@@ -1,0 +1,34 @@
+:host {
+  width: 100%;
+  header {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    height: 5%;
+    padding-left: 0.5%;
+    background-color: #0079c1;
+
+    img {
+      width: 1.5%;
+      padding-right: 5px;
+    }
+
+    a {
+      display: flex;
+      align-items: center;
+      width: 1.5%;
+      padding-right: 5px;
+      img {
+        width: 100%;
+        padding-right: 0;
+      }
+    }
+
+    h1 {
+      margin: 0;
+      font-size: 18px;
+      color: #fff;
+      font-weight: 430;
+    }
+  }
+}

@@ -1,0 +1,26 @@
+{
+  "compilerOptions": {
+    "target": "es2017",
+    "isolatedModules": false,
+    "noImplicitThis": true,
+    "noImplicitAny": true,
+    "strictNullChecks": true,
+    "noImplicitReturns": true,
+    "allowSyntheticDefaultImports": true,
+    "allowUnreachableCode": false,
+    "declaration": true,
+    "sourceMap": true,
+    "experimentalDecorators": true,
+    "moduleResolution": "node",
+    "module": "ESNext",
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "jsx": "react",
+    "jsxFactory": "h",
+    "importHelpers": true,
+    "lib": ["DOM", "DOM.Iterable", "ScriptHost", "ES2020"],
+    "resolveJsonModule": true
+  },
+  "files": ["node_modules/@esri/calcite-components/dist/types/components.d.ts"],
+  "include": ["src"]
+}
