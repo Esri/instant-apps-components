@@ -7,8 +7,10 @@
 import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
 export namespace Components {
     interface InstantAppsHeader {
-        "applySharedTheme": boolean;
-        "sharedTheme": string;
+        "backgroundColor": string;
+        "logoImage": string;
+        "logoLink": string;
+        "textColor": string;
         "titleText": string;
     }
 }
@@ -25,8 +27,10 @@ declare global {
 }
 declare namespace LocalJSX {
     interface InstantAppsHeader {
-        "applySharedTheme"?: boolean;
-        "sharedTheme"?: string;
+        "backgroundColor"?: string;
+        "logoImage"?: string;
+        "logoLink"?: string;
+        "textColor"?: string;
         "titleText"?: string;
     }
     interface IntrinsicElements {

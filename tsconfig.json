@@ -3,7 +3,7 @@
     "target": "es2017",
     "isolatedModules": false,
     "noImplicitThis": true,
-    "noImplicitAny": true,
+    "noImplicitAny": false,
     "strictNullChecks": true,
     "noImplicitReturns": true,
     "allowSyntheticDefaultImports": true,

@@ -1,4 +1,4 @@
-import { Component, Host, h, Prop, Watch, State } from '@stencil/core';
+import { Component, Host, h, Prop } from '@stencil/core';
 
 @Component({
   tag: 'instant-apps-header',
@@ -6,35 +6,31 @@ import { Component, Host, h, Prop, Watch, State } from '@stencil/core';
   shadow: true,
 })
 export class InstantAppsHeader {
-  @State() sharedThemeObj: any;
-
   @Prop() titleText: string;
 
-  @Prop() applySharedTheme: boolean = false;
+  @Prop() backgroundColor: string;
 
-  @Prop() sharedTheme: string;
+  @Prop() textColor: string;
 
-  @Watch('sharedTheme')
-  convertSharedThemeObj() {
-    this.sharedThemeObj = JSON.parse(this.sharedTheme);
-  }
+  @Prop() logoImage: string;
 
-  componentWillLoad() {
-    this.convertSharedThemeObj();
-  }
+  @Prop() logoLink: string;
 
   render() {
+    console.log(this);
     return (
       <Host>
-        <header style={{ backgroundColor: this.applySharedTheme && this.sharedThemeObj?.header?.background ? this.sharedThemeObj?.header?.background : '' }}>
-          {this.applySharedTheme && this.sharedThemeObj?.logo?.small && this.sharedThemeObj?.logo?.link ? (
-            <a href={`${this.sharedThemeObj?.logo?.link}`} target="_blank">
-              <img src={`${this.sharedThemeObj?.logo?.small}`} />
+        <header style={{ backgroundColor: this.backgroundColor }}>
+          {this.logoImage && this.logoLink ? (
+            <a href={`${this.logoLink}`} target="_blank">
+              <img src={`${this.logoImage}`} />
             </a>
+          ) : this.logoImage ? (
+            <img src={`${this.logoImage}`} />
           ) : (
             ''
           )}
-          <h1 style={{ color: this.applySharedTheme && this.sharedThemeObj?.header?.text ? this.sharedThemeObj?.header?.text : '' }}>{this.titleText}</h1>
+          <h1 style={{ color: this.textColor }}>{this.titleText}</h1>
         </header>
       </Host>
     );
