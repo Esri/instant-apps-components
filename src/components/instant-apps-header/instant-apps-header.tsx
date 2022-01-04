@@ -17,7 +17,6 @@ export class InstantAppsHeader {
   @Prop() logoLink: string;
 
   render() {
-    console.log(this);
     return (
       <Host>
         <header style={{ backgroundColor: this.backgroundColor }}>
