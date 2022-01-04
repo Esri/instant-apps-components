@@ -22,9 +22,18 @@ export const config: Config = {
           src: '../node_modules/@esri/calcite-components/dist/calcite',
           dest: 'dist/@esri/calcite-components',
         },
+        {
+          src: '../node_modules/@arcgis/core/assets',
+          dest: 'dist/@arcgis/core/assets',
+        },
       ],
       serviceWorker: null, // disable service workers
     },
   ],
-  plugins: [nodePolyfills(), sass()],
+  plugins: [
+    nodePolyfills(),
+    sass({
+      injectGlobalPaths: ['src/global/main.scss'],
+    }),
+  ],
 };
