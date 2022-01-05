@@ -6,7 +6,7 @@ Shared Web Components for ArcGIS Instant Apps.
 
 ## To set up locally, in terminal:
 
-1. `git clone https://github.com/ArcGIS/instant-apps-components`
+1. `git clone https://github.com/ArcGIS/instant-apps-components.git`
 
 2. `cd ./instant-apps-components`
 
