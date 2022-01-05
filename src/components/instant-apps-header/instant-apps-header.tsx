@@ -14,18 +14,23 @@ export class InstantAppsHeader {
 
   @Prop() logoImage: string;
 
+  @Prop() logoImageAltText: string;
+
   @Prop() logoLink: string;
 
+  @Prop() label: string;
+
   render() {
+    console.log(this);
     return (
       <Host>
         <header style={{ backgroundColor: this.backgroundColor }}>
           {this.logoImage && this.logoLink ? (
             <a href={`${this.logoLink}`} target="_blank">
-              <img src={`${this.logoImage}`} />
+              <img src={`${this.logoImage}`} alt={`${this.logoImageAltText}`} />
             </a>
           ) : this.logoImage ? (
-            <img src={`${this.logoImage}`} />
+            <img src={`${this.logoImage}`} alt={this.logoImageAltText} />
           ) : (
             ''
           )}

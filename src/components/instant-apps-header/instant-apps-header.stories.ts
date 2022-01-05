@@ -7,16 +7,18 @@ export default {
     backgroundColor: { control: 'color' },
     textColor: { control: 'color' },
     logoImage: { control: 'text' },
+    logoImageAltText: { control: 'text' },
     logoLink: { control: 'text' },
   },
 };
 
-const Template = ({ titleText, backgroundColor, textColor, logoImage, logoLink }) =>
+const Template = ({ titleText, backgroundColor, textColor, logoImage, logoImageAltText, logoLink }) =>
   html`<instant-apps-header
     title-text="${titleText}"
     background-color="${backgroundColor}"
     text-color="${textColor}"
     logo-image="${logoImage}"
+    logo-image-alt-text="${logoImageAltText}"
     logo-link="${logoLink}"
   ></instant-apps-header>`;
 
@@ -26,8 +28,9 @@ Basic.args = { titleText: 'Instant Apps: Header', backgroundColor: '#0079c1', te
 export const Theme = Template.bind({});
 Theme.args = {
   titleText: 'Instant Apps: Header (Shared Theme)',
-  backgroundColor: '#360670',
-  textColor: '#9ec3db',
-  logoImage: 'https://holistic.mapsdevext.arcgis.com/sharing/rest/content/items/83a6e3a8e4ec4462abcf8e367f88da76/data',
-  logoLink: 'https://holistic.mapsdevext.arcgis.com',
+  backgroundColor: '#ffffff',
+  textColor: '#151515',
+  logoImage: 'https://www.esri.com/content/dam/esrisites/en-us/common/icons/product-logos/arcgis-instant-apps-64.svg',
+  logoImageAltText: 'ArcGIS Instant Apps logo',
+  logoLink: 'https://www.esri.com/en-us/arcgis/products/arcgis-instant-apps/overview',
 };

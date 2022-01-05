@@ -8,14 +8,12 @@ import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
 export namespace Components {
     interface InstantAppsHeader {
         "backgroundColor": string;
+        "label": string;
         "logoImage": string;
+        "logoImageAltText": string;
         "logoLink": string;
         "textColor": string;
         "titleText": string;
-    }
-    interface InstantAppsView {
-        "mapId": string;
-        "portalUrl": string;
     }
 }
 declare global {
@@ -25,32 +23,22 @@ declare global {
         prototype: HTMLInstantAppsHeaderElement;
         new (): HTMLInstantAppsHeaderElement;
     };
-    interface HTMLInstantAppsViewElement extends Components.InstantAppsView, HTMLStencilElement {
-    }
-    var HTMLInstantAppsViewElement: {
-        prototype: HTMLInstantAppsViewElement;
-        new (): HTMLInstantAppsViewElement;
-    };
     interface HTMLElementTagNameMap {
         "instant-apps-header": HTMLInstantAppsHeaderElement;
-        "instant-apps-view": HTMLInstantAppsViewElement;
     }
 }
 declare namespace LocalJSX {
     interface InstantAppsHeader {
         "backgroundColor"?: string;
+        "label"?: string;
         "logoImage"?: string;
+        "logoImageAltText"?: string;
         "logoLink"?: string;
         "textColor"?: string;
         "titleText"?: string;
     }
-    interface InstantAppsView {
-        "mapId"?: string;
-        "portalUrl"?: string;
-    }
     interface IntrinsicElements {
         "instant-apps-header": InstantAppsHeader;
-        "instant-apps-view": InstantAppsView;
     }
 }
 export { LocalJSX as JSX };
@@ -58,7 +46,6 @@ declare module "@stencil/core" {
     export namespace JSX {
         interface IntrinsicElements {
             "instant-apps-header": LocalJSX.InstantAppsHeader & JSXBase.HTMLAttributes<HTMLInstantAppsHeaderElement>;
-            "instant-apps-view": LocalJSX.InstantAppsView & JSXBase.HTMLAttributes<HTMLInstantAppsViewElement>;
         }
     }
 }
