@@ -8,7 +8,7 @@ Shared Web Components for ArcGIS Instant Apps.
 
 1. `git clone https://github.com/ArcGIS/instant-apps-components.git`
 
-2. `cd ./instant-apps-components`
+2. `cd instant-apps-components`
 
 3. `npm install`
 
