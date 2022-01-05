@@ -22,11 +22,11 @@ You can use the stencil CLI to generate the necessary files for your web compone
 
 1. In terminal, run `stencil generate`.
 
-2. Enter the name of your component with the following naming convention: `instant-apps-[YOUR_COMPONENT_NAME]`.
+2. Enter the name of your web component with the following naming convention: `instant-apps-[YOUR_COMPONENT_NAME]`.
 
 3. Press `Enter`/`Return`.
 
-4. Since this library uses sass, you'll need to update your component's stylsheet file's extension. i.e. `src/components/instant-apps-[YOUR_COMPONENT_NAME]/instant-apps-[YOUR_COMPONENT_NAME].css` to `src/components/instant-apps-[YOUR_COMPONENT_NAME]/instant-apps-[YOUR_COMPONENT_NAME].scss`
+4. Since this web component library uses sass, you'll need to update your component's stylesheet file extension. i.e. `src/components/instant-apps-[YOUR_COMPONENT_NAME]/instant-apps-[YOUR_COMPONENT_NAME].css` to `src/components/instant-apps-[YOUR_COMPONENT_NAME]/instant-apps-[YOUR_COMPONENT_NAME].scss`
 
 5. In `src/components/instant-apps-[YOUR_COMPONENT_NAME]/instant-apps-[YOUR_COMPONENT_NAME].tsx`, update the following:
 
@@ -44,7 +44,7 @@ More info on Stencil's CLI can be found [here](https://stenciljs.com/docs/cli).
 
 To include your web component in the storybook UI, create a `.stories.ts` file within your web component's directory i.e. `src/components/instant-apps-[YOUR_COMPONENT_NAME]/instant-apps-[YOUR_COMPONENT_NAME].stories.ts`.
 
-Below is a code snippet example of how to write your web component's story.
+Below is a code snippet example:
 
 ```
 import { html } from 'lit-html';
@@ -68,7 +68,7 @@ Example.args = { exampleProp: 'Example text.' };
 
 More info on how to write stories can be found [here](https://storybook.js.org/docs/web-components/writing-stories/introduction).
 
-Additionally, documenentation on how to include controls to interact with the arguments of your web component can be found [here](https://storybook.js.org/docs/web-components/essentials/controls).
+Additionally, documenentation on how to provide controls to interact with the arguments of your web component dynamically can be found [here](https://storybook.js.org/docs/web-components/essentials/controls).
 
 ## Contributing
 
