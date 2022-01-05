@@ -14,7 +14,7 @@ Shared Web Components for ArcGIS Instant Apps.
 
 4. `npm start` (Wait until build is finished.)
 
-5. `npm run storybook`
+5. Open another terminal and run `npm run storybook`
 
 ## Stencil CLI
 

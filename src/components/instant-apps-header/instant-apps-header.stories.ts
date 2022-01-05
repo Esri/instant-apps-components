@@ -22,13 +22,13 @@ const Template = ({ titleText, backgroundColor, textColor, logoImage, logoImageA
     logo-link="${logoLink}"
   ></instant-apps-header>`;
 
-export const Basic = Template.bind({});
-Basic.args = { titleText: 'Instant Apps: Header', backgroundColor: '#0079c1', textColor: '#ffffff' };
+export const Standard = Template.bind({});
+Standard.args = { titleText: 'Instant Apps: Header', backgroundColor: '#0079c1', textColor: '#ffffff' };
 
 export const Theme = Template.bind({});
 Theme.args = {
   titleText: 'Instant Apps: Header (Shared Theme)',
-  backgroundColor: '#ffffff',
+  backgroundColor: '#f8f8f8',
   textColor: '#151515',
   logoImage: 'https://www.esri.com/content/dam/esrisites/en-us/common/icons/product-logos/arcgis-instant-apps-64.svg',
   logoImageAltText: 'ArcGIS Instant Apps logo',
