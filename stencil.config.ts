@@ -30,10 +30,5 @@ export const config: Config = {
       serviceWorker: null, // disable service workers
     },
   ],
-  plugins: [
-    nodePolyfills(),
-    sass({
-      injectGlobalPaths: ['src/global/main.scss'],
-    }),
-  ],
+  plugins: [nodePolyfills(), sass()],
 };

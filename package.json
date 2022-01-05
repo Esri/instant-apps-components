@@ -34,7 +34,6 @@
     "@storybook/addon-a11y": "^6.4.9",
     "@storybook/addon-controls": "^6.4.9",
     "@storybook/addon-docs": "^6.4.9",
-    "@storybook/addon-knobs": "^6.4.0",
     "@whitespace/storybook-addon-html": "^5.0.0",
     "lit-html": "^2.0.2",
     "rollup-plugin-node-polyfills": "^0.2.1",
