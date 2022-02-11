@@ -1,11 +1,13 @@
 import { Component, h, Prop, State } from '@stencil/core';
 import { substitute } from '@arcgis/core/intl';
+import InstantAppsSocialShare_T9n from './assets/t9n/resources.json';
 
 const base = 'instant-apps-social-share';
 
 const CSS = {
   base,
   dialog: `${base}__dialog`,
+  dialogContent: `${base}__dialog-content`,
   options: `${base}__options`,
   tipContainer: `${base}__tip`,
   tipHeader: `${base}__tip-header`,
@@ -33,6 +35,16 @@ export class InstantAppsSocialShare {
   @Prop() view: __esri.MapView | __esri.SceneView;
   @State() opened = false;
   @State() copied = false;
+  @State() messages: typeof InstantAppsSocialShare_T9n;
+
+  componentWillLoad() {
+    this.getMessages();
+  }
+
+  async getMessages() {
+    const messages = await import('./assets/t9n/resources.json');
+    this.messages = messages;
+  }
 
   componentDidLoad() {
     this.setupAutoCloseListeners();
@@ -61,35 +73,55 @@ export class InstantAppsSocialShare {
   }
 
   render() {
-    const content = [this.renderOptions(), this.renderTip()];
+    const content = this.copied ? (
+      this.renderSuccess()
+    ) : (
+      <div class={CSS.dialogContent}>
+        {this.renderOptions()}
+        {this.renderTip()}
+      </div>
+    );
     return [
       <calcite-popover ref={(el: HTMLCalcitePopoverElement) => (this.popover = el)} label="Share dialog" reference-element="shareButton" placement="bottom-start">
         <div class={CSS.dialog}>{content}</div>
       </calcite-popover>,
-      <calcite-button onClick={this.togglePopover.bind(this)} id="shareButton" appearance="transparent">
+      <calcite-button onClick={this.togglePopover.bind(this)} id="shareButton" color="neutral" appearance="transparent">
         <calcite-icon icon="share" />
       </calcite-button>,
     ];
   }
 
+  renderSuccess() {
+    const success = this.messages?.success;
+    return (
+      <div>
+        <span>{success?.label}</span>
+        <span>{success?.url}</span>
+      </div>
+    );
+  }
+
   renderOptions() {
+    const options = this.messages?.options;
     return (
       <ul class={CSS.options} role="menu">
         <li id="copyToClipboard" onClick={this.handleShareItem.bind(this, 'link')} role="menuitem">
-          <calcite-icon icon="link" scale="s" />
-          <span class={CSS.optionText}>Copy Link</span>
+          <span class={CSS.icon}>
+            <calcite-icon icon="link" scale="m" />
+          </span>
+          <span class={CSS.optionText}>{options?.link?.label}</span>
         </li>
         <li onClick={this.handleShareItem.bind(this, 'facebook')} role="menuitem">
           <span class={CSS.icon}>{this.renderFacebookIcon()}</span>
-          <span class={CSS.optionText}>Facebook</span>
+          <span class={CSS.optionText}>{options?.facebook?.label}</span>
         </li>
         <li onClick={this.handleShareItem.bind(this, 'twitter')} role="menuitem">
           <span class={CSS.icon}>{this.renderTwitterIcon()}</span>
-          <span class={CSS.optionText}>Twitter</span>
+          <span class={CSS.optionText}>{options?.twitter?.label}</span>
         </li>
         <li onClick={this.handleShareItem.bind(this, 'linkedIn')} role="menuitem">
           <span class={CSS.icon}>{this.renderLinkedInIcon()}</span>
-          <span class={CSS.optionText}>LinkedIn</span>
+          <span class={CSS.optionText}>{options?.linkedIn?.label}</span>
         </li>
       </ul>
     );
@@ -173,12 +205,14 @@ export class InstantAppsSocialShare {
   }
 
   renderTip() {
+    const info = this.messages?.info;
     return (
       <div class={CSS.tipContainer}>
         <span class={CSS.tipHeader}>
-          <calcite-icon icon="lightbulb" scale="s" /> Did you know?
+          <calcite-icon icon="lightbulb" scale="s" />
+          <span>{info?.label}</span>
         </span>
-        <p class={CSS.tipContent}>Copy link will preserve the current map view, visible layers, and open popups. Use this option to share what you see in the app.</p>
+        <p class={CSS.tipContent}>{info?.tooltip}</p>
       </div>
     );
   }
@@ -198,6 +232,7 @@ export class InstantAppsSocialShare {
     switch (type) {
       case 'link':
         navigator.clipboard.writeText(window.location.href);
+        this.copied = true;
         return;
       case 'facebook':
       case 'twitter':
