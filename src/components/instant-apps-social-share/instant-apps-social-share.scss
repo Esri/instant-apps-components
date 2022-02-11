@@ -8,7 +8,7 @@ $hoverDark: #262626;
   .instant-apps-social-share {
     &__dialog {
       box-sizing: border-box;
-      width: 200px;
+      width: 280px;
       height: auto;
       margin: 10px 0;
     }
@@ -63,17 +63,47 @@ $hoverDark: #262626;
         color: $calciteBlue;
         font-size: 16px;
         margin: 8px 0 5px 0;
+        calcite-icon {
+          margin-right: 5px;
+        }
       }
       &-content {
         line-height: 17px;
         font-size: 14.5px;
         margin: 0;
+        padding-top: 2%;
       }
     }
 
     &__icon {
       width: 1rem;
       height: 1rem;
+    }
+
+    &__success {
+      display: flex;
+      flex-direction: column;
+      padding: 0 20px;
+
+      &-header {
+        display: flex;
+        align-items: center;
+        font-weight: bold;
+        line-height: 40px;
+      }
+      &-icon {
+        display: flex;
+        align-items: center;
+        margin-right: 5px;
+        calcite-icon {
+          color: var(--calcite-ui-success);
+        }
+      }
+
+      &-message {
+        font-size: 15px;
+        line-height: 16px;
+      }
     }
   }
 }

@@ -14,6 +14,12 @@ const CSS = {
   tipContent: `${base}__tip-content`,
   icon: `${base}__icon`,
   optionText: `${base}__option-text`,
+  success: {
+    container: `${base}__success`,
+    header: `${base}__success-header`,
+    message: `${base}__success-message`,
+    icon: `${base}__success-icon`,
+  },
 };
 
 const SOCIAL_URL_TEMPLATES = {
@@ -30,9 +36,12 @@ const SOCIAL_URL_TEMPLATES = {
 export class InstantAppsSocialShare {
   popover: HTMLCalcitePopoverElement;
   successPopover: HTMLCalcitePopoverElement;
+  shareButton: HTMLCalciteButtonElement;
 
   @Prop() shareText: string = '';
   @Prop() view: __esri.MapView | __esri.SceneView;
+  @Prop() mode: 'popover' | 'inline' = 'popover';
+  @Prop() popoverButtonColor: 'inverse' | 'neutral' = 'inverse';
   @State() opened = false;
   @State() copied = false;
   @State() messages: typeof InstantAppsSocialShare_T9n;
@@ -47,15 +56,22 @@ export class InstantAppsSocialShare {
   }
 
   componentDidLoad() {
-    this.setupAutoCloseListeners();
-    if (this.opened) {
-      this.popover.toggle(true);
+    if (this.mode === 'popover') {
+      this.setupAutoCloseListeners();
+      if (this.opened) {
+        this.popover.toggle(true);
+      }
     }
   }
 
   setupAutoCloseListeners() {
-    document.body.addEventListener('click', this.autoCloseCallback.bind(this));
+    document.documentElement.addEventListener('click', this.autoCloseCallback.bind(this));
     this.popover.addEventListener('click', this.stopPropagationCallback.bind(this));
+    this.popover.addEventListener('calcitePopoverClose', () => {
+      setTimeout(() => {
+        this.copied = false;
+      }, 200);
+    });
   }
 
   autoCloseCallback() {
@@ -68,8 +84,10 @@ export class InstantAppsSocialShare {
   }
 
   disconnectedCallback() {
-    document.body.removeEventListener('click', this.autoCloseCallback);
-    this.popover.removeEventListener('click', this.stopPropagationCallback);
+    if (this.mode === 'popover') {
+      document.body.removeEventListener('click', this.autoCloseCallback);
+      this.popover.removeEventListener('click', this.stopPropagationCallback);
+    }
   }
 
   render() {
@@ -81,22 +99,43 @@ export class InstantAppsSocialShare {
         {this.renderTip()}
       </div>
     );
-    return [
-      <calcite-popover ref={(el: HTMLCalcitePopoverElement) => (this.popover = el)} label="Share dialog" reference-element="shareButton" placement="bottom-start">
-        <div class={CSS.dialog}>{content}</div>
-      </calcite-popover>,
-      <calcite-button onClick={this.togglePopover.bind(this)} id="shareButton" color="neutral" appearance="transparent">
-        <calcite-icon icon="share" />
-      </calcite-button>,
-    ];
+    const dialogContent = <div class={CSS.dialog}>{content}</div>;
+    console.log(this.messages);
+    return this.mode === 'popover'
+      ? [
+          <calcite-popover
+            ref={(el: HTMLCalcitePopoverElement) => (this.popover = el)}
+            label={this.messages?.share?.label}
+            reference-element="shareButton"
+            placement="bottom-start"
+          >
+            {dialogContent}
+          </calcite-popover>,
+          <calcite-button
+            onClick={this.togglePopover.bind(this)}
+            id="shareButton"
+            color={this.popoverButtonColor}
+            appearance="transparent"
+            label={this.messages?.share?.label}
+            title={this.messages?.share?.label}
+          >
+            <calcite-icon icon="share" />
+          </calcite-button>,
+        ]
+      : dialogContent;
   }
 
   renderSuccess() {
     const success = this.messages?.success;
     return (
-      <div>
-        <span>{success?.label}</span>
-        <span>{success?.url}</span>
+      <div class={CSS.success.container}>
+        <span class={CSS.success.header}>
+          <span class={CSS.success.icon}>
+            <calcite-icon icon="check-circle-f" scale="s" />
+          </span>
+          {success?.label}
+        </span>
+        <span class={CSS.success.message}>{success?.url}</span>
       </div>
     );
   }

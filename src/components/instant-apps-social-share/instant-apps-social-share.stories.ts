@@ -2,9 +2,22 @@ import { html } from 'lit-html';
 
 export default {
   title: 'Social Share',
+  argTypes: {
+    mode: {
+      options: ['popover', 'inline'],
+      control: { type: 'select' },
+    },
+  },
 };
 
-const Template = ({}) => html`<instant-apps-social-share></instant-apps-social-share>`;
+const Template = ({ mode }) => html`<instant-apps-social-share mode="${mode}"></instant-apps-social-share>`;
 
-export const Standard = Template.bind({});
-Standard.args = {};
+export const Popover = Template.bind({});
+Popover.args = {
+  mode: 'popover',
+};
+
+export const Inline = Template.bind({});
+Inline.args = {
+  mode: 'inline',
+};

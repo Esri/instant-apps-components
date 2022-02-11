@@ -12,6 +12,17 @@
     <script nomodule src="../dist/@esri/calcite-components/calcite.js"></script>
     <script type="module" src="/build/instant-apps-components.esm.js"></script>
     <script nomodule src="/build/instant-apps-components.js"></script>
+    <style>
+      html,
+      body {
+        margin: 0;
+        padding: 0;
+      }
+    </style>
   </head>
-  <body></body>
+  <body class="calcite-theme-light">
+    <instant-apps-header title-text="Instant Apps Components" logo-image="https://www.esri.com/content/dam/esrisites/en-us/common/icons/product-logos/arcgis-instant-apps-64.svg">
+      <instant-apps-social-share slot="actions-end"></instant-apps-social-share>
+    </instant-apps-header>
+  </body>
 </html>

@@ -1,36 +1,42 @@
 :host {
   width: 100%;
   header {
+    box-sizing: border-box;
     display: flex;
     align-items: center;
+    justify-content: space-between;
     width: 100%;
     height: auto;
-    padding-left: 0.5%;
+    padding: 0 0.5%;
     background-color: #0079c1;
     padding-top: 5px;
     padding-bottom: 5px;
 
-    img {
-      width: 2.5%;
-      padding-right: 5px;
-    }
-
-    a {
+    .instant-apps-header__header-content {
       display: flex;
       align-items: center;
-      width: 2.5%;
-      padding-right: 5px;
       img {
-        width: 100%;
-        padding-right: 0;
+        width: 8%;
+        padding: 0 5px;
       }
-    }
 
-    h1 {
-      margin: 0;
-      font-size: 18px;
-      color: #fff;
-      font-weight: 430;
+      a {
+        display: flex;
+        align-items: center;
+        width: 8%;
+        padding-right: 5px;
+        img {
+          width: 100%;
+          padding-right: 0;
+        }
+      }
+
+      h1 {
+        margin: 0;
+        font-size: 18px;
+        color: var(--calcite-ui-text-inverse);
+        font-weight: 430;
+      }
     }
   }
 }
