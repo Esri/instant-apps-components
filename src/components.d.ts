@@ -15,6 +15,10 @@ export namespace Components {
         "textColor": string;
         "titleText": string;
     }
+    interface InstantAppsSocialShare {
+        "shareText": string;
+        "view": __esri.MapView | __esri.SceneView;
+    }
 }
 declare global {
     interface HTMLInstantAppsHeaderElement extends Components.InstantAppsHeader, HTMLStencilElement {
@@ -23,8 +27,15 @@ declare global {
         prototype: HTMLInstantAppsHeaderElement;
         new (): HTMLInstantAppsHeaderElement;
     };
+    interface HTMLInstantAppsSocialShareElement extends Components.InstantAppsSocialShare, HTMLStencilElement {
+    }
+    var HTMLInstantAppsSocialShareElement: {
+        prototype: HTMLInstantAppsSocialShareElement;
+        new (): HTMLInstantAppsSocialShareElement;
+    };
     interface HTMLElementTagNameMap {
         "instant-apps-header": HTMLInstantAppsHeaderElement;
+        "instant-apps-social-share": HTMLInstantAppsSocialShareElement;
     }
 }
 declare namespace LocalJSX {
@@ -37,8 +48,13 @@ declare namespace LocalJSX {
         "textColor"?: string;
         "titleText"?: string;
     }
+    interface InstantAppsSocialShare {
+        "shareText"?: string;
+        "view"?: __esri.MapView | __esri.SceneView;
+    }
     interface IntrinsicElements {
         "instant-apps-header": InstantAppsHeader;
+        "instant-apps-social-share": InstantAppsSocialShare;
     }
 }
 export { LocalJSX as JSX };
@@ -46,6 +62,7 @@ declare module "@stencil/core" {
     export namespace JSX {
         interface IntrinsicElements {
             "instant-apps-header": LocalJSX.InstantAppsHeader & JSXBase.HTMLAttributes<HTMLInstantAppsHeaderElement>;
+            "instant-apps-social-share": LocalJSX.InstantAppsSocialShare & JSXBase.HTMLAttributes<HTMLInstantAppsSocialShareElement>;
         }
     }
 }
