@@ -5,7 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=5.0" />
     <title>ArcGIS Online: Instant Apps Components</title>
 
-    <link rel="stylesheet" href="../dist/@arcgis/core/assets/esri/themes/light/main.css" />
+    <link rel="stylesheet" href="https://js.arcgis.com/4.22/esri/themes/light/main.css" />
+    <script src="https://js.arcgis.com/4.22/"></script>
 
     <link rel="stylesheet" href="../dist/@esri/calcite-components/calcite.css" />
     <script type="module" src="../dist/@esri/calcite-components/calcite.esm.js"></script>
@@ -17,12 +18,39 @@
       body {
         margin: 0;
         padding: 0;
+        width: 100%;
+        height: 100%;
+      }
+
+      #viewDiv {
+        height: 95%;
       }
     </style>
+
+    </script>
   </head>
   <body class="calcite-theme-light">
     <instant-apps-header title-text="Instant Apps Components" logo-image="https://www.esri.com/content/dam/esrisites/en-us/common/icons/product-logos/arcgis-instant-apps-64.svg">
       <instant-apps-social-share slot="actions-end"></instant-apps-social-share>
     </instant-apps-header>
+    <div id="viewDiv"></div>
+    <script>
+      require(["esri/config","esri/WebMap", "esri/views/MapView"], function (esriConfig, WebMap, MapView) {
+         esriConfig.portalUrl = "https://holistic.mapsdevext.arcgis.com"
+         const map = new WebMap({
+           portalItem: {
+             id: "7aa58b37ed604cd698c6ff0d170ebae0"
+           }
+         });
+         const view = new MapView({
+           container: "viewDiv",
+           map: map
+         });
+
+         const socialShare = document.querySelector("instant-apps-social-share");
+         socialShare.view = view;
+
+       });
+   </script>
   </body>
 </html>

@@ -1,5 +1,11 @@
 import { Component, h, Prop, State } from '@stencil/core';
+
 import { substitute } from '@arcgis/core/intl';
+import Point from '@arcgis/core/geometry/Point';
+import SpatialReference from '@arcgis/core/geometry/SpatialReference';
+import { project, load as loadProjection } from '@arcgis/core/geometry/projection';
+import esriRequest from '@arcgis/core/request';
+
 import InstantAppsSocialShare_T9n from './assets/t9n/resources.json';
 
 const base = 'instant-apps-social-share';
@@ -27,6 +33,8 @@ const SOCIAL_URL_TEMPLATES = {
   twitter: 'https://twitter.com/intent/tweet?text={text}&url={url}',
   linkedIn: 'https://www.linkedin.com/sharing/share-offsite/?url={url}',
 };
+
+const SHORTEN_API = 'https://arcg.is/prod/shorten';
 
 @Component({
   tag: 'instant-apps-social-share',
@@ -100,7 +108,6 @@ export class InstantAppsSocialShare {
       </div>
     );
     const dialogContent = <div class={CSS.dialog}>{content}</div>;
-    console.log(this.messages);
     return this.mode === 'popover'
       ? [
           <calcite-popover
@@ -267,23 +274,126 @@ export class InstantAppsSocialShare {
     this.popover.toggle(this.opened);
   }
 
-  handleShareItem(type: 'link' | 'facebook' | 'twitter' | 'linkedIn') {
+  async handleShareItem(type: 'link' | 'facebook' | 'twitter' | 'linkedIn') {
+    const shareUrl = await this.generateShareUrl();
+    const shortenedUrl = await this.shortenUrl(shareUrl);
     switch (type) {
       case 'link':
-        navigator.clipboard.writeText(window.location.href);
+        navigator.clipboard.writeText(shortenedUrl);
         this.copied = true;
         return;
       case 'facebook':
       case 'twitter':
       case 'linkedIn':
         const urlData = {
-          url: encodeURI(window.location.href),
+          url: encodeURI(shortenedUrl),
         };
         const data = type === 'twitter' ? { ...urlData, text: this.shareText } : urlData;
         const url = substitute(SOCIAL_URL_TEMPLATES[type], data);
-        window.open(encodeURI(url), '_blank');
         this.closePopover();
+        window.open(encodeURI(url), '_blank');
         return;
     }
+  }
+
+  async shortenUrl(url: string) {
+    const request = await esriRequest(SHORTEN_API, {
+      query: {
+        longUrl: url,
+        f: 'json',
+      },
+    });
+
+    const shortUrl = request?.data?.data?.url;
+    if (shortUrl) {
+      return shortUrl.replace('http://', 'https://');
+    }
+  }
+
+  // VIEW LOGIC
+  async generateShareUrl(): Promise<string> {
+    const { href } = window.location;
+    // If view is not ready
+    if (!this.view.ready) {
+      return href;
+    }
+    // Use x/y values and the spatial reference of the view to instantiate a geometry point
+    const { x, y } = this.view.center;
+    const { spatialReference } = this.view;
+    const updatedSpatialReference = new SpatialReference({ ...spatialReference.toJSON() });
+    const centerPoint = new Point({
+      x,
+      y,
+      spatialReference: updatedSpatialReference,
+    });
+    // Use pointToConvert to project point. Once projected, pass point to generate the share URL parameters
+    const point = await this.processPoint(centerPoint);
+    return this.generateShareUrlParams(point);
+  }
+
+  async processPoint(point: Point): Promise<__esri.Point> {
+    const { isWGS84, isWebMercator } = point.spatialReference;
+    // If spatial reference is WGS84 or Web Mercator, use longitude/latitude values to generate the share URL parameters
+    if (isWGS84 || isWebMercator) {
+      return point;
+    }
+    const outputSpatialReference = new SpatialReference({
+      wkid: 4326,
+    });
+    await loadProjection();
+    const projectedPoint = project(point, outputSpatialReference) as __esri.Point;
+    return projectedPoint;
+  }
+
+  generateShareUrlParams(point: Point): string {
+    const { href } = window.location;
+    const { longitude, latitude } = point;
+    if (longitude === undefined || latitude === undefined) {
+      return href;
+    }
+    const roundedLon = this.roundValue(longitude);
+    const roundedLat = this.roundValue(latitude);
+    const { zoom } = this.view;
+    const roundedZoom = this.roundValue(zoom);
+    const graphic = this.view.get('popup.selectedFeature') as __esri.Graphic;
+    let layerId;
+    let oid;
+    if (graphic) {
+      const featureLayer = graphic.get('layer') as __esri.FeatureLayer;
+      layerId = featureLayer.id;
+      oid = graphic.attributes[featureLayer.objectIdField];
+    }
+
+    const visibleLayers = this.view.map.allLayers
+      .filter(layer => layer.type === 'feature' && layer.visible)
+      .toArray()
+      .map(featureLayer => featureLayer.id)
+      .toString()
+      .replace(',', ';');
+
+    const path = href.split('center')[0];
+    // If no "?", then append "?". Otherwise, check for "?" and "="
+    const sep = path.indexOf('?') === -1 ? '?' : path.indexOf('?') !== -1 && path.indexOf('=') !== -1 ? '&' : '';
+
+    const shareParams = `${path}${sep}center=${roundedLon};${roundedLat}&level=${roundedZoom}${layerId && graphic ? `&selectedFeature=${layerId};${oid}` : ''}${
+      visibleLayers ? `&visibleLayers=${visibleLayers}` : ''
+    }`;
+    const type = this.view.type;
+    // Checks if view.type is 3D, if so add, 3D url parameters
+    if (type === '3d') {
+      const { camera } = this.view as __esri.SceneView;
+      const { heading, fov, tilt } = camera;
+      const roundedHeading = this.roundValue(heading);
+      const roundedFov = this.roundValue(fov);
+      const roundedTilt = this.roundValue(tilt);
+      return `${shareParams}&heading=${roundedHeading}&fov=${roundedFov}&tilt=${roundedTilt}`;
+    }
+
+    // Otherwise, just return original url parameters for 2D
+    return shareParams;
+  }
+
+  roundValue(val: number): number {
+    return parseFloat(val.toFixed(4));
   }
 }
