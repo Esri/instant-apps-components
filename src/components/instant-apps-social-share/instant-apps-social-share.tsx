@@ -49,7 +49,7 @@ export class InstantAppsSocialShare {
   @Prop() shareText: string = '';
   @Prop() view: __esri.MapView | __esri.SceneView;
   @Prop() mode: 'popover' | 'inline' = 'popover';
-  @Prop() popoverButtonColor: 'inverse' | 'neutral' = 'inverse';
+  @Prop() popoverButtonColor: 'inverse' | 'neutral' = 'neutral';
   @State() opened = false;
   @State() copied = false;
   @State() messages: typeof InstantAppsSocialShare_T9n;
@@ -314,7 +314,7 @@ export class InstantAppsSocialShare {
   async generateShareUrl(): Promise<string> {
     const { href } = window.location;
     // If view is not ready
-    if (!this.view.ready) {
+    if (!this.view?.ready) {
       return href;
     }
     // Use x/y values and the spatial reference of the view to instantiate a geometry point
