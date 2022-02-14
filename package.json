@@ -30,7 +30,8 @@
   "dependencies": {
     "@arcgis/core": "^4.22.2",
     "@esri/calcite-components": "1.0.0-beta.69",
-    "@stencil/core": "2.12.0"
+    "@stencil/core": "2.12.0",
+    "esri-loader": "^3.4.0"
   },
   "devDependencies": {
     "@babel/core": "7.16.5",

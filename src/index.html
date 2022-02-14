@@ -31,21 +31,66 @@
   </head>
   <body class="calcite-theme-light">
     <instant-apps-header title-text="Instant Apps Components" logo-image="https://www.esri.com/content/dam/esrisites/en-us/common/icons/product-logos/arcgis-instant-apps-64.svg">
-      <instant-apps-social-share slot="actions-end"></instant-apps-social-share>
+      <instant-apps-social-share slot="actions-end" popover-button-color="inverse"></instant-apps-social-share>
     </instant-apps-header>
     <div id="viewDiv"></div>
     <script>
-      require(["esri/config","esri/WebMap", "esri/views/MapView"], function (esriConfig, WebMap, MapView) {
-         esriConfig.portalUrl = "https://holistic.mapsdevext.arcgis.com"
+      require(["esri/config","esri/WebMap", "esri/views/MapView", "esri/widgets/LayerList", "esri/core/watchUtils"], function (esriConfig, WebMap, MapView, LayerList, watchUtils) {
+
+        const searchParams = new URL(window.location.href).searchParams;
+
+        const center = searchParams.get("center") ? searchParams.get("center").split(";").map(val => parseFloat(val)) : null;
+        const zoom = searchParams.get("level") ? parseInt(searchParams.get("level")) : null;
+        const hiddenLayers = searchParams.get("hiddenLayers") ? searchParams.get("hiddenLayers").split(";") : null;
+        const selectedFeature = searchParams.get("selectedFeature") ? searchParams.get("selectedFeature").split(";") : null
+        const selectedFeatureLayerId = selectedFeature ? selectedFeature[0] : null;
+        const selectedFeatureOID = selectedFeature ? parseInt(selectedFeature[1]) : null;
+
+         esriConfig.portalUrl = "https://jsapi.maps.arcgis.com"
          const map = new WebMap({
            portalItem: {
-             id: "7aa58b37ed604cd698c6ff0d170ebae0"
+             id: "75dc070f2d294aab8fb3364063f14bf1"
            }
          });
          const view = new MapView({
            container: "viewDiv",
-           map: map
+           map: map,
+           center,
+           zoom
          });
+
+          view.map.loadAll().then(loadedMap => {
+
+            if (hiddenLayers) {
+              loadedMap.allLayers.forEach(layer => {
+                if (hiddenLayers.indexOf(layer.id) !== -1) {
+                  layer.visible = false;
+                }
+              })
+            }
+
+          if (selectedFeature) {
+            const selectedLayer = loadedMap.allLayers.find(layer => selectedFeatureLayerId === layer.id);
+          const query = selectedLayer.createQuery();
+          query.objectIds = [selectedFeatureOID];
+          selectedLayer.queryFeatures(query).then(featureRes => {
+            const feature = featureRes.features[0];
+            view.goTo(feature).then(() => {
+              view.popup.open({
+                features: [feature]
+              });
+            });
+          });
+          }
+         });
+
+
+
+         const layerList = new LayerList({
+           view
+         });
+
+         view.ui.add(layerList, "bottom-right");
 
          const socialShare = document.querySelector("instant-apps-social-share");
          socialShare.view = view;

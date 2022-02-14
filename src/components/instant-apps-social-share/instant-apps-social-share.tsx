@@ -1,4 +1,4 @@
-import { Component, h, Prop, State } from '@stencil/core';
+import { Component, h, Prop, State, Element } from '@stencil/core';
 
 import { substitute } from '@arcgis/core/intl';
 import Point from '@arcgis/core/geometry/Point';
@@ -6,7 +6,7 @@ import SpatialReference from '@arcgis/core/geometry/SpatialReference';
 import { project, load as loadProjection } from '@arcgis/core/geometry/projection';
 import esriRequest from '@arcgis/core/request';
 
-import InstantAppsSocialShare_T9n from './assets/t9n/resources.json';
+import { getLocaleComponentStrings } from '../../utils/locale';
 
 const base = 'instant-apps-social-share';
 
@@ -42,6 +42,8 @@ const SHORTEN_API = 'https://arcg.is/prod/shorten';
   shadow: true,
 })
 export class InstantAppsSocialShare {
+  @Element() el: HTMLInstantAppsSocialShareElement;
+
   popover: HTMLCalcitePopoverElement;
   successPopover: HTMLCalcitePopoverElement;
   shareButton: HTMLCalciteButtonElement;
@@ -52,24 +54,29 @@ export class InstantAppsSocialShare {
   @Prop() popoverButtonColor: 'inverse' | 'neutral' = 'neutral';
   @State() opened = false;
   @State() copied = false;
-  @State() messages: typeof InstantAppsSocialShare_T9n;
-
-  componentWillLoad() {
-    this.getMessages();
-  }
-
-  async getMessages() {
-    const messages = await import('./assets/t9n/resources.json');
-    this.messages = messages;
-  }
+  @State() messages;
 
   componentDidLoad() {
+    this.getMessages();
+
     if (this.mode === 'popover') {
       this.setupAutoCloseListeners();
       if (this.opened) {
         this.popover.toggle(true);
       }
     }
+  }
+
+  disconnectedCallback() {
+    if (this.mode === 'popover') {
+      document.body.removeEventListener('click', this.autoCloseCallback);
+      this.popover.removeEventListener('click', this.stopPropagationCallback);
+    }
+  }
+
+  async getMessages() {
+    const messages = await getLocaleComponentStrings(this.el);
+    this.messages = messages[0];
   }
 
   setupAutoCloseListeners() {
@@ -89,13 +96,6 @@ export class InstantAppsSocialShare {
 
   stopPropagationCallback(event: Event) {
     event.stopPropagation();
-  }
-
-  disconnectedCallback() {
-    if (this.mode === 'popover') {
-      document.body.removeEventListener('click', this.autoCloseCallback);
-      this.popover.removeEventListener('click', this.stopPropagationCallback);
-    }
   }
 
   render() {
@@ -364,8 +364,8 @@ export class InstantAppsSocialShare {
       oid = graphic.attributes[featureLayer.objectIdField];
     }
 
-    const visibleLayers = this.view.map.allLayers
-      .filter(layer => layer.type === 'feature' && layer.visible)
+    const hiddenLayers = this.view.map.allLayers
+      .filter(layer => layer.type === 'feature' && !layer.visible)
       .toArray()
       .map(featureLayer => featureLayer.id)
       .toString()
@@ -375,9 +375,9 @@ export class InstantAppsSocialShare {
     // If no "?", then append "?". Otherwise, check for "?" and "="
     const sep = path.indexOf('?') === -1 ? '?' : path.indexOf('?') !== -1 && path.indexOf('=') !== -1 ? '&' : '';
 
-    const shareParams = `${path}${sep}center=${roundedLon};${roundedLat}&level=${roundedZoom}${layerId && graphic ? `&selectedFeature=${layerId};${oid}` : ''}${
-      visibleLayers ? `&visibleLayers=${visibleLayers}` : ''
-    }`;
+    const shareParams = `${path}${sep}center=${roundedLon};${roundedLat}&level=${roundedZoom}${
+      layerId && hiddenLayers.indexOf(layerId) === -1 && graphic ? `&selectedFeature=${layerId};${oid}` : ''
+    }${hiddenLayers ? `&hiddenLayers=${hiddenLayers}` : ''}`;
     const type = this.view.type;
     // Checks if view.type is 3D, if so add, 3D url parameters
     if (type === '3d') {
