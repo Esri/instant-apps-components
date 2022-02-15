@@ -31,10 +31,10 @@
   </head>
   <body class="calcite-theme-light">
     <instant-apps-header title-text="Instant Apps Components" logo-image="https://www.esri.com/content/dam/esrisites/en-us/common/icons/product-logos/arcgis-instant-apps-64.svg">
-      <instant-apps-social-share slot="actions-end" popover-button-color="inverse"></instant-apps-social-share>
+      <instant-apps-social-share slot="actions-end" share-button-color="inverse"></instant-apps-social-share>
     </instant-apps-header>
     <div id="viewDiv"></div>
-    <!-- <script>
+    <script>
       require(["esri/config","esri/WebMap", "esri/views/MapView", "esri/widgets/LayerList", "esri/core/watchUtils"], function (esriConfig, WebMap, MapView, LayerList, watchUtils) {
 
         const searchParams = new URL(window.location.href).searchParams;
@@ -96,6 +96,6 @@
          socialShare.view = view;
 
        });
-   </script> -->
+   </script>
   </body>
 </html>

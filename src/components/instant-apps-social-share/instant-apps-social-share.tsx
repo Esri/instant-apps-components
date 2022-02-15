@@ -58,54 +58,62 @@ const SHORTEN_API = 'https://arcg.is/prod/shorten';
   shadow: true,
 })
 export class InstantAppsSocialShare {
+  // HOST ELEMENT
   @Element() el: HTMLInstantAppsSocialShareElement;
 
-  popover: HTMLCalcitePopoverElement;
-  successPopover: HTMLCalcitePopoverElement;
-  shareButton: HTMLCalciteButtonElement;
-  embedWidthEl: HTMLInputElement | undefined;
-  embedHeightEl: HTMLInputElement | undefined;
-  embedCodeEl: HTMLTextAreaElement | undefined;
-  copyLinkPopover: HTMLCalcitePopoverElement;
-  copyEmbedPopover: HTMLCalcitePopoverElement;
-  dialogContent: HTMLDivElement | undefined;
+  // REFERENCE NODES
+  popoverRef: HTMLCalcitePopoverElement;
+  embedWidthRef: HTMLInputElement | undefined;
+  embedHeightRef: HTMLInputElement | undefined;
+  embedCodeRef: HTMLTextAreaElement | undefined;
+  copyLinkPopoverRef: HTMLCalcitePopoverElement;
+  copyEmbedPopoverRef: HTMLCalcitePopoverElement;
+  dialogContentRef: HTMLDivElement | undefined;
 
-  @Prop() shareText: string = '';
-  @Prop() view: __esri.MapView | __esri.SceneView;
+  // PUBLIC PROPERTIES
   @Prop() mode: 'popover' | 'inline' = 'popover';
-  @Prop() popoverButtonColor: 'inverse' | 'neutral' = 'neutral';
+  @Prop() shareUrl: string;
+  @Prop() shareText: string = '';
   @Prop() embed = false;
+  @Prop() shareButtonColor: 'inverse' | 'neutral' = 'neutral';
+  @Prop() view: __esri.MapView | __esri.SceneView;
+
+  // INTERNAL STATE
+  // T9N
+  @State() messages: typeof SocialShare_T9n;
+
+  // mode = 'popover'
   @State() opened = false;
+  @State() copied = false;
+
+  // mode = 'inline'
   @State() inlineCopyLinkOpened = false;
   @State() inlineCopyEmbedOpened = false;
-  @State() copied = false;
   @State() embedWidth = 400;
   @State() embedHeight = 600;
-  @State() messages: typeof SocialShare_T9n;
 
   componentDidLoad() {
     this.getMessages();
-
     this.setupAutoCloseListeners();
-    if (this.opened) {
-      this.popover.toggle(true);
+    if (this.mode === 'popover' && this.opened) {
+      this.popoverRef.toggle(true);
     }
-
     if (this.embed) {
-      this.embedWidthEl?.addEventListener('change', () => {
-        const value = this.embedWidthEl?.value as string;
-        this.embedWidth = parseInt(value);
-      });
-      this.embedHeightEl?.addEventListener('change', () => {
-        const value = this.embedHeightEl?.value as string;
-        this.embedHeight = parseInt(value);
-      });
+      this.embedWidthRef?.addEventListener('change', this.updateDimensions.bind(this, 'width'));
+      this.embedHeightRef?.addEventListener('change', this.updateDimensions.bind(this, 'height'));
     }
   }
 
   disconnectedCallback() {
-    document.body.removeEventListener('click', this.autoCloseCallback);
-    this.popover.removeEventListener('click', this.stopPropagationCallback);
+    document.documentElement.removeEventListener('click', this.autoCloseCallback.bind(this));
+    if (this.mode === 'popover') {
+      this.popoverRef.removeEventListener('click', this.stopPropagationCallback.bind(this));
+      this.popoverRef.removeEventListener('calcitePopoverClose', this.resetPopoverCopyState.bind(this));
+    } else {
+      this.embedWidthRef?.removeEventListener('change', this.updateDimensions.bind(this));
+      this.embedHeightRef?.removeEventListener('change', this.updateDimensions.bind(this));
+      this.dialogContentRef?.removeEventListener('click', this.stopPropagationCallback.bind(this));
+    }
   }
 
   async getMessages() {
@@ -116,31 +124,43 @@ export class InstantAppsSocialShare {
   setupAutoCloseListeners() {
     document.documentElement.addEventListener('click', this.autoCloseCallback.bind(this));
     if (this.mode === 'popover') {
-      this.popover?.addEventListener('click', this.stopPropagationCallback.bind(this));
-      this.popover?.addEventListener('calcitePopoverClose', () => {
-        setTimeout(() => {
-          this.copied = false;
-        }, 200);
-      });
+      this.popoverRef?.addEventListener('click', this.stopPropagationCallback.bind(this));
+      this.popoverRef?.addEventListener('calcitePopoverClose', this.resetPopoverCopyState.bind(this));
     } else {
-      this.dialogContent?.addEventListener('click', this.stopPropagationCallback.bind(this));
+      this.dialogContentRef?.addEventListener('click', this.stopPropagationCallback.bind(this));
     }
   }
 
   autoCloseCallback() {
     if (this.mode === 'popover') {
       this.opened = false;
-      this.popover?.toggle(this.opened);
+      this.popoverRef?.toggle(this.opened);
     } else {
-      this.copyLinkPopover?.toggle(false);
+      this.copyLinkPopoverRef?.toggle(false);
       this.inlineCopyLinkOpened = false;
-      this.copyEmbedPopover?.toggle(false);
+      this.copyEmbedPopoverRef?.toggle(false);
       this.inlineCopyEmbedOpened = false;
     }
   }
 
   stopPropagationCallback(event: Event) {
     event.stopPropagation();
+  }
+
+  resetPopoverCopyState() {
+    setTimeout(() => {
+      this.copied = false;
+    }, 200);
+  }
+
+  updateDimensions(type: 'width' | 'height') {
+    if (type === 'width') {
+      const value = this.embedWidthRef?.value as string;
+      this.embedWidth = parseInt(value);
+    } else {
+      const value = this.embedHeightRef?.value as string;
+      this.embedHeight = parseInt(value);
+    }
   }
 
   render() {
@@ -155,14 +175,14 @@ export class InstantAppsSocialShare {
         </div>
       );
     const dialogContent = (
-      <div ref={el => (this.dialogContent = el)} class={`${CSS.dialog}${this.mode === 'inline' ? ` ${CSS.dialogEmbed}` : ''}`}>
+      <div ref={el => (this.dialogContentRef = el)} class={`${CSS.dialog}${this.mode === 'inline' ? ` ${CSS.dialogEmbed}` : ''}`}>
         {content}
       </div>
     );
     return this.mode === 'popover'
       ? [
           <calcite-popover
-            ref={(el: HTMLCalcitePopoverElement) => (this.popover = el)}
+            ref={(el: HTMLCalcitePopoverElement) => (this.popoverRef = el)}
             label={this.messages?.share?.label}
             reference-element="shareButton"
             placement="bottom-start"
@@ -172,7 +192,7 @@ export class InstantAppsSocialShare {
           <calcite-button
             onClick={this.togglePopover.bind(this)}
             id="shareButton"
-            color={this.popoverButtonColor}
+            color={this.shareButtonColor}
             appearance="transparent"
             label={this.messages?.share?.label}
             title={this.messages?.share?.label}
@@ -183,7 +203,7 @@ export class InstantAppsSocialShare {
       : [
           dialogContent,
           <calcite-popover
-            ref={(el: HTMLCalcitePopoverElement) => (this.copyLinkPopover = el)}
+            ref={(el: HTMLCalcitePopoverElement) => (this.copyLinkPopoverRef = el)}
             label={this.messages?.share?.label}
             reference-element="copyToClipboard"
             placement="trailing"
@@ -191,7 +211,7 @@ export class InstantAppsSocialShare {
             {this.renderSuccess()}
           </calcite-popover>,
           <calcite-popover
-            ref={(el: HTMLCalcitePopoverElement) => (this.copyEmbedPopover = el)}
+            ref={(el: HTMLCalcitePopoverElement) => (this.copyEmbedPopoverRef = el)}
             label={this.messages?.share?.label}
             reference-element="copyEmbedToClipboard"
             placement="trailing"
@@ -357,7 +377,7 @@ export class InstantAppsSocialShare {
         </span>
         <div class={CSS.embed.embedCode.container}>
           <div class={CSS.embed.embedCode.textArea}>
-            <textarea ref={el => (this.embedCodeEl = el)} cols={30} rows={7} readonly value={this.getEmbedCode()} />
+            <textarea ref={el => (this.embedCodeRef = el)} cols={30} rows={7} readonly value={this.getEmbedCode()} />
             <button id="copyEmbedToClipboard" onClick={this.copyEmbedCode.bind(this)} class={CSS.embed.embedCode.copyButton}>
               <calcite-icon icon="copy" scale="s" />
               <span>{embedMessages?.copy}</span>
@@ -366,11 +386,11 @@ export class InstantAppsSocialShare {
           <div class={CSS.embed.dimensions.container}>
             <label class={CSS.embed.dimensions.input}>
               <span>{embedMessages?.width}</span>
-              <input ref={el => (this.embedWidthEl = el)} type="number" value={this.embedWidth} />
+              <input ref={el => (this.embedWidthRef = el)} type="number" value={this.embedWidth} />
             </label>
             <label class={CSS.embed.dimensions.input}>
               <span>{embedMessages?.height}</span>
-              <input ref={el => (this.embedHeightEl = el)} type="number" value={this.embedHeight} />
+              <input ref={el => (this.embedHeightRef = el)} type="number" value={this.embedHeight} />
             </label>
           </div>
         </div>
@@ -381,24 +401,24 @@ export class InstantAppsSocialShare {
   togglePopover(event: Event) {
     event.stopPropagation();
     this.opened = !this.opened;
-    this.popover.toggle(this.opened);
+    this.popoverRef.toggle(this.opened);
   }
 
   closePopover() {
     this.opened = false;
-    this.popover.toggle(this.opened);
+    this.popoverRef.toggle(this.opened);
   }
 
   async handleShareItem(type: 'link' | 'facebook' | 'twitter' | 'linkedIn') {
-    const shareUrl = await this.generateShareUrl();
-    const shortenedUrl = await this.shortenUrl(shareUrl);
+    this.shareUrl = await this.generateShareUrl();
+    const shortenedUrl = await this.shortenUrl(this.shareUrl);
     switch (type) {
       case 'link':
         navigator.clipboard.writeText(shortenedUrl);
         if (this.embed) {
-          this.copyLinkPopover.toggle(true);
+          this.copyLinkPopoverRef.toggle(true);
           this.inlineCopyLinkOpened = true;
-          this.copyEmbedPopover.toggle(false);
+          this.copyEmbedPopoverRef.toggle(false);
           this.inlineCopyEmbedOpened = false;
         }
         this.copied = true;
@@ -419,14 +439,6 @@ export class InstantAppsSocialShare {
     }
   }
 
-  copyEmbedCode() {
-    navigator.clipboard.writeText(this.getEmbedCode());
-    this.copyLinkPopover.toggle(false);
-    this.inlineCopyLinkOpened = false;
-    this.copyEmbedPopover.toggle(true);
-    this.inlineCopyEmbedOpened = true;
-  }
-
   async shortenUrl(url: string) {
     const request = await esriRequest(SHORTEN_API, {
       query: {
@@ -439,6 +451,18 @@ export class InstantAppsSocialShare {
     if (shortUrl) {
       return shortUrl.replace('http://', 'https://');
     }
+  }
+
+  getEmbedCode(): string {
+    return `<iframe src="${this.shareUrl}" width="${this.embedWidth}" height="${this.embedHeight}" frameborder="0" style="border:0" allowfullscreen></iframe>`;
+  }
+
+  copyEmbedCode() {
+    navigator.clipboard.writeText(this.getEmbedCode());
+    this.copyLinkPopoverRef.toggle(false);
+    this.inlineCopyLinkOpened = false;
+    this.copyEmbedPopoverRef.toggle(true);
+    this.inlineCopyEmbedOpened = true;
   }
 
   // VIEW LOGIC
@@ -526,9 +550,5 @@ export class InstantAppsSocialShare {
 
   roundValue(val: number): number {
     return parseFloat(val.toFixed(4));
-  }
-
-  getEmbedCode(): string {
-    return `<iframe src="${window.location.href}" width="${this.embedWidth}" height="${this.embedHeight}" frameborder="0" style="border:0" allowfullscreen></iframe>`;
   }
 }

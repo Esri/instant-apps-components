@@ -18,8 +18,9 @@ export namespace Components {
     interface InstantAppsSocialShare {
         "embed": boolean;
         "mode": 'popover' | 'inline';
-        "popoverButtonColor": 'inverse' | 'neutral';
+        "shareButtonColor": 'inverse' | 'neutral';
         "shareText": string;
+        "shareUrl": string;
         "view": __esri.MapView | __esri.SceneView;
     }
 }
@@ -54,8 +55,9 @@ declare namespace LocalJSX {
     interface InstantAppsSocialShare {
         "embed"?: boolean;
         "mode"?: 'popover' | 'inline';
-        "popoverButtonColor"?: 'inverse' | 'neutral';
+        "shareButtonColor"?: 'inverse' | 'neutral';
         "shareText"?: string;
+        "shareUrl"?: string;
         "view"?: __esri.MapView | __esri.SceneView;
     }
     interface IntrinsicElements {
