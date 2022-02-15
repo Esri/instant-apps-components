@@ -31,7 +31,12 @@
   </head>
   <body class="calcite-theme-light">
     <instant-apps-header title-text="Instant Apps Components" logo-image="https://www.esri.com/content/dam/esrisites/en-us/common/icons/product-logos/arcgis-instant-apps-64.svg">
-      <instant-apps-social-share slot="actions-end" share-button-color="inverse"></instant-apps-social-share>
+      <!-- <instant-apps-social-share slot="actions-end" share-button-color="inverse" 
+     ></instant-apps-social-share> -->
+     <!-- <instant-apps-social-share slot="actions-end" share-button-color="inverse" 
+     share-url="https://holistic.mapsdevext.arcgis.com/?appid=962ed75b7ee34af98813e13a682710b0"></instant-apps-social-share> -->
+      <!-- <instant-apps-social-share slot="actions-end" share-button-color="inverse" 
+      query-string="attachmentIndex=0&featureObjectId=542"></instant-apps-social-share> -->
     </instant-apps-header>
     <div id="viewDiv"></div>
     <script>
@@ -92,9 +97,8 @@
 
          view.ui.add(layerList, "bottom-right");
 
-         const socialShare = document.querySelector("instant-apps-social-share");
-         socialShare.view = view;
-
+        //  const socialShare = document.querySelector("instant-apps-social-share");
+        //  socialShare.view = view;
        });
    </script>
   </body>

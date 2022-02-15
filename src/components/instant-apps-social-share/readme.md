@@ -7,13 +7,15 @@
 
 ## Properties
 
-| Property             | Attribute              | Description | Type                     | Default     |
-| -------------------- | ---------------------- | ----------- | ------------------------ | ----------- |
-| `embed`              | `embed`                |             | `boolean`                | `false`     |
-| `mode`               | `mode`                 |             | `"inline" \| "popover"`  | `'popover'` |
-| `popoverButtonColor` | `popover-button-color` |             | `"inverse" \| "neutral"` | `'neutral'` |
-| `shareText`          | `share-text`           |             | `string`                 | `''`        |
-| `view`               | --                     |             | `MapView \| SceneView`   | `undefined` |
+| Property           | Attribute            | Description | Type                     | Default                |
+| ------------------ | -------------------- | ----------- | ------------------------ | ---------------------- |
+| `embed`            | `embed`              |             | `boolean`                | `false`                |
+| `mode`             | `mode`               |             | `"inline" \| "popover"`  | `'popover'`            |
+| `queryString`      | `query-string`       |             | `string`                 | `undefined`            |
+| `shareButtonColor` | `share-button-color` |             | `"inverse" \| "neutral"` | `'neutral'`            |
+| `shareText`        | `share-text`         |             | `string`                 | `''`                   |
+| `shareUrl`         | `share-url`          |             | `string`                 | `window.location.href` |
+| `view`             | --                   |             | `MapView \| SceneView`   | `undefined`            |
 
 
 ----------------------------------------------

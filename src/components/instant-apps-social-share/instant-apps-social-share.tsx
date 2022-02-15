@@ -71,11 +71,33 @@ export class InstantAppsSocialShare {
   dialogContentRef: HTMLDivElement | undefined;
 
   // PUBLIC PROPERTIES
-  @Prop() mode: 'popover' | 'inline' = 'popover';
-  @Prop() shareUrl: string;
-  @Prop() shareText: string = '';
-  @Prop() embed = false;
-  @Prop() shareButtonColor: 'inverse' | 'neutral' = 'neutral';
+  @Prop({
+    reflect: true,
+  })
+  mode: 'popover' | 'inline' = 'popover';
+
+  @Prop({
+    mutable: true,
+  })
+  shareUrl: string = window.location.href;
+
+  @Prop({
+    reflect: true,
+  })
+  shareText: string = '';
+
+  @Prop({ reflect: true }) embed = false;
+
+  @Prop({
+    reflect: true,
+  })
+  shareButtonColor: 'inverse' | 'neutral' = 'neutral';
+
+  @Prop({
+    reflect: true,
+  })
+  queryString: string;
+
   @Prop() view: __esri.MapView | __esri.SceneView;
 
   // INTERNAL STATE
@@ -467,10 +489,16 @@ export class InstantAppsSocialShare {
 
   // VIEW LOGIC
   async generateShareUrl(): Promise<string> {
-    const { href } = window.location;
     // If view is not ready
-    if (!this.view?.ready) {
-      return href;
+    if (!this.view || !this.view?.ready) {
+      if (this.queryString) {
+        const path = this.shareUrl.split('center')[0];
+        // If no "?", then append "?". Otherwise, check for "?" and "="
+        const sep = path.indexOf('?') === -1 ? '?' : path.indexOf('?') !== -1 && path.indexOf('=') !== -1 ? '&' : '';
+        return `${this.shareUrl}${sep}${this.queryString}`;
+      } else {
+        return this.shareUrl;
+      }
     }
     // Use x/y values and the spatial reference of the view to instantiate a geometry point
     const { x, y } = this.view.center;
@@ -501,10 +529,9 @@ export class InstantAppsSocialShare {
   }
 
   generateShareUrlParams(point: Point): string {
-    const { href } = window.location;
     const { longitude, latitude } = point;
     if (longitude === undefined || latitude === undefined) {
-      return href;
+      return this.shareUrl;
     }
     const roundedLon = this.roundValue(longitude);
     const roundedLat = this.roundValue(latitude);
@@ -526,13 +553,13 @@ export class InstantAppsSocialShare {
       .toString()
       .replace(',', ';');
 
-    const path = href.split('center')[0];
+    const path = this.shareUrl.split('center')[0];
     // If no "?", then append "?". Otherwise, check for "?" and "="
     const sep = path.indexOf('?') === -1 ? '?' : path.indexOf('?') !== -1 && path.indexOf('=') !== -1 ? '&' : '';
 
     const shareParams = `${path}${sep}center=${roundedLon};${roundedLat}&level=${roundedZoom}${
       layerId && hiddenLayers.indexOf(layerId) === -1 && graphic ? `&selectedFeature=${layerId};${oid}` : ''
-    }${hiddenLayers ? `&hiddenLayers=${hiddenLayers}` : ''}`;
+    }${hiddenLayers ? `&hiddenLayers=${hiddenLayers}` : ''}${this.queryString ? (sep === '?' ? `&${this.queryString}` : `?${this.queryString}`) : ''}`;
     const type = this.view.type;
     // Checks if view.type is 3D, if so add, 3D url parameters
     if (type === '3d') {
