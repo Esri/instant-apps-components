@@ -9,6 +9,7 @@
 
 | Property             | Attribute              | Description | Type                     | Default     |
 | -------------------- | ---------------------- | ----------- | ------------------------ | ----------- |
+| `embed`              | `embed`                |             | `boolean`                | `false`     |
 | `mode`               | `mode`                 |             | `"inline" \| "popover"`  | `'popover'` |
 | `popoverButtonColor` | `popover-button-color` |             | `"inverse" \| "neutral"` | `'neutral'` |
 | `shareText`          | `share-text`           |             | `string`                 | `''`        |
