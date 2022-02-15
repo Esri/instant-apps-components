@@ -16,6 +16,7 @@ export namespace Components {
         "titleText": string;
     }
     interface InstantAppsSocialShare {
+        "embed": boolean;
         "mode": 'popover' | 'inline';
         "popoverButtonColor": 'inverse' | 'neutral';
         "shareText": string;
@@ -51,6 +52,7 @@ declare namespace LocalJSX {
         "titleText"?: string;
     }
     interface InstantAppsSocialShare {
+        "embed"?: boolean;
         "mode"?: 'popover' | 'inline';
         "popoverButtonColor"?: 'inverse' | 'neutral';
         "shareText"?: string;

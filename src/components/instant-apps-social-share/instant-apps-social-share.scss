@@ -1,4 +1,5 @@
 $calciteBlue: #007ac2;
+$border: #d3d3d3;
 $hoverLight: #f3f3f3;
 $hoverDark: #262626;
 
@@ -11,6 +12,11 @@ $hoverDark: #262626;
       width: 280px;
       height: auto;
       margin: 10px 0;
+      border-radius: 5px;
+    }
+
+    &__dialog-embed {
+      border: 1px solid $border;
     }
 
     &__options {
@@ -83,13 +89,13 @@ $hoverDark: #262626;
     &__success {
       display: flex;
       flex-direction: column;
-      padding: 0 20px;
+      padding: 15px;
 
       &-header {
         display: flex;
         align-items: center;
         font-weight: bold;
-        line-height: 40px;
+        margin-bottom: 10px;
       }
       &-icon {
         display: flex;
@@ -103,6 +109,79 @@ $hoverDark: #262626;
       &-message {
         font-size: 15px;
         line-height: 16px;
+      }
+    }
+
+    &__embed {
+      box-sizing: border-box;
+      width: 100%;
+      padding: 5%;
+      margin-bottom: 10px;
+      border-top: 1px solid $border;
+      &-header {
+        display: flex;
+        align-items: center;
+        margin-bottom: 5px;
+        calcite-icon {
+          margin-right: 5px;
+        }
+      }
+
+      &-code {
+        &-text-area {
+          border: 1px solid $border;
+          margin-bottom: 10px;
+          textarea {
+            box-sizing: border-box;
+            padding: 4%;
+            border: none;
+            resize: none;
+            background: transparent;
+            width: 100%;
+            font-family: var(--calcite-sans-family);
+            font-size: 14px;
+          }
+          button {
+            display: flex;
+            align-items: center;
+            text-align: start;
+            width: 100%;
+            border: none;
+            border-top: 1px solid $border;
+            background-color: transparent;
+            line-height: 16px;
+            font-size: 16px;
+            font-weight: 400;
+            padding: 3%;
+
+            calcite-icon {
+              color: $calciteBlue;
+              margin-right: 3px;
+            }
+          }
+
+          button:hover {
+            cursor: pointer;
+            background-color: $hoverLight;
+            transition: background-color 0.15s ease-out 0s;
+          }
+        }
+      }
+
+      &-dimensions {
+        display: flex;
+        justify-content: space-between;
+        &-input {
+          width: 47%;
+          box-sizing: border-box;
+          input {
+            border: 1px solid $border;
+            width: 100%;
+            height: 25px;
+            font-family: var(--calcite-sans-family);
+            font-size: 14px;
+          }
+        }
       }
     }
   }
