@@ -1,0 +1,38 @@
+{
+  "share": {
+    "label": "Į_Share___________š"
+  },
+  "embed": {
+    "label": "Į_Embed___________š",
+    "copy": "Į_Copy_________š",
+    "width": "Į_Width___________š",
+    "height": "Į_Height_____________š"
+  },
+  "info": {
+    "label": "Į_Did you know______________š?",
+    "tooltip": "Į_Copy link will preserve the current map view, visible layers, and open popups. Use this option to share what you see in the app_________________________________________________________________š."
+  },
+  "success": {
+    "label": "Į_Success_________________š!",
+    "url": "Į_App URL copied to clipboard_____________________________š.",
+    "embed": "Į_Embed code copied to clipboard_________________š."
+  },
+  "options": {
+    "link": {
+      "label": "Į_Copy Link___________________š",
+      "tooltip": "Į_Click to copy link to clipboard_________________š"
+    },
+    "facebook": {
+      "label": "Į_Facebook_________________š",
+      "tooltip": "Į_Click to share to your Facebook account_____________________š"
+    },
+    "twitter": {
+      "label": "Į_Twitter_______________š",
+      "tooltip": "Į_Click to share to your Twitter account____________________š"
+    },
+    "linkedIn": {
+      "label": "Į_LinkedIn_________________š",
+      "tooltip": "Į_Click to share to your LinkedIn account_____________________š"
+    }
+  }
+}

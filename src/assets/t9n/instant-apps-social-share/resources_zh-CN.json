@@ -1,0 +1,38 @@
+{
+  "share": {
+    "label": "试_Share___________验"
+  },
+  "embed": {
+    "label": "试_Embed___________验",
+    "copy": "试_Copy_________验",
+    "width": "试_Width___________验",
+    "height": "试_Height_____________验"
+  },
+  "info": {
+    "label": "试_Did you know______________验?",
+    "tooltip": "试_Copy link will preserve the current map view, visible layers, and open popups. Use this option to share what you see in the app_________________________________________________________________验."
+  },
+  "success": {
+    "label": "试_Success_________________验!",
+    "url": "试_App URL copied to clipboard_____________________________验.",
+    "embed": "试_Embed code copied to clipboard_________________验."
+  },
+  "options": {
+    "link": {
+      "label": "试_Copy Link___________________验",
+      "tooltip": "试_Click to copy link to clipboard_________________验"
+    },
+    "facebook": {
+      "label": "试_Facebook_________________验",
+      "tooltip": "试_Click to share to your Facebook account_____________________验"
+    },
+    "twitter": {
+      "label": "试_Twitter_______________验",
+      "tooltip": "试_Click to share to your Twitter account____________________验"
+    },
+    "linkedIn": {
+      "label": "试_LinkedIn_________________验",
+      "tooltip": "试_Click to share to your LinkedIn account_____________________验"
+    }
+  }
+}

@@ -7,6 +7,12 @@ export const config: Config = {
   outputTargets: [
     {
       type: 'dist',
+      copy: [
+        {
+          src: 'assets/t9n',
+          dest: '../assets/t9n',
+        },
+      ],
       esmLoaderPath: '../loader',
     },
     {
