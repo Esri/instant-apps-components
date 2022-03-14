@@ -19,18 +19,21 @@ $hoverDark: #262626;
 
 :host {
   display: block;
-
+  --instant-apps-social-share-width: 280px;
+  --instant-apps-social-share-background-color: transparent;
+  --instant-apps-social-share-embed-border: 1px solid $border;
   .instant-apps-social-share {
+    background-color: var(--instant-apps-social-share-background-color);
     &__dialog {
       box-sizing: border-box;
-      width: 280px;
+      width: var(--instant-apps-social-share-width);
       height: auto;
       margin: 10px 0;
       border-radius: 5px;
     }
 
     &__dialog-embed {
-      border: 1px solid $border;
+      border: var(--instant-apps-social-share-embed-border);
     }
 
     &__options {
