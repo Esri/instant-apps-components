@@ -1346,7 +1346,7 @@ let InstantAppsSocialShare$1 = class extends HTMLElement {
     const path = this.shareUrl.split('center')[0];
     const sep = path.indexOf('?') === -1 ? '?' : path.indexOf('?') !== -1 && path.indexOf('=') !== -1 ? (path.indexOf('&') === -1 ? '&' : '') : '';
     console.log("SEP: ", sep);
-    const shareParams = `${path}${sep}center=${roundedLon};${roundedLat}&level=${roundedZoom}${layerId && hiddenLayers.indexOf(layerId) === -1 && graphic ? `&selectedFeature=${layerId};${oid}` : ''}${hiddenLayers ? `&hiddenLayers=${hiddenLayers}` : ''}${this.queryString ? (sep === '?' ? `&${this.queryString}` : `?${this.queryString}`) : ''}`;
+    const shareParams = `${path}${sep}center=${roundedLon};${roundedLat}&level=${roundedZoom}${layerId && hiddenLayers.indexOf(layerId) === -1 && graphic ? `&selectedFeature=${layerId};${oid}` : ''}${hiddenLayers ? `&hiddenLayers=${hiddenLayers}` : ''}${this.queryString ? `&${this.queryString}` : ''}`;
     const type = this.view.type;
     // Checks if view.type is 3D, if so add, 3D url parameters
     if (type === '3d') {

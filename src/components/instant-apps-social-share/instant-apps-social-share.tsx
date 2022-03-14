@@ -574,7 +574,7 @@ export class InstantAppsSocialShare {
     console.log("SEP: ", sep);
     const shareParams = `${path}${sep}center=${roundedLon};${roundedLat}&level=${roundedZoom}${
       layerId && hiddenLayers.indexOf(layerId) === -1 && graphic ? `&selectedFeature=${layerId};${oid}` : ''
-    }${hiddenLayers ? `&hiddenLayers=${hiddenLayers}` : ''}${this.queryString ? (sep === '?' ? `&${this.queryString}` : `?${this.queryString}`) : ''}`;
+    }${hiddenLayers ? `&hiddenLayers=${hiddenLayers}` : ''}${this.queryString ? `&${this.queryString}` : ''}`;
     const type = this.view.type;
     // Checks if view.type is 3D, if so add, 3D url parameters
     if (type === '3d') {
