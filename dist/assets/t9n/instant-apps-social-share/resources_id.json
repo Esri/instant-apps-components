@@ -1,0 +1,38 @@
+{
+  "share": {
+    "label": "ng_Share___________ny"
+  },
+  "embed": {
+    "label": "ng_Embed___________ny",
+    "copy": "ng_Copy_________ny",
+    "width": "ng_Width___________ny",
+    "height": "ng_Height_____________ny"
+  },
+  "info": {
+    "label": "ng_Did you know______________ny?",
+    "tooltip": "ng_Copy link will preserve the current map view, visible layers, and open popups. Use this option to share what you see in the app_________________________________________________________________ny."
+  },
+  "success": {
+    "label": "ng_Success_________________ny!",
+    "url": "ng_App URL copied to clipboard_____________________________ny.",
+    "embed": "ng_Embed code copied to clipboard_________________ny."
+  },
+  "options": {
+    "link": {
+      "label": "ng_Copy Link___________________ny",
+      "tooltip": "ng_Click to copy link to clipboard_________________ny"
+    },
+    "facebook": {
+      "label": "ng_Facebook_________________ny",
+      "tooltip": "ng_Click to share to your Facebook account_____________________ny"
+    },
+    "twitter": {
+      "label": "ng_Twitter_______________ny",
+      "tooltip": "ng_Click to share to your Twitter account____________________ny"
+    },
+    "linkedIn": {
+      "label": "ng_LinkedIn_________________ny",
+      "tooltip": "ng_Click to share to your LinkedIn account_____________________ny"
+    }
+  }
+}

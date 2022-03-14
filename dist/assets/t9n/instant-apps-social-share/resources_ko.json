@@ -1,0 +1,38 @@
+{
+  "share": {
+    "label": "한_Share___________빠"
+  },
+  "embed": {
+    "label": "한_Embed___________빠",
+    "copy": "한_Copy_________빠",
+    "width": "한_Width___________빠",
+    "height": "한_Height_____________빠"
+  },
+  "info": {
+    "label": "한_Did you know______________빠?",
+    "tooltip": "한_Copy link will preserve the current map view, visible layers, and open popups. Use this option to share what you see in the app_________________________________________________________________빠."
+  },
+  "success": {
+    "label": "한_Success_________________빠!",
+    "url": "한_App URL copied to clipboard_____________________________빠.",
+    "embed": "한_Embed code copied to clipboard_________________빠."
+  },
+  "options": {
+    "link": {
+      "label": "한_Copy Link___________________빠",
+      "tooltip": "한_Click to copy link to clipboard_________________빠"
+    },
+    "facebook": {
+      "label": "한_Facebook_________________빠",
+      "tooltip": "한_Click to share to your Facebook account_____________________빠"
+    },
+    "twitter": {
+      "label": "한_Twitter_______________빠",
+      "tooltip": "한_Click to share to your Twitter account____________________빠"
+    },
+    "linkedIn": {
+      "label": "한_LinkedIn_________________빠",
+      "tooltip": "한_Click to share to your LinkedIn account_____________________빠"
+    }
+  }
+}
