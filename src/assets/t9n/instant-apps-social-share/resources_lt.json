@@ -1,38 +1,38 @@
 {
   "share": {
-    "label": "Į_Share___________š"
+    "label": "Bendrinti"
   },
   "embed": {
-    "label": "Į_Embed___________š",
-    "copy": "Į_Copy_________š",
-    "width": "Į_Width___________š",
-    "height": "Į_Height_____________š"
+    "label": "Įterpti",
+    "copy": "Kopijuoti",
+    "width": "Plotis",
+    "height": "Aukštis"
   },
   "info": {
-    "label": "Į_Did you know______________š?",
-    "tooltip": "Į_Copy link will preserve the current map view, visible layers, and open popups. Use this option to share what you see in the app_________________________________________________________________š."
+    "label": "Ar žinojote?",
+    "tooltip": "Parinktis „Kopijuoti nuorodą“ išlaikys esamą žemėlapio peržiūrą, matomus sluoksnius ir atidarytus iškylančius langus. Naudokite šią parinktį norėdami bendrinti tai, ką matote programoje."
   },
   "success": {
-    "label": "Į_Success_________________š!",
-    "url": "Į_App URL copied to clipboard_____________________________š.",
-    "embed": "Į_Embed code copied to clipboard_________________š."
+    "label": "Pavyko!",
+    "url": "Programos URL nukopijuotas į iškarpinę.",
+    "embed": "Įdėtasis kodas nukopijuotas į iškarpinę."
   },
   "options": {
     "link": {
-      "label": "Į_Copy Link___________________š",
-      "tooltip": "Į_Click to copy link to clipboard_________________š"
+      "label": "Kopijuoti nuorodą",
+      "tooltip": "Spustelėkite, jei norite nukopijuoti nuorodą į iškarpinę"
     },
     "facebook": {
-      "label": "Į_Facebook_________________š",
-      "tooltip": "Į_Click to share to your Facebook account_____________________š"
+      "label": "„Facebook“",
+      "tooltip": "Spustelėkite, jei norite bendrinti savo Facebook paskyroje"
     },
     "twitter": {
-      "label": "Į_Twitter_______________š",
-      "tooltip": "Į_Click to share to your Twitter account____________________š"
+      "label": "Twitter",
+      "tooltip": "Spustelėkite, jei norite bendrinti savo Twitter paskyroje"
     },
     "linkedIn": {
-      "label": "Į_LinkedIn_________________š",
-      "tooltip": "Į_Click to share to your LinkedIn account_____________________š"
+      "label": "LinkedIn",
+      "tooltip": "Spustelėkite, jei norite bendrinti savo LinkedIn paskyroje"
     }
   }
 }

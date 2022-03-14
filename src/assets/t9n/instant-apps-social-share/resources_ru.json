@@ -1,38 +1,38 @@
 {
   "share": {
-    "label": "Ж_Share___________Я"
+    "label": "Общий доступ"
   },
   "embed": {
-    "label": "Ж_Embed___________Я",
-    "copy": "Ж_Copy_________Я",
-    "width": "Ж_Width___________Я",
-    "height": "Ж_Height_____________Я"
+    "label": "Встроить",
+    "copy": "Копировать",
+    "width": "Ширина",
+    "height": "Высота"
   },
   "info": {
-    "label": "Ж_Did you know______________Я?",
-    "tooltip": "Ж_Copy link will preserve the current map view, visible layers, and open popups. Use this option to share what you see in the app_________________________________________________________________Я."
+    "label": "Знаете ли вы?",
+    "tooltip": "Скопированная ссылка сохранит текущий вид карты, видимые слои и открытые всплывающие окна. Используйте эту опцию, чтобы поделиться тем, что вы видите в приложении."
   },
   "success": {
-    "label": "Ж_Success_________________Я!",
-    "url": "Ж_App URL copied to clipboard_____________________________Я.",
-    "embed": "Ж_Embed code copied to clipboard_________________Я."
+    "label": "Успешно!",
+    "url": "URL-адрес приложения был скопирован в буфер обмена.",
+    "embed": "Код для встраивания скопирован в буфер обмена."
   },
   "options": {
     "link": {
-      "label": "Ж_Copy Link___________________Я",
-      "tooltip": "Ж_Click to copy link to clipboard_________________Я"
+      "label": "Копировать ссылку",
+      "tooltip": "Щелкните, чтобы копировать ссылку в буфер обмена"
     },
     "facebook": {
-      "label": "Ж_Facebook_________________Я",
-      "tooltip": "Ж_Click to share to your Facebook account_____________________Я"
+      "label": "Facebook",
+      "tooltip": "Щелкните, чтобы опубликовать в вашей учетной записи в Facebook"
     },
     "twitter": {
-      "label": "Ж_Twitter_______________Я",
-      "tooltip": "Ж_Click to share to your Twitter account____________________Я"
+      "label": "Twitter",
+      "tooltip": "Щелкните, чтобы опубликовать в вашей учетной записи в Twitter"
     },
     "linkedIn": {
-      "label": "Ж_LinkedIn_________________Я",
-      "tooltip": "Ж_Click to share to your LinkedIn account_____________________Я"
+      "label": "LinkedIn",
+      "tooltip": "Щелкните, чтобы опубликовать в вашей учетной записи в LinkedIn"
     }
   }
 }

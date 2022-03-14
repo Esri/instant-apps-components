@@ -1,38 +1,38 @@
 {
   "share": {
-    "label": "Č_Share___________ž"
+    "label": "Podijeli"
   },
   "embed": {
-    "label": "Č_Embed___________ž",
-    "copy": "Č_Copy_________ž",
-    "width": "Č_Width___________ž",
-    "height": "Č_Height_____________ž"
+    "label": "Umetni",
+    "copy": "Kopiraj",
+    "width": "Širina",
+    "height": "Visina"
   },
   "info": {
-    "label": "Č_Did you know______________ž?",
-    "tooltip": "Č_Copy link will preserve the current map view, visible layers, and open popups. Use this option to share what you see in the app_________________________________________________________________ž."
+    "label": "Jeste li znali?",
+    "tooltip": "Kopiraj poveznicu sačuvat će trenutni prikaz karte, vidljive slojeve i otvorene skočne prozore. Koristite ovu opciju da podijelite ono što vidite u aplikaciji."
   },
   "success": {
-    "label": "Č_Success_________________ž!",
-    "url": "Č_App URL copied to clipboard_____________________________ž.",
-    "embed": "Č_Embed code copied to clipboard_________________ž."
+    "label": "Uspjeh!",
+    "url": "URL aplikacije kopiran u međuspremnik.",
+    "embed": "Kod za umetanje kopiran u međuspremnik."
   },
   "options": {
     "link": {
-      "label": "Č_Copy Link___________________ž",
-      "tooltip": "Č_Click to copy link to clipboard_________________ž"
+      "label": "Kopiraj poveznicu",
+      "tooltip": "Kliknite za kopiranje poveznice u međuspremnik"
     },
     "facebook": {
-      "label": "Č_Facebook_________________ž",
-      "tooltip": "Č_Click to share to your Facebook account_____________________ž"
+      "label": "Facebook",
+      "tooltip": "Kliknite za dijeljenje na svom Facebook računu"
     },
     "twitter": {
-      "label": "Č_Twitter_______________ž",
-      "tooltip": "Č_Click to share to your Twitter account____________________ž"
+      "label": "Twitter",
+      "tooltip": "Kliknite za dijeljenje na svom Twitter računu"
     },
     "linkedIn": {
-      "label": "Č_LinkedIn_________________ž",
-      "tooltip": "Č_Click to share to your LinkedIn account_____________________ž"
+      "label": "LinkedIn",
+      "tooltip": "Kliknite za dijeljenje na svom LinkedIn računu"
     }
   }
 }

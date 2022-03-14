@@ -1,38 +1,38 @@
 {
   "share": {
-    "label": "试_Share___________验"
+    "label": "共享"
   },
   "embed": {
-    "label": "试_Embed___________验",
-    "copy": "试_Copy_________验",
-    "width": "试_Width___________验",
-    "height": "试_Height_____________验"
+    "label": "嵌入",
+    "copy": "复制",
+    "width": "宽度",
+    "height": "高度"
   },
   "info": {
-    "label": "试_Did you know______________验?",
-    "tooltip": "试_Copy link will preserve the current map view, visible layers, and open popups. Use this option to share what you see in the app_________________________________________________________________验."
+    "label": "您知道吗?",
+    "tooltip": "复制链接将保留当前地图视图、可见图层和打开的弹出窗口。 使用此选项共享您在应用程序中查看的内容。"
   },
   "success": {
-    "label": "试_Success_________________验!",
-    "url": "试_App URL copied to clipboard_____________________________验.",
-    "embed": "试_Embed code copied to clipboard_________________验."
+    "label": "成功!",
+    "url": "已将应用程序 URL 复制到剪贴板。",
+    "embed": "已将嵌入代码复制到剪贴板。"
   },
   "options": {
     "link": {
-      "label": "试_Copy Link___________________验",
-      "tooltip": "试_Click to copy link to clipboard_________________验"
+      "label": "复制链接",
+      "tooltip": "单击将链接复制到剪贴板"
     },
     "facebook": {
-      "label": "试_Facebook_________________验",
-      "tooltip": "试_Click to share to your Facebook account_____________________验"
+      "label": "Facebook",
+      "tooltip": "单击共享至您的 Facebook 帐户"
     },
     "twitter": {
-      "label": "试_Twitter_______________验",
-      "tooltip": "试_Click to share to your Twitter account____________________验"
+      "label": "Twitter",
+      "tooltip": "单击共享至您的 Twitter 帐户"
     },
     "linkedIn": {
-      "label": "试_LinkedIn_________________验",
-      "tooltip": "试_Click to share to your LinkedIn account_____________________验"
+      "label": "LinkedIn",
+      "tooltip": "单击共享至您的 LinkedIn 帐户"
     }
   }
 }
