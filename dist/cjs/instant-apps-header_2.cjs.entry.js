@@ -2,7 +2,7 @@
 
 Object.defineProperty(exports, '__esModule', { value: true });
 
-const instantAppsHeader_instantAppsSocialShare_entry = require('./instant-apps-header.instant-apps-social-share-9d5909ed.js');
+const instantAppsHeader_instantAppsSocialShare_entry = require('./instant-apps-header.instant-apps-social-share-448d3b67.js');
 require('./index-4b3cfad4.js');
 
 

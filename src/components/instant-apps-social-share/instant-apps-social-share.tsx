@@ -509,7 +509,6 @@ export class InstantAppsSocialShare {
         const path = this.shareUrl.split('center')[0];
         // If no "?", then append "?". Otherwise, check for "?" and "="
         const sep = path.indexOf('?') === -1 ? '?' : path.indexOf('?') !== -1 && path.indexOf('=') !== -1 ? (path.indexOf('&') === -1 ? '&' : '') : '';
-        console.log("SEP: ", sep);
         return `${this.shareUrl}${sep}${this.queryString}`;
       } else {
         return this.shareUrl;
@@ -571,7 +570,6 @@ export class InstantAppsSocialShare {
     const path = this.shareUrl.split('center')[0];
 
     const sep = path.indexOf('?') === -1 ? '?' : path.indexOf('?') !== -1 && path.indexOf('=') !== -1 ? (path.indexOf('&') === -1 ? '&' : '') : '';
-    console.log("SEP: ", sep);
     const shareParams = `${path}${sep}center=${roundedLon};${roundedLat}&level=${roundedZoom}${
       layerId && hiddenLayers.indexOf(layerId) === -1 && graphic ? `&selectedFeature=${layerId};${oid}` : ''
     }${hiddenLayers ? `&hiddenLayers=${hiddenLayers}` : ''}${this.queryString ? `&${this.queryString}` : ''}`;
