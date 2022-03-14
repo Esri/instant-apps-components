@@ -1,38 +1,38 @@
 {
   "share": {
-    "label": "Å_Share___________ö"
+    "label": "Jaa"
   },
   "embed": {
-    "label": "Å_Embed___________ö",
-    "copy": "Å_Copy_________ö",
-    "width": "Å_Width___________ö",
-    "height": "Å_Height_____________ö"
+    "label": "Upota",
+    "copy": "Kopioi",
+    "width": "Leveys",
+    "height": "Korkeus"
   },
   "info": {
-    "label": "Å_Did you know______________ö?",
-    "tooltip": "Å_Copy link will preserve the current map view, visible layers, and open popups. Use this option to share what you see in the app_________________________________________________________________ö."
+    "label": "Tiesitkö?",
+    "tooltip": "Kopioi linkki -toiminto säilyttää nykyisen karttanäkymän, näkyvät karttatasot ja avoimet ponnahdusikkunat. Tällä toiminnolla voit jakaa sovelluksen näkymän."
   },
   "success": {
-    "label": "Å_Success_________________ö!",
-    "url": "Å_App URL copied to clipboard_____________________________ö.",
-    "embed": "Å_Embed code copied to clipboard_________________ö."
+    "label": "Onnistui!",
+    "url": "Sovelluksen URL-osoite on kopioitu leikepöydälle.",
+    "embed": "Upotuskoodi on kopioitu leikepöydälle."
   },
   "options": {
     "link": {
-      "label": "Å_Copy Link___________________ö",
-      "tooltip": "Å_Click to copy link to clipboard_________________ö"
+      "label": "Kopioi linkki",
+      "tooltip": "Kopioi linkki leikepöydälle napsauttamalla"
     },
     "facebook": {
-      "label": "Å_Facebook_________________ö",
-      "tooltip": "Å_Click to share to your Facebook account_____________________ö"
+      "label": "Facebook",
+      "tooltip": "Napsauta, jos haluat jakaa Facebook-tilillesi"
     },
     "twitter": {
-      "label": "Å_Twitter_______________ö",
-      "tooltip": "Å_Click to share to your Twitter account____________________ö"
+      "label": "Twitter",
+      "tooltip": "Napsauta, jos haluat jakaa Twitter-tilillesi"
     },
     "linkedIn": {
-      "label": "Å_LinkedIn_________________ö",
-      "tooltip": "Å_Click to share to your LinkedIn account_____________________ö"
+      "label": "LinkedIn",
+      "tooltip": "Napsauta, jos haluat jakaa LinkedIn-tilillesi"
     }
   }
 }

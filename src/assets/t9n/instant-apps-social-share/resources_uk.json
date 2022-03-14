@@ -1,38 +1,38 @@
 {
   "share": {
-    "label": "ґ_Share___________Ї"
+    "label": "Поділитися"
   },
   "embed": {
-    "label": "ґ_Embed___________Ї",
-    "copy": "ґ_Copy_________Ї",
-    "width": "ґ_Width___________Ї",
-    "height": "ґ_Height_____________Ї"
+    "label": "Інтегрувати",
+    "copy": "Копіювати",
+    "width": "Ширина",
+    "height": "Висота"
   },
   "info": {
-    "label": "ґ_Did you know______________Ї?",
-    "tooltip": "ґ_Copy link will preserve the current map view, visible layers, and open popups. Use this option to share what you see in the app_________________________________________________________________Ї."
+    "label": "А ви знали?",
+    "tooltip": "Параметр \"Копіювати посилання\" збереже поточний вигляд карти, видимі шари та відкриті спливаючі вікна. Використовуйте цей параметр, щоб поділитися відображенням в додатку."
   },
   "success": {
-    "label": "ґ_Success_________________Ї!",
-    "url": "ґ_App URL copied to clipboard_____________________________Ї.",
-    "embed": "ґ_Embed code copied to clipboard_________________Ї."
+    "label": "Успішно!",
+    "url": "URL-адресу додатку скопійовано до буфера обміну",
+    "embed": "Код для вбудовування скопійовано до буфера обміну"
   },
   "options": {
     "link": {
-      "label": "ґ_Copy Link___________________Ї",
-      "tooltip": "ґ_Click to copy link to clipboard_________________Ї"
+      "label": "Копіювати посилання",
+      "tooltip": "Натисніть, щоб скопіювати посилання до буфера обміну"
     },
     "facebook": {
-      "label": "ґ_Facebook_________________Ї",
-      "tooltip": "ґ_Click to share to your Facebook account_____________________Ї"
+      "label": "Facebook",
+      "tooltip": "Натисніть, щоб опублікувати свій обліковий запис Facebook"
     },
     "twitter": {
-      "label": "ґ_Twitter_______________Ї",
-      "tooltip": "ґ_Click to share to your Twitter account____________________Ї"
+      "label": "Twitter",
+      "tooltip": "Натисніть, щоб опублікувати свій обліковий запис Twitter"
     },
     "linkedIn": {
-      "label": "ґ_LinkedIn_________________Ї",
-      "tooltip": "ґ_Click to share to your LinkedIn account_____________________Ї"
+      "label": "LinkedIn",
+      "tooltip": "Натисніть, щоб опублікувати свій обліковий запис LinkedIn"
     }
   }
 }

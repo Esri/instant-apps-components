@@ -1,38 +1,38 @@
 {
   "share": {
-    "label": "й_Share___________й"
+    "label": "Споделяне"
   },
   "embed": {
-    "label": "й_Embed___________й",
-    "copy": "й_Copy_________й",
-    "width": "й_Width___________й",
-    "height": "й_Height_____________й"
+    "label": "Вграждане",
+    "copy": "Копиране",
+    "width": "Ширина",
+    "height": "Височина"
   },
   "info": {
-    "label": "й_Did you know______________й?",
-    "tooltip": "й_Copy link will preserve the current map view, visible layers, and open popups. Use this option to share what you see in the app_________________________________________________________________й."
+    "label": "Знаехте ли?",
+    "tooltip": "Копирането на връзката ще запази текущия изглед на картата, видимите слоеве и отворените изскачащи прозорци. Използвайте тази опция, за да споделяте това, което виждате в приложението."
   },
   "success": {
-    "label": "й_Success_________________й!",
-    "url": "й_App URL copied to clipboard_____________________________й.",
-    "embed": "й_Embed code copied to clipboard_________________й."
+    "label": "Успешно!",
+    "url": "URL адресът на приложението е копиран в клипборда Ви.",
+    "embed": "Кодът за вграждане е копиран в клипборда."
   },
   "options": {
     "link": {
-      "label": "й_Copy Link___________________й",
-      "tooltip": "й_Click to copy link to clipboard_________________й"
+      "label": "Връзка за копиране",
+      "tooltip": "Натиснете, за да копирате връзката в клипборда."
     },
     "facebook": {
-      "label": "й_Facebook_________________й",
-      "tooltip": "й_Click to share to your Facebook account_____________________й"
+      "label": "Facebook",
+      "tooltip": "Натиснете, за да споделите в профила си във Facebook."
     },
     "twitter": {
-      "label": "й_Twitter_______________й",
-      "tooltip": "й_Click to share to your Twitter account____________________й"
+      "label": "Туитър",
+      "tooltip": "Натиснете, за да споделите в профила си във Twitter."
     },
     "linkedIn": {
-      "label": "й_LinkedIn_________________й",
-      "tooltip": "й_Click to share to your LinkedIn account_____________________й"
+      "label": "LinkedIn",
+      "tooltip": "Натиснете, за да споделите в профила си във LinkedIn."
     }
   }
 }

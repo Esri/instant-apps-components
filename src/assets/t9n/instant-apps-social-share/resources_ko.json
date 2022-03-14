@@ -1,38 +1,38 @@
 {
   "share": {
-    "label": "한_Share___________빠"
+    "label": "공유"
   },
   "embed": {
-    "label": "한_Embed___________빠",
-    "copy": "한_Copy_________빠",
-    "width": "한_Width___________빠",
-    "height": "한_Height_____________빠"
+    "label": "임베드",
+    "copy": "복사",
+    "width": "너비",
+    "height": "높이"
   },
   "info": {
-    "label": "한_Did you know______________빠?",
-    "tooltip": "한_Copy link will preserve the current map view, visible layers, and open popups. Use this option to share what you see in the app_________________________________________________________________빠."
+    "label": "알고 계십니까?",
+    "tooltip": "링크를 복사하면 현재 맵 뷰, 표시되는 레이어, 열린 팝업이 유지됩니다. 이 옵션을 사용하여 앱에 표시되는 내용을 공유할 수 있습니다."
   },
   "success": {
-    "label": "한_Success_________________빠!",
-    "url": "한_App URL copied to clipboard_____________________________빠.",
-    "embed": "한_Embed code copied to clipboard_________________빠."
+    "label": "수고하셨습니다!",
+    "url": "앱 URL이 클립보드에 복사되었습니다.",
+    "embed": "임베드 코드가 클립보드에 복사되었습니다."
   },
   "options": {
     "link": {
-      "label": "한_Copy Link___________________빠",
-      "tooltip": "한_Click to copy link to clipboard_________________빠"
+      "label": "링크 복사",
+      "tooltip": "클릭하여 클립보드에 링크 복사"
     },
     "facebook": {
-      "label": "한_Facebook_________________빠",
-      "tooltip": "한_Click to share to your Facebook account_____________________빠"
+      "label": "Facebook",
+      "tooltip": "클릭하여 Facebook 계정에 공유"
     },
     "twitter": {
-      "label": "한_Twitter_______________빠",
-      "tooltip": "한_Click to share to your Twitter account____________________빠"
+      "label": "Twitter",
+      "tooltip": "클릭하여 Twitter 계정에 공유"
     },
     "linkedIn": {
-      "label": "한_LinkedIn_________________빠",
-      "tooltip": "한_Click to share to your LinkedIn account_____________________빠"
+      "label": "LinkedIn",
+      "tooltip": "클릭하여 LinkedIn 계정에 공유"
     }
   }
 }

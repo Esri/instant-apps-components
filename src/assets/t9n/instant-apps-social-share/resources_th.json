@@ -1,38 +1,38 @@
 {
   "share": {
-    "label": "ก้_Share___________ษฺ"
+    "label": "แชร์"
   },
   "embed": {
-    "label": "ก้_Embed___________ษฺ",
-    "copy": "ก้_Copy_________ษฺ",
-    "width": "ก้_Width___________ษฺ",
-    "height": "ก้_Height_____________ษฺ"
+    "label": "ฝัง",
+    "copy": "คัดลอก",
+    "width": "ความกว้าง",
+    "height": "ความสูง"
   },
   "info": {
-    "label": "ก้_Did you know______________ษฺ?",
-    "tooltip": "ก้_Copy link will preserve the current map view, visible layers, and open popups. Use this option to share what you see in the app_________________________________________________________________ษฺ."
+    "label": "คุณรู้หรือไม่",
+    "tooltip": "การคัดลอกลิงก์ จะคงมุมมองแผนที่ ชั้นข้อมูลที่แสดง และป็อปอัพที่เปิดอยู่ในปัจจุบันไว้ ใช้ตัวเลือกนี้เพื่อแชร์สิ่งที่คุณภายในแอป"
   },
   "success": {
-    "label": "ก้_Success_________________ษฺ!",
-    "url": "ก้_App URL copied to clipboard_____________________________ษฺ.",
-    "embed": "ก้_Embed code copied to clipboard_________________ษฺ."
+    "label": "สำเร็จ!",
+    "url": "คัดลอก URL แอปไปยังคลิปบอร์ดแล้ว",
+    "embed": "คัดลอกโค้ดที่ฝังไปยังคลิปบอร์ดแล้ว"
   },
   "options": {
     "link": {
-      "label": "ก้_Copy Link___________________ษฺ",
-      "tooltip": "ก้_Click to copy link to clipboard_________________ษฺ"
+      "label": "คัดลอกลิงก์",
+      "tooltip": "คลิกเพื่อคัดลอกลิงก์ไปยังคลิปบอร์ด"
     },
     "facebook": {
-      "label": "ก้_Facebook_________________ษฺ",
-      "tooltip": "ก้_Click to share to your Facebook account_____________________ษฺ"
+      "label": "Facebook",
+      "tooltip": "คลิกเพื่อแชร์ไปยังบัญชีผู้ใช้ Facebook ของคุณ"
     },
     "twitter": {
-      "label": "ก้_Twitter_______________ษฺ",
-      "tooltip": "ก้_Click to share to your Twitter account____________________ษฺ"
+      "label": "Twitter",
+      "tooltip": "คลิกเพื่อแชร์ไปยังบัญชีผู้ใช้ Twitter ของคุณ"
     },
     "linkedIn": {
-      "label": "ก้_LinkedIn_________________ษฺ",
-      "tooltip": "ก้_Click to share to your LinkedIn account_____________________ษฺ"
+      "label": "LinkedIn",
+      "tooltip": "คลิกเพื่อแชร์ไปยังบัญชีผู้ใช้ LinkedIn ของคุณ"
     }
   }
 }
