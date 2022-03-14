@@ -1,38 +1,38 @@
 {
   "share": {
-    "label": "כן_Share___________ש"
+    "label": "שתף"
   },
   "embed": {
-    "label": "כן_Embed___________ש",
-    "copy": "כן_Copy_________ש",
-    "width": "כן_Width___________ש",
-    "height": "כן_Height_____________ש"
+    "label": "הטבע",
+    "copy": "העתק",
+    "width": "רוחב",
+    "height": "גובה"
   },
   "info": {
-    "label": "כן_Did you know______________ש?",
-    "tooltip": "כן_Copy link will preserve the current map view, visible layers, and open popups. Use this option to share what you see in the app_________________________________________________________________ש."
+    "label": "הידעת?",
+    "tooltip": "העתקת קישור תשמר את תצוגת המפה הנוכחית, שכבות גלויות וחלונות קופצים פתוחים. השתמש באפשרות זו כדי לשתף את מה שאתה רואה באפליקציה."
   },
   "success": {
-    "label": "כן_Success_________________ש!",
-    "url": "כן_App URL copied to clipboard_____________________________ש.",
-    "embed": "כן_Embed code copied to clipboard_________________ש."
+    "label": "הצלחה!",
+    "url": "כתובת ה-URL של האפליקציה הועתקה ללוח.",
+    "embed": "קוד ההטבעה הועתק ללוח."
   },
   "options": {
     "link": {
-      "label": "כן_Copy Link___________________ש",
-      "tooltip": "כן_Click to copy link to clipboard_________________ש"
+      "label": "העתק קישור",
+      "tooltip": "לחץ כדי להעתיק את הקישור ללוח"
     },
     "facebook": {
-      "label": "כן_Facebook_________________ש",
-      "tooltip": "כן_Click to share to your Facebook account_____________________ש"
+      "label": "Facebook",
+      "tooltip": "לחץ כדי לשתף את חשבון Facebook שלך"
     },
     "twitter": {
-      "label": "כן_Twitter_______________ש",
-      "tooltip": "כן_Click to share to your Twitter account____________________ש"
+      "label": "Twitter",
+      "tooltip": "לחץ כדי לשתף את חשבון Twitter שלך"
     },
     "linkedIn": {
-      "label": "כן_LinkedIn_________________ש",
-      "tooltip": "כן_Click to share to your LinkedIn account_____________________ש"
+      "label": "LinkedIn",
+      "tooltip": "לחץ כדי לשתף את חשבון LinkedIn שלך"
     }
   }
 }

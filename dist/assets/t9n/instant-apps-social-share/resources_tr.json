@@ -1,38 +1,38 @@
 {
   "share": {
-    "label": "ı_Share___________İ"
+    "label": "Paylaş"
   },
   "embed": {
-    "label": "ı_Embed___________İ",
-    "copy": "ı_Copy_________İ",
-    "width": "ı_Width___________İ",
-    "height": "ı_Height_____________İ"
+    "label": "Yerleştir",
+    "copy": "Kopyala",
+    "width": "Genişlik",
+    "height": "Yükseklik"
   },
   "info": {
-    "label": "ı_Did you know______________İ?",
-    "tooltip": "ı_Copy link will preserve the current map view, visible layers, and open popups. Use this option to share what you see in the app_________________________________________________________________İ."
+    "label": "Biliyor muydunuz?",
+    "tooltip": "Bağlantıyı kopyala, geçerli harita görünümünü, görünür katmanları ve açık açılır pencereleri koruyacaktır. Uygulamada gördüklerinizi paylaşmak için bu seçeneği kullanın."
   },
   "success": {
-    "label": "ı_Success_________________İ!",
-    "url": "ı_App URL copied to clipboard_____________________________İ.",
-    "embed": "ı_Embed code copied to clipboard_________________İ."
+    "label": "Başarılı!",
+    "url": "Uygulama URL'si panonuza kopyalandı.",
+    "embed": "Yerleşik kod panoya kopyalandı."
   },
   "options": {
     "link": {
-      "label": "ı_Copy Link___________________İ",
-      "tooltip": "ı_Click to copy link to clipboard_________________İ"
+      "label": "Bağlantıyı kopyala",
+      "tooltip": "Bağlantıyı panoya kopyalamak için tıklayın"
     },
     "facebook": {
-      "label": "ı_Facebook_________________İ",
-      "tooltip": "ı_Click to share to your Facebook account_____________________İ"
+      "label": "Facebook",
+      "tooltip": "Facebook hesabınızı paylaşmak için tıklayın"
     },
     "twitter": {
-      "label": "ı_Twitter_______________İ",
-      "tooltip": "ı_Click to share to your Twitter account____________________İ"
+      "label": "Twitter",
+      "tooltip": "Twitter hesabınızı paylaşmak için tıklayın"
     },
     "linkedIn": {
-      "label": "ı_LinkedIn_________________İ",
-      "tooltip": "ı_Click to share to your LinkedIn account_____________________İ"
+      "label": "LinkedIn",
+      "tooltip": "LinkedIn hesabınızı paylaşmak için tıklayın"
     }
   }
 }

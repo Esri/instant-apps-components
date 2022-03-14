@@ -1,38 +1,38 @@
 {
   "share": {
-    "label": "Š_Share___________č"
+    "label": "Deli"
   },
   "embed": {
-    "label": "Š_Embed___________č",
-    "copy": "Š_Copy_________č",
-    "width": "Š_Width___________č",
-    "height": "Š_Height_____________č"
+    "label": "Vdelaj",
+    "copy": "Kopiraj",
+    "width": "Širina",
+    "height": "Višina"
   },
   "info": {
-    "label": "Š_Did you know______________č?",
-    "tooltip": "Š_Copy link will preserve the current map view, visible layers, and open popups. Use this option to share what you see in the app_________________________________________________________________č."
+    "label": "Ali ste vedeli?",
+    "tooltip": "Kopiranje povezave bo ohranilo trenutni kartni pogled, vidne sloje in odprta pojavna okna. Uporabite to možnost, da delite kar vidite v aplikaciji."
   },
   "success": {
-    "label": "Š_Success_________________č!",
-    "url": "Š_App URL copied to clipboard_____________________________č.",
-    "embed": "Š_Embed code copied to clipboard_________________č."
+    "label": "Uspešno!",
+    "url": "URL aplikacije je kopiran v odložišče.",
+    "embed": "Vdelana koda je kopirana v odložišče."
   },
   "options": {
     "link": {
-      "label": "Š_Copy Link___________________č",
-      "tooltip": "Š_Click to copy link to clipboard_________________č"
+      "label": "Kopiraj povezavo",
+      "tooltip": "Kliknite za kopiranje povezave v odložišče"
     },
     "facebook": {
-      "label": "Š_Facebook_________________č",
-      "tooltip": "Š_Click to share to your Facebook account_____________________č"
+      "label": "Facebook",
+      "tooltip": "Kliknite za deljenje na vašem računu Facebook"
     },
     "twitter": {
-      "label": "Š_Twitter_______________č",
-      "tooltip": "Š_Click to share to your Twitter account____________________č"
+      "label": "Twitter",
+      "tooltip": "Kliknite za deljenje na vašem računu Twitter"
     },
     "linkedIn": {
-      "label": "Š_LinkedIn_________________č",
-      "tooltip": "Š_Click to share to your LinkedIn account_____________________č"
+      "label": "LinkedIn",
+      "tooltip": "Kliknite za deljenje na vašem računu LinkedIn"
     }
   }
 }

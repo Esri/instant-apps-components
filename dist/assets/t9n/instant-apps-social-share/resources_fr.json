@@ -1,38 +1,38 @@
 {
   "share": {
-    "label": "æ_Share___________Â"
+    "label": "Partager"
   },
   "embed": {
-    "label": "æ_Embed___________Â",
-    "copy": "æ_Copy_________Â",
-    "width": "æ_Width___________Â",
-    "height": "æ_Height_____________Â"
+    "label": "Incorporer",
+    "copy": "Copier",
+    "width": "Largeur",
+    "height": "Hauteur"
   },
   "info": {
-    "label": "æ_Did you know______________Â?",
-    "tooltip": "æ_Copy link will preserve the current map view, visible layers, and open popups. Use this option to share what you see in the app_________________________________________________________________Â."
+    "label": "Le saviez-vous ?",
+    "tooltip": "Copier le lien permet de conserver la vue cartographique actuelle, les couches visibles et les fenêtres contextuelles ouvertes. Utilisez cette option pour partager ce que vous voyez dans l’application."
   },
   "success": {
-    "label": "æ_Success_________________Â!",
-    "url": "æ_App URL copied to clipboard_____________________________Â.",
-    "embed": "æ_Embed code copied to clipboard_________________Â."
+    "label": "Opération réussie !",
+    "url": "URL de l’application copiée dans le Presse-papiers.",
+    "embed": "Code incorporé copié dans le Presse-papiers."
   },
   "options": {
     "link": {
-      "label": "æ_Copy Link___________________Â",
-      "tooltip": "æ_Click to copy link to clipboard_________________Â"
+      "label": "Copier le lien",
+      "tooltip": "Cliquer pour copier le lien dans le Presse-papiers"
     },
     "facebook": {
-      "label": "æ_Facebook_________________Â",
-      "tooltip": "æ_Click to share to your Facebook account_____________________Â"
+      "label": "Facebook",
+      "tooltip": "Cliquer pour partager dans votre compte Facebook"
     },
     "twitter": {
-      "label": "æ_Twitter_______________Â",
-      "tooltip": "æ_Click to share to your Twitter account____________________Â"
+      "label": "Twitter",
+      "tooltip": "Cliquer pour partager dans votre compte Twitter"
     },
     "linkedIn": {
-      "label": "æ_LinkedIn_________________Â",
-      "tooltip": "æ_Click to share to your LinkedIn account_____________________Â"
+      "label": "LinkedIn",
+      "tooltip": "Cliquer pour partager dans votre compte LinkedIn"
     }
   }
 }

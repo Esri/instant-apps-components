@@ -1,38 +1,38 @@
 {
   "share": {
-    "label": "Ĳ_Share___________ä"
+    "label": "Delen"
   },
   "embed": {
-    "label": "Ĳ_Embed___________ä",
-    "copy": "Ĳ_Copy_________ä",
-    "width": "Ĳ_Width___________ä",
-    "height": "Ĳ_Height_____________ä"
+    "label": "Inbedden",
+    "copy": "Kopiëren",
+    "width": "Breedte",
+    "height": "Hoogte"
   },
   "info": {
-    "label": "Ĳ_Did you know______________ä?",
-    "tooltip": "Ĳ_Copy link will preserve the current map view, visible layers, and open popups. Use this option to share what you see in the app_________________________________________________________________ä."
+    "label": "Wist u dat?",
+    "tooltip": "Koppeling kopiëren behoudt de huidige kaartweergave, zichtbare lagen en geopende pop-ups. Gebruik deze optie om te delen wat u in de app ziet."
   },
   "success": {
-    "label": "Ĳ_Success_________________ä!",
-    "url": "Ĳ_App URL copied to clipboard_____________________________ä.",
-    "embed": "Ĳ_Embed code copied to clipboard_________________ä."
+    "label": "Gelukt!",
+    "url": "App-URL gekopieerd naar klembord.",
+    "embed": "Inbed-code gekopieerd naar klembord."
   },
   "options": {
     "link": {
-      "label": "Ĳ_Copy Link___________________ä",
-      "tooltip": "Ĳ_Click to copy link to clipboard_________________ä"
+      "label": "Link kopiëren",
+      "tooltip": "Klik om link naar klembord te kopiëren"
     },
     "facebook": {
-      "label": "Ĳ_Facebook_________________ä",
-      "tooltip": "Ĳ_Click to share to your Facebook account_____________________ä"
+      "label": "Facebook",
+      "tooltip": "Klik om te delen met uw Facebook-account"
     },
     "twitter": {
-      "label": "Ĳ_Twitter_______________ä",
-      "tooltip": "Ĳ_Click to share to your Twitter account____________________ä"
+      "label": "Twitter",
+      "tooltip": "Klik om te delen met uw Twitter-account"
     },
     "linkedIn": {
-      "label": "Ĳ_LinkedIn_________________ä",
-      "tooltip": "Ĳ_Click to share to your LinkedIn account_____________________ä"
+      "label": "LinkedIn",
+      "tooltip": "Klik om te delen met uw LinkedIn-account"
     }
   }
 }

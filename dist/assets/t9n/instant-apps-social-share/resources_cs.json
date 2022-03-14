@@ -1,38 +1,38 @@
 {
   "share": {
-    "label": "Ř_Share___________ů"
+    "label": "Sdílet"
   },
   "embed": {
-    "label": "Ř_Embed___________ů",
-    "copy": "Ř_Copy_________ů",
-    "width": "Ř_Width___________ů",
-    "height": "Ř_Height_____________ů"
+    "label": "Vložený obsah",
+    "copy": "Kopírovat",
+    "width": "Šířka",
+    "height": "Výška"
   },
   "info": {
-    "label": "Ř_Did you know______________ů?",
-    "tooltip": "Ř_Copy link will preserve the current map view, visible layers, and open popups. Use this option to share what you see in the app_________________________________________________________________ů."
+    "label": "Věděli jste, že?",
+    "tooltip": "Kopírování odkazu zachová aktuální zobrazení mapy, viditelné vrstvy a otevřená vyskakovací okna. Tuto možnost použijte ke sdílení toho, co vidíte v aplikaci."
   },
   "success": {
-    "label": "Ř_Success_________________ů!",
-    "url": "Ř_App URL copied to clipboard_____________________________ů.",
-    "embed": "Ř_Embed code copied to clipboard_________________ů."
+    "label": "Úspěch!",
+    "url": "Adresa URL aplikace byla zkopírována do schránky.",
+    "embed": "Kód vložení byl zkopírován do schránky."
   },
   "options": {
     "link": {
-      "label": "Ř_Copy Link___________________ů",
-      "tooltip": "Ř_Click to copy link to clipboard_________________ů"
+      "label": "Kopírovat odkaz",
+      "tooltip": "Kliknutím zkopírujete odkaz do schránky"
     },
     "facebook": {
-      "label": "Ř_Facebook_________________ů",
-      "tooltip": "Ř_Click to share to your Facebook account_____________________ů"
+      "label": "Facebook",
+      "tooltip": "Kliknutím sdílejte na svém účtu na Facebooku"
     },
     "twitter": {
-      "label": "Ř_Twitter_______________ů",
-      "tooltip": "Ř_Click to share to your Twitter account____________________ů"
+      "label": "Twitter",
+      "tooltip": "Kliknutím sdílejte na svém účtu na Twitteru"
     },
     "linkedIn": {
-      "label": "Ř_LinkedIn_________________ů",
-      "tooltip": "Ř_Click to share to your LinkedIn account_____________________ů"
+      "label": "LinkedIn",
+      "tooltip": "Kliknutím sdílejte na svém účtu LinkedIn"
     }
   }
 }

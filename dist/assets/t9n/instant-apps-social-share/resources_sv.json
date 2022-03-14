@@ -1,38 +1,38 @@
 {
   "share": {
-    "label": "Å_Share___________ö"
+    "label": "Dela"
   },
   "embed": {
-    "label": "Å_Embed___________ö",
-    "copy": "Å_Copy_________ö",
-    "width": "Å_Width___________ö",
-    "height": "Å_Height_____________ö"
+    "label": "Bädda in",
+    "copy": "Kopiera",
+    "width": "Bredd",
+    "height": "Höjd"
   },
   "info": {
-    "label": "Å_Did you know______________ö?",
-    "tooltip": "Å_Copy link will preserve the current map view, visible layers, and open popups. Use this option to share what you see in the app_________________________________________________________________ö."
+    "label": "Visste du det här?",
+    "tooltip": "Kopiering av länken bevarar den aktuella kartvyn, synliga lager och öppna popup-fönster. Använd det här alternativet för att dela det du ser i appen."
   },
   "success": {
-    "label": "Å_Success_________________ö!",
-    "url": "Å_App URL copied to clipboard_____________________________ö.",
-    "embed": "Å_Embed code copied to clipboard_________________ö."
+    "label": "Det lyckades!",
+    "url": "Appens URL kopierades till Urklipp.",
+    "embed": "Inbäddad kod kopierad till urklipp."
   },
   "options": {
     "link": {
-      "label": "Å_Copy Link___________________ö",
-      "tooltip": "Å_Click to copy link to clipboard_________________ö"
+      "label": "Kopiera länk",
+      "tooltip": "Klicka om du vill kopiera länken till Urklipp"
     },
     "facebook": {
-      "label": "Å_Facebook_________________ö",
-      "tooltip": "Å_Click to share to your Facebook account_____________________ö"
+      "label": "Facebook",
+      "tooltip": "Klicka för att dela till ditt Facebook-konto"
     },
     "twitter": {
-      "label": "Å_Twitter_______________ö",
-      "tooltip": "Å_Click to share to your Twitter account____________________ö"
+      "label": "Twitter",
+      "tooltip": "Klicka för att dela till ditt Twitter-konto"
     },
     "linkedIn": {
-      "label": "Å_LinkedIn_________________ö",
-      "tooltip": "Å_Click to share to your LinkedIn account_____________________ö"
+      "label": "LinkedIn",
+      "tooltip": "Klicka för att dela till ditt LinkedIn-konto"
     }
   }
 }
