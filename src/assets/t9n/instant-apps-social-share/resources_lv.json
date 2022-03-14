@@ -1,38 +1,38 @@
 {
   "share": {
-    "label": "ķ_Share___________ū"
+    "label": "Koplietot"
   },
   "embed": {
-    "label": "ķ_Embed___________ū",
-    "copy": "ķ_Copy_________ū",
-    "width": "ķ_Width___________ū",
-    "height": "ķ_Height_____________ū"
+    "label": "Iegult",
+    "copy": "Kopēt",
+    "width": "Platums",
+    "height": "Augstums"
   },
   "info": {
-    "label": "ķ_Did you know______________ū?",
-    "tooltip": "ķ_Copy link will preserve the current map view, visible layers, and open popups. Use this option to share what you see in the app_________________________________________________________________ū."
+    "label": "Vai zinājāt?",
+    "tooltip": "Kopējot saiti, tiks saglabāts pašreizējais kartes skats, redzamie slāņi un atvērtie uznirstošie logi. Izmantojiet šo opciju, lai kopīgotu lietotnē redzamo informāciju."
   },
   "success": {
-    "label": "ķ_Success_________________ū!",
-    "url": "ķ_App URL copied to clipboard_____________________________ū.",
-    "embed": "ķ_Embed code copied to clipboard_________________ū."
+    "label": "Izdevās!",
+    "url": "Lietotnes vietrādis (URL) ir iekopēts starpliktuvē.",
+    "embed": "Iegulšanas kods ir iekopēts starpliktuvē."
   },
   "options": {
     "link": {
-      "label": "ķ_Copy Link___________________ū",
-      "tooltip": "ķ_Click to copy link to clipboard_________________ū"
+      "label": "Kopēt saiti",
+      "tooltip": "Noklikšķiniet, lai kopētu saiti starpliktuvē"
     },
     "facebook": {
-      "label": "ķ_Facebook_________________ū",
-      "tooltip": "ķ_Click to share to your Facebook account_____________________ū"
+      "label": "Facebook",
+      "tooltip": "Noklikšķiniet, lai koplietotu savā Facebook kontā"
     },
     "twitter": {
-      "label": "ķ_Twitter_______________ū",
-      "tooltip": "ķ_Click to share to your Twitter account____________________ū"
+      "label": "Twitter",
+      "tooltip": "Noklikšķiniet, lai koplietotu savā Twitter kontā"
     },
     "linkedIn": {
-      "label": "ķ_LinkedIn_________________ū",
-      "tooltip": "ķ_Click to share to your LinkedIn account_____________________ū"
+      "label": "LinkedIn",
+      "tooltip": "Noklikšķiniet, lai koplietotu savā LinkedIn kontā"
     }
   }
 }

@@ -1,38 +1,38 @@
 {
   "share": {
-    "label": "須_Share___________鷗"
+    "label": "共有"
   },
   "embed": {
-    "label": "須_Embed___________鷗",
-    "copy": "須_Copy_________鷗",
-    "width": "須_Width___________鷗",
-    "height": "須_Height_____________鷗"
+    "label": "埋め込み",
+    "copy": "コピー",
+    "width": "幅",
+    "height": "高さ"
   },
   "info": {
-    "label": "須_Did you know______________鷗?",
-    "tooltip": "須_Copy link will preserve the current map view, visible layers, and open popups. Use this option to share what you see in the app_________________________________________________________________鷗."
+    "label": "ご存じですか？",
+    "tooltip": "コピー リンクに、現在のマップ ビュー、表示可能なレイヤー、開いているポップアップが保持されます。 このオプションを使用し、アプリに表示されるものを共有します。"
   },
   "success": {
-    "label": "須_Success_________________鷗!",
-    "url": "須_App URL copied to clipboard_____________________________鷗.",
-    "embed": "須_Embed code copied to clipboard_________________鷗."
+    "label": "成功です。",
+    "url": "アプリ URL がクリップボードにコピーされました。",
+    "embed": "埋め込みコードがクリップボードにコピーされました。"
   },
   "options": {
     "link": {
-      "label": "須_Copy Link___________________鷗",
-      "tooltip": "須_Click to copy link to clipboard_________________鷗"
+      "label": "リンクのコピー",
+      "tooltip": "クリックすると、クリップボードにリンクをコピーします"
     },
     "facebook": {
-      "label": "須_Facebook_________________鷗",
-      "tooltip": "須_Click to share to your Facebook account_____________________鷗"
+      "label": "Facebook",
+      "tooltip": "クリックすると、Facebook アカウントに共有します"
     },
     "twitter": {
-      "label": "須_Twitter_______________鷗",
-      "tooltip": "須_Click to share to your Twitter account____________________鷗"
+      "label": "Twitter",
+      "tooltip": "クリックすると、Twitter アカウントに共有します"
     },
     "linkedIn": {
-      "label": "須_LinkedIn_________________鷗",
-      "tooltip": "須_Click to share to your LinkedIn account_____________________鷗"
+      "label": "LinkedIn",
+      "tooltip": "クリックすると、LinkedIn アカウントに共有します"
     }
   }
 }

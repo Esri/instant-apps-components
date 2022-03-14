@@ -1,38 +1,38 @@
 {
   "share": {
-    "label": "å_Share___________ø"
+    "label": "Del"
   },
   "embed": {
-    "label": "å_Embed___________ø",
-    "copy": "å_Copy_________ø",
-    "width": "å_Width___________ø",
-    "height": "å_Height_____________ø"
+    "label": "Bygg inn",
+    "copy": "Kopier",
+    "width": "Bredde",
+    "height": "Høyde"
   },
   "info": {
-    "label": "å_Did you know______________ø?",
-    "tooltip": "å_Copy link will preserve the current map view, visible layers, and open popups. Use this option to share what you see in the app_________________________________________________________________ø."
+    "label": "Visste du at?",
+    "tooltip": "Kopier kobling vil beholde gjeldende kartvisning, synlige lag og åpne popup-vinduer. Bruk dette alternativet til å dele det du ser i appen."
   },
   "success": {
-    "label": "å_Success_________________ø!",
-    "url": "å_App URL copied to clipboard_____________________________ø.",
-    "embed": "å_Embed code copied to clipboard_________________ø."
+    "label": "Vellykket!",
+    "url": "Appens URL er kopiert til utklippstavlen.",
+    "embed": "Bygg inn kode kopiert til utklippstavlen."
   },
   "options": {
     "link": {
-      "label": "å_Copy Link___________________ø",
-      "tooltip": "å_Click to copy link to clipboard_________________ø"
+      "label": "Kopier kobling",
+      "tooltip": "Klikk for å kopiere koblingen til utklippstavlen"
     },
     "facebook": {
-      "label": "å_Facebook_________________ø",
-      "tooltip": "å_Click to share to your Facebook account_____________________ø"
+      "label": "Facebook",
+      "tooltip": "Klikk for å dele til Facebook-kontoen din"
     },
     "twitter": {
-      "label": "å_Twitter_______________ø",
-      "tooltip": "å_Click to share to your Twitter account____________________ø"
+      "label": "Twitter",
+      "tooltip": "Klikk for å dele til Twitter-kontoen din"
     },
     "linkedIn": {
-      "label": "å_LinkedIn_________________ø",
-      "tooltip": "å_Click to share to your LinkedIn account_____________________ø"
+      "label": "LinkedIn",
+      "tooltip": "Klikk for å dele til LinkedIn-kontoen din"
     }
   }
 }

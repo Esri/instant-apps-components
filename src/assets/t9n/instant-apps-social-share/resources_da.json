@@ -1,38 +1,38 @@
 {
   "share": {
-    "label": "ø_Share___________å"
+    "label": "Del"
   },
   "embed": {
-    "label": "ø_Embed___________å",
-    "copy": "ø_Copy_________å",
-    "width": "ø_Width___________å",
-    "height": "ø_Height_____________å"
+    "label": "Integrér",
+    "copy": "Kopiér",
+    "width": "Bredde",
+    "height": "Højde"
   },
   "info": {
-    "label": "ø_Did you know______________å?",
-    "tooltip": "ø_Copy link will preserve the current map view, visible layers, and open popups. Use this option to share what you see in the app_________________________________________________________________å."
+    "label": "Vidste du det?",
+    "tooltip": "Kopiering af linket vil bevare den aktuelle kortvisning, synlige lag og åbne pop-up-vinduer. Brug denne indstilling til at dele, hvad du kan se i appen."
   },
   "success": {
-    "label": "ø_Success_________________å!",
-    "url": "ø_App URL copied to clipboard_____________________________å.",
-    "embed": "ø_Embed code copied to clipboard_________________å."
+    "label": "Færdig!",
+    "url": "App-URL er blevet kopieret til udklipsholderen.",
+    "embed": "Indlejret kode er blevet kopieret til udklipsholderen."
   },
   "options": {
     "link": {
-      "label": "ø_Copy Link___________________å",
-      "tooltip": "ø_Click to copy link to clipboard_________________å"
+      "label": "Kopiér link",
+      "tooltip": "Klik for at kopiere link til udklipsholder"
     },
     "facebook": {
-      "label": "ø_Facebook_________________å",
-      "tooltip": "ø_Click to share to your Facebook account_____________________å"
+      "label": "Facebook",
+      "tooltip": "Klik for at dele din Facebook-konto"
     },
     "twitter": {
-      "label": "ø_Twitter_______________å",
-      "tooltip": "ø_Click to share to your Twitter account____________________å"
+      "label": "Twitter",
+      "tooltip": "Klik for at dele din Twitter-konto"
     },
     "linkedIn": {
-      "label": "ø_LinkedIn_________________å",
-      "tooltip": "ø_Click to share to your LinkedIn account_____________________å"
+      "label": "LinkedIn",
+      "tooltip": "Klik for at dele din LinkedIn-konto"
     }
   }
 }
