@@ -23,7 +23,6 @@ $hoverDark: #262626;
   --instant-apps-social-share-background-color: transparent;
   --instant-apps-social-share-embed-border: 1px solid $border;
   .instant-apps-social-share {
-    background-color: var(--instant-apps-social-share-background-color);
     &__dialog {
       box-sizing: border-box;
       width: var(--instant-apps-social-share-width);
@@ -34,6 +33,7 @@ $hoverDark: #262626;
 
     &__dialog-embed {
       border: var(--instant-apps-social-share-embed-border);
+      background-color: var(--instant-apps-social-share-background-color);
     }
 
     &__options {

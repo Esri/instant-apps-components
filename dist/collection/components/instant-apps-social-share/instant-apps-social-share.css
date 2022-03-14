@@ -17,9 +17,6 @@
   --instant-apps-social-share-background-color: transparent;
   --instant-apps-social-share-embed-border: 1px solid $border;
 }
-:host .instant-apps-social-share {
-  background-color: var(--instant-apps-social-share-background-color);
-}
 :host .instant-apps-social-share__dialog {
   box-sizing: border-box;
   width: var(--instant-apps-social-share-width);
@@ -29,6 +26,7 @@
 }
 :host .instant-apps-social-share__dialog-embed {
   border: var(--instant-apps-social-share-embed-border);
+  background-color: var(--instant-apps-social-share-background-color);
 }
 :host .instant-apps-social-share__options {
   margin: 0;
