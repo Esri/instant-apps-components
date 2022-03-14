@@ -22,6 +22,7 @@ $hoverDark: #262626;
   --instant-apps-social-share-width: 280px;
   --instant-apps-social-share-background-color: transparent;
   --instant-apps-social-share-embed-border: 1px solid $border;
+  --instant-apps-social-share-embed-text-area-text: #468540;
   .instant-apps-social-share {
     &__dialog {
       box-sizing: border-box;
@@ -147,7 +148,6 @@ $hoverDark: #262626;
       &-code {
         &-text-area {
           border: 1px solid $border;
-          margin-bottom: 10px;
           textarea {
             box-sizing: border-box;
             padding: 4%;
@@ -185,9 +185,16 @@ $hoverDark: #262626;
         }
       }
 
+      &-text-area-text {
+        font-size: 13px;
+        font-weight: 600;
+        color: var(--instant-apps-social-share-embed-text-area-text);
+      }
+
       &-dimensions {
         display: flex;
         justify-content: space-between;
+        margin-top: 10px;
         &-input {
           width: 47%;
           box-sizing: border-box;
