@@ -181,7 +181,7 @@ $hoverDark: #262626;
 
           button:hover {
             cursor: pointer;
-            background-color: $hoverLight;
+            background-color: var(--calcite-ui-foreground-2);
             transition: background-color 0.15s ease-out 0s;
           }
         }

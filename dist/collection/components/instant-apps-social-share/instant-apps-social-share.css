@@ -160,7 +160,7 @@
 }
 :host .instant-apps-social-share__embed-code-text-area button:hover {
   cursor: pointer;
-  background-color: #f3f3f3;
+  background-color: var(--calcite-ui-foreground-2);
   transition: background-color 0.15s ease-out 0s;
 }
 :host .instant-apps-social-share__embed-text-area-text {
