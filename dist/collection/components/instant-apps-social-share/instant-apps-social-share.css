@@ -138,6 +138,7 @@
   width: 100%;
   font-family: var(--calcite-sans-family);
   font-size: 14px;
+  color: var(--calcite-ui-text-1);
 }
 :host .instant-apps-social-share__embed-code-text-area button {
   display: flex;
@@ -151,6 +152,7 @@
   font-size: 16px;
   font-weight: 400;
   padding: 3%;
+  color: var(--calcite-ui-text-1);
 }
 :host .instant-apps-social-share__embed-code-text-area button calcite-icon {
   color: #007ac2;
