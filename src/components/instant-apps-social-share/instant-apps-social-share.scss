@@ -19,18 +19,22 @@ $hoverDark: #262626;
 
 :host {
   display: block;
-
+  --instant-apps-social-share-width: 280px;
+  --instant-apps-social-share-background-color: transparent;
+  --instant-apps-social-share-embed-border: 1px solid $border;
+  --instant-apps-social-share-embed-text-area-text: #468540;
   .instant-apps-social-share {
     &__dialog {
       box-sizing: border-box;
-      width: 280px;
+      width: var(--instant-apps-social-share-width);
       height: auto;
       margin: 10px 0;
       border-radius: 5px;
     }
 
     &__dialog-embed {
-      border: 1px solid $border;
+      border: var(--instant-apps-social-share-embed-border);
+      background-color: var(--instant-apps-social-share-background-color);
     }
 
     &__options {
@@ -144,7 +148,6 @@ $hoverDark: #262626;
       &-code {
         &-text-area {
           border: 1px solid $border;
-          margin-bottom: 10px;
           textarea {
             box-sizing: border-box;
             padding: 4%;
@@ -154,6 +157,7 @@ $hoverDark: #262626;
             width: 100%;
             font-family: var(--calcite-sans-family);
             font-size: 14px;
+            color: var(--calcite-ui-text-1);
           }
           button {
             display: flex;
@@ -167,6 +171,7 @@ $hoverDark: #262626;
             font-size: 16px;
             font-weight: 400;
             padding: 3%;
+            color: var(--calcite-ui-text-1);
 
             calcite-icon {
               color: $calciteBlue;
@@ -176,15 +181,22 @@ $hoverDark: #262626;
 
           button:hover {
             cursor: pointer;
-            background-color: $hoverLight;
+            background-color: var(--calcite-ui-foreground-2);
             transition: background-color 0.15s ease-out 0s;
           }
         }
       }
 
+      &-text-area-text {
+        font-size: 13px;
+        font-weight: 600;
+        color: var(--instant-apps-social-share-embed-text-area-text);
+      }
+
       &-dimensions {
         display: flex;
         justify-content: space-between;
+        margin-top: 10px;
         &-input {
           width: 47%;
           box-sizing: border-box;

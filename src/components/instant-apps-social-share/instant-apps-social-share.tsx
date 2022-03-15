@@ -51,6 +51,7 @@ const CSS = {
       textArea: `${base}__embed-code-text-area`,
       copyButton: `${base}__embed-code-copy-button`,
     },
+    textAreaText: `${base}__embed-text-area-text`,
     dimensions: {
       container: `${base}__embed-dimensions`,
       input: `${base}__embed-dimensions-input`,
@@ -413,12 +414,15 @@ export class InstantAppsSocialShare {
         </span>
         <div class={CSS.embed.embedCode.container}>
           <div class={CSS.embed.embedCode.textArea}>
-            <textarea ref={el => (this.embedCodeRef = el)} cols={30} rows={7} readonly value={this.getEmbedCode()} />
+            <textarea ref={el => (this.embedCodeRef = el)} cols={30} rows={5} readonly value={this.getEmbedCode()} />
             <button id="copyEmbedToClipboard" onClick={this.copyEmbedCode.bind(this)} class={CSS.embed.embedCode.copyButton}>
               <calcite-icon icon="copy" scale="s" />
               <span>{embedMessages?.copy}</span>
             </button>
           </div>
+          <span class={CSS.embed.textAreaText}>
+            <slot name="text-area-text"></slot>
+          </span>
           <div class={CSS.embed.dimensions.container}>
             <label class={CSS.embed.dimensions.input}>
               <span>{embedMessages?.width}</span>
