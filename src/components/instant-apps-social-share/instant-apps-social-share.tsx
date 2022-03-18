@@ -113,6 +113,11 @@ export class InstantAppsSocialShare {
   })
   queryString: string;
 
+  @Prop({
+    reflect: true,
+  })
+  iframeInnerText: string = '';
+
   @Prop() view: __esri.MapView | __esri.SceneView;
 
   // INTERNAL STATE
@@ -451,10 +456,19 @@ export class InstantAppsSocialShare {
 
   async handleShareItem(type: 'link' | 'facebook' | 'twitter' | 'linkedIn') {
     this.shareUrl = await this.generateShareUrl();
-    const shortenedUrl = await this.shortenUrl(this.shareUrl);
+    let shortenedUrl = null;
+
+    // Detects Safari - If Safari, do not shorten URL due to Safari not allowing clipboard copy after network requests
+    const isChrome = navigator?.userAgent?.includes('Chrome');
+    const isSafari = navigator?.userAgent?.includes('Safari');
+    const doNotShortenUrl = isSafari !== undefined && isSafari && isChrome !== undefined && !isChrome;
+    if (!doNotShortenUrl) {
+      shortenedUrl = await this.shortenUrl(this.shareUrl);
+    }
+    const urlToUse = shortenedUrl ? shortenedUrl : this.shareUrl;
     switch (type) {
       case 'link':
-        navigator.clipboard.writeText(shortenedUrl);
+        navigator.clipboard.writeText(urlToUse);
         if (this.embed) {
           this.copyLinkPopoverRef.toggle(true);
           this.inlineCopyLinkOpened = true;
@@ -467,7 +481,7 @@ export class InstantAppsSocialShare {
       case 'twitter':
       case 'linkedIn':
         const urlData = {
-          url: encodeURI(shortenedUrl),
+          url: encodeURI(urlToUse),
         };
         const data = type === 'twitter' ? { ...urlData, text: this.shareText } : urlData;
         const url = substitute(SOCIAL_URL_TEMPLATES[type], data);
@@ -494,7 +508,7 @@ export class InstantAppsSocialShare {
   }
 
   getEmbedCode(): string {
-    return `<iframe src="${this.shareUrl}" width="${this.embedWidth}" height="${this.embedHeight}" frameborder="0" style="border:0" allowfullscreen></iframe>`;
+    return `<iframe src="${this.shareUrl}" width="${this.embedWidth}" height="${this.embedHeight}" frameborder="0" style="border:0" allowfullscreen>${this.iframeInnerText}</iframe>`;
   }
 
   copyEmbedCode() {
