@@ -65,6 +65,7 @@ export class InstantAppsSocialShare {
     this.shareText = '';
     this.embed = false;
     this.shareButtonColor = 'neutral';
+    this.iframeInnerText = '';
     // mode = 'popover'
     this.opened = false;
     this.copied = false;
@@ -265,11 +266,20 @@ export class InstantAppsSocialShare {
     this.popoverRef.toggle(this.opened);
   }
   async handleShareItem(type) {
+    var _a, _b;
     this.shareUrl = await this.generateShareUrl();
-    const shortenedUrl = await this.shortenUrl(this.shareUrl);
+    let shortenedUrl = null;
+    // Detects Safari - If Safari, do not shorten URL due to Safari not allowing clipboard copy after network requests
+    const isChrome = (_a = navigator === null || navigator === void 0 ? void 0 : navigator.userAgent) === null || _a === void 0 ? void 0 : _a.includes('Chrome');
+    const isSafari = (_b = navigator === null || navigator === void 0 ? void 0 : navigator.userAgent) === null || _b === void 0 ? void 0 : _b.includes('Safari');
+    const doNotShortenUrl = isSafari !== undefined && isSafari && isChrome !== undefined && !isChrome;
+    if (!doNotShortenUrl) {
+      shortenedUrl = await this.shortenUrl(this.shareUrl);
+    }
+    const urlToUse = shortenedUrl ? shortenedUrl : this.shareUrl;
     switch (type) {
       case 'link':
-        navigator.clipboard.writeText(shortenedUrl);
+        navigator.clipboard.writeText(urlToUse);
         if (this.embed) {
           this.copyLinkPopoverRef.toggle(true);
           this.inlineCopyLinkOpened = true;
@@ -282,7 +292,7 @@ export class InstantAppsSocialShare {
       case 'twitter':
       case 'linkedIn':
         const urlData = {
-          url: encodeURI(shortenedUrl),
+          url: encodeURI(urlToUse),
         };
         const data = type === 'twitter' ? Object.assign(Object.assign({}, urlData), { text: this.shareText }) : urlData;
         const url = substitute(SOCIAL_URL_TEMPLATES[type], data);
@@ -307,7 +317,7 @@ export class InstantAppsSocialShare {
     }
   }
   getEmbedCode() {
-    return `<iframe src="${this.shareUrl}" width="${this.embedWidth}" height="${this.embedHeight}" frameborder="0" style="border:0" allowfullscreen></iframe>`;
+    return `<iframe src="${this.shareUrl}" width="${this.embedWidth}" height="${this.embedHeight}" frameborder="0" style="border:0" allowfullscreen>${this.iframeInnerText}</iframe>`;
   }
   copyEmbedCode() {
     navigator.clipboard.writeText(this.getEmbedCode());
@@ -514,6 +524,24 @@ export class InstantAppsSocialShare {
       },
       "attribute": "query-string",
       "reflect": true
+    },
+    "iframeInnerText": {
+      "type": "string",
+      "mutable": false,
+      "complexType": {
+        "original": "string",
+        "resolved": "string",
+        "references": {}
+      },
+      "required": false,
+      "optional": false,
+      "docs": {
+        "tags": [],
+        "text": ""
+      },
+      "attribute": "iframe-inner-text",
+      "reflect": true,
+      "defaultValue": "''"
     },
     "view": {
       "type": "unknown",

@@ -15,6 +15,7 @@ export declare class InstantAppsSocialShare {
   embed: boolean;
   shareButtonColor: 'inverse' | 'neutral';
   queryString: string;
+  iframeInnerText: string;
   view: __esri.MapView | __esri.SceneView;
   messages: typeof SocialShare_T9n;
   opened: boolean;

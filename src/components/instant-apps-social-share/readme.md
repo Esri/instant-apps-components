@@ -10,6 +10,7 @@
 | Property           | Attribute            | Description | Type                     | Default                |
 | ------------------ | -------------------- | ----------- | ------------------------ | ---------------------- |
 | `embed`            | `embed`              |             | `boolean`                | `false`                |
+| `iframeInnerText`  | `iframe-inner-text`  |             | `string`                 | `''`                   |
 | `mode`             | `mode`               |             | `"inline" \| "popover"`  | `'popover'`            |
 | `queryString`      | `query-string`       |             | `string`                 | `undefined`            |
 | `shareButtonColor` | `share-button-color` |             | `"inverse" \| "neutral"` | `'neutral'`            |
