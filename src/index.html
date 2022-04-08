@@ -50,7 +50,7 @@
      <!-- <instant-apps-social-share slot="actions-end" share-button-color="inverse" 
      share-url="https://holistic.mapsdevext.arcgis.com/?appid=962ed75b7ee34af98813e13a682710b0"></instant-apps-social-share> -->
       <instant-apps-social-share slot="actions-end" share-button-color="inverse" 
-      query-string="attachmentIndex=0&featureObjectId=542"></instant-apps-social-share>
+      query-string="attachmentIndex=0&featureObjectId=542" scale="s"></instant-apps-social-share>
     </instant-apps-header>
     <div id="viewDiv"></div>
     <script>
@@ -113,6 +113,10 @@
 
          const socialShare = document.querySelector("instant-apps-social-share");
          socialShare.view = view;
+         socialShare.defaultUrlParams = {
+           selectedFeature: false,
+           hiddenLayers: false
+         }
        });
    </script>
   </body>

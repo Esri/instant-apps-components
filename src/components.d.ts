@@ -16,13 +16,17 @@ export namespace Components {
         "titleText": string;
     }
     interface InstantAppsSocialShare {
+        "defaultUrlParams": { center?: boolean; level?: boolean; selectedFeature?: boolean; hiddenLayers?: boolean } | null;
+        "displayTipText": boolean;
         "embed": boolean;
         "iframeInnerText": string;
         "mode": 'popover' | 'inline';
         "queryString": string;
+        "scale": 's' | 'm' | 'l';
         "shareButtonColor": 'inverse' | 'neutral';
         "shareText": string;
         "shareUrl": string;
+        "socialMedia": boolean;
         "view": __esri.MapView | __esri.SceneView;
     }
 }
@@ -55,13 +59,17 @@ declare namespace LocalJSX {
         "titleText"?: string;
     }
     interface InstantAppsSocialShare {
+        "defaultUrlParams"?: { center?: boolean; level?: boolean; selectedFeature?: boolean; hiddenLayers?: boolean } | null;
+        "displayTipText"?: boolean;
         "embed"?: boolean;
         "iframeInnerText"?: string;
         "mode"?: 'popover' | 'inline';
         "queryString"?: string;
+        "scale"?: 's' | 'm' | 'l';
         "shareButtonColor"?: 'inverse' | 'neutral';
         "shareText"?: string;
         "shareUrl"?: string;
+        "socialMedia"?: boolean;
         "view"?: __esri.MapView | __esri.SceneView;
     }
     interface IntrinsicElements {

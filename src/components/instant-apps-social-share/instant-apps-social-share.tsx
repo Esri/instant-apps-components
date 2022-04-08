@@ -12,7 +12,7 @@
  *   limitations under the License.
  */
 
-import { Component, h, Prop, State, Element } from '@stencil/core';
+import { Component, h, Prop, State, Element, Host } from '@stencil/core';
 
 import { substitute } from '@arcgis/core/intl';
 import Point from '@arcgis/core/geometry/Point';
@@ -120,6 +120,14 @@ export class InstantAppsSocialShare {
 
   @Prop() view: __esri.MapView | __esri.SceneView;
 
+  @Prop({ reflect: true }) displayTipText: boolean = true;
+
+  @Prop({ reflect: true }) socialMedia: boolean = true;
+
+  @Prop({ reflect: true }) scale: 's' | 'm' | 'l' = 'm';
+
+  @Prop() defaultUrlParams: { center?: boolean; level?: boolean; selectedFeature?: boolean; hiddenLayers?: boolean } | null = null;
+
   // INTERNAL STATE
   // T9N
   @State() messages: typeof SocialShare_T9n;
@@ -212,55 +220,64 @@ export class InstantAppsSocialShare {
       ) : (
         <div class={CSS.dialogContent}>
           {this.renderOptions()}
-          {this.mode === 'popover' && !this.embed ? this.renderTip() : null}
+          {this.mode === 'popover' && !this.embed && this.displayTipText ? this.renderTip() : null}
           {this.embed ? this.renderEmbed() : null}
         </div>
       );
     const dialogContent = (
-      <div ref={el => (this.dialogContentRef = el)} class={`${CSS.dialog}${this.mode === 'inline' ? ` ${CSS.dialogEmbed}` : ''}`}>
+      <div ref={el => (this.dialogContentRef = el)} class={CSS.dialog}>
         {content}
       </div>
     );
-    return this.mode === 'popover'
-      ? [
-          <calcite-popover
-            ref={(el: HTMLCalcitePopoverElement) => (this.popoverRef = el)}
-            label={this.messages?.share?.label}
-            reference-element="shareButton"
-            placement="bottom-start"
-          >
-            {dialogContent}
-          </calcite-popover>,
-          <calcite-button
-            onClick={this.togglePopover.bind(this)}
-            id="shareButton"
-            color={this.shareButtonColor}
-            appearance="transparent"
-            label={this.messages?.share?.label}
-            title={this.messages?.share?.label}
-          >
-            <calcite-icon icon="share" />
-          </calcite-button>,
-        ]
-      : [
-          dialogContent,
-          <calcite-popover
-            ref={(el: HTMLCalcitePopoverElement) => (this.copyLinkPopoverRef = el)}
-            label={this.messages?.share?.label}
-            reference-element="copyToClipboard"
-            placement="trailing"
-          >
-            {this.renderSuccess()}
-          </calcite-popover>,
-          <calcite-popover
-            ref={(el: HTMLCalcitePopoverElement) => (this.copyEmbedPopoverRef = el)}
-            label={this.messages?.share?.label}
-            reference-element="copyEmbedToClipboard"
-            placement="trailing"
-          >
-            {this.renderEmbedSuccess()}
-          </calcite-popover>,
-        ];
+
+    return (
+      <Host>
+        {this.mode === 'popover'
+          ? [
+              <calcite-popover
+                ref={(el: HTMLCalcitePopoverElement) => (this.popoverRef = el)}
+                label={this.messages?.share?.label}
+                reference-element="shareButton"
+                placement="bottom-start"
+                scale={this.scale}
+              >
+                {dialogContent}
+              </calcite-popover>,
+              <calcite-button
+                onClick={this.togglePopover.bind(this)}
+                id="shareButton"
+                color={this.shareButtonColor}
+                appearance="transparent"
+                label={this.messages?.share?.label}
+                title={this.messages?.share?.label}
+                scale={this.scale}
+              >
+                <calcite-icon icon="share" scale="m" />
+              </calcite-button>,
+            ]
+          : [
+              dialogContent,
+              <calcite-popover
+                ref={(el: HTMLCalcitePopoverElement) => (this.copyLinkPopoverRef = el)}
+                label={this.messages?.share?.label}
+                reference-element="copyToClipboard"
+                placement="trailing"
+                scale={this.scale}
+              >
+                {this.renderSuccess()}
+              </calcite-popover>,
+              <calcite-popover
+                ref={(el: HTMLCalcitePopoverElement) => (this.copyEmbedPopoverRef = el)}
+                label={this.messages?.share?.label}
+                reference-element="copyEmbedToClipboard"
+                placement="trailing"
+                scale={this.scale}
+              >
+                {this.renderEmbedSuccess()}
+              </calcite-popover>,
+            ]}
+      </Host>
+    );
   }
 
   renderSuccess() {
@@ -269,7 +286,7 @@ export class InstantAppsSocialShare {
       <div class={CSS.success.container}>
         <span class={CSS.success.header}>
           <span class={CSS.success.icon}>
-            <calcite-icon icon="check-circle-f" scale="s" />
+            <calcite-icon icon="check-circle-f" scale={this.scale} />
           </span>
           {success?.label}
         </span>
@@ -284,7 +301,7 @@ export class InstantAppsSocialShare {
       <div class={CSS.success.container}>
         <span class={CSS.success.header}>
           <span class={CSS.success.icon}>
-            <calcite-icon icon="check-circle-f" scale="s" />
+            <calcite-icon icon="check-circle-f" scale={this.scale} />
           </span>
           {success?.label}
         </span>
@@ -299,22 +316,26 @@ export class InstantAppsSocialShare {
       <ul class={CSS.options} role="menu">
         <li id="copyToClipboard" onClick={this.handleShareItem.bind(this, 'link')} role="menuitem">
           <span class={CSS.icon}>
-            <calcite-icon icon="link" scale="m" />
+            <calcite-icon icon="link" scale={this.scale} />
           </span>
           <span class={CSS.optionText}>{options?.link?.label}</span>
         </li>
-        <li onClick={this.handleShareItem.bind(this, 'facebook')} role="menuitem">
-          <span class={CSS.icon}>{this.renderFacebookIcon()}</span>
-          <span class={CSS.optionText}>{options?.facebook?.label}</span>
-        </li>
-        <li onClick={this.handleShareItem.bind(this, 'twitter')} role="menuitem">
-          <span class={CSS.icon}>{this.renderTwitterIcon()}</span>
-          <span class={CSS.optionText}>{options?.twitter?.label}</span>
-        </li>
-        <li onClick={this.handleShareItem.bind(this, 'linkedIn')} role="menuitem">
-          <span class={CSS.icon}>{this.renderLinkedInIcon()}</span>
-          <span class={CSS.optionText}>{options?.linkedIn?.label}</span>
-        </li>
+        {this.socialMedia
+          ? [
+              <li onClick={this.handleShareItem.bind(this, 'facebook')} role="menuitem">
+                <span class={CSS.icon}>{this.renderFacebookIcon()}</span>
+                <span class={CSS.optionText}>{options?.facebook?.label}</span>
+              </li>,
+              <li onClick={this.handleShareItem.bind(this, 'twitter')} role="menuitem">
+                <span class={CSS.icon}>{this.renderTwitterIcon()}</span>
+                <span class={CSS.optionText}>{options?.twitter?.label}</span>
+              </li>,
+              <li onClick={this.handleShareItem.bind(this, 'linkedIn')} role="menuitem">
+                <span class={CSS.icon}>{this.renderLinkedInIcon()}</span>
+                <span class={CSS.optionText}>{options?.linkedIn?.label}</span>
+              </li>,
+            ]
+          : null}
       </ul>
     );
   }
@@ -401,7 +422,7 @@ export class InstantAppsSocialShare {
     return (
       <div class={CSS.tipContainer}>
         <span class={CSS.tipHeader}>
-          <calcite-icon icon="lightbulb" scale="s" />
+          <calcite-icon icon="lightbulb" scale={this.scale} />
           <span>{info?.label}</span>
         </span>
         <p class={CSS.tipContent}>{info?.tooltip}</p>
@@ -414,14 +435,14 @@ export class InstantAppsSocialShare {
     return (
       <div class={CSS.embed.container}>
         <span class={CSS.embed.header}>
-          <calcite-icon icon="code" scale="m" />
+          <calcite-icon icon="code" scale={this.scale} />
           <span>{this.messages?.embed?.label}</span>
         </span>
         <div class={CSS.embed.embedCode.container}>
           <div class={CSS.embed.embedCode.textArea}>
             <textarea ref={el => (this.embedCodeRef = el)} cols={30} rows={5} readonly value={this.getEmbedCode()} />
             <button id="copyEmbedToClipboard" onClick={this.copyEmbedCode.bind(this)} class={CSS.embed.embedCode.copyButton}>
-              <calcite-icon icon="copy" scale="s" />
+              <calcite-icon icon="copy" scale={this.scale} />
               <span>{embedMessages?.copy}</span>
             </button>
           </div>
@@ -588,9 +609,16 @@ export class InstantAppsSocialShare {
     const path = this.shareUrl.split('center')[0];
 
     const sep = path.indexOf('?') === -1 ? '?' : path.indexOf('?') !== -1 && path.indexOf('=') !== -1 ? (path.indexOf('&') === -1 ? '&' : '') : '';
-    const shareParams = `${path}${sep}center=${roundedLon};${roundedLat}&level=${roundedZoom}${
-      layerId && hiddenLayers.indexOf(layerId) === -1 && graphic ? `&selectedFeature=${layerId};${oid}` : ''
-    }${hiddenLayers ? `&hiddenLayers=${hiddenLayers}` : ''}${this.queryString ? `&${this.queryString}` : ''}`;
+
+    const { defaultUrlParams } = this;
+
+    const center = defaultUrlParams?.center === false ? '' : `center=${roundedLon};${roundedLat}`;
+    const level = defaultUrlParams?.level === false ? '' : `&level=${roundedZoom}`;
+    const selectedFeature =
+      defaultUrlParams?.selectedFeature === false ? '' : layerId && hiddenLayers.indexOf(layerId) === -1 && graphic ? `&selectedFeature=${layerId};${oid}` : '';
+    const hiddenLayersParam = defaultUrlParams?.hiddenLayers === false ? '' : hiddenLayers ? `&hiddenLayers=${hiddenLayers}` : '';
+
+    const shareParams = `${path}${sep}${center}${level}${selectedFeature}${hiddenLayersParam}${this.queryString ? `&${this.queryString}` : ''}`;
     const type = this.view.type;
     // Checks if view.type is 3D, if so add, 3D url parameters
     if (type === '3d') {
