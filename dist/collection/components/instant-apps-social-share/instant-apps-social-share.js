@@ -397,7 +397,7 @@ export class InstantAppsSocialShare {
       .toArray()
       .map(featureLayer => featureLayer.id)
       .toString()
-      .replace(',', ';');
+      .replaceAll(',', ';');
     const path = this.shareUrl.split('center')[0];
     const sep = path.indexOf('?') === -1 ? '?' : path.indexOf('?') !== -1 && path.indexOf('=') !== -1 ? (path.indexOf('&') === -1 ? '&' : '') : '';
     const { defaultUrlParams } = this;
