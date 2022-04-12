@@ -1254,11 +1254,11 @@ let InstantAppsSocialShare$1 = class extends HTMLElement {
       case 'link':
         navigator.clipboard.writeText(urlToUse);
         if (this.embed) {
-          this.copyLinkPopoverRef.toggle(true);
-          this.inlineCopyLinkOpened = true;
           this.copyEmbedPopoverRef.toggle(false);
           this.inlineCopyEmbedOpened = false;
         }
+        this.copyLinkPopoverRef.toggle(true);
+        this.inlineCopyLinkOpened = true;
         this.copied = true;
         return;
       case 'facebook':
