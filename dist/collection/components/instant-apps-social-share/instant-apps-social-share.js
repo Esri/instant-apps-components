@@ -155,7 +155,7 @@ export class InstantAppsSocialShare {
     var _a, _b, _c, _d, _e, _f, _g, _h, _j, _k;
     const content = this.copied && this.mode === 'popover' ? (this.renderSuccess()) : (h("div", { class: CSS.dialogContent },
       this.renderOptions(),
-      this.mode === 'popover' && !this.embed && this.displayTipText ? this.renderTip() : null,
+      this.displayTipText ? this.renderTip() : null,
       this.embed ? this.renderEmbed() : null));
     const dialogContent = (h("div", { ref: el => (this.dialogContentRef = el), class: CSS.dialog }, content));
     return (h(Host, null, this.mode === 'popover'

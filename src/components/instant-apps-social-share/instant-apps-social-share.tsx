@@ -220,7 +220,7 @@ export class InstantAppsSocialShare {
       ) : (
         <div class={CSS.dialogContent}>
           {this.renderOptions()}
-          {this.mode === 'popover' && !this.embed && this.displayTipText ? this.renderTip() : null}
+          {this.displayTipText ? this.renderTip() : null}
           {this.embed ? this.renderEmbed() : null}
         </div>
       );
