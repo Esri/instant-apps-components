@@ -292,7 +292,9 @@ export class InstantAppsSocialShare {
           this.copyEmbedPopoverRef.toggle(false);
           this.inlineCopyEmbedOpened = false;
         }
-        this.copyLinkPopoverRef.toggle(true);
+        if (this.mode === 'inline') {
+          this.copyLinkPopoverRef.toggle(true);
+        }
         this.inlineCopyLinkOpened = true;
         this.copied = true;
         return;
@@ -339,15 +341,7 @@ export class InstantAppsSocialShare {
     var _a;
     // If view is not ready
     if (!this.view || !((_a = this.view) === null || _a === void 0 ? void 0 : _a.ready)) {
-      if (this.queryString) {
-        const path = this.shareUrl.split('center')[0];
-        // If no "?", then append "?". Otherwise, check for "?" and "="
-        const sep = path.indexOf('?') === -1 ? '?' : path.indexOf('?') !== -1 && path.indexOf('=') !== -1 ? (path.indexOf('&') === -1 ? '&' : '') : '';
-        return `${this.shareUrl}${sep}${this.queryString}`;
-      }
-      else {
-        return this.shareUrl;
-      }
+      return this.shareUrl;
     }
     // Use x/y values and the spatial reference of the view to instantiate a geometry point
     const { x, y } = this.view.center;
@@ -393,34 +387,52 @@ export class InstantAppsSocialShare {
       oid = graphic.attributes[featureLayer.objectIdField];
     }
     const hiddenLayers = this.view.map.allLayers
-      .filter(layer => layer.type === 'feature' && !layer.visible)
+      .filter(layer => !layer.visible)
       .toArray()
       .map(featureLayer => featureLayer.id)
       .toString()
       .replaceAll(',', ';');
-    const path = this.shareUrl.split('center')[0];
-    const sep = path.indexOf('?') === -1 ? '?' : path.indexOf('?') !== -1 && path.indexOf('=') !== -1 ? (path.indexOf('&') === -1 ? '&' : '') : '';
+    const { type } = this.view;
     const { defaultUrlParams } = this;
-    const center = (defaultUrlParams === null || defaultUrlParams === void 0 ? void 0 : defaultUrlParams.center) === false ? '' : `center=${roundedLon};${roundedLat}`;
-    const level = (defaultUrlParams === null || defaultUrlParams === void 0 ? void 0 : defaultUrlParams.level) === false ? '' : `&level=${roundedZoom}`;
-    const selectedFeature = (defaultUrlParams === null || defaultUrlParams === void 0 ? void 0 : defaultUrlParams.selectedFeature) === false ? '' : layerId && hiddenLayers.indexOf(layerId) === -1 && graphic ? `&selectedFeature=${layerId};${oid}` : '';
-    const hiddenLayersParam = (defaultUrlParams === null || defaultUrlParams === void 0 ? void 0 : defaultUrlParams.hiddenLayers) === false ? '' : hiddenLayers ? `&hiddenLayers=${hiddenLayers}` : '';
-    const shareParams = `${path}${sep}${center}${level}${selectedFeature}${hiddenLayersParam}${this.queryString ? `&${this.queryString}` : ''}`;
-    const type = this.view.type;
-    // Checks if view.type is 3D, if so add, 3D url parameters
+    // Checks if view.type is 3D, if so, set 3D url parameters
     if (type === '3d') {
+      // viewpoint=cam:{camera.position.longitude},{camera.position.latitude},{camera.position.z};{camera.heading},{camera.tilt}
       const { camera } = this.view;
-      const { heading, fov, tilt } = camera;
-      const roundedHeading = this.roundValue(heading);
-      const roundedFov = this.roundValue(fov);
-      const roundedTilt = this.roundValue(tilt);
-      return `${shareParams}&heading=${roundedHeading}&fov=${roundedFov}&tilt=${roundedTilt}`;
+      const { heading, position, tilt } = camera;
+      const { longitude, latitude, z } = position;
+      const viewpoint_Values = {
+        longitude: this.roundValue(longitude, 8),
+        latitude: this.roundValue(latitude, 8),
+        z: this.roundValue(z, 3),
+        heading: this.roundValue(heading, 3),
+        tilt: this.roundValue(tilt, 3),
+      };
+      const viewpointVal = `cam:${viewpoint_Values.longitude},${viewpoint_Values.latitude},${viewpoint_Values.z};${viewpoint_Values.heading},${viewpoint_Values.tilt}`;
+      const url = new URL(this.shareUrl);
+      if (layerId && oid && (defaultUrlParams === null || defaultUrlParams === void 0 ? void 0 : defaultUrlParams.viewpoint) !== false)
+        url.searchParams.set('viewpoint', viewpointVal);
+      if (layerId && oid && (defaultUrlParams === null || defaultUrlParams === void 0 ? void 0 : defaultUrlParams.selectedFeature) !== false)
+        url.searchParams.set('selectedFeature', `${layerId};${oid}`);
+      if (hiddenLayers && (defaultUrlParams === null || defaultUrlParams === void 0 ? void 0 : defaultUrlParams.hiddenLayers) !== false)
+        url.searchParams.set('hiddenLayers', hiddenLayers);
+      url.search = decodeURIComponent(url.search);
+      return url.href;
     }
-    // Otherwise, just return original url parameters for 2D
-    return shareParams;
+    // Otherwise, just return original url for 2D
+    const url = new URL(this.shareUrl);
+    if ((defaultUrlParams === null || defaultUrlParams === void 0 ? void 0 : defaultUrlParams.center) !== false)
+      url.searchParams.set('center', `${roundedLon};${roundedLat}`);
+    if ((defaultUrlParams === null || defaultUrlParams === void 0 ? void 0 : defaultUrlParams.level) !== false)
+      url.searchParams.set('level', `${roundedZoom}`);
+    if (layerId && oid && (defaultUrlParams === null || defaultUrlParams === void 0 ? void 0 : defaultUrlParams.selectedFeature) !== false)
+      url.searchParams.set('selectedFeature', `${layerId};${oid}`);
+    if (hiddenLayers && (defaultUrlParams === null || defaultUrlParams === void 0 ? void 0 : defaultUrlParams.selectedFeature) !== false)
+      url.searchParams.set('hiddenLayers', hiddenLayers);
+    url.search = decodeURIComponent(url.search);
+    return url.href;
   }
-  roundValue(val) {
-    return parseFloat(val.toFixed(4));
+  roundValue(val, decimalPoints = 4) {
+    return parseFloat(val.toFixed(decimalPoints));
   }
   static get is() { return "instant-apps-social-share"; }
   static get encapsulation() { return "shadow"; }
@@ -521,23 +533,6 @@ export class InstantAppsSocialShare {
       "reflect": true,
       "defaultValue": "'neutral'"
     },
-    "queryString": {
-      "type": "string",
-      "mutable": false,
-      "complexType": {
-        "original": "string",
-        "resolved": "string",
-        "references": {}
-      },
-      "required": false,
-      "optional": false,
-      "docs": {
-        "tags": [],
-        "text": ""
-      },
-      "attribute": "query-string",
-      "reflect": true
-    },
     "iframeInnerText": {
       "type": "string",
       "mutable": false,
@@ -633,8 +628,8 @@ export class InstantAppsSocialShare {
       "type": "unknown",
       "mutable": false,
       "complexType": {
-        "original": "{ center?: boolean; level?: boolean; selectedFeature?: boolean; hiddenLayers?: boolean } | null",
-        "resolved": "null | { center?: boolean | undefined; level?: boolean | undefined; selectedFeature?: boolean | undefined; hiddenLayers?: boolean | undefined; }",
+        "original": "{ center?: boolean; level?: boolean; viewpoint?: boolean; selectedFeature?: boolean; hiddenLayers?: boolean } | null",
+        "resolved": "null | { center?: boolean | undefined; level?: boolean | undefined; viewpoint?: boolean | undefined; selectedFeature?: boolean | undefined; hiddenLayers?: boolean | undefined; }",
         "references": {}
       },
       "required": false,

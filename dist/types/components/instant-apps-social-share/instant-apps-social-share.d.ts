@@ -14,7 +14,6 @@ export declare class InstantAppsSocialShare {
   shareText: string;
   embed: boolean;
   shareButtonColor: 'inverse' | 'neutral';
-  queryString: string;
   iframeInnerText: string;
   view: __esri.MapView | __esri.SceneView;
   displayTipText: boolean;
@@ -23,6 +22,7 @@ export declare class InstantAppsSocialShare {
   defaultUrlParams: {
     center?: boolean;
     level?: boolean;
+    viewpoint?: boolean;
     selectedFeature?: boolean;
     hiddenLayers?: boolean;
   } | null;
@@ -59,5 +59,5 @@ export declare class InstantAppsSocialShare {
   generateShareUrl(): Promise<string>;
   processPoint(point: Point): Promise<__esri.Point>;
   generateShareUrlParams(point: Point): string;
-  roundValue(val: number): number;
+  roundValue(val: number, decimalPoints?: number): number;
 }

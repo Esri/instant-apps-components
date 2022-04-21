@@ -10,7 +10,7 @@
   },
   "info": {
     "label": "Did you know?",
-    "tooltip": "Copy link will preserve the current map view, visible layers, and open popups. Use this option to share what you see in the app."
+    "tooltip": "You can share what you see in the app. All share options will preserve the current map view, visible layers, and open popups."
   },
   "success": {
     "label": "Success!",

@@ -1,4 +1,4 @@
-import { s as s$1, e } from './instant-apps-header.instant-apps-social-share-bd6e5b11.js';
+import { s as s$1, e } from './instant-apps-header.instant-apps-social-share-512caa58.js';
 import './index-c2b6dfe1.js';
 
 /*

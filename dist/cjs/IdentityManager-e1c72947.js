@@ -1,6 +1,6 @@
 'use strict';
 
-const instantAppsHeader_instantAppsSocialShare_entry = require('./instant-apps-header.instant-apps-social-share-840118bb.js');
+const instantAppsHeader_instantAppsSocialShare_entry = require('./instant-apps-header.instant-apps-social-share-26732720.js');
 require('./index-4b3cfad4.js');
 
 /*

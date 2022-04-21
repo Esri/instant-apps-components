@@ -16,12 +16,11 @@ export namespace Components {
         "titleText": string;
     }
     interface InstantAppsSocialShare {
-        "defaultUrlParams": { center?: boolean; level?: boolean; selectedFeature?: boolean; hiddenLayers?: boolean } | null;
+        "defaultUrlParams": { center?: boolean; level?: boolean; viewpoint?: boolean; selectedFeature?: boolean; hiddenLayers?: boolean } | null;
         "displayTipText": boolean;
         "embed": boolean;
         "iframeInnerText": string;
         "mode": 'popover' | 'inline';
-        "queryString": string;
         "scale": 's' | 'm' | 'l';
         "shareButtonColor": 'inverse' | 'neutral';
         "shareText": string;
@@ -59,12 +58,11 @@ declare namespace LocalJSX {
         "titleText"?: string;
     }
     interface InstantAppsSocialShare {
-        "defaultUrlParams"?: { center?: boolean; level?: boolean; selectedFeature?: boolean; hiddenLayers?: boolean } | null;
+        "defaultUrlParams"?: { center?: boolean; level?: boolean; viewpoint?: boolean; selectedFeature?: boolean; hiddenLayers?: boolean } | null;
         "displayTipText"?: boolean;
         "embed"?: boolean;
         "iframeInnerText"?: string;
         "mode"?: 'popover' | 'inline';
-        "queryString"?: string;
         "scale"?: 's' | 'm' | 'l';
         "shareButtonColor"?: 'inverse' | 'neutral';
         "shareText"?: string;
