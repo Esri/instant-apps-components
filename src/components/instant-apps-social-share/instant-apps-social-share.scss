@@ -23,9 +23,19 @@ $hoverDark: #262626;
   --instant-apps-social-share-width--m: 280px;
   --instant-apps-social-share-width--l: 320px;
   --instant-apps-social-share-background-color: transparent;
+  --instant-apps-social-share-popover-button-background-color: transparent;
+  --instant-apps-social-share-popover-button-icon-color: var(--calcite-ui-icon-color);
   --instant-apps-social-share-embed-border: 1px solid $border;
   --instant-apps-social-share-embed-text-area-text: #468540;
   .instant-apps-social-share {
+
+    &__popover-button {
+      background-color: var(--instant-apps-social-share-popover-button-background-color);
+      calcite-icon {
+        color: var(--instant-apps-social-share-popover-button-icon-color);
+      }
+    }
+
     &__dialog {
       box-sizing: border-box;
       height: auto;

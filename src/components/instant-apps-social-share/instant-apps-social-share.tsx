@@ -37,6 +37,7 @@ const CSS = {
   tipContent: `${base}__tip-content`,
   icon: `${base}__icon`,
   optionText: `${base}__option-text`,
+  popoverButton: `${base}__popover-button`,
   success: {
     container: `${base}__success`,
     header: `${base}__success-header`,
@@ -241,6 +242,7 @@ export class InstantAppsSocialShare {
               <calcite-button
                 onClick={this.togglePopover.bind(this)}
                 id="shareButton"
+                class={CSS.popoverButton}
                 color={this.shareButtonColor}
                 appearance="transparent"
                 label={this.messages?.share?.label}
