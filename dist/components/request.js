@@ -1,5 +1,4 @@
-import { e, s as s$1 } from './instant-apps-social-share-593ecea0.js';
-import './index-4c8f6592.js';
+import { s as s$1, e } from './instant-apps-social-share.js';
 
 /*
 All material copyright ESRI, All Rights Reserved, unless otherwise specified.
