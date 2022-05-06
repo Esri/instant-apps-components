@@ -617,7 +617,7 @@ export class InstantAppsSocialShare {
 
       const viewpointVal = `cam:${viewpoint_Values.longitude},${viewpoint_Values.latitude},${viewpoint_Values.z};${viewpoint_Values.heading},${viewpoint_Values.tilt}`;
       const url = new URL(this.shareUrl);
-      if (layerId && oid && defaultUrlParams?.viewpoint !== false) url.searchParams.set('viewpoint', viewpointVal);
+      if (defaultUrlParams?.viewpoint !== false) url.searchParams.set('viewpoint', viewpointVal);
       if (layerId && oid && defaultUrlParams?.selectedFeature !== false) url.searchParams.set('selectedFeature', `${layerId};${oid}`);
       if (hiddenLayers && defaultUrlParams?.hiddenLayers !== false) url.searchParams.set('hiddenLayers', hiddenLayers);
       url.search = decodeURIComponent(url.search);
