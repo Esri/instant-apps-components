@@ -578,6 +578,7 @@ export class InstantAppsSocialShare {
     if (longitude === undefined || latitude === undefined) {
       return this.shareUrl;
     }
+
     const roundedLon = this.roundValue(longitude);
     const roundedLat = this.roundValue(latitude);
     const { zoom } = this.view;
@@ -600,6 +601,17 @@ export class InstantAppsSocialShare {
 
     const { type } = this.view;
     const { defaultUrlParams } = this;
+
+    const url = new URL(this.shareUrl);
+    const { searchParams } = url;
+
+    // Resets existing URL params
+    if (searchParams.get('center')) searchParams.delete('center');
+    if (searchParams.get('level')) searchParams.delete('level');
+    if (searchParams.get('selectedFeature')) searchParams.delete('selectedFeature');
+    if (searchParams.get('hiddenLayers')) searchParams.delete('hiddenLayers');
+    if (searchParams.get('viewpoint')) searchParams.delete('viewpoint');
+
     // Checks if view.type is 3D, if so, set 3D url parameters
     if (type === '3d') {
       // viewpoint=cam:{camera.position.longitude},{camera.position.latitude},{camera.position.z};{camera.heading},{camera.tilt}
@@ -616,7 +628,7 @@ export class InstantAppsSocialShare {
       };
 
       const viewpointVal = `cam:${viewpoint_Values.longitude},${viewpoint_Values.latitude},${viewpoint_Values.z};${viewpoint_Values.heading},${viewpoint_Values.tilt}`;
-      const url = new URL(this.shareUrl);
+
       if (defaultUrlParams?.viewpoint !== false) url.searchParams.set('viewpoint', viewpointVal);
       if (layerId && oid && defaultUrlParams?.selectedFeature !== false) url.searchParams.set('selectedFeature', `${layerId};${oid}`);
       if (hiddenLayers && defaultUrlParams?.hiddenLayers !== false) url.searchParams.set('hiddenLayers', hiddenLayers);
@@ -625,7 +637,6 @@ export class InstantAppsSocialShare {
     }
 
     // Otherwise, just return original url for 2D
-    const url = new URL(this.shareUrl);
     if (defaultUrlParams?.center !== false) url.searchParams.set('center', `${roundedLon};${roundedLat}`);
     if (defaultUrlParams?.level !== false) url.searchParams.set('level', `${roundedZoom}`);
     if (layerId && oid && defaultUrlParams?.selectedFeature !== false) url.searchParams.set('selectedFeature', `${layerId};${oid}`);

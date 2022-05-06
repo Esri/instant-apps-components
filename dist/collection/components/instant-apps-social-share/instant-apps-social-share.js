@@ -395,6 +395,19 @@ export class InstantAppsSocialShare {
       .replaceAll(',', ';');
     const { type } = this.view;
     const { defaultUrlParams } = this;
+    const url = new URL(this.shareUrl);
+    const { searchParams } = url;
+    // Resets existing URL params
+    if (searchParams.get('center'))
+      searchParams.delete('center');
+    if (searchParams.get('level'))
+      searchParams.delete('level');
+    if (searchParams.get('selectedFeature'))
+      searchParams.delete('selectedFeature');
+    if (searchParams.get('hiddenLayers'))
+      searchParams.delete('hiddenLayers');
+    if (searchParams.get('viewpoint'))
+      searchParams.delete('viewpoint');
     // Checks if view.type is 3D, if so, set 3D url parameters
     if (type === '3d') {
       // viewpoint=cam:{camera.position.longitude},{camera.position.latitude},{camera.position.z};{camera.heading},{camera.tilt}
@@ -409,7 +422,6 @@ export class InstantAppsSocialShare {
         tilt: this.roundValue(tilt, 3),
       };
       const viewpointVal = `cam:${viewpoint_Values.longitude},${viewpoint_Values.latitude},${viewpoint_Values.z};${viewpoint_Values.heading},${viewpoint_Values.tilt}`;
-      const url = new URL(this.shareUrl);
       if ((defaultUrlParams === null || defaultUrlParams === void 0 ? void 0 : defaultUrlParams.viewpoint) !== false)
         url.searchParams.set('viewpoint', viewpointVal);
       if (layerId && oid && (defaultUrlParams === null || defaultUrlParams === void 0 ? void 0 : defaultUrlParams.selectedFeature) !== false)
@@ -420,7 +432,6 @@ export class InstantAppsSocialShare {
       return url.href;
     }
     // Otherwise, just return original url for 2D
-    const url = new URL(this.shareUrl);
     if ((defaultUrlParams === null || defaultUrlParams === void 0 ? void 0 : defaultUrlParams.center) !== false)
       url.searchParams.set('center', `${roundedLon};${roundedLat}`);
     if ((defaultUrlParams === null || defaultUrlParams === void 0 ? void 0 : defaultUrlParams.level) !== false)
