@@ -15,6 +15,16 @@ export namespace Components {
         "textColor": string;
         "titleText": string;
     }
+    interface InstantAppsPopover {
+        "content": string;
+        "mediaSrc": string;
+        "popoverTitle": string;
+        "referenceElement": string;
+        "subtitle": string;
+    }
+    interface InstantAppsPopovers {
+        "instantAppsPopovers": { [id: string]: HTMLInstantAppsPopoverElement };
+    }
     interface InstantAppsSocialShare {
         "defaultUrlParams": { center?: boolean; level?: boolean; viewpoint?: boolean; selectedFeature?: boolean; hiddenLayers?: boolean } | null;
         "displayTipText": boolean;
@@ -36,6 +46,18 @@ declare global {
         prototype: HTMLInstantAppsHeaderElement;
         new (): HTMLInstantAppsHeaderElement;
     };
+    interface HTMLInstantAppsPopoverElement extends Components.InstantAppsPopover, HTMLStencilElement {
+    }
+    var HTMLInstantAppsPopoverElement: {
+        prototype: HTMLInstantAppsPopoverElement;
+        new (): HTMLInstantAppsPopoverElement;
+    };
+    interface HTMLInstantAppsPopoversElement extends Components.InstantAppsPopovers, HTMLStencilElement {
+    }
+    var HTMLInstantAppsPopoversElement: {
+        prototype: HTMLInstantAppsPopoversElement;
+        new (): HTMLInstantAppsPopoversElement;
+    };
     interface HTMLInstantAppsSocialShareElement extends Components.InstantAppsSocialShare, HTMLStencilElement {
     }
     var HTMLInstantAppsSocialShareElement: {
@@ -44,6 +66,8 @@ declare global {
     };
     interface HTMLElementTagNameMap {
         "instant-apps-header": HTMLInstantAppsHeaderElement;
+        "instant-apps-popover": HTMLInstantAppsPopoverElement;
+        "instant-apps-popovers": HTMLInstantAppsPopoversElement;
         "instant-apps-social-share": HTMLInstantAppsSocialShareElement;
     }
 }
@@ -56,6 +80,16 @@ declare namespace LocalJSX {
         "logoLink"?: string;
         "textColor"?: string;
         "titleText"?: string;
+    }
+    interface InstantAppsPopover {
+        "content"?: string;
+        "mediaSrc"?: string;
+        "popoverTitle"?: string;
+        "referenceElement"?: string;
+        "subtitle"?: string;
+    }
+    interface InstantAppsPopovers {
+        "instantAppsPopovers"?: { [id: string]: HTMLInstantAppsPopoverElement };
     }
     interface InstantAppsSocialShare {
         "defaultUrlParams"?: { center?: boolean; level?: boolean; viewpoint?: boolean; selectedFeature?: boolean; hiddenLayers?: boolean } | null;
@@ -72,6 +106,8 @@ declare namespace LocalJSX {
     }
     interface IntrinsicElements {
         "instant-apps-header": InstantAppsHeader;
+        "instant-apps-popover": InstantAppsPopover;
+        "instant-apps-popovers": InstantAppsPopovers;
         "instant-apps-social-share": InstantAppsSocialShare;
     }
 }
@@ -80,6 +116,8 @@ declare module "@stencil/core" {
     export namespace JSX {
         interface IntrinsicElements {
             "instant-apps-header": LocalJSX.InstantAppsHeader & JSXBase.HTMLAttributes<HTMLInstantAppsHeaderElement>;
+            "instant-apps-popover": LocalJSX.InstantAppsPopover & JSXBase.HTMLAttributes<HTMLInstantAppsPopoverElement>;
+            "instant-apps-popovers": LocalJSX.InstantAppsPopovers & JSXBase.HTMLAttributes<HTMLInstantAppsPopoversElement>;
             "instant-apps-social-share": LocalJSX.InstantAppsSocialShare & JSXBase.HTMLAttributes<HTMLInstantAppsSocialShareElement>;
         }
     }
