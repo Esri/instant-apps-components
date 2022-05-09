@@ -31,6 +31,10 @@ const CSS = {
   icon: `${base}__icon`,
   optionText: `${base}__option-text`,
   popoverButton: `${base}__popover-button`,
+  layout: {
+    vertical: `${base}__layout--vertical`,
+    horizontal: `${base}__layout--horizontal`,
+  },
   success: {
     container: `${base}__success`,
     header: `${base}__success-header`,
@@ -69,6 +73,7 @@ export class InstantAppsSocialShare {
     this.iframeInnerText = '';
     this.displayTipText = true;
     this.socialMedia = true;
+    this.shareIconsLayout = 'vertical';
     this.scale = 'm';
     this.defaultUrlParams = null;
     // mode = 'popover'
@@ -158,7 +163,8 @@ export class InstantAppsSocialShare {
       this.renderOptions(),
       this.displayTipText ? this.renderTip() : null,
       this.embed ? this.renderEmbed() : null));
-    const dialogContent = (h("div", { ref: el => (this.dialogContentRef = el), class: CSS.dialog }, content));
+    const layoutClass = this.shareIconsLayout === 'vertical' ? ` ${CSS.layout.vertical}` : ` ${CSS.layout.horizontal}`;
+    const dialogContent = (h("div", { ref: el => (this.dialogContentRef = el), class: `${CSS.dialog}${layoutClass}` }, content));
     return (h(Host, null, this.mode === 'popover'
       ? [
         h("calcite-popover", { ref: (el) => (this.popoverRef = el), label: (_b = (_a = this.messages) === null || _a === void 0 ? void 0 : _a.share) === null || _b === void 0 ? void 0 : _b.label, "reference-element": "shareButton", placement: "bottom-start", scale: this.scale }, dialogContent),
@@ -617,6 +623,24 @@ export class InstantAppsSocialShare {
       "attribute": "social-media",
       "reflect": true,
       "defaultValue": "true"
+    },
+    "shareIconsLayout": {
+      "type": "string",
+      "mutable": false,
+      "complexType": {
+        "original": "'vertical' | 'horizontal'",
+        "resolved": "\"horizontal\" | \"vertical\"",
+        "references": {}
+      },
+      "required": false,
+      "optional": false,
+      "docs": {
+        "tags": [],
+        "text": ""
+      },
+      "attribute": "share-icons-layout",
+      "reflect": true,
+      "defaultValue": "'vertical'"
     },
     "scale": {
       "type": "string",

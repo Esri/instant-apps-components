@@ -7,6 +7,12 @@ declare const _default: {
         type: string;
       };
     };
+    shareIconsLayout: {
+      options: string[];
+      control: {
+        type: string;
+      };
+    };
     scale: {
       options: string[];
       control: {
