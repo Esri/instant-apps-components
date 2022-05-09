@@ -18,6 +18,7 @@ export declare class InstantAppsSocialShare {
   view: __esri.MapView | __esri.SceneView;
   displayTipText: boolean;
   socialMedia: boolean;
+  shareIconsLayout: 'vertical' | 'horizontal';
   scale: 's' | 'm' | 'l';
   defaultUrlParams: {
     center?: boolean;
