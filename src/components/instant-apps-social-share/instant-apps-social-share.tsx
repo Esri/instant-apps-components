@@ -14,11 +14,13 @@
 
 import { Component, h, Prop, State, Element, Host } from '@stencil/core';
 
-import { substitute } from '@arcgis/core/intl';
-import Point from '@arcgis/core/geometry/Point';
-import SpatialReference from '@arcgis/core/geometry/SpatialReference';
-import { project, load as loadProjection } from '@arcgis/core/geometry/projection';
-import esriRequest from '@arcgis/core/request';
+// import { substitute } from '@arcgis/core/intl';
+// import Point from '@arcgis/core/geometry/Point';
+// import SpatialReference from '@arcgis/core/geometry/SpatialReference';
+// import { project, load as loadProjection } from '@arcgis/core/geometry/projection';
+// import esriRequest from '@arcgis/core/request';
+
+import { loadModules } from '../../utils/loadModules';
 
 import SocialShare_T9n from '../../assets/t9n/instant-apps-social-share/resources.json';
 
@@ -504,7 +506,8 @@ export class InstantAppsSocialShare {
           url: encodeURI(urlToUse),
         };
         const data = type === 'twitter' ? { ...urlData, text: this.shareText } : urlData;
-        const url = substitute(SOCIAL_URL_TEMPLATES[type], data);
+        const [intl] = await loadModules(['esri/intl']);
+        const url = intl.substitute(SOCIAL_URL_TEMPLATES[type], data);
         if (this.mode === 'popover') {
           this.closePopover();
         }
@@ -514,6 +517,7 @@ export class InstantAppsSocialShare {
   }
 
   async shortenUrl(url: string) {
+    const [esriRequest] = await loadModules(['esri/request']);
     const request = await esriRequest(SHORTEN_API, {
       query: {
         longUrl: url,
@@ -548,6 +552,7 @@ export class InstantAppsSocialShare {
     // Use x/y values and the spatial reference of the view to instantiate a geometry point
     const { x, y } = this.view.center;
     const { spatialReference } = this.view;
+    const [Point, SpatialReference] = await loadModules(['esri/geometry/Point', 'esri/geometry/SpatialReference']);
     const updatedSpatialReference = new SpatialReference({ ...spatialReference.toJSON() });
     const centerPoint = new Point({
       x,
@@ -559,21 +564,22 @@ export class InstantAppsSocialShare {
     return this.generateShareUrlParams(point);
   }
 
-  async processPoint(point: Point): Promise<__esri.Point> {
+  async processPoint(point: __esri.Point): Promise<__esri.Point> {
     const { isWGS84, isWebMercator } = point.spatialReference;
     // If spatial reference is WGS84 or Web Mercator, use longitude/latitude values to generate the share URL parameters
     if (isWGS84 || isWebMercator) {
       return point;
     }
+    const [SpatialReference, projection] = await loadModules(['esri/geometry/SpatialReference', 'esri/geometry/projection']);
     const outputSpatialReference = new SpatialReference({
       wkid: 4326,
     });
-    await loadProjection();
-    const projectedPoint = project(point, outputSpatialReference) as __esri.Point;
+    await projection.loadProjection();
+    const projectedPoint = projection.project(point, outputSpatialReference) as __esri.Point;
     return projectedPoint;
   }
 
-  generateShareUrlParams(point: Point): string {
+  generateShareUrlParams(point: __esri.Point): string {
     const { longitude, latitude } = point;
     if (longitude === undefined || latitude === undefined) {
       return this.shareUrl;

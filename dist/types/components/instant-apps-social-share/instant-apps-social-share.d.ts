@@ -1,4 +1,4 @@
-import Point from '@arcgis/core/geometry/Point';
+/// <reference types="arcgis-js-api" />
 import SocialShare_T9n from '../../assets/t9n/instant-apps-social-share/resources.json';
 export declare class InstantAppsSocialShare {
   el: HTMLInstantAppsSocialShareElement;
@@ -57,7 +57,7 @@ export declare class InstantAppsSocialShare {
   getEmbedCode(): string;
   copyEmbedCode(): void;
   generateShareUrl(): Promise<string>;
-  processPoint(point: Point): Promise<__esri.Point>;
-  generateShareUrlParams(point: Point): string;
+  processPoint(point: __esri.Point): Promise<__esri.Point>;
+  generateShareUrlParams(point: __esri.Point): string;
   roundValue(val: number, decimalPoints?: number): number;
 }

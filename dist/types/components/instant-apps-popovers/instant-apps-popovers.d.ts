@@ -1,10 +1,12 @@
 export declare class InstantAppsPopovers {
+  currentId: string;
   host: HTMLElement;
-  instantAppsPopovers: {
-    [id: string]: HTMLInstantAppsPopoverElement;
-  };
+  instantAppsPopovers: Map<string, HTMLInstantAppsPopoverElement>;
   previous: HTMLCalcitePopoverElement;
-  componentDidLoad(): void;
+  componentWillLoad(): void;
   render(): any;
-  handlePrevious(e: CustomEvent): void;
+  handlePrevious(node: HTMLCalcitePopoverElement): void;
+  page(type: 'back' | 'next'): void;
+  getKey(type: 'back' | 'next'): string | undefined;
+  getIndex(): number | null;
 }

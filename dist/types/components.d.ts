@@ -5,6 +5,7 @@
  * It contains typing information for all components that exist in this project.
  */
 import { HTMLStencilElement, JSXBase } from "./stencil-public-runtime";
+import { InstantAppsPopovers } from "./components/instant-apps-popovers/instant-apps-popovers";
 export namespace Components {
     interface InstantAppsHeader {
         "backgroundColor": string;
@@ -17,13 +18,15 @@ export namespace Components {
     }
     interface InstantAppsPopover {
         "content": string;
+        "index": number;
         "mediaSrc": string;
+        "parent": InstantAppsPopovers;
         "popoverTitle": string;
         "referenceElement": string;
         "subtitle": string;
     }
     interface InstantAppsPopovers {
-        "instantAppsPopovers": { [id: string]: HTMLInstantAppsPopoverElement };
+        "instantAppsPopovers": Map<string, HTMLInstantAppsPopoverElement>;
     }
     interface InstantAppsSocialShare {
         "defaultUrlParams": { center?: boolean; level?: boolean; viewpoint?: boolean; selectedFeature?: boolean; hiddenLayers?: boolean } | null;
@@ -83,13 +86,15 @@ declare namespace LocalJSX {
     }
     interface InstantAppsPopover {
         "content"?: string;
+        "index"?: number;
         "mediaSrc"?: string;
+        "parent"?: InstantAppsPopovers;
         "popoverTitle"?: string;
         "referenceElement"?: string;
         "subtitle"?: string;
     }
     interface InstantAppsPopovers {
-        "instantAppsPopovers"?: { [id: string]: HTMLInstantAppsPopoverElement };
+        "instantAppsPopovers"?: Map<string, HTMLInstantAppsPopoverElement>;
     }
     interface InstantAppsSocialShare {
         "defaultUrlParams"?: { center?: boolean; level?: boolean; viewpoint?: boolean; selectedFeature?: boolean; hiddenLayers?: boolean } | null;
