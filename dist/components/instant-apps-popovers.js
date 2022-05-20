@@ -72,10 +72,15 @@ let InstantAppsPopovers$1 = class extends HTMLElement {
     var _a;
     const instantAppsPopover = this.instantAppsPopovers.get(key);
     const popover = (_a = this.instantAppsPopovers.get(key)) === null || _a === void 0 ? void 0 : _a.firstElementChild;
-    if (instantAppsPopover.beforeOpen) {
+    if (instantAppsPopover === null || instantAppsPopover === void 0 ? void 0 : instantAppsPopover.beforeOpen) {
       await instantAppsPopover.beforeOpen();
     }
     popover.toggle(true);
+  }
+  async close(key) {
+    var _a;
+    const popover = (_a = this.instantAppsPopovers.get(key)) === null || _a === void 0 ? void 0 : _a.firstElementChild;
+    popover.toggle(false);
   }
   get host() { return this; }
   static get style() { return instantAppsPopoversCss; }
@@ -84,7 +89,8 @@ InstantAppsPopovers$1 = /*@__PURE__*/ proxyCustomElement(InstantAppsPopovers$1, 
     "instantAppsPopovers": [16],
     "currentId": [32],
     "previous": [32],
-    "open": [64]
+    "open": [64],
+    "close": [64]
   }]);
 function defineCustomElement$1() {
   if (typeof customElements === "undefined") {

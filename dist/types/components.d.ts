@@ -28,6 +28,7 @@ export namespace Components {
         "subtitle": string;
     }
     interface InstantAppsPopovers {
+        "close": (key: string) => Promise<void>;
         "instantAppsPopovers": Map<string, HTMLInstantAppsPopoverElement>;
         "open": (key: string) => Promise<void>;
     }

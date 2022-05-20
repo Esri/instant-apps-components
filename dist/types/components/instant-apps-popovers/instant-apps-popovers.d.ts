@@ -10,4 +10,5 @@ export declare class InstantAppsPopovers {
   getKey(type: 'back' | 'next'): string | undefined;
   getIndex(): number | null;
   open(key: string): Promise<void>;
+  close(key: string): Promise<void>;
 }

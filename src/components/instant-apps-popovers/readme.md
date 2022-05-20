@@ -14,6 +14,16 @@
 
 ## Methods
 
+### `close(key: string) => Promise<void>`
+
+
+
+#### Returns
+
+Type: `Promise<void>`
+
+
+
 ### `open(key: string) => Promise<void>`
 
 

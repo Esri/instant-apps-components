@@ -67,10 +67,15 @@ export class InstantAppsPopovers {
     var _a;
     const instantAppsPopover = this.instantAppsPopovers.get(key);
     const popover = (_a = this.instantAppsPopovers.get(key)) === null || _a === void 0 ? void 0 : _a.firstElementChild;
-    if (instantAppsPopover.beforeOpen) {
+    if (instantAppsPopover === null || instantAppsPopover === void 0 ? void 0 : instantAppsPopover.beforeOpen) {
       await instantAppsPopover.beforeOpen();
     }
     popover.toggle(true);
+  }
+  async close(key) {
+    var _a;
+    const popover = (_a = this.instantAppsPopovers.get(key)) === null || _a === void 0 ? void 0 : _a.firstElementChild;
+    popover.toggle(false);
   }
   static get is() { return "instant-apps-popovers"; }
   static get encapsulation() { return "shadow"; }
@@ -122,6 +127,28 @@ export class InstantAppsPopovers {
             "location": "global"
           },
           "HTMLInstantAppsPopoverElement": {
+            "location": "global"
+          },
+          "HTMLCalcitePopoverElement": {
+            "location": "global"
+          }
+        },
+        "return": "Promise<void>"
+      },
+      "docs": {
+        "text": "",
+        "tags": []
+      }
+    },
+    "close": {
+      "complexType": {
+        "signature": "(key: string) => Promise<void>",
+        "parameters": [{
+            "tags": [],
+            "text": ""
+          }],
+        "references": {
+          "Promise": {
             "location": "global"
           },
           "HTMLCalcitePopoverElement": {
