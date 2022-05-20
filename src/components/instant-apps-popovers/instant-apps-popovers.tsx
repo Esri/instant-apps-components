@@ -1,4 +1,4 @@
-import { Component, Host, h, Prop, Element, State } from '@stencil/core';
+import { Component, Host, h, Prop, Element, State, Method } from '@stencil/core';
 
 @Component({
   tag: 'instant-apps-popovers',
@@ -27,10 +27,11 @@ export class InstantAppsPopovers {
       popover.index = popoverIndex;
       this.instantAppsPopovers.set(referenceElement, popover);
     });
-    this.host.addEventListener('calcitePopoverOpen', (e: CustomEvent) => {
-      const node = e.target as HTMLCalcitePopoverElement;
-      this.handlePrevious(node);
-    });
+    // TODO
+    // this.host.addEventListener('calcitePopoverOpen', (e: CustomEvent) => {
+    //   const node = e.target as HTMLCalcitePopoverElement;
+    //   this.handlePrevious(node);
+    // });
   }
 
   render() {
@@ -78,5 +79,15 @@ export class InstantAppsPopovers {
     const { currentId } = this;
     const [...keys] = this.instantAppsPopovers.keys();
     return keys.indexOf(currentId);
+  }
+
+  @Method()
+  async open(key: string): Promise<void> {
+    const instantAppsPopover = this.instantAppsPopovers.get(key) as HTMLInstantAppsPopoverElement;
+    const popover = this.instantAppsPopovers.get(key)?.firstElementChild as HTMLCalcitePopoverElement;
+    if (instantAppsPopover.beforeOpen) {
+      await instantAppsPopover.beforeOpen();
+    }
+    popover.toggle(true);
   }
 }

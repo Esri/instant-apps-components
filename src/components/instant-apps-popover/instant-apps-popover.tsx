@@ -1,5 +1,9 @@
-import { Component, h, Prop } from '@stencil/core';
+import { Component, h, Element, Prop, State } from '@stencil/core';
 import { InstantAppsPopovers } from '../instant-apps-popovers/instant-apps-popovers';
+
+import Popover_T9n from '../../assets/t9n/instant-apps-popover/resources.json';
+
+import { getLocaleComponentStrings } from '../../utils/locale';
 
 const CSS = {
   content: 'instant-apps-popover__content',
@@ -12,6 +16,10 @@ const CSS = {
   shadow: false,
 })
 export class InstantAppsPopover {
+  // Host element
+  @Element() el: HTMLInstantAppsPopoverElement;
+
+  // Public properties
   @Prop({
     reflect: true,
   })
@@ -45,28 +53,62 @@ export class InstantAppsPopover {
   @Prop()
   parent: InstantAppsPopovers;
 
+  @Prop({
+    reflect: true,
+  })
+  pagination: boolean = false;
+
+  @Prop()
+  beforeOpen: () => Promise<void>;
+
+  // Internal State
+  @State()
+  messages: typeof Popover_T9n;
+
+  componentDidLoad() {
+    this.getMessages();
+  }
+
   render() {
-    const { index } = this;
+    return (
+      <calcite-popover
+        reference-element={this.referenceElement}
+        heading={this.popoverTitle}
+        auto-close="true"
+        dismissible="true"
+        placement="leading"
+        intl-close={this.messages?.close}
+      >
+        <div class={CSS.content}>
+          <slot name="action"></slot>
+          <section>{this.content}</section>
+          {this.pagination ? this.renderPagination() : null}
+        </div>
+      </calcite-popover>
+    );
+  }
+
+  renderPagination() {
+    const { index, messages, parent } = this;
     const size = this.parent?.instantAppsPopovers?.size;
     const isFirst = index === 0;
     const isLast = index === size - 1;
     return (
-      <calcite-popover reference-element={this.referenceElement} heading={this.popoverTitle} auto-close="true" dismissible="true" placement="leading">
-        <div class={CSS.content}>
-          <slot name="action"></slot>
-          <section>{this.content}</section>
-          <div class={CSS.buttonContainer}>
-            {!isFirst ? (
-              <calcite-button key="prev" onClick={() => this.parent?.page('back')} appearance="outline" color="neutral">
-                Back
-              </calcite-button>
-            ) : null}
-            <calcite-button key="next" onClick={() => this.parent?.page('next')}>
-              {isLast ? 'Done' : 'Next'}
-            </calcite-button>
-          </div>
-        </div>
-      </calcite-popover>
+      <div key="pagination-button-container" class={CSS.buttonContainer}>
+        {!isFirst ? (
+          <calcite-button key="prev" onClick={() => parent?.page('back')} appearance="outline" color="neutral">
+            {messages?.back}
+          </calcite-button>
+        ) : null}
+        <calcite-button key="next" onClick={() => parent?.page('next')}>
+          {isLast ? messages?.done : messages?.next}
+        </calcite-button>
+      </div>
     );
+  }
+
+  async getMessages() {
+    const messages = await getLocaleComponentStrings(this.el);
+    this.messages = messages[0] as typeof Popover_T9n;
   }
 }

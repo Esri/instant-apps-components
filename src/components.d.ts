@@ -17,9 +17,11 @@ export namespace Components {
         "titleText": string;
     }
     interface InstantAppsPopover {
+        "beforeOpen": () => Promise<void>;
         "content": string;
         "index": number;
         "mediaSrc": string;
+        "pagination": boolean;
         "parent": InstantAppsPopovers;
         "popoverTitle": string;
         "referenceElement": string;
@@ -27,6 +29,7 @@ export namespace Components {
     }
     interface InstantAppsPopovers {
         "instantAppsPopovers": Map<string, HTMLInstantAppsPopoverElement>;
+        "open": (key: string) => Promise<void>;
     }
     interface InstantAppsSocialShare {
         "defaultUrlParams": { center?: boolean; level?: boolean; viewpoint?: boolean; selectedFeature?: boolean; hiddenLayers?: boolean } | null;
@@ -85,9 +88,11 @@ declare namespace LocalJSX {
         "titleText"?: string;
     }
     interface InstantAppsPopover {
+        "beforeOpen"?: () => Promise<void>;
         "content"?: string;
         "index"?: number;
         "mediaSrc"?: string;
+        "pagination"?: boolean;
         "parent"?: InstantAppsPopovers;
         "popoverTitle"?: string;
         "referenceElement"?: string;

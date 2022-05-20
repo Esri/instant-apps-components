@@ -7,9 +7,22 @@
 
 ## Properties
 
-| Property              | Attribute | Description | Type                                               | Default |
-| --------------------- | --------- | ----------- | -------------------------------------------------- | ------- |
-| `instantAppsPopovers` | --        |             | `{ [id: string]: HTMLInstantAppsPopoverElement; }` | `{}`    |
+| Property              | Attribute | Description | Type                                         | Default     |
+| --------------------- | --------- | ----------- | -------------------------------------------- | ----------- |
+| `instantAppsPopovers` | --        |             | `Map<string, HTMLInstantAppsPopoverElement>` | `new Map()` |
+
+
+## Methods
+
+### `open(key: string) => Promise<void>`
+
+
+
+#### Returns
+
+Type: `Promise<void>`
+
+
 
 
 ----------------------------------------------
