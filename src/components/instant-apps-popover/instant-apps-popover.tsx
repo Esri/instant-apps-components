@@ -69,16 +69,13 @@ export class InstantAppsPopover {
     this.getMessages();
   }
 
+  componentDidUpdate() {
+    this.el.referenceElement = this.referenceElement;
+  }
+
   render() {
     return (
-      <calcite-popover
-        reference-element={this.referenceElement}
-        heading={this.popoverTitle}
-        auto-close="true"
-        dismissible="true"
-        placement="leading"
-        intl-close={this.messages?.close}
-      >
+      <calcite-popover heading={this.popoverTitle} auto-close="true" dismissible="true" placement="leading" intl-close={this.messages?.close}>
         <div class={CSS.content}>
           <slot name="action"></slot>
           <section>{this.content}</section>

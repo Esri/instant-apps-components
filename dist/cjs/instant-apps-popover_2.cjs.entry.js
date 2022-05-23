@@ -2,8 +2,8 @@
 
 Object.defineProperty(exports, '__esModule', { value: true });
 
-const index = require('./index-9b4daf99.js');
-const locale = require('./locale-a1702c40.js');
+const index = require('./index-172ac3b5.js');
+const locale = require('./locale-2767e2c1.js');
 
 const instantAppsPopoverCss = ":host{display:block}.instant-apps-popover__content{padding:2.5%;padding-top:0;max-width:25vw}.instant-apps-popover__content .instant-apps-popover__button-container{display:flex;align-items:center;justify-content:flex-end;margin-top:10px}.instant-apps-popover__content .instant-apps-popover__button-container calcite-button:last-child{margin-left:5px}";
 
@@ -19,9 +19,12 @@ let InstantAppsPopover = class {
   componentDidLoad() {
     this.getMessages();
   }
+  componentDidUpdate() {
+    this.el.referenceElement = this.referenceElement;
+  }
   render() {
     var _a;
-    return (index.h("calcite-popover", { "reference-element": this.referenceElement, heading: this.popoverTitle, "auto-close": "true", dismissible: "true", placement: "leading", "intl-close": (_a = this.messages) === null || _a === void 0 ? void 0 : _a.close }, index.h("div", { class: CSS.content }, index.h("slot", { name: "action" }), index.h("section", null, this.content), this.pagination ? this.renderPagination() : null)));
+    return (index.h("calcite-popover", { heading: this.popoverTitle, "auto-close": "true", dismissible: "true", placement: "leading", "intl-close": (_a = this.messages) === null || _a === void 0 ? void 0 : _a.close }, index.h("div", { class: CSS.content }, index.h("slot", { name: "action" }), index.h("section", null, this.content), this.pagination ? this.renderPagination() : null)));
   }
   renderPagination() {
     var _a, _b;

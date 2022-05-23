@@ -1,6 +1,4 @@
-'use strict';
-
-const index = require('./index-9b4daf99.js');
+import { a as getAssetPath } from './index-91b43dd0.js';
 
 var commonjsGlobal = typeof globalThis !== 'undefined' ? globalThis : typeof window !== 'undefined' ? window : typeof global !== 'undefined' ? global : typeof self !== 'undefined' ? self : {};
 
@@ -388,7 +386,7 @@ function getComponentClosestLanguage(element) {
 }
 function fetchLocaleStringsForComponent(componentName, locale) {
   return new Promise((resolve, reject) => {
-    fetch(index.getAssetPath(`../assets/t9n/${componentName}/resources_${locale}.json`)).then(result => {
+    fetch(getAssetPath(`../assets/t9n/${componentName}/resources_${locale}.json`)).then(result => {
       if (result.ok)
         resolve(result.json());
       else
@@ -410,5 +408,4 @@ async function getLocaleComponentStrings(element) {
   return [strings, componentLanguage];
 }
 
-exports.esriLoader = esriLoader;
-exports.getLocaleComponentStrings = getLocaleComponentStrings;
+export { esriLoader as e, getLocaleComponentStrings as g };

@@ -13,6 +13,7 @@ export declare class InstantAppsPopover {
   beforeOpen: () => Promise<void>;
   messages: typeof Popover_T9n;
   componentDidLoad(): void;
+  componentDidUpdate(): void;
   render(): any;
   renderPagination(): any;
   getMessages(): Promise<void>;
