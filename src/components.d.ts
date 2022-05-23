@@ -24,7 +24,7 @@ export namespace Components {
         "pagination": boolean;
         "parent": InstantAppsPopovers;
         "popoverTitle": string;
-        "referenceElement": string;
+        "referenceElement": string | HTMLElement;
         "subtitle": string;
     }
     interface InstantAppsPopovers {
@@ -96,7 +96,7 @@ declare namespace LocalJSX {
         "pagination"?: boolean;
         "parent"?: InstantAppsPopovers;
         "popoverTitle"?: string;
-        "referenceElement"?: string;
+        "referenceElement"?: string | HTMLElement;
         "subtitle"?: string;
     }
     interface InstantAppsPopovers {

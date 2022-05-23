@@ -16,6 +16,8 @@ const CSS = {
   shadow: false,
 })
 export class InstantAppsPopover {
+  popoverEl: HTMLCalcitePopoverElement;
+
   // Host element
   @Element() el: HTMLInstantAppsPopoverElement;
 
@@ -48,7 +50,7 @@ export class InstantAppsPopover {
   @Prop({
     reflect: true,
   })
-  referenceElement: string;
+  referenceElement: string | HTMLElement;
 
   @Prop()
   parent: InstantAppsPopovers;
@@ -70,12 +72,19 @@ export class InstantAppsPopover {
   }
 
   componentDidUpdate() {
-    this.el.referenceElement = this.referenceElement;
+    this.popoverEl.referenceElement = this.referenceElement;
   }
 
   render() {
     return (
-      <calcite-popover heading={this.popoverTitle} auto-close="true" dismissible="true" placement="leading" intl-close={this.messages?.close}>
+      <calcite-popover
+        ref={(el: HTMLCalcitePopoverElement) => (this.popoverEl = el)}
+        heading={this.popoverTitle}
+        auto-close="true"
+        dismissible="true"
+        placement="leading"
+        intl-close={this.messages?.close}
+      >
         <div class={CSS.content}>
           <slot name="action"></slot>
           <section>{this.content}</section>

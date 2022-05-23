@@ -12,11 +12,11 @@ export class InstantAppsPopover {
     this.getMessages();
   }
   componentDidUpdate() {
-    this.el.referenceElement = this.referenceElement;
+    this.popoverEl.referenceElement = this.referenceElement;
   }
   render() {
     var _a;
-    return (h("calcite-popover", { heading: this.popoverTitle, "auto-close": "true", dismissible: "true", placement: "leading", "intl-close": (_a = this.messages) === null || _a === void 0 ? void 0 : _a.close },
+    return (h("calcite-popover", { ref: (el) => (this.popoverEl = el), heading: this.popoverTitle, "auto-close": "true", dismissible: "true", placement: "leading", "intl-close": (_a = this.messages) === null || _a === void 0 ? void 0 : _a.close },
       h("div", { class: CSS.content },
         h("slot", { name: "action" }),
         h("section", null, this.content),
@@ -133,9 +133,13 @@ export class InstantAppsPopover {
       "type": "string",
       "mutable": false,
       "complexType": {
-        "original": "string",
-        "resolved": "string",
-        "references": {}
+        "original": "string | HTMLElement",
+        "resolved": "HTMLElement | string",
+        "references": {
+          "HTMLElement": {
+            "location": "global"
+          }
+        }
       },
       "required": false,
       "optional": false,
