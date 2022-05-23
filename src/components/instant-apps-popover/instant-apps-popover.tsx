@@ -82,7 +82,7 @@ export class InstantAppsPopover {
         heading={this.popoverTitle}
         auto-close="true"
         dismissible="true"
-        placement="leading"
+        placement="trailing-start"
         intl-close={this.messages?.close}
       >
         <div class={CSS.content}>

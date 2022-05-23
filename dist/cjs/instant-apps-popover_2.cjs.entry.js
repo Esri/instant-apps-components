@@ -24,7 +24,7 @@ let InstantAppsPopover = class {
   }
   render() {
     var _a;
-    return (index.h("calcite-popover", { ref: (el) => (this.popoverEl = el), heading: this.popoverTitle, "auto-close": "true", dismissible: "true", placement: "leading", "intl-close": (_a = this.messages) === null || _a === void 0 ? void 0 : _a.close }, index.h("div", { class: CSS.content }, index.h("slot", { name: "action" }), index.h("section", null, this.content), this.pagination ? this.renderPagination() : null)));
+    return (index.h("calcite-popover", { ref: (el) => (this.popoverEl = el), heading: this.popoverTitle, "auto-close": "true", dismissible: "true", placement: "trailing-start", "intl-close": (_a = this.messages) === null || _a === void 0 ? void 0 : _a.close }, index.h("div", { class: CSS.content }, index.h("slot", { name: "action" }), index.h("section", null, this.content), this.pagination ? this.renderPagination() : null)));
   }
   renderPagination() {
     var _a, _b;
