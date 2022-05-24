@@ -84,6 +84,7 @@ export class InstantAppsPopover {
         dismissible="true"
         placement="trailing-start"
         intl-close={this.messages?.close}
+        trigger-disabled="true"
       >
         <div class={CSS.content}>
           <slot name="action"></slot>
