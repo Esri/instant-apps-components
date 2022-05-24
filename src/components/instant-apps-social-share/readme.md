@@ -21,6 +21,13 @@
 | `view`             | --                   |             | `MapView \| SceneView`                                                                                                                                                                    | `undefined`            |
 
 
+## CSS Variables:
+
+```
+  --instant-apps-social-share-popover-button-background-color;
+  --instant-apps-social-share-popover-button-icon-color;
+```
+
 ----------------------------------------------
 
 *Built with [StencilJS](https://stenciljs.com/)*
