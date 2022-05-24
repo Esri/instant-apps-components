@@ -40,6 +40,7 @@ export namespace Components {
         "mode": 'popover' | 'inline';
         "scale": 's' | 'm' | 'l';
         "shareButtonColor": 'inverse' | 'neutral';
+        "shareIconsLayout": 'vertical' | 'horizontal';
         "shareText": string;
         "shareUrl": string;
         "socialMedia": boolean;
@@ -110,6 +111,7 @@ declare namespace LocalJSX {
         "mode"?: 'popover' | 'inline';
         "scale"?: 's' | 'm' | 'l';
         "shareButtonColor"?: 'inverse' | 'neutral';
+        "shareIconsLayout"?: 'vertical' | 'horizontal';
         "shareText"?: string;
         "shareUrl"?: string;
         "socialMedia"?: boolean;

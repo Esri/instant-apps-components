@@ -40,6 +40,10 @@ const CSS = {
   icon: `${base}__icon`,
   optionText: `${base}__option-text`,
   popoverButton: `${base}__popover-button`,
+  layout: {
+    vertical: `${base}__layout--vertical`,
+    horizontal: `${base}__layout--horizontal`,
+  },
   success: {
     container: `${base}__success`,
     header: `${base}__success-header`,
@@ -121,6 +125,8 @@ export class InstantAppsSocialShare {
   @Prop({ reflect: true }) displayTipText: boolean = true;
 
   @Prop({ reflect: true }) socialMedia: boolean = true;
+
+  @Prop({ reflect: true }) shareIconsLayout: 'vertical' | 'horizontal' = 'vertical';
 
   @Prop({ reflect: true }) scale: 's' | 'm' | 'l' = 'm';
 
@@ -222,8 +228,11 @@ export class InstantAppsSocialShare {
           {this.embed ? this.renderEmbed() : null}
         </div>
       );
+
+    const layoutClass = this.shareIconsLayout === 'vertical' ? ` ${CSS.layout.vertical}` : ` ${CSS.layout.horizontal}`;
+
     const dialogContent = (
-      <div ref={el => (this.dialogContentRef = el)} class={CSS.dialog}>
+      <div ref={el => (this.dialogContentRef = el)} class={`${CSS.dialog}${layoutClass}`}>
         {content}
       </div>
     );

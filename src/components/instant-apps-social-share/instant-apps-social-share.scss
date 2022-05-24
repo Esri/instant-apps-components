@@ -22,6 +22,11 @@ $hoverDark: #262626;
   --instant-apps-social-share-width--s: 200px;
   --instant-apps-social-share-width--m: 280px;
   --instant-apps-social-share-width--l: 320px;
+
+  --instant-apps-social-share-width-horizontal--s: 300px;
+  --instant-apps-social-share-width-horizontal--m: 380px;
+  --instant-apps-social-share-width-horizontal--l: 420px;
+
   --instant-apps-social-share-background-color: transparent;
   --instant-apps-social-share-popover-button-background-color: transparent;
   --instant-apps-social-share-popover-button-icon-color: var(--calcite-ui-icon-color);
@@ -212,6 +217,27 @@ $hoverDark: #262626;
         }
       }
     }
+
+    &__layout--horizontal {
+      .instant-apps-social-share__options {
+        display: flex;
+        justify-content: space-around;
+        margin-bottom: 8%;
+        li {
+          flex-direction: column;
+          padding: 0;
+          .instant-apps-social-share__option-text {
+            white-space: nowrap;
+            margin-left: 0;
+            margin-top: 10px;
+            text-align: center;
+          }
+        }
+        li:hover {
+          background-color: unset;
+        }
+      }
+    }
   }
 }
 
@@ -220,7 +246,6 @@ $hoverDark: #262626;
     &__dialog {
       width: var(--instant-apps-social-share-width--s);
     }
-
     &__icon {
       width: 16px;
       height: 16px;
@@ -228,7 +253,10 @@ $hoverDark: #262626;
     &__option-text {
       font-size: var(--calcite-font-size--1);
     }
+  }
 
+  .instant-apps-social-share__dialog.instant-apps-social-share__layout--horizontal {
+    width: var(--instant-apps-social-share-width-horizontal--s);
   }
 
   .instant-apps-social-share__tip-header,
@@ -252,7 +280,10 @@ $hoverDark: #262626;
     &__option-text {
       font-size: var(--calcite-font-size-0);
     }
+  }
 
+  .instant-apps-social-share__dialog.instant-apps-social-share__layout--horizontal {
+    width: var(--instant-apps-social-share-width-horizontal--m);
   }
 
   .instant-apps-social-share__tip-header,
@@ -264,7 +295,7 @@ $hoverDark: #262626;
   }
 }
 
-:host([scale="l"] ){
+:host([scale="l"]) {
   .instant-apps-social-share {
     &__dialog {
       width: var(--instant-apps-social-share-width--l);
@@ -278,6 +309,11 @@ $hoverDark: #262626;
     }
 
   }
+
+  .instant-apps-social-share__dialog.instant-apps-social-share__layout--horizontal {
+    width: var(--instant-apps-social-share-width-horizontal--l);
+  }
+
   .instant-apps-social-share__tip-header,
   .instant-apps-social-share__tip-content,
   .instant-apps-social-share__embed-header,
