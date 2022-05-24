@@ -14,196 +14,106 @@
 
 <!DOCTYPE html>
 <html dir="ltr" lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=5.0" />
+    <title>ArcGIS Online: Instant Apps Components</title>
 
-<head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=5.0" />
-  <title>ArcGIS Online: Instant Apps Components</title>
+    <link rel="stylesheet" href="https://jsdev.arcgis.com/4.24/esri/themes/light/main.css" />
+    <script src="https://jsdev.arcgis.com/4.24/"></script>
 
-  <link rel="stylesheet" href="https://jsdev.arcgis.com/4.24/esri/themes/light/main.css" />
-  <script src="https://jsdev.arcgis.com/4.24/"></script>
+    <script type="module" src="https://unpkg.com/@esri/calcite-components@1.0.0-beta.82/dist/calcite/calcite.esm.js"></script>
+    <link rel="stylesheet" type="text/css" href="https://unpkg.com/@esri/calcite-components@1.0.0-beta.82/dist/calcite/calcite.css" />
+    <script type="module" src="/build/instant-apps-components.esm.js"></script>
+    <script nomodule src="/build/instant-apps-components.js"></script>
 
-  <link rel="stylesheet" href="../dist/@esri/calcite-components/calcite.css" />
-  <script type="module" src="../dist/@esri/calcite-components/calcite.esm.js"></script>
-  <script nomodule src="../dist/@esri/calcite-components/calcite.js"></script>
-  <script type="module" src="/build/instant-apps-components.esm.js"></script>
-  <script nomodule src="/build/instant-apps-components.js"></script>
-  <style>
-    html,
-    body {
-      margin: 0;
-      padding: 0;
-      width: 100%;
-      height: 100%;
-    }
-
-    #viewDiv {
-      height: 95%;
-    }
-  </style>
-
-  </script>
-</head>
-
-<body class="calcite-theme-light">
-  <instant-apps-header title-text="Instant Apps Components"
-    logo-image="https://www.esri.com/content/dam/esrisites/en-us/common/icons/product-logos/arcgis-instant-apps-64.svg">
-    <!-- <instant-apps-social-share slot="actions-end" share-button-color="inverse" 
-     ></instant-apps-social-share> -->
-    <!-- <instant-apps-social-share slot="actions-end" share-button-color="inverse" 
-     share-url="https://holistic.mapsdevext.arcgis.com/?appid=962ed75b7ee34af98813e13a682710b0"></instant-apps-social-share> -->
-    <instant-apps-social-share slot="actions-end" share-button-color="inverse" scale="s" mode="popover">
-    </instant-apps-social-share>
-  </instant-apps-header>
-  <div id="viewDiv"></div>
-  <!-- <script>
-      require(["esri/config","esri/WebMap", "esri/views/MapView", "esri/widgets/LayerList", "esri/core/watchUtils"], function (esriConfig, WebMap, MapView, LayerList, watchUtils) {
-
-        const searchParams = new URL(window.location.href).searchParams;
-
-        const center = searchParams.get("center") ? searchParams.get("center").split(";").map(val => parseFloat(val)) : null;
-        const zoom = searchParams.get("level") ? parseInt(searchParams.get("level")) : null;
-        const hiddenLayers = searchParams.get("hiddenLayers") ? searchParams.get("hiddenLayers").split(";") : null;
-        const selectedFeature = searchParams.get("selectedFeature") ? searchParams.get("selectedFeature").split(";") : null
-        const selectedFeatureLayerId = selectedFeature ? selectedFeature[0] : null;
-        const selectedFeatureOID = selectedFeature ? parseInt(selectedFeature[1]) : null;
-
-         esriConfig.portalUrl = "https://jsapi.maps.arcgis.com"
-         const map = new WebMap({
-           portalItem: {
-             id: "75dc070f2d294aab8fb3364063f14bf1"
-           }
-         });
-         const view = new MapView({
-           container: "viewDiv",
-           map: map,
-           center,
-           zoom
-         });
-
-          view.map.loadAll().then(loadedMap => {
-
-            if (hiddenLayers) {
-              loadedMap.allLayers.forEach(layer => {
-                if (hiddenLayers.indexOf(layer.id) !== -1) {
-                  layer.visible = false;
-                }
-              })
-            }
-
-          if (selectedFeature) {
-            const selectedLayer = loadedMap.allLayers.find(layer => selectedFeatureLayerId === layer.id);
-          const query = selectedLayer.createQuery();
-          query.objectIds = [selectedFeatureOID];
-          selectedLayer.queryFeatures(query).then(featureRes => {
-            const feature = featureRes.features[0];
-            view.goTo(feature).then(() => {
-              view.popup.open({
-                features: [feature]
-              });
-            });
-          });
-          }
-         });
-
-
-
-         const layerList = new LayerList({
-           view
-         });
-
-         view.ui.add(layerList, "bottom-right");
-
-         const socialShare = document.querySelector("instant-apps-social-share");
-         socialShare.view = view;
-         socialShare.defaultUrlParams = {
-           selectedFeature: false,
-           hiddenLayers: false
-         }
-       });
-   </script> -->
-  <script>
-    require(["esri/config", "esri/WebScene", "esri/views/SceneView", "esri/widgets/LayerList", "esri/core/watchUtils", "esri/geometry/projection"], function (esriConfig, WebScene, SceneView, LayerList, watchUtils, projection) {
-
-      // esriConfig.portalUrl = "https://holistic.mapsdevext.arcgis.com";
-
-      const searchParams = new URL(window.location.href).searchParams;
-
-      const viewpoint = searchParams.get("viewpoint");
-
-      let camera;
-
-      if (viewpoint) {
-        const viewpointValues = viewpoint.split(':')[1];
-        const viewpointArrs = viewpointValues.split(';');
-        const parsedViewpointValues = viewpointArrs.map(viewpointArrItem => viewpointArrItem.split(','))
-          .map(nestedviewpointArrItem => nestedviewpointArrItem.map(nestedviewpointArrItemVal => parseFloat(nestedviewpointArrItemVal)));
-        const [longitude, latitude, z] = parsedViewpointValues[0];
-        const [heading, tilt] = parsedViewpointValues[1];
-        camera = { heading, position: { longitude, latitude, z }, tilt };
+    <style>
+      html,
+      body {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
       }
 
+      html,
+      body,
+      calcite-shell {
+        width: 100%;
+        height: 100%;
+      }
+      .open {
+        position: relative;
+        top: 50%;
+        left: 50%;
+      }
+    </style>
+  </head>
 
+  <body>
+    <instant-apps-popovers id="popovers">
+      <div slot="popovers">
+        <instant-apps-popover
+          id="onePopover"
+          reference-element="one"
+          popover-title="One"
+          subtitle="Subtitle"
+          content="Lorem ipsum dolor sit amet consectetur adipisicing elit. Impedit aspernatur omnis quod! Tempore fugiat excepturi ea tenetur animi mollitia tempora."
+          graphic="Graphic"
+        >
+          <calcite-button slot="action" icon-start="arrow-left" appearance="transparent" color="neutral">Back to 'Get started'</calcite-button>
+        </instant-apps-popover>
 
-
-      const map = new WebScene({
-        portalItem: {
-          id: "7685f7ba6b47426ea20d6f640cf98596"
+        <instant-apps-popover
+          reference-element="two"
+          popover-title="Two"
+          subtitle="Subtitle"
+          content="Lorem ipsum dolor sit amet consectetur adipisicing elit. Impedit aspernatur omnis quod! Tempore fugiat excepturi ea tenetur animi mollitia tempora."
+          graphic="Graphic"
+        >
+          <calcite-button slot="action" icon-start="arrow-left" appearance="transparent" color="neutral">Back to 'Get started'</calcite-button>
+        </instant-apps-popover>
+        <instant-apps-popover
+          reference-element="three"
+          popover-title="Three"
+          subtitle="Subtitle"
+          content="Lorem ipsum dolor sit amet consectetur adipisicing elit. Impedit aspernatur omnis quod! Tempore fugiat excepturi ea tenetur animi mollitia tempora."
+          graphic="Graphic"
+        >
+          <calcite-button slot="action" icon-start="arrow-left" appearance="transparent" color="neutral">Back to 'Get started'</calcite-button>
+        </instant-apps-popover>
+      </div>
+    </instant-apps-popovers>
+    <calcite-shell>
+      <calcite-shell-panel slot="primary-panel" position="start" detached>
+        <calcite-action-bar slot="action-bar">
+          <calcite-action-group>
+            <calcite-action id="one" text="Add" icon="plus"></calcite-action>
+            <calcite-action text="Save" disabled icon="save"></calcite-action>
+            <calcite-action id="two" text="Layers" active indicator icon="layers"></calcite-action>
+          </calcite-action-group>
+          <calcite-action-group>
+            <calcite-action text="Add" icon="plus"></calcite-action>
+            <calcite-action id="three" text="Layers" indicator icon="layers"></calcite-action>
+          </calcite-action-group>
+        </calcite-action-bar>
+      </calcite-shell-panel>
+    </calcite-shell>
+    <button class="open" value="one">Open me!</button>
+    <button class="open" value="two">Open me!</button>
+    <button class="open" value="three">Open me!</button>
+    <script>
+      const onePopover = document.getElementById('onePopover');
+      onePopover.beforeOpen = async () => {
+        console.log('TEST');
+      };
+      const popovers = document.getElementById('popovers');
+      document.body.addEventListener('click', e => {
+        const node = e.target;
+        if (node.classList.contains('open')) {
+          const id = node.value;
+          popovers.open(id);
         }
       });
-
-      const viewConfig = {
-        map,
-        container: "viewDiv"
-      };
-
-
-      const view = new SceneView(camera ? { ...viewConfig, camera } : viewConfig);
-
-      const layerList = new LayerList({
-        view
-      });
-
-      const selectedFeature = searchParams.get("selectedFeature") ? searchParams.get("selectedFeature").split(";") : null
-      const layerId = selectedFeature ? selectedFeature[0] : null;
-      const featureId = selectedFeature ? parseInt(selectedFeature[1]) : null;
-
-
-
-      view.when(() => {
-        view.map.loadAll().then(() => {
-          const layer = view.map.findLayerById(layerId);
-          // get the feature
-          const query = layer.createQuery();
-          query.outFields = ["*"];
-          query.objectIds = [featureId];
-          query.returnGeometry = true;
-          layer.queryFeatures(query).then(results => {
-            const {
-              features
-            } = results;
-            console.log("Features", features);
-            console.log(features[0].geometry.centroid);
-            projection.load().then(function () {
-              let centroid = projection.project(features[0].geometry.centroid, view.spatialReference);
-              view.popup.open({
-                features,
-                location: centroid,
-                fetchFeatures: true
-              })
-            });
-          });
-        })
-
-      })
-
-
-      const socialShare = document.querySelector("instant-apps-social-share");
-      socialShare.view = view;
-
-      view.ui.add(layerList, "bottom-right");
-    });
-  </script>
-</body>
-
+    </script>
+  </body>
 </html>

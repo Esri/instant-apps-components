@@ -2,6 +2,7 @@
 
 <!-- Auto Generated Below -->
 
+
 ## Properties
 
 | Property           | Attribute            | Description                                                                                                          | Type                                                                                                                                                                                      | Default                |
@@ -28,4 +29,6 @@
   --instant-apps-social-share-popover-button-icon-color;
 ```
 
-_Built with [StencilJS](https://stenciljs.com/)_
+----------------------------------------------
+
+*Built with [StencilJS](https://stenciljs.com/)*

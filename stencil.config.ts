@@ -12,10 +12,6 @@ export const config: Config = {
           src: 'assets/t9n',
           dest: '../assets/t9n',
         },
-        {
-          src: '../node_modules/@esri/calcite-components/dist/calcite',
-          dest: '../../dist/@esri/calcite-components',
-        },
       ],
       esmLoaderPath: '../loader',
     },
@@ -27,16 +23,6 @@ export const config: Config = {
     },
     {
       type: 'www',
-      copy: [
-        {
-          src: '../node_modules/@esri/calcite-components/dist/calcite',
-          dest: 'dist/@esri/calcite-components',
-        },
-        {
-          src: '../node_modules/@arcgis/core/assets',
-          dest: 'dist/@arcgis/core/assets',
-        },
-      ],
       serviceWorker: null, // disable service workers
     },
   ],

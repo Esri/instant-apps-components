@@ -1,6 +1,8 @@
 {
   "entries": [
+    "./components/instant-apps-popovers/instant-apps-popovers.js",
     "./components/instant-apps-header/instant-apps-header.js",
+    "./components/instant-apps-popover/instant-apps-popover.js",
     "./components/instant-apps-social-share/instant-apps-social-share.js"
   ],
   "compiler": {
