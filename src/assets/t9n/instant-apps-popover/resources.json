@@ -1,6 +1,6 @@
 {
-    "back": "Back",
-    "next": "Next",
-    "done": "Done",
-    "close": "Close"
+  "back": "Previous",
+  "next": "Next",
+  "done": "Done",
+  "close": "Close"
 }

@@ -21,9 +21,10 @@ export namespace Components {
         "content": string;
         "index": number;
         "mediaSrc": string;
-        "pagination": boolean;
         "parent": InstantAppsPopovers;
+        "placement": string;
         "popoverTitle": string;
+        "refId": string;
         "referenceElement": string | HTMLElement;
         "subtitle": string;
     }
@@ -31,6 +32,7 @@ export namespace Components {
         "close": (key: string) => Promise<void>;
         "instantAppsPopovers": Map<string, HTMLInstantAppsPopoverElement>;
         "open": (key: string) => Promise<void>;
+        "pagination": boolean;
     }
     interface InstantAppsSocialShare {
         "defaultUrlParams": { center?: boolean; level?: boolean; viewpoint?: boolean; selectedFeature?: boolean; hiddenLayers?: boolean } | null;
@@ -94,14 +96,16 @@ declare namespace LocalJSX {
         "content"?: string;
         "index"?: number;
         "mediaSrc"?: string;
-        "pagination"?: boolean;
         "parent"?: InstantAppsPopovers;
+        "placement"?: string;
         "popoverTitle"?: string;
+        "refId"?: string;
         "referenceElement"?: string | HTMLElement;
         "subtitle"?: string;
     }
     interface InstantAppsPopovers {
         "instantAppsPopovers"?: Map<string, HTMLInstantAppsPopoverElement>;
+        "pagination"?: boolean;
     }
     interface InstantAppsSocialShare {
         "defaultUrlParams"?: { center?: boolean; level?: boolean; viewpoint?: boolean; selectedFeature?: boolean; hiddenLayers?: boolean } | null;

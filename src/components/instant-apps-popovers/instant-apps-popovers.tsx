@@ -15,23 +15,24 @@ export class InstantAppsPopovers {
   @Prop()
   instantAppsPopovers: Map<string, HTMLInstantAppsPopoverElement> = new Map();
 
-  @State()
-  previous: HTMLCalcitePopoverElement;
+  @Prop({
+    reflect: true,
+  })
+  pagination: boolean = false;
 
   componentWillLoad() {
     const popovers = Array.from(this.host.querySelector("[slot='popovers']")?.children as HTMLCollection) as HTMLInstantAppsPopoverElement[];
     popovers.forEach((popover, popoverIndex) => {
-      const referenceElement = popover.getAttribute('reference-element') as string;
-      if (popoverIndex === 0) this.currentId = referenceElement;
+      const refId = popover.getAttribute('ref-id') as string;
       popover.parent = this;
       popover.index = popoverIndex;
-      this.instantAppsPopovers.set(referenceElement, popover);
+      this.instantAppsPopovers.set(refId, popover);
     });
-    // TODO
-    // this.host.addEventListener('calcitePopoverOpen', (e: CustomEvent) => {
-    //   const node = e.target as HTMLCalcitePopoverElement;
-    //   this.handlePrevious(node);
-    // });
+    this.host.addEventListener('calcitePopoverOpen', e => {
+      const node = e.target as HTMLCalcitePopoverElement;
+      const refId = node.getAttribute('ref-id') as string;
+      this.currentId = refId;
+    });
   }
 
   render() {
@@ -42,43 +43,24 @@ export class InstantAppsPopovers {
     );
   }
 
-  handlePrevious(node: HTMLCalcitePopoverElement): void {
-    if (this.previous) {
-      const referenceElement = 'reference-element';
-      const previousReference = this.previous.getAttribute(referenceElement);
-      const currentReference = node.getAttribute(referenceElement);
-      if (previousReference === currentReference) return;
-      this.previous.toggle(false);
-    }
-    this.previous = node;
+  next(): void {
+    const refIds = Array.from(this.instantAppsPopovers.keys());
+    const index = refIds.indexOf(this.currentId) + 1;
+    const nextId = refIds[index];
+    this.close(this.currentId);
+    this.open(nextId);
   }
 
-  page(type: 'back' | 'next'): void {
-    const key = this.getKey(type);
-    if (!key) {
-      const popover = this.instantAppsPopovers.get(this.currentId)?.firstElementChild as HTMLCalcitePopoverElement;
-      this.handlePrevious(popover);
-      popover.toggle(false);
-      return;
-    }
-    const popover = this.instantAppsPopovers.get(key)?.firstElementChild as HTMLCalcitePopoverElement;
-    this.handlePrevious(popover);
-    popover.toggle(true);
-    this.currentId = key;
+  previous(): void {
+    const refIds = Array.from(this.instantAppsPopovers.keys());
+    const index = refIds.indexOf(this.currentId) - 1;
+    const previousId = refIds[index];
+    this.close(this.currentId);
+    this.open(previousId);
   }
 
-  getKey(type: 'back' | 'next'): string | undefined {
-    const [...keys] = this.instantAppsPopovers.keys();
-    const currentIndex = this.getIndex();
-    if (currentIndex === null) return;
-    return type === 'next' ? keys[currentIndex + 1] : keys[currentIndex - 1];
-  }
-
-  getIndex(): number | null {
-    if (!this) return null;
-    const { currentId } = this;
-    const [...keys] = this.instantAppsPopovers.keys();
-    return keys.indexOf(currentId);
+  done(): void {
+    this.close(this.currentId);
   }
 
   @Method()

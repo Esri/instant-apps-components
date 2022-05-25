@@ -11,7 +11,7 @@ let InstantAppsPopover$1 = class extends HTMLElement {
   constructor() {
     super();
     this.__registerHost();
-    this.pagination = false;
+    this.placement = 'trailing-start';
   }
   componentDidLoad() {
     this.getMessages();
@@ -21,7 +21,7 @@ let InstantAppsPopover$1 = class extends HTMLElement {
   }
   render() {
     var _a;
-    return (h("calcite-popover", { ref: (el) => (this.popoverEl = el), heading: this.popoverTitle, "auto-close": "true", dismissible: "true", placement: "trailing-start", "intl-close": (_a = this.messages) === null || _a === void 0 ? void 0 : _a.close, "trigger-disabled": "true" }, h("div", { class: CSS.content }, h("slot", { name: "action" }), h("section", null, this.content), this.pagination ? this.renderPagination() : null)));
+    return (h("calcite-popover", { ref: (el) => (this.popoverEl = el), heading: this.popoverTitle, "auto-close": "true", dismissible: "true", placement: this.placement, "intl-close": (_a = this.messages) === null || _a === void 0 ? void 0 : _a.close, "trigger-disabled": "true", "ref-id": this.refId }, h("div", { class: CSS.content }, h("slot", { name: "action" }), h("section", null, this.content), this.parent.pagination ? this.renderPagination() : null)));
   }
   renderPagination() {
     var _a, _b;
@@ -29,7 +29,14 @@ let InstantAppsPopover$1 = class extends HTMLElement {
     const size = (_b = (_a = this.parent) === null || _a === void 0 ? void 0 : _a.instantAppsPopovers) === null || _b === void 0 ? void 0 : _b.size;
     const isFirst = index === 0;
     const isLast = index === size - 1;
-    return (h("div", { key: "pagination-button-container", class: CSS.buttonContainer }, !isFirst ? (h("calcite-button", { key: "prev", onClick: () => parent === null || parent === void 0 ? void 0 : parent.page('back'), appearance: "outline", color: "neutral" }, messages === null || messages === void 0 ? void 0 : messages.back)) : null, h("calcite-button", { key: "next", onClick: () => parent === null || parent === void 0 ? void 0 : parent.page('next') }, isLast ? messages === null || messages === void 0 ? void 0 : messages.done : messages === null || messages === void 0 ? void 0 : messages.next)));
+    return (h("div", { key: "pagination-button-container", class: CSS.buttonContainer }, !isFirst ? (h("calcite-button", { key: "prev", onClick: () => parent === null || parent === void 0 ? void 0 : parent.previous(), appearance: "outline", color: "neutral" }, messages === null || messages === void 0 ? void 0 : messages.back)) : null, h("calcite-button", { key: "next", onClick: () => {
+        if (isLast) {
+          parent === null || parent === void 0 ? void 0 : parent.done();
+        }
+        else {
+          parent === null || parent === void 0 ? void 0 : parent.next();
+        }
+      } }, isLast ? messages === null || messages === void 0 ? void 0 : messages.done : messages === null || messages === void 0 ? void 0 : messages.next)));
   }
   async getMessages() {
     const messages = await getLocaleComponentStrings(this.el);
@@ -46,8 +53,9 @@ InstantAppsPopover$1 = /*@__PURE__*/ proxyCustomElement(InstantAppsPopover$1, [4
     "index": [514],
     "referenceElement": [513, "reference-element"],
     "parent": [16],
-    "pagination": [516],
     "beforeOpen": [16],
+    "placement": [1],
+    "refId": [1, "ref-id"],
     "messages": [32]
   }]);
 function defineCustomElement$1() {

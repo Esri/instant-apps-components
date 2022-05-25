@@ -7,9 +7,10 @@
 
 ## Properties
 
-| Property              | Attribute | Description | Type                                         | Default     |
-| --------------------- | --------- | ----------- | -------------------------------------------- | ----------- |
-| `instantAppsPopovers` | --        |             | `Map<string, HTMLInstantAppsPopoverElement>` | `new Map()` |
+| Property              | Attribute    | Description | Type                                         | Default     |
+| --------------------- | ------------ | ----------- | -------------------------------------------- | ----------- |
+| `instantAppsPopovers` | --           |             | `Map<string, HTMLInstantAppsPopoverElement>` | `new Map()` |
+| `pagination`          | `pagination` |             | `boolean`                                    | `false`     |
 
 
 ## Methods

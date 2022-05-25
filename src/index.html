@@ -50,30 +50,32 @@
   </head>
 
   <body>
-    <instant-apps-popovers id="popovers">
+    <instant-apps-popovers id="popovers" pagination="true">
       <div slot="popovers">
         <instant-apps-popover
           id="onePopover"
           reference-element="one"
-          popover-title="One"
+          ref-id="one"
+          popover-title="Chain 1"
           subtitle="Subtitle"
           content="Lorem ipsum dolor sit amet consectetur adipisicing elit. Impedit aspernatur omnis quod! Tempore fugiat excepturi ea tenetur animi mollitia tempora."
           graphic="Graphic"
         >
           <calcite-button slot="action" icon-start="arrow-left" appearance="transparent" color="neutral">Back to 'Get started'</calcite-button>
         </instant-apps-popover>
-
         <instant-apps-popover
           reference-element="two"
-          popover-title="Two"
+          ref-id="two"
+          popover-title="Chain 2"
           subtitle="Subtitle"
           content="Lorem ipsum dolor sit amet consectetur adipisicing elit. Impedit aspernatur omnis quod! Tempore fugiat excepturi ea tenetur animi mollitia tempora."
-          graphic="Graphic"
+          popover-title="Chain 3"
         >
           <calcite-button slot="action" icon-start="arrow-left" appearance="transparent" color="neutral">Back to 'Get started'</calcite-button>
         </instant-apps-popover>
         <instant-apps-popover
           reference-element="three"
+          ref-id="three"
           popover-title="Three"
           subtitle="Subtitle"
           content="Lorem ipsum dolor sit amet consectetur adipisicing elit. Impedit aspernatur omnis quod! Tempore fugiat excepturi ea tenetur animi mollitia tempora."
@@ -101,7 +103,7 @@
     <button class="open" value="one">Open me!</button>
     <button class="open" value="two">Open me!</button>
     <button class="open" value="three">Open me!</button>
-    <script>
+    <!-- <script>
       const onePopover = document.getElementById('onePopover');
       onePopover.beforeOpen = async () => {
         console.log('TEST');
@@ -114,6 +116,6 @@
           popovers.open(id);
         }
       });
-    </script>
+    </script> -->
   </body>
 </html>

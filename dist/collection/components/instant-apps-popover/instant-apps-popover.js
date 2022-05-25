@@ -6,7 +6,7 @@ const CSS = {
 };
 export class InstantAppsPopover {
   constructor() {
-    this.pagination = false;
+    this.placement = 'trailing-start';
   }
   componentDidLoad() {
     this.getMessages();
@@ -16,11 +16,11 @@ export class InstantAppsPopover {
   }
   render() {
     var _a;
-    return (h("calcite-popover", { ref: (el) => (this.popoverEl = el), heading: this.popoverTitle, "auto-close": "true", dismissible: "true", placement: "trailing-start", "intl-close": (_a = this.messages) === null || _a === void 0 ? void 0 : _a.close, "trigger-disabled": "true" },
+    return (h("calcite-popover", { ref: (el) => (this.popoverEl = el), heading: this.popoverTitle, "auto-close": "true", dismissible: "true", placement: this.placement, "intl-close": (_a = this.messages) === null || _a === void 0 ? void 0 : _a.close, "trigger-disabled": "true", "ref-id": this.refId },
       h("div", { class: CSS.content },
         h("slot", { name: "action" }),
         h("section", null, this.content),
-        this.pagination ? this.renderPagination() : null)));
+        this.parent.pagination ? this.renderPagination() : null)));
   }
   renderPagination() {
     var _a, _b;
@@ -29,8 +29,15 @@ export class InstantAppsPopover {
     const isFirst = index === 0;
     const isLast = index === size - 1;
     return (h("div", { key: "pagination-button-container", class: CSS.buttonContainer },
-      !isFirst ? (h("calcite-button", { key: "prev", onClick: () => parent === null || parent === void 0 ? void 0 : parent.page('back'), appearance: "outline", color: "neutral" }, messages === null || messages === void 0 ? void 0 : messages.back)) : null,
-      h("calcite-button", { key: "next", onClick: () => parent === null || parent === void 0 ? void 0 : parent.page('next') }, isLast ? messages === null || messages === void 0 ? void 0 : messages.done : messages === null || messages === void 0 ? void 0 : messages.next)));
+      !isFirst ? (h("calcite-button", { key: "prev", onClick: () => parent === null || parent === void 0 ? void 0 : parent.previous(), appearance: "outline", color: "neutral" }, messages === null || messages === void 0 ? void 0 : messages.back)) : null,
+      h("calcite-button", { key: "next", onClick: () => {
+          if (isLast) {
+            parent === null || parent === void 0 ? void 0 : parent.done();
+          }
+          else {
+            parent === null || parent === void 0 ? void 0 : parent.next();
+          }
+        } }, isLast ? messages === null || messages === void 0 ? void 0 : messages.done : messages === null || messages === void 0 ? void 0 : messages.next)));
   }
   async getMessages() {
     const messages = await getLocaleComponentStrings(this.el);
@@ -170,24 +177,6 @@ export class InstantAppsPopover {
         "text": ""
       }
     },
-    "pagination": {
-      "type": "boolean",
-      "mutable": false,
-      "complexType": {
-        "original": "boolean",
-        "resolved": "boolean",
-        "references": {}
-      },
-      "required": false,
-      "optional": false,
-      "docs": {
-        "tags": [],
-        "text": ""
-      },
-      "attribute": "pagination",
-      "reflect": true,
-      "defaultValue": "false"
-    },
     "beforeOpen": {
       "type": "unknown",
       "mutable": false,
@@ -206,6 +195,41 @@ export class InstantAppsPopover {
         "tags": [],
         "text": ""
       }
+    },
+    "placement": {
+      "type": "string",
+      "mutable": false,
+      "complexType": {
+        "original": "string",
+        "resolved": "string",
+        "references": {}
+      },
+      "required": false,
+      "optional": false,
+      "docs": {
+        "tags": [],
+        "text": ""
+      },
+      "attribute": "placement",
+      "reflect": false,
+      "defaultValue": "'trailing-start'"
+    },
+    "refId": {
+      "type": "string",
+      "mutable": false,
+      "complexType": {
+        "original": "string",
+        "resolved": "string",
+        "references": {}
+      },
+      "required": false,
+      "optional": false,
+      "docs": {
+        "tags": [],
+        "text": ""
+      },
+      "attribute": "ref-id",
+      "reflect": false
     }
   }; }
   static get states() { return {

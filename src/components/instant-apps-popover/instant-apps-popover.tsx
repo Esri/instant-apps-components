@@ -55,13 +55,14 @@ export class InstantAppsPopover {
   @Prop()
   parent: InstantAppsPopovers;
 
-  @Prop({
-    reflect: true,
-  })
-  pagination: boolean = false;
-
   @Prop()
   beforeOpen: () => Promise<void>;
+
+  @Prop()
+  placement: string = 'trailing-start';
+
+  @Prop()
+  refId: string;
 
   // Internal State
   @State()
@@ -82,14 +83,15 @@ export class InstantAppsPopover {
         heading={this.popoverTitle}
         auto-close="true"
         dismissible="true"
-        placement="trailing-start"
+        placement={this.placement}
         intl-close={this.messages?.close}
         trigger-disabled="true"
+        ref-id={this.refId}
       >
         <div class={CSS.content}>
           <slot name="action"></slot>
           <section>{this.content}</section>
-          {this.pagination ? this.renderPagination() : null}
+          {this.parent.pagination ? this.renderPagination() : null}
         </div>
       </calcite-popover>
     );
@@ -103,11 +105,20 @@ export class InstantAppsPopover {
     return (
       <div key="pagination-button-container" class={CSS.buttonContainer}>
         {!isFirst ? (
-          <calcite-button key="prev" onClick={() => parent?.page('back')} appearance="outline" color="neutral">
+          <calcite-button key="prev" onClick={() => parent?.previous()} appearance="outline" color="neutral">
             {messages?.back}
           </calcite-button>
         ) : null}
-        <calcite-button key="next" onClick={() => parent?.page('next')}>
+        <calcite-button
+          key="next"
+          onClick={() => {
+            if (isLast) {
+              parent?.done();
+            } else {
+              parent?.next();
+            }
+          }}
+        >
           {isLast ? messages?.done : messages?.next}
         </calcite-button>
       </div>
