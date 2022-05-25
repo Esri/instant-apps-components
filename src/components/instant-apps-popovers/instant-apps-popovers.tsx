@@ -20,6 +20,8 @@ export class InstantAppsPopovers {
   })
   pagination: boolean = false;
 
+  @Prop() beforeOpen: () => Promise<void> = () => Promise.resolve();
+
   componentWillLoad() {
     const popovers = Array.from(this.host.querySelector("[slot='popovers']")?.children as HTMLCollection) as HTMLInstantAppsPopoverElement[];
     popovers.forEach((popover, popoverIndex) => {
@@ -65,12 +67,10 @@ export class InstantAppsPopovers {
 
   @Method()
   async open(key: string): Promise<void> {
-    const instantAppsPopover = this.instantAppsPopovers.get(key) as HTMLInstantAppsPopoverElement;
-    const popover = this.instantAppsPopovers.get(key)?.firstElementChild as HTMLCalcitePopoverElement;
-    if (instantAppsPopover?.beforeOpen) {
-      await instantAppsPopover.beforeOpen();
-    }
-    popover.toggle(true);
+    return this.beforeOpen().then(() => {
+      const popover = this.instantAppsPopovers.get(key)?.firstElementChild as HTMLCalcitePopoverElement;
+      popover.toggle(true);
+    });
   }
 
   @Method()

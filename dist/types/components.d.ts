@@ -17,7 +17,6 @@ export namespace Components {
         "titleText": string;
     }
     interface InstantAppsPopover {
-        "beforeOpen": () => Promise<void>;
         "content": string;
         "index": number;
         "mediaSrc": string;
@@ -29,6 +28,7 @@ export namespace Components {
         "subtitle": string;
     }
     interface InstantAppsPopovers {
+        "beforeOpen": () => Promise<void>;
         "close": (key: string) => Promise<void>;
         "instantAppsPopovers": Map<string, HTMLInstantAppsPopoverElement>;
         "open": (key: string) => Promise<void>;
@@ -92,7 +92,6 @@ declare namespace LocalJSX {
         "titleText"?: string;
     }
     interface InstantAppsPopover {
-        "beforeOpen"?: () => Promise<void>;
         "content"?: string;
         "index"?: number;
         "mediaSrc"?: string;
@@ -104,6 +103,7 @@ declare namespace LocalJSX {
         "subtitle"?: string;
     }
     interface InstantAppsPopovers {
+        "beforeOpen"?: () => Promise<void>;
         "instantAppsPopovers"?: Map<string, HTMLInstantAppsPopoverElement>;
         "pagination"?: boolean;
     }

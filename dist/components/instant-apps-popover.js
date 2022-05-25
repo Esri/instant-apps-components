@@ -53,7 +53,6 @@ InstantAppsPopover$1 = /*@__PURE__*/ proxyCustomElement(InstantAppsPopover$1, [4
     "index": [514],
     "referenceElement": [513, "reference-element"],
     "parent": [16],
-    "beforeOpen": [16],
     "placement": [1],
     "refId": [1, "ref-id"],
     "messages": [32]

@@ -9,6 +9,7 @@ let InstantAppsPopovers$1 = class extends HTMLElement {
     this.__attachShadow();
     this.instantAppsPopovers = new Map();
     this.pagination = false;
+    this.beforeOpen = () => Promise.resolve();
   }
   componentWillLoad() {
     var _a;
@@ -46,13 +47,11 @@ let InstantAppsPopovers$1 = class extends HTMLElement {
     this.close(this.currentId);
   }
   async open(key) {
-    var _a;
-    const instantAppsPopover = this.instantAppsPopovers.get(key);
-    const popover = (_a = this.instantAppsPopovers.get(key)) === null || _a === void 0 ? void 0 : _a.firstElementChild;
-    if (instantAppsPopover === null || instantAppsPopover === void 0 ? void 0 : instantAppsPopover.beforeOpen) {
-      await instantAppsPopover.beforeOpen();
-    }
-    popover.toggle(true);
+    return this.beforeOpen().then(() => {
+      var _a;
+      const popover = (_a = this.instantAppsPopovers.get(key)) === null || _a === void 0 ? void 0 : _a.firstElementChild;
+      popover.toggle(true);
+    });
   }
   async close(key) {
     var _a;
@@ -65,6 +64,7 @@ let InstantAppsPopovers$1 = class extends HTMLElement {
 InstantAppsPopovers$1 = /*@__PURE__*/ proxyCustomElement(InstantAppsPopovers$1, [1, "instant-apps-popovers", {
     "instantAppsPopovers": [16],
     "pagination": [516],
+    "beforeOpen": [16],
     "currentId": [32],
     "open": [64],
     "close": [64]

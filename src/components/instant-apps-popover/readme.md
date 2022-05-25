@@ -9,7 +9,6 @@
 
 | Property           | Attribute           | Description | Type                    | Default            |
 | ------------------ | ------------------- | ----------- | ----------------------- | ------------------ |
-| `beforeOpen`       | --                  |             | `() => Promise<void>`   | `undefined`        |
 | `content`          | `content`           |             | `string`                | `undefined`        |
 | `index`            | `index`             |             | `number`                | `undefined`        |
 | `mediaSrc`         | `media-src`         |             | `string`                | `undefined`        |

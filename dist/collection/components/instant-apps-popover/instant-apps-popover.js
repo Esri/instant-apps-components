@@ -177,25 +177,6 @@ export class InstantAppsPopover {
         "text": ""
       }
     },
-    "beforeOpen": {
-      "type": "unknown",
-      "mutable": false,
-      "complexType": {
-        "original": "() => Promise<void>",
-        "resolved": "() => Promise<void>",
-        "references": {
-          "Promise": {
-            "location": "global"
-          }
-        }
-      },
-      "required": false,
-      "optional": false,
-      "docs": {
-        "tags": [],
-        "text": ""
-      }
-    },
     "placement": {
       "type": "string",
       "mutable": false,

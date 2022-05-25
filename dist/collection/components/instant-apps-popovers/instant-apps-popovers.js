@@ -3,6 +3,7 @@ export class InstantAppsPopovers {
   constructor() {
     this.instantAppsPopovers = new Map();
     this.pagination = false;
+    this.beforeOpen = () => Promise.resolve();
   }
   componentWillLoad() {
     var _a;
@@ -41,13 +42,11 @@ export class InstantAppsPopovers {
     this.close(this.currentId);
   }
   async open(key) {
-    var _a;
-    const instantAppsPopover = this.instantAppsPopovers.get(key);
-    const popover = (_a = this.instantAppsPopovers.get(key)) === null || _a === void 0 ? void 0 : _a.firstElementChild;
-    if (instantAppsPopover === null || instantAppsPopover === void 0 ? void 0 : instantAppsPopover.beforeOpen) {
-      await instantAppsPopover.beforeOpen();
-    }
-    popover.toggle(true);
+    return this.beforeOpen().then(() => {
+      var _a;
+      const popover = (_a = this.instantAppsPopovers.get(key)) === null || _a === void 0 ? void 0 : _a.firstElementChild;
+      popover.toggle(true);
+    });
   }
   async close(key) {
     var _a;
@@ -103,6 +102,26 @@ export class InstantAppsPopovers {
       "attribute": "pagination",
       "reflect": true,
       "defaultValue": "false"
+    },
+    "beforeOpen": {
+      "type": "unknown",
+      "mutable": false,
+      "complexType": {
+        "original": "() => Promise<void>",
+        "resolved": "() => Promise<void>",
+        "references": {
+          "Promise": {
+            "location": "global"
+          }
+        }
+      },
+      "required": false,
+      "optional": false,
+      "docs": {
+        "tags": [],
+        "text": ""
+      },
+      "defaultValue": "() => Promise.resolve()"
     }
   }; }
   static get states() { return {
@@ -118,9 +137,6 @@ export class InstantAppsPopovers {
           }],
         "references": {
           "Promise": {
-            "location": "global"
-          },
-          "HTMLInstantAppsPopoverElement": {
             "location": "global"
           },
           "HTMLCalcitePopoverElement": {

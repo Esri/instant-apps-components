@@ -56,9 +56,6 @@ export class InstantAppsPopover {
   parent: InstantAppsPopovers;
 
   @Prop()
-  beforeOpen: () => Promise<void>;
-
-  @Prop()
   placement: string = 'trailing-start';
 
   @Prop()

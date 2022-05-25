@@ -3,6 +3,7 @@ export declare class InstantAppsPopovers {
   host: HTMLElement;
   instantAppsPopovers: Map<string, HTMLInstantAppsPopoverElement>;
   pagination: boolean;
+  beforeOpen: () => Promise<void>;
   componentWillLoad(): void;
   render(): any;
   next(): void;
