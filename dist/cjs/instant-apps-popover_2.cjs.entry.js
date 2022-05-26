@@ -49,7 +49,7 @@ let InstantAppsPopover = class {
 };
 InstantAppsPopover.style = instantAppsPopoverCss;
 
-const instantAppsPopoversCss = ":host{display:block}#instantAppsPopoverScrim{--calcite-scrim-background:rgba(0, 0, 0, 0.5);z-index:100}";
+const instantAppsPopoversCss = ":host{display:block}";
 
 let InstantAppsPopovers = class {
   constructor(hostRef) {
@@ -72,6 +72,9 @@ let InstantAppsPopovers = class {
       const refId = node.getAttribute('ref-id');
       this.currentId = refId;
     });
+    this.host.addEventListener('calcitePopoverClose', () => {
+      this.endTour();
+    });
   }
   render() {
     return (index.h(index.Host, null, index.h("slot", { name: "popovers" })));
@@ -91,7 +94,6 @@ let InstantAppsPopovers = class {
     this.open(previousId);
   }
   done() {
-    this.close(this.currentId);
     this.endTour();
   }
   async open(key) {
@@ -107,9 +109,9 @@ let InstantAppsPopovers = class {
     popover.toggle(false);
   }
   async beginTour() {
-    this.pagination = true;
     const scrim = document.createElement('calcite-scrim');
     scrim.id = 'instantAppsPopoverScrim';
+    scrim.addEventListener('click', () => this.endTour());
     document.body.appendChild(scrim);
     const refIds = Array.from(this.instantAppsPopovers.keys());
     this.open(refIds[0]);
@@ -117,7 +119,7 @@ let InstantAppsPopovers = class {
   async endTour() {
     const scrim = document.getElementById('instantAppsPopoverScrim');
     scrim === null || scrim === void 0 ? void 0 : scrim.remove();
-    this.pagination = false;
+    this.close(this.currentId);
   }
   get host() { return index.getElement(this); }
 };

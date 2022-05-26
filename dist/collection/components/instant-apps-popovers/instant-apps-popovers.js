@@ -19,6 +19,9 @@ export class InstantAppsPopovers {
       const refId = node.getAttribute('ref-id');
       this.currentId = refId;
     });
+    this.host.addEventListener('calcitePopoverClose', () => {
+      this.endTour();
+    });
   }
   render() {
     return (h(Host, null,
@@ -39,7 +42,6 @@ export class InstantAppsPopovers {
     this.open(previousId);
   }
   done() {
-    this.close(this.currentId);
     this.endTour();
   }
   async open(key) {
@@ -55,9 +57,9 @@ export class InstantAppsPopovers {
     popover.toggle(false);
   }
   async beginTour() {
-    this.pagination = true;
     const scrim = document.createElement('calcite-scrim');
     scrim.id = 'instantAppsPopoverScrim';
+    scrim.addEventListener('click', () => this.endTour());
     document.body.appendChild(scrim);
     const refIds = Array.from(this.instantAppsPopovers.keys());
     this.open(refIds[0]);
@@ -65,7 +67,7 @@ export class InstantAppsPopovers {
   async endTour() {
     const scrim = document.getElementById('instantAppsPopoverScrim');
     scrim === null || scrim === void 0 ? void 0 : scrim.remove();
-    this.pagination = false;
+    this.close(this.currentId);
   }
   static get is() { return "instant-apps-popovers"; }
   static get encapsulation() { return "shadow"; }
