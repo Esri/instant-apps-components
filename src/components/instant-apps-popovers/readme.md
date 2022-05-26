@@ -10,7 +10,7 @@
 | Property              | Attribute | Description | Type                                         | Default                   |
 | --------------------- | --------- | ----------- | -------------------------------------------- | ------------------------- |
 | `beforeOpen`          | --        |             | `() => Promise<void>`                        | `() => Promise.resolve()` |
-| `inTour`              | `in-tour` |             | `boolean`                                    | `false`                   |
+| `inTour`              | `in-tour` |             | `boolean`                                    | `undefined`               |
 | `instantAppsPopovers` | --        |             | `Map<string, HTMLInstantAppsPopoverElement>` | `new Map()`               |
 
 

@@ -1,7 +1,6 @@
 import { Component, Host, h, Prop, Element, State, Method } from '@stencil/core';
 export class InstantAppsPopovers {
   constructor() {
-    this.inTour = false;
     this.instantAppsPopovers = new Map();
     // @Prop({
     //   reflect: true,
@@ -106,8 +105,7 @@ export class InstantAppsPopovers {
         "text": ""
       },
       "attribute": "in-tour",
-      "reflect": true,
-      "defaultValue": "false"
+      "reflect": true
     },
     "instantAppsPopovers": {
       "type": "unknown",

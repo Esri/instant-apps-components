@@ -10,7 +10,7 @@ export class InstantAppsPopovers {
     mutable: true,
     reflect: true,
   })
-  inTour: boolean = false;
+  inTour: boolean;
 
   @State()
   currentId: string;

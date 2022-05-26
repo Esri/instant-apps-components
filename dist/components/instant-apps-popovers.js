@@ -6,7 +6,6 @@ let InstantAppsPopovers$1 = class extends HTMLElement {
   constructor() {
     super();
     this.__registerHost();
-    this.inTour = false;
     this.instantAppsPopovers = new Map();
     // @Prop({
     //   reflect: true,

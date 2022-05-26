@@ -57,7 +57,6 @@ const instantAppsPopoversCss = ":host{display:block}#instantAppsPopoverScrim{--c
 let InstantAppsPopovers = class {
   constructor(hostRef) {
     index.registerInstance(this, hostRef);
-    this.inTour = false;
     this.instantAppsPopovers = new Map();
     // @Prop({
     //   reflect: true,
