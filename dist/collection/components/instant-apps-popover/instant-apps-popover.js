@@ -10,7 +10,6 @@ export class InstantAppsPopover {
   constructor() {
     this.placement = 'trailing-start';
     this.pagination = false;
-    this.dismissible = false;
     this.disableAction = false;
   }
   componentDidLoad() {
@@ -21,7 +20,7 @@ export class InstantAppsPopover {
   }
   render() {
     var _a, _b;
-    return (h("calcite-popover", { ref: (el) => (this.popoverEl = el), heading: this.popoverTitle, "auto-close": "true", placement: this.placement, "intl-close": (_a = this.messages) === null || _a === void 0 ? void 0 : _a.close, "trigger-disabled": "true", "ref-id": this.refId, dismissible: this.dismissible },
+    return (h("calcite-popover", { ref: (el) => (this.popoverEl = el), heading: this.popoverTitle, "auto-close": "true", placement: this.placement, "intl-close": (_a = this.messages) === null || _a === void 0 ? void 0 : _a.close, "trigger-disabled": "true", "ref-id": this.refId, dismissible: "true" },
       h("div", { class: `${CSS.content}${this.disableAction ? ` ${CSS.actionDisabled}` : ''}` },
         !this.disableAction ? (h("calcite-action", { key: "popover-action", class: CSS.action, onclick: this.popoverAction, icon: "arrow-left", compact: "true", "text-enabled": "true", text: this.intlPopoverAction ? this.intlPopoverAction : (_b = this.messages) === null || _b === void 0 ? void 0 : _b.back })) : null,
         h("section", null,
@@ -234,24 +233,6 @@ export class InstantAppsPopover {
         "text": ""
       },
       "attribute": "pagination",
-      "reflect": true,
-      "defaultValue": "false"
-    },
-    "dismissible": {
-      "type": "boolean",
-      "mutable": false,
-      "complexType": {
-        "original": "boolean",
-        "resolved": "boolean",
-        "references": {}
-      },
-      "required": false,
-      "optional": false,
-      "docs": {
-        "tags": [],
-        "text": ""
-      },
-      "attribute": "dismissible",
       "reflect": true,
       "defaultValue": "false"
     },

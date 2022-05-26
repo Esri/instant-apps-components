@@ -71,11 +71,6 @@ export class InstantAppsPopover {
   @Prop({
     reflect: true,
   })
-  dismissible = false;
-
-  @Prop({
-    reflect: true,
-  })
   disableAction = false;
 
   @Prop()
@@ -106,7 +101,7 @@ export class InstantAppsPopover {
         intl-close={this.messages?.close}
         trigger-disabled="true"
         ref-id={this.refId}
-        dismissible={this.dismissible}
+        dismissible="true"
       >
         <div class={`${CSS.content}${this.disableAction ? ` ${CSS.actionDisabled}` : ''}`}>
           {!this.disableAction ? (

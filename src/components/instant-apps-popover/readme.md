@@ -11,7 +11,6 @@
 | ------------------- | --------------------- | ----------- | ----------------------- | ------------------ |
 | `content`           | `content`             |             | `string`                | `undefined`        |
 | `disableAction`     | `disable-action`      |             | `boolean`               | `false`            |
-| `dismissible`       | `dismissible`         |             | `boolean`               | `false`            |
 | `index`             | `index`               |             | `number`                | `undefined`        |
 | `intlPopoverAction` | `intl-popover-action` |             | `string`                | `undefined`        |
 | `mediaSrc`          | `media-src`           |             | `string`                | `undefined`        |

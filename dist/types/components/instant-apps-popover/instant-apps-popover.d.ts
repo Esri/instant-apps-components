@@ -13,7 +13,6 @@ export declare class InstantAppsPopover {
   placement: string;
   refId: string;
   pagination: boolean;
-  dismissible: boolean;
   disableAction: boolean;
   popoverAction: Function;
   intlPopoverAction: string;
