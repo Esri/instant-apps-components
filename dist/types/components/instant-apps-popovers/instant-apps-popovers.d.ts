@@ -11,6 +11,6 @@ export declare class InstantAppsPopovers {
   done(): void;
   open(key: string): Promise<void>;
   close(key: string): Promise<void>;
-  beginTour(): void;
-  endTour(): void;
+  beginTour(): Promise<void>;
+  endTour(): Promise<void>;
 }

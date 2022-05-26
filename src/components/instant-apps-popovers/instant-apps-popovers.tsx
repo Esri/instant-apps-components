@@ -80,7 +80,8 @@ export class InstantAppsPopovers {
     popover.toggle(false);
   }
 
-  beginTour(): void {
+  @Method()
+  async beginTour(): Promise<void> {
     this.pagination = true;
     const scrim = document.createElement('calcite-scrim');
     scrim.id = 'instantAppsPopoverScrim';
@@ -89,7 +90,8 @@ export class InstantAppsPopovers {
     this.open(refIds[0]);
   }
 
-  endTour(): void {
+  @Method()
+  async endTour(): Promise<void> {
     const scrim = document.getElementById('instantAppsPopoverScrim');
     scrim?.remove();
     this.pagination = false;

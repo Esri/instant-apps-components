@@ -59,7 +59,7 @@ let InstantAppsPopovers$1 = class extends HTMLElement {
     const popover = (_a = this.instantAppsPopovers.get(key)) === null || _a === void 0 ? void 0 : _a.firstElementChild;
     popover.toggle(false);
   }
-  beginTour() {
+  async beginTour() {
     this.pagination = true;
     const scrim = document.createElement('calcite-scrim');
     scrim.id = 'instantAppsPopoverScrim';
@@ -67,7 +67,7 @@ let InstantAppsPopovers$1 = class extends HTMLElement {
     const refIds = Array.from(this.instantAppsPopovers.keys());
     this.open(refIds[0]);
   }
-  endTour() {
+  async endTour() {
     const scrim = document.getElementById('instantAppsPopoverScrim');
     scrim === null || scrim === void 0 ? void 0 : scrim.remove();
     this.pagination = false;
@@ -81,7 +81,9 @@ InstantAppsPopovers$1 = /*@__PURE__*/ proxyCustomElement(InstantAppsPopovers$1, 
     "beforeOpen": [16],
     "currentId": [32],
     "open": [64],
-    "close": [64]
+    "close": [64],
+    "beginTour": [64],
+    "endTour": [64]
   }]);
 function defineCustomElement$1() {
   if (typeof customElements === "undefined") {

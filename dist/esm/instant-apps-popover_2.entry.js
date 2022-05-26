@@ -102,7 +102,7 @@ let InstantAppsPopovers = class {
     const popover = (_a = this.instantAppsPopovers.get(key)) === null || _a === void 0 ? void 0 : _a.firstElementChild;
     popover.toggle(false);
   }
-  beginTour() {
+  async beginTour() {
     this.pagination = true;
     const scrim = document.createElement('calcite-scrim');
     scrim.id = 'instantAppsPopoverScrim';
@@ -110,7 +110,7 @@ let InstantAppsPopovers = class {
     const refIds = Array.from(this.instantAppsPopovers.keys());
     this.open(refIds[0]);
   }
-  endTour() {
+  async endTour() {
     const scrim = document.getElementById('instantAppsPopoverScrim');
     scrim === null || scrim === void 0 ? void 0 : scrim.remove();
     this.pagination = false;

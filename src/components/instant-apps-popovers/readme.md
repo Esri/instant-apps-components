@@ -16,7 +16,27 @@
 
 ## Methods
 
+### `beginTour() => Promise<void>`
+
+
+
+#### Returns
+
+Type: `Promise<void>`
+
+
+
 ### `close(key: string) => Promise<void>`
+
+
+
+#### Returns
+
+Type: `Promise<void>`
+
+
+
+### `endTour() => Promise<void>`
 
 
 

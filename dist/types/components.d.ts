@@ -29,7 +29,9 @@ export namespace Components {
     }
     interface InstantAppsPopovers {
         "beforeOpen": () => Promise<void>;
+        "beginTour": () => Promise<void>;
         "close": (key: string) => Promise<void>;
+        "endTour": () => Promise<void>;
         "instantAppsPopovers": Map<string, HTMLInstantAppsPopoverElement>;
         "open": (key: string) => Promise<void>;
         "pagination": boolean;
