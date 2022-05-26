@@ -12,6 +12,9 @@ export declare class InstantAppsPopover {
   parent: InstantAppsPopovers;
   placement: string;
   refId: string;
+  pagination: boolean;
+  dismissible: boolean;
+  disableAction: boolean;
   messages: typeof Popover_T9n;
   componentDidLoad(): void;
   componentDidUpdate(): void;

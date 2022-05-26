@@ -12,6 +12,9 @@ let InstantAppsPopover$1 = class extends HTMLElement {
     super();
     this.__registerHost();
     this.placement = 'trailing-start';
+    this.pagination = false;
+    this.dismissible = false;
+    this.disableAction = false;
   }
   componentDidLoad() {
     this.getMessages();
@@ -21,7 +24,7 @@ let InstantAppsPopover$1 = class extends HTMLElement {
   }
   render() {
     var _a;
-    return (h("calcite-popover", { ref: (el) => (this.popoverEl = el), heading: this.popoverTitle, "auto-close": "true", dismissible: "true", placement: this.placement, "intl-close": (_a = this.messages) === null || _a === void 0 ? void 0 : _a.close, "trigger-disabled": "true", "ref-id": this.refId }, h("div", { class: CSS.content }, h("slot", { name: "action" }), h("section", null, this.content), this.parent.pagination ? this.renderPagination() : null)));
+    return (h("calcite-popover", { ref: (el) => (this.popoverEl = el), heading: this.popoverTitle, "auto-close": "true", placement: this.placement, "intl-close": (_a = this.messages) === null || _a === void 0 ? void 0 : _a.close, "trigger-disabled": "true", "ref-id": this.refId, dismissible: this.dismissible }, h("div", { class: CSS.content }, h("slot", { name: "action" }), h("section", null, this.content), this.pagination ? this.renderPagination() : null)));
   }
   renderPagination() {
     var _a, _b;
@@ -55,6 +58,9 @@ InstantAppsPopover$1 = /*@__PURE__*/ proxyCustomElement(InstantAppsPopover$1, [4
     "parent": [16],
     "placement": [1],
     "refId": [1, "ref-id"],
+    "pagination": [516],
+    "dismissible": [516],
+    "disableAction": [516, "disable-action"],
     "messages": [32]
   }]);
 function defineCustomElement$1() {

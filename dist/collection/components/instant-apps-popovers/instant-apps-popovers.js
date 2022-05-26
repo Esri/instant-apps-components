@@ -1,8 +1,12 @@
 import { Component, Host, h, Prop, Element, State, Method } from '@stencil/core';
 export class InstantAppsPopovers {
   constructor() {
+    this.inTour = false;
     this.instantAppsPopovers = new Map();
-    this.pagination = false;
+    // @Prop({
+    //   reflect: true,
+    // })
+    // pagination: boolean = false;
     this.beforeOpen = () => Promise.resolve();
   }
   componentWillLoad() {
@@ -18,9 +22,6 @@ export class InstantAppsPopovers {
       const node = e.target;
       const refId = node.getAttribute('ref-id');
       this.currentId = refId;
-    });
-    this.host.addEventListener('calcitePopoverClose', () => {
-      this.endTour();
     });
   }
   render() {
@@ -44,6 +45,15 @@ export class InstantAppsPopovers {
   done() {
     this.endTour();
   }
+  handlePopoverProps(config) {
+    var _a;
+    const popovers = Array.from((_a = this.host.querySelector("[slot='popovers']")) === null || _a === void 0 ? void 0 : _a.children);
+    popovers.forEach(popover => {
+      popover.disableAction = config.disableAction;
+      popover.dismissible = config.dismissble;
+      popover.pagination = config.pagination;
+    });
+  }
   async open(key) {
     return this.beforeOpen().then(() => {
       var _a;
@@ -57,6 +67,8 @@ export class InstantAppsPopovers {
     popover.toggle(false);
   }
   async beginTour() {
+    this.inTour = true;
+    this.handlePopoverProps({ dismissble: false, pagination: true, disableAction: true });
     const scrim = document.createElement('calcite-scrim');
     scrim.id = 'instantAppsPopoverScrim';
     scrim.addEventListener('click', () => this.endTour());
@@ -68,9 +80,10 @@ export class InstantAppsPopovers {
     const scrim = document.getElementById('instantAppsPopoverScrim');
     scrim === null || scrim === void 0 ? void 0 : scrim.remove();
     this.close(this.currentId);
+    this.inTour = false;
+    this.handlePopoverProps({ dismissble: true, pagination: false, disableAction: false });
   }
   static get is() { return "instant-apps-popovers"; }
-  static get encapsulation() { return "shadow"; }
   static get originalStyleUrls() { return {
     "$": ["instant-apps-popovers.scss"]
   }; }
@@ -78,6 +91,24 @@ export class InstantAppsPopovers {
     "$": ["instant-apps-popovers.css"]
   }; }
   static get properties() { return {
+    "inTour": {
+      "type": "boolean",
+      "mutable": true,
+      "complexType": {
+        "original": "boolean",
+        "resolved": "boolean",
+        "references": {}
+      },
+      "required": false,
+      "optional": false,
+      "docs": {
+        "tags": [],
+        "text": ""
+      },
+      "attribute": "in-tour",
+      "reflect": true,
+      "defaultValue": "false"
+    },
     "instantAppsPopovers": {
       "type": "unknown",
       "mutable": false,
@@ -100,24 +131,6 @@ export class InstantAppsPopovers {
         "text": ""
       },
       "defaultValue": "new Map()"
-    },
-    "pagination": {
-      "type": "boolean",
-      "mutable": false,
-      "complexType": {
-        "original": "boolean",
-        "resolved": "boolean",
-        "references": {}
-      },
-      "required": false,
-      "optional": false,
-      "docs": {
-        "tags": [],
-        "text": ""
-      },
-      "attribute": "pagination",
-      "reflect": true,
-      "defaultValue": "false"
     },
     "beforeOpen": {
       "type": "unknown",

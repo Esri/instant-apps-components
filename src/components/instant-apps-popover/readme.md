@@ -10,8 +10,11 @@
 | Property           | Attribute           | Description | Type                    | Default            |
 | ------------------ | ------------------- | ----------- | ----------------------- | ------------------ |
 | `content`          | `content`           |             | `string`                | `undefined`        |
+| `disableAction`    | `disable-action`    |             | `boolean`               | `false`            |
+| `dismissible`      | `dismissible`       |             | `boolean`               | `false`            |
 | `index`            | `index`             |             | `number`                | `undefined`        |
 | `mediaSrc`         | `media-src`         |             | `string`                | `undefined`        |
+| `pagination`       | `pagination`        |             | `boolean`               | `false`            |
 | `parent`           | --                  |             | `InstantAppsPopovers`   | `undefined`        |
 | `placement`        | `placement`         |             | `string`                | `'trailing-start'` |
 | `popoverTitle`     | `popover-title`     |             | `string`                | `undefined`        |

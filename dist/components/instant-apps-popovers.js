@@ -1,14 +1,17 @@
 import { HTMLElement, h, Host, proxyCustomElement } from '@stencil/core/internal/client';
 
-const instantAppsPopoversCss = ":host{display:block}";
+const instantAppsPopoversCss = ":host{display:block}#instantAppsPopoverScrim{--calcite-scrim-background:rgba(0, 0, 0, 0.5);z-index:100}";
 
 let InstantAppsPopovers$1 = class extends HTMLElement {
   constructor() {
     super();
     this.__registerHost();
-    this.__attachShadow();
+    this.inTour = false;
     this.instantAppsPopovers = new Map();
-    this.pagination = false;
+    // @Prop({
+    //   reflect: true,
+    // })
+    // pagination: boolean = false;
     this.beforeOpen = () => Promise.resolve();
   }
   componentWillLoad() {
@@ -24,9 +27,6 @@ let InstantAppsPopovers$1 = class extends HTMLElement {
       const node = e.target;
       const refId = node.getAttribute('ref-id');
       this.currentId = refId;
-    });
-    this.host.addEventListener('calcitePopoverClose', () => {
-      this.endTour();
     });
   }
   render() {
@@ -49,6 +49,15 @@ let InstantAppsPopovers$1 = class extends HTMLElement {
   done() {
     this.endTour();
   }
+  handlePopoverProps(config) {
+    var _a;
+    const popovers = Array.from((_a = this.host.querySelector("[slot='popovers']")) === null || _a === void 0 ? void 0 : _a.children);
+    popovers.forEach(popover => {
+      popover.disableAction = config.disableAction;
+      popover.dismissible = config.dismissble;
+      popover.pagination = config.pagination;
+    });
+  }
   async open(key) {
     return this.beforeOpen().then(() => {
       var _a;
@@ -62,6 +71,8 @@ let InstantAppsPopovers$1 = class extends HTMLElement {
     popover.toggle(false);
   }
   async beginTour() {
+    this.inTour = true;
+    this.handlePopoverProps({ dismissble: false, pagination: true, disableAction: true });
     const scrim = document.createElement('calcite-scrim');
     scrim.id = 'instantAppsPopoverScrim';
     scrim.addEventListener('click', () => this.endTour());
@@ -73,13 +84,15 @@ let InstantAppsPopovers$1 = class extends HTMLElement {
     const scrim = document.getElementById('instantAppsPopoverScrim');
     scrim === null || scrim === void 0 ? void 0 : scrim.remove();
     this.close(this.currentId);
+    this.inTour = false;
+    this.handlePopoverProps({ dismissble: true, pagination: false, disableAction: false });
   }
   get host() { return this; }
   static get style() { return instantAppsPopoversCss; }
 };
-InstantAppsPopovers$1 = /*@__PURE__*/ proxyCustomElement(InstantAppsPopovers$1, [1, "instant-apps-popovers", {
+InstantAppsPopovers$1 = /*@__PURE__*/ proxyCustomElement(InstantAppsPopovers$1, [4, "instant-apps-popovers", {
+    "inTour": [1540, "in-tour"],
     "instantAppsPopovers": [16],
-    "pagination": [516],
     "beforeOpen": [16],
     "currentId": [32],
     "open": [64],

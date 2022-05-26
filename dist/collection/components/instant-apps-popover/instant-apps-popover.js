@@ -7,6 +7,9 @@ const CSS = {
 export class InstantAppsPopover {
   constructor() {
     this.placement = 'trailing-start';
+    this.pagination = false;
+    this.dismissible = false;
+    this.disableAction = false;
   }
   componentDidLoad() {
     this.getMessages();
@@ -16,11 +19,11 @@ export class InstantAppsPopover {
   }
   render() {
     var _a;
-    return (h("calcite-popover", { ref: (el) => (this.popoverEl = el), heading: this.popoverTitle, "auto-close": "true", dismissible: "true", placement: this.placement, "intl-close": (_a = this.messages) === null || _a === void 0 ? void 0 : _a.close, "trigger-disabled": "true", "ref-id": this.refId },
+    return (h("calcite-popover", { ref: (el) => (this.popoverEl = el), heading: this.popoverTitle, "auto-close": "true", placement: this.placement, "intl-close": (_a = this.messages) === null || _a === void 0 ? void 0 : _a.close, "trigger-disabled": "true", "ref-id": this.refId, dismissible: this.dismissible },
       h("div", { class: CSS.content },
         h("slot", { name: "action" }),
         h("section", null, this.content),
-        this.parent.pagination ? this.renderPagination() : null)));
+        this.pagination ? this.renderPagination() : null)));
   }
   renderPagination() {
     var _a, _b;
@@ -211,6 +214,60 @@ export class InstantAppsPopover {
       },
       "attribute": "ref-id",
       "reflect": false
+    },
+    "pagination": {
+      "type": "boolean",
+      "mutable": false,
+      "complexType": {
+        "original": "boolean",
+        "resolved": "boolean",
+        "references": {}
+      },
+      "required": false,
+      "optional": false,
+      "docs": {
+        "tags": [],
+        "text": ""
+      },
+      "attribute": "pagination",
+      "reflect": true,
+      "defaultValue": "false"
+    },
+    "dismissible": {
+      "type": "boolean",
+      "mutable": false,
+      "complexType": {
+        "original": "boolean",
+        "resolved": "boolean",
+        "references": {}
+      },
+      "required": false,
+      "optional": false,
+      "docs": {
+        "tags": [],
+        "text": ""
+      },
+      "attribute": "dismissible",
+      "reflect": true,
+      "defaultValue": "false"
+    },
+    "disableAction": {
+      "type": "boolean",
+      "mutable": false,
+      "complexType": {
+        "original": "boolean",
+        "resolved": "boolean",
+        "references": {}
+      },
+      "required": false,
+      "optional": false,
+      "docs": {
+        "tags": [],
+        "text": ""
+      },
+      "attribute": "disable-action",
+      "reflect": true,
+      "defaultValue": "false"
     }
   }; }
   static get states() { return {

@@ -11,6 +11,9 @@ let InstantAppsPopover = class {
   constructor(hostRef) {
     registerInstance(this, hostRef);
     this.placement = 'trailing-start';
+    this.pagination = false;
+    this.dismissible = false;
+    this.disableAction = false;
   }
   componentDidLoad() {
     this.getMessages();
@@ -20,7 +23,7 @@ let InstantAppsPopover = class {
   }
   render() {
     var _a;
-    return (h("calcite-popover", { ref: (el) => (this.popoverEl = el), heading: this.popoverTitle, "auto-close": "true", dismissible: "true", placement: this.placement, "intl-close": (_a = this.messages) === null || _a === void 0 ? void 0 : _a.close, "trigger-disabled": "true", "ref-id": this.refId }, h("div", { class: CSS.content }, h("slot", { name: "action" }), h("section", null, this.content), this.parent.pagination ? this.renderPagination() : null)));
+    return (h("calcite-popover", { ref: (el) => (this.popoverEl = el), heading: this.popoverTitle, "auto-close": "true", placement: this.placement, "intl-close": (_a = this.messages) === null || _a === void 0 ? void 0 : _a.close, "trigger-disabled": "true", "ref-id": this.refId, dismissible: this.dismissible }, h("div", { class: CSS.content }, h("slot", { name: "action" }), h("section", null, this.content), this.pagination ? this.renderPagination() : null)));
   }
   renderPagination() {
     var _a, _b;
@@ -45,13 +48,17 @@ let InstantAppsPopover = class {
 };
 InstantAppsPopover.style = instantAppsPopoverCss;
 
-const instantAppsPopoversCss = ":host{display:block}";
+const instantAppsPopoversCss = ":host{display:block}#instantAppsPopoverScrim{--calcite-scrim-background:rgba(0, 0, 0, 0.5);z-index:100}";
 
 let InstantAppsPopovers = class {
   constructor(hostRef) {
     registerInstance(this, hostRef);
+    this.inTour = false;
     this.instantAppsPopovers = new Map();
-    this.pagination = false;
+    // @Prop({
+    //   reflect: true,
+    // })
+    // pagination: boolean = false;
     this.beforeOpen = () => Promise.resolve();
   }
   componentWillLoad() {
@@ -67,9 +74,6 @@ let InstantAppsPopovers = class {
       const node = e.target;
       const refId = node.getAttribute('ref-id');
       this.currentId = refId;
-    });
-    this.host.addEventListener('calcitePopoverClose', () => {
-      this.endTour();
     });
   }
   render() {
@@ -92,6 +96,15 @@ let InstantAppsPopovers = class {
   done() {
     this.endTour();
   }
+  handlePopoverProps(config) {
+    var _a;
+    const popovers = Array.from((_a = this.host.querySelector("[slot='popovers']")) === null || _a === void 0 ? void 0 : _a.children);
+    popovers.forEach(popover => {
+      popover.disableAction = config.disableAction;
+      popover.dismissible = config.dismissble;
+      popover.pagination = config.pagination;
+    });
+  }
   async open(key) {
     return this.beforeOpen().then(() => {
       var _a;
@@ -105,6 +118,8 @@ let InstantAppsPopovers = class {
     popover.toggle(false);
   }
   async beginTour() {
+    this.inTour = true;
+    this.handlePopoverProps({ dismissble: false, pagination: true, disableAction: true });
     const scrim = document.createElement('calcite-scrim');
     scrim.id = 'instantAppsPopoverScrim';
     scrim.addEventListener('click', () => this.endTour());
@@ -116,6 +131,8 @@ let InstantAppsPopovers = class {
     const scrim = document.getElementById('instantAppsPopoverScrim');
     scrim === null || scrim === void 0 ? void 0 : scrim.remove();
     this.close(this.currentId);
+    this.inTour = false;
+    this.handlePopoverProps({ dismissble: true, pagination: false, disableAction: false });
   }
   get host() { return getElement(this); }
 };

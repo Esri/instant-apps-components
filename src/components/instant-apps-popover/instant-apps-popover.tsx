@@ -61,6 +61,21 @@ export class InstantAppsPopover {
   @Prop()
   refId: string;
 
+  @Prop({
+    reflect: true,
+  })
+  pagination = false;
+
+  @Prop({
+    reflect: true,
+  })
+  dismissible = false;
+
+  @Prop({
+    reflect: true,
+  })
+  disableAction = false;
+
   // Internal State
   @State()
   messages: typeof Popover_T9n;
@@ -79,16 +94,16 @@ export class InstantAppsPopover {
         ref={(el: HTMLCalcitePopoverElement) => (this.popoverEl = el)}
         heading={this.popoverTitle}
         auto-close="true"
-        dismissible="true"
         placement={this.placement}
         intl-close={this.messages?.close}
         trigger-disabled="true"
         ref-id={this.refId}
+        dismissible={this.dismissible}
       >
         <div class={CSS.content}>
           <slot name="action"></slot>
           <section>{this.content}</section>
-          {this.parent.pagination ? this.renderPagination() : null}
+          {this.pagination ? this.renderPagination() : null}
         </div>
       </calcite-popover>
     );

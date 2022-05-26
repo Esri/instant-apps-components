@@ -3,9 +3,15 @@ import { Component, Host, h, Prop, Element, State, Method } from '@stencil/core'
 @Component({
   tag: 'instant-apps-popovers',
   styleUrl: 'instant-apps-popovers.scss',
-  shadow: true,
+  shadow: false,
 })
 export class InstantAppsPopovers {
+  @Prop({
+    mutable: true,
+    reflect: true,
+  })
+  inTour: boolean = false;
+
   @State()
   currentId: string;
 
@@ -15,10 +21,10 @@ export class InstantAppsPopovers {
   @Prop()
   instantAppsPopovers: Map<string, HTMLInstantAppsPopoverElement> = new Map();
 
-  @Prop({
-    reflect: true,
-  })
-  pagination: boolean = false;
+  // @Prop({
+  //   reflect: true,
+  // })
+  // pagination: boolean = false;
 
   @Prop() beforeOpen: () => Promise<void> = () => Promise.resolve();
 
@@ -34,9 +40,6 @@ export class InstantAppsPopovers {
       const node = e.target as HTMLCalcitePopoverElement;
       const refId = node.getAttribute('ref-id') as string;
       this.currentId = refId;
-    });
-    this.host.addEventListener('calcitePopoverClose', () => {
-      this.endTour();
     });
   }
 
@@ -68,6 +71,15 @@ export class InstantAppsPopovers {
     this.endTour();
   }
 
+  handlePopoverProps(config: { dismissble: boolean; pagination: boolean; disableAction: boolean }): void {
+    const popovers = Array.from(this.host.querySelector("[slot='popovers']")?.children as HTMLCollection) as HTMLInstantAppsPopoverElement[];
+    popovers.forEach(popover => {
+      popover.disableAction = config.disableAction;
+      popover.dismissible = config.dismissble;
+      popover.pagination = config.pagination;
+    });
+  }
+
   @Method()
   async open(key: string): Promise<void> {
     return this.beforeOpen().then(() => {
@@ -84,6 +96,8 @@ export class InstantAppsPopovers {
 
   @Method()
   async beginTour(): Promise<void> {
+    this.inTour = true;
+    this.handlePopoverProps({ dismissble: false, pagination: true, disableAction: true });
     const scrim = document.createElement('calcite-scrim');
     scrim.id = 'instantAppsPopoverScrim';
     scrim.addEventListener('click', () => this.endTour());
@@ -97,5 +111,7 @@ export class InstantAppsPopovers {
     const scrim = document.getElementById('instantAppsPopoverScrim');
     scrim?.remove();
     this.close(this.currentId);
+    this.inTour = false;
+    this.handlePopoverProps({ dismissble: true, pagination: false, disableAction: false });
   }
 }

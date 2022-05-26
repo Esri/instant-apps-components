@@ -103,19 +103,23 @@
     <button class="open" value="one">Open me!</button>
     <button class="open" value="two">Open me!</button>
     <button class="open" value="three">Open me!</button>
-    <!-- <script>
-      const onePopover = document.getElementById('onePopover');
-      onePopover.beforeOpen = async () => {
-        console.log('TEST');
-      };
+    <script>
       const popovers = document.getElementById('popovers');
-      document.body.addEventListener('click', e => {
-        const node = e.target;
-        if (node.classList.contains('open')) {
-          const id = node.value;
-          popovers.open(id);
-        }
-      });
-    </script> -->
+      setTimeout(() => {
+        popovers.beginTour();
+      }, 3000);
+      // const onePopover = document.getElementById('onePopover');
+      // onePopover.beforeOpen = async () => {
+      //   console.log('TEST');
+      // };
+      // const popovers = document.getElementById('popovers');
+      // document.body.addEventListener('click', e => {
+      //   const node = e.target;
+      //   if (node.classList.contains('open')) {
+      //     const id = node.value;
+      //     popovers.open(id);
+      //   }
+      // });
+    </script>
   </body>
 </html>

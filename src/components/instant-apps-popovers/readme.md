@@ -7,11 +7,11 @@
 
 ## Properties
 
-| Property              | Attribute    | Description | Type                                         | Default                   |
-| --------------------- | ------------ | ----------- | -------------------------------------------- | ------------------------- |
-| `beforeOpen`          | --           |             | `() => Promise<void>`                        | `() => Promise.resolve()` |
-| `instantAppsPopovers` | --           |             | `Map<string, HTMLInstantAppsPopoverElement>` | `new Map()`               |
-| `pagination`          | `pagination` |             | `boolean`                                    | `false`                   |
+| Property              | Attribute | Description | Type                                         | Default                   |
+| --------------------- | --------- | ----------- | -------------------------------------------- | ------------------------- |
+| `beforeOpen`          | --        |             | `() => Promise<void>`                        | `() => Promise.resolve()` |
+| `inTour`              | `in-tour` |             | `boolean`                                    | `false`                   |
+| `instantAppsPopovers` | --        |             | `Map<string, HTMLInstantAppsPopoverElement>` | `new Map()`               |
 
 
 ## Methods
