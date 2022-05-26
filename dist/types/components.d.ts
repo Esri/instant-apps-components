@@ -21,10 +21,12 @@ export namespace Components {
         "disableAction": boolean;
         "dismissible": boolean;
         "index": number;
+        "intlPopoverAction": string;
         "mediaSrc": string;
         "pagination": boolean;
         "parent": InstantAppsPopovers;
         "placement": string;
+        "popoverAction": Function;
         "popoverTitle": string;
         "refId": string;
         "referenceElement": string | HTMLElement;
@@ -101,10 +103,12 @@ declare namespace LocalJSX {
         "disableAction"?: boolean;
         "dismissible"?: boolean;
         "index"?: number;
+        "intlPopoverAction"?: string;
         "mediaSrc"?: string;
         "pagination"?: boolean;
         "parent"?: InstantAppsPopovers;
         "placement"?: string;
+        "popoverAction"?: Function;
         "popoverTitle"?: string;
         "refId"?: string;
         "referenceElement"?: string | HTMLElement;

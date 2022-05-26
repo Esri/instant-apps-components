@@ -24,7 +24,7 @@ let InstantAppsPopover$1 = class extends HTMLElement {
   }
   render() {
     var _a;
-    return (h("calcite-popover", { ref: (el) => (this.popoverEl = el), heading: this.popoverTitle, "auto-close": "true", placement: this.placement, "intl-close": (_a = this.messages) === null || _a === void 0 ? void 0 : _a.close, "trigger-disabled": "true", "ref-id": this.refId, dismissible: this.dismissible }, h("div", { class: CSS.content }, h("slot", { name: "action" }), h("section", null, this.content), this.pagination ? this.renderPagination() : null)));
+    return (h("calcite-popover", { ref: (el) => (this.popoverEl = el), heading: this.popoverTitle, "auto-close": "true", placement: this.placement, "intl-close": (_a = this.messages) === null || _a === void 0 ? void 0 : _a.close, "trigger-disabled": "true", "ref-id": this.refId, dismissible: this.dismissible }, h("div", { class: CSS.content }, !this.disableAction ? (h("calcite-button", { key: "popover-action", onclick: this.popoverAction, "icon-start": "arrow-left", appearance: "transparent", color: "neutral" }, this.intlPopoverAction ? this.intlPopoverAction : this.messages.back)) : null, h("section", null, this.content), this.pagination ? this.renderPagination() : null)));
   }
   renderPagination() {
     var _a, _b;
@@ -48,7 +48,7 @@ let InstantAppsPopover$1 = class extends HTMLElement {
   get el() { return this; }
   static get style() { return instantAppsPopoverCss; }
 };
-InstantAppsPopover$1 = /*@__PURE__*/ proxyCustomElement(InstantAppsPopover$1, [4, "instant-apps-popover", {
+InstantAppsPopover$1 = /*@__PURE__*/ proxyCustomElement(InstantAppsPopover$1, [0, "instant-apps-popover", {
     "popoverTitle": [513, "popover-title"],
     "subtitle": [513],
     "content": [513],
@@ -61,6 +61,8 @@ InstantAppsPopover$1 = /*@__PURE__*/ proxyCustomElement(InstantAppsPopover$1, [4
     "pagination": [516],
     "dismissible": [516],
     "disableAction": [516, "disable-action"],
+    "popoverAction": [16],
+    "intlPopoverAction": [1, "intl-popover-action"],
     "messages": [32]
   }]);
 function defineCustomElement$1() {

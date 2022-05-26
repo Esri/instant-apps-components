@@ -21,7 +21,7 @@ export class InstantAppsPopover {
     var _a;
     return (h("calcite-popover", { ref: (el) => (this.popoverEl = el), heading: this.popoverTitle, "auto-close": "true", placement: this.placement, "intl-close": (_a = this.messages) === null || _a === void 0 ? void 0 : _a.close, "trigger-disabled": "true", "ref-id": this.refId, dismissible: this.dismissible },
       h("div", { class: CSS.content },
-        h("slot", { name: "action" }),
+        !this.disableAction ? (h("calcite-button", { key: "popover-action", onclick: this.popoverAction, "icon-start": "arrow-left", appearance: "transparent", color: "neutral" }, this.intlPopoverAction ? this.intlPopoverAction : this.messages.back)) : null,
         h("section", null, this.content),
         this.pagination ? this.renderPagination() : null)));
   }
@@ -268,6 +268,42 @@ export class InstantAppsPopover {
       "attribute": "disable-action",
       "reflect": true,
       "defaultValue": "false"
+    },
+    "popoverAction": {
+      "type": "unknown",
+      "mutable": false,
+      "complexType": {
+        "original": "Function",
+        "resolved": "Function",
+        "references": {
+          "Function": {
+            "location": "global"
+          }
+        }
+      },
+      "required": false,
+      "optional": false,
+      "docs": {
+        "tags": [],
+        "text": ""
+      }
+    },
+    "intlPopoverAction": {
+      "type": "string",
+      "mutable": false,
+      "complexType": {
+        "original": "string",
+        "resolved": "string",
+        "references": {}
+      },
+      "required": false,
+      "optional": false,
+      "docs": {
+        "tags": [],
+        "text": ""
+      },
+      "attribute": "intl-popover-action",
+      "reflect": false
     }
   }; }
   static get states() { return {

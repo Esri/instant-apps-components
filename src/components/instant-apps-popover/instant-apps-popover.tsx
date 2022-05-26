@@ -76,6 +76,12 @@ export class InstantAppsPopover {
   })
   disableAction = false;
 
+  @Prop()
+  popoverAction: Function;
+
+  @Prop()
+  intlPopoverAction: string;
+
   // Internal State
   @State()
   messages: typeof Popover_T9n;
@@ -101,7 +107,11 @@ export class InstantAppsPopover {
         dismissible={this.dismissible}
       >
         <div class={CSS.content}>
-          <slot name="action"></slot>
+          {!this.disableAction ? (
+            <calcite-button key="popover-action" onclick={this.popoverAction} icon-start="arrow-left" appearance="transparent" color="neutral">
+              {this.intlPopoverAction ? this.intlPopoverAction : this.messages.back}
+            </calcite-button>
+          ) : null}
           <section>{this.content}</section>
           {this.pagination ? this.renderPagination() : null}
         </div>

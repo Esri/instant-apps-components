@@ -7,20 +7,22 @@
 
 ## Properties
 
-| Property           | Attribute           | Description | Type                    | Default            |
-| ------------------ | ------------------- | ----------- | ----------------------- | ------------------ |
-| `content`          | `content`           |             | `string`                | `undefined`        |
-| `disableAction`    | `disable-action`    |             | `boolean`               | `false`            |
-| `dismissible`      | `dismissible`       |             | `boolean`               | `false`            |
-| `index`            | `index`             |             | `number`                | `undefined`        |
-| `mediaSrc`         | `media-src`         |             | `string`                | `undefined`        |
-| `pagination`       | `pagination`        |             | `boolean`               | `false`            |
-| `parent`           | --                  |             | `InstantAppsPopovers`   | `undefined`        |
-| `placement`        | `placement`         |             | `string`                | `'trailing-start'` |
-| `popoverTitle`     | `popover-title`     |             | `string`                | `undefined`        |
-| `refId`            | `ref-id`            |             | `string`                | `undefined`        |
-| `referenceElement` | `reference-element` |             | `HTMLElement \| string` | `undefined`        |
-| `subtitle`         | `subtitle`          |             | `string`                | `undefined`        |
+| Property            | Attribute             | Description | Type                    | Default            |
+| ------------------- | --------------------- | ----------- | ----------------------- | ------------------ |
+| `content`           | `content`             |             | `string`                | `undefined`        |
+| `disableAction`     | `disable-action`      |             | `boolean`               | `false`            |
+| `dismissible`       | `dismissible`         |             | `boolean`               | `false`            |
+| `index`             | `index`               |             | `number`                | `undefined`        |
+| `intlPopoverAction` | `intl-popover-action` |             | `string`                | `undefined`        |
+| `mediaSrc`          | `media-src`           |             | `string`                | `undefined`        |
+| `pagination`        | `pagination`          |             | `boolean`               | `false`            |
+| `parent`            | --                    |             | `InstantAppsPopovers`   | `undefined`        |
+| `placement`         | `placement`           |             | `string`                | `'trailing-start'` |
+| `popoverAction`     | --                    |             | `Function`              | `undefined`        |
+| `popoverTitle`      | `popover-title`       |             | `string`                | `undefined`        |
+| `refId`             | `ref-id`              |             | `string`                | `undefined`        |
+| `referenceElement`  | `reference-element`   |             | `HTMLElement \| string` | `undefined`        |
+| `subtitle`          | `subtitle`            |             | `string`                | `undefined`        |
 
 
 ----------------------------------------------
