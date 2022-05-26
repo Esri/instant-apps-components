@@ -75,10 +75,6 @@ let InstantAppsPopovers = class {
       const refId = node.getAttribute('ref-id');
       this.currentId = refId;
     });
-    this.host.addEventListener('calcitePopoverClose', () => {
-      if (this.inTour)
-        this.endTour();
-    });
   }
   render() {
     return (index.h(index.Host, null, index.h("slot", { name: "popovers" })));
