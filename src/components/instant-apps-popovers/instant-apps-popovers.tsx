@@ -63,6 +63,7 @@ export class InstantAppsPopovers {
 
   done(): void {
     this.close(this.currentId);
+    this.endTour();
   }
 
   @Method()
@@ -77,5 +78,20 @@ export class InstantAppsPopovers {
   async close(key: string): Promise<void> {
     const popover = this.instantAppsPopovers.get(key)?.firstElementChild as HTMLCalcitePopoverElement;
     popover.toggle(false);
+  }
+
+  beginTour(): void {
+    this.pagination = true;
+    const scrim = document.createElement('calcite-scrim');
+    scrim.id = 'instantAppsPopoverScrim';
+    document.body.appendChild(scrim);
+    const refIds = Array.from(this.instantAppsPopovers.keys());
+    this.open(refIds[0]);
+  }
+
+  endTour(): void {
+    const scrim = document.getElementById('instantAppsPopoverScrim');
+    scrim?.remove();
+    this.pagination = false;
   }
 }
