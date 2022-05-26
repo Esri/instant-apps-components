@@ -50,7 +50,7 @@
   </head>
 
   <body>
-    <instant-apps-popovers id="popovers" pagination="true">
+    <instant-apps-popovers id="popovers">
       <div slot="popovers">
         <instant-apps-popover
           id="onePopover"
@@ -104,9 +104,19 @@
     <button class="open" value="two">Open me!</button>
     <button class="open" value="three">Open me!</button>
     <script>
-      const popovers = document.getElementById('popovers');
       setTimeout(() => {
-        popovers.beginTour();
+        const popovers = document.getElementById('popovers');
+        const one = document.getElementById('one');
+        const two = document.getElementById('two');
+        const three = document.getElementById('three');
+        popovers.instantAppsPopovers.forEach(popover => {
+          const refElement = popover.getAttribute('reference-element');
+          const node = document.getElementById(refElement);
+          popover.referenceElement = node;
+        });
+        setTimeout(() => {
+          popovers.beginTour();
+        }, 3000);
       }, 3000);
       // const onePopover = document.getElementById('onePopover');
       // onePopover.beforeOpen = async () => {

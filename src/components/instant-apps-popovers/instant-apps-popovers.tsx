@@ -21,11 +21,6 @@ export class InstantAppsPopovers {
   @Prop()
   instantAppsPopovers: Map<string, HTMLInstantAppsPopoverElement> = new Map();
 
-  // @Prop({
-  //   reflect: true,
-  // })
-  // pagination: boolean = false;
-
   @Prop() beforeOpen: () => Promise<void> = () => Promise.resolve();
 
   componentWillLoad() {
@@ -71,11 +66,10 @@ export class InstantAppsPopovers {
     this.endTour();
   }
 
-  handlePopoverProps(config: { dismissble: boolean; pagination: boolean; disableAction: boolean }): void {
+  handlePopoverProps(config: { pagination: boolean; disableAction: boolean }): void {
     const popovers = Array.from(this.host.querySelector("[slot='popovers']")?.children as HTMLCollection) as HTMLInstantAppsPopoverElement[];
     popovers.forEach(popover => {
       popover.disableAction = config.disableAction;
-      popover.dismissible = config.dismissble;
       popover.pagination = config.pagination;
     });
   }
@@ -84,6 +78,7 @@ export class InstantAppsPopovers {
   async open(key: string): Promise<void> {
     return this.beforeOpen().then(() => {
       const popover = this.instantAppsPopovers.get(key)?.firstElementChild as HTMLCalcitePopoverElement;
+      debugger;
       popover.toggle(true);
     });
   }
@@ -97,21 +92,15 @@ export class InstantAppsPopovers {
   @Method()
   async beginTour(): Promise<void> {
     this.inTour = true;
-    this.handlePopoverProps({ dismissble: false, pagination: true, disableAction: true });
-    const scrim = document.createElement('calcite-scrim');
-    scrim.id = 'instantAppsPopoverScrim';
-    scrim.addEventListener('click', () => this.endTour());
-    document.body.appendChild(scrim);
+    this.handlePopoverProps({ pagination: true, disableAction: true });
     const refIds = Array.from(this.instantAppsPopovers.keys());
     this.open(refIds[0]);
   }
 
   @Method()
   async endTour(): Promise<void> {
-    const scrim = document.getElementById('instantAppsPopoverScrim');
-    scrim?.remove();
     this.close(this.currentId);
     this.inTour = false;
-    this.handlePopoverProps({ dismissble: true, pagination: false, disableAction: false });
+    this.handlePopoverProps({ pagination: false, disableAction: false });
   }
 }

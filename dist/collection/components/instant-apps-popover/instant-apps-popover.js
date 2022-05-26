@@ -22,7 +22,9 @@ export class InstantAppsPopover {
     return (h("calcite-popover", { ref: (el) => (this.popoverEl = el), heading: this.popoverTitle, "auto-close": "true", placement: this.placement, "intl-close": (_a = this.messages) === null || _a === void 0 ? void 0 : _a.close, "trigger-disabled": "true", "ref-id": this.refId, dismissible: this.dismissible },
       h("div", { class: CSS.content },
         !this.disableAction ? (h("calcite-button", { key: "popover-action", onclick: this.popoverAction, "icon-start": "arrow-left", appearance: "transparent", color: "neutral" }, this.intlPopoverAction ? this.intlPopoverAction : (_b = this.messages) === null || _b === void 0 ? void 0 : _b.back)) : null,
-        h("section", null, this.content),
+        h("section", null,
+          h("span", { id: "subtitle" }, this.subtitle),
+          h("p", null, this.content)),
         this.pagination ? this.renderPagination() : null)));
   }
   renderPagination() {

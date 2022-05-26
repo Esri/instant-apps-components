@@ -10,7 +10,6 @@ export declare class InstantAppsPopovers {
   previous(): void;
   done(): void;
   handlePopoverProps(config: {
-    dismissble: boolean;
     pagination: boolean;
     disableAction: boolean;
   }): void;

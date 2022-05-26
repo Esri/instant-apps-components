@@ -112,7 +112,11 @@ export class InstantAppsPopover {
               {this.intlPopoverAction ? this.intlPopoverAction : this.messages?.back}
             </calcite-button>
           ) : null}
-          <section>{this.content}</section>
+
+          <section>
+            <span id="subtitle">{this.subtitle}</span>
+            <p>{this.content}</p>
+          </section>
           {this.pagination ? this.renderPagination() : null}
         </div>
       </calcite-popover>

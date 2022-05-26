@@ -3,8 +3,23 @@
 }
 
 .instant-apps-popover__content {
-  padding: 2.5%;
+  padding: 5%;
   max-width: 25vw;
+  font-family: Avenir;
+  font-size: 14px;
+
+  span {
+    display: inline-block;
+    font-weight: 900;
+    color: #000;
+    margin: 10px 0;
+  }
+
+  p {
+    line-height: 19.12px;
+    margin: 0;
+    margin-bottom: 10px;
+  }
 
   .instant-apps-popover__button-container {
     display: flex;

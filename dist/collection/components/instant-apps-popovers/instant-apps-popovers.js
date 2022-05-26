@@ -2,10 +2,6 @@ import { Component, Host, h, Prop, Element, State, Method } from '@stencil/core'
 export class InstantAppsPopovers {
   constructor() {
     this.instantAppsPopovers = new Map();
-    // @Prop({
-    //   reflect: true,
-    // })
-    // pagination: boolean = false;
     this.beforeOpen = () => Promise.resolve();
   }
   componentWillLoad() {
@@ -49,7 +45,6 @@ export class InstantAppsPopovers {
     const popovers = Array.from((_a = this.host.querySelector("[slot='popovers']")) === null || _a === void 0 ? void 0 : _a.children);
     popovers.forEach(popover => {
       popover.disableAction = config.disableAction;
-      popover.dismissible = config.dismissble;
       popover.pagination = config.pagination;
     });
   }
@@ -57,6 +52,7 @@ export class InstantAppsPopovers {
     return this.beforeOpen().then(() => {
       var _a;
       const popover = (_a = this.instantAppsPopovers.get(key)) === null || _a === void 0 ? void 0 : _a.firstElementChild;
+      debugger;
       popover.toggle(true);
     });
   }
@@ -67,20 +63,14 @@ export class InstantAppsPopovers {
   }
   async beginTour() {
     this.inTour = true;
-    this.handlePopoverProps({ dismissble: false, pagination: true, disableAction: true });
-    const scrim = document.createElement('calcite-scrim');
-    scrim.id = 'instantAppsPopoverScrim';
-    scrim.addEventListener('click', () => this.endTour());
-    document.body.appendChild(scrim);
+    this.handlePopoverProps({ pagination: true, disableAction: true });
     const refIds = Array.from(this.instantAppsPopovers.keys());
     this.open(refIds[0]);
   }
   async endTour() {
-    const scrim = document.getElementById('instantAppsPopoverScrim');
-    scrim === null || scrim === void 0 ? void 0 : scrim.remove();
     this.close(this.currentId);
     this.inTour = false;
-    this.handlePopoverProps({ dismissble: true, pagination: false, disableAction: false });
+    this.handlePopoverProps({ pagination: false, disableAction: false });
   }
   static get is() { return "instant-apps-popovers"; }
   static get originalStyleUrls() { return {
