@@ -109,7 +109,7 @@ export class InstantAppsPopover {
         <div class={CSS.content}>
           {!this.disableAction ? (
             <calcite-button key="popover-action" onclick={this.popoverAction} icon-start="arrow-left" appearance="transparent" color="neutral">
-              {this.intlPopoverAction ? this.intlPopoverAction : this.messages.back}
+              {this.intlPopoverAction ? this.intlPopoverAction : this.messages?.back}
             </calcite-button>
           ) : null}
           <section>{this.content}</section>
