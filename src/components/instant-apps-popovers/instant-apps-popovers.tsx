@@ -36,6 +36,9 @@ export class InstantAppsPopovers {
       const refId = node.getAttribute('ref-id') as string;
       this.currentId = refId;
     });
+    this.host.addEventListener('calcitePopoverClose', () => {
+      if (this.inTour) this.endTour();
+    });
   }
 
   render() {
