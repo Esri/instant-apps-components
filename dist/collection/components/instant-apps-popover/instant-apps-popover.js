@@ -3,6 +3,8 @@ import { getLocaleComponentStrings } from '../../utils/locale';
 const CSS = {
   content: 'instant-apps-popover__content',
   buttonContainer: 'instant-apps-popover__button-container',
+  action: 'instant-apps-popover__action',
+  actionDisabled: 'instant-apps-popover--action-disabled',
 };
 export class InstantAppsPopover {
   constructor() {
@@ -20,8 +22,8 @@ export class InstantAppsPopover {
   render() {
     var _a, _b;
     return (h("calcite-popover", { ref: (el) => (this.popoverEl = el), heading: this.popoverTitle, "auto-close": "true", placement: this.placement, "intl-close": (_a = this.messages) === null || _a === void 0 ? void 0 : _a.close, "trigger-disabled": "true", "ref-id": this.refId, dismissible: this.dismissible },
-      h("div", { class: CSS.content },
-        !this.disableAction ? (h("calcite-button", { key: "popover-action", onclick: this.popoverAction, "icon-start": "arrow-left", appearance: "transparent", color: "neutral" }, this.intlPopoverAction ? this.intlPopoverAction : (_b = this.messages) === null || _b === void 0 ? void 0 : _b.back)) : null,
+      h("div", { class: `${CSS.content}${this.disableAction ? ` ${CSS.actionDisabled}` : ''}` },
+        !this.disableAction ? (h("calcite-action", { key: "popover-action", class: CSS.action, onclick: this.popoverAction, icon: "arrow-left", compact: "true", "text-enabled": "true", text: this.intlPopoverAction ? this.intlPopoverAction : (_b = this.messages) === null || _b === void 0 ? void 0 : _b.back })) : null,
         h("section", null,
           h("span", { id: "subtitle" }, this.subtitle),
           h("p", null, this.content)),

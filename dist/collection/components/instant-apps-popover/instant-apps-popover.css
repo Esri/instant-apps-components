@@ -3,7 +3,9 @@
 }
 
 .instant-apps-popover__content {
-  padding: 5%;
+  display: flex;
+  flex-direction: column;
+  padding: 0 5% 5% 5%;
   max-width: 25vw;
   font-family: Avenir;
   font-size: 14px;
@@ -12,7 +14,7 @@
   display: inline-block;
   font-weight: 900;
   color: #000;
-  margin: 10px 0;
+  margin: 0 0 10px 0;
 }
 .instant-apps-popover__content p {
   line-height: 19.12px;
@@ -27,4 +29,14 @@
 }
 .instant-apps-popover__content .instant-apps-popover__button-container calcite-button:last-child {
   margin-left: 5px;
+}
+.instant-apps-popover__content calcite-action {
+  align-self: flex-start;
+}
+
+.instant-apps-popover__content.instant-apps-popover--action-disabled {
+  padding: 5%;
+}
+.instant-apps-popover__content.instant-apps-popover--action-disabled #subtitle {
+  margin: 0 0 10px 0;
 }

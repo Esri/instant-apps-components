@@ -5,11 +5,13 @@ Object.defineProperty(exports, '__esModule', { value: true });
 const index = require('./index-172ac3b5.js');
 const locale = require('./locale-2767e2c1.js');
 
-const instantAppsPopoverCss = ":host{display:block}.instant-apps-popover__content{padding:5%;max-width:25vw;font-family:Avenir;font-size:14px}.instant-apps-popover__content span{display:inline-block;font-weight:900;color:#000;margin:10px 0}.instant-apps-popover__content p{line-height:19.12px;margin:0;margin-bottom:10px}.instant-apps-popover__content .instant-apps-popover__button-container{display:flex;align-items:center;justify-content:flex-end;margin-top:10px}.instant-apps-popover__content .instant-apps-popover__button-container calcite-button:last-child{margin-left:5px}";
+const instantAppsPopoverCss = ":host{display:block}.instant-apps-popover__content{display:flex;flex-direction:column;padding:0 5% 5% 5%;max-width:25vw;font-family:Avenir;font-size:14px}.instant-apps-popover__content span{display:inline-block;font-weight:900;color:#000;margin:0 0 10px 0}.instant-apps-popover__content p{line-height:19.12px;margin:0;margin-bottom:10px}.instant-apps-popover__content .instant-apps-popover__button-container{display:flex;align-items:center;justify-content:flex-end;margin-top:10px}.instant-apps-popover__content .instant-apps-popover__button-container calcite-button:last-child{margin-left:5px}.instant-apps-popover__content calcite-action{align-self:flex-start}.instant-apps-popover__content.instant-apps-popover--action-disabled{padding:5%}.instant-apps-popover__content.instant-apps-popover--action-disabled #subtitle{margin:0 0 10px 0}";
 
 const CSS = {
   content: 'instant-apps-popover__content',
   buttonContainer: 'instant-apps-popover__button-container',
+  action: 'instant-apps-popover__action',
+  actionDisabled: 'instant-apps-popover--action-disabled',
 };
 let InstantAppsPopover = class {
   constructor(hostRef) {
@@ -27,7 +29,7 @@ let InstantAppsPopover = class {
   }
   render() {
     var _a, _b;
-    return (index.h("calcite-popover", { ref: (el) => (this.popoverEl = el), heading: this.popoverTitle, "auto-close": "true", placement: this.placement, "intl-close": (_a = this.messages) === null || _a === void 0 ? void 0 : _a.close, "trigger-disabled": "true", "ref-id": this.refId, dismissible: this.dismissible }, index.h("div", { class: CSS.content }, !this.disableAction ? (index.h("calcite-button", { key: "popover-action", onclick: this.popoverAction, "icon-start": "arrow-left", appearance: "transparent", color: "neutral" }, this.intlPopoverAction ? this.intlPopoverAction : (_b = this.messages) === null || _b === void 0 ? void 0 : _b.back)) : null, index.h("section", null, index.h("span", { id: "subtitle" }, this.subtitle), index.h("p", null, this.content)), this.pagination ? this.renderPagination() : null)));
+    return (index.h("calcite-popover", { ref: (el) => (this.popoverEl = el), heading: this.popoverTitle, "auto-close": "true", placement: this.placement, "intl-close": (_a = this.messages) === null || _a === void 0 ? void 0 : _a.close, "trigger-disabled": "true", "ref-id": this.refId, dismissible: this.dismissible }, index.h("div", { class: `${CSS.content}${this.disableAction ? ` ${CSS.actionDisabled}` : ''}` }, !this.disableAction ? (index.h("calcite-action", { key: "popover-action", class: CSS.action, onclick: this.popoverAction, icon: "arrow-left", compact: "true", "text-enabled": "true", text: this.intlPopoverAction ? this.intlPopoverAction : (_b = this.messages) === null || _b === void 0 ? void 0 : _b.back })) : null, index.h("section", null, index.h("span", { id: "subtitle" }, this.subtitle), index.h("p", null, this.content)), this.pagination ? this.renderPagination() : null)));
   }
   renderPagination() {
     var _a, _b;

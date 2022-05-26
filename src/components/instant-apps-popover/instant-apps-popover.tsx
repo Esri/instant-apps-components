@@ -8,6 +8,8 @@ import { getLocaleComponentStrings } from '../../utils/locale';
 const CSS = {
   content: 'instant-apps-popover__content',
   buttonContainer: 'instant-apps-popover__button-container',
+  action: 'instant-apps-popover__action',
+  actionDisabled: 'instant-apps-popover--action-disabled',
 };
 
 @Component({
@@ -106,13 +108,18 @@ export class InstantAppsPopover {
         ref-id={this.refId}
         dismissible={this.dismissible}
       >
-        <div class={CSS.content}>
+        <div class={`${CSS.content}${this.disableAction ? ` ${CSS.actionDisabled}` : ''}`}>
           {!this.disableAction ? (
-            <calcite-button key="popover-action" onclick={this.popoverAction} icon-start="arrow-left" appearance="transparent" color="neutral">
-              {this.intlPopoverAction ? this.intlPopoverAction : this.messages?.back}
-            </calcite-button>
+            <calcite-action
+              key="popover-action"
+              class={CSS.action}
+              onclick={this.popoverAction}
+              icon="arrow-left"
+              compact="true"
+              text-enabled="true"
+              text={this.intlPopoverAction ? this.intlPopoverAction : this.messages?.back}
+            />
           ) : null}
-
           <section>
             <span id="subtitle">{this.subtitle}</span>
             <p>{this.content}</p>

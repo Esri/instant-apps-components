@@ -61,7 +61,6 @@
           content="Lorem ipsum dolor sit amet consectetur adipisicing elit. Impedit aspernatur omnis quod! Tempore fugiat excepturi ea tenetur animi mollitia tempora."
           graphic="Graphic"
         >
-          <calcite-button slot="action" icon-start="arrow-left" appearance="transparent" color="neutral">Back to 'Get started'</calcite-button>
         </instant-apps-popover>
         <instant-apps-popover
           reference-element="two"
@@ -71,7 +70,6 @@
           content="Lorem ipsum dolor sit amet consectetur adipisicing elit. Impedit aspernatur omnis quod! Tempore fugiat excepturi ea tenetur animi mollitia tempora."
           popover-title="Chain 3"
         >
-          <calcite-button slot="action" icon-start="arrow-left" appearance="transparent" color="neutral">Back to 'Get started'</calcite-button>
         </instant-apps-popover>
         <instant-apps-popover
           reference-element="three"
@@ -81,7 +79,6 @@
           content="Lorem ipsum dolor sit amet consectetur adipisicing elit. Impedit aspernatur omnis quod! Tempore fugiat excepturi ea tenetur animi mollitia tempora."
           graphic="Graphic"
         >
-          <calcite-button slot="action" icon-start="arrow-left" appearance="transparent" color="neutral">Back to 'Get started'</calcite-button>
         </instant-apps-popover>
       </div>
     </instant-apps-popovers>
@@ -103,33 +100,6 @@
     <button class="open" value="one">Open me!</button>
     <button class="open" value="two">Open me!</button>
     <button class="open" value="three">Open me!</button>
-    <script>
-      setTimeout(() => {
-        const popovers = document.getElementById('popovers');
-        const one = document.getElementById('one');
-        const two = document.getElementById('two');
-        const three = document.getElementById('three');
-        popovers.instantAppsPopovers.forEach(popover => {
-          const refElement = popover.getAttribute('reference-element');
-          const node = document.getElementById(refElement);
-          popover.referenceElement = node;
-        });
-        setTimeout(() => {
-          popovers.beginTour();
-        }, 3000);
-      }, 3000);
-      // const onePopover = document.getElementById('onePopover');
-      // onePopover.beforeOpen = async () => {
-      //   console.log('TEST');
-      // };
-      // const popovers = document.getElementById('popovers');
-      // document.body.addEventListener('click', e => {
-      //   const node = e.target;
-      //   if (node.classList.contains('open')) {
-      //     const id = node.value;
-      //     popovers.open(id);
-      //   }
-      // });
-    </script>
+    <script></script>
   </body>
 </html>

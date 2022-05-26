@@ -1,19 +1,24 @@
 :host {
   display: block;
+
+
 }
 
 .instant-apps-popover__content {
-  padding: 5%;
+  display: flex;
+  flex-direction: column;
+  padding: 0 5% 5% 5%;
   max-width: 25vw;
   font-family: Avenir;
   font-size: 14px;
-
   span {
     display: inline-block;
     font-weight: 900;
     color: #000;
-    margin: 10px 0;
+    margin: 0 0 10px 0;
   }
+
+
 
   p {
     line-height: 19.12px;
@@ -31,5 +36,17 @@
     }
   }
 
-  
+  calcite-action {
+    align-self: flex-start;
+  }
 }
+
+.instant-apps-popover__content.instant-apps-popover--action-disabled {
+
+    padding: 5%;
+
+    #subtitle {
+      margin: 0 0 10px 0;
+    }
+  }
+
