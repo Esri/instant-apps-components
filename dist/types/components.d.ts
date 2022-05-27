@@ -17,18 +17,26 @@ export namespace Components {
         "titleText": string;
     }
     interface InstantAppsPopover {
-        "beforeOpen": () => Promise<void>;
         "content": string;
+        "disableAction": boolean;
         "index": number;
+        "intlPopoverAction": string;
         "mediaSrc": string;
         "pagination": boolean;
         "parent": InstantAppsPopovers;
+        "placement": string;
+        "popoverAction": Function;
         "popoverTitle": string;
+        "refId": string;
         "referenceElement": string | HTMLElement;
         "subtitle": string;
     }
     interface InstantAppsPopovers {
+        "beforeOpen": () => Promise<void>;
+        "beginTour": () => Promise<void>;
         "close": (key: string) => Promise<void>;
+        "endTour": () => Promise<void>;
+        "inTour": boolean;
         "instantAppsPopovers": Map<string, HTMLInstantAppsPopoverElement>;
         "open": (key: string) => Promise<void>;
     }
@@ -90,17 +98,23 @@ declare namespace LocalJSX {
         "titleText"?: string;
     }
     interface InstantAppsPopover {
-        "beforeOpen"?: () => Promise<void>;
         "content"?: string;
+        "disableAction"?: boolean;
         "index"?: number;
+        "intlPopoverAction"?: string;
         "mediaSrc"?: string;
         "pagination"?: boolean;
         "parent"?: InstantAppsPopovers;
+        "placement"?: string;
+        "popoverAction"?: Function;
         "popoverTitle"?: string;
+        "refId"?: string;
         "referenceElement"?: string | HTMLElement;
         "subtitle"?: string;
     }
     interface InstantAppsPopovers {
+        "beforeOpen"?: () => Promise<void>;
+        "inTour"?: boolean;
         "instantAppsPopovers"?: Map<string, HTMLInstantAppsPopoverElement>;
     }
     interface InstantAppsSocialShare {

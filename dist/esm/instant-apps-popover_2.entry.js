@@ -1,16 +1,20 @@
 import { r as registerInstance, h, g as getElement, H as Host } from './index-91b43dd0.js';
 import { g as getLocaleComponentStrings } from './locale-2d6b1670.js';
 
-const instantAppsPopoverCss = ":host{display:block}.instant-apps-popover__content{padding:2.5%;padding-top:0;max-width:25vw}.instant-apps-popover__content .instant-apps-popover__button-container{display:flex;align-items:center;justify-content:flex-end;margin-top:10px}.instant-apps-popover__content .instant-apps-popover__button-container calcite-button:last-child{margin-left:5px}";
+const instantAppsPopoverCss = ":host{display:block}.instant-apps-popover__content{display:flex;flex-direction:column;padding:0 5% 5% 5%;max-width:25vw;font-family:Avenir;font-size:14px}.instant-apps-popover__content span{display:inline-block;font-weight:900;color:#000;margin:0 0 10px 0}.instant-apps-popover__content p{line-height:19.12px;margin:0;margin-bottom:10px}.instant-apps-popover__content .instant-apps-popover__button-container{display:flex;align-items:center;justify-content:flex-end;margin-top:10px}.instant-apps-popover__content .instant-apps-popover__button-container calcite-button:last-child{margin-left:5px}.instant-apps-popover__content calcite-action{align-self:flex-start}.instant-apps-popover__content.instant-apps-popover--action-disabled{padding:5%}.instant-apps-popover__content.instant-apps-popover--action-disabled #subtitle{margin:0 0 10px 0}";
 
 const CSS = {
   content: 'instant-apps-popover__content',
   buttonContainer: 'instant-apps-popover__button-container',
+  action: 'instant-apps-popover__action',
+  actionDisabled: 'instant-apps-popover--action-disabled',
 };
 let InstantAppsPopover = class {
   constructor(hostRef) {
     registerInstance(this, hostRef);
+    this.placement = 'trailing-start';
     this.pagination = false;
+    this.disableAction = false;
   }
   componentDidLoad() {
     this.getMessages();
@@ -19,8 +23,8 @@ let InstantAppsPopover = class {
     this.popoverEl.referenceElement = this.referenceElement;
   }
   render() {
-    var _a;
-    return (h("calcite-popover", { ref: (el) => (this.popoverEl = el), heading: this.popoverTitle, "auto-close": "true", dismissible: "true", placement: "trailing-start", "intl-close": (_a = this.messages) === null || _a === void 0 ? void 0 : _a.close, "trigger-disabled": "true" }, h("div", { class: CSS.content }, h("slot", { name: "action" }), h("section", null, this.content), this.pagination ? this.renderPagination() : null)));
+    var _a, _b;
+    return (h("calcite-popover", { ref: (el) => (this.popoverEl = el), heading: this.popoverTitle, "auto-close": "true", placement: this.placement, "intl-close": (_a = this.messages) === null || _a === void 0 ? void 0 : _a.close, "trigger-disabled": "true", "ref-id": this.refId, dismissible: "true" }, h("div", { class: `${CSS.content}${this.disableAction ? ` ${CSS.actionDisabled}` : ''}` }, !this.disableAction ? (h("calcite-action", { key: "popover-action", class: CSS.action, onclick: this.popoverAction, icon: "arrow-left", compact: "true", "text-enabled": "true", text: this.intlPopoverAction ? this.intlPopoverAction : (_b = this.messages) === null || _b === void 0 ? void 0 : _b.back })) : null, h("section", null, h("span", { id: "subtitle" }, this.subtitle), h("p", null, this.content)), this.pagination ? this.renderPagination() : null)));
   }
   renderPagination() {
     var _a, _b;
@@ -28,7 +32,14 @@ let InstantAppsPopover = class {
     const size = (_b = (_a = this.parent) === null || _a === void 0 ? void 0 : _a.instantAppsPopovers) === null || _b === void 0 ? void 0 : _b.size;
     const isFirst = index === 0;
     const isLast = index === size - 1;
-    return (h("div", { key: "pagination-button-container", class: CSS.buttonContainer }, !isFirst ? (h("calcite-button", { key: "prev", onClick: () => parent === null || parent === void 0 ? void 0 : parent.page('back'), appearance: "outline", color: "neutral" }, messages === null || messages === void 0 ? void 0 : messages.back)) : null, h("calcite-button", { key: "next", onClick: () => parent === null || parent === void 0 ? void 0 : parent.page('next') }, isLast ? messages === null || messages === void 0 ? void 0 : messages.done : messages === null || messages === void 0 ? void 0 : messages.next)));
+    return (h("div", { key: "pagination-button-container", class: CSS.buttonContainer }, !isFirst ? (h("calcite-button", { key: "prev", onClick: () => parent === null || parent === void 0 ? void 0 : parent.previous(), appearance: "outline", color: "neutral" }, messages === null || messages === void 0 ? void 0 : messages.back)) : null, h("calcite-button", { key: "next", onClick: () => {
+        if (isLast) {
+          parent === null || parent === void 0 ? void 0 : parent.done();
+        }
+        else {
+          parent === null || parent === void 0 ? void 0 : parent.next();
+        }
+      } }, isLast ? messages === null || messages === void 0 ? void 0 : messages.done : messages === null || messages === void 0 ? void 0 : messages.next)));
   }
   async getMessages() {
     const messages = await getLocaleComponentStrings(this.el);
@@ -44,79 +55,74 @@ let InstantAppsPopovers = class {
   constructor(hostRef) {
     registerInstance(this, hostRef);
     this.instantAppsPopovers = new Map();
+    this.beforeOpen = () => Promise.resolve();
   }
   componentWillLoad() {
     var _a;
     const popovers = Array.from((_a = this.host.querySelector("[slot='popovers']")) === null || _a === void 0 ? void 0 : _a.children);
     popovers.forEach((popover, popoverIndex) => {
-      const referenceElement = popover.getAttribute('reference-element');
-      if (popoverIndex === 0)
-        this.currentId = referenceElement;
+      const refId = popover.getAttribute('ref-id');
       popover.parent = this;
       popover.index = popoverIndex;
-      this.instantAppsPopovers.set(referenceElement, popover);
+      this.instantAppsPopovers.set(refId, popover);
     });
-    // TODO
-    // this.host.addEventListener('calcitePopoverOpen', (e: CustomEvent) => {
-    //   const node = e.target as HTMLCalcitePopoverElement;
-    //   this.handlePrevious(node);
-    // });
+    this.host.addEventListener('calcitePopoverOpen', e => {
+      const node = e.target;
+      const refId = node.getAttribute('ref-id');
+      this.currentId = refId;
+    });
   }
   render() {
     return (h(Host, null, h("slot", { name: "popovers" })));
   }
-  handlePrevious(node) {
-    if (this.previous) {
-      const referenceElement = 'reference-element';
-      const previousReference = this.previous.getAttribute(referenceElement);
-      const currentReference = node.getAttribute(referenceElement);
-      if (previousReference === currentReference)
-        return;
-      this.previous.toggle(false);
-    }
-    this.previous = node;
+  next() {
+    const refIds = Array.from(this.instantAppsPopovers.keys());
+    const index = refIds.indexOf(this.currentId) + 1;
+    const nextId = refIds[index];
+    this.close(this.currentId);
+    this.open(nextId);
   }
-  page(type) {
-    var _a, _b;
-    const key = this.getKey(type);
-    if (!key) {
-      const popover = (_a = this.instantAppsPopovers.get(this.currentId)) === null || _a === void 0 ? void 0 : _a.firstElementChild;
-      this.handlePrevious(popover);
-      popover.toggle(false);
-      return;
-    }
-    const popover = (_b = this.instantAppsPopovers.get(key)) === null || _b === void 0 ? void 0 : _b.firstElementChild;
-    this.handlePrevious(popover);
-    popover.toggle(true);
-    this.currentId = key;
+  previous() {
+    const refIds = Array.from(this.instantAppsPopovers.keys());
+    const index = refIds.indexOf(this.currentId) - 1;
+    const previousId = refIds[index];
+    this.close(this.currentId);
+    this.open(previousId);
   }
-  getKey(type) {
-    const [...keys] = this.instantAppsPopovers.keys();
-    const currentIndex = this.getIndex();
-    if (currentIndex === null)
-      return;
-    return type === 'next' ? keys[currentIndex + 1] : keys[currentIndex - 1];
+  done() {
+    this.endTour();
   }
-  getIndex() {
-    if (!this)
-      return null;
-    const { currentId } = this;
-    const [...keys] = this.instantAppsPopovers.keys();
-    return keys.indexOf(currentId);
+  handlePopoverProps(config) {
+    var _a;
+    const popovers = Array.from((_a = this.host.querySelector("[slot='popovers']")) === null || _a === void 0 ? void 0 : _a.children);
+    popovers.forEach(popover => {
+      popover.disableAction = config.disableAction;
+      popover.pagination = config.pagination;
+    });
   }
   async open(key) {
-    var _a;
-    const instantAppsPopover = this.instantAppsPopovers.get(key);
-    const popover = (_a = this.instantAppsPopovers.get(key)) === null || _a === void 0 ? void 0 : _a.firstElementChild;
-    if (instantAppsPopover === null || instantAppsPopover === void 0 ? void 0 : instantAppsPopover.beforeOpen) {
-      await instantAppsPopover.beforeOpen();
-    }
-    popover.toggle(true);
+    return this.beforeOpen().then(() => {
+      var _a;
+      const popover = (_a = this.instantAppsPopovers.get(key)) === null || _a === void 0 ? void 0 : _a.firstElementChild;
+      debugger;
+      popover.toggle(true);
+    });
   }
   async close(key) {
     var _a;
     const popover = (_a = this.instantAppsPopovers.get(key)) === null || _a === void 0 ? void 0 : _a.firstElementChild;
     popover.toggle(false);
+  }
+  async beginTour() {
+    this.inTour = true;
+    this.handlePopoverProps({ pagination: true, disableAction: true });
+    const refIds = Array.from(this.instantAppsPopovers.keys());
+    this.open(refIds[0]);
+  }
+  async endTour() {
+    this.close(this.currentId);
+    this.inTour = false;
+    this.handlePopoverProps({ pagination: false, disableAction: false });
   }
   get host() { return getElement(this); }
 };

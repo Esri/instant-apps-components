@@ -8,6 +8,8 @@ import { getLocaleComponentStrings } from '../../utils/locale';
 const CSS = {
   content: 'instant-apps-popover__content',
   buttonContainer: 'instant-apps-popover__button-container',
+  action: 'instant-apps-popover__action',
+  actionDisabled: 'instant-apps-popover--action-disabled',
 };
 
 @Component({
@@ -55,13 +57,27 @@ export class InstantAppsPopover {
   @Prop()
   parent: InstantAppsPopovers;
 
+  @Prop()
+  placement: string = 'trailing-start';
+
+  @Prop()
+  refId: string;
+
   @Prop({
     reflect: true,
   })
-  pagination: boolean = false;
+  pagination = false;
+
+  @Prop({
+    reflect: true,
+  })
+  disableAction = false;
 
   @Prop()
-  beforeOpen: () => Promise<void>;
+  popoverAction: Function;
+
+  @Prop()
+  intlPopoverAction: string;
 
   // Internal State
   @State()
@@ -81,14 +97,28 @@ export class InstantAppsPopover {
         ref={(el: HTMLCalcitePopoverElement) => (this.popoverEl = el)}
         heading={this.popoverTitle}
         auto-close="true"
-        dismissible="true"
-        placement="trailing-start"
+        placement={this.placement}
         intl-close={this.messages?.close}
         trigger-disabled="true"
+        ref-id={this.refId}
+        dismissible="true"
       >
-        <div class={CSS.content}>
-          <slot name="action"></slot>
-          <section>{this.content}</section>
+        <div class={`${CSS.content}${this.disableAction ? ` ${CSS.actionDisabled}` : ''}`}>
+          {!this.disableAction ? (
+            <calcite-action
+              key="popover-action"
+              class={CSS.action}
+              onclick={this.popoverAction}
+              icon="arrow-left"
+              compact="true"
+              text-enabled="true"
+              text={this.intlPopoverAction ? this.intlPopoverAction : this.messages?.back}
+            />
+          ) : null}
+          <section>
+            <span id="subtitle">{this.subtitle}</span>
+            <p>{this.content}</p>
+          </section>
           {this.pagination ? this.renderPagination() : null}
         </div>
       </calcite-popover>
@@ -103,11 +133,20 @@ export class InstantAppsPopover {
     return (
       <div key="pagination-button-container" class={CSS.buttonContainer}>
         {!isFirst ? (
-          <calcite-button key="prev" onClick={() => parent?.page('back')} appearance="outline" color="neutral">
+          <calcite-button key="prev" onClick={() => parent?.previous()} appearance="outline" color="neutral">
             {messages?.back}
           </calcite-button>
         ) : null}
-        <calcite-button key="next" onClick={() => parent?.page('next')}>
+        <calcite-button
+          key="next"
+          onClick={() => {
+            if (isLast) {
+              parent?.done();
+            } else {
+              parent?.next();
+            }
+          }}
+        >
           {isLast ? messages?.done : messages?.next}
         </calcite-button>
       </div>

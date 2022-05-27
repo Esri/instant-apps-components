@@ -10,8 +10,12 @@ export declare class InstantAppsPopover {
   index: number;
   referenceElement: string | HTMLElement;
   parent: InstantAppsPopovers;
+  placement: string;
+  refId: string;
   pagination: boolean;
-  beforeOpen: () => Promise<void>;
+  disableAction: boolean;
+  popoverAction: Function;
+  intlPopoverAction: string;
   messages: typeof Popover_T9n;
   componentDidLoad(): void;
   componentDidUpdate(): void;

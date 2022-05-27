@@ -1,17 +1,21 @@
 import { HTMLElement, h, proxyCustomElement } from '@stencil/core/internal/client';
 import { g as getLocaleComponentStrings } from './locale.js';
 
-const instantAppsPopoverCss = ":host{display:block}.instant-apps-popover__content{padding:2.5%;padding-top:0;max-width:25vw}.instant-apps-popover__content .instant-apps-popover__button-container{display:flex;align-items:center;justify-content:flex-end;margin-top:10px}.instant-apps-popover__content .instant-apps-popover__button-container calcite-button:last-child{margin-left:5px}";
+const instantAppsPopoverCss = ":host{display:block}.instant-apps-popover__content{display:flex;flex-direction:column;padding:0 5% 5% 5%;max-width:25vw;font-family:Avenir;font-size:14px}.instant-apps-popover__content span{display:inline-block;font-weight:900;color:#000;margin:0 0 10px 0}.instant-apps-popover__content p{line-height:19.12px;margin:0;margin-bottom:10px}.instant-apps-popover__content .instant-apps-popover__button-container{display:flex;align-items:center;justify-content:flex-end;margin-top:10px}.instant-apps-popover__content .instant-apps-popover__button-container calcite-button:last-child{margin-left:5px}.instant-apps-popover__content calcite-action{align-self:flex-start}.instant-apps-popover__content.instant-apps-popover--action-disabled{padding:5%}.instant-apps-popover__content.instant-apps-popover--action-disabled #subtitle{margin:0 0 10px 0}";
 
 const CSS = {
   content: 'instant-apps-popover__content',
   buttonContainer: 'instant-apps-popover__button-container',
+  action: 'instant-apps-popover__action',
+  actionDisabled: 'instant-apps-popover--action-disabled',
 };
 let InstantAppsPopover$1 = class extends HTMLElement {
   constructor() {
     super();
     this.__registerHost();
+    this.placement = 'trailing-start';
     this.pagination = false;
+    this.disableAction = false;
   }
   componentDidLoad() {
     this.getMessages();
@@ -20,8 +24,8 @@ let InstantAppsPopover$1 = class extends HTMLElement {
     this.popoverEl.referenceElement = this.referenceElement;
   }
   render() {
-    var _a;
-    return (h("calcite-popover", { ref: (el) => (this.popoverEl = el), heading: this.popoverTitle, "auto-close": "true", dismissible: "true", placement: "trailing-start", "intl-close": (_a = this.messages) === null || _a === void 0 ? void 0 : _a.close, "trigger-disabled": "true" }, h("div", { class: CSS.content }, h("slot", { name: "action" }), h("section", null, this.content), this.pagination ? this.renderPagination() : null)));
+    var _a, _b;
+    return (h("calcite-popover", { ref: (el) => (this.popoverEl = el), heading: this.popoverTitle, "auto-close": "true", placement: this.placement, "intl-close": (_a = this.messages) === null || _a === void 0 ? void 0 : _a.close, "trigger-disabled": "true", "ref-id": this.refId, dismissible: "true" }, h("div", { class: `${CSS.content}${this.disableAction ? ` ${CSS.actionDisabled}` : ''}` }, !this.disableAction ? (h("calcite-action", { key: "popover-action", class: CSS.action, onclick: this.popoverAction, icon: "arrow-left", compact: "true", "text-enabled": "true", text: this.intlPopoverAction ? this.intlPopoverAction : (_b = this.messages) === null || _b === void 0 ? void 0 : _b.back })) : null, h("section", null, h("span", { id: "subtitle" }, this.subtitle), h("p", null, this.content)), this.pagination ? this.renderPagination() : null)));
   }
   renderPagination() {
     var _a, _b;
@@ -29,7 +33,14 @@ let InstantAppsPopover$1 = class extends HTMLElement {
     const size = (_b = (_a = this.parent) === null || _a === void 0 ? void 0 : _a.instantAppsPopovers) === null || _b === void 0 ? void 0 : _b.size;
     const isFirst = index === 0;
     const isLast = index === size - 1;
-    return (h("div", { key: "pagination-button-container", class: CSS.buttonContainer }, !isFirst ? (h("calcite-button", { key: "prev", onClick: () => parent === null || parent === void 0 ? void 0 : parent.page('back'), appearance: "outline", color: "neutral" }, messages === null || messages === void 0 ? void 0 : messages.back)) : null, h("calcite-button", { key: "next", onClick: () => parent === null || parent === void 0 ? void 0 : parent.page('next') }, isLast ? messages === null || messages === void 0 ? void 0 : messages.done : messages === null || messages === void 0 ? void 0 : messages.next)));
+    return (h("div", { key: "pagination-button-container", class: CSS.buttonContainer }, !isFirst ? (h("calcite-button", { key: "prev", onClick: () => parent === null || parent === void 0 ? void 0 : parent.previous(), appearance: "outline", color: "neutral" }, messages === null || messages === void 0 ? void 0 : messages.back)) : null, h("calcite-button", { key: "next", onClick: () => {
+        if (isLast) {
+          parent === null || parent === void 0 ? void 0 : parent.done();
+        }
+        else {
+          parent === null || parent === void 0 ? void 0 : parent.next();
+        }
+      } }, isLast ? messages === null || messages === void 0 ? void 0 : messages.done : messages === null || messages === void 0 ? void 0 : messages.next)));
   }
   async getMessages() {
     const messages = await getLocaleComponentStrings(this.el);
@@ -38,7 +49,7 @@ let InstantAppsPopover$1 = class extends HTMLElement {
   get el() { return this; }
   static get style() { return instantAppsPopoverCss; }
 };
-InstantAppsPopover$1 = /*@__PURE__*/ proxyCustomElement(InstantAppsPopover$1, [4, "instant-apps-popover", {
+InstantAppsPopover$1 = /*@__PURE__*/ proxyCustomElement(InstantAppsPopover$1, [0, "instant-apps-popover", {
     "popoverTitle": [513, "popover-title"],
     "subtitle": [513],
     "content": [513],
@@ -46,8 +57,12 @@ InstantAppsPopover$1 = /*@__PURE__*/ proxyCustomElement(InstantAppsPopover$1, [4
     "index": [514],
     "referenceElement": [513, "reference-element"],
     "parent": [16],
+    "placement": [1],
+    "refId": [1, "ref-id"],
     "pagination": [516],
-    "beforeOpen": [16],
+    "disableAction": [516, "disable-action"],
+    "popoverAction": [16],
+    "intlPopoverAction": [1, "intl-popover-action"],
     "messages": [32]
   }]);
 function defineCustomElement$1() {

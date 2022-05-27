@@ -6,91 +6,88 @@ let InstantAppsPopovers$1 = class extends HTMLElement {
   constructor() {
     super();
     this.__registerHost();
-    this.__attachShadow();
     this.instantAppsPopovers = new Map();
+    this.beforeOpen = () => Promise.resolve();
   }
   componentWillLoad() {
     var _a;
     const popovers = Array.from((_a = this.host.querySelector("[slot='popovers']")) === null || _a === void 0 ? void 0 : _a.children);
     popovers.forEach((popover, popoverIndex) => {
-      const referenceElement = popover.getAttribute('reference-element');
-      if (popoverIndex === 0)
-        this.currentId = referenceElement;
+      const refId = popover.getAttribute('ref-id');
       popover.parent = this;
       popover.index = popoverIndex;
-      this.instantAppsPopovers.set(referenceElement, popover);
+      this.instantAppsPopovers.set(refId, popover);
     });
-    // TODO
-    // this.host.addEventListener('calcitePopoverOpen', (e: CustomEvent) => {
-    //   const node = e.target as HTMLCalcitePopoverElement;
-    //   this.handlePrevious(node);
-    // });
+    this.host.addEventListener('calcitePopoverOpen', e => {
+      const node = e.target;
+      const refId = node.getAttribute('ref-id');
+      this.currentId = refId;
+    });
   }
   render() {
     return (h(Host, null, h("slot", { name: "popovers" })));
   }
-  handlePrevious(node) {
-    if (this.previous) {
-      const referenceElement = 'reference-element';
-      const previousReference = this.previous.getAttribute(referenceElement);
-      const currentReference = node.getAttribute(referenceElement);
-      if (previousReference === currentReference)
-        return;
-      this.previous.toggle(false);
-    }
-    this.previous = node;
+  next() {
+    const refIds = Array.from(this.instantAppsPopovers.keys());
+    const index = refIds.indexOf(this.currentId) + 1;
+    const nextId = refIds[index];
+    this.close(this.currentId);
+    this.open(nextId);
   }
-  page(type) {
-    var _a, _b;
-    const key = this.getKey(type);
-    if (!key) {
-      const popover = (_a = this.instantAppsPopovers.get(this.currentId)) === null || _a === void 0 ? void 0 : _a.firstElementChild;
-      this.handlePrevious(popover);
-      popover.toggle(false);
-      return;
-    }
-    const popover = (_b = this.instantAppsPopovers.get(key)) === null || _b === void 0 ? void 0 : _b.firstElementChild;
-    this.handlePrevious(popover);
-    popover.toggle(true);
-    this.currentId = key;
+  previous() {
+    const refIds = Array.from(this.instantAppsPopovers.keys());
+    const index = refIds.indexOf(this.currentId) - 1;
+    const previousId = refIds[index];
+    this.close(this.currentId);
+    this.open(previousId);
   }
-  getKey(type) {
-    const [...keys] = this.instantAppsPopovers.keys();
-    const currentIndex = this.getIndex();
-    if (currentIndex === null)
-      return;
-    return type === 'next' ? keys[currentIndex + 1] : keys[currentIndex - 1];
+  done() {
+    this.endTour();
   }
-  getIndex() {
-    if (!this)
-      return null;
-    const { currentId } = this;
-    const [...keys] = this.instantAppsPopovers.keys();
-    return keys.indexOf(currentId);
+  handlePopoverProps(config) {
+    var _a;
+    const popovers = Array.from((_a = this.host.querySelector("[slot='popovers']")) === null || _a === void 0 ? void 0 : _a.children);
+    popovers.forEach(popover => {
+      popover.disableAction = config.disableAction;
+      popover.pagination = config.pagination;
+    });
   }
   async open(key) {
-    var _a;
-    const instantAppsPopover = this.instantAppsPopovers.get(key);
-    const popover = (_a = this.instantAppsPopovers.get(key)) === null || _a === void 0 ? void 0 : _a.firstElementChild;
-    if (instantAppsPopover === null || instantAppsPopover === void 0 ? void 0 : instantAppsPopover.beforeOpen) {
-      await instantAppsPopover.beforeOpen();
-    }
-    popover.toggle(true);
+    return this.beforeOpen().then(() => {
+      var _a;
+      const popover = (_a = this.instantAppsPopovers.get(key)) === null || _a === void 0 ? void 0 : _a.firstElementChild;
+      debugger;
+      popover.toggle(true);
+    });
   }
   async close(key) {
     var _a;
     const popover = (_a = this.instantAppsPopovers.get(key)) === null || _a === void 0 ? void 0 : _a.firstElementChild;
     popover.toggle(false);
   }
+  async beginTour() {
+    this.inTour = true;
+    this.handlePopoverProps({ pagination: true, disableAction: true });
+    const refIds = Array.from(this.instantAppsPopovers.keys());
+    this.open(refIds[0]);
+  }
+  async endTour() {
+    this.close(this.currentId);
+    this.inTour = false;
+    this.handlePopoverProps({ pagination: false, disableAction: false });
+  }
   get host() { return this; }
   static get style() { return instantAppsPopoversCss; }
 };
-InstantAppsPopovers$1 = /*@__PURE__*/ proxyCustomElement(InstantAppsPopovers$1, [1, "instant-apps-popovers", {
+InstantAppsPopovers$1 = /*@__PURE__*/ proxyCustomElement(InstantAppsPopovers$1, [4, "instant-apps-popovers", {
+    "inTour": [1540, "in-tour"],
     "instantAppsPopovers": [16],
+    "beforeOpen": [16],
     "currentId": [32],
-    "previous": [32],
     "open": [64],
-    "close": [64]
+    "close": [64],
+    "beginTour": [64],
+    "endTour": [64]
   }]);
 function defineCustomElement$1() {
   if (typeof customElements === "undefined") {

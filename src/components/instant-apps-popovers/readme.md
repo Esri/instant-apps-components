@@ -7,14 +7,36 @@
 
 ## Properties
 
-| Property              | Attribute | Description | Type                                         | Default     |
-| --------------------- | --------- | ----------- | -------------------------------------------- | ----------- |
-| `instantAppsPopovers` | --        |             | `Map<string, HTMLInstantAppsPopoverElement>` | `new Map()` |
+| Property              | Attribute | Description | Type                                         | Default                   |
+| --------------------- | --------- | ----------- | -------------------------------------------- | ------------------------- |
+| `beforeOpen`          | --        |             | `() => Promise<void>`                        | `() => Promise.resolve()` |
+| `inTour`              | `in-tour` |             | `boolean`                                    | `undefined`               |
+| `instantAppsPopovers` | --        |             | `Map<string, HTMLInstantAppsPopoverElement>` | `new Map()`               |
 
 
 ## Methods
 
+### `beginTour() => Promise<void>`
+
+
+
+#### Returns
+
+Type: `Promise<void>`
+
+
+
 ### `close(key: string) => Promise<void>`
+
+
+
+#### Returns
+
+Type: `Promise<void>`
+
+
+
+### `endTour() => Promise<void>`
 
 
 

@@ -2,83 +2,77 @@ import { Component, Host, h, Prop, Element, State, Method } from '@stencil/core'
 export class InstantAppsPopovers {
   constructor() {
     this.instantAppsPopovers = new Map();
+    this.beforeOpen = () => Promise.resolve();
   }
   componentWillLoad() {
     var _a;
     const popovers = Array.from((_a = this.host.querySelector("[slot='popovers']")) === null || _a === void 0 ? void 0 : _a.children);
     popovers.forEach((popover, popoverIndex) => {
-      const referenceElement = popover.getAttribute('reference-element');
-      if (popoverIndex === 0)
-        this.currentId = referenceElement;
+      const refId = popover.getAttribute('ref-id');
       popover.parent = this;
       popover.index = popoverIndex;
-      this.instantAppsPopovers.set(referenceElement, popover);
+      this.instantAppsPopovers.set(refId, popover);
     });
-    // TODO
-    // this.host.addEventListener('calcitePopoverOpen', (e: CustomEvent) => {
-    //   const node = e.target as HTMLCalcitePopoverElement;
-    //   this.handlePrevious(node);
-    // });
+    this.host.addEventListener('calcitePopoverOpen', e => {
+      const node = e.target;
+      const refId = node.getAttribute('ref-id');
+      this.currentId = refId;
+    });
   }
   render() {
     return (h(Host, null,
       h("slot", { name: "popovers" })));
   }
-  handlePrevious(node) {
-    if (this.previous) {
-      const referenceElement = 'reference-element';
-      const previousReference = this.previous.getAttribute(referenceElement);
-      const currentReference = node.getAttribute(referenceElement);
-      if (previousReference === currentReference)
-        return;
-      this.previous.toggle(false);
-    }
-    this.previous = node;
+  next() {
+    const refIds = Array.from(this.instantAppsPopovers.keys());
+    const index = refIds.indexOf(this.currentId) + 1;
+    const nextId = refIds[index];
+    this.close(this.currentId);
+    this.open(nextId);
   }
-  page(type) {
-    var _a, _b;
-    const key = this.getKey(type);
-    if (!key) {
-      const popover = (_a = this.instantAppsPopovers.get(this.currentId)) === null || _a === void 0 ? void 0 : _a.firstElementChild;
-      this.handlePrevious(popover);
-      popover.toggle(false);
-      return;
-    }
-    const popover = (_b = this.instantAppsPopovers.get(key)) === null || _b === void 0 ? void 0 : _b.firstElementChild;
-    this.handlePrevious(popover);
-    popover.toggle(true);
-    this.currentId = key;
+  previous() {
+    const refIds = Array.from(this.instantAppsPopovers.keys());
+    const index = refIds.indexOf(this.currentId) - 1;
+    const previousId = refIds[index];
+    this.close(this.currentId);
+    this.open(previousId);
   }
-  getKey(type) {
-    const [...keys] = this.instantAppsPopovers.keys();
-    const currentIndex = this.getIndex();
-    if (currentIndex === null)
-      return;
-    return type === 'next' ? keys[currentIndex + 1] : keys[currentIndex - 1];
+  done() {
+    this.endTour();
   }
-  getIndex() {
-    if (!this)
-      return null;
-    const { currentId } = this;
-    const [...keys] = this.instantAppsPopovers.keys();
-    return keys.indexOf(currentId);
+  handlePopoverProps(config) {
+    var _a;
+    const popovers = Array.from((_a = this.host.querySelector("[slot='popovers']")) === null || _a === void 0 ? void 0 : _a.children);
+    popovers.forEach(popover => {
+      popover.disableAction = config.disableAction;
+      popover.pagination = config.pagination;
+    });
   }
   async open(key) {
-    var _a;
-    const instantAppsPopover = this.instantAppsPopovers.get(key);
-    const popover = (_a = this.instantAppsPopovers.get(key)) === null || _a === void 0 ? void 0 : _a.firstElementChild;
-    if (instantAppsPopover === null || instantAppsPopover === void 0 ? void 0 : instantAppsPopover.beforeOpen) {
-      await instantAppsPopover.beforeOpen();
-    }
-    popover.toggle(true);
+    return this.beforeOpen().then(() => {
+      var _a;
+      const popover = (_a = this.instantAppsPopovers.get(key)) === null || _a === void 0 ? void 0 : _a.firstElementChild;
+      debugger;
+      popover.toggle(true);
+    });
   }
   async close(key) {
     var _a;
     const popover = (_a = this.instantAppsPopovers.get(key)) === null || _a === void 0 ? void 0 : _a.firstElementChild;
     popover.toggle(false);
   }
+  async beginTour() {
+    this.inTour = true;
+    this.handlePopoverProps({ pagination: true, disableAction: true });
+    const refIds = Array.from(this.instantAppsPopovers.keys());
+    this.open(refIds[0]);
+  }
+  async endTour() {
+    this.close(this.currentId);
+    this.inTour = false;
+    this.handlePopoverProps({ pagination: false, disableAction: false });
+  }
   static get is() { return "instant-apps-popovers"; }
-  static get encapsulation() { return "shadow"; }
   static get originalStyleUrls() { return {
     "$": ["instant-apps-popovers.scss"]
   }; }
@@ -86,6 +80,23 @@ export class InstantAppsPopovers {
     "$": ["instant-apps-popovers.css"]
   }; }
   static get properties() { return {
+    "inTour": {
+      "type": "boolean",
+      "mutable": true,
+      "complexType": {
+        "original": "boolean",
+        "resolved": "boolean",
+        "references": {}
+      },
+      "required": false,
+      "optional": false,
+      "docs": {
+        "tags": [],
+        "text": ""
+      },
+      "attribute": "in-tour",
+      "reflect": true
+    },
     "instantAppsPopovers": {
       "type": "unknown",
       "mutable": false,
@@ -108,11 +119,30 @@ export class InstantAppsPopovers {
         "text": ""
       },
       "defaultValue": "new Map()"
+    },
+    "beforeOpen": {
+      "type": "unknown",
+      "mutable": false,
+      "complexType": {
+        "original": "() => Promise<void>",
+        "resolved": "() => Promise<void>",
+        "references": {
+          "Promise": {
+            "location": "global"
+          }
+        }
+      },
+      "required": false,
+      "optional": false,
+      "docs": {
+        "tags": [],
+        "text": ""
+      },
+      "defaultValue": "() => Promise.resolve()"
     }
   }; }
   static get states() { return {
-    "currentId": {},
-    "previous": {}
+    "currentId": {}
   }; }
   static get methods() { return {
     "open": {
@@ -124,9 +154,6 @@ export class InstantAppsPopovers {
           }],
         "references": {
           "Promise": {
-            "location": "global"
-          },
-          "HTMLInstantAppsPopoverElement": {
             "location": "global"
           },
           "HTMLCalcitePopoverElement": {
@@ -152,6 +179,38 @@ export class InstantAppsPopovers {
             "location": "global"
           },
           "HTMLCalcitePopoverElement": {
+            "location": "global"
+          }
+        },
+        "return": "Promise<void>"
+      },
+      "docs": {
+        "text": "",
+        "tags": []
+      }
+    },
+    "beginTour": {
+      "complexType": {
+        "signature": "() => Promise<void>",
+        "parameters": [],
+        "references": {
+          "Promise": {
+            "location": "global"
+          }
+        },
+        "return": "Promise<void>"
+      },
+      "docs": {
+        "text": "",
+        "tags": []
+      }
+    },
+    "endTour": {
+      "complexType": {
+        "signature": "() => Promise<void>",
+        "parameters": [],
+        "references": {
+          "Promise": {
             "location": "global"
           }
         },
