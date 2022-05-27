@@ -13,7 +13,7 @@
 .instant-apps-popover__content span {
   display: inline-block;
   font-weight: 900;
-  color: #000;
+  color: var(--calcite-ui-text-1);
   margin: 0 0 10px 0;
 }
 .instant-apps-popover__content p {
