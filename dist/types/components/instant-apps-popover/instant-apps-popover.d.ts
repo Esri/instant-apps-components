@@ -16,6 +16,7 @@ export declare class InstantAppsPopover {
   disableAction: boolean;
   popoverAction: Function;
   intlPopoverAction: string;
+  intlOf: string;
   messages: typeof Popover_T9n;
   componentDidLoad(): void;
   componentDidUpdate(): void;

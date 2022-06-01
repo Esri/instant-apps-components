@@ -7,7 +7,7 @@
   flex-direction: column;
   padding: 0 5% 5% 5%;
   max-width: 25vw;
-  font-family: Avenir;
+  font-family: var(--calcite-sans-family);
   font-size: 14px;
 }
 .instant-apps-popover__content .instant-apps-popover__action {
@@ -19,11 +19,13 @@
   font-weight: 900;
   color: var(--calcite-ui-text-1);
   margin: 0 0 10px 0;
+  font-family: var(--calcite-sans-family);
 }
 .instant-apps-popover__content p {
   line-height: 19.12px;
   margin: 0;
   margin-bottom: 10px;
+  font-family: var(--calcite-sans-family);
 }
 .instant-apps-popover__content .instant-apps-popover__footer {
   display: flex;
@@ -35,6 +37,7 @@
   margin-bottom: 0;
   font-weight: normal;
   font-size: 14px;
+  font-family: var(--calcite-sans-family);
 }
 .instant-apps-popover__content .instant-apps-popover__footer calcite-button:first-child {
   --calcite-ui-foreground-3: transparent;

@@ -12,6 +12,7 @@ export class InstantAppsPopover {
     this.placement = 'trailing-start';
     this.pagination = false;
     this.disableAction = false;
+    this.intlOf = "of";
   }
   componentDidLoad() {
     this.getMessages();
@@ -30,7 +31,9 @@ export class InstantAppsPopover {
         this.pagination ? (h("div", { key: `iac-popover-footer-${this.index}`, class: CSS.footer },
           h("span", null,
             this.index + 1,
-            " of ", (_d = (_c = this.parent) === null || _c === void 0 ? void 0 : _c.instantAppsPopovers) === null || _d === void 0 ? void 0 :
+            " ",
+            this.intlOf,
+            " ", (_d = (_c = this.parent) === null || _c === void 0 ? void 0 : _c.instantAppsPopovers) === null || _d === void 0 ? void 0 :
             _d.size),
           this.renderPagination())) : null)));
   }
@@ -295,6 +298,24 @@ export class InstantAppsPopover {
       },
       "attribute": "intl-popover-action",
       "reflect": false
+    },
+    "intlOf": {
+      "type": "string",
+      "mutable": false,
+      "complexType": {
+        "original": "string",
+        "resolved": "string",
+        "references": {}
+      },
+      "required": false,
+      "optional": false,
+      "docs": {
+        "tags": [],
+        "text": ""
+      },
+      "attribute": "intl-of",
+      "reflect": false,
+      "defaultValue": "\"of\""
     }
   }; }
   static get states() { return {

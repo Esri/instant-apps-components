@@ -20,6 +20,7 @@ export namespace Components {
         "content": string;
         "disableAction": boolean;
         "index": number;
+        "intlOf": string;
         "intlPopoverAction": string;
         "mediaSrc": string;
         "pagination": boolean;
@@ -101,6 +102,7 @@ declare namespace LocalJSX {
         "content"?: string;
         "disableAction"?: boolean;
         "index"?: number;
+        "intlOf"?: string;
         "intlPopoverAction"?: string;
         "mediaSrc"?: string;
         "pagination"?: boolean;

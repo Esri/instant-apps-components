@@ -80,6 +80,9 @@ export class InstantAppsPopover {
   @Prop()
   intlPopoverAction: string;
 
+  @Prop()
+  intlOf: string = "of";
+
   // Internal State
   @State()
   messages: typeof Popover_T9n;
@@ -123,7 +126,7 @@ export class InstantAppsPopover {
           {this.pagination ? (
             <div key={`iac-popover-footer-${this.index}`} class={CSS.footer}>
               <span>
-                {this.index + 1} of {this.parent?.instantAppsPopovers?.size}
+                {this.index + 1} {this.intlOf} {this.parent?.instantAppsPopovers?.size}
               </span>
               {this.renderPagination()}
             </div>
