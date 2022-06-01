@@ -11,6 +11,12 @@
   max-width: 25vw;
   font-family: Avenir;
   font-size: 14px;
+    
+  .instant-apps-popover__action {
+    align-self: flex-start;
+    --calcite-ui-foreground-2: transparent;
+  }
+
   span {
     display: inline-block;
     font-weight: 900;
@@ -18,26 +24,31 @@
     margin: 0 0 10px 0;
   }
 
-
-
   p {
     line-height: 19.12px;
     margin: 0;
     margin-bottom: 10px;
   }
 
-  .instant-apps-popover__button-container {
+  .instant-apps-popover__footer {
     display: flex;
+    flex-direction: row;
     align-items: center;
-    justify-content: flex-end;
-    margin-top: 10px;
+    justify-content: space-between;
+
+    span {
+      margin-bottom: 0;
+      font-weight: normal;
+      font-size: 14px;
+    }
+
+    calcite-button:first-child {
+      --calcite-ui-foreground-3: transparent;
+    }
+
     calcite-button:last-child {
       margin-left: 5px;
     }
-  }
-
-  calcite-action {
-    align-self: flex-start;
   }
 }
 

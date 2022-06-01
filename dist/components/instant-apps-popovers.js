@@ -56,7 +56,6 @@ let InstantAppsPopovers$1 = class extends HTMLElement {
     return this.beforeOpen().then(() => {
       var _a;
       const popover = (_a = this.instantAppsPopovers.get(key)) === null || _a === void 0 ? void 0 : _a.firstElementChild;
-      debugger;
       popover.toggle(true);
     });
   }

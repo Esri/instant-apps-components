@@ -10,6 +10,7 @@ const CSS = {
   buttonContainer: 'instant-apps-popover__button-container',
   action: 'instant-apps-popover__action',
   actionDisabled: 'instant-apps-popover--action-disabled',
+  footer: 'instant-apps-popover__footer',
 };
 
 @Component({
@@ -109,7 +110,7 @@ export class InstantAppsPopover {
               key="popover-action"
               class={CSS.action}
               onclick={this.popoverAction}
-              icon="arrow-left"
+              icon="chevron-left"
               compact="true"
               text-enabled="true"
               text={this.intlPopoverAction ? this.intlPopoverAction : this.messages?.back}
@@ -119,7 +120,14 @@ export class InstantAppsPopover {
             <span id="subtitle">{this.subtitle}</span>
             <p>{this.content}</p>
           </section>
-          {this.pagination ? this.renderPagination() : null}
+          {this.pagination ? (
+            <div key={`iac-popover-footer-${this.index}`} class={CSS.footer}>
+              <span>
+                {this.index + 1} of {this.parent?.instantAppsPopovers?.size}
+              </span>
+              {this.renderPagination()}
+            </div>
+          ) : null}
         </div>
       </calcite-popover>
     );

@@ -10,6 +10,10 @@
   font-family: Avenir;
   font-size: 14px;
 }
+.instant-apps-popover__content .instant-apps-popover__action {
+  align-self: flex-start;
+  --calcite-ui-foreground-2: transparent;
+}
 .instant-apps-popover__content span {
   display: inline-block;
   font-weight: 900;
@@ -21,17 +25,22 @@
   margin: 0;
   margin-bottom: 10px;
 }
-.instant-apps-popover__content .instant-apps-popover__button-container {
+.instant-apps-popover__content .instant-apps-popover__footer {
   display: flex;
+  flex-direction: row;
   align-items: center;
-  justify-content: flex-end;
-  margin-top: 10px;
+  justify-content: space-between;
 }
-.instant-apps-popover__content .instant-apps-popover__button-container calcite-button:last-child {
+.instant-apps-popover__content .instant-apps-popover__footer span {
+  margin-bottom: 0;
+  font-weight: normal;
+  font-size: 14px;
+}
+.instant-apps-popover__content .instant-apps-popover__footer calcite-button:first-child {
+  --calcite-ui-foreground-3: transparent;
+}
+.instant-apps-popover__content .instant-apps-popover__footer calcite-button:last-child {
   margin-left: 5px;
-}
-.instant-apps-popover__content calcite-action {
-  align-self: flex-start;
 }
 
 .instant-apps-popover__content.instant-apps-popover--action-disabled {

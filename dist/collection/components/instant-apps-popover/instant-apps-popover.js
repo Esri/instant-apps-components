@@ -5,6 +5,7 @@ const CSS = {
   buttonContainer: 'instant-apps-popover__button-container',
   action: 'instant-apps-popover__action',
   actionDisabled: 'instant-apps-popover--action-disabled',
+  footer: 'instant-apps-popover__footer',
 };
 export class InstantAppsPopover {
   constructor() {
@@ -19,14 +20,19 @@ export class InstantAppsPopover {
     this.popoverEl.referenceElement = this.referenceElement;
   }
   render() {
-    var _a, _b;
+    var _a, _b, _c, _d;
     return (h("calcite-popover", { ref: (el) => (this.popoverEl = el), heading: this.popoverTitle, "auto-close": "true", placement: this.placement, "intl-close": (_a = this.messages) === null || _a === void 0 ? void 0 : _a.close, "trigger-disabled": "true", "ref-id": this.refId, dismissible: "true" },
       h("div", { class: `${CSS.content}${this.disableAction ? ` ${CSS.actionDisabled}` : ''}` },
-        !this.disableAction ? (h("calcite-action", { key: "popover-action", class: CSS.action, onclick: this.popoverAction, icon: "arrow-left", compact: "true", "text-enabled": "true", text: this.intlPopoverAction ? this.intlPopoverAction : (_b = this.messages) === null || _b === void 0 ? void 0 : _b.back })) : null,
+        !this.disableAction ? (h("calcite-action", { key: "popover-action", class: CSS.action, onclick: this.popoverAction, icon: "chevron-left", compact: "true", "text-enabled": "true", text: this.intlPopoverAction ? this.intlPopoverAction : (_b = this.messages) === null || _b === void 0 ? void 0 : _b.back })) : null,
         h("section", null,
           h("span", { id: "subtitle" }, this.subtitle),
           h("p", null, this.content)),
-        this.pagination ? this.renderPagination() : null)));
+        this.pagination ? (h("div", { key: `iac-popover-footer-${this.index}`, class: CSS.footer },
+          h("span", null,
+            this.index + 1,
+            " of ", (_d = (_c = this.parent) === null || _c === void 0 ? void 0 : _c.instantAppsPopovers) === null || _d === void 0 ? void 0 :
+            _d.size),
+          this.renderPagination())) : null)));
   }
   renderPagination() {
     var _a, _b;
