@@ -19,7 +19,6 @@ import { Component, h, Prop, State, Element, Host } from '@stencil/core';
 // import esriRequest from '@arcgis/core/request';
 import { loadModules } from '../../utils/loadModules';
 import { getLocaleComponentStrings } from '../../utils/locale';
-import '@a11y/focus-trap';
 const base = 'instant-apps-social-share';
 const CSS = {
   base,
@@ -137,10 +136,25 @@ export class InstantAppsSocialShare {
     }
   }
   handlePopoverRefKeyDown(e) {
-    var _a;
-    if (e.code === 'Escape') {
+    var _a, _b;
+    if (e.code === 'Tab') {
+      if (!this.shareListRef)
+        return;
+      const node = e.target;
+      const firstFocusableEl = this.shareListRef.children[0];
+      const lastFocusableEl = this.shareListRef.children[((_a = this.shareListRef) === null || _a === void 0 ? void 0 : _a.children.length) - 1];
+      if (e.shiftKey && node === firstFocusableEl) {
+        e.preventDefault();
+        lastFocusableEl.focus();
+      }
+      else if (!e.shiftKey && node === lastFocusableEl) {
+        e.preventDefault();
+        firstFocusableEl.focus();
+      }
+    }
+    else if (e.code === 'Escape') {
       this.closePopover();
-      (_a = this.popoverButtonRef) === null || _a === void 0 ? void 0 : _a.setFocus();
+      (_b = this.popoverButtonRef) === null || _b === void 0 ? void 0 : _b.setFocus();
     }
   }
   autoCloseCallback() {
@@ -187,8 +201,7 @@ export class InstantAppsSocialShare {
     const dialogContent = (h("div", { ref: el => (this.dialogContentRef = el), class: `${CSS.dialog}${layoutClass}` }, content));
     return (h(Host, null, this.mode === 'popover'
       ? [
-        h("calcite-popover", { ref: (el) => (this.popoverRef = el), label: (_b = (_a = this.messages) === null || _a === void 0 ? void 0 : _a.share) === null || _b === void 0 ? void 0 : _b.label, "reference-element": "shareButton", placement: "bottom-start", scale: this.scale },
-          h("focus-trap", null, dialogContent)),
+        h("calcite-popover", { ref: (el) => (this.popoverRef = el), label: (_b = (_a = this.messages) === null || _a === void 0 ? void 0 : _a.share) === null || _b === void 0 ? void 0 : _b.label, "reference-element": "shareButton", placement: "bottom-start", scale: this.scale }, dialogContent),
         h("calcite-button", { ref: el => (this.popoverButtonRef = el), onClick: this.togglePopover.bind(this), id: "shareButton", class: CSS.popoverButton, color: this.shareButtonColor, appearance: "transparent", label: (_d = (_c = this.messages) === null || _c === void 0 ? void 0 : _c.share) === null || _d === void 0 ? void 0 : _d.label, title: (_f = (_e = this.messages) === null || _e === void 0 ? void 0 : _e.share) === null || _f === void 0 ? void 0 : _f.label, scale: this.scale },
           h("calcite-icon", { icon: "share", scale: "m" })),
       ]

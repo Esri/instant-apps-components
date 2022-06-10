@@ -26,8 +26,6 @@ import SocialShare_T9n from '../../assets/t9n/instant-apps-social-share/resource
 
 import { getLocaleComponentStrings } from '../../utils/locale';
 
-import '@a11y/focus-trap';
-
 type ShareItemOptions = 'link' | 'facebook' | 'twitter' | 'linkedIn';
 
 const base = 'instant-apps-social-share';
@@ -199,7 +197,19 @@ export class InstantAppsSocialShare {
   }
 
   handlePopoverRefKeyDown(e: KeyboardEvent) {
-    if (e.code === 'Escape') {
+    if (e.code === 'Tab') {
+      if (!this.shareListRef) return;
+      const node = e.target;
+      const firstFocusableEl = this.shareListRef.children[0] as HTMLElement;
+      const lastFocusableEl = this.shareListRef.children[this.shareListRef?.children.length - 1] as HTMLElement;
+      if (e.shiftKey && node === firstFocusableEl) {
+        e.preventDefault();
+        lastFocusableEl.focus();
+      } else if (!e.shiftKey && node === lastFocusableEl) {
+        e.preventDefault();
+        firstFocusableEl.focus();
+      }
+    } else if (e.code === 'Escape') {
       this.closePopover();
       this.popoverButtonRef?.setFocus();
     }
@@ -269,7 +279,7 @@ export class InstantAppsSocialShare {
                 placement="bottom-start"
                 scale={this.scale}
               >
-                <focus-trap>{dialogContent}</focus-trap>
+                {dialogContent}
               </calcite-popover>,
               <calcite-button
                 ref={el => (this.popoverButtonRef = el)}

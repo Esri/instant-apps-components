@@ -1,6 +1,5 @@
 /// <reference types="arcgis-js-api" />
 import SocialShare_T9n from '../../assets/t9n/instant-apps-social-share/resources.json';
-import '@a11y/focus-trap';
 declare type ShareItemOptions = 'link' | 'facebook' | 'twitter' | 'linkedIn';
 export declare class InstantAppsSocialShare {
   el: HTMLInstantAppsSocialShareElement;
