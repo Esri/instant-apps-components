@@ -1,4 +1,4 @@
-import { HTMLElement, h, Host, proxyCustomElement } from '@stencil/core/internal/client';
+import { HTMLElement as HTMLElement$1, h, Host, proxyCustomElement } from '@stencil/core/internal/client';
 import { e as esriLoader, g as getLocaleComponentStrings } from './locale.js';
 
 /*
@@ -18,6 +18,294 @@ const loadModules = async (moduleNames, options) => {
   const mods = await esriLoader.loadModules(moduleNames, options);
   return mods.map(mod => (mod.__esModule && mod.default ? mod.default : mod));
 };
+
+/**
+ * Traverses the slots of the open shadowroots and returns all children matching the query.
+ * @param {ShadowRoot | HTMLElement} root
+ * @param skipNode
+ * @param isMatch
+ * @param {number} maxDepth
+ * @param {number} depth
+ * @returns {HTMLElement[]}
+ */
+function queryShadowRoot(root, skipNode, isMatch, maxDepth = 20, depth = 0) {
+    let matches = [];
+    // If the depth is above the max depth, abort the searching here.
+    if (depth >= maxDepth) {
+        return matches;
+    }
+    // Traverses a slot element
+    const traverseSlot = ($slot) => {
+        // Only check nodes that are of the type Node.ELEMENT_NODE
+        // Read more here https://developer.mozilla.org/en-US/docs/Web/API/Node/nodeType
+        const assignedNodes = $slot.assignedNodes().filter(node => node.nodeType === 1);
+        if (assignedNodes.length > 0) {
+            return queryShadowRoot(assignedNodes[0].parentElement, skipNode, isMatch, maxDepth, depth + 1);
+        }
+        return [];
+    };
+    // Go through each child and continue the traversing if necessary
+    // Even though the typing says that children can't be undefined, Edge 15 sometimes gives an undefined value.
+    // Therefore we fallback to an empty array if it is undefined.
+    const children = Array.from(root.children || []);
+    for (const $child of children) {
+        // Check if the node and its descendants should be skipped
+        if (skipNode($child)) {
+            continue;
+        }
+        // If the child matches we always add it
+        if (isMatch($child)) {
+            matches.push($child);
+        }
+        if ($child.shadowRoot != null) {
+            matches.push(...queryShadowRoot($child.shadowRoot, skipNode, isMatch, maxDepth, depth + 1));
+        }
+        else if ($child.tagName === "SLOT") {
+            matches.push(...traverseSlot($child));
+        }
+        else {
+            matches.push(...queryShadowRoot($child, skipNode, isMatch, maxDepth, depth + 1));
+        }
+    }
+    return matches;
+}
+
+/**
+ * Returns whether the element is hidden.
+ * @param $elem
+ */
+function isHidden($elem) {
+    return $elem.hasAttribute("hidden")
+        || ($elem.hasAttribute("aria-hidden") && $elem.getAttribute("aria-hidden") !== "false")
+        // A quick and dirty way to check whether the element is hidden.
+        // For a more fine-grained check we could use "window.getComputedStyle" but we don't because of bad performance.
+        // If the element has visibility set to "hidden" or "collapse", display set to "none" or opacity set to "0" through CSS
+        // we won't be able to catch it here. We accept it due to the huge performance benefits.
+        || $elem.style.display === `none`
+        || $elem.style.opacity === `0`
+        || $elem.style.visibility === `hidden`
+        || $elem.style.visibility === `collapse`;
+    // If offsetParent is null we can assume that the element is hidden
+    // https://stackoverflow.com/questions/306305/what-would-make-offsetparent-null
+    //|| $elem.offsetParent == null;
+}
+/**
+ * Returns whether the element is disabled.
+ * @param $elem
+ */
+function isDisabled($elem) {
+    return $elem.hasAttribute("disabled")
+        || ($elem.hasAttribute("aria-disabled") && $elem.getAttribute("aria-disabled") !== "false");
+}
+/**
+ * Determines whether an element is focusable.
+ * Read more here: https://stackoverflow.com/questions/1599660/which-html-elements-can-receive-focus/1600194#1600194
+ * Or here: https://stackoverflow.com/questions/18261595/how-to-check-if-a-dom-element-is-focusable
+ * @param $elem
+ */
+function isFocusable($elem) {
+    // Discard elements that are removed from the tab order.
+    if ($elem.getAttribute("tabindex") === "-1" || isHidden($elem) || isDisabled($elem)) {
+        return false;
+    }
+    return (
+    // At this point we know that the element can have focus (eg. won't be -1) if the tabindex attribute exists
+    $elem.hasAttribute("tabindex")
+        // Anchor tags or area tags with a href set
+        || ($elem instanceof HTMLAnchorElement || $elem instanceof HTMLAreaElement) && $elem.hasAttribute("href")
+        // Form elements which are not disabled
+        || ($elem instanceof HTMLButtonElement
+            || $elem instanceof HTMLInputElement
+            || $elem instanceof HTMLTextAreaElement
+            || $elem instanceof HTMLSelectElement)
+        // IFrames
+        || $elem instanceof HTMLIFrameElement);
+}
+
+const timeouts = new Map();
+/**
+ * Debounces a callback.
+ * @param cb
+ * @param ms
+ * @param id
+ */
+function debounce(cb, ms, id) {
+    // Clear current timeout for id
+    const timeout = timeouts.get(id);
+    if (timeout != null) {
+        window.clearTimeout(timeout);
+    }
+    // Set new timeout
+    timeouts.set(id, window.setTimeout(() => {
+        cb();
+        timeouts.delete(id);
+    }, ms));
+}
+
+/**
+ * Template for the focus trap.
+ */
+const template = document.createElement("template");
+template.innerHTML = `
+	<div id="start"></div>
+	<div id="backup"></div>
+	<slot></slot>
+	<div id="end"></div>
+`;
+/**
+ * Focus trap web component.
+ * @customElement focus-trap
+ * @slot - Default content.
+ */
+class FocusTrap extends HTMLElement {
+    /**
+     * Attaches the shadow root.
+     */
+    constructor() {
+        super();
+        // The debounce id is used to distinguish this focus trap from others when debouncing
+        this.debounceId = Math.random().toString();
+        this._focused = false;
+        const shadow = this.attachShadow({ mode: "open" });
+        shadow.appendChild(template.content.cloneNode(true));
+        this.$backup = shadow.querySelector("#backup");
+        this.$start = shadow.querySelector("#start");
+        this.$end = shadow.querySelector("#end");
+        this.focusLastElement = this.focusLastElement.bind(this);
+        this.focusFirstElement = this.focusFirstElement.bind(this);
+        this.onFocusIn = this.onFocusIn.bind(this);
+        this.onFocusOut = this.onFocusOut.bind(this);
+    }
+    // Whenever one of these attributes changes we need to render the template again.
+    static get observedAttributes() {
+        return [
+            "inactive"
+        ];
+    }
+    /**
+     * Determines whether the focus trap is active or not.
+     * @attr
+     */
+    get inactive() {
+        return this.hasAttribute("inactive");
+    }
+    set inactive(value) {
+        value ? this.setAttribute("inactive", "") : this.removeAttribute("inactive");
+    }
+    /**
+     * Returns whether the element currently has focus.
+     */
+    get focused() {
+        return this._focused;
+    }
+    /**
+     * Hooks up the element.
+     */
+    connectedCallback() {
+        this.$start.addEventListener("focus", this.focusLastElement);
+        this.$end.addEventListener("focus", this.focusFirstElement);
+        // Focus out is called every time the user tabs around inside the element
+        this.addEventListener("focusin", this.onFocusIn);
+        this.addEventListener("focusout", this.onFocusOut);
+        this.render();
+    }
+    /**
+     * Tears down the element.
+     */
+    disconnectedCallback() {
+        this.$start.removeEventListener("focus", this.focusLastElement);
+        this.$end.removeEventListener("focus", this.focusFirstElement);
+        this.removeEventListener("focusin", this.onFocusIn);
+        this.removeEventListener("focusout", this.onFocusOut);
+    }
+    /**
+     * When the attributes changes we need to re-render the template.
+     */
+    attributeChangedCallback() {
+        this.render();
+    }
+    /**
+     * Focuses the first focusable element in the focus trap.
+     */
+    focusFirstElement() {
+        this.trapFocus();
+    }
+    /**
+     * Focuses the last focusable element in the focus trap.
+     */
+    focusLastElement() {
+        this.trapFocus(true);
+    }
+    /**
+     * Returns a list of the focusable children found within the element.
+     */
+    getFocusableElements() {
+        return queryShadowRoot(this, isHidden, isFocusable);
+    }
+    /**
+     * Focuses on either the last or first focusable element.
+     * @param {boolean} trapToEnd
+     */
+    trapFocus(trapToEnd) {
+        if (this.inactive)
+            return;
+        let focusableChildren = this.getFocusableElements();
+        if (focusableChildren.length > 0) {
+            if (trapToEnd) {
+                focusableChildren[focusableChildren.length - 1].focus();
+            }
+            else {
+                focusableChildren[0].focus();
+            }
+            this.$backup.setAttribute("tabindex", "-1");
+        }
+        else {
+            // If there are no focusable children we need to focus on the backup
+            // to trap the focus. This is a useful behavior if the focus trap is
+            // for example used in a dialog and we don't want the user to tab
+            // outside the dialog even though there are no focusable children
+            // in the dialog.
+            this.$backup.setAttribute("tabindex", "0");
+            this.$backup.focus();
+        }
+    }
+    /**
+     * When the element gains focus this function is called.
+     */
+    onFocusIn() {
+        this.updateFocused(true);
+    }
+    /**
+     * When the element looses its focus this function is called.
+     */
+    onFocusOut() {
+        this.updateFocused(false);
+    }
+    /**
+     * Updates the focused property and updates the view.
+     * The update is debounced because the focusin and focusout out
+     * might fire multiple times in a row. We only want to render
+     * the element once, therefore waiting until the focus is "stable".
+     * @param value
+     */
+    updateFocused(value) {
+        debounce(() => {
+            if (this.focused !== value) {
+                this._focused = value;
+                this.render();
+            }
+        }, 0, this.debounceId);
+    }
+    /**
+     * Updates the template.
+     */
+    render() {
+        this.$start.setAttribute("tabindex", !this.focused || this.inactive ? `-1` : `0`);
+        this.$end.setAttribute("tabindex", !this.focused || this.inactive ? `-1` : `0`);
+        this.focused ? this.setAttribute("focused", "") : this.removeAttribute("focused");
+    }
+}
+window.customElements.define("focus-trap", FocusTrap);
 
 const instantAppsSocialShareCss = ":host{display:block;--instant-apps-social-share-width--s:200px;--instant-apps-social-share-width--m:280px;--instant-apps-social-share-width--l:320px;--instant-apps-social-share-width-horizontal--s:300px;--instant-apps-social-share-width-horizontal--m:380px;--instant-apps-social-share-width-horizontal--l:420px;--instant-apps-social-share-background-color:transparent;--instant-apps-social-share-popover-button-background-color:transparent;--instant-apps-social-share-popover-button-icon-color:var(--calcite-ui-icon-color);--instant-apps-social-share-embed-border:1px solid $border;--instant-apps-social-share-embed-text-area-text:#468540}:host .instant-apps-social-share__popover-button{background-color:var(--instant-apps-social-share-popover-button-background-color)}:host .instant-apps-social-share__popover-button calcite-icon{color:var(--instant-apps-social-share-popover-button-icon-color)}:host .instant-apps-social-share__dialog{box-sizing:border-box;height:auto;padding:10px 0;border-radius:5px}:host .instant-apps-social-share__dialog-embed{border:var(--instant-apps-social-share-embed-border);background-color:var(--instant-apps-social-share-background-color)}:host .instant-apps-social-share__options{margin:0;padding:1% 0 0 0;list-style-type:none}:host .instant-apps-social-share__options li{box-sizing:border-box;display:flex;align-items:center;width:100%;padding:5%;transition:background-color 0.15s ease-out 0s}:host .instant-apps-social-share__options li .instant-apps-social-share__icon,:host .instant-apps-social-share__options li .instant-apps-social-share__option-text{display:inline-block}:host .instant-apps-social-share__options li .instant-apps-social-share__icon{display:flex;align-items:center}:host .instant-apps-social-share__options li .instant-apps-social-share__option-text{width:85%;margin-left:10px;word-break:break-word}:host .instant-apps-social-share__options li:hover{cursor:pointer;background-color:var(--calcite-ui-foreground-2)}:host .instant-apps-social-share__tip{box-sizing:border-box;padding:0 5% 1% 5%}:host .instant-apps-social-share__tip-header{display:flex;align-items:center;color:#007ac2;margin:8px 0 5px 0}:host .instant-apps-social-share__tip-header calcite-icon{margin-right:5px}:host .instant-apps-social-share__tip-content{line-height:17px;margin:0;padding-top:2%}:host .instant-apps-social-share__success{display:flex;flex-direction:column;padding:15px}:host .instant-apps-social-share__success-header{display:flex;align-items:center;font-weight:bold;margin-bottom:10px}:host .instant-apps-social-share__success-icon{display:flex;align-items:center;margin-right:5px}:host .instant-apps-social-share__success-icon calcite-icon{color:var(--calcite-ui-success)}:host .instant-apps-social-share__success-message{line-height:16px}:host .instant-apps-social-share__embed{box-sizing:border-box;width:100%;padding:5%;margin-bottom:10px;border-top:1px solid #d3d3d3}:host .instant-apps-social-share__embed-header{display:flex;align-items:center;margin-bottom:5px}:host .instant-apps-social-share__embed-header calcite-icon{margin-right:5px}:host .instant-apps-social-share__embed-code-text-area{border:1px solid #d3d3d3}:host .instant-apps-social-share__embed-code-text-area textarea{box-sizing:border-box;padding:4%;border:none;resize:none;background:transparent;width:100%;font-family:var(--calcite-sans-family);color:var(--calcite-ui-text-1)}:host .instant-apps-social-share__embed-code-text-area button{display:flex;align-items:center;text-align:start;width:100%;border:none;border-top:1px solid #d3d3d3;background-color:transparent;line-height:16px;font-weight:400;padding:3%;color:var(--calcite-ui-text-1)}:host .instant-apps-social-share__embed-code-text-area button calcite-icon{color:#007ac2;margin-right:3px}:host .instant-apps-social-share__embed-code-text-area button:hover{cursor:pointer;background-color:var(--calcite-ui-foreground-2);transition:background-color 0.15s ease-out 0s}:host .instant-apps-social-share__embed-text-area-text{font-weight:600;color:var(--instant-apps-social-share-embed-text-area-text)}:host .instant-apps-social-share__embed-dimensions{display:flex;justify-content:space-between;margin-top:10px}:host .instant-apps-social-share__embed-dimensions-input{width:47%;box-sizing:border-box}:host .instant-apps-social-share__embed-dimensions-input input{border:1px solid #d3d3d3;width:100%;height:25px;font-family:var(--calcite-sans-family)}:host .instant-apps-social-share__layout--horizontal .instant-apps-social-share__options{display:flex;justify-content:space-around;margin-bottom:8%}:host .instant-apps-social-share__layout--horizontal .instant-apps-social-share__options li{flex-direction:column;padding:0}:host .instant-apps-social-share__layout--horizontal .instant-apps-social-share__options li .instant-apps-social-share__option-text{white-space:nowrap;margin-left:0;margin-top:10px;text-align:center}:host .instant-apps-social-share__layout--horizontal .instant-apps-social-share__options li:hover{background-color:unset}:host([scale=s]) .instant-apps-social-share__dialog{width:var(--instant-apps-social-share-width--s)}:host([scale=s]) .instant-apps-social-share__icon{width:16px;height:16px}:host([scale=s]) .instant-apps-social-share__option-text{font-size:var(--calcite-font-size--1)}:host([scale=s]) .instant-apps-social-share__dialog.instant-apps-social-share__layout--horizontal{width:var(--instant-apps-social-share-width-horizontal--s)}:host([scale=s]) .instant-apps-social-share__tip-header,:host([scale=s]) .instant-apps-social-share__tip-content,:host([scale=s]) .instant-apps-social-share__embed-header,:host([scale=s]) .instant-apps-social-share__embed-dimensions-input{font-size:var(--calcite-font-size--2)}:host([scale=m]) .instant-apps-social-share__dialog{width:var(--instant-apps-social-share-width--m)}:host([scale=m]) .instant-apps-social-share__icon{width:24px;height:24px}:host([scale=m]) .instant-apps-social-share__option-text{font-size:var(--calcite-font-size-0)}:host([scale=m]) .instant-apps-social-share__dialog.instant-apps-social-share__layout--horizontal{width:var(--instant-apps-social-share-width-horizontal--m)}:host([scale=m]) .instant-apps-social-share__tip-header,:host([scale=m]) .instant-apps-social-share__tip-content,:host([scale=m]) .instant-apps-social-share__embed-header,:host([scale=m]) .instant-apps-social-share__embed-dimensions-input{font-size:var(--calcite-font-size--1)}:host([scale=l]) .instant-apps-social-share__dialog{width:var(--instant-apps-social-share-width--l)}:host([scale=l]) .instant-apps-social-share__icon{width:32px;height:32px}:host([scale=l]) .instant-apps-social-share__option-text{font-size:var(--calcite-font-size-1)}:host([scale=l]) .instant-apps-social-share__dialog.instant-apps-social-share__layout--horizontal{width:var(--instant-apps-social-share-width-horizontal--l)}:host([scale=l]) .instant-apps-social-share__tip-header,:host([scale=l]) .instant-apps-social-share__tip-content,:host([scale=l]) .instant-apps-social-share__embed-header,:host([scale=l]) .instant-apps-social-share__embed-dimensions-input{font-size:var(--calcite-font-size-0)}";
 
@@ -65,7 +353,7 @@ const SOCIAL_URL_TEMPLATES = {
   linkedIn: 'https://www.linkedin.com/sharing/share-offsite/?url={url}',
 };
 const SHORTEN_API = 'https://arcg.is/prod/shorten';
-let InstantAppsSocialShare$1 = class extends HTMLElement {
+let InstantAppsSocialShare$1 = class extends HTMLElement$1 {
   constructor() {
     super();
     this.__registerHost();
@@ -95,8 +383,16 @@ let InstantAppsSocialShare$1 = class extends HTMLElement {
     var _a, _b;
     this.getMessages();
     this.setupAutoCloseListeners();
-    if (this.mode === 'popover' && this.opened) {
-      this.popoverRef.toggle(true);
+    if (this.mode === 'popover') {
+      if (this.opened)
+        this.popoverRef.toggle(true);
+      this.popoverRef.addEventListener('calcitePopoverOpen', () => {
+        if (!this.shareListRef)
+          return;
+        const firstNode = this.shareListRef.children[0];
+        firstNode.focus();
+      });
+      this.popoverRef.addEventListener('keydown', this.handlePopoverRefKeyDown.bind(this));
     }
     if (this.embed) {
       (_a = this.embedWidthRef) === null || _a === void 0 ? void 0 : _a.addEventListener('change', this.updateDimensions.bind(this, 'width'));
@@ -109,6 +405,7 @@ let InstantAppsSocialShare$1 = class extends HTMLElement {
     if (this.mode === 'popover') {
       this.popoverRef.removeEventListener('click', this.stopPropagationCallback.bind(this));
       this.popoverRef.removeEventListener('calcitePopoverClose', this.resetPopoverCopyState.bind(this));
+      this.popoverRef.removeEventListener('keydown', this.handlePopoverRefKeyDown.bind(this));
     }
     else {
       (_a = this.embedWidthRef) === null || _a === void 0 ? void 0 : _a.removeEventListener('change', this.updateDimensions.bind(this));
@@ -131,6 +428,13 @@ let InstantAppsSocialShare$1 = class extends HTMLElement {
       (_c = this.dialogContentRef) === null || _c === void 0 ? void 0 : _c.addEventListener('click', this.stopPropagationCallback.bind(this));
     }
   }
+  handlePopoverRefKeyDown(e) {
+    var _a;
+    if (e.code === 'Escape') {
+      this.closePopover();
+      (_a = this.popoverButtonRef) === null || _a === void 0 ? void 0 : _a.setFocus();
+    }
+  }
   autoCloseCallback() {
     var _a, _b, _c;
     if (this.mode === 'popover') {
@@ -148,6 +452,8 @@ let InstantAppsSocialShare$1 = class extends HTMLElement {
     event.stopPropagation();
   }
   resetPopoverCopyState() {
+    var _a;
+    (_a = this.popoverButtonRef) === null || _a === void 0 ? void 0 : _a.setFocus();
     setTimeout(() => {
       this.copied = false;
     }, 200);
@@ -170,8 +476,8 @@ let InstantAppsSocialShare$1 = class extends HTMLElement {
     const dialogContent = (h("div", { ref: el => (this.dialogContentRef = el), class: `${CSS.dialog}${layoutClass}` }, content));
     return (h(Host, null, this.mode === 'popover'
       ? [
-        h("calcite-popover", { ref: (el) => (this.popoverRef = el), label: (_b = (_a = this.messages) === null || _a === void 0 ? void 0 : _a.share) === null || _b === void 0 ? void 0 : _b.label, "reference-element": "shareButton", placement: "bottom-start", scale: this.scale }, dialogContent),
-        h("calcite-button", { onClick: this.togglePopover.bind(this), id: "shareButton", class: CSS.popoverButton, color: this.shareButtonColor, appearance: "transparent", label: (_d = (_c = this.messages) === null || _c === void 0 ? void 0 : _c.share) === null || _d === void 0 ? void 0 : _d.label, title: (_f = (_e = this.messages) === null || _e === void 0 ? void 0 : _e.share) === null || _f === void 0 ? void 0 : _f.label, scale: this.scale }, h("calcite-icon", { icon: "share", scale: "m" })),
+        h("calcite-popover", { ref: (el) => (this.popoverRef = el), label: (_b = (_a = this.messages) === null || _a === void 0 ? void 0 : _a.share) === null || _b === void 0 ? void 0 : _b.label, "reference-element": "shareButton", placement: "bottom-start", scale: this.scale }, h("focus-trap", null, dialogContent)),
+        h("calcite-button", { ref: el => (this.popoverButtonRef = el), onClick: this.togglePopover.bind(this), id: "shareButton", class: CSS.popoverButton, color: this.shareButtonColor, appearance: "transparent", label: (_d = (_c = this.messages) === null || _c === void 0 ? void 0 : _c.share) === null || _d === void 0 ? void 0 : _d.label, title: (_f = (_e = this.messages) === null || _e === void 0 ? void 0 : _e.share) === null || _f === void 0 ? void 0 : _f.label, scale: this.scale }, h("calcite-icon", { icon: "share", scale: "m" })),
       ]
       : [
         dialogContent,
@@ -194,13 +500,22 @@ let InstantAppsSocialShare$1 = class extends HTMLElement {
   renderOptions() {
     var _a, _b, _c, _d, _e;
     const options = (_a = this.messages) === null || _a === void 0 ? void 0 : _a.options;
-    return (h("ul", { class: CSS.options, role: "menu" }, h("li", { id: "copyToClipboard", onClick: this.handleShareItem.bind(this, 'link'), role: "menuitem" }, h("span", { class: CSS.icon }, h("calcite-icon", { icon: "link", scale: this.scale })), h("span", { class: CSS.optionText }, (_b = options === null || options === void 0 ? void 0 : options.link) === null || _b === void 0 ? void 0 : _b.label)), this.socialMedia
+    return (h("ul", { ref: el => (this.shareListRef = el), class: CSS.options, role: "menu" }, h("li", { id: "copyToClipboard", onClick: this.handleShareItem.bind(this, 'link'), onKeyDown: this.handleOptionKeyDown('link'), role: "menuitem", tabindex: "0" }, h("span", { class: CSS.icon }, h("calcite-icon", { icon: "link", scale: this.scale })), h("span", { class: CSS.optionText }, (_b = options === null || options === void 0 ? void 0 : options.link) === null || _b === void 0 ? void 0 : _b.label)), this.socialMedia
       ? [
-        h("li", { onClick: this.handleShareItem.bind(this, 'facebook'), role: "menuitem" }, h("span", { class: CSS.icon }, this.renderFacebookIcon()), h("span", { class: CSS.optionText }, (_c = options === null || options === void 0 ? void 0 : options.facebook) === null || _c === void 0 ? void 0 : _c.label)),
-        h("li", { onClick: this.handleShareItem.bind(this, 'twitter'), role: "menuitem" }, h("span", { class: CSS.icon }, this.renderTwitterIcon()), h("span", { class: CSS.optionText }, (_d = options === null || options === void 0 ? void 0 : options.twitter) === null || _d === void 0 ? void 0 : _d.label)),
-        h("li", { onClick: this.handleShareItem.bind(this, 'linkedIn'), role: "menuitem" }, h("span", { class: CSS.icon }, this.renderLinkedInIcon()), h("span", { class: CSS.optionText }, (_e = options === null || options === void 0 ? void 0 : options.linkedIn) === null || _e === void 0 ? void 0 : _e.label)),
+        h("li", { onClick: this.handleShareItem.bind(this, 'facebook'), onKeyDown: this.handleOptionKeyDown('facebook'), role: "menuitem", tabindex: "0" }, h("span", { class: CSS.icon }, this.renderFacebookIcon()), h("span", { class: CSS.optionText }, (_c = options === null || options === void 0 ? void 0 : options.facebook) === null || _c === void 0 ? void 0 : _c.label)),
+        h("li", { onClick: this.handleShareItem.bind(this, 'twitter'), onKeyDown: this.handleOptionKeyDown('twitter'), role: "menuitem", tabindex: "0" }, h("span", { class: CSS.icon }, this.renderTwitterIcon()), h("span", { class: CSS.optionText }, (_d = options === null || options === void 0 ? void 0 : options.twitter) === null || _d === void 0 ? void 0 : _d.label)),
+        h("li", { onClick: this.handleShareItem.bind(this, 'linkedIn'), onKeyDown: this.handleOptionKeyDown('linkedIn'), role: "menuitem", tabindex: "0" }, h("span", { class: CSS.icon }, this.renderLinkedInIcon()), h("span", { class: CSS.optionText }, (_e = options === null || options === void 0 ? void 0 : options.linkedIn) === null || _e === void 0 ? void 0 : _e.label)),
       ]
       : null));
+  }
+  handleOptionKeyDown(type) {
+    return (e) => {
+      const keyCode = e.code;
+      const canActivate = keyCode === 'Space' || keyCode === 'Enter';
+      if (!canActivate)
+        return;
+      this.handleShareItem(type);
+    };
   }
   renderFacebookIcon() {
     return (h("svg", { height: "100%", style: { fillRule: 'evenodd', clipRule: 'evenodd', strokeLinejoin: 'round', strokeMiterlimit: '2' }, version: "1.1", viewBox: "0 0 512 512", width: "100%", xmlns: "http://www.w3.org/2000/svg" }, h("g", null, h("path", { d: "M512,256c0,-141.385 -114.615,-256 -256,-256c-141.385,0 -256,114.615 -256,256c0,127.777 93.616,233.685 216,252.89l0,-178.89l-65,0l0,-74l65,0l0,-56.4c0,-64.16 38.219,-99.6 96.695,-99.6c28.009,0 57.305,5 57.305,5l0,63l-32.281,0c-31.801,0 -41.719,19.733 -41.719,39.978l0,48.022l71,0l-11.35,74l-59.65,0l0,178.89c122.385,-19.205 216,-125.113 216,-252.89Z", style: { fill: '#1877f2', fillRule: 'nonzero' } }), h("path", { d: "M355.65,330l11.35,-74l-71,0l0,-48.022c0,-20.245 9.917,-39.978 41.719,-39.978l32.281,0l0,-63c0,0 -29.297,-5 -57.305,-5c-58.476,0 -96.695,35.44 -96.695,99.6l0,56.4l-65,0l0,74l65,0l0,178.89c13.033,2.045 26.392,3.11 40,3.11c13.608,0 26.966,-1.065 40,-3.11l0,-178.89l59.65,0Z", style: { fill: '#fff', fillRule: 'nonzero' } }))));
@@ -251,9 +566,12 @@ let InstantAppsSocialShare$1 = class extends HTMLElement {
         }
         if (this.mode === 'inline') {
           this.copyLinkPopoverRef.toggle(true);
+          setTimeout(() => this.copyLinkPopoverRef.toggle(false), 3000);
         }
         this.inlineCopyLinkOpened = true;
         this.copied = true;
+        if (this.mode === 'popover')
+          setTimeout(() => this.closePopover(), 2000);
         return;
       case 'facebook':
       case 'twitter':
@@ -293,6 +611,7 @@ let InstantAppsSocialShare$1 = class extends HTMLElement {
     this.copyLinkPopoverRef.toggle(false);
     this.inlineCopyLinkOpened = false;
     this.copyEmbedPopoverRef.toggle(true);
+    setTimeout(() => this.copyEmbedPopoverRef.toggle(false), 3000);
     this.inlineCopyEmbedOpened = true;
   }
   // VIEW LOGIC

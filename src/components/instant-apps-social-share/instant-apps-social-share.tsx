@@ -26,6 +26,10 @@ import SocialShare_T9n from '../../assets/t9n/instant-apps-social-share/resource
 
 import { getLocaleComponentStrings } from '../../utils/locale';
 
+import '@a11y/focus-trap';
+
+type ShareItemOptions = 'link' | 'facebook' | 'twitter' | 'linkedIn';
+
 const base = 'instant-apps-social-share';
 
 const CSS = {
@@ -91,6 +95,8 @@ export class InstantAppsSocialShare {
   copyLinkPopoverRef: HTMLCalcitePopoverElement;
   copyEmbedPopoverRef: HTMLCalcitePopoverElement;
   dialogContentRef: HTMLDivElement | undefined;
+  shareListRef: HTMLUListElement | undefined;
+  popoverButtonRef: HTMLCalciteButtonElement | undefined;
 
   // PUBLIC PROPERTIES
   @Prop({
@@ -149,8 +155,14 @@ export class InstantAppsSocialShare {
   componentDidLoad() {
     this.getMessages();
     this.setupAutoCloseListeners();
-    if (this.mode === 'popover' && this.opened) {
-      this.popoverRef.toggle(true);
+    if (this.mode === 'popover') {
+      if (this.opened) this.popoverRef.toggle(true);
+      this.popoverRef.addEventListener('calcitePopoverOpen', () => {
+        if (!this.shareListRef) return;
+        const firstNode = this.shareListRef.children[0] as HTMLLIElement;
+        firstNode.focus();
+      });
+      this.popoverRef.addEventListener('keydown', this.handlePopoverRefKeyDown.bind(this));
     }
     if (this.embed) {
       this.embedWidthRef?.addEventListener('change', this.updateDimensions.bind(this, 'width'));
@@ -163,6 +175,7 @@ export class InstantAppsSocialShare {
     if (this.mode === 'popover') {
       this.popoverRef.removeEventListener('click', this.stopPropagationCallback.bind(this));
       this.popoverRef.removeEventListener('calcitePopoverClose', this.resetPopoverCopyState.bind(this));
+      this.popoverRef.removeEventListener('keydown', this.handlePopoverRefKeyDown.bind(this));
     } else {
       this.embedWidthRef?.removeEventListener('change', this.updateDimensions.bind(this));
       this.embedHeightRef?.removeEventListener('change', this.updateDimensions.bind(this));
@@ -185,6 +198,13 @@ export class InstantAppsSocialShare {
     }
   }
 
+  handlePopoverRefKeyDown(e: KeyboardEvent) {
+    if (e.code === 'Escape') {
+      this.closePopover();
+      this.popoverButtonRef?.setFocus();
+    }
+  }
+
   autoCloseCallback() {
     if (this.mode === 'popover') {
       this.opened = false;
@@ -202,6 +222,7 @@ export class InstantAppsSocialShare {
   }
 
   resetPopoverCopyState() {
+    this.popoverButtonRef?.setFocus();
     setTimeout(() => {
       this.copied = false;
     }, 200);
@@ -248,9 +269,10 @@ export class InstantAppsSocialShare {
                 placement="bottom-start"
                 scale={this.scale}
               >
-                {dialogContent}
+                <focus-trap>{dialogContent}</focus-trap>
               </calcite-popover>,
               <calcite-button
+                ref={el => (this.popoverButtonRef = el)}
                 onClick={this.togglePopover.bind(this)}
                 id="shareButton"
                 class={CSS.popoverButton}
@@ -321,8 +343,8 @@ export class InstantAppsSocialShare {
   renderOptions() {
     const options = this.messages?.options;
     return (
-      <ul class={CSS.options} role="menu">
-        <li id="copyToClipboard" onClick={this.handleShareItem.bind(this, 'link')} role="menuitem">
+      <ul ref={el => (this.shareListRef = el)} class={CSS.options} role="menu">
+        <li id="copyToClipboard" onClick={this.handleShareItem.bind(this, 'link')} onKeyDown={this.handleOptionKeyDown('link')} role="menuitem" tabindex="0">
           <span class={CSS.icon}>
             <calcite-icon icon="link" scale={this.scale} />
           </span>
@@ -330,15 +352,15 @@ export class InstantAppsSocialShare {
         </li>
         {this.socialMedia
           ? [
-              <li onClick={this.handleShareItem.bind(this, 'facebook')} role="menuitem">
+              <li onClick={this.handleShareItem.bind(this, 'facebook')} onKeyDown={this.handleOptionKeyDown('facebook')} role="menuitem" tabindex="0">
                 <span class={CSS.icon}>{this.renderFacebookIcon()}</span>
                 <span class={CSS.optionText}>{options?.facebook?.label}</span>
               </li>,
-              <li onClick={this.handleShareItem.bind(this, 'twitter')} role="menuitem">
+              <li onClick={this.handleShareItem.bind(this, 'twitter')} onKeyDown={this.handleOptionKeyDown('twitter')} role="menuitem" tabindex="0">
                 <span class={CSS.icon}>{this.renderTwitterIcon()}</span>
                 <span class={CSS.optionText}>{options?.twitter?.label}</span>
               </li>,
-              <li onClick={this.handleShareItem.bind(this, 'linkedIn')} role="menuitem">
+              <li onClick={this.handleShareItem.bind(this, 'linkedIn')} onKeyDown={this.handleOptionKeyDown('linkedIn')} role="menuitem" tabindex="0">
                 <span class={CSS.icon}>{this.renderLinkedInIcon()}</span>
                 <span class={CSS.optionText}>{options?.linkedIn?.label}</span>
               </li>,
@@ -346,6 +368,15 @@ export class InstantAppsSocialShare {
           : null}
       </ul>
     );
+  }
+
+  handleOptionKeyDown(type: ShareItemOptions) {
+    return (e: KeyboardEvent) => {
+      const keyCode = e.code;
+      const canActivate = keyCode === 'Space' || keyCode === 'Enter';
+      if (!canActivate) return;
+      this.handleShareItem(type);
+    };
   }
 
   renderFacebookIcon() {
@@ -483,7 +514,7 @@ export class InstantAppsSocialShare {
     this.popoverRef.toggle(this.opened);
   }
 
-  async handleShareItem(type: 'link' | 'facebook' | 'twitter' | 'linkedIn') {
+  async handleShareItem(type: ShareItemOptions) {
     this.shareUrl = await this.generateShareUrl();
     let shortenedUrl = null;
 
@@ -504,9 +535,11 @@ export class InstantAppsSocialShare {
         }
         if (this.mode === 'inline') {
           this.copyLinkPopoverRef.toggle(true);
+          setTimeout(() => this.copyLinkPopoverRef.toggle(false), 3000);
         }
         this.inlineCopyLinkOpened = true;
         this.copied = true;
+        if (this.mode === 'popover') setTimeout(() => this.closePopover(), 2000);
         return;
       case 'facebook':
       case 'twitter':
@@ -549,6 +582,7 @@ export class InstantAppsSocialShare {
     this.copyLinkPopoverRef.toggle(false);
     this.inlineCopyLinkOpened = false;
     this.copyEmbedPopoverRef.toggle(true);
+    setTimeout(() => this.copyEmbedPopoverRef.toggle(false), 3000);
     this.inlineCopyEmbedOpened = true;
   }
 

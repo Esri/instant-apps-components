@@ -19,6 +19,7 @@ import { Component, h, Prop, State, Element, Host } from '@stencil/core';
 // import esriRequest from '@arcgis/core/request';
 import { loadModules } from '../../utils/loadModules';
 import { getLocaleComponentStrings } from '../../utils/locale';
+import '@a11y/focus-trap';
 const base = 'instant-apps-social-share';
 const CSS = {
   base,
@@ -90,8 +91,16 @@ export class InstantAppsSocialShare {
     var _a, _b;
     this.getMessages();
     this.setupAutoCloseListeners();
-    if (this.mode === 'popover' && this.opened) {
-      this.popoverRef.toggle(true);
+    if (this.mode === 'popover') {
+      if (this.opened)
+        this.popoverRef.toggle(true);
+      this.popoverRef.addEventListener('calcitePopoverOpen', () => {
+        if (!this.shareListRef)
+          return;
+        const firstNode = this.shareListRef.children[0];
+        firstNode.focus();
+      });
+      this.popoverRef.addEventListener('keydown', this.handlePopoverRefKeyDown.bind(this));
     }
     if (this.embed) {
       (_a = this.embedWidthRef) === null || _a === void 0 ? void 0 : _a.addEventListener('change', this.updateDimensions.bind(this, 'width'));
@@ -104,6 +113,7 @@ export class InstantAppsSocialShare {
     if (this.mode === 'popover') {
       this.popoverRef.removeEventListener('click', this.stopPropagationCallback.bind(this));
       this.popoverRef.removeEventListener('calcitePopoverClose', this.resetPopoverCopyState.bind(this));
+      this.popoverRef.removeEventListener('keydown', this.handlePopoverRefKeyDown.bind(this));
     }
     else {
       (_a = this.embedWidthRef) === null || _a === void 0 ? void 0 : _a.removeEventListener('change', this.updateDimensions.bind(this));
@@ -126,6 +136,13 @@ export class InstantAppsSocialShare {
       (_c = this.dialogContentRef) === null || _c === void 0 ? void 0 : _c.addEventListener('click', this.stopPropagationCallback.bind(this));
     }
   }
+  handlePopoverRefKeyDown(e) {
+    var _a;
+    if (e.code === 'Escape') {
+      this.closePopover();
+      (_a = this.popoverButtonRef) === null || _a === void 0 ? void 0 : _a.setFocus();
+    }
+  }
   autoCloseCallback() {
     var _a, _b, _c;
     if (this.mode === 'popover') {
@@ -143,6 +160,8 @@ export class InstantAppsSocialShare {
     event.stopPropagation();
   }
   resetPopoverCopyState() {
+    var _a;
+    (_a = this.popoverButtonRef) === null || _a === void 0 ? void 0 : _a.setFocus();
     setTimeout(() => {
       this.copied = false;
     }, 200);
@@ -168,8 +187,9 @@ export class InstantAppsSocialShare {
     const dialogContent = (h("div", { ref: el => (this.dialogContentRef = el), class: `${CSS.dialog}${layoutClass}` }, content));
     return (h(Host, null, this.mode === 'popover'
       ? [
-        h("calcite-popover", { ref: (el) => (this.popoverRef = el), label: (_b = (_a = this.messages) === null || _a === void 0 ? void 0 : _a.share) === null || _b === void 0 ? void 0 : _b.label, "reference-element": "shareButton", placement: "bottom-start", scale: this.scale }, dialogContent),
-        h("calcite-button", { onClick: this.togglePopover.bind(this), id: "shareButton", class: CSS.popoverButton, color: this.shareButtonColor, appearance: "transparent", label: (_d = (_c = this.messages) === null || _c === void 0 ? void 0 : _c.share) === null || _d === void 0 ? void 0 : _d.label, title: (_f = (_e = this.messages) === null || _e === void 0 ? void 0 : _e.share) === null || _f === void 0 ? void 0 : _f.label, scale: this.scale },
+        h("calcite-popover", { ref: (el) => (this.popoverRef = el), label: (_b = (_a = this.messages) === null || _a === void 0 ? void 0 : _a.share) === null || _b === void 0 ? void 0 : _b.label, "reference-element": "shareButton", placement: "bottom-start", scale: this.scale },
+          h("focus-trap", null, dialogContent)),
+        h("calcite-button", { ref: el => (this.popoverButtonRef = el), onClick: this.togglePopover.bind(this), id: "shareButton", class: CSS.popoverButton, color: this.shareButtonColor, appearance: "transparent", label: (_d = (_c = this.messages) === null || _c === void 0 ? void 0 : _c.share) === null || _d === void 0 ? void 0 : _d.label, title: (_f = (_e = this.messages) === null || _e === void 0 ? void 0 : _e.share) === null || _f === void 0 ? void 0 : _f.label, scale: this.scale },
           h("calcite-icon", { icon: "share", scale: "m" })),
       ]
       : [
@@ -201,24 +221,33 @@ export class InstantAppsSocialShare {
   renderOptions() {
     var _a, _b, _c, _d, _e;
     const options = (_a = this.messages) === null || _a === void 0 ? void 0 : _a.options;
-    return (h("ul", { class: CSS.options, role: "menu" },
-      h("li", { id: "copyToClipboard", onClick: this.handleShareItem.bind(this, 'link'), role: "menuitem" },
+    return (h("ul", { ref: el => (this.shareListRef = el), class: CSS.options, role: "menu" },
+      h("li", { id: "copyToClipboard", onClick: this.handleShareItem.bind(this, 'link'), onKeyDown: this.handleOptionKeyDown('link'), role: "menuitem", tabindex: "0" },
         h("span", { class: CSS.icon },
           h("calcite-icon", { icon: "link", scale: this.scale })),
         h("span", { class: CSS.optionText }, (_b = options === null || options === void 0 ? void 0 : options.link) === null || _b === void 0 ? void 0 : _b.label)),
       this.socialMedia
         ? [
-          h("li", { onClick: this.handleShareItem.bind(this, 'facebook'), role: "menuitem" },
+          h("li", { onClick: this.handleShareItem.bind(this, 'facebook'), onKeyDown: this.handleOptionKeyDown('facebook'), role: "menuitem", tabindex: "0" },
             h("span", { class: CSS.icon }, this.renderFacebookIcon()),
             h("span", { class: CSS.optionText }, (_c = options === null || options === void 0 ? void 0 : options.facebook) === null || _c === void 0 ? void 0 : _c.label)),
-          h("li", { onClick: this.handleShareItem.bind(this, 'twitter'), role: "menuitem" },
+          h("li", { onClick: this.handleShareItem.bind(this, 'twitter'), onKeyDown: this.handleOptionKeyDown('twitter'), role: "menuitem", tabindex: "0" },
             h("span", { class: CSS.icon }, this.renderTwitterIcon()),
             h("span", { class: CSS.optionText }, (_d = options === null || options === void 0 ? void 0 : options.twitter) === null || _d === void 0 ? void 0 : _d.label)),
-          h("li", { onClick: this.handleShareItem.bind(this, 'linkedIn'), role: "menuitem" },
+          h("li", { onClick: this.handleShareItem.bind(this, 'linkedIn'), onKeyDown: this.handleOptionKeyDown('linkedIn'), role: "menuitem", tabindex: "0" },
             h("span", { class: CSS.icon }, this.renderLinkedInIcon()),
             h("span", { class: CSS.optionText }, (_e = options === null || options === void 0 ? void 0 : options.linkedIn) === null || _e === void 0 ? void 0 : _e.label)),
         ]
         : null));
+  }
+  handleOptionKeyDown(type) {
+    return (e) => {
+      const keyCode = e.code;
+      const canActivate = keyCode === 'Space' || keyCode === 'Enter';
+      if (!canActivate)
+        return;
+      this.handleShareItem(type);
+    };
   }
   renderFacebookIcon() {
     return (h("svg", { height: "100%", style: { fillRule: 'evenodd', clipRule: 'evenodd', strokeLinejoin: 'round', strokeMiterlimit: '2' }, version: "1.1", viewBox: "0 0 512 512", width: "100%", xmlns: "http://www.w3.org/2000/svg" },
@@ -302,9 +331,12 @@ export class InstantAppsSocialShare {
         }
         if (this.mode === 'inline') {
           this.copyLinkPopoverRef.toggle(true);
+          setTimeout(() => this.copyLinkPopoverRef.toggle(false), 3000);
         }
         this.inlineCopyLinkOpened = true;
         this.copied = true;
+        if (this.mode === 'popover')
+          setTimeout(() => this.closePopover(), 2000);
         return;
       case 'facebook':
       case 'twitter':
@@ -344,6 +376,7 @@ export class InstantAppsSocialShare {
     this.copyLinkPopoverRef.toggle(false);
     this.inlineCopyLinkOpened = false;
     this.copyEmbedPopoverRef.toggle(true);
+    setTimeout(() => this.copyEmbedPopoverRef.toggle(false), 3000);
     this.inlineCopyEmbedOpened = true;
   }
   // VIEW LOGIC

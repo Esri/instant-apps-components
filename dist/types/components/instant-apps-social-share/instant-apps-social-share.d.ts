@@ -1,5 +1,7 @@
 /// <reference types="arcgis-js-api" />
 import SocialShare_T9n from '../../assets/t9n/instant-apps-social-share/resources.json';
+import '@a11y/focus-trap';
+declare type ShareItemOptions = 'link' | 'facebook' | 'twitter' | 'linkedIn';
 export declare class InstantAppsSocialShare {
   el: HTMLInstantAppsSocialShareElement;
   popoverRef: HTMLCalcitePopoverElement;
@@ -9,6 +11,8 @@ export declare class InstantAppsSocialShare {
   copyLinkPopoverRef: HTMLCalcitePopoverElement;
   copyEmbedPopoverRef: HTMLCalcitePopoverElement;
   dialogContentRef: HTMLDivElement | undefined;
+  shareListRef: HTMLUListElement | undefined;
+  popoverButtonRef: HTMLCalciteButtonElement | undefined;
   mode: 'popover' | 'inline';
   shareUrl: string;
   shareText: string;
@@ -38,6 +42,7 @@ export declare class InstantAppsSocialShare {
   disconnectedCallback(): void;
   getMessages(): Promise<void>;
   setupAutoCloseListeners(): void;
+  handlePopoverRefKeyDown(e: KeyboardEvent): void;
   autoCloseCallback(): void;
   stopPropagationCallback(event: Event): void;
   resetPopoverCopyState(): void;
@@ -46,6 +51,7 @@ export declare class InstantAppsSocialShare {
   renderSuccess(): any;
   renderEmbedSuccess(): any;
   renderOptions(): any;
+  handleOptionKeyDown(type: ShareItemOptions): (e: KeyboardEvent) => void;
   renderFacebookIcon(): any;
   renderTwitterIcon(): any;
   renderLinkedInIcon(): any;
@@ -53,7 +59,7 @@ export declare class InstantAppsSocialShare {
   renderEmbed(): any;
   togglePopover(event: Event): void;
   closePopover(): void;
-  handleShareItem(type: 'link' | 'facebook' | 'twitter' | 'linkedIn'): Promise<void>;
+  handleShareItem(type: ShareItemOptions): Promise<void>;
   shortenUrl(url: string): Promise<any>;
   getEmbedCode(): string;
   copyEmbedCode(): void;
@@ -62,3 +68,4 @@ export declare class InstantAppsSocialShare {
   generateShareUrlParams(point: __esri.Point): string;
   roundValue(val: number, decimalPoints?: number): number;
 }
+export {};
