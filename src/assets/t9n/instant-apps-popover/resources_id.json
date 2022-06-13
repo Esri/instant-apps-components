@@ -1,6 +1,6 @@
 {
-  "back": "ng_Back_________ny",
-  "next": "ng_Next_________ny",
-  "done": "ng_Done_________ny",
-  "close": "ng_Close___________ny"
+  "back": "Kembali",
+  "next": "Selanjutnya",
+  "done": "Selesai",
+  "close": "Tutup"
 }

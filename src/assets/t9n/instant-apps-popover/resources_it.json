@@ -1,6 +1,6 @@
 {
-  "back": "é_Back_________È",
-  "next": "é_Next_________È",
-  "done": "é_Done_________È",
-  "close": "é_Close___________È"
+  "back": "Indietro",
+  "next": "Avanti",
+  "done": "Completato",
+  "close": "Chiudi"
 }

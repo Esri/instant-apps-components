@@ -1,6 +1,6 @@
 {
-  "back": "ı_Back_________İ",
-  "next": "ı_Next_________İ",
-  "done": "ı_Done_________İ",
-  "close": "ı_Close___________İ"
+  "back": "Geri",
+  "next": "İleri",
+  "done": "Tamam",
+  "close": "Kapat"
 }
