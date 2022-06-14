@@ -124,6 +124,11 @@ export class InstantAppsSocialShare {
   })
   iframeInnerText: string = '';
 
+  @Prop({
+    reflect: true,
+  })
+  popoverButtonIconScale: 's' | 'm' | 'l' = 'm';
+
   @Prop() view: __esri.MapView | __esri.SceneView;
 
   @Prop({ reflect: true }) displayTipText: boolean = true;
@@ -292,7 +297,7 @@ export class InstantAppsSocialShare {
                 title={this.messages?.share?.label}
                 scale={this.scale}
               >
-                <calcite-icon icon="share" scale="m" />
+                <calcite-icon icon="share" scale={this.popoverButtonIconScale} />
               </calcite-button>,
             ]
           : [

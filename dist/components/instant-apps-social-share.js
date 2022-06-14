@@ -77,6 +77,7 @@ let InstantAppsSocialShare$1 = class extends HTMLElement {
     this.embed = false;
     this.shareButtonColor = 'neutral';
     this.iframeInnerText = '';
+    this.popoverButtonIconScale = 'm';
     this.displayTipText = true;
     this.socialMedia = true;
     this.shareIconsLayout = 'vertical';
@@ -204,7 +205,7 @@ let InstantAppsSocialShare$1 = class extends HTMLElement {
     return (h(Host, null, this.mode === 'popover'
       ? [
         h("calcite-popover", { ref: (el) => (this.popoverRef = el), label: (_b = (_a = this.messages) === null || _a === void 0 ? void 0 : _a.share) === null || _b === void 0 ? void 0 : _b.label, "reference-element": "shareButton", placement: "bottom-start", scale: this.scale }, dialogContent),
-        h("calcite-button", { ref: el => (this.popoverButtonRef = el), onClick: this.togglePopover.bind(this), id: "shareButton", class: CSS.popoverButton, color: this.shareButtonColor, appearance: "transparent", label: (_d = (_c = this.messages) === null || _c === void 0 ? void 0 : _c.share) === null || _d === void 0 ? void 0 : _d.label, title: (_f = (_e = this.messages) === null || _e === void 0 ? void 0 : _e.share) === null || _f === void 0 ? void 0 : _f.label, scale: this.scale }, h("calcite-icon", { icon: "share", scale: "m" })),
+        h("calcite-button", { ref: el => (this.popoverButtonRef = el), onClick: this.togglePopover.bind(this), id: "shareButton", class: CSS.popoverButton, color: this.shareButtonColor, appearance: "transparent", label: (_d = (_c = this.messages) === null || _c === void 0 ? void 0 : _c.share) === null || _d === void 0 ? void 0 : _d.label, title: (_f = (_e = this.messages) === null || _e === void 0 ? void 0 : _e.share) === null || _f === void 0 ? void 0 : _f.label, scale: this.scale }, h("calcite-icon", { icon: "share", scale: this.popoverButtonIconScale })),
       ]
       : [
         dialogContent,
@@ -462,6 +463,7 @@ InstantAppsSocialShare$1 = /*@__PURE__*/ proxyCustomElement(InstantAppsSocialSha
     "embed": [516],
     "shareButtonColor": [513, "share-button-color"],
     "iframeInnerText": [513, "iframe-inner-text"],
+    "popoverButtonIconScale": [513, "popover-button-icon-scale"],
     "view": [16],
     "displayTipText": [516, "display-tip-text"],
     "socialMedia": [516, "social-media"],

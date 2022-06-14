@@ -12,7 +12,7 @@
 | `content`           | `content`             |             | `string`                | `undefined`        |
 | `disableAction`     | `disable-action`      |             | `boolean`               | `false`            |
 | `index`             | `index`               |             | `number`                | `undefined`        |
-| `intlOf`            | `intl-of`             |             | `string`                | `"of"`             |
+| `intlOf`            | `intl-of`             |             | `string`                | `'of'`             |
 | `intlPopoverAction` | `intl-popover-action` |             | `string`                | `undefined`        |
 | `mediaSrc`          | `media-src`           |             | `string`                | `undefined`        |
 | `pagination`        | `pagination`          |             | `boolean`               | `false`            |

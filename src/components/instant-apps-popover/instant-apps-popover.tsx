@@ -81,7 +81,7 @@ export class InstantAppsPopover {
   intlPopoverAction: string;
 
   @Prop()
-  intlOf: string = "of";
+  intlOf: string = 'of';
 
   // Internal State
   @State()
@@ -113,7 +113,7 @@ export class InstantAppsPopover {
               key="popover-action"
               class={CSS.action}
               onclick={this.popoverAction}
-              icon="chevron-left"
+              icon={document.dir === 'rtl' ? 'chevron-right' : 'chevron-left'}
               compact="true"
               text-enabled="true"
               text={this.intlPopoverAction ? this.intlPopoverAction : this.messages?.back}

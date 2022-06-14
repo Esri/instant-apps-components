@@ -47,6 +47,7 @@ export namespace Components {
         "embed": boolean;
         "iframeInnerText": string;
         "mode": 'popover' | 'inline';
+        "popoverButtonIconScale": 's' | 'm' | 'l';
         "scale": 's' | 'm' | 'l';
         "shareButtonColor": 'inverse' | 'neutral';
         "shareIconsLayout": 'vertical' | 'horizontal';
@@ -125,6 +126,7 @@ declare namespace LocalJSX {
         "embed"?: boolean;
         "iframeInnerText"?: string;
         "mode"?: 'popover' | 'inline';
+        "popoverButtonIconScale"?: 's' | 'm' | 'l';
         "scale"?: 's' | 'm' | 'l';
         "shareButtonColor"?: 'inverse' | 'neutral';
         "shareIconsLayout"?: 'vertical' | 'horizontal';

@@ -72,6 +72,7 @@ export class InstantAppsSocialShare {
     this.embed = false;
     this.shareButtonColor = 'neutral';
     this.iframeInnerText = '';
+    this.popoverButtonIconScale = 'm';
     this.displayTipText = true;
     this.socialMedia = true;
     this.shareIconsLayout = 'vertical';
@@ -203,7 +204,7 @@ export class InstantAppsSocialShare {
       ? [
         h("calcite-popover", { ref: (el) => (this.popoverRef = el), label: (_b = (_a = this.messages) === null || _a === void 0 ? void 0 : _a.share) === null || _b === void 0 ? void 0 : _b.label, "reference-element": "shareButton", placement: "bottom-start", scale: this.scale }, dialogContent),
         h("calcite-button", { ref: el => (this.popoverButtonRef = el), onClick: this.togglePopover.bind(this), id: "shareButton", class: CSS.popoverButton, color: this.shareButtonColor, appearance: "transparent", label: (_d = (_c = this.messages) === null || _c === void 0 ? void 0 : _c.share) === null || _d === void 0 ? void 0 : _d.label, title: (_f = (_e = this.messages) === null || _e === void 0 ? void 0 : _e.share) === null || _f === void 0 ? void 0 : _f.label, scale: this.scale },
-          h("calcite-icon", { icon: "share", scale: "m" })),
+          h("calcite-icon", { icon: "share", scale: this.popoverButtonIconScale })),
       ]
       : [
         dialogContent,
@@ -619,6 +620,24 @@ export class InstantAppsSocialShare {
       "attribute": "iframe-inner-text",
       "reflect": true,
       "defaultValue": "''"
+    },
+    "popoverButtonIconScale": {
+      "type": "string",
+      "mutable": false,
+      "complexType": {
+        "original": "'s' | 'm' | 'l'",
+        "resolved": "\"l\" | \"m\" | \"s\"",
+        "references": {}
+      },
+      "required": false,
+      "optional": false,
+      "docs": {
+        "tags": [],
+        "text": ""
+      },
+      "attribute": "popover-button-icon-scale",
+      "reflect": true,
+      "defaultValue": "'m'"
     },
     "view": {
       "type": "unknown",

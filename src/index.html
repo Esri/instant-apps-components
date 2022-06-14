@@ -50,61 +50,8 @@
   </head>
 
   <body>
-    <instant-apps-popovers id="popovers">
-      <div slot="popovers">
-        <instant-apps-popover
-          id="onePopover"
-          reference-element="one"
-          ref-id="one"
-          popover-title="Chain 1"
-          subtitle="Subtitle"
-          content="Lorem ipsum dolor sit amet consectetur adipisicing elit. Impedit aspernatur omnis quod! Tempore fugiat excepturi ea tenetur animi mollitia tempora."
-          graphic="Graphic"
-          pagination="true"
-          disable-action="true"
-        >
-        </instant-apps-popover>
-        <instant-apps-popover
-          reference-element="two"
-          ref-id="two"
-          popover-title="Chain 2"
-          subtitle="Subtitle"
-          content="Lorem ipsum dolor sit amet consectetur adipisicing elit. Impedit aspernatur omnis quod! Tempore fugiat excepturi ea tenetur animi mollitia tempora."
-          popover-title="Chain 3"
-          pagination="true"
-          disable-action="true"
-        >
-        </instant-apps-popover>
-        <instant-apps-popover
-          reference-element="three"
-          ref-id="three"
-          popover-title="Three"
-          subtitle="Subtitle"
-          content="Lorem ipsum dolor sit amet consectetur adipisicing elit. Impedit aspernatur omnis quod! Tempore fugiat excepturi ea tenetur animi mollitia tempora."
-          graphic="Graphic"
-          pagination="true"
-        >
-        </instant-apps-popover>
-      </div>
-    </instant-apps-popovers>
-    <calcite-shell>
-      <calcite-shell-panel slot="primary-panel" position="start" detached>
-        <calcite-action-bar slot="action-bar">
-          <calcite-action-group>
-            <calcite-action id="one" text="Add" icon="plus"></calcite-action>
-            <calcite-action text="Save" disabled icon="save"></calcite-action>
-            <calcite-action id="two" text="Layers" active indicator icon="layers"></calcite-action>
-          </calcite-action-group>
-          <calcite-action-group>
-            <calcite-action text="Add" icon="plus"></calcite-action>
-            <calcite-action id="three" text="Layers" indicator icon="layers"></calcite-action>
-          </calcite-action-group>
-        </calcite-action-bar>
-      </calcite-shell-panel>
-    </calcite-shell>
-    <button class="open" value="one">Open me!</button>
-    <button class="open" value="two">Open me!</button>
-    <button class="open" value="three">Open me!</button>
-    <script></script>
+    <instant-apps-header title-text="Sup">
+      <instant-apps-social-share slot="actions-end" popover-button-icon-scale="s"></instant-apps-social-share>
+    </instant-apps-header>
   </body>
 </html>

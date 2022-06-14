@@ -1,5 +1,5 @@
-import { HTMLElement, h, proxyCustomElement } from '@stencil/core/internal/client';
-import { g as getLocaleComponentStrings } from './locale.js';
+import { r as registerInstance, h, g as getElement } from './index-91b43dd0.js';
+import { g as getLocaleComponentStrings } from './locale-2d6b1670.js';
 
 const instantAppsPopoverCss = ":host{display:block}.instant-apps-popover__content{display:flex;flex-direction:column;padding:0 5% 5% 5%;max-width:25vw;font-family:var(--calcite-sans-family);font-size:14px}.instant-apps-popover__content .instant-apps-popover__action{align-self:flex-start;--calcite-ui-foreground-2:transparent}.instant-apps-popover__content span{display:inline-block;font-weight:900;color:var(--calcite-ui-text-1);margin:0 0 10px 0;font-family:var(--calcite-sans-family)}.instant-apps-popover__content p{line-height:19.12px;margin:0;margin-bottom:10px;font-family:var(--calcite-sans-family)}.instant-apps-popover__content .instant-apps-popover__footer{display:flex;flex-direction:row;align-items:center;justify-content:space-between}.instant-apps-popover__content .instant-apps-popover__footer span{margin-bottom:0;font-weight:normal;font-size:14px;font-family:var(--calcite-sans-family)}.instant-apps-popover__content .instant-apps-popover__footer calcite-button:first-child{--calcite-ui-foreground-3:transparent}.instant-apps-popover__content .instant-apps-popover__footer calcite-button:last-child{margin-left:5px}.instant-apps-popover__content.instant-apps-popover--action-disabled{padding:5%}.instant-apps-popover__content.instant-apps-popover--action-disabled #subtitle{margin:0 0 10px 0}";
 
@@ -10,10 +10,9 @@ const CSS = {
   actionDisabled: 'instant-apps-popover--action-disabled',
   footer: 'instant-apps-popover__footer',
 };
-let InstantAppsPopover$1 = class extends HTMLElement {
-  constructor() {
-    super();
-    this.__registerHost();
+let InstantAppsPopover = class {
+  constructor(hostRef) {
+    registerInstance(this, hostRef);
     this.placement = 'trailing-start';
     this.pagination = false;
     this.disableAction = false;
@@ -49,41 +48,8 @@ let InstantAppsPopover$1 = class extends HTMLElement {
     const messages = await getLocaleComponentStrings(this.el);
     this.messages = messages[0];
   }
-  get el() { return this; }
-  static get style() { return instantAppsPopoverCss; }
+  get el() { return getElement(this); }
 };
-InstantAppsPopover$1 = /*@__PURE__*/ proxyCustomElement(InstantAppsPopover$1, [0, "instant-apps-popover", {
-    "popoverTitle": [513, "popover-title"],
-    "subtitle": [513],
-    "content": [513],
-    "mediaSrc": [513, "media-src"],
-    "index": [514],
-    "referenceElement": [513, "reference-element"],
-    "parent": [16],
-    "placement": [1],
-    "refId": [1, "ref-id"],
-    "pagination": [516],
-    "disableAction": [516, "disable-action"],
-    "popoverAction": [16],
-    "intlPopoverAction": [1, "intl-popover-action"],
-    "intlOf": [1, "intl-of"],
-    "messages": [32]
-  }]);
-function defineCustomElement$1() {
-  if (typeof customElements === "undefined") {
-    return;
-  }
-  const components = ["instant-apps-popover"];
-  components.forEach(tagName => { switch (tagName) {
-    case "instant-apps-popover":
-      if (!customElements.get(tagName)) {
-        customElements.define(tagName, InstantAppsPopover$1);
-      }
-      break;
-  } });
-}
+InstantAppsPopover.style = instantAppsPopoverCss;
 
-const InstantAppsPopover = InstantAppsPopover$1;
-const defineCustomElement = defineCustomElement$1;
-
-export { InstantAppsPopover, defineCustomElement };
+export { InstantAppsPopover as instant_apps_popover };

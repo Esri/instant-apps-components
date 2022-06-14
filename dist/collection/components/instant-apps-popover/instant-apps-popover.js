@@ -12,7 +12,7 @@ export class InstantAppsPopover {
     this.placement = 'trailing-start';
     this.pagination = false;
     this.disableAction = false;
-    this.intlOf = "of";
+    this.intlOf = 'of';
   }
   componentDidLoad() {
     this.getMessages();
@@ -24,7 +24,7 @@ export class InstantAppsPopover {
     var _a, _b, _c, _d;
     return (h("calcite-popover", { ref: (el) => (this.popoverEl = el), heading: this.popoverTitle, "auto-close": "true", placement: this.placement, "intl-close": (_a = this.messages) === null || _a === void 0 ? void 0 : _a.close, "trigger-disabled": "true", "ref-id": this.refId, dismissible: "true" },
       h("div", { class: `${CSS.content}${this.disableAction ? ` ${CSS.actionDisabled}` : ''}` },
-        !this.disableAction ? (h("calcite-action", { key: "popover-action", class: CSS.action, onclick: this.popoverAction, icon: "chevron-left", compact: "true", "text-enabled": "true", text: this.intlPopoverAction ? this.intlPopoverAction : (_b = this.messages) === null || _b === void 0 ? void 0 : _b.back })) : null,
+        !this.disableAction ? (h("calcite-action", { key: "popover-action", class: CSS.action, onclick: this.popoverAction, icon: document.dir === 'rtl' ? 'chevron-right' : 'chevron-left', compact: "true", "text-enabled": "true", text: this.intlPopoverAction ? this.intlPopoverAction : (_b = this.messages) === null || _b === void 0 ? void 0 : _b.back })) : null,
         h("section", null,
           h("span", { id: "subtitle" }, this.subtitle),
           h("p", null, this.content)),
@@ -315,7 +315,7 @@ export class InstantAppsPopover {
       },
       "attribute": "intl-of",
       "reflect": false,
-      "defaultValue": "\"of\""
+      "defaultValue": "'of'"
     }
   }; }
   static get states() { return {
