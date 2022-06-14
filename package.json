@@ -34,7 +34,7 @@
   },
   "devDependencies": {
     "@babel/core": "7.16.5",
-    "@esri/calcite-components": "^1.0.0-beta.82",
+    "@esri/calcite-components": "^1.0.0-beta.83",
     "@stencil/sass": "^1.5.2",
     "@storybook/addon-a11y": "^6.4.9",
     "@storybook/addon-actions": "^6.4.9",
