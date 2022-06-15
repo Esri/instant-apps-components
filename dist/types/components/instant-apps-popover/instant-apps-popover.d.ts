@@ -6,6 +6,8 @@ export declare class InstantAppsPopover {
   popoverTitle: string;
   subtitle: string;
   content: string;
+  imgSrc: string;
+  imgAlt: string;
   mediaSrc: string;
   index: number;
   referenceElement: string | HTMLElement;

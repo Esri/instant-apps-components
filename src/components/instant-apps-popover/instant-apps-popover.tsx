@@ -10,6 +10,7 @@ const CSS = {
   buttonContainer: 'instant-apps-popover__button-container',
   action: 'instant-apps-popover__action',
   actionDisabled: 'instant-apps-popover--action-disabled',
+  img: 'instant-apps-popover__img',
   footer: 'instant-apps-popover__footer',
 };
 
@@ -39,6 +40,16 @@ export class InstantAppsPopover {
     reflect: true,
   })
   content: string;
+
+  @Prop({
+    reflect: true,
+  })
+  imgSrc: string;
+
+  @Prop({
+    reflect: true,
+  })
+  imgAlt: string;
 
   @Prop({
     reflect: true,
@@ -122,6 +133,7 @@ export class InstantAppsPopover {
           <section>
             <span id="subtitle">{this.subtitle}</span>
             <p>{this.content}</p>
+            {this.imgSrc ? <img key={`iac-popover-img-${this.refId}`} class={CSS.img} src={this.imgSrc} alt={this.imgAlt ? this.imgAlt : ''} /> : null}
           </section>
           {this.pagination ? (
             <div key={`iac-popover-footer-${this.index}`} class={CSS.footer}>

@@ -11,6 +11,8 @@
 | ------------------- | --------------------- | ----------- | ----------------------- | ------------------ |
 | `content`           | `content`             |             | `string`                | `undefined`        |
 | `disableAction`     | `disable-action`      |             | `boolean`               | `false`            |
+| `imgAlt`            | `img-alt`             |             | `string`                | `undefined`        |
+| `imgSrc`            | `img-src`             |             | `string`                | `undefined`        |
 | `index`             | `index`               |             | `number`                | `undefined`        |
 | `intlOf`            | `intl-of`             |             | `string`                | `'of'`             |
 | `intlPopoverAction` | `intl-popover-action` |             | `string`                | `undefined`        |

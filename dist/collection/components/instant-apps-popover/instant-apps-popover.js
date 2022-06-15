@@ -5,6 +5,7 @@ const CSS = {
   buttonContainer: 'instant-apps-popover__button-container',
   action: 'instant-apps-popover__action',
   actionDisabled: 'instant-apps-popover--action-disabled',
+  img: 'instant-apps-popover__img',
   footer: 'instant-apps-popover__footer',
 };
 export class InstantAppsPopover {
@@ -27,7 +28,8 @@ export class InstantAppsPopover {
         !this.disableAction ? (h("calcite-action", { key: "popover-action", class: CSS.action, onclick: this.popoverAction, icon: document.dir === 'rtl' ? 'chevron-right' : 'chevron-left', compact: "true", "text-enabled": "true", text: this.intlPopoverAction ? this.intlPopoverAction : (_b = this.messages) === null || _b === void 0 ? void 0 : _b.back })) : null,
         h("section", null,
           h("span", { id: "subtitle" }, this.subtitle),
-          h("p", null, this.content)),
+          h("p", null, this.content),
+          this.imgSrc ? h("img", { key: `iac-popover-img-${this.refId}`, class: CSS.img, src: this.imgSrc, alt: this.imgAlt ? this.imgAlt : '' }) : null),
         this.pagination ? (h("div", { key: `iac-popover-footer-${this.index}`, class: CSS.footer },
           h("span", null,
             this.index + 1,
@@ -115,6 +117,40 @@ export class InstantAppsPopover {
         "text": ""
       },
       "attribute": "content",
+      "reflect": true
+    },
+    "imgSrc": {
+      "type": "string",
+      "mutable": false,
+      "complexType": {
+        "original": "string",
+        "resolved": "string",
+        "references": {}
+      },
+      "required": false,
+      "optional": false,
+      "docs": {
+        "tags": [],
+        "text": ""
+      },
+      "attribute": "img-src",
+      "reflect": true
+    },
+    "imgAlt": {
+      "type": "string",
+      "mutable": false,
+      "complexType": {
+        "original": "string",
+        "resolved": "string",
+        "references": {}
+      },
+      "required": false,
+      "optional": false,
+      "docs": {
+        "tags": [],
+        "text": ""
+      },
+      "attribute": "img-alt",
       "reflect": true
     },
     "mediaSrc": {

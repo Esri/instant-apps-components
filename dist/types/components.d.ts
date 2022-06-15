@@ -19,6 +19,8 @@ export namespace Components {
     interface InstantAppsPopover {
         "content": string;
         "disableAction": boolean;
+        "imgAlt": string;
+        "imgSrc": string;
         "index": number;
         "intlOf": string;
         "intlPopoverAction": string;
@@ -102,6 +104,8 @@ declare namespace LocalJSX {
     interface InstantAppsPopover {
         "content"?: string;
         "disableAction"?: boolean;
+        "imgAlt"?: string;
+        "imgSrc"?: string;
         "index"?: number;
         "intlOf"?: string;
         "intlPopoverAction"?: string;
