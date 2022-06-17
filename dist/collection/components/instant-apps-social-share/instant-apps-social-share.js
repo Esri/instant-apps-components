@@ -438,9 +438,10 @@ export class InstantAppsSocialShare {
     const { zoom } = this.view;
     const roundedZoom = this.roundValue(zoom);
     const graphic = this.view.get('popup.selectedFeature');
+    const visible = this.view.get('popup.visible');
     let layerId;
     let oid;
-    if (graphic) {
+    if (graphic && visible) {
       const featureLayer = graphic.get('layer');
       layerId = featureLayer.id;
       oid = graphic.attributes[featureLayer.objectIdField];

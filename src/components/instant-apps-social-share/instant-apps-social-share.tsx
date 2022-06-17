@@ -648,9 +648,10 @@ export class InstantAppsSocialShare {
     const { zoom } = this.view;
     const roundedZoom = this.roundValue(zoom);
     const graphic = this.view.get('popup.selectedFeature') as __esri.Graphic;
+    const visible = this.view.get('popup.visible');
     let layerId;
     let oid;
-    if (graphic) {
+    if (graphic && visible) {
       const featureLayer = graphic.get('layer') as __esri.FeatureLayer;
       layerId = featureLayer.id;
       oid = graphic.attributes[featureLayer.objectIdField];
