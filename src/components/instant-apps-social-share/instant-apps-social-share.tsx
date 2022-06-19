@@ -14,12 +14,6 @@
 
 import { Component, h, Prop, State, Element, Host } from '@stencil/core';
 
-// import { substitute } from '@arcgis/core/intl';
-// import Point from '@arcgis/core/geometry/Point';
-// import SpatialReference from '@arcgis/core/geometry/SpatialReference';
-// import { project, load as loadProjection } from '@arcgis/core/geometry/projection';
-// import esriRequest from '@arcgis/core/request';
-
 import { loadModules } from '../../utils/loadModules';
 
 import SocialShare_T9n from '../../assets/t9n/instant-apps-social-share/resources.json';
