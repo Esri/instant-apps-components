@@ -1,5 +1,6 @@
 www/
 loader/
+dist/
 
 *~
 *.sw[mnpcod]
@@ -25,3 +26,5 @@ UserInterfaceState.xcuserstate
 .env
 
 dist/@esri/
+
+.DS_Store
