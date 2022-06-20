@@ -66,6 +66,9 @@ const CSS = {
       input: `${base}__embed-dimensions-input`,
     },
   },
+  rtl: {
+    optionText: `${base}__option-text--rtl`,
+  },
 };
 
 const SOCIAL_URL_TEMPLATES = {
@@ -357,27 +360,28 @@ export class InstantAppsSocialShare {
 
   renderOptions() {
     const options = this.messages?.options;
+    const optionText_RTL = document.dir === 'rtl' ? ` ${CSS.rtl.optionText}` : '';
     return (
       <ul ref={el => (this.shareListRef = el)} class={CSS.options} role="menu">
         <li id="copyToClipboard" onClick={this.handleShareItem.bind(this, 'link')} onKeyDown={this.handleOptionKeyDown('link')} role="menuitem" tabindex="0">
           <span class={CSS.icon}>
             <calcite-icon icon="link" scale={this.scale} />
           </span>
-          <span class={CSS.optionText}>{options?.link?.label}</span>
+          <span class={`${CSS.optionText}${optionText_RTL}`}>{options?.link?.label}</span>
         </li>
         {this.socialMedia
           ? [
               <li onClick={this.handleShareItem.bind(this, 'facebook')} onKeyDown={this.handleOptionKeyDown('facebook')} role="menuitem" tabindex="0">
                 <span class={CSS.icon}>{this.renderFacebookIcon()}</span>
-                <span class={CSS.optionText}>{options?.facebook?.label}</span>
+                <span class={`${CSS.optionText}${optionText_RTL}`}>{options?.facebook?.label}</span>
               </li>,
               <li onClick={this.handleShareItem.bind(this, 'twitter')} onKeyDown={this.handleOptionKeyDown('twitter')} role="menuitem" tabindex="0">
                 <span class={CSS.icon}>{this.renderTwitterIcon()}</span>
-                <span class={CSS.optionText}>{options?.twitter?.label}</span>
+                <span class={`${CSS.optionText}${optionText_RTL}`}>{options?.twitter?.label}</span>
               </li>,
               <li onClick={this.handleShareItem.bind(this, 'linkedIn')} onKeyDown={this.handleOptionKeyDown('linkedIn')} role="menuitem" tabindex="0">
                 <span class={CSS.icon}>{this.renderLinkedInIcon()}</span>
-                <span class={CSS.optionText}>{options?.linkedIn?.label}</span>
+                <span class={`${CSS.optionText}${optionText_RTL}`}>{options?.linkedIn?.label}</span>
               </li>,
             ]
           : null}

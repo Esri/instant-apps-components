@@ -80,6 +80,11 @@ $hoverDark: #262626;
           margin-left: 10px;
           word-break: break-word;
         }
+
+        .instant-apps-social-share__option-text--rtl {
+          margin-left: 0;
+          margin-right: 10px;
+        }
       }
 
       li:hover {

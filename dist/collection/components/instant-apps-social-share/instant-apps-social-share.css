@@ -67,6 +67,10 @@
   margin-left: 10px;
   word-break: break-word;
 }
+:host .instant-apps-social-share__options li .instant-apps-social-share__option-text--rtl {
+  margin-left: 0;
+  margin-right: 10px;
+}
 :host .instant-apps-social-share__options li:hover {
   cursor: pointer;
   background-color: var(--calcite-ui-foreground-2);

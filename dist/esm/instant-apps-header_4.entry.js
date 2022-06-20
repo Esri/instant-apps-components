@@ -1,5 +1,328 @@
-import { HTMLElement, h, Host, proxyCustomElement } from '@stencil/core/internal/client';
-import { e as esriLoader, g as getLocaleComponentStrings } from './locale.js';
+import { r as registerInstance, h, H as Host, g as getAssetPath, a as getElement } from './index-3997d0c9.js';
+
+const instantAppsHeaderCss = ":host{width:100%}:host header{box-sizing:border-box;display:flex;align-items:center;justify-content:space-between;width:100%;height:100%;padding:0 0.5%;background-color:#0079c1;padding-top:5px;padding-bottom:5px}:host header .instant-apps-header__header-content{display:flex;align-items:center}:host header .instant-apps-header__header-content img{width:6%;padding:0 5px}:host header .instant-apps-header__header-content a{display:flex;align-items:center;width:8%;padding-right:5px}:host header .instant-apps-header__header-content a img{width:100%;padding-right:0}:host header .instant-apps-header__header-content h1{margin:0;font-size:18px;color:var(--calcite-ui-text-inverse);font-weight:430}";
+
+const CSS$2 = {
+  headerContent: 'instant-apps-header__header-content',
+};
+let InstantAppsHeader = class {
+  constructor(hostRef) {
+    registerInstance(this, hostRef);
+  }
+  render() {
+    return (h(Host, null, h("header", { style: { backgroundColor: this.backgroundColor } }, h("span", { class: CSS$2.headerContent }, this.logoImage && this.logoLink ? (h("a", { href: `${this.logoLink}`, target: "_blank" }, h("img", { src: `${this.logoImage}`, alt: `${this.logoImageAltText}` }))) : this.logoImage ? (h("img", { src: `${this.logoImage}`, alt: this.logoImageAltText })) : (''), h("h1", { style: { color: this.textColor } }, this.titleText)), h("slot", { name: "actions-end" }))));
+  }
+};
+InstantAppsHeader.style = instantAppsHeaderCss;
+
+var commonjsGlobal = typeof globalThis !== 'undefined' ? globalThis : typeof window !== 'undefined' ? window : typeof global !== 'undefined' ? global : typeof self !== 'undefined' ? self : {};
+
+function createCommonjsModule(fn, basedir, module) {
+	return module = {
+		path: basedir,
+		exports: {},
+		require: function (path, base) {
+			return commonjsRequire();
+		}
+	}, fn(module, module.exports), module.exports;
+}
+
+function commonjsRequire () {
+	throw new Error('Dynamic requires are not currently supported by @rollup/plugin-commonjs');
+}
+
+var esriLoader = createCommonjsModule(function (module, exports) {
+(function (global, factory) {
+	factory(exports) ;
+}(commonjsGlobal, (function (exports) {
+/* Copyright (c) 2017 Environmental Systems Research Institute, Inc.
+ * Apache-2.0 */
+var isBrowser = typeof window !== 'undefined';
+// allow consuming libraries to provide their own Promise implementations
+var utils = {
+    Promise: isBrowser ? window['Promise'] : undefined
+};
+
+/* Copyright (c) 2017 Environmental Systems Research Institute, Inc.
+ * Apache-2.0 */
+var DEFAULT_VERSION = '4.23';
+var NEXT = 'next';
+function parseVersion(version) {
+    if (version.toLowerCase() === NEXT) {
+        return NEXT;
+    }
+    var match = version && version.match(/^(\d)\.(\d+)/);
+    return match && {
+        major: parseInt(match[1], 10),
+        minor: parseInt(match[2], 10)
+    };
+}
+/**
+ * Get the CDN url for a given version
+ *
+ * @param version Ex: '4.23' or '3.40'. Defaults to the latest 4.x version.
+ */
+function getCdnUrl(version) {
+    if (version === void 0) { version = DEFAULT_VERSION; }
+    return "https://js.arcgis.com/" + version + "/";
+}
+/**
+ * Get the CDN url for a the CSS for a given version and/or theme
+ *
+ * @param version Ex: '4.23', '3.40', or 'next'. Defaults to the latest 4.x version.
+ */
+function getCdnCssUrl(version) {
+    if (version === void 0) { version = DEFAULT_VERSION; }
+    var baseUrl = getCdnUrl(version);
+    var parsedVersion = parseVersion(version);
+    if (parsedVersion !== NEXT && parsedVersion.major === 3) {
+        // NOTE: at 3.11 the CSS moved from the /js folder to the root
+        var path = parsedVersion.minor <= 10 ? 'js/' : '';
+        return "" + baseUrl + path + "esri/css/esri.css";
+    }
+    else {
+        // assume 4.x
+        return baseUrl + "esri/themes/light/main.css";
+    }
+}
+
+/* Copyright (c) 2017 Environmental Systems Research Institute, Inc.
+ * Apache-2.0 */
+function createStylesheetLink(href) {
+    var link = document.createElement('link');
+    link.rel = 'stylesheet';
+    link.href = href;
+    return link;
+}
+function insertLink(link, before) {
+    if (before) {
+        // the link should be inserted before a specific node
+        var beforeNode = document.querySelector(before);
+        beforeNode.parentNode.insertBefore(link, beforeNode);
+    }
+    else {
+        // append the link to then end of the head tag
+        document.head.appendChild(link);
+    }
+}
+// check if the css url has been injected or added manually
+function getCss(url) {
+    return document.querySelector("link[href*=\"" + url + "\"]");
+}
+function getCssUrl(urlOrVersion) {
+    return !urlOrVersion || parseVersion(urlOrVersion)
+        // if it's a valid version string return the CDN URL
+        ? getCdnCssUrl(urlOrVersion)
+        // otherwise assume it's a URL and return that
+        : urlOrVersion;
+}
+// lazy load the CSS needed for the ArcGIS API
+function loadCss(urlOrVersion, before) {
+    var url = getCssUrl(urlOrVersion);
+    var link = getCss(url);
+    if (!link) {
+        // create & load the css link
+        link = createStylesheetLink(url);
+        insertLink(link, before);
+    }
+    return link;
+}
+
+/* Copyright (c) 2017 Environmental Systems Research Institute, Inc.
+ * Apache-2.0 */
+var defaultOptions = {};
+function createScript(url) {
+    var script = document.createElement('script');
+    script.type = 'text/javascript';
+    script.src = url;
+    script.setAttribute('data-esri-loader', 'loading');
+    return script;
+}
+// add a one-time load handler to script
+// and optionally add a one time error handler as well
+function handleScriptLoad(script, callback, errback) {
+    var onScriptError;
+    if (errback) {
+        // set up an error handler as well
+        onScriptError = handleScriptError(script, errback);
+    }
+    var onScriptLoad = function () {
+        // pass the script to the callback
+        callback(script);
+        // remove this event listener
+        script.removeEventListener('load', onScriptLoad, false);
+        if (onScriptError) {
+            // remove the error listener as well
+            script.removeEventListener('error', onScriptError, false);
+        }
+    };
+    script.addEventListener('load', onScriptLoad, false);
+}
+// add a one-time error handler to the script
+function handleScriptError(script, callback) {
+    var onScriptError = function (e) {
+        // reject the promise and remove this event listener
+        callback(e.error || new Error("There was an error attempting to load " + script.src));
+        // remove this event listener
+        script.removeEventListener('error', onScriptError, false);
+    };
+    script.addEventListener('error', onScriptError, false);
+    return onScriptError;
+}
+// allow the user to configure default script options rather than passing options to `loadModules` each time
+function setDefaultOptions(options) {
+    if (options === void 0) { options = {}; }
+    defaultOptions = options;
+}
+// get the script injected by this library
+function getScript() {
+    return document.querySelector('script[data-esri-loader]');
+}
+// has ArcGIS API been loaded on the page yet?
+function isLoaded() {
+    var globalRequire = window['require'];
+    // .on() ensures that it's Dojo's AMD loader
+    return globalRequire && globalRequire.on;
+}
+// load the ArcGIS API on the page
+function loadScript(options) {
+    if (options === void 0) { options = {}; }
+    // we would have liked to use spread like { ...defaultOptions, ...options }
+    // but TS would inject a polyfill that would require use to configure rollup w content: 'window'
+    // if we have another occasion to use spread, let's do that and replace this for...in
+    var opts = {};
+    [defaultOptions, options].forEach(function (obj) {
+        for (var prop in obj) {
+            if (Object.prototype.hasOwnProperty.call(obj, prop)) {
+                opts[prop] = obj[prop];
+            }
+        }
+    });
+    // URL to load
+    var version = opts.version;
+    var url = opts.url || getCdnUrl(version);
+    return new utils.Promise(function (resolve, reject) {
+        var script = getScript();
+        if (script) {
+            // the API is already loaded or in the process of loading...
+            // NOTE: have to test against scr attribute value, not script.src
+            // b/c the latter will return the full url for relative paths
+            var src = script.getAttribute('src');
+            if (src !== url) {
+                // potentially trying to load a different version of the API
+                reject(new Error("The ArcGIS API for JavaScript is already loaded (" + src + ")."));
+            }
+            else {
+                if (isLoaded()) {
+                    // the script has already successfully loaded
+                    resolve(script);
+                }
+                else {
+                    // wait for the script to load and then resolve
+                    handleScriptLoad(script, resolve, reject);
+                }
+            }
+        }
+        else {
+            if (isLoaded()) {
+                // the API has been loaded by some other means
+                // potentially trying to load a different version of the API
+                reject(new Error("The ArcGIS API for JavaScript is already loaded."));
+            }
+            else {
+                // this is the first time attempting to load the API
+                var css = opts.css;
+                if (css) {
+                    var useVersion = css === true;
+                    // load the css before loading the script
+                    loadCss(useVersion ? version : css, opts.insertCssBefore);
+                }
+                // create a script object whose source points to the API
+                script = createScript(url);
+                // _currentUrl = url;
+                // once the script is loaded...
+                handleScriptLoad(script, function () {
+                    // update the status of the script
+                    script.setAttribute('data-esri-loader', 'loaded');
+                    // return the script
+                    resolve(script);
+                }, reject);
+                // load the script
+                document.body.appendChild(script);
+            }
+        }
+    });
+}
+
+/* Copyright (c) 2017 Environmental Systems Research Institute, Inc.
+ * Apache-2.0 */
+// wrap Dojo's require() in a promise
+function requireModules(modules) {
+    return new utils.Promise(function (resolve, reject) {
+        // If something goes wrong loading the esri/dojo scripts, reject with the error.
+        var errorHandler = window['require'].on('error', reject);
+        window['require'](modules, function () {
+            var args = [];
+            for (var _i = 0; _i < arguments.length; _i++) {
+                args[_i] = arguments[_i];
+            }
+            // remove error handler
+            errorHandler.remove();
+            // Resolve with the parameters from dojo require as an array.
+            resolve(args);
+        });
+    });
+}
+// returns a promise that resolves with an array of the required modules
+// also will attempt to lazy load the ArcGIS API if it has not already been loaded
+function loadModules(modules, loadScriptOptions) {
+    if (loadScriptOptions === void 0) { loadScriptOptions = {}; }
+    if (!isLoaded()) {
+        // script is not yet loaded, is it in the process of loading?
+        var script = getScript();
+        var src = script && script.getAttribute('src');
+        if (!loadScriptOptions.url && src) {
+            // script is still loading and user did not specify a URL
+            // in this case we want to default to the URL that's being loaded
+            // instead of defaulting to the latest 4.x URL
+            loadScriptOptions.url = src;
+        }
+        // attempt to load the script then load the modules
+        return loadScript(loadScriptOptions).then(function () { return requireModules(modules); });
+    }
+    else {
+        // script is already loaded, just load the modules
+        return requireModules(modules);
+    }
+}
+
+/*
+  Copyright (c) 2017 Esri
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+    http://www.apache.org/licenses/LICENSE-2.0
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+*/
+// re-export the functions that are part of the public API
+
+exports.utils = utils;
+exports.loadModules = loadModules;
+exports.getScript = getScript;
+exports.isLoaded = isLoaded;
+exports.loadScript = loadScript;
+exports.setDefaultOptions = setDefaultOptions;
+exports.loadCss = loadCss;
+
+Object.defineProperty(exports, '__esModule', { value: true });
+
+})));
+//# sourceMappingURL=esri-loader.js.map
+});
 
 /*
  *   Copyright (c) 2022 Esri
@@ -18,6 +341,235 @@ const loadModules = async (moduleNames, options) => {
   const mods = await esriLoader.loadModules(moduleNames, options);
   return mods.map(mod => (mod.__esModule && mod.default ? mod.default : mod));
 };
+
+/*
+ *   Copyright (c) 2022 Esri
+ *   All rights reserved.
+ *   Licensed under the Apache License, Version 2.0 (the "License");
+ *   you may not use this file except in compliance with the License.
+ *   You may obtain a copy of the License at
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *   Unless required by applicable law or agreed to in writing, software
+ *   distributed under the License is distributed on an "AS IS" BASIS,
+ *   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *   See the License for the specific language governing permissions and
+ *   limitations under the License.
+ */
+const languageMap = new Map([
+  ['ar', 'ar'],
+  ['bg', 'bg'],
+  ['bs', 'bs'],
+  ['ca', 'ca'],
+  ['cs', 'cs'],
+  ['da', 'da'],
+  ['de', 'de'],
+  ['el', 'el'],
+  ['en', 'en'],
+  ['es', 'es'],
+  ['et', 'et'],
+  ['fi', 'fi'],
+  ['fr', 'fr'],
+  ['he', 'he'],
+  ['hr', 'hr'],
+  ['hu', 'hu'],
+  ['id', 'id'],
+  ['it', 'it'],
+  ['ja', 'ja'],
+  ['ko', 'ko'],
+  ['lt', 'lt'],
+  ['lv', 'lv'],
+  ['nb', 'nb'],
+  ['nl', 'nl'],
+  ['pl', 'pl'],
+  ['pt-br', 'pt-BR'],
+  ['pt-pt', 'pt-PT'],
+  ['ro', 'ro'],
+  ['ru', 'ru'],
+  ['sk', 'sk'],
+  ['sl', 'sl'],
+  ['sr', 'sr'],
+  ['sv', 'sv'],
+  ['th', 'th'],
+  ['tr', 'tr'],
+  ['uk', 'uk'],
+  ['vi', 'vi'],
+  ['zh-cn', 'zh-CN'],
+  ['zh-hk', 'zh-HK'],
+  ['zh-tw', 'zh-TW'],
+]);
+
+// https://medium.com/stencil-tricks/implementing-internationalisation-i18n-with-stencil-5e6559554117
+function getComponentClosestLanguage(element) {
+  var _a, _b, _c;
+  const closestElement = (_a = element.closest('[lang]')) !== null && _a !== void 0 ? _a : (_c = (_b = element.shadowRoot) === null || _b === void 0 ? void 0 : _b.ownerDocument) === null || _c === void 0 ? void 0 : _c.documentElement;
+  // language set by the calling application or browser. defaults to english.
+  const lang = ((closestElement === null || closestElement === void 0 ? void 0 : closestElement.lang) || (navigator === null || navigator === void 0 ? void 0 : navigator.language) || 'en').toLowerCase();
+  if (languageMap.has(lang)) {
+    return languageMap.get(lang);
+  }
+  else {
+    // "ru-RU" maps to "ru" use case
+    if (languageMap.has(lang.slice(0, 2))) {
+      return languageMap.get(lang.slice(0, 2));
+    }
+    else {
+      return 'en';
+    }
+  }
+}
+function fetchLocaleStringsForComponent(componentName, locale) {
+  return new Promise((resolve, reject) => {
+    fetch(getAssetPath(`../assets/t9n/${componentName}/resources_${locale}.json`)).then(result => {
+      if (result.ok)
+        resolve(result.json());
+      else
+        reject();
+    }, () => reject());
+  });
+}
+async function getLocaleComponentStrings(element) {
+  const componentName = element.tagName.toLowerCase();
+  const componentLanguage = getComponentClosestLanguage(element);
+  let strings;
+  try {
+    strings = await fetchLocaleStringsForComponent(componentName, componentLanguage);
+  }
+  catch (e) {
+    console.warn(`no locale for ${componentName} (${componentLanguage}) loading default locale en.`);
+    strings = await fetchLocaleStringsForComponent(componentName, 'en');
+  }
+  return [strings, componentLanguage];
+}
+
+const instantAppsPopoverCss = ":host{display:block}.instant-apps-popover__content{display:flex;flex-direction:column;padding:0 5% 5% 5%;max-width:35vw;font-family:var(--calcite-sans-family);font-size:14px}.instant-apps-popover__content .instant-apps-popover__action{align-self:flex-start;--calcite-ui-foreground-2:transparent}.instant-apps-popover__content span{display:inline-block;font-weight:var(--calcite-font-weight-medium);color:var(--calcite-ui-text-1);margin:0 0 10px 0;font-family:var(--calcite-sans-family)}.instant-apps-popover__content p{line-height:19.12px;margin:0;margin-bottom:10px;font-family:var(--calcite-sans-family)}.instant-apps-popover__content .instant-apps-popover__footer{display:flex;flex-direction:row;align-items:center;justify-content:space-between}.instant-apps-popover__content .instant-apps-popover__footer span{margin-bottom:0;font-weight:normal;font-size:14px;font-family:var(--calcite-sans-family)}.instant-apps-popover__content .instant-apps-popover__footer calcite-button:first-child{--calcite-ui-foreground-3:transparent}.instant-apps-popover__content .instant-apps-popover__footer calcite-button:last-child{margin-left:5px}.instant-apps-popover__content .instant-apps-popover__img{width:100%;margin-bottom:10px}.instant-apps-popover__content.instant-apps-popover--action-disabled{padding:5%}.instant-apps-popover__content.instant-apps-popover--action-disabled #subtitle{margin:0 0 10px 0}";
+
+const CSS$1 = {
+  content: 'instant-apps-popover__content',
+  buttonContainer: 'instant-apps-popover__button-container',
+  action: 'instant-apps-popover__action',
+  actionDisabled: 'instant-apps-popover--action-disabled',
+  img: 'instant-apps-popover__img',
+  footer: 'instant-apps-popover__footer',
+};
+let InstantAppsPopover = class {
+  constructor(hostRef) {
+    registerInstance(this, hostRef);
+    this.placement = 'trailing-start';
+    this.pagination = false;
+    this.disableAction = false;
+    this.intlOf = 'of';
+  }
+  componentDidLoad() {
+    this.getMessages();
+  }
+  componentDidUpdate() {
+    this.popoverEl.referenceElement = this.referenceElement;
+  }
+  render() {
+    var _a, _b, _c, _d;
+    return (h("calcite-popover", { ref: (el) => (this.popoverEl = el), heading: this.popoverTitle, "auto-close": "true", placement: this.placement, "intl-close": (_a = this.messages) === null || _a === void 0 ? void 0 : _a.close, "trigger-disabled": "true", "ref-id": this.refId, dismissible: "true" }, h("div", { class: `${CSS$1.content}${this.disableAction ? ` ${CSS$1.actionDisabled}` : ''}` }, !this.disableAction ? (h("calcite-action", { key: "popover-action", class: CSS$1.action, onclick: this.popoverAction, icon: document.dir === 'rtl' ? 'chevron-right' : 'chevron-left', compact: "true", "text-enabled": "true", text: this.intlPopoverAction ? this.intlPopoverAction : (_b = this.messages) === null || _b === void 0 ? void 0 : _b.back })) : null, h("section", null, h("span", { id: "subtitle" }, this.subtitle), h("p", null, this.content), this.imgSrc ? h("img", { key: `iac-popover-img-${this.refId}`, class: CSS$1.img, src: this.imgSrc, alt: this.imgAlt ? this.imgAlt : '' }) : null), this.pagination ? (h("div", { key: `iac-popover-footer-${this.index}`, class: CSS$1.footer }, h("span", null, this.index + 1, " ", this.intlOf, " ", (_d = (_c = this.parent) === null || _c === void 0 ? void 0 : _c.instantAppsPopovers) === null || _d === void 0 ? void 0 :
+      _d.size), this.renderPagination())) : null)));
+  }
+  renderPagination() {
+    var _a, _b;
+    const { index, messages, parent } = this;
+    const size = (_b = (_a = this.parent) === null || _a === void 0 ? void 0 : _a.instantAppsPopovers) === null || _b === void 0 ? void 0 : _b.size;
+    const isFirst = index === 0;
+    const isLast = index === size - 1;
+    return (h("div", { key: "pagination-button-container", class: CSS$1.buttonContainer }, !isFirst ? (h("calcite-button", { key: "prev", onClick: () => parent === null || parent === void 0 ? void 0 : parent.previous(), appearance: "outline", color: "neutral" }, messages === null || messages === void 0 ? void 0 : messages.back)) : null, h("calcite-button", { key: "next", onClick: () => {
+        if (isLast) {
+          parent === null || parent === void 0 ? void 0 : parent.done();
+        }
+        else {
+          parent === null || parent === void 0 ? void 0 : parent.next();
+        }
+      } }, isLast ? messages === null || messages === void 0 ? void 0 : messages.done : messages === null || messages === void 0 ? void 0 : messages.next)));
+  }
+  async getMessages() {
+    const messages = await getLocaleComponentStrings(this.el);
+    this.messages = messages[0];
+  }
+  get el() { return getElement(this); }
+};
+InstantAppsPopover.style = instantAppsPopoverCss;
+
+const instantAppsPopoversCss = ":host{display:block}";
+
+let InstantAppsPopovers = class {
+  constructor(hostRef) {
+    registerInstance(this, hostRef);
+    this.instantAppsPopovers = new Map();
+    this.beforeOpen = () => Promise.resolve();
+  }
+  componentWillLoad() {
+    var _a;
+    const popovers = Array.from((_a = this.host.querySelector("[slot='popovers']")) === null || _a === void 0 ? void 0 : _a.children);
+    popovers.forEach((popover, popoverIndex) => {
+      const refId = popover.getAttribute('ref-id');
+      popover.parent = this;
+      popover.index = popoverIndex;
+      this.instantAppsPopovers.set(refId, popover);
+    });
+    this.host.addEventListener('calcitePopoverOpen', e => {
+      const node = e.target;
+      const refId = node.getAttribute('ref-id');
+      this.currentId = refId;
+    });
+  }
+  render() {
+    return (h(Host, null, h("slot", { name: "popovers" })));
+  }
+  next() {
+    const refIds = Array.from(this.instantAppsPopovers.keys());
+    const index = refIds.indexOf(this.currentId) + 1;
+    const nextId = refIds[index];
+    this.close(this.currentId);
+    this.open(nextId);
+  }
+  previous() {
+    const refIds = Array.from(this.instantAppsPopovers.keys());
+    const index = refIds.indexOf(this.currentId) - 1;
+    const previousId = refIds[index];
+    this.close(this.currentId);
+    this.open(previousId);
+  }
+  done() {
+    this.endTour();
+  }
+  handlePopoverProps(config) {
+    var _a;
+    const popovers = Array.from((_a = this.host.querySelector("[slot='popovers']")) === null || _a === void 0 ? void 0 : _a.children);
+    popovers.forEach(popover => {
+      popover.disableAction = config.disableAction;
+      popover.pagination = config.pagination;
+    });
+  }
+  async open(key) {
+    return this.beforeOpen().then(() => {
+      var _a;
+      const popover = (_a = this.instantAppsPopovers.get(key)) === null || _a === void 0 ? void 0 : _a.firstElementChild;
+      popover.toggle(true);
+    });
+  }
+  async close(key) {
+    var _a;
+    const popover = (_a = this.instantAppsPopovers.get(key)) === null || _a === void 0 ? void 0 : _a.firstElementChild;
+    popover.toggle(false);
+  }
+  async beginTour() {
+    this.inTour = true;
+    this.handlePopoverProps({ pagination: true, disableAction: true });
+    const refIds = Array.from(this.instantAppsPopovers.keys());
+    this.open(refIds[0]);
+  }
+  async endTour() {
+    this.close(this.currentId);
+    this.inTour = false;
+    this.handlePopoverProps({ pagination: false, disableAction: false });
+  }
+  get host() { return getElement(this); }
+};
+InstantAppsPopovers.style = instantAppsPopoversCss;
 
 const instantAppsSocialShareCss = ":host{display:block;--instant-apps-social-share-width--s:200px;--instant-apps-social-share-width--m:280px;--instant-apps-social-share-width--l:320px;--instant-apps-social-share-width-horizontal--s:300px;--instant-apps-social-share-width-horizontal--m:380px;--instant-apps-social-share-width-horizontal--l:420px;--instant-apps-social-share-background-color:transparent;--instant-apps-social-share-popover-button-background-color:transparent;--instant-apps-social-share-popover-button-icon-color:var(--calcite-ui-icon-color);--instant-apps-social-share-embed-border:1px solid $border;--instant-apps-social-share-embed-text-area-text:#468540}:host .instant-apps-social-share__popover-button{background-color:var(--instant-apps-social-share-popover-button-background-color)}:host .instant-apps-social-share__popover-button calcite-icon{color:var(--instant-apps-social-share-popover-button-icon-color)}:host .instant-apps-social-share__dialog{box-sizing:border-box;height:auto;padding:10px 0;border-radius:5px}:host .instant-apps-social-share__dialog-embed{border:var(--instant-apps-social-share-embed-border);background-color:var(--instant-apps-social-share-background-color)}:host .instant-apps-social-share__options{margin:0;padding:1% 0 0 0;list-style-type:none}:host .instant-apps-social-share__options li{box-sizing:border-box;display:flex;align-items:center;width:100%;padding:5%;transition:background-color 0.15s ease-out 0s}:host .instant-apps-social-share__options li .instant-apps-social-share__icon,:host .instant-apps-social-share__options li .instant-apps-social-share__option-text{display:inline-block}:host .instant-apps-social-share__options li .instant-apps-social-share__icon{display:flex;align-items:center}:host .instant-apps-social-share__options li .instant-apps-social-share__option-text{width:85%;margin-left:10px;word-break:break-word}:host .instant-apps-social-share__options li .instant-apps-social-share__option-text--rtl{margin-left:0;margin-right:10px}:host .instant-apps-social-share__options li:hover{cursor:pointer;background-color:var(--calcite-ui-foreground-2)}:host .instant-apps-social-share__tip{box-sizing:border-box;padding:0 5% 1% 5%}:host .instant-apps-social-share__tip-header{display:flex;align-items:center;color:#007ac2;margin:8px 0 5px 0}:host .instant-apps-social-share__tip-header calcite-icon{margin-right:5px}:host .instant-apps-social-share__tip-content{line-height:17px;margin:0;padding-top:2%}:host .instant-apps-social-share__success{display:flex;flex-direction:column;padding:15px}:host .instant-apps-social-share__success-header{display:flex;align-items:center;font-weight:bold;margin-bottom:10px}:host .instant-apps-social-share__success-icon{display:flex;align-items:center;margin-right:5px}:host .instant-apps-social-share__success-icon calcite-icon{color:var(--calcite-ui-success)}:host .instant-apps-social-share__success-message{line-height:16px}:host .instant-apps-social-share__embed{box-sizing:border-box;width:100%;padding:5%;margin-bottom:10px;border-top:1px solid #d3d3d3}:host .instant-apps-social-share__embed-header{display:flex;align-items:center;margin-bottom:5px}:host .instant-apps-social-share__embed-header calcite-icon{margin-right:5px}:host .instant-apps-social-share__embed-code-text-area{border:1px solid #d3d3d3}:host .instant-apps-social-share__embed-code-text-area textarea{box-sizing:border-box;padding:4%;border:none;resize:none;background:transparent;width:100%;font-family:var(--calcite-sans-family);color:var(--calcite-ui-text-1)}:host .instant-apps-social-share__embed-code-text-area button{display:flex;align-items:center;text-align:start;width:100%;border:none;border-top:1px solid #d3d3d3;background-color:transparent;line-height:16px;font-weight:400;padding:3%;color:var(--calcite-ui-text-1)}:host .instant-apps-social-share__embed-code-text-area button calcite-icon{color:#007ac2;margin-right:3px}:host .instant-apps-social-share__embed-code-text-area button:hover{cursor:pointer;background-color:var(--calcite-ui-foreground-2);transition:background-color 0.15s ease-out 0s}:host .instant-apps-social-share__embed-text-area-text{font-weight:600;color:var(--instant-apps-social-share-embed-text-area-text)}:host .instant-apps-social-share__embed-dimensions{display:flex;justify-content:space-between;margin-top:10px}:host .instant-apps-social-share__embed-dimensions-input{width:47%;box-sizing:border-box}:host .instant-apps-social-share__embed-dimensions-input input{border:1px solid #d3d3d3;width:100%;height:25px;font-family:var(--calcite-sans-family)}:host .instant-apps-social-share__layout--horizontal .instant-apps-social-share__options{display:flex;justify-content:space-around;margin-bottom:8%}:host .instant-apps-social-share__layout--horizontal .instant-apps-social-share__options li{flex-direction:column;padding:0}:host .instant-apps-social-share__layout--horizontal .instant-apps-social-share__options li .instant-apps-social-share__option-text{white-space:nowrap;margin-left:0;margin-top:10px;text-align:center}:host .instant-apps-social-share__layout--horizontal .instant-apps-social-share__options li:hover{background-color:unset}:host([scale=s]) .instant-apps-social-share__dialog{width:var(--instant-apps-social-share-width--s)}:host([scale=s]) .instant-apps-social-share__icon{width:16px;height:16px}:host([scale=s]) .instant-apps-social-share__option-text{font-size:var(--calcite-font-size--1)}:host([scale=s]) .instant-apps-social-share__dialog.instant-apps-social-share__layout--horizontal{width:var(--instant-apps-social-share-width-horizontal--s)}:host([scale=s]) .instant-apps-social-share__tip-header,:host([scale=s]) .instant-apps-social-share__tip-content,:host([scale=s]) .instant-apps-social-share__embed-header,:host([scale=s]) .instant-apps-social-share__embed-dimensions-input{font-size:var(--calcite-font-size--2)}:host([scale=m]) .instant-apps-social-share__dialog{width:var(--instant-apps-social-share-width--m)}:host([scale=m]) .instant-apps-social-share__icon{width:24px;height:24px}:host([scale=m]) .instant-apps-social-share__option-text{font-size:var(--calcite-font-size-0)}:host([scale=m]) .instant-apps-social-share__dialog.instant-apps-social-share__layout--horizontal{width:var(--instant-apps-social-share-width-horizontal--m)}:host([scale=m]) .instant-apps-social-share__tip-header,:host([scale=m]) .instant-apps-social-share__tip-content,:host([scale=m]) .instant-apps-social-share__embed-header,:host([scale=m]) .instant-apps-social-share__embed-dimensions-input{font-size:var(--calcite-font-size--1)}:host([scale=l]) .instant-apps-social-share__dialog{width:var(--instant-apps-social-share-width--l)}:host([scale=l]) .instant-apps-social-share__icon{width:32px;height:32px}:host([scale=l]) .instant-apps-social-share__option-text{font-size:var(--calcite-font-size-1)}:host([scale=l]) .instant-apps-social-share__dialog.instant-apps-social-share__layout--horizontal{width:var(--instant-apps-social-share-width-horizontal--l)}:host([scale=l]) .instant-apps-social-share__tip-header,:host([scale=l]) .instant-apps-social-share__tip-content,:host([scale=l]) .instant-apps-social-share__embed-header,:host([scale=l]) .instant-apps-social-share__embed-dimensions-input{font-size:var(--calcite-font-size-0)}";
 
@@ -68,11 +620,9 @@ const SOCIAL_URL_TEMPLATES = {
   linkedIn: 'https://www.linkedin.com/sharing/share-offsite/?url={url}',
 };
 const SHORTEN_API = 'https://arcg.is/prod/shorten';
-let InstantAppsSocialShare$1 = class extends HTMLElement {
-  constructor() {
-    super();
-    this.__registerHost();
-    this.__attachShadow();
+let InstantAppsSocialShare = class {
+  constructor(hostRef) {
+    registerInstance(this, hostRef);
     // PUBLIC PROPERTIES
     this.mode = 'popover';
     this.shareUrl = window.location.href;
@@ -458,46 +1008,8 @@ let InstantAppsSocialShare$1 = class extends HTMLElement {
   roundValue(val, decimalPoints = 4) {
     return parseFloat(val.toFixed(decimalPoints));
   }
-  get el() { return this; }
-  static get style() { return instantAppsSocialShareCss; }
+  get el() { return getElement(this); }
 };
-InstantAppsSocialShare$1 = /*@__PURE__*/ proxyCustomElement(InstantAppsSocialShare$1, [1, "instant-apps-social-share", {
-    "mode": [513],
-    "shareUrl": [1025, "share-url"],
-    "shareText": [513, "share-text"],
-    "embed": [516],
-    "shareButtonColor": [513, "share-button-color"],
-    "iframeInnerText": [513, "iframe-inner-text"],
-    "popoverButtonIconScale": [513, "popover-button-icon-scale"],
-    "view": [16],
-    "displayTipText": [516, "display-tip-text"],
-    "socialMedia": [516, "social-media"],
-    "shareIconsLayout": [513, "share-icons-layout"],
-    "scale": [513],
-    "defaultUrlParams": [16],
-    "messages": [32],
-    "opened": [32],
-    "copied": [32],
-    "inlineCopyLinkOpened": [32],
-    "inlineCopyEmbedOpened": [32],
-    "embedWidth": [32],
-    "embedHeight": [32]
-  }]);
-function defineCustomElement$1() {
-  if (typeof customElements === "undefined") {
-    return;
-  }
-  const components = ["instant-apps-social-share"];
-  components.forEach(tagName => { switch (tagName) {
-    case "instant-apps-social-share":
-      if (!customElements.get(tagName)) {
-        customElements.define(tagName, InstantAppsSocialShare$1);
-      }
-      break;
-  } });
-}
+InstantAppsSocialShare.style = instantAppsSocialShareCss;
 
-const InstantAppsSocialShare = InstantAppsSocialShare$1;
-const defineCustomElement = defineCustomElement$1;
-
-export { InstantAppsSocialShare, defineCustomElement };
+export { InstantAppsHeader as instant_apps_header, InstantAppsPopover as instant_apps_popover, InstantAppsPopovers as instant_apps_popovers, InstantAppsSocialShare as instant_apps_social_share };
