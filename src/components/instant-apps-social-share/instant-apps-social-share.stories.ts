@@ -21,20 +21,46 @@ export default {
       options: ['popover', 'inline'],
       control: { type: 'select' },
     },
+    shareIconsLayout: {
+      options: ['vertical', 'horizontal'],
+      control: { type: 'select' },
+    },
+    scale: {
+      options: ['m', 's', 'l'],
+      control: { type: 'select' },
+    },
     embed: { type: 'boolean' },
+    socialMedia: { type: 'boolean' },
+    displayTipText: { type: 'boolean' },
   },
 };
 
-const Template = ({ mode, embed }) => html`<instant-apps-social-share mode="${mode}" embed="${embed}"></instant-apps-social-share>`;
+const Template = ({ mode, embed, scale, socialMedia, displayTipText, shareIconsLayout }) =>
+  html`<instant-apps-social-share
+    mode="${mode}"
+    embed="${embed}"
+    scale="${scale}"
+    social-media="${socialMedia}"
+    display-tip-text="${displayTipText}"
+    share-icons-layout="${shareIconsLayout}"
+  ></instant-apps-social-share>`;
 
 export const Popover = Template.bind({});
 Popover.args = {
   mode: 'popover',
-  embed: false
+  shareIconsLayout: 'vertical',
+  embed: false,
+  socialMedia: true,
+  displayTipText: true,
+  scale: 'm',
 };
 
 export const Inline = Template.bind({});
 Inline.args = {
   mode: 'inline',
+  shareIconsLayout: 'vertical',
   embed: true,
+  socialMedia: true,
+  displayTipText: true,
+  scale: 'm',
 };

@@ -12,17 +12,15 @@
  *   limitations under the License.
  */
 
-import { Component, h, Prop, State, Element } from '@stencil/core';
+import { Component, h, Prop, State, Element, Host } from '@stencil/core';
 
-import { substitute } from '@arcgis/core/intl';
-import Point from '@arcgis/core/geometry/Point';
-import SpatialReference from '@arcgis/core/geometry/SpatialReference';
-import { project, load as loadProjection } from '@arcgis/core/geometry/projection';
-import esriRequest from '@arcgis/core/request';
+import { loadModules } from '../../utils/loadModules';
 
 import SocialShare_T9n from '../../assets/t9n/instant-apps-social-share/resources.json';
 
 import { getLocaleComponentStrings } from '../../utils/locale';
+
+type ShareItemOptions = 'link' | 'facebook' | 'twitter' | 'linkedIn';
 
 const base = 'instant-apps-social-share';
 
@@ -37,6 +35,11 @@ const CSS = {
   tipContent: `${base}__tip-content`,
   icon: `${base}__icon`,
   optionText: `${base}__option-text`,
+  popoverButton: `${base}__popover-button`,
+  layout: {
+    vertical: `${base}__layout--vertical`,
+    horizontal: `${base}__layout--horizontal`,
+  },
   success: {
     container: `${base}__success`,
     header: `${base}__success-header`,
@@ -84,6 +87,8 @@ export class InstantAppsSocialShare {
   copyLinkPopoverRef: HTMLCalcitePopoverElement;
   copyEmbedPopoverRef: HTMLCalcitePopoverElement;
   dialogContentRef: HTMLDivElement | undefined;
+  shareListRef: HTMLUListElement | undefined;
+  popoverButtonRef: HTMLCalciteButtonElement | undefined;
 
   // PUBLIC PROPERTIES
   @Prop({
@@ -111,14 +116,24 @@ export class InstantAppsSocialShare {
   @Prop({
     reflect: true,
   })
-  queryString: string;
+  iframeInnerText: string = '';
 
   @Prop({
     reflect: true,
   })
-  iframeInnerText: string = '';
+  popoverButtonIconScale: 's' | 'm' | 'l' = 'm';
 
   @Prop() view: __esri.MapView | __esri.SceneView;
+
+  @Prop({ reflect: true }) displayTipText: boolean = true;
+
+  @Prop({ reflect: true }) socialMedia: boolean = true;
+
+  @Prop({ reflect: true }) shareIconsLayout: 'vertical' | 'horizontal' = 'vertical';
+
+  @Prop({ reflect: true }) scale: 's' | 'm' | 'l' = 'm';
+
+  @Prop() defaultUrlParams: { center?: boolean; level?: boolean; viewpoint?: boolean; selectedFeature?: boolean; hiddenLayers?: boolean } | null = null;
 
   // INTERNAL STATE
   // T9N
@@ -137,8 +152,14 @@ export class InstantAppsSocialShare {
   componentDidLoad() {
     this.getMessages();
     this.setupAutoCloseListeners();
-    if (this.mode === 'popover' && this.opened) {
-      this.popoverRef.toggle(true);
+    if (this.mode === 'popover') {
+      if (this.opened) this.popoverRef.toggle(true);
+      this.popoverRef.addEventListener('calcitePopoverOpen', () => {
+        if (!this.shareListRef) return;
+        const firstNode = this.shareListRef.children[0] as HTMLLIElement;
+        firstNode.focus();
+      });
+      this.popoverRef.addEventListener('keydown', this.handlePopoverRefKeyDown.bind(this));
     }
     if (this.embed) {
       this.embedWidthRef?.addEventListener('change', this.updateDimensions.bind(this, 'width'));
@@ -151,6 +172,7 @@ export class InstantAppsSocialShare {
     if (this.mode === 'popover') {
       this.popoverRef.removeEventListener('click', this.stopPropagationCallback.bind(this));
       this.popoverRef.removeEventListener('calcitePopoverClose', this.resetPopoverCopyState.bind(this));
+      this.popoverRef.removeEventListener('keydown', this.handlePopoverRefKeyDown.bind(this));
     } else {
       this.embedWidthRef?.removeEventListener('change', this.updateDimensions.bind(this));
       this.embedHeightRef?.removeEventListener('change', this.updateDimensions.bind(this));
@@ -173,6 +195,25 @@ export class InstantAppsSocialShare {
     }
   }
 
+  handlePopoverRefKeyDown(e: KeyboardEvent) {
+    if (e.code === 'Tab') {
+      if (!this.shareListRef) return;
+      const node = e.target;
+      const firstFocusableEl = this.shareListRef.children[0] as HTMLElement;
+      const lastFocusableEl = this.shareListRef.children[this.shareListRef?.children.length - 1] as HTMLElement;
+      if (e.shiftKey && node === firstFocusableEl) {
+        e.preventDefault();
+        lastFocusableEl.focus();
+      } else if (!e.shiftKey && node === lastFocusableEl) {
+        e.preventDefault();
+        firstFocusableEl.focus();
+      }
+    } else if (e.code === 'Escape') {
+      this.closePopover();
+      this.popoverButtonRef?.setFocus();
+    }
+  }
+
   autoCloseCallback() {
     if (this.mode === 'popover') {
       this.opened = false;
@@ -190,6 +231,7 @@ export class InstantAppsSocialShare {
   }
 
   resetPopoverCopyState() {
+    this.popoverButtonRef?.setFocus();
     setTimeout(() => {
       this.copied = false;
     }, 200);
@@ -212,55 +254,69 @@ export class InstantAppsSocialShare {
       ) : (
         <div class={CSS.dialogContent}>
           {this.renderOptions()}
-          {this.mode === 'popover' && !this.embed ? this.renderTip() : null}
+          {this.displayTipText ? this.renderTip() : null}
           {this.embed ? this.renderEmbed() : null}
         </div>
       );
+
+    const layoutClass = this.shareIconsLayout === 'vertical' ? ` ${CSS.layout.vertical}` : ` ${CSS.layout.horizontal}`;
+
     const dialogContent = (
-      <div ref={el => (this.dialogContentRef = el)} class={`${CSS.dialog}${this.mode === 'inline' ? ` ${CSS.dialogEmbed}` : ''}`}>
+      <div ref={el => (this.dialogContentRef = el)} class={`${CSS.dialog}${layoutClass}`}>
         {content}
       </div>
     );
-    return this.mode === 'popover'
-      ? [
-          <calcite-popover
-            ref={(el: HTMLCalcitePopoverElement) => (this.popoverRef = el)}
-            label={this.messages?.share?.label}
-            reference-element="shareButton"
-            placement="bottom-start"
-          >
-            {dialogContent}
-          </calcite-popover>,
-          <calcite-button
-            onClick={this.togglePopover.bind(this)}
-            id="shareButton"
-            color={this.shareButtonColor}
-            appearance="transparent"
-            label={this.messages?.share?.label}
-            title={this.messages?.share?.label}
-          >
-            <calcite-icon icon="share" />
-          </calcite-button>,
-        ]
-      : [
-          dialogContent,
-          <calcite-popover
-            ref={(el: HTMLCalcitePopoverElement) => (this.copyLinkPopoverRef = el)}
-            label={this.messages?.share?.label}
-            reference-element="copyToClipboard"
-            placement="trailing"
-          >
-            {this.renderSuccess()}
-          </calcite-popover>,
-          <calcite-popover
-            ref={(el: HTMLCalcitePopoverElement) => (this.copyEmbedPopoverRef = el)}
-            label={this.messages?.share?.label}
-            reference-element="copyEmbedToClipboard"
-            placement="trailing"
-          >
-            {this.renderEmbedSuccess()}
-          </calcite-popover>,
-        ];
+
+    return (
+      <Host>
+        {this.mode === 'popover'
+          ? [
+              <calcite-popover
+                ref={(el: HTMLCalcitePopoverElement) => (this.popoverRef = el)}
+                label={this.messages?.share?.label}
+                reference-element="shareButton"
+                placement="bottom-start"
+                scale={this.scale}
+              >
+                {dialogContent}
+              </calcite-popover>,
+              <calcite-button
+                ref={el => (this.popoverButtonRef = el)}
+                onClick={this.togglePopover.bind(this)}
+                id="shareButton"
+                class={CSS.popoverButton}
+                color={this.shareButtonColor}
+                appearance="transparent"
+                label={this.messages?.share?.label}
+                title={this.messages?.share?.label}
+                scale={this.scale}
+              >
+                <calcite-icon icon="share" scale={this.popoverButtonIconScale} />
+              </calcite-button>,
+            ]
+          : [
+              dialogContent,
+              <calcite-popover
+                ref={(el: HTMLCalcitePopoverElement) => (this.copyLinkPopoverRef = el)}
+                label={this.messages?.share?.label}
+                reference-element="copyToClipboard"
+                placement="trailing"
+                scale={this.scale}
+              >
+                {this.renderSuccess()}
+              </calcite-popover>,
+              <calcite-popover
+                ref={(el: HTMLCalcitePopoverElement) => (this.copyEmbedPopoverRef = el)}
+                label={this.messages?.share?.label}
+                reference-element="copyEmbedToClipboard"
+                placement="trailing"
+                scale={this.scale}
+              >
+                {this.renderEmbedSuccess()}
+              </calcite-popover>,
+            ]}
+      </Host>
+    );
   }
 
   renderSuccess() {
@@ -269,7 +325,7 @@ export class InstantAppsSocialShare {
       <div class={CSS.success.container}>
         <span class={CSS.success.header}>
           <span class={CSS.success.icon}>
-            <calcite-icon icon="check-circle-f" scale="s" />
+            <calcite-icon icon="check-circle-f" scale={this.scale} />
           </span>
           {success?.label}
         </span>
@@ -284,7 +340,7 @@ export class InstantAppsSocialShare {
       <div class={CSS.success.container}>
         <span class={CSS.success.header}>
           <span class={CSS.success.icon}>
-            <calcite-icon icon="check-circle-f" scale="s" />
+            <calcite-icon icon="check-circle-f" scale={this.scale} />
           </span>
           {success?.label}
         </span>
@@ -296,27 +352,40 @@ export class InstantAppsSocialShare {
   renderOptions() {
     const options = this.messages?.options;
     return (
-      <ul class={CSS.options} role="menu">
-        <li id="copyToClipboard" onClick={this.handleShareItem.bind(this, 'link')} role="menuitem">
+      <ul ref={el => (this.shareListRef = el)} class={CSS.options} role="menu">
+        <li id="copyToClipboard" onClick={this.handleShareItem.bind(this, 'link')} onKeyDown={this.handleOptionKeyDown('link')} role="menuitem" tabindex="0">
           <span class={CSS.icon}>
-            <calcite-icon icon="link" scale="m" />
+            <calcite-icon icon="link" scale={this.scale} />
           </span>
           <span class={CSS.optionText}>{options?.link?.label}</span>
         </li>
-        <li onClick={this.handleShareItem.bind(this, 'facebook')} role="menuitem">
-          <span class={CSS.icon}>{this.renderFacebookIcon()}</span>
-          <span class={CSS.optionText}>{options?.facebook?.label}</span>
-        </li>
-        <li onClick={this.handleShareItem.bind(this, 'twitter')} role="menuitem">
-          <span class={CSS.icon}>{this.renderTwitterIcon()}</span>
-          <span class={CSS.optionText}>{options?.twitter?.label}</span>
-        </li>
-        <li onClick={this.handleShareItem.bind(this, 'linkedIn')} role="menuitem">
-          <span class={CSS.icon}>{this.renderLinkedInIcon()}</span>
-          <span class={CSS.optionText}>{options?.linkedIn?.label}</span>
-        </li>
+        {this.socialMedia
+          ? [
+              <li onClick={this.handleShareItem.bind(this, 'facebook')} onKeyDown={this.handleOptionKeyDown('facebook')} role="menuitem" tabindex="0">
+                <span class={CSS.icon}>{this.renderFacebookIcon()}</span>
+                <span class={CSS.optionText}>{options?.facebook?.label}</span>
+              </li>,
+              <li onClick={this.handleShareItem.bind(this, 'twitter')} onKeyDown={this.handleOptionKeyDown('twitter')} role="menuitem" tabindex="0">
+                <span class={CSS.icon}>{this.renderTwitterIcon()}</span>
+                <span class={CSS.optionText}>{options?.twitter?.label}</span>
+              </li>,
+              <li onClick={this.handleShareItem.bind(this, 'linkedIn')} onKeyDown={this.handleOptionKeyDown('linkedIn')} role="menuitem" tabindex="0">
+                <span class={CSS.icon}>{this.renderLinkedInIcon()}</span>
+                <span class={CSS.optionText}>{options?.linkedIn?.label}</span>
+              </li>,
+            ]
+          : null}
       </ul>
     );
+  }
+
+  handleOptionKeyDown(type: ShareItemOptions) {
+    return (e: KeyboardEvent) => {
+      const keyCode = e.code;
+      const canActivate = keyCode === 'Space' || keyCode === 'Enter';
+      if (!canActivate) return;
+      this.handleShareItem(type);
+    };
   }
 
   renderFacebookIcon() {
@@ -401,7 +470,7 @@ export class InstantAppsSocialShare {
     return (
       <div class={CSS.tipContainer}>
         <span class={CSS.tipHeader}>
-          <calcite-icon icon="lightbulb" scale="s" />
+          <calcite-icon icon="lightbulb" scale={this.scale} />
           <span>{info?.label}</span>
         </span>
         <p class={CSS.tipContent}>{info?.tooltip}</p>
@@ -414,14 +483,14 @@ export class InstantAppsSocialShare {
     return (
       <div class={CSS.embed.container}>
         <span class={CSS.embed.header}>
-          <calcite-icon icon="code" scale="m" />
+          <calcite-icon icon="code" scale={this.scale} />
           <span>{this.messages?.embed?.label}</span>
         </span>
         <div class={CSS.embed.embedCode.container}>
           <div class={CSS.embed.embedCode.textArea}>
             <textarea ref={el => (this.embedCodeRef = el)} cols={30} rows={5} readonly value={this.getEmbedCode()} />
             <button id="copyEmbedToClipboard" onClick={this.copyEmbedCode.bind(this)} class={CSS.embed.embedCode.copyButton}>
-              <calcite-icon icon="copy" scale="s" />
+              <calcite-icon icon="copy" scale={this.scale} />
               <span>{embedMessages?.copy}</span>
             </button>
           </div>
@@ -454,7 +523,7 @@ export class InstantAppsSocialShare {
     this.popoverRef.toggle(this.opened);
   }
 
-  async handleShareItem(type: 'link' | 'facebook' | 'twitter' | 'linkedIn') {
+  async handleShareItem(type: ShareItemOptions) {
     this.shareUrl = await this.generateShareUrl();
     let shortenedUrl = null;
 
@@ -470,12 +539,16 @@ export class InstantAppsSocialShare {
       case 'link':
         navigator.clipboard.writeText(urlToUse);
         if (this.embed) {
-          this.copyLinkPopoverRef.toggle(true);
-          this.inlineCopyLinkOpened = true;
           this.copyEmbedPopoverRef.toggle(false);
           this.inlineCopyEmbedOpened = false;
         }
+        if (this.mode === 'inline') {
+          this.copyLinkPopoverRef.toggle(true);
+          setTimeout(() => this.copyLinkPopoverRef.toggle(false), 3000);
+        }
+        this.inlineCopyLinkOpened = true;
         this.copied = true;
+        if (this.mode === 'popover') setTimeout(() => this.closePopover(), 2000);
         return;
       case 'facebook':
       case 'twitter':
@@ -484,7 +557,8 @@ export class InstantAppsSocialShare {
           url: encodeURI(urlToUse),
         };
         const data = type === 'twitter' ? { ...urlData, text: this.shareText } : urlData;
-        const url = substitute(SOCIAL_URL_TEMPLATES[type], data);
+        const [intl] = await loadModules(['esri/intl']);
+        const url = intl.substitute(SOCIAL_URL_TEMPLATES[type], data);
         if (this.mode === 'popover') {
           this.closePopover();
         }
@@ -494,6 +568,7 @@ export class InstantAppsSocialShare {
   }
 
   async shortenUrl(url: string) {
+    const [esriRequest] = await loadModules(['esri/request']);
     const request = await esriRequest(SHORTEN_API, {
       query: {
         longUrl: url,
@@ -516,6 +591,7 @@ export class InstantAppsSocialShare {
     this.copyLinkPopoverRef.toggle(false);
     this.inlineCopyLinkOpened = false;
     this.copyEmbedPopoverRef.toggle(true);
+    setTimeout(() => this.copyEmbedPopoverRef.toggle(false), 3000);
     this.inlineCopyEmbedOpened = true;
   }
 
@@ -523,18 +599,12 @@ export class InstantAppsSocialShare {
   async generateShareUrl(): Promise<string> {
     // If view is not ready
     if (!this.view || !this.view?.ready) {
-      if (this.queryString) {
-        const path = this.shareUrl.split('center')[0];
-        // If no "?", then append "?". Otherwise, check for "?" and "="
-        const sep = path.indexOf('?') === -1 ? '?' : path.indexOf('?') !== -1 && path.indexOf('=') !== -1 ? (path.indexOf('&') === -1 ? '&' : '') : '';
-        return `${this.shareUrl}${sep}${this.queryString}`;
-      } else {
-        return this.shareUrl;
-      }
+      return this.shareUrl;
     }
     // Use x/y values and the spatial reference of the view to instantiate a geometry point
     const { x, y } = this.view.center;
     const { spatialReference } = this.view;
+    const [Point, SpatialReference] = await loadModules(['esri/geometry/Point', 'esri/geometry/SpatialReference']);
     const updatedSpatialReference = new SpatialReference({ ...spatialReference.toJSON() });
     const centerPoint = new Point({
       x,
@@ -546,67 +616,95 @@ export class InstantAppsSocialShare {
     return this.generateShareUrlParams(point);
   }
 
-  async processPoint(point: Point): Promise<__esri.Point> {
+  async processPoint(point: __esri.Point): Promise<__esri.Point> {
     const { isWGS84, isWebMercator } = point.spatialReference;
     // If spatial reference is WGS84 or Web Mercator, use longitude/latitude values to generate the share URL parameters
     if (isWGS84 || isWebMercator) {
       return point;
     }
+    const [SpatialReference, projection] = await loadModules(['esri/geometry/SpatialReference', 'esri/geometry/projection']);
     const outputSpatialReference = new SpatialReference({
       wkid: 4326,
     });
-    await loadProjection();
-    const projectedPoint = project(point, outputSpatialReference) as __esri.Point;
+    await projection.loadProjection();
+    const projectedPoint = projection.project(point, outputSpatialReference) as __esri.Point;
     return projectedPoint;
   }
 
-  generateShareUrlParams(point: Point): string {
+  generateShareUrlParams(point: __esri.Point): string {
     const { longitude, latitude } = point;
     if (longitude === undefined || latitude === undefined) {
       return this.shareUrl;
     }
+
     const roundedLon = this.roundValue(longitude);
     const roundedLat = this.roundValue(latitude);
     const { zoom } = this.view;
     const roundedZoom = this.roundValue(zoom);
     const graphic = this.view.get('popup.selectedFeature') as __esri.Graphic;
+    const visible = this.view.get('popup.visible');
     let layerId;
     let oid;
-    if (graphic) {
+    if (graphic && visible) {
       const featureLayer = graphic.get('layer') as __esri.FeatureLayer;
       layerId = featureLayer.id;
       oid = graphic.attributes[featureLayer.objectIdField];
     }
 
     const hiddenLayers = this.view.map.allLayers
-      .filter(layer => layer.type === 'feature' && !layer.visible)
+      .filter(layer => !layer.visible)
       .toArray()
       .map(featureLayer => featureLayer.id)
       .toString()
-      .replace(',', ';');
+      .replaceAll(',', ';');
 
-    const path = this.shareUrl.split('center')[0];
+    const { type } = this.view;
+    const { defaultUrlParams } = this;
 
-    const sep = path.indexOf('?') === -1 ? '?' : path.indexOf('?') !== -1 && path.indexOf('=') !== -1 ? (path.indexOf('&') === -1 ? '&' : '') : '';
-    const shareParams = `${path}${sep}center=${roundedLon};${roundedLat}&level=${roundedZoom}${
-      layerId && hiddenLayers.indexOf(layerId) === -1 && graphic ? `&selectedFeature=${layerId};${oid}` : ''
-    }${hiddenLayers ? `&hiddenLayers=${hiddenLayers}` : ''}${this.queryString ? `&${this.queryString}` : ''}`;
-    const type = this.view.type;
-    // Checks if view.type is 3D, if so add, 3D url parameters
+    const url = new URL(this.shareUrl);
+    const { searchParams } = url;
+
+    // Resets existing URL params
+    if (searchParams.get('center')) searchParams.delete('center');
+    if (searchParams.get('level')) searchParams.delete('level');
+    if (searchParams.get('selectedFeature')) searchParams.delete('selectedFeature');
+    if (searchParams.get('hiddenLayers')) searchParams.delete('hiddenLayers');
+    if (searchParams.get('viewpoint')) searchParams.delete('viewpoint');
+
+    // Checks if view.type is 3D, if so, set 3D url parameters
     if (type === '3d') {
+      // viewpoint=cam:{camera.position.longitude},{camera.position.latitude},{camera.position.z};{camera.heading},{camera.tilt}
       const { camera } = this.view as __esri.SceneView;
-      const { heading, fov, tilt } = camera;
-      const roundedHeading = this.roundValue(heading);
-      const roundedFov = this.roundValue(fov);
-      const roundedTilt = this.roundValue(tilt);
-      return `${shareParams}&heading=${roundedHeading}&fov=${roundedFov}&tilt=${roundedTilt}`;
+      const { heading, position, tilt } = camera;
+      const { longitude, latitude, z } = position;
+
+      const viewpoint_Values = {
+        longitude: this.roundValue(longitude, 8),
+        latitude: this.roundValue(latitude, 8),
+        z: this.roundValue(z, 3),
+        heading: this.roundValue(heading, 3),
+        tilt: this.roundValue(tilt, 3),
+      };
+
+      const viewpointVal = `cam:${viewpoint_Values.longitude},${viewpoint_Values.latitude},${viewpoint_Values.z};${viewpoint_Values.heading},${viewpoint_Values.tilt}`;
+
+      if (defaultUrlParams?.viewpoint !== false) url.searchParams.set('viewpoint', viewpointVal);
+      if (layerId && oid && defaultUrlParams?.selectedFeature !== false) url.searchParams.set('selectedFeature', `${layerId};${oid}`);
+      if (hiddenLayers && defaultUrlParams?.hiddenLayers !== false) url.searchParams.set('hiddenLayers', hiddenLayers);
+      url.search = decodeURIComponent(url.search);
+      return url.href;
     }
 
-    // Otherwise, just return original url parameters for 2D
-    return shareParams;
+    // Otherwise, just return original url for 2D
+    if (defaultUrlParams?.center !== false) url.searchParams.set('center', `${roundedLon};${roundedLat}`);
+    if (defaultUrlParams?.level !== false) url.searchParams.set('level', `${roundedZoom}`);
+    if (layerId && oid && defaultUrlParams?.selectedFeature !== false) url.searchParams.set('selectedFeature', `${layerId};${oid}`);
+    if (hiddenLayers && defaultUrlParams?.selectedFeature !== false) url.searchParams.set('hiddenLayers', hiddenLayers);
+    url.search = decodeURIComponent(url.search);
+    return url.href;
   }
 
-  roundValue(val: number): number {
-    return parseFloat(val.toFixed(4));
+  roundValue(val: number, decimalPoints: number = 4): number {
+    return parseFloat(val.toFixed(decimalPoints));
   }
 }

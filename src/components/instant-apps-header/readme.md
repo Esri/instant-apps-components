@@ -22,7 +22,6 @@
 
 *Built with [StencilJS](https://stenciljs.com/)*
 
-
 ## License
 
 COPYRIGHT © 2022 Esri

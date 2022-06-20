@@ -1,6 +1,6 @@
-dist/
 www/
 loader/
+dist/
 
 *~
 *.sw[mnpcod]
@@ -24,3 +24,7 @@ $RECYCLE.BIN/
 Thumbs.db
 UserInterfaceState.xcuserstate
 .env
+
+dist/@esri/
+
+.DS_Store

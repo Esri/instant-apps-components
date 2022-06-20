@@ -23,16 +23,6 @@ export const config: Config = {
     },
     {
       type: 'www',
-      copy: [
-        {
-          src: '../node_modules/@esri/calcite-components/dist/calcite',
-          dest: 'dist/@esri/calcite-components',
-        },
-        {
-          src: '../node_modules/@arcgis/core/assets',
-          dest: 'dist/@arcgis/core/assets',
-        },
-      ],
       serviceWorker: null, // disable service workers
     },
   ],
