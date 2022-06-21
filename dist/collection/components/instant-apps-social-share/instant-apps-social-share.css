@@ -194,7 +194,7 @@
   padding: 0;
 }
 :host .instant-apps-social-share__layout--horizontal .instant-apps-social-share__options li .instant-apps-social-share__option-text {
-  white-space: nowrap;
+  word-break: break-word;
   margin-left: 0;
   margin-top: 10px;
   text-align: center;

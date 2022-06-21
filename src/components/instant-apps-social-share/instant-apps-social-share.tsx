@@ -377,7 +377,7 @@ export class InstantAppsSocialShare {
               </li>,
               <li onClick={this.handleShareItem.bind(this, 'twitter')} onKeyDown={this.handleOptionKeyDown('twitter')} role="menuitem" tabindex="0">
                 <span class={CSS.icon}>{this.renderTwitterIcon()}</span>
-                <span class={`${CSS.optionText}${optionText_RTL}`}>{options?.twitter?.label}</span>
+                <span class={`${CSS.optionText}${optionText_RTL}`}>Twitter</span>
               </li>,
               <li onClick={this.handleShareItem.bind(this, 'linkedIn')} onKeyDown={this.handleOptionKeyDown('linkedIn')} role="menuitem" tabindex="0">
                 <span class={CSS.icon}>{this.renderLinkedInIcon()}</span>

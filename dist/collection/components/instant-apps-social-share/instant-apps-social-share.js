@@ -236,7 +236,7 @@ export class InstantAppsSocialShare {
       h("span", { class: CSS.success.message }, success === null || success === void 0 ? void 0 : success.embed)));
   }
   renderOptions() {
-    var _a, _b, _c, _d, _e;
+    var _a, _b, _c, _d;
     const options = (_a = this.messages) === null || _a === void 0 ? void 0 : _a.options;
     const optionText_RTL = document.dir === 'rtl' ? ` ${CSS.rtl.optionText}` : '';
     return (h("ul", { ref: el => (this.shareListRef = el), class: CSS.options, role: "menu" },
@@ -251,10 +251,10 @@ export class InstantAppsSocialShare {
             h("span", { class: `${CSS.optionText}${optionText_RTL}` }, (_c = options === null || options === void 0 ? void 0 : options.facebook) === null || _c === void 0 ? void 0 : _c.label)),
           h("li", { onClick: this.handleShareItem.bind(this, 'twitter'), onKeyDown: this.handleOptionKeyDown('twitter'), role: "menuitem", tabindex: "0" },
             h("span", { class: CSS.icon }, this.renderTwitterIcon()),
-            h("span", { class: `${CSS.optionText}${optionText_RTL}` }, (_d = options === null || options === void 0 ? void 0 : options.twitter) === null || _d === void 0 ? void 0 : _d.label)),
+            h("span", { class: `${CSS.optionText}${optionText_RTL}` }, "Twitter")),
           h("li", { onClick: this.handleShareItem.bind(this, 'linkedIn'), onKeyDown: this.handleOptionKeyDown('linkedIn'), role: "menuitem", tabindex: "0" },
             h("span", { class: CSS.icon }, this.renderLinkedInIcon()),
-            h("span", { class: `${CSS.optionText}${optionText_RTL}` }, (_e = options === null || options === void 0 ? void 0 : options.linkedIn) === null || _e === void 0 ? void 0 : _e.label)),
+            h("span", { class: `${CSS.optionText}${optionText_RTL}` }, (_d = options === null || options === void 0 ? void 0 : options.linkedIn) === null || _d === void 0 ? void 0 : _d.label)),
         ]
         : null));
   }
