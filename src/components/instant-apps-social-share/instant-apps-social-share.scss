@@ -19,6 +19,14 @@ $hoverDark: #262626;
 
 :host {
   display: block;
+  /**
+ * @prop --instant-apps-social-share-width--s: Width of component when scale is set to `s`
+ * @prop --instant-apps-social-share-width--m: Width of component when scale is set to `m`
+ * @prop --instant-apps-social-share-width--l: Width of component when scale is set to `l`
+ * @prop --instant-apps-social-share-width-horizontal--s: Width of component when `share-icons-layout` is set to `horizontal` and scale is set to 's'
+ * @prop --instant-apps-social-share-width-horizontal--m: Width of component when `share-icons-layout` is set to `horizontal` and scale is set to 'm'
+ * @prop --instant-apps-social-share-width-horizontal--l: Width of component when `share-icons-layout` is set to `horizontal` and scale is set to 'l'
+ */
   --instant-apps-social-share-width--s: 200px;
   --instant-apps-social-share-width--m: 280px;
   --instant-apps-social-share-width--l: 320px;
