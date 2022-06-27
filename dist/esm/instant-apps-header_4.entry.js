@@ -624,18 +624,53 @@ let InstantAppsSocialShare = class {
   constructor(hostRef) {
     registerInstance(this, hostRef);
     // PUBLIC PROPERTIES
+    /**
+     * Renders tool as a popover with a trigger button, or inline to place in a custom container.
+     */
     this.mode = 'popover';
+    /**
+     * Generated share URL. Use this property to append custom URL parameters if needed.
+     */
     this.shareUrl = window.location.href;
     this.shareText = '';
+    /**
+     * Show/hide the embed UI.
+     */
     this.embed = false;
     this.shareButtonColor = 'neutral';
+    /**
+     * Text to nest in embed iframe code.
+     */
     this.iframeInnerText = '';
+    /**
+     * Adjusts the scale of the popover button icon.
+     */
     this.popoverButtonIconScale = 'm';
+    /**
+     * Show/hide the tip text below the share options.
+     */
     this.displayTipText = true;
+    /**
+     * Show/hide social media icons.
+     */
     this.socialMedia = true;
+    /**
+     * Display the share icons in a vertical or horizontal layout.
+     */
     this.shareIconsLayout = 'vertical';
+    /**
+     * Adjusts the scale of the component.
+     */
     this.scale = 'm';
+    /**
+     * Configure the default URL parameters that are appended to the generated share URL.
+     */
     this.defaultUrlParams = null;
+    /**
+     * Configures the placement of the success message popover for the 'Copy Link' button.
+     * See options here: https://github.com/Esri/calcite-components/blob/v1.0.0-beta.83/src/utils/popper.ts#L34
+     */
+    this.inlineSuccessPopoverPlacement = 'trailing';
     // mode = 'popover'
     this.opened = false;
     this.copied = false;
@@ -762,8 +797,8 @@ let InstantAppsSocialShare = class {
       ]
       : [
         dialogContent,
-        h("calcite-popover", { ref: (el) => (this.copyLinkPopoverRef = el), label: (_h = (_g = this.messages) === null || _g === void 0 ? void 0 : _g.share) === null || _h === void 0 ? void 0 : _h.label, "reference-element": "copyToClipboard", placement: "trailing", scale: this.scale }, this.renderSuccess()),
-        h("calcite-popover", { ref: (el) => (this.copyEmbedPopoverRef = el), label: (_k = (_j = this.messages) === null || _j === void 0 ? void 0 : _j.share) === null || _k === void 0 ? void 0 : _k.label, "reference-element": "copyEmbedToClipboard", placement: "trailing", scale: this.scale }, this.renderEmbedSuccess()),
+        h("calcite-popover", { ref: (el) => (this.copyLinkPopoverRef = el), label: (_h = (_g = this.messages) === null || _g === void 0 ? void 0 : _g.share) === null || _h === void 0 ? void 0 : _h.label, "reference-element": "copyToClipboard", placement: this.inlineSuccessPopoverPlacement, scale: this.scale }, this.renderSuccess()),
+        h("calcite-popover", { ref: (el) => (this.copyEmbedPopoverRef = el), label: (_k = (_j = this.messages) === null || _j === void 0 ? void 0 : _j.share) === null || _k === void 0 ? void 0 : _k.label, "reference-element": "copyEmbedToClipboard", placement: this.inlineSuccessPopoverPlacement, scale: this.scale }, this.renderEmbedSuccess()),
       ]));
   }
   renderSuccess() {
