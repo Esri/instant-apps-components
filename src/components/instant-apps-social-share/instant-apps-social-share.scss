@@ -19,6 +19,14 @@ $hoverDark: #262626;
 
 :host {
   display: block;
+  /**
+ * @prop --instant-apps-social-share-width--s: Width of component when scale is set to `s`
+ * @prop --instant-apps-social-share-width--m: Width of component when scale is set to `m`
+ * @prop --instant-apps-social-share-width--l: Width of component when scale is set to `l`
+ * @prop --instant-apps-social-share-width-horizontal--s: Width of component when `share-icons-layout` is set to `horizontal` and scale is set to 's'
+ * @prop --instant-apps-social-share-width-horizontal--m: Width of component when `share-icons-layout` is set to `horizontal` and scale is set to 'm'
+ * @prop --instant-apps-social-share-width-horizontal--l: Width of component when `share-icons-layout` is set to `horizontal` and scale is set to 'l'
+ */
   --instant-apps-social-share-width--s: 200px;
   --instant-apps-social-share-width--m: 280px;
   --instant-apps-social-share-width--l: 320px;
@@ -79,6 +87,11 @@ $hoverDark: #262626;
           width: 85%;
           margin-left: 10px;
           word-break: break-word;
+        }
+
+        .instant-apps-social-share__option-text--rtl {
+          margin-left: 0;
+          margin-right: 10px;
         }
       }
 
@@ -227,7 +240,7 @@ $hoverDark: #262626;
           flex-direction: column;
           padding: 0;
           .instant-apps-social-share__option-text {
-            white-space: nowrap;
+            word-break: break-word;
             margin-left: 0;
             margin-top: 10px;
             text-align: center;
