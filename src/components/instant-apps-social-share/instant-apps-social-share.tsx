@@ -19,6 +19,7 @@ import { loadModules } from '../../utils/loadModules';
 import SocialShare_T9n from '../../assets/t9n/instant-apps-social-share/resources.json';
 
 import { getLocaleComponentStrings } from '../../utils/locale';
+import { PopperPlacement } from '@esri/calcite-components/dist/types/utils/popper';
 
 type ShareItemOptions = 'link' | 'facebook' | 'twitter' | 'linkedIn';
 
@@ -60,6 +61,9 @@ const CSS = {
       input: `${base}__embed-dimensions-input`,
     },
   },
+  rtl: {
+    optionText: `${base}__option-text--rtl`,
+  },
 };
 
 const SOCIAL_URL_TEMPLATES = {
@@ -91,11 +95,18 @@ export class InstantAppsSocialShare {
   popoverButtonRef: HTMLCalciteButtonElement | undefined;
 
   // PUBLIC PROPERTIES
+
+  /**
+   * Renders tool as a popover with a trigger button, or inline to place in a custom container.
+   */
   @Prop({
     reflect: true,
   })
   mode: 'popover' | 'inline' = 'popover';
 
+  /**
+   * Generated share URL. Use this property to append custom URL parameters if needed.
+   */
   @Prop({
     mutable: true,
   })
@@ -106,6 +117,9 @@ export class InstantAppsSocialShare {
   })
   shareText: string = '';
 
+  /**
+   * Show/hide the embed UI.
+   */
   @Prop({ reflect: true }) embed = false;
 
   @Prop({
@@ -113,27 +127,58 @@ export class InstantAppsSocialShare {
   })
   shareButtonColor: 'inverse' | 'neutral' = 'neutral';
 
+  /**
+   * Text to nest in embed iframe code.
+   */
   @Prop({
     reflect: true,
   })
   iframeInnerText: string = '';
 
+  /**
+   * Adjusts the scale of the popover button icon.
+   */
   @Prop({
     reflect: true,
   })
   popoverButtonIconScale: 's' | 'm' | 'l' = 'm';
 
+  /**
+   * MapView or SceneView to reference when URL parameter values are generated, i.e. center, level, viewpoint, etc.
+   */
   @Prop() view: __esri.MapView | __esri.SceneView;
 
+  /**
+   * Show/hide the tip text below the share options.
+   */
   @Prop({ reflect: true }) displayTipText: boolean = true;
 
+  /**
+   * Show/hide social media icons.
+   */
   @Prop({ reflect: true }) socialMedia: boolean = true;
 
+  /**
+   * Display the share icons in a vertical or horizontal layout.
+   */
   @Prop({ reflect: true }) shareIconsLayout: 'vertical' | 'horizontal' = 'vertical';
 
+  /**
+   * Adjusts the scale of the component.
+   */
   @Prop({ reflect: true }) scale: 's' | 'm' | 'l' = 'm';
 
+  /**
+   * Configure the default URL parameters that are appended to the generated share URL.
+   */
   @Prop() defaultUrlParams: { center?: boolean; level?: boolean; viewpoint?: boolean; selectedFeature?: boolean; hiddenLayers?: boolean } | null = null;
+
+  /**
+   * Configures the placement of the success message popover for the 'Copy Link' button.
+   * See options here: https://github.com/Esri/calcite-components/blob/v1.0.0-beta.83/src/utils/popper.ts#L34
+   */
+  @Prop({ reflect: true })
+  inlineSuccessPopoverPlacement: PopperPlacement = 'trailing';
 
   // INTERNAL STATE
   // T9N
@@ -300,7 +345,7 @@ export class InstantAppsSocialShare {
                 ref={(el: HTMLCalcitePopoverElement) => (this.copyLinkPopoverRef = el)}
                 label={this.messages?.share?.label}
                 reference-element="copyToClipboard"
-                placement="trailing"
+                placement={this.inlineSuccessPopoverPlacement}
                 scale={this.scale}
               >
                 {this.renderSuccess()}
@@ -309,7 +354,7 @@ export class InstantAppsSocialShare {
                 ref={(el: HTMLCalcitePopoverElement) => (this.copyEmbedPopoverRef = el)}
                 label={this.messages?.share?.label}
                 reference-element="copyEmbedToClipboard"
-                placement="trailing"
+                placement={this.inlineSuccessPopoverPlacement}
                 scale={this.scale}
               >
                 {this.renderEmbedSuccess()}
@@ -351,27 +396,28 @@ export class InstantAppsSocialShare {
 
   renderOptions() {
     const options = this.messages?.options;
+    const optionText_RTL = document.dir === 'rtl' ? ` ${CSS.rtl.optionText}` : '';
     return (
       <ul ref={el => (this.shareListRef = el)} class={CSS.options} role="menu">
         <li id="copyToClipboard" onClick={this.handleShareItem.bind(this, 'link')} onKeyDown={this.handleOptionKeyDown('link')} role="menuitem" tabindex="0">
           <span class={CSS.icon}>
             <calcite-icon icon="link" scale={this.scale} />
           </span>
-          <span class={CSS.optionText}>{options?.link?.label}</span>
+          <span class={`${CSS.optionText}${optionText_RTL}`}>{options?.link?.label}</span>
         </li>
         {this.socialMedia
           ? [
               <li onClick={this.handleShareItem.bind(this, 'facebook')} onKeyDown={this.handleOptionKeyDown('facebook')} role="menuitem" tabindex="0">
                 <span class={CSS.icon}>{this.renderFacebookIcon()}</span>
-                <span class={CSS.optionText}>{options?.facebook?.label}</span>
+                <span class={`${CSS.optionText}${optionText_RTL}`}>{options?.facebook?.label}</span>
               </li>,
               <li onClick={this.handleShareItem.bind(this, 'twitter')} onKeyDown={this.handleOptionKeyDown('twitter')} role="menuitem" tabindex="0">
                 <span class={CSS.icon}>{this.renderTwitterIcon()}</span>
-                <span class={CSS.optionText}>{options?.twitter?.label}</span>
+                <span class={`${CSS.optionText}${optionText_RTL}`}>Twitter</span>
               </li>,
               <li onClick={this.handleShareItem.bind(this, 'linkedIn')} onKeyDown={this.handleOptionKeyDown('linkedIn')} role="menuitem" tabindex="0">
                 <span class={CSS.icon}>{this.renderLinkedInIcon()}</span>
-                <span class={CSS.optionText}>{options?.linkedIn?.label}</span>
+                <span class={`${CSS.optionText}${optionText_RTL}`}>{options?.linkedIn?.label}</span>
               </li>,
             ]
           : null}
