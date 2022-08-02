@@ -1,5 +1,5 @@
 {
-  "name": "instant-apps-components",
+  "name": "@esri/instant-apps-components",
   "version": "1.0.0-beta.1",
   "description": "Reusable ArcGIS Instant Apps web components.",
   "main": "dist/index.cjs.js",
