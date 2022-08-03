@@ -27,14 +27,14 @@ export default {
 };
 
 const Template = ({ titleText, backgroundColor, textColor, logoImage, logoImageAltText, logoLink }) =>
-  html`<instant-apps-header
-    title-text="${titleText}"
-    background-color="${backgroundColor}"
-    text-color="${textColor}"
-    logo-image="${logoImage}"
-    logo-image-alt-text="${logoImageAltText}"
-    logo-link="${logoLink}"
-  ></instant-apps-header>`;
+  html`<div style="height: 70px;"><instant-apps-header
+  title-text="${titleText}"
+  background-color="${backgroundColor}"
+  text-color="${textColor}"
+  logo-image="${logoImage}"
+  logo-image-alt-text="${logoImageAltText}"
+  logo-link="${logoLink}"
+></instant-apps-header></div>`;
 
 export const Standard = Template.bind({});
 Standard.args = { titleText: 'Instant Apps: Header', backgroundColor: '#0079c1', textColor: '#ffffff' };
