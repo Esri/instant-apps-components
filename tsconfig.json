@@ -22,5 +22,6 @@
     "resolveJsonModule": true
   },
   "files": ["node_modules/@esri/calcite-components/dist/types/components.d.ts"],
-  "include": ["src"]
+  "include": ["src"],
+  "exclude": ["src/widgets"]
 }

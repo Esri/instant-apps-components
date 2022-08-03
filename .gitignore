@@ -29,3 +29,5 @@ UserInterfaceState.xcuserstate
 dist/@esri/
 
 .DS_Store
+
+src/widgets/

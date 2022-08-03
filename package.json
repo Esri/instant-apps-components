@@ -34,11 +34,11 @@
   "dependencies": {
     "@a11y/focus-trap": "^1.0.5",
     "@stencil/core": "2.12.0",
-    "esri-loader": "^3.4.0"
+    "esri-loader": "^3.6.0"
   },
   "devDependencies": {
     "@babel/core": "7.16.5",
-    "@esri/calcite-components": "^1.0.0-beta.83",
+    "@esri/calcite-components": "^1.0.0-beta.86",
     "@stencil/sass": "^1.5.2",
     "@storybook/addon-a11y": "^6.4.9",
     "@storybook/addon-actions": "^6.4.9",
