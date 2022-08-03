@@ -9,12 +9,29 @@ import { InstantAppsPopovers } from "./components/instant-apps-popovers/instant-
 import { PopperPlacement } from "@esri/calcite-components/dist/types/utils/popper";
 export namespace Components {
     interface InstantAppsHeader {
+        /**
+          * Background color to display in header - accepts a hexidecimal value i.e. `#000000`.
+         */
         "backgroundColor": string;
-        "label": string;
+        /**
+          * Image URL for logo. Displays at the start of the header.
+         */
         "logoImage": string;
+        /**
+          * Alternate text for header logo.
+         */
         "logoImageAltText": string;
+        /**
+          * Logo URL to link out to another page.
+         */
         "logoLink": string;
+        /**
+          * Text color to display in header - accepts a hexidecimal value i.e. `#FFFFFF`.
+         */
         "textColor": string;
+        /**
+          * Main text to display in header.
+         */
         "titleText": string;
     }
     interface InstantAppsPopover {
@@ -131,12 +148,29 @@ declare global {
 }
 declare namespace LocalJSX {
     interface InstantAppsHeader {
+        /**
+          * Background color to display in header - accepts a hexidecimal value i.e. `#000000`.
+         */
         "backgroundColor"?: string;
-        "label"?: string;
+        /**
+          * Image URL for logo. Displays at the start of the header.
+         */
         "logoImage"?: string;
+        /**
+          * Alternate text for header logo.
+         */
         "logoImageAltText"?: string;
+        /**
+          * Logo URL to link out to another page.
+         */
         "logoLink"?: string;
+        /**
+          * Text color to display in header - accepts a hexidecimal value i.e. `#FFFFFF`.
+         */
         "textColor"?: string;
+        /**
+          * Main text to display in header.
+         */
         "titleText"?: string;
     }
     interface InstantAppsPopover {
