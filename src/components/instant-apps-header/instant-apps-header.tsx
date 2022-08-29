@@ -13,6 +13,7 @@
  */
 
 import { Component, Host, h, Prop, Element, State } from '@stencil/core';
+import { HostElement } from '@stencil/core/internal';
 import { getElementDir } from '../../utils/languageUtil';
 
 const CSS = {
@@ -30,10 +31,10 @@ const CSS = {
 })
 export class InstantAppsHeader {
   @Element()
-  el;
+  el: HostElement;
 
   @State()
-  dir: "ltr" | "rtl";
+  dir: 'ltr' | 'rtl';
 
   /**
    * Main text to display in header.
@@ -70,7 +71,6 @@ export class InstantAppsHeader {
   }
 
   render() {
-    console.log('DIRECTION: ', this.dir);
     return (
       <Host>
         <header class={this.dir === 'rtl' ? CSS.flipRtl : ''} style={{ backgroundColor: this.backgroundColor }}>
