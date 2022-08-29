@@ -41,7 +41,16 @@ export namespace Components {
         "view": __esri.MapView;
     }
     interface InstantAppsInteractiveLegendClassic {
+        "headingLevel": number;
         "legendvm": __esri.LegendViewModel;
+        "messages": any;
+        "type": 'classic';
+    }
+    interface InstantAppsInteractiveLegendRelationship {
+        "effectlist": any;
+        "element": any;
+        "opacity": number;
+        "relationshipElementId": string;
     }
     interface InstantAppsPopover {
         "content": string;
@@ -142,6 +151,12 @@ declare global {
         prototype: HTMLInstantAppsInteractiveLegendClassicElement;
         new (): HTMLInstantAppsInteractiveLegendClassicElement;
     };
+    interface HTMLInstantAppsInteractiveLegendRelationshipElement extends Components.InstantAppsInteractiveLegendRelationship, HTMLStencilElement {
+    }
+    var HTMLInstantAppsInteractiveLegendRelationshipElement: {
+        prototype: HTMLInstantAppsInteractiveLegendRelationshipElement;
+        new (): HTMLInstantAppsInteractiveLegendRelationshipElement;
+    };
     interface HTMLInstantAppsPopoverElement extends Components.InstantAppsPopover, HTMLStencilElement {
     }
     var HTMLInstantAppsPopoverElement: {
@@ -164,6 +179,7 @@ declare global {
         "instant-apps-header": HTMLInstantAppsHeaderElement;
         "instant-apps-interactive-legend": HTMLInstantAppsInteractiveLegendElement;
         "instant-apps-interactive-legend-classic": HTMLInstantAppsInteractiveLegendClassicElement;
+        "instant-apps-interactive-legend-relationship": HTMLInstantAppsInteractiveLegendRelationshipElement;
         "instant-apps-popover": HTMLInstantAppsPopoverElement;
         "instant-apps-popovers": HTMLInstantAppsPopoversElement;
         "instant-apps-social-share": HTMLInstantAppsSocialShareElement;
@@ -203,7 +219,16 @@ declare namespace LocalJSX {
         "view"?: __esri.MapView;
     }
     interface InstantAppsInteractiveLegendClassic {
+        "headingLevel"?: number;
         "legendvm"?: __esri.LegendViewModel;
+        "messages"?: any;
+        "type"?: 'classic';
+    }
+    interface InstantAppsInteractiveLegendRelationship {
+        "effectlist"?: any;
+        "element"?: any;
+        "opacity"?: number;
+        "relationshipElementId"?: string;
     }
     interface InstantAppsPopover {
         "content"?: string;
@@ -284,6 +309,7 @@ declare namespace LocalJSX {
         "instant-apps-header": InstantAppsHeader;
         "instant-apps-interactive-legend": InstantAppsInteractiveLegend;
         "instant-apps-interactive-legend-classic": InstantAppsInteractiveLegendClassic;
+        "instant-apps-interactive-legend-relationship": InstantAppsInteractiveLegendRelationship;
         "instant-apps-popover": InstantAppsPopover;
         "instant-apps-popovers": InstantAppsPopovers;
         "instant-apps-social-share": InstantAppsSocialShare;
@@ -296,6 +322,7 @@ declare module "@stencil/core" {
             "instant-apps-header": LocalJSX.InstantAppsHeader & JSXBase.HTMLAttributes<HTMLInstantAppsHeaderElement>;
             "instant-apps-interactive-legend": LocalJSX.InstantAppsInteractiveLegend & JSXBase.HTMLAttributes<HTMLInstantAppsInteractiveLegendElement>;
             "instant-apps-interactive-legend-classic": LocalJSX.InstantAppsInteractiveLegendClassic & JSXBase.HTMLAttributes<HTMLInstantAppsInteractiveLegendClassicElement>;
+            "instant-apps-interactive-legend-relationship": LocalJSX.InstantAppsInteractiveLegendRelationship & JSXBase.HTMLAttributes<HTMLInstantAppsInteractiveLegendRelationshipElement>;
             "instant-apps-popover": LocalJSX.InstantAppsPopover & JSXBase.HTMLAttributes<HTMLInstantAppsPopoverElement>;
             "instant-apps-popovers": LocalJSX.InstantAppsPopovers & JSXBase.HTMLAttributes<HTMLInstantAppsPopoversElement>;
             "instant-apps-social-share": LocalJSX.InstantAppsSocialShare & JSXBase.HTMLAttributes<HTMLInstantAppsSocialShareElement>;

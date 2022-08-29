@@ -12,9 +12,10 @@ const CSS = {
 @Component({
   tag: 'instant-apps-interactive-legend',
   styleUrl: 'instant-apps-interactive-legend.scss',
-  shadow: true,
+  shadow: false,
 })
 export class InstantAppsInteractiveLegend {
+  classic;
   handles: __esri.Handles;
 
   @State()
@@ -33,17 +34,25 @@ export class InstantAppsInteractiveLegend {
   legendvm: __esri.LegendViewModel;
 
   componentWillLoad() {
-    this.initializeModules();
+    this.initializeModules().then(async () => {
+      this.initApp();
+    });
   }
 
   async initializeModules() {
-    const [reactiveUtils, LegendViewModel, Handles] = await loadModules(['esri/core/reactiveUtils', 'esri/widgets/Legend/LegendViewModel', 'esri/core/Handles']);
+    const [Handles] = await loadModules(['esri/core/Handles']);
     this.handles = new Handles();
-    this.legendvm = new LegendViewModel({
+    return Promise.resolve();
+  }
+
+  async initApp() {
+    const [reactiveUtils, LegendViewModel] = await loadModules(['esri/core/reactiveUtils', 'esri/widgets/Legend/LegendViewModel']);
+    const legendVM = new LegendViewModel({
       view: this.view,
     });
-    await reactiveUtils.whenOnce(() => this.legendvm);
 
+    await reactiveUtils.whenOnce(() => legendVM?.activeLayerInfos?.length);
+    this.legendvm = legendVM;
     this.handles.add([
       reactiveUtils.on(
         () => this.legendvm?.activeLayerInfos,
@@ -51,12 +60,13 @@ export class InstantAppsInteractiveLegend {
         () => this._refreshActiveLayerInfos(this?.legendvm?.activeLayerInfos, reactiveUtils),
       ),
     ]);
+    this.reRender = !this.reRender;
   }
 
   render() {
     return (
-      <div class={`${CSS.base} ${CSS.widget} ${CSS.panel}`}>
-        <instant-apps-interactive-legend-classic legendvm={this.legendvm}></instant-apps-interactive-legend-classic>
+      <div class={`esri-component ${CSS.base} ${CSS.widget} ${CSS.panel}`}>
+        {this.legendvm?.activeLayerInfos?.length > 0 ? <instant-apps-interactive-legend-classic legendvm={this.legendvm}></instant-apps-interactive-legend-classic> : null}
       </div>
     );
   }
@@ -65,6 +75,7 @@ export class InstantAppsInteractiveLegend {
     if (!activeLayerInfos) return;
     this.handles.removeAll();
     activeLayerInfos.forEach(activeLayerInfo => this._renderOnActiveLayerInfoChange(activeLayerInfo, reactiveUtils));
+    this.reRender = !this.reRender;
   }
 
   private _renderOnActiveLayerInfoChange(activeLayerInfo: __esri.ActiveLayerInfo, reactiveUtils: __esri.reactiveUtils): void {

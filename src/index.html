@@ -68,22 +68,23 @@
         <instant-apps-social-share slot="actions-end" popover-button-icon-scale="s"></instant-apps-social-share>
       </instant-apps-header>
       <calcite-shell-panel slot="primary-panel">
-        <calcite-panel> </calcite-panel>
+        <calcite-panel></calcite-panel>
       </calcite-shell-panel>
       <div id="viewDiv"></div>
     </calcite-shell>
 
     <script>
-      require(['esri/WebMap', 'esri/views/MapView', 'esri/layers/FeatureLayer', 'esri/widgets/FeatureTable', 'esri/core/watchUtils'], (
+      require(['esri/WebMap', 'esri/views/MapView', 'esri/layers/FeatureLayer', 'esri/widgets/FeatureTable', 'esri/core/watchUtils', 'esri/widgets/Legend'], (
         WebMap,
         MapView,
         FeatureLayer,
         FeatureTable,
         watchUtils,
+        Legend,
       ) => {
         const map = new WebMap({
           portalItem: {
-            id: '89cd0f1a793d4304a5581d4801b83eb1',
+            id: '89cd0f1a793d4304a5581d4801b83eb1', // f0a65cdcf362483fa268a30d62eed4a2
           },
         });
 
@@ -94,6 +95,13 @@
 
         view.when(async () => {
           const loadedMap = await map.loadAll();
+
+          // const legend = new Legend({
+          //   view,
+          // });
+
+          // view.ui.add(legend, 'top-right');
+
           const interactiveLegend = document.createElement('instant-apps-interactive-legend');
           interactiveLegend.view = view;
           const calcitePanel = document.querySelector('calcite-panel');
