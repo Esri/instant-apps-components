@@ -14,7 +14,6 @@
 
 import { Component, Host, h, Prop, Element, State } from '@stencil/core';
 import { getElementDir } from '../../utils/languageUtil';
-import { DocDirection } from '../../utils/types';
 
 const CSS = {
   headerContent: 'instant-apps-header__header-content',
@@ -34,7 +33,7 @@ export class InstantAppsHeader {
   el;
 
   @State()
-  dir: DocDirection;
+  dir: "ltr" | "rtl";
 
   /**
    * Main text to display in header.
