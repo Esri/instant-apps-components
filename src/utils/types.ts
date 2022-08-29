@@ -13,3 +13,5 @@
  */
 
 export type APIVersion = 3 | 4;
+
+export type DocDirection = 'ltr' | 'rtl';
