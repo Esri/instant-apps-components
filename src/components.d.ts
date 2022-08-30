@@ -14,6 +14,14 @@ export namespace Components {
          */
         "backgroundColor": string;
         /**
+          * Display info button at the end of the title.
+         */
+        "infoButton": boolean;
+        /**
+          * Keeps track of the info 'open' state
+         */
+        "infoIsOpen": boolean;
+        /**
           * Image URL for logo. Displays at the start of the header.
          */
         "logoImage": string;
@@ -153,6 +161,14 @@ declare namespace LocalJSX {
          */
         "backgroundColor"?: string;
         /**
+          * Display info button at the end of the title.
+         */
+        "infoButton"?: boolean;
+        /**
+          * Keeps track of the info 'open' state
+         */
+        "infoIsOpen"?: boolean;
+        /**
           * Image URL for logo. Displays at the start of the header.
          */
         "logoImage"?: string;
@@ -164,6 +180,10 @@ declare namespace LocalJSX {
           * Logo URL to link out to another page.
          */
         "logoLink"?: string;
+        /**
+          * Fires when the info button is clicked.
+         */
+        "onInfoIsOpenChanged"?: (event: CustomEvent<boolean>) => void;
         /**
           * Text color to display in header - accepts a hexidecimal value i.e. `#FFFFFF`.
          */

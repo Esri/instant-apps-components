@@ -7,14 +7,23 @@
 
 ## Properties
 
-| Property           | Attribute             | Description                                                                         | Type     | Default     |
-| ------------------ | --------------------- | ----------------------------------------------------------------------------------- | -------- | ----------- |
-| `backgroundColor`  | `background-color`    | Background color to display in header - accepts a hexidecimal value i.e. `#000000`. | `string` | `undefined` |
-| `logoImage`        | `logo-image`          | Image URL for logo. Displays at the start of the header.                            | `string` | `undefined` |
-| `logoImageAltText` | `logo-image-alt-text` | Alternate text for header logo.                                                     | `string` | `undefined` |
-| `logoLink`         | `logo-link`           | Logo URL to link out to another page.                                               | `string` | `undefined` |
-| `textColor`        | `text-color`          | Text color to display in header - accepts a hexidecimal value i.e. `#FFFFFF`.       | `string` | `undefined` |
-| `titleText`        | `title-text`          | Main text to display in header.                                                     | `string` | `undefined` |
+| Property           | Attribute             | Description                                                                         | Type      | Default     |
+| ------------------ | --------------------- | ----------------------------------------------------------------------------------- | --------- | ----------- |
+| `backgroundColor`  | `background-color`    | Background color to display in header - accepts a hexidecimal value i.e. `#000000`. | `string`  | `undefined` |
+| `infoButton`       | `info-button`         | Display info button at the end of the title.                                        | `boolean` | `false`     |
+| `infoIsOpen`       | `info-is-open`        | Keeps track of the info 'open' state                                                | `boolean` | `false`     |
+| `logoImage`        | `logo-image`          | Image URL for logo. Displays at the start of the header.                            | `string`  | `undefined` |
+| `logoImageAltText` | `logo-image-alt-text` | Alternate text for header logo.                                                     | `string`  | `undefined` |
+| `logoLink`         | `logo-link`           | Logo URL to link out to another page.                                               | `string`  | `undefined` |
+| `textColor`        | `text-color`          | Text color to display in header - accepts a hexidecimal value i.e. `#FFFFFF`.       | `string`  | `undefined` |
+| `titleText`        | `title-text`          | Main text to display in header.                                                     | `string`  | `undefined` |
+
+
+## Events
+
+| Event               | Description                            | Type                   |
+| ------------------- | -------------------------------------- | ---------------------- |
+| `infoIsOpenChanged` | Fires when the info button is clicked. | `CustomEvent<boolean>` |
 
 
 ## Slots
@@ -28,7 +37,7 @@
 
 | Name                           | Description                       |
 | ------------------------------ | --------------------------------- |
-| `--instant-apps-header-height` | Height for header. Default: 100%; |
+| `--instant-apps-header-height` | Height for header. Default: auto; |
 
 
 ----------------------------------------------
