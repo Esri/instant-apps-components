@@ -3,7 +3,7 @@
 
 [npm-img]: https://img.shields.io/npm/v/@esri/instant-apps-components.svg?color=%23007ac2&style=flat-square
 
-[npm-url]: https://www.npmjs.com/package/@esri/instant-apps
+[npm-url]: https://www.npmjs.com/package/@esri/instant-apps-components
 
 # Instant Apps Components
 
