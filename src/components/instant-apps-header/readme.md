@@ -24,6 +24,13 @@
 | `"actions-end"` | Used to slot an action at the end of the header i.e. `calcite-action`, `instant-apps-social-share` |
 
 
+## CSS Custom Properties
+
+| Name                           | Description                       |
+| ------------------------------ | --------------------------------- |
+| `--instant-apps-header-height` | Height for header. Default: 100%; |
+
+
 ----------------------------------------------
 
 ## License
