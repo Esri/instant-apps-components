@@ -13,7 +13,7 @@
  */
 
 import { Component, Host, h, Prop, Element, State } from '@stencil/core';
-import { HostElement } from '@stencil/core/internal';
+import { Event, EventEmitter, HostElement } from '@stencil/core/internal';
 import { getElementDir } from '../../utils/languageUtil';
 
 const CSS = {
@@ -66,7 +66,28 @@ export class InstantAppsHeader {
    */
   @Prop() logoLink: string;
 
-  componentDidLoad() {
+  /**
+   * Display info button at the end of the title.
+   */
+  @Prop({
+    reflect: true,
+  })
+  infoButton: boolean = false;
+
+  /**
+   * Keeps track of the info 'open' state
+   */
+  @Prop({
+    reflect: true,
+  })
+  infoIsOpen: boolean = false;
+
+  /**
+   * Fires when the info button is clicked.
+   */
+  @Event({ cancelable: false }) infoIsOpenChanged: EventEmitter<boolean>;
+
+  componentWillLoad() {
     this.dir = getElementDir(this.el);
   }
 
@@ -85,10 +106,18 @@ export class InstantAppsHeader {
               ''
             )}
             <h1 style={{ color: this.textColor }}>{this.titleText}</h1>
+            <button id="infoButton" onClick={this.toggleInfo.bind(this)}>
+              <calcite-icon icon="information-f" scale="s" />
+            </button>
           </span>
           <slot name="actions-end"></slot>
         </header>
       </Host>
     );
+  }
+
+  toggleInfo(): void {
+    this.infoIsOpen = !this.infoIsOpen;
+    this.infoIsOpenChanged.emit(this.infoIsOpen);
   }
 }

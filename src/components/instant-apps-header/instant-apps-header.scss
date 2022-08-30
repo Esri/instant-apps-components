@@ -14,9 +14,9 @@
 
 :host {
   /**
- * @prop --instant-apps-header-height: Height for header. Default: 100%;
+ * @prop --instant-apps-header-height: Height for header. Default: auto;
  */
- --instant-apps-header-height: 100%;
+ --instant-apps-header-height: auto;
   width: 100%;
   header {
     box-sizing: border-box;
@@ -56,6 +56,17 @@
         color: var(--calcite-ui-text-inverse);
         font-weight: 430;
         white-space: nowrap;
+      }
+
+      #infoButton {
+        display: flex;
+        align-items: center;
+        background-color: transparent;
+        border: none;
+        cursor: pointer;
+        calcite-icon {
+          color: #FFFFFF;
+        }
       }
     }
   }
