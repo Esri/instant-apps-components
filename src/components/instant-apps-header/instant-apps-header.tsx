@@ -12,10 +12,13 @@
  *   limitations under the License.
  */
 
-import { Component, Host, h, Prop } from '@stencil/core';
+import { Component, Host, h, Prop, Element, State } from '@stencil/core';
+import { HostElement } from '@stencil/core/internal';
+import { getElementDir } from '../../utils/languageUtil';
 
 const CSS = {
   headerContent: 'instant-apps-header__header-content',
+  flipRtl: 'instant-apps-header--rtl',
 };
 
 /**
@@ -27,6 +30,12 @@ const CSS = {
   shadow: true,
 })
 export class InstantAppsHeader {
+  @Element()
+  el: HostElement;
+
+  @State()
+  dir: 'ltr' | 'rtl';
+
   /**
    * Main text to display in header.
    */
@@ -57,10 +66,14 @@ export class InstantAppsHeader {
    */
   @Prop() logoLink: string;
 
+  componentDidLoad() {
+    this.dir = getElementDir(this.el);
+  }
+
   render() {
     return (
       <Host>
-        <header style={{ backgroundColor: this.backgroundColor }}>
+        <header class={this.dir === 'rtl' ? CSS.flipRtl : ''} style={{ backgroundColor: this.backgroundColor }}>
           <span class={CSS.headerContent}>
             {this.logoImage && this.logoLink ? (
               <a href={`${this.logoLink}`} target="_blank">
