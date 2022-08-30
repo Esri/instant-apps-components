@@ -106,9 +106,11 @@ export class InstantAppsHeader {
               ''
             )}
             <h1 style={{ color: this.textColor }}>{this.titleText}</h1>
-            <button id="infoButton" onClick={this.toggleInfo.bind(this)}>
-              <calcite-icon icon="information-f" scale="s" />
-            </button>
+            {this.infoButton ? (
+              <button id="infoButton" onClick={this.toggleInfo.bind(this)}>
+                <calcite-icon icon="information-f" scale="s" />
+              </button>
+            ) : null}
           </span>
           <slot name="actions-end"></slot>
         </header>
