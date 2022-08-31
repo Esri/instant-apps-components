@@ -35,9 +35,12 @@
 
 ## CSS Custom Properties
 
-| Name                           | Description                       |
-| ------------------------------ | --------------------------------- |
-| `--instant-apps-header-height` | Height for header. Default: auto; |
+| Name                                    | Description                               |
+| --------------------------------------- | ----------------------------------------- |
+| `--instant-apps-header-height`          | Height for header. Default: auto;         |
+| `--instant-apps-header-logo-link-width` | Logo link width. Default: 6.5%;           |
+| `--instant-apps-header-logo-width`      | Logo width. Default: 6%;                  |
+| `--instant-apps-header-min-height`      | Minimum height for header. Default: 45px; |
 
 
 ----------------------------------------------

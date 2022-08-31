@@ -17,6 +17,21 @@
  * @prop --instant-apps-header-height: Height for header. Default: auto;
  */
  --instant-apps-header-height: auto;
+
+   /**
+ * @prop --instant-apps-header-min-height: Minimum height for header. Default: 45px;
+ */
+ --instant-apps-header-min-height: 45px;
+
+    /**
+ * @prop --instant-apps-header-logo-width: Logo width. Default: 6%;
+ */
+ --instant-apps-header-logo-width: 6%;
+
+   /**
+ * @prop --instant-apps-header-logo-link-width: Logo link width. Default: 6.5%;
+ */
+ --instant-apps-header-logo-link-width: 6.5%;
   width: 100%;
   header {
     box-sizing: border-box;
@@ -30,20 +45,20 @@
     padding-top: 5px;
     padding-bottom: 5px;
     font-family: var(--calcite-sans-family);
-    min-height: 45px;
+    min-height: var(--instant-apps-header-min-height);
 
     .instant-apps-header__header-content {
       display: flex;
       align-items: center;
       img {
-        width: 6%;
+        width: var(--instant-apps-header-logo-width);
         padding: 0 5px;
       }
 
       a {
         display: flex;
         align-items: center;
-        width: 6.5%;
+        width: var(--instant-apps-header-logo-link-width);
         margin-right: 10px;
         img {
           width: 100%;
