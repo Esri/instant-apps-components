@@ -14,6 +14,18 @@ export namespace Components {
          */
         "backgroundColor": string;
         /**
+          * CSS styles to be used in conjuction with `custom-header-html`. IMPORTANT: SANITIZE YOUR CSS BEFORE PASSING IT IN TO AVOID SECURITY VULNERABILITIES.
+         */
+        "customHeaderCss": string;
+        /**
+          * HTML code for custom headers. IMPORTANT: SANITIZE YOUR HTML BEFORE PASSING IT IN TO AVOID SECURITY VULNERABILITIES.
+         */
+        "customHeaderHtml": string;
+        /**
+          * Font family to use for text
+         */
+        "fontFamily": string;
+        /**
           * Display info button at the end of the title.
          */
         "infoButton": boolean;
@@ -160,6 +172,18 @@ declare namespace LocalJSX {
           * Background color to display in header - accepts a hexidecimal value i.e. `#000000`.
          */
         "backgroundColor"?: string;
+        /**
+          * CSS styles to be used in conjuction with `custom-header-html`. IMPORTANT: SANITIZE YOUR CSS BEFORE PASSING IT IN TO AVOID SECURITY VULNERABILITIES.
+         */
+        "customHeaderCss"?: string;
+        /**
+          * HTML code for custom headers. IMPORTANT: SANITIZE YOUR HTML BEFORE PASSING IT IN TO AVOID SECURITY VULNERABILITIES.
+         */
+        "customHeaderHtml"?: string;
+        /**
+          * Font family to use for text
+         */
+        "fontFamily"?: string;
         /**
           * Display info button at the end of the title.
          */

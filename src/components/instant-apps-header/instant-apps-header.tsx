@@ -17,6 +17,7 @@ import { Event, EventEmitter, HostElement } from '@stencil/core/internal';
 import { getElementDir } from '../../utils/languageUtil';
 
 const CSS = {
+  base: 'instant-apps-header--standard',
   headerContent: 'instant-apps-header__header-content',
   flipRtl: 'instant-apps-header--rtl',
 };
@@ -83,6 +84,30 @@ export class InstantAppsHeader {
   infoIsOpen: boolean = false;
 
   /**
+   * HTML code for custom headers. IMPORTANT: SANITIZE YOUR HTML BEFORE PASSING IT IN TO AVOID SECURITY VULNERABILITIES.
+   */
+  @Prop({
+    reflect: true,
+  })
+  customHeaderHtml: string;
+
+  /**
+   * CSS styles to be used in conjuction with `custom-header-html`. IMPORTANT: SANITIZE YOUR CSS BEFORE PASSING IT IN TO AVOID SECURITY VULNERABILITIES.
+   */
+  @Prop({
+    reflect: true,
+  })
+  customHeaderCss: string;
+
+  /**
+   * Font family to use for text
+   */
+  @Prop({
+    reflect: true,
+  })
+  fontFamily: string = 'var(--calcite-sans-family);';
+
+  /**
    * Fires when the info button is clicked.
    */
   @Event({ cancelable: false }) infoIsOpenChanged: EventEmitter<boolean>;
@@ -94,26 +119,30 @@ export class InstantAppsHeader {
   render() {
     return (
       <Host>
-        <header class={this.dir === 'rtl' ? CSS.flipRtl : ''} style={{ backgroundColor: this.backgroundColor }}>
-          <span class={CSS.headerContent}>
-            {this.logoImage && this.logoLink ? (
-              <a href={`${this.logoLink}`} target="_blank">
-                <img src={`${this.logoImage}`} alt={`${this.logoImageAltText}`} />
-              </a>
-            ) : this.logoImage ? (
-              <img src={`${this.logoImage}`} alt={this.logoImageAltText} />
-            ) : (
-              ''
-            )}
-            <h1 style={{ color: this.textColor }}>{this.titleText}</h1>
-            {this.infoButton ? (
-              <button id="infoButton" onClick={this.toggleInfo.bind(this)}>
-                <calcite-icon icon="information-f" scale="s" />
-              </button>
-            ) : null}
-          </span>
-          <slot name="actions-end"></slot>
-        </header>
+        {this.customHeaderHtml ? (
+          [<style>{this.customHeaderCss}</style>, <header innerHTML={this.customHeaderHtml} />]
+        ) : (
+          <header class={`${CSS.base}${this.dir === 'rtl' ? ` ${CSS.flipRtl}` : ''}`} style={{ backgroundColor: this.backgroundColor, fontFamily: this.fontFamily }}>
+            <span class={CSS.headerContent}>
+              {this.logoImage && this.logoLink ? (
+                <a href={`${this.logoLink}`} target="_blank">
+                  <img src={`${this.logoImage}`} alt={`${this.logoImageAltText}`} />
+                </a>
+              ) : this.logoImage ? (
+                <img src={`${this.logoImage}`} alt={this.logoImageAltText} />
+              ) : (
+                ''
+              )}
+              <h1 style={{ color: this.textColor }}>{this.titleText}</h1>
+              {this.infoButton ? (
+                <button id="infoButton" onClick={this.toggleInfo.bind(this)}>
+                  <calcite-icon icon="information-f" scale="s" />
+                </button>
+              ) : null}
+            </span>
+            <slot name="actions-end" />
+          </header>
+        )}
       </Host>
     );
   }
