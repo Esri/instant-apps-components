@@ -20,6 +20,9 @@ const CSS = {
   base: 'instant-apps-header--standard',
   headerContent: 'instant-apps-header__header-content',
   flipRtl: 'instant-apps-header--rtl',
+  logoScale: 'instant-apps-header__logo-scale--',
+  logoHeight: 'instant-apps-header__logo-height--',
+  standardHeight: 'instant-apps-header__standard-height',
 };
 
 /**
@@ -56,6 +59,14 @@ export class InstantAppsHeader {
    * Image URL for logo. Displays at the start of the header.
    */
   @Prop() logoImage: string;
+
+  /**
+   * Adjusts scale of logo image.
+   */
+  @Prop({
+    reflect: true,
+  })
+  logoScale: 's' | 'm' | 'l' = 'm';
 
   /**
    * Alternate text for header logo.
@@ -122,14 +133,17 @@ export class InstantAppsHeader {
         {this.customHeaderHtml ? (
           [<style>{this.customHeaderCss}</style>, <header innerHTML={this.customHeaderHtml} />]
         ) : (
-          <header class={`${CSS.base}${this.dir === 'rtl' ? ` ${CSS.flipRtl}` : ''}`} style={{ backgroundColor: this.backgroundColor, fontFamily: this.fontFamily }}>
+          <header
+            class={`${CSS.base}${this.dir === 'rtl' ? ` ${CSS.flipRtl}` : ''}${this.logoImage ? ` ${CSS.logoHeight}${this.logoScale}` : ` ${CSS.standardHeight}`}`}
+            style={{ backgroundColor: this.backgroundColor, fontFamily: this.fontFamily }}
+          >
             <span class={CSS.headerContent}>
               {this.logoImage && this.logoLink ? (
                 <a href={`${this.logoLink}`} target="_blank">
-                  <img src={`${this.logoImage}`} alt={`${this.logoImageAltText}`} />
+                  <img class={`${CSS.logoScale}${this.logoScale}`} src={`${this.logoImage}`} alt={`${this.logoImageAltText}`} />
                 </a>
               ) : this.logoImage ? (
-                <img src={`${this.logoImage}`} alt={this.logoImageAltText} />
+                <img class={`${CSS.logoScale}${this.logoScale}`} src={`${this.logoImage}`} alt={this.logoImageAltText} />
               ) : (
                 ''
               )}
