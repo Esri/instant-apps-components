@@ -46,6 +46,10 @@ export namespace Components {
          */
         "logoLink": string;
         /**
+          * Adjusts scale of logo image.
+         */
+        "logoScale": 's' | 'm' | 'l';
+        /**
           * Text color to display in header - accepts a hexidecimal value i.e. `#FFFFFF`.
          */
         "textColor": string;
@@ -204,6 +208,10 @@ declare namespace LocalJSX {
           * Logo URL to link out to another page.
          */
         "logoLink"?: string;
+        /**
+          * Adjusts scale of logo image.
+         */
+        "logoScale"?: 's' | 'm' | 'l';
         /**
           * Fires when the info button is clicked.
          */

@@ -19,19 +19,10 @@
  --instant-apps-header-height: auto;
 
    /**
- * @prop --instant-apps-header-min-height: Minimum height for header. Default: 45px;
+ * @prop --instant-apps-header-min-height: Minimum height for header. Default: 50px;
  */
- --instant-apps-header-min-height: 45px;
+ --instant-apps-header-min-height: 50px;
 
-    /**
- * @prop --instant-apps-header-logo-width: Logo width. Default: 6%;
- */
- --instant-apps-header-logo-width: 6%;
-
-   /**
- * @prop --instant-apps-header-logo-link-width: Logo link width. Default: 6.5%;
- */
- --instant-apps-header-logo-link-width: 6.5%;
   width: 100%;
   .instant-apps-header--standard {
     box-sizing: border-box;
@@ -40,7 +31,6 @@
     justify-content: space-between;
     width: 100%;
     height: var(--instant-apps-header-height);
-    padding: 0 7.5px;
     background-color: #0079c1;
     padding-top: 5px;
     padding-bottom: 5px;
@@ -50,20 +40,17 @@
     .instant-apps-header__header-content {
       display: flex;
       align-items: center;
-      img {
-        width: var(--instant-apps-header-logo-width);
-        padding: 0 5px;
-      }
 
       a {
         display: flex;
         align-items: center;
-        width: var(--instant-apps-header-logo-link-width);
-        margin-right: 10px;
         img {
-          width: 100%;
           padding-right: 0;
         }
+      }
+
+      img {
+        margin: 10px;
       }
 
       h1 {
@@ -87,18 +74,45 @@
     }
   }
 
-   
-  .instant-apps-header--rtl {
-      .instant-apps-header__header-content {
-        a {
-          margin-right: 0;
-          margin-left: 10px;
-          img {
-            width: 100%;
-            padding-left: 0;
-          }
-        }
-      }
+  .instant-apps-header__standard-height {
+    padding: 10px;
+  }
+
+  .instant-apps-header__logo-height--s {
+    height: 55px;
+  }
+  .instant-apps-header__logo-scale--s {
+    width: 35px;
+    height: 35px;
+  }
+
+  .instant-apps-header__logo-height--m {
+    height: 70px;
+  }
+  .instant-apps-header__logo-scale--m {
+    width: 50px;
+    height: 50px;
+  }
+
+  .instant-apps-header__logo-height--l {
+    height: 80px;
+  }
+  .instant-apps-header__logo-scale--l {
+    width: 60px;
+    height: 60px;
+  }
+
+  .instant-apps-header__logo-height--s,
+  .instant-apps-header__logo-height--m,
+  .instant-apps-header__logo-height--l {
+    padding-right: 10px;
+  }
+
+    .instant-apps-header--rtl.instant-apps-header__logo-height--s,
+    .instant-apps-header--rtl.instant-apps-header__logo-height--m,
+    .instant-apps-header--rtl.instant-apps-header__logo-height--l {
+      padding-right: 0;
+      padding-left: 10px;
     }
   
 }
