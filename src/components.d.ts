@@ -14,6 +14,26 @@ export namespace Components {
          */
         "backgroundColor": string;
         /**
+          * CSS styles to be used in conjuction with `custom-header-html`. IMPORTANT: SANITIZE YOUR CSS BEFORE PASSING IT IN TO AVOID SECURITY VULNERABILITIES.
+         */
+        "customHeaderCss": string;
+        /**
+          * HTML code for custom headers. IMPORTANT: SANITIZE YOUR HTML BEFORE PASSING IT IN TO AVOID SECURITY VULNERABILITIES.
+         */
+        "customHeaderHtml": string;
+        /**
+          * Font family to use for text
+         */
+        "fontFamily": string;
+        /**
+          * Display info button at the end of the title.
+         */
+        "infoButton": boolean;
+        /**
+          * Keeps track of the info 'open' state
+         */
+        "infoIsOpen": boolean;
+        /**
           * Image URL for logo. Displays at the start of the header.
          */
         "logoImage": string;
@@ -25,6 +45,10 @@ export namespace Components {
           * Logo URL to link out to another page.
          */
         "logoLink": string;
+        /**
+          * Adjusts scale of logo image.
+         */
+        "logoScale": 's' | 'm' | 'l';
         /**
           * Text color to display in header - accepts a hexidecimal value i.e. `#FFFFFF`.
          */
@@ -192,6 +216,26 @@ declare namespace LocalJSX {
          */
         "backgroundColor"?: string;
         /**
+          * CSS styles to be used in conjuction with `custom-header-html`. IMPORTANT: SANITIZE YOUR CSS BEFORE PASSING IT IN TO AVOID SECURITY VULNERABILITIES.
+         */
+        "customHeaderCss"?: string;
+        /**
+          * HTML code for custom headers. IMPORTANT: SANITIZE YOUR HTML BEFORE PASSING IT IN TO AVOID SECURITY VULNERABILITIES.
+         */
+        "customHeaderHtml"?: string;
+        /**
+          * Font family to use for text
+         */
+        "fontFamily"?: string;
+        /**
+          * Display info button at the end of the title.
+         */
+        "infoButton"?: boolean;
+        /**
+          * Keeps track of the info 'open' state
+         */
+        "infoIsOpen"?: boolean;
+        /**
           * Image URL for logo. Displays at the start of the header.
          */
         "logoImage"?: string;
@@ -203,6 +247,14 @@ declare namespace LocalJSX {
           * Logo URL to link out to another page.
          */
         "logoLink"?: string;
+        /**
+          * Adjusts scale of logo image.
+         */
+        "logoScale"?: 's' | 'm' | 'l';
+        /**
+          * Fires when the info button is clicked.
+         */
+        "onInfoIsOpenChanged"?: (event: CustomEvent<boolean>) => void;
         /**
           * Text color to display in header - accepts a hexidecimal value i.e. `#FFFFFF`.
          */
