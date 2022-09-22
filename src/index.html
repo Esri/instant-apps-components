@@ -37,20 +37,6 @@
         margin: 0;
         padding: 0;
       }
-
-      .panel-content {
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        padding: 5%;
-        font-size: 1rem;
-        font-weight: 400;
-        margin: 0;
-      }
-
-      calcite-button {
-        margin: 5px 0;
-      }
     </style>
   </head>
 
@@ -58,7 +44,7 @@
     <calcite-shell>
       <instant-apps-header
         slot="header"
-        title-text="Instant Apps: Header (Shared Theme)"
+        title-text="10.3 Interactive Legend"
         text-color="#f8f8f8"
         background-color="#151515"
         logo-image="https://www.esri.com/content/dam/esrisites/en-us/common/icons/product-logos/arcgis-instant-apps-64.svg"
@@ -67,30 +53,38 @@
       >
         <instant-apps-social-share slot="actions-end" popover-button-icon-scale="s"></instant-apps-social-share>
       </instant-apps-header>
-      <calcite-shell-panel slot="primary-panel">
+      <calcite-shell-panel slot="primary-panel" position="end">
         <calcite-panel></calcite-panel>
       </calcite-shell-panel>
       <div id="viewDiv"></div>
     </calcite-shell>
 
     <script>
-      require(['esri/WebMap', 'esri/views/MapView', 'esri/layers/FeatureLayer', 'esri/widgets/FeatureTable', 'esri/core/watchUtils', 'esri/widgets/Legend'], (
-        WebMap,
-        MapView,
-        FeatureLayer,
-        FeatureTable,
-        watchUtils,
-        Legend,
-      ) => {
+      require([
+        'esri/WebMap',
+        'esri/views/MapView',
+        'esri/layers/FeatureLayer',
+        'esri/widgets/FeatureTable',
+        'esri/core/watchUtils',
+        'esri/widgets/Legend',
+        'esri/config',
+        'esri/widgets/Home',
+      ], (WebMap, MapView, FeatureLayer, FeatureTable, watchUtils, Legend, esriConfig, Home) => {
+        esriConfig.portalUrl = 'https://holistic.mapsdevext.arcgis.com';
+
         const map = new WebMap({
           portalItem: {
-            id: '89cd0f1a793d4304a5581d4801b83eb1', // f0a65cdcf362483fa268a30d62eed4a2
+            id: '7e252d7ebdc448378e7d1c3ff15c5703', // f0a65cdcf362483fa268a30d62eed4a2
           },
         });
 
         const view = new MapView({
           map: map,
           container: 'viewDiv',
+        });
+
+        const home = new Home({
+          view,
         });
 
         view.when(async () => {
@@ -101,6 +95,8 @@
           // });
 
           // view.ui.add(legend, 'top-right');
+
+          view.ui.add(home, 'top-left');
 
           const interactiveLegend = document.createElement('instant-apps-interactive-legend');
           interactiveLegend.view = view;

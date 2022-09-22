@@ -10,11 +10,14 @@ import {
 
 import { isImageryStretchedLegend } from './support/styleUtils';
 
-import { validateInteractivity } from './support/helpers';
+import { validateInteractivity, generateData, updateFeatureCount } from './support/helpers';
 
 import { loadModules } from 'esri-loader';
 
+import { IInteractiveLegendData } from './interfaces/interfaces';
+
 const CSS = {
+  // jsapi styles
   service: 'esri-legend__service',
   label: 'esri-legend__service-label',
   layer: 'esri-legend__layer',
@@ -48,6 +51,11 @@ const CSS = {
   message: 'esri-legend__message',
   header: 'esri-widget__heading',
   hidden: 'esri-hidden',
+
+  // instant-apps-interactive-legend
+  layerCaptionBtnContainer: 'instant-apps-interactive-legend__layer-caption-btn-container',
+  countText: 'instant-apps-interactive-legend__info-count-text',
+  interactiveLayerRow: 'instant-apps-interactive-legend__layer-row--interactive',
 };
 
 const KEY = 'esri-legend__';
@@ -59,12 +67,15 @@ const univariateColorRampStyles = { display: 'table-cell', verticalAlign: 'middl
 @Component({
   tag: 'instant-apps-interactive-legend-classic',
   styleUrl: 'instant-apps-interactive-legend-classic.scss',
-  shadow: false,
+  scoped: true,
 })
 export class InstantAppsInteractiveLegendClassic {
   reactiveUtils;
   handles: __esri.Handles;
   intl: __esri.intl;
+
+  @State()
+  data: IInteractiveLegendData;
 
   @State()
   reRender = false;
@@ -85,13 +96,26 @@ export class InstantAppsInteractiveLegendClassic {
   readonly type: 'classic' = 'classic';
 
   async componentWillLoad() {
-    const [intl] = await loadModules(['esri/intl']);
+    const [intl, reactiveUtils, Handles] = await loadModules(['esri/intl', 'esri/core/reactiveUtils', 'esri/core/Handles']);
+    this.reactiveUtils = reactiveUtils;
+    this.handles = new Handles();
     this.intl = intl;
   }
 
   async componentDidLoad() {
-    const [reactiveUtils] = await loadModules(['esri/core/reactiveUtils']);
-    this.reactiveUtils = reactiveUtils;
+    await this.reactiveUtils.whenOnce(() => this.legendvm);
+    this.data = await generateData(this.legendvm, this.reactiveUtils);
+
+    this.handles.add(
+      this.reactiveUtils.watch(
+        () => this.legendvm?.view?.updating,
+        () => {
+          updateFeatureCount(this.legendvm, this.data);
+          this.reRender = !this.reRender;
+        },
+      ),
+    );
+
     this.reRender = !this.reRender;
   }
 
@@ -129,7 +153,10 @@ export class InstantAppsInteractiveLegendClassic {
 
       return (
         <div key={key} class={`${CSS.service} ${CSS.groupLayer}`}>
-          <h3 class={`${CSS.header} ${CSS.label}`}>{activeLayerInfo.title}</h3>
+          <header>
+            <h3 class={`${CSS.header} ${CSS.label}`}>{activeLayerInfo.title}</h3>
+            <span>Total feature count: 50,000</span>
+          </header>
           {layers}
         </div>
       );
@@ -153,9 +180,14 @@ export class InstantAppsInteractiveLegendClassic {
 
       const layerClasses = !!activeLayerInfo.parent ? ` ${CSS.groupLayerChild}` : '';
 
+      const totalFeatureCount = this.intl.formatNumber(this.data?.[activeLayerInfo?.layer?.id]?.totalCount);
+
       return (
         <div key={key} class={`${CSS.service}${layerClasses}`} tabIndex={0}>
-          <h3 class={`${CSS.header} ${CSS.label}`}>{activeLayerInfo.title}</h3>
+          <header>
+            <h3 class={`${CSS.header} ${CSS.label}`}>{activeLayerInfo.title}</h3>
+            <span>Total feature count: {totalFeatureCount}</span>
+          </header>
           <div class={CSS.layer}>{filteredElements}</div>
         </div>
       );
@@ -169,11 +201,12 @@ export class InstantAppsInteractiveLegendClassic {
 
     let content = null;
 
+    const isInteractive = validateInteractivity(activeLayerInfo, legendElement, legendElementIndex);
+
     // build symbol table or size ramp
     if (legendElement.type === 'symbol-table' || isSizeRamp) {
-      console.log(legendElement);
       const rows = (legendElement.infos as any)
-        .map((info: any) => this.renderLegendForElementInfo(info, layer, effectList, isSizeRamp, legendElement, activeLayerInfo, legendElementIndex))
+        .map((info: any) => this.renderLegendForElementInfo(info, layer, effectList, isSizeRamp, legendElement, activeLayerInfo, legendElementIndex, isInteractive))
         .filter((row: any) => !!row);
 
       if (rows.length) {
@@ -218,7 +251,17 @@ export class InstantAppsInteractiveLegendClassic {
     }
 
     const tableClass = isChild ? CSS.layerChildTable : CSS.layerTable;
-    const caption = title ? <div class={CSS.layerCaption}>{title}</div> : null;
+    const caption = title ? (
+      <div class={CSS.layerCaption}>
+        {title}
+        {isInteractive ? (
+          <div class={CSS.layerCaptionBtnContainer}>
+            <calcite-button icon-start="list-check-all" appearance="outline" round="true" />
+            <calcite-button icon-start="magnifying-glass-plus" appearance="outline" round="true" />
+          </div>
+        ) : null}
+      </div>
+    ) : null;
 
     const tableClasses = isSizeRamp || !isChild ? ` ${CSS.layerTableSizeRamp}` : '';
 
@@ -445,9 +488,8 @@ export class InstantAppsInteractiveLegendClassic {
     legendElement: any,
     activeLayerInfo: __esri.ActiveLayerInfo,
     legendElementIndex: number,
+    isInteractive: boolean,
   ) {
-    const isInteractive = validateInteractivity(activeLayerInfo, legendElement, legendElementIndex);
-    console.log('IS INTERACTIVE: ', isInteractive);
     // nested
     if (elementInfo.type) {
       return this.renderLegendForElement(elementInfo, layer, effectList, activeLayerInfo, legendElementIndex, true);
@@ -469,11 +511,22 @@ export class InstantAppsInteractiveLegendClassic {
     const imageryLayerInfoStretched = isStretched ? ` ${CSS.imageryLayerInfoStretched}` : '';
     const sizeRamp = !isStretched && isSizeRamp ? ` ${CSS.sizeRamp}` : '';
 
+    let count;
+
+    if (this.data) {
+      const data = this.data[activeLayerInfo.layer.id];
+      const category = data.categories.get(elementInfo.value);
+      count = this.intl.formatNumber(category?.count as number);
+    }
+
     return isInteractive ? (
       // Regular LegendElementInfo
-      <div onClick={this.handleSelection.bind(this, elementInfo)} class={CSS.layerRow}>
-        <div class={`${CSS.symbolContainer}${imageryLayerInfoStretched}${sizeRamp}`}>{content}</div>
-        <div class={`${CSS.layerInfo}${imageryLayerInfoStretched}`}>{this.getTitle(this.messages, elementInfo.label, false) || ''}</div>
+      <div onClick={this.handleSelection.bind(this, elementInfo)} class={`${CSS.layerRow} ${CSS.interactiveLayerRow}`}>
+        <div>
+          <div class={`${CSS.symbolContainer}${imageryLayerInfoStretched}${sizeRamp}`}>{content}</div>
+          <div class={`${CSS.layerInfo}${imageryLayerInfoStretched}`}>{this.getTitle(this.messages, elementInfo.label, false) || ''}</div>
+        </div>
+        <span class={CSS.countText}>{count}</span>
       </div>
     ) : (
       <div class={CSS.layerRow}>

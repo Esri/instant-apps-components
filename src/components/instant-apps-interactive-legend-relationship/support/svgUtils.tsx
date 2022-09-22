@@ -4,7 +4,6 @@ import { mat2df32 } from './mat2df32';
 
 import has from './has';
 
-
 let patternCount = 0;
 let linearGradientCount = 0;
 
@@ -602,7 +601,6 @@ function getBoundingBoxForPath(shape: any): any {
   const p = path.match(PATH_REGEX);
   const segments: any[] = []; // Segment[]
   const bboxRect: any = {};
-  const lastPoint: any = {};
 
   if (!p) {
     return null;
