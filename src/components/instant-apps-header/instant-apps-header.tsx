@@ -131,7 +131,7 @@ export class InstantAppsHeader {
     return (
       <Host>
         {this.customHeaderHtml ? (
-          [<style>{this.customHeaderCss}</style>, <header innerHTML={this.customHeaderHtml} />]
+          [<style>{this.customHeaderCss}</style>, <div innerHTML={this.customHeaderHtml} />]
         ) : (
           <header
             class={`${CSS.base}${this.dir === 'rtl' ? ` ${CSS.flipRtl}` : ''}${this.logoImage ? ` ${CSS.logoHeight}${this.logoScale}` : ` ${CSS.standardHeight}`}`}
