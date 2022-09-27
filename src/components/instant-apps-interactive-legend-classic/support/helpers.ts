@@ -1,3 +1,4 @@
+import { loadModules } from 'esri-loader';
 import { IInteractiveLegendData, ICategories, IIntLegendLayerData, ICategory } from '../interfaces/interfaces';
 
 export function validateInteractivity(activeLayerInfo: __esri.ActiveLayerInfo, legendElement: any, legendElementIndex: number): boolean {
@@ -139,10 +140,10 @@ async function createInteractiveLegendDataForLayer(
   });
 
   // Generated expression to apply to layer filters
-  const expression = null;
+  const queryExpressions = [];
 
   // Total feature count
-  return Promise.resolve({ categories, field, expression, totalCount, fLayerView });
+  return Promise.resolve({ categories, field, queryExpressions, totalCount, fLayerView, legendElement });
 }
 
 export async function getInfoCount(extent: __esri.Geometry, fLayerView: __esri.FeatureLayerView, field: string, info: any): Promise<number> {
@@ -177,5 +178,118 @@ export async function updateFeatureCount(legendvm: __esri.LegendViewModel, data:
       category.count = count;
     });
     dataForALI.totalCount = totalCount;
+  });
+}
+
+export async function handleFilter(data: IIntLegendLayerData, info: any, infoIndex: number): Promise<void> {
+  const [FeatureFilter] = await loadModules(['esri/layers/support/FeatureFilter']);
+  const { queryExpressions, fLayerView } = data;
+  generateQueryExpressions(data, info, infoIndex);
+  const where = queryExpressions.join(' OR ');
+  const timeExtent = fLayerView?.filter?.timeExtent ?? null;
+  fLayerView.filter = new FeatureFilter({ where, timeExtent });
+}
+
+function generateQueryExpressions(data: IIntLegendLayerData, info: any, infoIndex: number): void {
+  const { field, legendElement, categories } = data;
+  const legendElementInfos = Array.from(categories);
+  const queryExpression = generateQueryExpression(info, field, infoIndex, legendElement, legendElementInfos, '');
+  const category = categories.get(info.value) as ICategory;
+  category.selected = !category?.selected;
+  const hasOneValue = legendElementInfos && legendElementInfos.length === 1;
+  const queryExpressions = data?.queryExpressions;
+  const expressionIndex = queryExpressions.indexOf(queryExpression);
+  if (queryExpressions.length === 0 || expressionIndex === -1) {
+    if (queryExpressions && queryExpressions[0] === '1=0') {
+      queryExpressions.splice(0, 1);
+    }
+    queryExpressions.push(queryExpression);
+  } else if (queryExpressions && queryExpressions.length === 1 && queryExpression === queryExpressions[0] && !hasOneValue) {
+    queryExpressions[0] = '1=0';
+  } else if (queryExpressions && queryExpressions.length === 1 && !hasOneValue) {
+    queryExpressions[0] = queryExpression;
+  } else if (queryExpressions && queryExpressions.length === 1 && queryExpression !== queryExpressions[0] && queryExpressions[0] === '1=0' && !hasOneValue) {
+    queryExpressions[0] = queryExpression;
+  } else if (queryExpressions && queryExpressions.length === 1 && queryExpression === queryExpressions[0] && queryExpressions[0] === '1=0' && !hasOneValue) {
+    queryExpressions[0] = null;
+  } else {
+    queryExpressions.splice(expressionIndex, 1);
+  }
+}
+function generateQueryExpression(info: any, field: string, infoIndex: number, legendElement: __esri.LegendElement, legendElementInfos: any[], normalizationField?: string): string {
+  const { value } = info;
+  if (legendElement.type === 'symbol-table') {
+    // Classify data size/color ramp
+    if (!info.hasOwnProperty('value') || (Array.isArray(info.value) && legendElementInfos?.length === 1)) {
+      // Classify data size/color ramp - 'Other' category
+      if (
+        legendElementInfos?.[0].hasOwnProperty('value') &&
+        Array.isArray(legendElementInfos?.[0].value) &&
+        legendElementInfos?.[legendElementInfos?.length - 2] &&
+        legendElementInfos?.[legendElementInfos?.length - 2].hasOwnProperty('value') &&
+        Array.isArray(legendElementInfos?.[legendElementInfos?.length - 2].value)
+      ) {
+        const expression = normalizationField
+          ? `((${field}/${normalizationField}) > ${legendElementInfos?.[0].value[1]}) OR ((${field}/${normalizationField}) < ${
+              legendElementInfos?.[legendElementInfos?.length - 2].value[0]
+            }) OR ${normalizationField} = 0 OR ${normalizationField} IS NULL`
+          : `${field} > ${legendElementInfos?.[0].value[1]} OR ${field} < ${legendElementInfos?.[legendElementInfos?.length - 2].value[0]} OR ${field} IS NULL`;
+        return expression;
+      } else if (legendElementInfos?.length === 1) {
+        return '1=0';
+      } else {
+        // Types unique symbols - 'Other' category
+        const expressionList = [] as string[];
+        legendElementInfos?.forEach(legendElementInfo => {
+          if (info.value) {
+            const { value } = legendElementInfo;
+            const singleQuote = value.indexOf("'") !== -1 ? value.split("'").join("''") : null;
+            const expression = singleQuote
+              ? `${field} <> '${singleQuote}'`
+              : isNaN(value) || (typeof value === 'string' && !value.trim())
+              ? `${field} <> '${value}'`
+              : `${field} <> ${value} AND ${field} <> '${value}'`;
+            expressionList.push(expression);
+          }
+        });
+        const noExpression = expressionList.join(' AND ');
+        return field ? `${noExpression} OR ${field} IS NULL` : '';
+      }
+    } else {
+      const singleQuote = value.indexOf("'") !== -1 ? value.split("'").join("''") : null;
+      const isArray = Array.isArray(info.value);
+      const isLastElement = legendElementInfos?.length - 1 === infoIndex;
+      const lastElementAndNoValue = !legendElementInfos?.[legendElementInfos?.length - 1].hasOwnProperty('value');
+      const secondToLastElement = infoIndex === legendElementInfos?.length - 2;
+      const expression = isArray
+        ? normalizationField
+          ? isLastElement || (lastElementAndNoValue && secondToLastElement)
+            ? `(${field}/${normalizationField}) >= ${value[0]} AND (${field}/${normalizationField}) <= ${info.value[1]}`
+            : `(${field}/${normalizationField}) > ${value[0]} AND (${field}/${normalizationField}) <= ${info.value[1]}`
+          : isLastElement || (lastElementAndNoValue && secondToLastElement)
+          ? `${field} >= ${value[0]} AND ${field} <= ${value[1]}`
+          : `${field} > ${value[0]} AND ${field} <= ${value[1]}`
+        : legendElementInfos?.length === 1 && field
+        ? isNaN(value) || !value.trim().length
+          ? `${field} <> '${value}'`
+          : `${field} <> ${value} OR ${field} <> '${value}'`
+        : singleQuote
+        ? `${field} = '${singleQuote}'`
+        : isNaN(value) || !value.trim().length
+        ? `${field} = '${value}'`
+        : `${field} = ${value} OR ${field} = '${value}'`;
+
+      return expression;
+    }
+  } else {
+    return '';
+  }
+}
+
+export function showAll(data: IIntLegendLayerData): void {
+  data.queryExpressions = [];
+  data.fLayerView.filter.where = '';
+  data.categories.forEach(category => {
+    category.selected = false;
   });
 }

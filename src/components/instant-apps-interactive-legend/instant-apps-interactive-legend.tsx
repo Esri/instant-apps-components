@@ -34,9 +34,7 @@ export class InstantAppsInteractiveLegend {
   legendvm: __esri.LegendViewModel;
 
   componentWillLoad() {
-    this.initializeModules().then(async () => {
-      this.initApp();
-    });
+    this.initializeModules().then(async () => this.initApp());
   }
 
   async initializeModules() {
@@ -47,10 +45,8 @@ export class InstantAppsInteractiveLegend {
 
   async initApp() {
     const [reactiveUtils, LegendViewModel] = await loadModules(['esri/core/reactiveUtils', 'esri/widgets/Legend/LegendViewModel']);
-    const legendVM = new LegendViewModel({
-      view: this.view,
-    });
-
+    const { view } = this;
+    const legendVM = new LegendViewModel({ view });
     await reactiveUtils.whenOnce(() => legendVM?.activeLayerInfos?.length);
     this.legendvm = legendVM;
     this.handles.add([

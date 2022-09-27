@@ -63,7 +63,7 @@
 
   .instant-apps-interactive-legend__layer-row--interactive:hover {
     cursor: pointer;
-    background-color: var(--instant-apps-interactive-legend-secondary-background-color);
+    background-color: var(--instant-apps-interactive-legend-info-item--selected);
   }
 
   .esri-legend__layer-cell--info {
@@ -96,6 +96,10 @@
   .instant-apps-interactive-legend__info-count-text {
     font-size: var(--instant-apps-interactive-legend-info-font-size);
     color: var(--instant-apps-interactive-legend-secondary-color);
+  }
+
+  .instant-apps-interactive-legend-element-info--selected {
+    background-color: var(--instant-apps-interactive-legend-info-item--selected);
   }
 }
 

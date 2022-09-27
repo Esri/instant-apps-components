@@ -10,7 +10,7 @@ import {
 
 import { isImageryStretchedLegend } from './support/styleUtils';
 
-import { validateInteractivity, generateData, updateFeatureCount } from './support/helpers';
+import { validateInteractivity, generateData, updateFeatureCount, handleFilter, showAll } from './support/helpers';
 
 import { loadModules } from 'esri-loader';
 
@@ -56,6 +56,7 @@ const CSS = {
   layerCaptionBtnContainer: 'instant-apps-interactive-legend__layer-caption-btn-container',
   countText: 'instant-apps-interactive-legend__info-count-text',
   interactiveLayerRow: 'instant-apps-interactive-legend__layer-row--interactive',
+  infoSelected: 'instant-apps-interactive-legend-element-info--selected',
 };
 
 const KEY = 'esri-legend__';
@@ -206,7 +207,9 @@ export class InstantAppsInteractiveLegendClassic {
     // build symbol table or size ramp
     if (legendElement.type === 'symbol-table' || isSizeRamp) {
       const rows = (legendElement.infos as any)
-        .map((info: any) => this.renderLegendForElementInfo(info, layer, effectList, isSizeRamp, legendElement, activeLayerInfo, legendElementIndex, isInteractive))
+        .map((info: any, infoIndex: number) =>
+          this.renderLegendForElementInfo(info, layer, effectList, isSizeRamp, legendElement, activeLayerInfo, legendElementIndex, infoIndex, isInteractive),
+        )
         .filter((row: any) => !!row);
 
       if (rows.length) {
@@ -256,7 +259,15 @@ export class InstantAppsInteractiveLegendClassic {
         {title}
         {isInteractive ? (
           <div class={CSS.layerCaptionBtnContainer}>
-            <calcite-button icon-start="list-check-all" appearance="outline" round="true" />
+            <calcite-button
+              onClick={() => {
+                showAll(this.data?.[layer?.id]);
+                this.reRender = !this.reRender;
+              }}
+              icon-start="list-check-all"
+              appearance="outline"
+              round="true"
+            />
             <calcite-button icon-start="magnifying-glass-plus" appearance="outline" round="true" />
           </div>
         ) : null}
@@ -488,6 +499,7 @@ export class InstantAppsInteractiveLegendClassic {
     legendElement: any,
     activeLayerInfo: __esri.ActiveLayerInfo,
     legendElementIndex: number,
+    infoIndex: number,
     isInteractive: boolean,
   ) {
     // nested
@@ -512,16 +524,24 @@ export class InstantAppsInteractiveLegendClassic {
     const sizeRamp = !isStretched && isSizeRamp ? ` ${CSS.sizeRamp}` : '';
 
     let count;
+    let selected;
 
     if (this.data) {
       const data = this.data[activeLayerInfo.layer.id];
       const category = data.categories.get(elementInfo.value);
+      selected = category?.selected;
       count = this.intl.formatNumber(category?.count as number);
     }
 
     return isInteractive ? (
       // Regular LegendElementInfo
-      <div onClick={this.handleSelection.bind(this, elementInfo)} class={`${CSS.layerRow} ${CSS.interactiveLayerRow}`}>
+      <div
+        onClick={() => {
+          handleFilter(this.data?.[layer?.id], elementInfo, infoIndex);
+          this.reRender = !this.reRender;
+        }}
+        class={`${CSS.layerRow} ${CSS.interactiveLayerRow}${selected ? ` ${CSS.infoSelected}` : ''}`}
+      >
         <div>
           <div class={`${CSS.symbolContainer}${imageryLayerInfoStretched}${sizeRamp}`}>{content}</div>
           <div class={`${CSS.layerInfo}${imageryLayerInfoStretched}`}>{this.getTitle(this.messages, elementInfo.label, false) || ''}</div>
@@ -534,13 +554,6 @@ export class InstantAppsInteractiveLegendClassic {
         <div class={`${CSS.layerInfo}${imageryLayerInfoStretched}`}>{this.getTitle(this.messages, elementInfo.label, false) || ''}</div>
       </div>
     );
-  }
-
-  handleSelection(elementInfo: any): void {
-    const { label, value } = elementInfo;
-    console.log('LABEL: ', label);
-    console.log('VALUE: ', value);
-    console.log('MORE INFO: ', elementInfo);
   }
 
   renderImage(elementInfo: ImageSymbolTableElementInfo, layer: __esri.Layer, isStretched: boolean) {
