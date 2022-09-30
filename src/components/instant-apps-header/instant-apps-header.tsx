@@ -128,7 +128,7 @@ export class InstantAppsHeader {
   }
 
   render() {
-    const hasEmptyLogo = this.logoImage === 'undefined' || this.logoImage?.split('?')?.[0] === 'undefined' || !this.logoImage;
+    const hasEmptyLogo = this.logoImage === 'undefined' || this.logoImage?.split('?')?.[0] === 'undefined' || this.logoImage?.split('?')?.[0] === '' || !this.logoImage;
     const logo = this.renderLogo(hasEmptyLogo);
     return (
       <Host>
