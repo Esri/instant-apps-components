@@ -128,25 +128,19 @@ export class InstantAppsHeader {
   }
 
   render() {
+    const hasEmptyLogo = this.logoImage === 'undefined' || this.logoImage?.split('?')?.[0] === 'undefined' || this.logoImage?.split('?')?.[0] === '' || !this.logoImage;
+    const logo = this.renderLogo(hasEmptyLogo);
     return (
       <Host>
         {this.customHeaderHtml ? (
           [<style>{this.customHeaderCss}</style>, <div innerHTML={this.customHeaderHtml} />]
         ) : (
           <header
-            class={`${CSS.base}${this.dir === 'rtl' ? ` ${CSS.flipRtl}` : ''}${this.logoImage ? ` ${CSS.logoHeight}${this.logoScale}` : ` ${CSS.standardHeight}`}`}
+            class={`${CSS.base}${this.dir === 'rtl' ? ` ${CSS.flipRtl}` : ''}${this.logoImage && !hasEmptyLogo ? ` ${CSS.logoHeight}${this.logoScale}` : ` ${CSS.standardHeight}`}`}
             style={{ backgroundColor: this.backgroundColor, fontFamily: this.fontFamily }}
           >
             <span class={CSS.headerContent}>
-              {this.logoImage && this.logoLink ? (
-                <a href={`${this.logoLink}`} target="_blank">
-                  <img class={`${CSS.logoScale}${this.logoScale}`} src={`${this.logoImage}`} alt={`${this.logoImageAltText}`} />
-                </a>
-              ) : this.logoImage ? (
-                <img class={`${CSS.logoScale}${this.logoScale}`} src={`${this.logoImage}`} alt={this.logoImageAltText} />
-              ) : (
-                ''
-              )}
+              {logo}
               <h1 style={{ color: this.textColor }}>{this.titleText}</h1>
               {this.infoButton ? (
                 <button id="infoButton" onClick={this.toggleInfo.bind(this)}>
@@ -158,6 +152,20 @@ export class InstantAppsHeader {
           </header>
         )}
       </Host>
+    );
+  }
+
+  renderLogo(hasEmptyLogo: boolean) {
+    return hasEmptyLogo ? (
+      ''
+    ) : this.logoImage && this.logoLink ? (
+      <a href={`${this.logoLink}`} target="_blank">
+        <img class={`${CSS.logoScale}${this.logoScale}`} src={`${this.logoImage}`} alt={`${this.logoImageAltText}`} />
+      </a>
+    ) : this.logoImage ? (
+      <img class={`${CSS.logoScale}${this.logoScale}`} src={`${this.logoImage}`} alt={this.logoImageAltText} />
+    ) : (
+      ''
     );
   }
 

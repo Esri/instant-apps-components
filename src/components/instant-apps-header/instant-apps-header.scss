@@ -56,7 +56,7 @@
 
       h1 {
         margin: 0;
-        font-size: 18px;
+        font-size: 20px;
         color: var(--calcite-ui-text-1);
         font-weight: 430;
         white-space: nowrap;
@@ -81,6 +81,12 @@
 
   .instant-apps-header__logo-height--s {
     height: 55px;
+    .instant-apps-header__header-content {
+      h1 {
+        font-size: 18px;
+      }
+    }
+
   }
   .instant-apps-header__logo-scale--s {
     width: 35px;
@@ -97,6 +103,11 @@
 
   .instant-apps-header__logo-height--l {
     height: 80px;
+    .instant-apps-header__header-content {
+      h1 {
+        font-size: 22px;
+        }
+    }
   }
   .instant-apps-header__logo-scale--l {
     width: 60px;
