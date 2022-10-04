@@ -1,6 +1,8 @@
-import { Component, h, Prop, State } from '@stencil/core';
+import { Component, h, Element, Prop, State } from '@stencil/core';
 
 import { loadModules } from '../../utils/loadModules';
+
+import { FilterMode } from '../instant-apps-interactive-legend-classic/interfaces/interfaces';
 
 const CSS = {
   base: 'esri-legend',
@@ -12,14 +14,23 @@ const CSS = {
 @Component({
   tag: 'instant-apps-interactive-legend',
   styleUrl: 'instant-apps-interactive-legend.scss',
-  shadow: false,
+  scoped: true,
 })
 export class InstantAppsInteractiveLegend {
-  classic;
+  ref: HTMLInstantAppsInteractiveLegendClassicElement;
   handles: __esri.Handles;
+
+  @Element()
+  el: HTMLElement;
 
   @State()
   reRender = false;
+
+  /**
+   * Specify a light or dark theme for the UI.
+   */
+  @Prop()
+  theme: 'light' | 'dark' = 'light';
 
   /**
    * Reference to Map View or Scene View
@@ -33,8 +44,32 @@ export class InstantAppsInteractiveLegend {
   @State()
   legendvm: __esri.LegendViewModel;
 
+  /**
+   * Displays 'Zoom To' button - updates the extent of the view based on the selected legend infos.
+   */
+  @Prop()
+  zoomTo = false;
+
+  /**
+   * Display individual counts and total counts for legend infos.
+   */
+  @Prop()
+  featureCount = false;
+
+  /**
+   * Filter mode to use when filtering features.
+   */
+  @Prop()
+  filterMode: FilterMode = {
+    type: 'filter',
+  };
+
   componentWillLoad() {
     this.initializeModules().then(async () => this.initApp());
+  }
+
+  componentDidUpdate() {
+    if (this.ref) this.ref.filterMode = this.filterMode;
   }
 
   async initializeModules() {
@@ -62,7 +97,16 @@ export class InstantAppsInteractiveLegend {
   render() {
     return (
       <div class={`esri-component ${CSS.base} ${CSS.widget} ${CSS.panel}`}>
-        {this.legendvm?.activeLayerInfos?.length > 0 ? <instant-apps-interactive-legend-classic legendvm={this.legendvm}></instant-apps-interactive-legend-classic> : null}
+        {this.legendvm?.activeLayerInfos?.length > 0 ? (
+          <instant-apps-interactive-legend-classic
+            ref={(el: HTMLInstantAppsInteractiveLegendClassicElement) => (this.ref = el)}
+            class={this.theme === 'dark' ? 'calcite-theme-dark' : 'calcite-theme-light'}
+            legendvm={this.legendvm}
+            zoom-to={this.zoomTo}
+            filter-mode={this.filterMode}
+            feature-count={this.featureCount}
+          ></instant-apps-interactive-legend-classic>
+        ) : null}
       </div>
     );
   }

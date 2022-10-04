@@ -1,4 +1,4 @@
-import { Component, h, Prop, State } from '@stencil/core';
+import { Component, h, Prop, Element, State } from '@stencil/core';
 
 import {
   getUnivariateColorRampPreview,
@@ -10,11 +10,11 @@ import {
 
 import { isImageryStretchedLegend } from './support/styleUtils';
 
-import { validateInteractivity, generateData, updateFeatureCount, handleFilter, showAll } from './support/helpers';
+import { validateInteractivity, generateData, updateFeatureCount, handleFilter, showAll, zoomTo } from './support/helpers';
 
 import { loadModules } from 'esri-loader';
 
-import { IInteractiveLegendData } from './interfaces/interfaces';
+import { FilterMode, IInteractiveLegendData } from './interfaces/interfaces';
 
 const CSS = {
   // jsapi styles
@@ -71,7 +71,7 @@ const univariateColorRampStyles = { display: 'table-cell', verticalAlign: 'middl
   scoped: true,
 })
 export class InstantAppsInteractiveLegendClassic {
-  reactiveUtils;
+  reactiveUtils: __esri.reactiveUtils;
   handles: __esri.Handles;
   intl: __esri.intl;
 
@@ -84,17 +84,43 @@ export class InstantAppsInteractiveLegendClassic {
   @State()
   intLegendId: string;
 
+  /**
+   * Legend View model from the 4.x ArcGIS API for JavaScript
+   */
   @Prop()
   legendvm: __esri.LegendViewModel;
 
+  @Element()
+  el: HTMLElement;
+
+  /**
+   * Displays 'Zoom To' button - updates the extent of the view based on the selected legend infos.
+   */
   @Prop()
-  headingLevel: number = 3;
+  zoomTo = false;
+
+  /**
+   * Display individual counts and total counts for legend infos.
+   */
+  @Prop()
+  featureCount = false;
+
+  /**
+   * Filter mode to use when filtering features.
+   */
+  @Prop()
+  filterMode: FilterMode = {
+    type: 'filter',
+  };
 
   @Prop()
   messages;
 
-  @Prop()
-  readonly type: 'classic' = 'classic';
+  /**
+   * TODO: Property to specify layout type
+   */
+  // @Prop()
+  // readonly type: 'classic' = 'classic';
 
   async componentWillLoad() {
     const [intl, reactiveUtils, Handles] = await loadModules(['esri/intl', 'esri/core/reactiveUtils', 'esri/core/Handles']);
@@ -105,17 +131,27 @@ export class InstantAppsInteractiveLegendClassic {
 
   async componentDidLoad() {
     await this.reactiveUtils.whenOnce(() => this.legendvm);
-    this.data = await generateData(this.legendvm, this.reactiveUtils);
+    await (this.legendvm?.view?.map as __esri.WebMap).loadAll();
+    this.data = await generateData(this.legendvm, this.reactiveUtils, this.featureCount);
 
-    this.handles.add(
-      this.reactiveUtils.watch(
-        () => this.legendvm?.view?.updating,
-        () => {
-          updateFeatureCount(this.legendvm, this.data);
-          this.reRender = !this.reRender;
-        },
-      ),
-    );
+    const featureCountKey = 'feature-count';
+
+    if (this.handles.has(featureCountKey)) {
+      this.handles.remove(featureCountKey);
+    }
+
+    if (this.featureCount) {
+      this.handles.add(
+        this.reactiveUtils.watch(
+          () => this.legendvm?.view?.updating,
+          () => {
+            updateFeatureCount(this.legendvm, this.data);
+            this.reRender = !this.reRender;
+          },
+        ),
+        featureCountKey,
+      );
+    }
 
     this.reRender = !this.reRender;
   }
@@ -128,7 +164,11 @@ export class InstantAppsInteractiveLegendClassic {
         .toArray()
         .map(activeLayerInfo => this.renderLegendForLayer(activeLayerInfo))
         .filter(layer => !!layer);
-    return <div>{filteredLayers && filteredLayers.length ? filteredLayers : <div class={CSS.message}>{this.messages?.noLegend}</div>}</div>;
+    return (
+      <div class={this.el.classList.contains('calcite-theme-dark') ? 'calcite-theme-dark' : 'calcite-theme-light'}>
+        {filteredLayers && filteredLayers.length ? filteredLayers : <div class={CSS.message}>{this.messages?.noLegend}</div>}
+      </div>
+    );
   }
 
   renderLegendForLayer(activeLayerInfo: __esri.ActiveLayerInfo) {
@@ -181,13 +221,13 @@ export class InstantAppsInteractiveLegendClassic {
 
       const layerClasses = !!activeLayerInfo.parent ? ` ${CSS.groupLayerChild}` : '';
 
-      const totalFeatureCount = this.intl.formatNumber(this.data?.[activeLayerInfo?.layer?.id]?.totalCount);
+      const totalFeatureCount = this.featureCount ? this.intl.formatNumber(this.data?.[activeLayerInfo?.layer?.id]?.totalCount as number) : null;
 
       return (
         <div key={key} class={`${CSS.service}${layerClasses}`} tabIndex={0}>
           <header>
             <h3 class={`${CSS.header} ${CSS.label}`}>{activeLayerInfo.title}</h3>
-            <span>Total feature count: {totalFeatureCount}</span>
+            {this.featureCount ? <span key="total-feature-count-text">Total feature count: {totalFeatureCount}</span> : null}
           </header>
           <div class={CSS.layer}>{filteredElements}</div>
         </div>
@@ -268,7 +308,18 @@ export class InstantAppsInteractiveLegendClassic {
               appearance="outline"
               round="true"
             />
-            <calcite-button icon-start="magnifying-glass-plus" appearance="outline" round="true" />
+            {this.zoomTo ? (
+              <calcite-button
+                key="zoom-to-button"
+                onClick={() => {
+                  zoomTo(this.data?.[layer?.id], this.legendvm.view as __esri.MapView);
+                  this.reRender = !this.reRender;
+                }}
+                icon-start="magnifying-glass-plus"
+                appearance="outline"
+                round="true"
+              />
+            ) : null}
           </div>
         ) : null}
       </div>
@@ -537,7 +588,7 @@ export class InstantAppsInteractiveLegendClassic {
       // Regular LegendElementInfo
       <div
         onClick={() => {
-          handleFilter(this.data?.[layer?.id], elementInfo, infoIndex);
+          handleFilter(this.data?.[layer?.id], elementInfo, infoIndex, this.filterMode);
           this.reRender = !this.reRender;
         }}
         class={`${CSS.layerRow} ${CSS.interactiveLayerRow}${selected ? ` ${CSS.infoSelected}` : ''}`}
@@ -546,7 +597,11 @@ export class InstantAppsInteractiveLegendClassic {
           <div class={`${CSS.symbolContainer}${imageryLayerInfoStretched}${sizeRamp}`}>{content}</div>
           <div class={`${CSS.layerInfo}${imageryLayerInfoStretched}`}>{this.getTitle(this.messages, elementInfo.label, false) || ''}</div>
         </div>
-        <span class={CSS.countText}>{count}</span>
+        {this.featureCount ? (
+          <span key="element-info-count" class={CSS.countText}>
+            {count}
+          </span>
+        ) : null}
       </div>
     ) : (
       <div class={CSS.layerRow}>

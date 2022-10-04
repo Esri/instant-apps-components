@@ -5,8 +5,8 @@
  * It contains typing information for all components that exist in this project.
  */
 import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
+import { FilterMode } from "./components/instant-apps-interactive-legend-classic/interfaces/interfaces";
 import { InstantAppsPopovers } from "./components/instant-apps-popovers/instant-apps-popovers";
-import { PopperPlacement } from "@esri/calcite-components/dist/types/utils/popper";
 export namespace Components {
     interface InstantAppsHeader {
         /**
@@ -60,15 +60,44 @@ export namespace Components {
     }
     interface InstantAppsInteractiveLegend {
         /**
+          * Display individual counts and total counts for legend infos.
+         */
+        "featureCount": boolean;
+        /**
+          * Filter mode to use when filtering features.
+         */
+        "filterMode": FilterMode;
+        /**
+          * Specify a light or dark theme for the UI.
+         */
+        "theme": 'light' | 'dark';
+        /**
           * Reference to Map View or Scene View
          */
         "view": __esri.MapView;
+        /**
+          * Displays 'Zoom To' button - updates the extent of the view based on the selected legend infos.
+         */
+        "zoomTo": boolean;
     }
     interface InstantAppsInteractiveLegendClassic {
-        "headingLevel": number;
+        /**
+          * Display individual counts and total counts for legend infos.
+         */
+        "featureCount": boolean;
+        /**
+          * Filter mode to use when filtering features.
+         */
+        "filterMode": FilterMode;
+        /**
+          * Legend View model from the 4.x ArcGIS API for JavaScript
+         */
         "legendvm": __esri.LegendViewModel;
         "messages": any;
-        "type": 'classic';
+        /**
+          * Displays 'Zoom To' button - updates the extent of the view based on the selected legend infos.
+         */
+        "zoomTo": boolean;
     }
     interface InstantAppsInteractiveLegendRelationship {
         "effectlist": any;
@@ -123,7 +152,7 @@ export namespace Components {
         /**
           * Configures the placement of the success message popover for the 'Copy Link' button. See options here: https://github.com/Esri/calcite-components/blob/v1.0.0-beta.83/src/utils/popper.ts#L34
          */
-        "inlineSuccessPopoverPlacement": PopperPlacement;
+        "inlineSuccessPopoverPlacement": any;
         /**
           * Renders tool as a popover with a trigger button, or inline to place in a custom container.
          */
@@ -155,6 +184,10 @@ export namespace Components {
          */
         "view": __esri.MapView | __esri.SceneView;
     }
+}
+export interface InstantAppsHeaderCustomEvent<T> extends CustomEvent<T> {
+    detail: T;
+    target: HTMLInstantAppsHeaderElement;
 }
 declare global {
     interface HTMLInstantAppsHeaderElement extends Components.InstantAppsHeader, HTMLStencilElement {
@@ -254,7 +287,7 @@ declare namespace LocalJSX {
         /**
           * Fires when the info button is clicked.
          */
-        "onInfoIsOpenChanged"?: (event: CustomEvent<boolean>) => void;
+        "onInfoIsOpenChanged"?: (event: InstantAppsHeaderCustomEvent<boolean>) => void;
         /**
           * Text color to display in header - accepts a hexidecimal value i.e. `#FFFFFF`.
          */
@@ -266,15 +299,44 @@ declare namespace LocalJSX {
     }
     interface InstantAppsInteractiveLegend {
         /**
+          * Display individual counts and total counts for legend infos.
+         */
+        "featureCount"?: boolean;
+        /**
+          * Filter mode to use when filtering features.
+         */
+        "filterMode"?: FilterMode;
+        /**
+          * Specify a light or dark theme for the UI.
+         */
+        "theme"?: 'light' | 'dark';
+        /**
           * Reference to Map View or Scene View
          */
         "view"?: __esri.MapView;
+        /**
+          * Displays 'Zoom To' button - updates the extent of the view based on the selected legend infos.
+         */
+        "zoomTo"?: boolean;
     }
     interface InstantAppsInteractiveLegendClassic {
-        "headingLevel"?: number;
+        /**
+          * Display individual counts and total counts for legend infos.
+         */
+        "featureCount"?: boolean;
+        /**
+          * Filter mode to use when filtering features.
+         */
+        "filterMode"?: FilterMode;
+        /**
+          * Legend View model from the 4.x ArcGIS API for JavaScript
+         */
         "legendvm"?: __esri.LegendViewModel;
         "messages"?: any;
-        "type"?: 'classic';
+        /**
+          * Displays 'Zoom To' button - updates the extent of the view based on the selected legend infos.
+         */
+        "zoomTo"?: boolean;
     }
     interface InstantAppsInteractiveLegendRelationship {
         "effectlist"?: any;
@@ -325,7 +387,7 @@ declare namespace LocalJSX {
         /**
           * Configures the placement of the success message popover for the 'Copy Link' button. See options here: https://github.com/Esri/calcite-components/blob/v1.0.0-beta.83/src/utils/popper.ts#L34
          */
-        "inlineSuccessPopoverPlacement"?: PopperPlacement;
+        "inlineSuccessPopoverPlacement"?: any;
         /**
           * Renders tool as a popover with a trigger button, or inline to place in a custom container.
          */

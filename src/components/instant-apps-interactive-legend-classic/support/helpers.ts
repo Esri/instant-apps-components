@@ -1,5 +1,6 @@
 import { loadModules } from 'esri-loader';
-import { IInteractiveLegendData, ICategories, IIntLegendLayerData, ICategory } from '../interfaces/interfaces';
+import { IInteractiveLegendData, ICategories, IIntLegendLayerData, ICategory, FilterMode } from '../interfaces/interfaces';
+import { getMergedEffect } from './effects';
 
 export function validateInteractivity(activeLayerInfo: __esri.ActiveLayerInfo, legendElement: any, legendElementIndex: number): boolean {
   const fLayer = activeLayerInfo.layer as __esri.FeatureLayer;
@@ -65,7 +66,7 @@ export function validateInteractivity(activeLayerInfo: __esri.ActiveLayerInfo, l
   return isValidated;
 }
 
-export async function generateData(legendVM: __esri.LegendViewModel, reactiveUtils: __esri.reactiveUtils): Promise<IInteractiveLegendData> {
+export async function generateData(legendVM: __esri.LegendViewModel, reactiveUtils: __esri.reactiveUtils, featureCount: boolean): Promise<IInteractiveLegendData> {
   const { activeLayerInfos, view } = legendVM;
 
   // Step 1. Create data object to return
@@ -76,7 +77,7 @@ export async function generateData(legendVM: __esri.LegendViewModel, reactiveUti
   const intLegendDataPromises = [] as Promise<IIntLegendLayerData>[];
 
   // Step 3. Iterate through each Active Layer Info and create data bucket for each layer
-  activeLayerInfos.forEach(activeLayerInfoCallback(intLegendDataPromises, view as __esri.MapView, reactiveUtils));
+  activeLayerInfos.forEach(activeLayerInfoCallback(intLegendDataPromises, view as __esri.MapView, reactiveUtils, featureCount));
 
   // Step 4. Store resolved data
   const intLegendLayerDataObjs = await Promise.all(intLegendDataPromises);
@@ -88,10 +89,11 @@ function activeLayerInfoCallback(
   intLegendDataPromises: Promise<IIntLegendLayerData>[],
   view: __esri.MapView,
   reactiveUtils: __esri.reactiveUtils,
+  featureCount: boolean,
 ): (activeLayerInfo: __esri.ActiveLayerInfo) => void {
   return (activeLayerInfo: __esri.ActiveLayerInfo) => {
     // Step 3a. Push to promises array since there are promises within function
-    const intLegendDataPromise = createInteractiveLegendDataForLayer(view as __esri.MapView, activeLayerInfo, reactiveUtils).then(res => res);
+    const intLegendDataPromise = createInteractiveLegendDataForLayer(view as __esri.MapView, activeLayerInfo, reactiveUtils, featureCount).then(res => res);
     intLegendDataPromises.push(intLegendDataPromise);
   };
 }
@@ -100,6 +102,7 @@ async function createInteractiveLegendDataForLayer(
   view: __esri.MapView,
   activeLayerInfo: __esri.ActiveLayerInfo,
   reactiveUtils: __esri.reactiveUtils,
+  featureCount: boolean,
 ): Promise<IIntLegendLayerData> {
   // Get first Legend Element from Active LayerInfo - only first legend element will be interactive
   await reactiveUtils.whenOnce(() => activeLayerInfo?.legendElements?.length > 0);
@@ -114,41 +117,68 @@ async function createInteractiveLegendDataForLayer(
   const fLayer = activeLayerInfo.layer as __esri.FeatureLayer;
   // Get Feature Layer View to query
   const fLayerView = await view.whenLayerView(fLayer);
+  await reactiveUtils.whenOnce(() => fLayerView?.updating === false);
   const field = fLayer.renderer?.get('field') as string;
 
-  // Store the legend element infos data to easily access information for count, whether an item is selected, or a legendElementInfo data.
-  const countPromises = [] as any;
+  if (featureCount) {
+    // Store the legend element infos data to easily access information for count, whether an item is selected, or a legendElementInfo data.
+    const countPromises = [] as any;
 
-  legendElement?.infos?.forEach(legendElementInfo => {
-    const countPromise = getInfoCount(view.extent, fLayerView, field, legendElementInfo);
-    countPromises.push(countPromise);
-  });
+    legendElement?.infos?.forEach((legendElementInfo, legendElementInfoIndex) => {
+      const countPromise = getInfoCount(view.extent, fLayerView, field, legendElementInfo, legendElementInfoIndex, legendElement, legendElement.infos);
+      countPromises.push(countPromise);
+    });
 
-  const counts = (await Promise.all(countPromises)) as number[];
+    const counts = (await Promise.all(countPromises)) as number[];
 
-  let totalCount = 0;
+    let totalCount = 0;
 
-  legendElement?.infos?.forEach((legendElementInfo, legendElementInfoIndex) => {
-    const count = counts[legendElementInfoIndex];
-    totalCount += count;
-    const category = {
-      count,
-      selected: false,
-      legendElementInfo,
-    };
-    categories.set(legendElementInfo.value, category);
-  });
+    legendElement?.infos?.forEach((legendElementInfo, legendElementInfoIndex) => {
+      const count = counts[legendElementInfoIndex];
+      totalCount += count;
+      const category = {
+        count,
+        selected: false,
+        legendElementInfo,
+      };
+      categories.set(legendElementInfo.value, category);
+    });
 
-  // Generated expression to apply to layer filters
-  const queryExpressions = [];
+    // Generated expression to apply to layer filters
+    const queryExpressions = [];
 
-  // Total feature count
-  return Promise.resolve({ categories, field, queryExpressions, totalCount, fLayerView, legendElement });
+    // Total feature count
+    return Promise.resolve({ categories, field, queryExpressions, totalCount, fLayerView, legendElement });
+  } else {
+    legendElement?.infos?.forEach(legendElementInfo => {
+      const category = {
+        count: null,
+        selected: false,
+        legendElementInfo,
+      };
+      categories.set(legendElementInfo.value, category);
+    });
+
+    // Generated expression to apply to layer filters
+    const queryExpressions = [];
+
+    // Total feature count
+    return Promise.resolve({ categories, field, queryExpressions, totalCount: null, fLayerView, legendElement });
+  }
 }
 
-export async function getInfoCount(extent: __esri.Geometry, fLayerView: __esri.FeatureLayerView, field: string, info: any): Promise<number> {
+export async function getInfoCount(
+  extent: __esri.Geometry,
+  fLayerView: __esri.FeatureLayerView,
+  field: string,
+  info: any,
+  infoIndex: number,
+  legendElement,
+  legendElementInfos,
+): Promise<number> {
   const query = fLayerView.createQuery();
-  query.where = `${field} = '${info.value}'`;
+  const where = generateQueryExpression(info, field, infoIndex, legendElement, legendElementInfos);
+  query.where = where;
   query.geometry = extent;
   const featureCount = await fLayerView.queryFeatureCount(query);
   return featureCount;
@@ -165,8 +195,8 @@ export async function updateFeatureCount(legendvm: __esri.LegendViewModel, data:
     const fLayerView = data[activeLayerInfo?.layer?.id]?.fLayerView;
     const field = fLayer.renderer?.get('field') as string;
     const countPromises = [] as any;
-    legendElement?.infos?.forEach(legendElementInfo => {
-      const countPromise = getInfoCount(view.extent, fLayerView, field, legendElementInfo);
+    legendElement?.infos?.forEach((legendElementInfo, legendElementInfoIndex) => {
+      const countPromise = getInfoCount(view.extent, fLayerView, field, legendElementInfo, legendElementInfoIndex, legendElement, legendElement.infos);
       countPromises.push(countPromise);
     });
     const counts = (await Promise.all(countPromises)) as number[];
@@ -179,15 +209,6 @@ export async function updateFeatureCount(legendvm: __esri.LegendViewModel, data:
     });
     dataForALI.totalCount = totalCount;
   });
-}
-
-export async function handleFilter(data: IIntLegendLayerData, info: any, infoIndex: number): Promise<void> {
-  const [FeatureFilter] = await loadModules(['esri/layers/support/FeatureFilter']);
-  const { queryExpressions, fLayerView } = data;
-  generateQueryExpressions(data, info, infoIndex);
-  const where = queryExpressions.join(' OR ');
-  const timeExtent = fLayerView?.filter?.timeExtent ?? null;
-  fLayerView.filter = new FeatureFilter({ where, timeExtent });
 }
 
 function generateQueryExpressions(data: IIntLegendLayerData, info: any, infoIndex: number): void {
@@ -216,6 +237,7 @@ function generateQueryExpressions(data: IIntLegendLayerData, info: any, infoInde
     queryExpressions.splice(expressionIndex, 1);
   }
 }
+
 function generateQueryExpression(info: any, field: string, infoIndex: number, legendElement: __esri.LegendElement, legendElementInfos: any[], normalizationField?: string): string {
   const { value } = info;
   if (legendElement.type === 'symbol-table') {
@@ -286,10 +308,51 @@ function generateQueryExpression(info: any, field: string, infoIndex: number, le
   }
 }
 
+export async function handleFilter(data: IIntLegendLayerData, info: any, infoIndex: number, filterMode: FilterMode): Promise<void> {
+  const [FeatureFilter, FeatureEffect] = await loadModules(['esri/layers/support/FeatureFilter', 'esri/layers/support/FeatureEffect']);
+  const { queryExpressions, fLayerView } = data;
+  generateQueryExpressions(data, info, infoIndex);
+  const where = queryExpressions.join(' OR ');
+  const timeExtent = fLayerView?.filter?.timeExtent ?? null;
+
+  const { type } = filterMode;
+
+  if (type === 'filter') {
+    fLayerView.filter = new FeatureFilter({ where, timeExtent });
+  } else {
+    if (filterMode.effect) {
+      const { includedEffect, excludedEffect } = filterMode.effect;
+      const mergedExcludedEffect = await getMergedEffect(excludedEffect, fLayerView, 'excludedEffect');
+      const mergedIncludedEffect = await getMergedEffect(includedEffect, fLayerView, 'includedEffect');
+
+      fLayerView.featureEffect = new FeatureEffect({
+        filter: new FeatureFilter({ where, timeExtent }),
+        includedEffect: mergedIncludedEffect,
+        excludedEffect: mergedExcludedEffect,
+      }) as __esri.FeatureEffect;
+    }
+  }
+}
+
 export function showAll(data: IIntLegendLayerData): void {
   data.queryExpressions = [];
-  data.fLayerView.filter.where = '';
+  if (data?.fLayerView?.filter?.where) data.fLayerView.filter.where = '';
+  if (data?.fLayerView?.featureEffect?.filter?.where) (data.fLayerView as any).featureEffect = null;
   data.categories.forEach(category => {
     category.selected = false;
   });
+}
+
+export async function zoomTo(data: IIntLegendLayerData, view: __esri.MapView): Promise<void> {
+  const where = data.queryExpressions.join(' OR ');
+  const query = data.fLayerView.createQuery();
+  query.where = where;
+
+  try {
+    const geometry = await data.fLayerView.queryExtent(query);
+    await view.goTo(geometry);
+
+    console.log('GEOMETRY: ', geometry);
+    console.log('QUERIED EXTENT');
+  } catch {}
 }

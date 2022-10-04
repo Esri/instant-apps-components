@@ -19,7 +19,7 @@ import { loadModules } from '../../utils/loadModules';
 import SocialShare_T9n from '../../assets/t9n/instant-apps-social-share/resources.json';
 
 import { getLocaleComponentStrings } from '../../utils/locale';
-import { PopperPlacement } from '@esri/calcite-components/dist/types/utils/popper';
+// import { PopperPlacement } from '@esri/calcite-components/dist/types/utils/popper';
 
 type ShareItemOptions = 'link' | 'facebook' | 'twitter' | 'linkedIn';
 
@@ -178,7 +178,7 @@ export class InstantAppsSocialShare {
    * See options here: https://github.com/Esri/calcite-components/blob/v1.0.0-beta.83/src/utils/popper.ts#L34
    */
   @Prop({ reflect: true })
-  inlineSuccessPopoverPlacement: PopperPlacement = 'trailing';
+  inlineSuccessPopoverPlacement: any = 'trailing';
 
   // INTERNAL STATE
   // T9N
