@@ -80,6 +80,7 @@ export namespace Components {
         "beforeOpen": () => Promise<void>;
         "beginTour": () => Promise<void>;
         "close": (key: string) => Promise<void>;
+        "currentId": string;
         "endTour": () => Promise<void>;
         "inTour": boolean;
         "instantAppsPopovers": Map<string, HTMLInstantAppsPopoverElement>;
@@ -137,6 +138,10 @@ export namespace Components {
          */
         "view": __esri.MapView | __esri.SceneView;
     }
+}
+export interface InstantAppsHeaderCustomEvent<T> extends CustomEvent<T> {
+    detail: T;
+    target: HTMLInstantAppsHeaderElement;
 }
 declare global {
     interface HTMLInstantAppsHeaderElement extends Components.InstantAppsHeader, HTMLStencilElement {
@@ -215,7 +220,7 @@ declare namespace LocalJSX {
         /**
           * Fires when the info button is clicked.
          */
-        "onInfoIsOpenChanged"?: (event: CustomEvent<boolean>) => void;
+        "onInfoIsOpenChanged"?: (event: InstantAppsHeaderCustomEvent<boolean>) => void;
         /**
           * Text color to display in header - accepts a hexidecimal value i.e. `#FFFFFF`.
          */
@@ -245,6 +250,7 @@ declare namespace LocalJSX {
     }
     interface InstantAppsPopovers {
         "beforeOpen"?: () => Promise<void>;
+        "currentId"?: string;
         "inTour"?: boolean;
         "instantAppsPopovers"?: Map<string, HTMLInstantAppsPopoverElement>;
     }
