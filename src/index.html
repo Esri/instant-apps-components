@@ -67,9 +67,6 @@
         logo-link="https://www.esri.com/en-us/arcgis/products/arcgis-instant-apps/overview"
         info-button="true"
         info-is-open="true"
-
-        custom-header-html="<div>My custom Header test <img onload=alert('hacked'); src='https://picsum.photos/50'/> </div>"
-        custom-header-css="#customHeader{background-color: purple;}"
       >
         <instant-apps-social-share slot="actions-end" popover-button-icon-scale="s"></instant-apps-social-share>
       </instant-apps-header>
@@ -188,13 +185,6 @@
           popovers.open(id);
         }
       });
-    </script>
-    <script>
-      setTimeout(()=>{
-        const instantAppsHeader = document.getElementById("instant-apps-header");
-        console.log("instantAppsHeader", instantAppsHeader);
-        instantAppsHeader.customHeaderHtml = "<div>XSS Hack attempt #2 <img onload=alert('hacked'); src='https://picsum.photos/50'/> </div>"
-      }, 3000);
     </script>
   </body>
 </html>
