@@ -13,8 +13,9 @@
  */
 
 import { Component, Host, h, Prop, Element, State } from '@stencil/core';
-import { Event, EventEmitter, HostElement } from '@stencil/core/internal';
+import { Event, EventEmitter, HostElement, Watch } from '@stencil/core/internal';
 import { getElementDir } from '../../utils/languageUtil';
+import Sanitizer from "@esri/arcgis-html-sanitizer";
 
 const CSS = {
   base: 'instant-apps-header--standard',
@@ -95,20 +96,30 @@ export class InstantAppsHeader {
   infoIsOpen: boolean = false;
 
   /**
-   * HTML code for custom headers. IMPORTANT: SANITIZE YOUR HTML BEFORE PASSING IT IN TO AVOID SECURITY VULNERABILITIES.
+   * HTML code for custom headers.
    */
   @Prop({
-    reflect: true,
+    mutable: true,
   })
   customHeaderHtml: string;
 
+  @Watch("customHeaderHtml")
+  sanitizeCustomHeaderHtml(){
+    this.customHeaderHtml = this._sanitizer.sanitize(this.customHeaderHtml);
+  }
+
   /**
-   * CSS styles to be used in conjuction with `custom-header-html`. IMPORTANT: SANITIZE YOUR CSS BEFORE PASSING IT IN TO AVOID SECURITY VULNERABILITIES.
+   * CSS styles to be used in conjuction with `custom-header-html`.
    */
   @Prop({
-    reflect: true,
+    mutable: true,
   })
   customHeaderCss: string;
+
+  @Watch("customHeaderCss")
+  sanitizeCustomHeaderCss(){
+    this.customHeaderCss = this._sanitizer.sanitize(this.customHeaderCss);
+  }
 
   /**
    * Font family to use for text
@@ -123,8 +134,12 @@ export class InstantAppsHeader {
    */
   @Event({ cancelable: false }) infoIsOpenChanged: EventEmitter<boolean>;
 
+  private _sanitizer = new Sanitizer();
+
   componentWillLoad() {
     this.dir = getElementDir(this.el);
+    this.customHeaderHtml = this._sanitizer.sanitize(this.customHeaderHtml);
+    this.customHeaderCss = this._sanitizer.sanitize(this.customHeaderCss);
   }
 
   render() {
@@ -133,7 +148,7 @@ export class InstantAppsHeader {
     return (
       <Host>
         {this.customHeaderHtml ? (
-          [<style>{this.customHeaderCss}</style>, <div innerHTML={this.customHeaderHtml} />]
+          [<style>{this.customHeaderCss}</style>, <div id="customHeader" innerHTML={this.customHeaderHtml} />]
         ) : (
           <header
             class={`${CSS.base}${this.dir === 'rtl' ? ` ${CSS.flipRtl}` : ''}${this.logoImage && !hasEmptyLogo ? ` ${CSS.logoHeight}${this.logoScale}` : ` ${CSS.standardHeight}`}`}

@@ -14,11 +14,11 @@ export namespace Components {
          */
         "backgroundColor": string;
         /**
-          * CSS styles to be used in conjuction with `custom-header-html`. IMPORTANT: SANITIZE YOUR CSS BEFORE PASSING IT IN TO AVOID SECURITY VULNERABILITIES.
+          * CSS styles to be used in conjuction with `custom-header-html`.
          */
         "customHeaderCss": string;
         /**
-          * HTML code for custom headers. IMPORTANT: SANITIZE YOUR HTML BEFORE PASSING IT IN TO AVOID SECURITY VULNERABILITIES.
+          * HTML code for custom headers.
          */
         "customHeaderHtml": string;
         /**
@@ -139,10 +139,6 @@ export namespace Components {
         "view": __esri.MapView | __esri.SceneView;
     }
 }
-export interface InstantAppsHeaderCustomEvent<T> extends CustomEvent<T> {
-    detail: T;
-    target: HTMLInstantAppsHeaderElement;
-}
 declare global {
     interface HTMLInstantAppsHeaderElement extends Components.InstantAppsHeader, HTMLStencilElement {
     }
@@ -182,11 +178,11 @@ declare namespace LocalJSX {
          */
         "backgroundColor"?: string;
         /**
-          * CSS styles to be used in conjuction with `custom-header-html`. IMPORTANT: SANITIZE YOUR CSS BEFORE PASSING IT IN TO AVOID SECURITY VULNERABILITIES.
+          * CSS styles to be used in conjuction with `custom-header-html`.
          */
         "customHeaderCss"?: string;
         /**
-          * HTML code for custom headers. IMPORTANT: SANITIZE YOUR HTML BEFORE PASSING IT IN TO AVOID SECURITY VULNERABILITIES.
+          * HTML code for custom headers.
          */
         "customHeaderHtml"?: string;
         /**
@@ -220,7 +216,7 @@ declare namespace LocalJSX {
         /**
           * Fires when the info button is clicked.
          */
-        "onInfoIsOpenChanged"?: (event: InstantAppsHeaderCustomEvent<boolean>) => void;
+        "onInfoIsOpenChanged"?: (event: CustomEvent<boolean>) => void;
         /**
           * Text color to display in header - accepts a hexidecimal value i.e. `#FFFFFF`.
          */
