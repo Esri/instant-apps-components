@@ -50,6 +50,10 @@ export namespace Components {
          */
         "logoScale": 's' | 'm' | 'l';
         /**
+          * Mobile breakpoint value in pixels(px).
+         */
+        "mobileWidthBreakpoint": number;
+        /**
           * Text color to display in header - accepts a hexidecimal value i.e. `#FFFFFF`.
          */
         "textColor": string;
@@ -213,6 +217,10 @@ declare namespace LocalJSX {
           * Adjusts scale of logo image.
          */
         "logoScale"?: 's' | 'm' | 'l';
+        /**
+          * Mobile breakpoint value in pixels(px).
+         */
+        "mobileWidthBreakpoint"?: number;
         /**
           * Fires when the info button is clicked.
          */

@@ -1,4 +1,4 @@
-import { Component, Host, h, Prop, Element, State, Method } from '@stencil/core';
+import { Component, Host, h, Prop, Element, Method } from '@stencil/core';
 
 @Component({
   tag: 'instant-apps-popovers',
