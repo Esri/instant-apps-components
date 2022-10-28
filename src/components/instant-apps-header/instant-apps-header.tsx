@@ -37,7 +37,25 @@ const CSS = {
   shadow: true,
 })
 export class InstantAppsHeader {
-  private _sanitizer = new Sanitizer();
+  private _sanitizer = new Sanitizer(
+    {
+      whiteList: {
+        h1: ['style'],
+        h2: ['style'],
+        h3: ['style'],
+        h4: ['style'],
+        h5: ['style'],
+        h6: ['style'],
+        img: ['style', 'src', 'width', 'height'],
+        pre: ['style'],
+        p: ['id', 'class', 'style'],
+        div: ['id', 'class', 'style', 'role'],
+        span: ['id', 'class', 'style', 'role'],
+        figure: ['class', 'style'],
+      },
+    },
+    true,
+  );
 
   @Element()
   el: HostElement;
