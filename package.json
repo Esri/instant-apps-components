@@ -33,6 +33,7 @@
   },
   "dependencies": {
     "@a11y/focus-trap": "^1.0.5",
+    "@esri/arcgis-html-sanitizer": "^3.0.0",
     "@stencil/core": "2.12.0",
     "esri-loader": "^3.4.0"
   },

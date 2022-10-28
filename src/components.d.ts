@@ -15,11 +15,11 @@ export namespace Components {
          */
         "backgroundColor": string;
         /**
-          * CSS styles to be used in conjuction with `custom-header-html`. IMPORTANT: SANITIZE YOUR CSS BEFORE PASSING IT IN TO AVOID SECURITY VULNERABILITIES.
+          * CSS styles to be used in conjuction with `custom-header-html`.
          */
         "customHeaderCss": string;
         /**
-          * HTML code for custom headers. IMPORTANT: SANITIZE YOUR HTML BEFORE PASSING IT IN TO AVOID SECURITY VULNERABILITIES.
+          * HTML code for custom headers.
          */
         "customHeaderHtml": string;
         /**
@@ -183,11 +183,11 @@ declare namespace LocalJSX {
          */
         "backgroundColor"?: string;
         /**
-          * CSS styles to be used in conjuction with `custom-header-html`. IMPORTANT: SANITIZE YOUR CSS BEFORE PASSING IT IN TO AVOID SECURITY VULNERABILITIES.
+          * CSS styles to be used in conjuction with `custom-header-html`.
          */
         "customHeaderCss"?: string;
         /**
-          * HTML code for custom headers. IMPORTANT: SANITIZE YOUR HTML BEFORE PASSING IT IN TO AVOID SECURITY VULNERABILITIES.
+          * HTML code for custom headers.
          */
         "customHeaderHtml"?: string;
         /**
