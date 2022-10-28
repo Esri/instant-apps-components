@@ -5,6 +5,7 @@
  * It contains typing information for all components that exist in this project.
  */
 import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
+import { MobileWidthBreakpoint } from "./interfaces/interfaces";
 import { InstantAppsPopovers } from "./components/instant-apps-popovers/instant-apps-popovers";
 import { PopperPlacement } from "@esri/calcite-components/dist/types/utils/popper";
 export namespace Components {
@@ -49,6 +50,10 @@ export namespace Components {
           * Adjusts scale of logo image.
          */
         "logoScale": 's' | 'm' | 'l';
+        /**
+          * Object to override media query breakpoints
+         */
+        "mobileWidthBreakpoints": MobileWidthBreakpoint;
         /**
           * Text color to display in header - accepts a hexidecimal value i.e. `#FFFFFF`.
          */
@@ -139,10 +144,6 @@ export namespace Components {
         "view": __esri.MapView | __esri.SceneView;
     }
 }
-export interface InstantAppsHeaderCustomEvent<T> extends CustomEvent<T> {
-    detail: T;
-    target: HTMLInstantAppsHeaderElement;
-}
 declare global {
     interface HTMLInstantAppsHeaderElement extends Components.InstantAppsHeader, HTMLStencilElement {
     }
@@ -218,9 +219,13 @@ declare namespace LocalJSX {
          */
         "logoScale"?: 's' | 'm' | 'l';
         /**
+          * Object to override media query breakpoints
+         */
+        "mobileWidthBreakpoints"?: MobileWidthBreakpoint;
+        /**
           * Fires when the info button is clicked.
          */
-        "onInfoIsOpenChanged"?: (event: InstantAppsHeaderCustomEvent<boolean>) => void;
+        "onInfoIsOpenChanged"?: (event: CustomEvent<boolean>) => void;
         /**
           * Text color to display in header - accepts a hexidecimal value i.e. `#FFFFFF`.
          */

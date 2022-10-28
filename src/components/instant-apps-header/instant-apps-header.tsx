@@ -16,6 +16,9 @@ import { Component, Host, h, Prop, Element, State } from '@stencil/core';
 import { Event, EventEmitter, HostElement } from '@stencil/core/internal';
 import { getElementDir } from '../../utils/languageUtil';
 
+import { widthBreakpoints } from '../../utils/breakpoints';
+import { MobileWidthBreakpoint } from '../../interfaces/interfaces';
+
 const CSS = {
   base: 'instant-apps-header--standard',
   headerContent: 'instant-apps-header__header-content',
@@ -83,6 +86,7 @@ export class InstantAppsHeader {
    */
   @Prop({
     reflect: true,
+    mutable: true,
   })
   infoButton: boolean = false;
 
@@ -119,12 +123,28 @@ export class InstantAppsHeader {
   fontFamily: string = 'var(--calcite-sans-family);';
 
   /**
+   * Object to override media query breakpoints
+   */
+  @Prop()
+  mobileWidthBreakpoints: MobileWidthBreakpoint = {
+    xsmall: [545],
+    small: [545, 768],
+    medium: [769, 992],
+    large: [993, 1200],
+    xlarge: [1200],
+  };
+
+  /**
    * Fires when the info button is clicked.
    */
   @Event({ cancelable: false }) infoIsOpenChanged: EventEmitter<boolean>;
 
+  @State()
+  initialScale: 's' | 'm' | 'l' = 'm';
+
   componentWillLoad() {
     this.dir = getElementDir(this.el);
+    this.handleMobileBreakpoints();
   }
 
   render() {
@@ -172,5 +192,26 @@ export class InstantAppsHeader {
   toggleInfo(): void {
     this.infoIsOpen = !this.infoIsOpen;
     this.infoIsOpenChanged.emit(this.infoIsOpen);
+  }
+
+  mqlCallback(): (event: MediaQueryListEvent) => void {
+    return event => {
+      const { matches } = event;
+      if (matches) {
+        this.logoScale = 's';
+        return;
+      }
+      this.logoScale = this.initialScale;
+    };
+  }
+
+  handleMobileBreakpoints(): void {
+    this.initialScale = this.logoScale;
+    const mediaQuery = `(max-width: ${widthBreakpoints.medium[1]}px)`;
+    const mql = window.matchMedia(mediaQuery);
+    if (mql.matches) {
+      this.logoScale = 's';
+    }
+    mql.addEventListener('change', this.mqlCallback());
   }
 }
