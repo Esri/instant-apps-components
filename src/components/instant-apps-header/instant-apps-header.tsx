@@ -18,7 +18,6 @@ import { getElementDir } from '../../utils/languageUtil';
 import Sanitizer from '@esri/arcgis-html-sanitizer';
 
 import { widthBreakpoints } from '../../utils/breakpoints';
-import { MobileWidthBreakpoint } from '../../interfaces/interfaces';
 
 const CSS = {
   base: 'instant-apps-header--standard',
@@ -136,16 +135,10 @@ export class InstantAppsHeader {
   fontFamily: string = 'var(--calcite-sans-family);';
 
   /**
-   * Object to override media query breakpoints
+   * Mobile breakpoint value in pixels(px).
    */
   @Prop()
-  mobileWidthBreakpoints: MobileWidthBreakpoint = {
-    xsmall: [545],
-    small: [545, 768],
-    medium: [769, 992],
-    large: [993, 1200],
-    xlarge: [1200],
-  };
+  mobileWidthBreakpoint: number = widthBreakpoints.medium[1];
 
   /**
    * Fires when the info button is clicked.
@@ -223,7 +216,7 @@ export class InstantAppsHeader {
 
   handleMobileBreakpoints(): void {
     this.initialScale = this.logoScale;
-    const mediaQuery = `(max-width: ${widthBreakpoints.medium[1]}px)`;
+    const mediaQuery = `(max-width: ${this.mobileWidthBreakpoint}px)`;
     const mql = window.matchMedia(mediaQuery);
     if (mql.matches) {
       this.logoScale = 's';

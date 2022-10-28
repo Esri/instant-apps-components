@@ -5,7 +5,6 @@
  * It contains typing information for all components that exist in this project.
  */
 import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
-import { MobileWidthBreakpoint } from "./interfaces/interfaces";
 import { InstantAppsPopovers } from "./components/instant-apps-popovers/instant-apps-popovers";
 import { PopperPlacement } from "@esri/calcite-components/dist/types/utils/popper";
 export namespace Components {
@@ -51,9 +50,9 @@ export namespace Components {
          */
         "logoScale": 's' | 'm' | 'l';
         /**
-          * Object to override media query breakpoints
+          * Mobile breakpoint value in pixels(px).
          */
-        "mobileWidthBreakpoints": MobileWidthBreakpoint;
+        "mobileWidthBreakpoint": number;
         /**
           * Text color to display in header - accepts a hexidecimal value i.e. `#FFFFFF`.
          */
@@ -219,9 +218,9 @@ declare namespace LocalJSX {
          */
         "logoScale"?: 's' | 'm' | 'l';
         /**
-          * Object to override media query breakpoints
+          * Mobile breakpoint value in pixels(px).
          */
-        "mobileWidthBreakpoints"?: MobileWidthBreakpoint;
+        "mobileWidthBreakpoint"?: number;
         /**
           * Fires when the info button is clicked.
          */
