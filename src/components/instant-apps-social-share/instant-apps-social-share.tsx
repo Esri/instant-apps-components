@@ -548,11 +548,25 @@ export class InstantAppsSocialShare {
           <div class={CSS.embed.dimensions.container}>
             <label class={CSS.embed.dimensions.input}>
               <span>{embedMessages?.width}</span>
-              <input ref={el => (this.embedWidthRef = el)} type="number" onChange={this.handleNumberInputOnChange('width')} value={this.embedWidth} min="1" />
+              <input
+                ref={el => (this.embedWidthRef = el)}
+                type="number"
+                onKeyDown={e => ['e', 'E', '+', '-'].includes(e.key) && e.preventDefault()}
+                onChange={this.handleNumberInputOnChange('width')}
+                value={this.embedWidth}
+                min="1"
+              />
             </label>
             <label class={CSS.embed.dimensions.input}>
               <span>{embedMessages?.height}</span>
-              <input ref={el => (this.embedHeightRef = el)} type="number" onChange={this.handleNumberInputOnChange('height')} value={this.embedHeight} min="1" />
+              <input
+                ref={el => (this.embedHeightRef = el)}
+                type="number"
+                onKeyDown={e => ['e', 'E', '+', '-'].includes(e.key) && e.preventDefault()}
+                onChange={this.handleNumberInputOnChange('height')}
+                value={this.embedHeight}
+                min="1"
+              />
             </label>
           </div>
         </div>
