@@ -74,6 +74,8 @@ const SOCIAL_URL_TEMPLATES = {
 
 const SHORTEN_API = 'https://arcg.is/prod/shorten';
 
+const MIN_WIDTH_HEIGHT_VALUE = '1';
+
 @Component({
   tag: 'instant-apps-social-share',
   styleUrl: 'instant-apps-social-share.scss',
@@ -546,16 +548,30 @@ export class InstantAppsSocialShare {
           <div class={CSS.embed.dimensions.container}>
             <label class={CSS.embed.dimensions.input}>
               <span>{embedMessages?.width}</span>
-              <input ref={el => (this.embedWidthRef = el)} type="number" value={this.embedWidth} />
+              <input ref={el => (this.embedWidthRef = el)} type="number" onChange={this.handleNumberInputOnChange('width')} value={this.embedWidth} min="1" />
             </label>
             <label class={CSS.embed.dimensions.input}>
               <span>{embedMessages?.height}</span>
-              <input ref={el => (this.embedHeightRef = el)} type="number" value={this.embedHeight} />
+              <input ref={el => (this.embedHeightRef = el)} type="number" onChange={this.handleNumberInputOnChange('height')} value={this.embedHeight} min="1" />
             </label>
           </div>
         </div>
       </div>
     );
+  }
+
+  handleNumberInputOnChange(type: 'width' | 'height'): () => void {
+    const ref = (type === 'width' ? this.embedWidthRef : this.embedHeightRef) as HTMLInputElement;
+    const valType = type === 'width' ? 'embedWidth' : 'embedHeight';
+    return () => {
+      if (ref) {
+        const value = parseFloat(ref.value);
+        if (value <= 0) {
+          this[valType] = parseInt(MIN_WIDTH_HEIGHT_VALUE);
+          ref.value = MIN_WIDTH_HEIGHT_VALUE;
+        }
+      }
+    };
   }
 
   togglePopover(event: Event) {
