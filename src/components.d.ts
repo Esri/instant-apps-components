@@ -58,6 +58,12 @@ export namespace Components {
          */
         "titleText": string;
     }
+    interface InstantAppsKeyboardShortcuts {
+        /**
+          * MapView or SceneView to reference when URL parameter values are generated, i.e. center, level, viewpoint, etc.
+         */
+        "view": __esri.MapView | __esri.SceneView;
+    }
     interface InstantAppsPopover {
         "content": string;
         "disableAction": boolean;
@@ -139,16 +145,18 @@ export namespace Components {
         "view": __esri.MapView | __esri.SceneView;
     }
 }
-export interface InstantAppsHeaderCustomEvent<T> extends CustomEvent<T> {
-    detail: T;
-    target: HTMLInstantAppsHeaderElement;
-}
 declare global {
     interface HTMLInstantAppsHeaderElement extends Components.InstantAppsHeader, HTMLStencilElement {
     }
     var HTMLInstantAppsHeaderElement: {
         prototype: HTMLInstantAppsHeaderElement;
         new (): HTMLInstantAppsHeaderElement;
+    };
+    interface HTMLInstantAppsKeyboardShortcutsElement extends Components.InstantAppsKeyboardShortcuts, HTMLStencilElement {
+    }
+    var HTMLInstantAppsKeyboardShortcutsElement: {
+        prototype: HTMLInstantAppsKeyboardShortcutsElement;
+        new (): HTMLInstantAppsKeyboardShortcutsElement;
     };
     interface HTMLInstantAppsPopoverElement extends Components.InstantAppsPopover, HTMLStencilElement {
     }
@@ -170,6 +178,7 @@ declare global {
     };
     interface HTMLElementTagNameMap {
         "instant-apps-header": HTMLInstantAppsHeaderElement;
+        "instant-apps-keyboard-shortcuts": HTMLInstantAppsKeyboardShortcutsElement;
         "instant-apps-popover": HTMLInstantAppsPopoverElement;
         "instant-apps-popovers": HTMLInstantAppsPopoversElement;
         "instant-apps-social-share": HTMLInstantAppsSocialShareElement;
@@ -220,7 +229,7 @@ declare namespace LocalJSX {
         /**
           * Fires when the info button is clicked.
          */
-        "onInfoIsOpenChanged"?: (event: InstantAppsHeaderCustomEvent<boolean>) => void;
+        "onInfoIsOpenChanged"?: (event: CustomEvent<boolean>) => void;
         /**
           * Text color to display in header - accepts a hexidecimal value i.e. `#FFFFFF`.
          */
@@ -229,6 +238,12 @@ declare namespace LocalJSX {
           * Main text to display in header.
          */
         "titleText"?: string;
+    }
+    interface InstantAppsKeyboardShortcuts {
+        /**
+          * MapView or SceneView to reference when URL parameter values are generated, i.e. center, level, viewpoint, etc.
+         */
+        "view"?: __esri.MapView | __esri.SceneView;
     }
     interface InstantAppsPopover {
         "content"?: string;
@@ -308,6 +323,7 @@ declare namespace LocalJSX {
     }
     interface IntrinsicElements {
         "instant-apps-header": InstantAppsHeader;
+        "instant-apps-keyboard-shortcuts": InstantAppsKeyboardShortcuts;
         "instant-apps-popover": InstantAppsPopover;
         "instant-apps-popovers": InstantAppsPopovers;
         "instant-apps-social-share": InstantAppsSocialShare;
@@ -318,6 +334,7 @@ declare module "@stencil/core" {
     export namespace JSX {
         interface IntrinsicElements {
             "instant-apps-header": LocalJSX.InstantAppsHeader & JSXBase.HTMLAttributes<HTMLInstantAppsHeaderElement>;
+            "instant-apps-keyboard-shortcuts": LocalJSX.InstantAppsKeyboardShortcuts & JSXBase.HTMLAttributes<HTMLInstantAppsKeyboardShortcutsElement>;
             "instant-apps-popover": LocalJSX.InstantAppsPopover & JSXBase.HTMLAttributes<HTMLInstantAppsPopoverElement>;
             "instant-apps-popovers": LocalJSX.InstantAppsPopovers & JSXBase.HTMLAttributes<HTMLInstantAppsPopoversElement>;
             "instant-apps-social-share": LocalJSX.InstantAppsSocialShare & JSXBase.HTMLAttributes<HTMLInstantAppsSocialShareElement>;

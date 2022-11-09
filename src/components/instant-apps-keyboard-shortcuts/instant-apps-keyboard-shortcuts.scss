@@ -1,0 +1,36 @@
+:host {
+
+.instant-apps-keyboard-shortcuts__content {
+  display: flex;
+  flex-direction: column;
+  padding:5%;
+  max-width: 35vw;
+  font-family: var(--calcite-sans-family);
+  font-size: 14px;
+  background-color: var(--calcite-ui-background);
+  color: var(--calcite-ui-text-1);
+  table{
+    border:none;
+    border-collapse: collapse;
+    width:100%;
+    margin-bottom:1em;
+  }
+  table td, table th{
+    border:solid 1px var(--calcite-ui-border-1);
+    padding: 0.5rem 0.75rem 0.5rem 0.75rem;
+  }
+   tr:nth-child(even){
+   background-color:var(--calcite-ui-foreground-2);
+
+
+  }
+  tr:nth-child(odd){
+    
+  }
+  tr th{
+    padding:0.5em 0.7em;
+    font-weight: 400;
+  }
+}
+
+}
