@@ -139,11 +139,6 @@ export class InstantAppsHeader {
   })
   customHeaderCss: string;
 
-  @Watch('customHeaderCss')
-  sanitizeCustomHeaderCss() {
-    this.customHeaderCss = this._sanitizer.sanitize(this.customHeaderCss);
-  }
-
   /**
    * Font family to use for text
    */
@@ -171,7 +166,6 @@ export class InstantAppsHeader {
     this.handleMobileBreakpoints();
     this.dir = getElementDir(this.el);
     this.customHeaderHtml = this._sanitizer.sanitize(this.customHeaderHtml);
-    this.customHeaderCss = this._sanitizer.sanitize(this.customHeaderCss);
   }
 
   render() {
