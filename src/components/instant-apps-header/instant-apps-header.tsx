@@ -52,6 +52,7 @@ export class InstantAppsHeader {
         div: ['id', 'class', 'style', 'role'],
         span: ['id', 'class', 'style', 'role'],
         figure: ['class', 'style'],
+        header: ['id', 'class', 'style', 'role']
       },
     },
     true,
