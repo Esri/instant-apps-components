@@ -40,10 +40,19 @@
 
 ## CSS Custom Properties
 
-| Name                               | Description                               |
-| ---------------------------------- | ----------------------------------------- |
-| `--instant-apps-header-height`     | Height for header. Default: auto;         |
-| `--instant-apps-header-min-height` | Minimum height for header. Default: 50px; |
+| Name                                               | Description                                                         |
+| -------------------------------------------------- | ------------------------------------------------------------------- |
+| `--instant-apps-header-height`                     | Height for header. Default: auto;                                   |
+| `--instant-apps-header-height--logo-scale--l`      | Header height when logo scale is set to 'l'. Default value is 80px. |
+| `--instant-apps-header-height--logo-scale--m`      | Header height when logo scale is set to 'm'. Default value is 70px. |
+| `--instant-apps-header-height--logo-scale--s`      | Header height when logo scale is set to 's'. Default value is 55px. |
+| `--instant-apps-header-logo-height--logo-scale--l` | Logo height when logo scale is set to 'l'. Default value: 60px.     |
+| `--instant-apps-header-logo-height--logo-scale--m` | Logo height when logo scale is set to 'm'. Default value: 50px.     |
+| `--instant-apps-header-logo-height--logo-scale--s` | Logo height when logo scale is set to 's'. Default value: 35px.     |
+| `--instant-apps-header-logo-width--logo-scale--l`  | Logo width when logo scale is set to 'l'. Default value: 60px.      |
+| `--instant-apps-header-logo-width--logo-scale--m`  | Logo width when logo scale is set to 'm'. Default value: 50px.      |
+| `--instant-apps-header-logo-width--logo-scale--s`  | Logo width when logo scale is set to 's'. Default value: 35px.      |
+| `--instant-apps-header-min-height`                 | Minimum height for header. Default: 50px;                           |
 
 
 ----------------------------------------------
