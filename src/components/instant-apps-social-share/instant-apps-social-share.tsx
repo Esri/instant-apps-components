@@ -156,6 +156,11 @@ export class InstantAppsSocialShare {
   @Prop({ reflect: true }) displayTipText: boolean = true;
 
   /**
+   * Shortens generated URL.
+   */
+  @Prop({ reflect: true }) shortenShareUrl: boolean = true;
+
+  /**
    * Show/hide social media icons.
    */
   @Prop({ reflect: true }) socialMedia: boolean = true;
@@ -606,7 +611,7 @@ export class InstantAppsSocialShare {
     // Detects Safari - If Safari, do not shorten URL due to Safari not allowing clipboard copy after network requests
     const isChrome = navigator?.userAgent?.includes('Chrome');
     const isSafari = navigator?.userAgent?.includes('Safari');
-    const doNotShortenUrl = isSafari !== undefined && isSafari && isChrome !== undefined && !isChrome;
+    const doNotShortenUrl = (isSafari !== undefined && isSafari && isChrome !== undefined && !isChrome) || this.shortenShareUrl === false;
     if (!doNotShortenUrl) {
       shortenedUrl = await this.shortenUrl(this.shareUrl);
     }
