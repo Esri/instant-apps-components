@@ -156,6 +156,11 @@ export class InstantAppsSocialShare {
   @Prop({ reflect: true }) displayTipText: boolean = true;
 
   /**
+   * Shortens generated URL.
+   */
+  @Prop({ reflect: true }) shortenShareUrl: boolean = true;
+
+  /**
    * Show/hide social media icons.
    */
   @Prop({ reflect: true }) socialMedia: boolean = true;
@@ -608,7 +613,9 @@ export class InstantAppsSocialShare {
     const isSafari = navigator?.userAgent?.includes('Safari');
     const doNotShortenUrl = isSafari !== undefined && isSafari && isChrome !== undefined && !isChrome;
     if (!doNotShortenUrl) {
-      shortenedUrl = await this.shortenUrl(this.shareUrl);
+      if (this.shortenShareUrl) {
+        shortenedUrl = await this.shortenUrl(this.shareUrl);
+      }
     }
     const urlToUse = shortenedUrl ? shortenedUrl : this.shareUrl;
     switch (type) {

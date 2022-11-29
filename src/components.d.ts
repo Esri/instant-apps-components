@@ -134,6 +134,10 @@ export namespace Components {
          */
         "shareUrl": string;
         /**
+          * Shortens generated URL.
+         */
+        "shortenShareUrl": boolean;
+        /**
           * Show/hide social media icons.
          */
         "socialMedia": boolean;
@@ -301,6 +305,10 @@ declare namespace LocalJSX {
           * Generated share URL. Use this property to append custom URL parameters if needed.
          */
         "shareUrl"?: string;
+        /**
+          * Shortens generated URL.
+         */
+        "shortenShareUrl"?: boolean;
         /**
           * Show/hide social media icons.
          */
