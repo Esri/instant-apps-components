@@ -611,9 +611,11 @@ export class InstantAppsSocialShare {
     // Detects Safari - If Safari, do not shorten URL due to Safari not allowing clipboard copy after network requests
     const isChrome = navigator?.userAgent?.includes('Chrome');
     const isSafari = navigator?.userAgent?.includes('Safari');
-    const doNotShortenUrl = (isSafari !== undefined && isSafari && isChrome !== undefined && !isChrome) || this.shortenShareUrl === false;
+    const doNotShortenUrl = isSafari !== undefined && isSafari && isChrome !== undefined && !isChrome;
     if (!doNotShortenUrl) {
-      shortenedUrl = await this.shortenUrl(this.shareUrl);
+      if (this.shortenShareUrl) {
+        shortenedUrl = await this.shortenUrl(this.shareUrl);
+      }
     }
     const urlToUse = shortenedUrl ? shortenedUrl : this.shareUrl;
     switch (type) {
