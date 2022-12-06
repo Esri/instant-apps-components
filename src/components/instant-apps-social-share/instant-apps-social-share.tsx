@@ -680,6 +680,9 @@ export class InstantAppsSocialShare {
 
   // VIEW LOGIC
   async generateShareUrl(): Promise<string> {
+    // Update shareUrl--it may have changes since the component was loaded
+    this.shareUrl = window.location.href;
+
     // If view is not ready
     if (!this.view || !this.view?.ready) {
       return this.shareUrl;
