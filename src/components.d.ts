@@ -148,6 +148,10 @@ export namespace Components {
          */
         "socialMedia": boolean;
         /**
+          * Provides an alternate to the success.url message "App URL copied to clipboard."
+         */
+        "successMessage": string;
+        /**
           * MapView or SceneView to reference when URL parameter values are generated, i.e. center, level, viewpoint, etc.
          */
         "view": __esri.MapView | __esri.SceneView;
@@ -332,6 +336,10 @@ declare namespace LocalJSX {
           * Show/hide social media icons.
          */
         "socialMedia"?: boolean;
+        /**
+          * Provides an alternate to the success.url message "App URL copied to clipboard."
+         */
+        "successMessage"?: string;
         /**
           * MapView or SceneView to reference when URL parameter values are generated, i.e. center, level, viewpoint, etc.
          */

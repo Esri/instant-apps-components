@@ -32,10 +32,11 @@ export default {
     embed: { type: 'boolean' },
     socialMedia: { type: 'boolean' },
     displayTipText: { type: 'boolean' },
+    successMessage: { type: 'string' },
   },
 };
 
-const Template = ({ mode, embed, scale, socialMedia, displayTipText, shareIconsLayout }) =>
+const Template = ({ mode, embed, scale, socialMedia, displayTipText, shareIconsLayout, successMessage }) =>
   html`<instant-apps-social-share
     mode="${mode}"
     embed="${embed}"
@@ -43,6 +44,7 @@ const Template = ({ mode, embed, scale, socialMedia, displayTipText, shareIconsL
     social-media="${socialMedia}"
     display-tip-text="${displayTipText}"
     share-icons-layout="${shareIconsLayout}"
+    success-message="${successMessage}"
   ></instant-apps-social-share>`;
 
 export const Popover = Template.bind({});
@@ -53,6 +55,7 @@ Popover.args = {
   socialMedia: true,
   displayTipText: true,
   scale: 'm',
+  successMessage: ''
 };
 
 export const Inline = Template.bind({});
@@ -63,4 +66,5 @@ Inline.args = {
   socialMedia: true,
   displayTipText: true,
   scale: 'm',
+  successMessage: ''
 };

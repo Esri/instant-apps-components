@@ -176,6 +176,11 @@ export class InstantAppsSocialShare {
   @Prop({ reflect: true }) scale: 's' | 'm' | 'l' = 'm';
 
   /**
+   * Provides an alternate to the success.url message "App URL copied to clipboard."
+   */
+  @Prop({ reflect: true }) successMessage: string = "";
+
+  /**
    * Configure the default URL parameters that are appended to the generated share URL.
    */
   @Prop() defaultUrlParams: { center?: boolean; level?: boolean; viewpoint?: boolean; selectedFeature?: boolean; hiddenLayers?: boolean } | null = null;
@@ -381,7 +386,7 @@ export class InstantAppsSocialShare {
           </span>
           {success?.label}
         </span>
-        <span class={CSS.success.message}>{success?.url}</span>
+        <span class={CSS.success.message}>{this.successMessage || success?.url}</span>
       </div>
     );
   }
