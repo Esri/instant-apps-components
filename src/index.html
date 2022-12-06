@@ -153,6 +153,11 @@
         view.when(async () => {
           const loadedMap = await map.loadAll();
 
+
+        const keyboardShortcuts = document.createElement("instant-apps-keyboard-shortcuts");
+        keyboardShortcuts.view = view;
+        view.ui.add(keyboardShortcuts, "bottom-right");
+
           let selectedFeature = searchParams.get('selectedFeature');
           let layerId;
           let featureOID;
