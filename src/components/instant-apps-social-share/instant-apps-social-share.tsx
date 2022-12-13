@@ -615,9 +615,7 @@ export class InstantAppsSocialShare {
 
     // Safari requires that clipboard copy and window opening be tied to the triggering event. It also doesn't always
     // handle a full URL. So we must shorten the URL for Safari after opening the other window.
-    //const isChrome = navigator?.userAgent?.includes('Chrome');
     const isSafari = navigator?.userAgent?.includes('Safari');
-    //const doNotShortenUrl = isSafari !== undefined && isSafari;// && isChrome !== undefined && !isChrome;
     if (!isSafari && this.shortenShareUrl) {
       shortenedUrl = await this.shortenUrl(this.shareUrl);
     }
@@ -660,11 +658,9 @@ export class InstantAppsSocialShare {
 
         // With Safari, need to open new tab using the triggering event, so add shortened URL after opening.
         // Safari truncates URL without this approach.
-        if (isSafari) {
-          if (socialWin) {
-            socialWin.location = url;
-            socialWin.focus();
-          }
+        if (isSafari && socialWin) {
+          socialWin.location = url;
+          socialWin.focus();
         } else {
           window.open(encodeURI(url), '_blank');
         }
