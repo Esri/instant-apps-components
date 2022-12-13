@@ -613,16 +613,17 @@ export class InstantAppsSocialShare {
     this.shareUrl = await this.generateShareUrl();
     let shortenedUrl = null;
 
-    // Detects Safari - If Safari, do not shorten URL due to Safari not allowing clipboard copy after network requests
-    const isChrome = navigator?.userAgent?.includes('Chrome');
+    // Safari requires that clipboard copy and window opening be tied to the triggering event. It also doesn't always
+    // handle a full URL. So we must shorten the URL for Safari after opening the other window.
+    //const isChrome = navigator?.userAgent?.includes('Chrome');
     const isSafari = navigator?.userAgent?.includes('Safari');
-    const doNotShortenUrl = isSafari !== undefined && isSafari && isChrome !== undefined && !isChrome;
-    if (!doNotShortenUrl) {
-      if (this.shortenShareUrl) {
-        shortenedUrl = await this.shortenUrl(this.shareUrl);
-      }
+    //const doNotShortenUrl = isSafari !== undefined && isSafari;// && isChrome !== undefined && !isChrome;
+    if (!isSafari && this.shortenShareUrl) {
+      shortenedUrl = await this.shortenUrl(this.shareUrl);
     }
-    const urlToUse = shortenedUrl ? shortenedUrl : this.shareUrl;
+    let socialWin;
+    let urlToUse = shortenedUrl ? shortenedUrl : this.shareUrl;
+
     switch (type) {
       case 'link':
         navigator.clipboard.writeText(urlToUse);
@@ -641,6 +642,12 @@ export class InstantAppsSocialShare {
       case 'facebook':
       case 'twitter':
       case 'linkedIn':
+        if (isSafari) {
+          socialWin = window.open("", '_blank');
+          if (this.shortenShareUrl) {
+            urlToUse = await this.shortenUrl(this.shareUrl) || urlToUse;
+          }
+        }
         const urlData = {
           url: encodeURI(urlToUse),
         };
@@ -650,7 +657,18 @@ export class InstantAppsSocialShare {
         if (this.mode === 'popover') {
           this.closePopover();
         }
-        window.open(encodeURI(url), '_blank');
+
+        // With Safari, need to open new tab using the triggering event, so add shortened URL after opening.
+        // Safari truncates URL without this approach.
+        if (isSafari) {
+          if (socialWin) {
+            socialWin.location = url;
+            socialWin.focus();
+          }
+        } else {
+          window.open(encodeURI(url), '_blank');
+        }
+
         return;
     }
   }
