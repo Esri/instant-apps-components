@@ -74,6 +74,8 @@ const SOCIAL_URL_TEMPLATES = {
 
 const SHORTEN_API = 'https://arcg.is/prod/shorten';
 
+const MIN_WIDTH_HEIGHT_VALUE = '1';
+
 @Component({
   tag: 'instant-apps-social-share',
   styleUrl: 'instant-apps-social-share.scss',
@@ -154,6 +156,11 @@ export class InstantAppsSocialShare {
   @Prop({ reflect: true }) displayTipText: boolean = true;
 
   /**
+   * Shortens generated URL.
+   */
+  @Prop({ reflect: true }) shortenShareUrl: boolean = true;
+
+  /**
    * Show/hide social media icons.
    */
   @Prop({ reflect: true }) socialMedia: boolean = true;
@@ -167,6 +174,11 @@ export class InstantAppsSocialShare {
    * Adjusts the scale of the component.
    */
   @Prop({ reflect: true }) scale: 's' | 'm' | 'l' = 'm';
+
+  /**
+   * Provides an alternate to the success.url message "App URL copied to clipboard."
+   */
+  @Prop({ reflect: true }) successMessage: string = "";
 
   /**
    * Configure the default URL parameters that are appended to the generated share URL.
@@ -374,7 +386,7 @@ export class InstantAppsSocialShare {
           </span>
           {success?.label}
         </span>
-        <span class={CSS.success.message}>{success?.url}</span>
+        <span class={CSS.success.message}>{this.successMessage || success?.url}</span>
       </div>
     );
   }
@@ -546,16 +558,44 @@ export class InstantAppsSocialShare {
           <div class={CSS.embed.dimensions.container}>
             <label class={CSS.embed.dimensions.input}>
               <span>{embedMessages?.width}</span>
-              <input ref={el => (this.embedWidthRef = el)} type="number" value={this.embedWidth} />
+              <input
+                ref={el => (this.embedWidthRef = el)}
+                type="number"
+                onKeyDown={e => ['e', 'E', '+', '-'].includes(e.key) && e.preventDefault()}
+                onChange={this.handleNumberInputOnChange('width')}
+                value={this.embedWidth}
+                min="1"
+              />
             </label>
             <label class={CSS.embed.dimensions.input}>
               <span>{embedMessages?.height}</span>
-              <input ref={el => (this.embedHeightRef = el)} type="number" value={this.embedHeight} />
+              <input
+                ref={el => (this.embedHeightRef = el)}
+                type="number"
+                onKeyDown={e => ['e', 'E', '+', '-'].includes(e.key) && e.preventDefault()}
+                onChange={this.handleNumberInputOnChange('height')}
+                value={this.embedHeight}
+                min="1"
+              />
             </label>
           </div>
         </div>
       </div>
     );
+  }
+
+  handleNumberInputOnChange(type: 'width' | 'height'): () => void {
+    const ref = (type === 'width' ? this.embedWidthRef : this.embedHeightRef) as HTMLInputElement;
+    const valType = type === 'width' ? 'embedWidth' : 'embedHeight';
+    return () => {
+      if (ref) {
+        const value = parseFloat(ref.value);
+        if (value <= 0) {
+          this[valType] = parseInt(MIN_WIDTH_HEIGHT_VALUE);
+          ref.value = MIN_WIDTH_HEIGHT_VALUE;
+        }
+      }
+    };
   }
 
   togglePopover(event: Event) {
@@ -573,14 +613,15 @@ export class InstantAppsSocialShare {
     this.shareUrl = await this.generateShareUrl();
     let shortenedUrl = null;
 
-    // Detects Safari - If Safari, do not shorten URL due to Safari not allowing clipboard copy after network requests
-    const isChrome = navigator?.userAgent?.includes('Chrome');
+    // Safari requires that clipboard copy and window opening be tied to the triggering event. It also doesn't always
+    // handle a full URL. So we must shorten the URL for Safari after opening the other window.
     const isSafari = navigator?.userAgent?.includes('Safari');
-    const doNotShortenUrl = isSafari !== undefined && isSafari && isChrome !== undefined && !isChrome;
-    if (!doNotShortenUrl) {
+    if (!isSafari && this.shortenShareUrl) {
       shortenedUrl = await this.shortenUrl(this.shareUrl);
     }
-    const urlToUse = shortenedUrl ? shortenedUrl : this.shareUrl;
+    let socialWin;
+    let urlToUse = shortenedUrl ? shortenedUrl : this.shareUrl;
+
     switch (type) {
       case 'link':
         navigator.clipboard.writeText(urlToUse);
@@ -599,6 +640,12 @@ export class InstantAppsSocialShare {
       case 'facebook':
       case 'twitter':
       case 'linkedIn':
+        if (isSafari) {
+          socialWin = window.open("", '_blank');
+          if (this.shortenShareUrl) {
+            urlToUse = await this.shortenUrl(this.shareUrl) || urlToUse;
+          }
+        }
         const urlData = {
           url: encodeURI(urlToUse),
         };
@@ -608,7 +655,16 @@ export class InstantAppsSocialShare {
         if (this.mode === 'popover') {
           this.closePopover();
         }
-        window.open(encodeURI(url), '_blank');
+
+        // With Safari, need to open new tab using the triggering event, so add shortened URL after opening.
+        // Safari truncates URL without this approach.
+        if (isSafari && socialWin) {
+          socialWin.location = url;
+          socialWin.focus();
+        } else {
+          window.open(encodeURI(url), '_blank');
+        }
+
         return;
     }
   }
@@ -643,6 +699,9 @@ export class InstantAppsSocialShare {
 
   // VIEW LOGIC
   async generateShareUrl(): Promise<string> {
+    // Update shareUrl--it may have changes since the component was loaded
+    this.shareUrl = window.location.href;
+
     // If view is not ready
     if (!this.view || !this.view?.ready) {
       return this.shareUrl;

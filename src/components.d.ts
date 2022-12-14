@@ -14,11 +14,11 @@ export namespace Components {
          */
         "backgroundColor": string;
         /**
-          * CSS styles to be used in conjuction with `custom-header-html`. IMPORTANT: SANITIZE YOUR CSS BEFORE PASSING IT IN TO AVOID SECURITY VULNERABILITIES.
+          * CSS styles to be used in conjuction with `custom-header-html`.
          */
         "customHeaderCss": string;
         /**
-          * HTML code for custom headers. IMPORTANT: SANITIZE YOUR HTML BEFORE PASSING IT IN TO AVOID SECURITY VULNERABILITIES.
+          * HTML code for custom headers.
          */
         "customHeaderHtml": string;
         /**
@@ -49,6 +49,10 @@ export namespace Components {
           * Adjusts scale of logo image.
          */
         "logoScale": 's' | 'm' | 'l';
+        /**
+          * Mobile breakpoint value in pixels(px).
+         */
+        "mobileWidthBreakpoint": number;
         /**
           * Text color to display in header - accepts a hexidecimal value i.e. `#FFFFFF`.
          */
@@ -105,6 +109,12 @@ export namespace Components {
         "opacity": number;
         "relationshipElementId": string;
     }
+    interface InstantAppsKeyboardShortcuts {
+        /**
+          * MapView or SceneView to reference when URL parameter values are generated, i.e. center, level, viewpoint, etc.
+         */
+        "view": __esri.MapView | __esri.SceneView;
+    }
     interface InstantAppsPopover {
         "content": string;
         "disableAction": boolean;
@@ -127,6 +137,7 @@ export namespace Components {
         "beforeOpen": () => Promise<void>;
         "beginTour": () => Promise<void>;
         "close": (key: string) => Promise<void>;
+        "currentId": string;
         "endTour": () => Promise<void>;
         "inTour": boolean;
         "instantAppsPopovers": Map<string, HTMLInstantAppsPopoverElement>;
@@ -176,18 +187,22 @@ export namespace Components {
          */
         "shareUrl": string;
         /**
+          * Shortens generated URL.
+         */
+        "shortenShareUrl": boolean;
+        /**
           * Show/hide social media icons.
          */
         "socialMedia": boolean;
+        /**
+          * Provides an alternate to the success.url message "App URL copied to clipboard."
+         */
+        "successMessage": string;
         /**
           * MapView or SceneView to reference when URL parameter values are generated, i.e. center, level, viewpoint, etc.
          */
         "view": __esri.MapView | __esri.SceneView;
     }
-}
-export interface InstantAppsHeaderCustomEvent<T> extends CustomEvent<T> {
-    detail: T;
-    target: HTMLInstantAppsHeaderElement;
 }
 declare global {
     interface HTMLInstantAppsHeaderElement extends Components.InstantAppsHeader, HTMLStencilElement {
@@ -214,6 +229,12 @@ declare global {
         prototype: HTMLInstantAppsInteractiveLegendRelationshipElement;
         new (): HTMLInstantAppsInteractiveLegendRelationshipElement;
     };
+    interface HTMLInstantAppsKeyboardShortcutsElement extends Components.InstantAppsKeyboardShortcuts, HTMLStencilElement {
+    }
+    var HTMLInstantAppsKeyboardShortcutsElement: {
+        prototype: HTMLInstantAppsKeyboardShortcutsElement;
+        new (): HTMLInstantAppsKeyboardShortcutsElement;
+    };
     interface HTMLInstantAppsPopoverElement extends Components.InstantAppsPopover, HTMLStencilElement {
     }
     var HTMLInstantAppsPopoverElement: {
@@ -237,6 +258,7 @@ declare global {
         "instant-apps-interactive-legend": HTMLInstantAppsInteractiveLegendElement;
         "instant-apps-interactive-legend-classic": HTMLInstantAppsInteractiveLegendClassicElement;
         "instant-apps-interactive-legend-relationship": HTMLInstantAppsInteractiveLegendRelationshipElement;
+        "instant-apps-keyboard-shortcuts": HTMLInstantAppsKeyboardShortcutsElement;
         "instant-apps-popover": HTMLInstantAppsPopoverElement;
         "instant-apps-popovers": HTMLInstantAppsPopoversElement;
         "instant-apps-social-share": HTMLInstantAppsSocialShareElement;
@@ -249,11 +271,11 @@ declare namespace LocalJSX {
          */
         "backgroundColor"?: string;
         /**
-          * CSS styles to be used in conjuction with `custom-header-html`. IMPORTANT: SANITIZE YOUR CSS BEFORE PASSING IT IN TO AVOID SECURITY VULNERABILITIES.
+          * CSS styles to be used in conjuction with `custom-header-html`.
          */
         "customHeaderCss"?: string;
         /**
-          * HTML code for custom headers. IMPORTANT: SANITIZE YOUR HTML BEFORE PASSING IT IN TO AVOID SECURITY VULNERABILITIES.
+          * HTML code for custom headers.
          */
         "customHeaderHtml"?: string;
         /**
@@ -285,9 +307,13 @@ declare namespace LocalJSX {
          */
         "logoScale"?: 's' | 'm' | 'l';
         /**
+          * Mobile breakpoint value in pixels(px).
+         */
+        "mobileWidthBreakpoint"?: number;
+        /**
           * Fires when the info button is clicked.
          */
-        "onInfoIsOpenChanged"?: (event: InstantAppsHeaderCustomEvent<boolean>) => void;
+        "onInfoIsOpenChanged"?: (event: CustomEvent<boolean>) => void;
         /**
           * Text color to display in header - accepts a hexidecimal value i.e. `#FFFFFF`.
          */
@@ -344,6 +370,12 @@ declare namespace LocalJSX {
         "opacity"?: number;
         "relationshipElementId"?: string;
     }
+    interface InstantAppsKeyboardShortcuts {
+        /**
+          * MapView or SceneView to reference when URL parameter values are generated, i.e. center, level, viewpoint, etc.
+         */
+        "view"?: __esri.MapView | __esri.SceneView;
+    }
     interface InstantAppsPopover {
         "content"?: string;
         "disableAction"?: boolean;
@@ -364,6 +396,7 @@ declare namespace LocalJSX {
     }
     interface InstantAppsPopovers {
         "beforeOpen"?: () => Promise<void>;
+        "currentId"?: string;
         "inTour"?: boolean;
         "instantAppsPopovers"?: Map<string, HTMLInstantAppsPopoverElement>;
     }
@@ -411,9 +444,17 @@ declare namespace LocalJSX {
          */
         "shareUrl"?: string;
         /**
+          * Shortens generated URL.
+         */
+        "shortenShareUrl"?: boolean;
+        /**
           * Show/hide social media icons.
          */
         "socialMedia"?: boolean;
+        /**
+          * Provides an alternate to the success.url message "App URL copied to clipboard."
+         */
+        "successMessage"?: string;
         /**
           * MapView or SceneView to reference when URL parameter values are generated, i.e. center, level, viewpoint, etc.
          */
@@ -424,6 +465,7 @@ declare namespace LocalJSX {
         "instant-apps-interactive-legend": InstantAppsInteractiveLegend;
         "instant-apps-interactive-legend-classic": InstantAppsInteractiveLegendClassic;
         "instant-apps-interactive-legend-relationship": InstantAppsInteractiveLegendRelationship;
+        "instant-apps-keyboard-shortcuts": InstantAppsKeyboardShortcuts;
         "instant-apps-popover": InstantAppsPopover;
         "instant-apps-popovers": InstantAppsPopovers;
         "instant-apps-social-share": InstantAppsSocialShare;
@@ -437,6 +479,7 @@ declare module "@stencil/core" {
             "instant-apps-interactive-legend": LocalJSX.InstantAppsInteractiveLegend & JSXBase.HTMLAttributes<HTMLInstantAppsInteractiveLegendElement>;
             "instant-apps-interactive-legend-classic": LocalJSX.InstantAppsInteractiveLegendClassic & JSXBase.HTMLAttributes<HTMLInstantAppsInteractiveLegendClassicElement>;
             "instant-apps-interactive-legend-relationship": LocalJSX.InstantAppsInteractiveLegendRelationship & JSXBase.HTMLAttributes<HTMLInstantAppsInteractiveLegendRelationshipElement>;
+            "instant-apps-keyboard-shortcuts": LocalJSX.InstantAppsKeyboardShortcuts & JSXBase.HTMLAttributes<HTMLInstantAppsKeyboardShortcutsElement>;
             "instant-apps-popover": LocalJSX.InstantAppsPopover & JSXBase.HTMLAttributes<HTMLInstantAppsPopoverElement>;
             "instant-apps-popovers": LocalJSX.InstantAppsPopovers & JSXBase.HTMLAttributes<HTMLInstantAppsPopoversElement>;
             "instant-apps-social-share": LocalJSX.InstantAppsSocialShare & JSXBase.HTMLAttributes<HTMLInstantAppsSocialShareElement>;

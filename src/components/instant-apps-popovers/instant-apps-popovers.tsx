@@ -1,4 +1,4 @@
-import { Component, Host, h, Prop, Element, State, Method } from '@stencil/core';
+import { Component, Host, h, Prop, Element, Method } from '@stencil/core';
 
 @Component({
   tag: 'instant-apps-popovers',
@@ -12,7 +12,10 @@ export class InstantAppsPopovers {
   })
   inTour: boolean;
 
-  @State()
+  @Prop({
+    mutable: true,
+    reflect: true,
+  })
   currentId: string;
 
   @Element()
@@ -31,11 +34,11 @@ export class InstantAppsPopovers {
       popover.index = popoverIndex;
       this.instantAppsPopovers.set(refId, popover);
     });
-    this.host.addEventListener('calcitePopoverOpen', e => {
-      const node = e.target as HTMLCalcitePopoverElement;
-      const refId = node.getAttribute('ref-id') as string;
-      this.currentId = refId;
-    });
+    // this.host.addEventListener('calcitePopoverOpen', e => {
+    //   const node = e.target as HTMLCalcitePopoverElement;
+    //   const refId = node.getAttribute('ref-id') as string;
+    //   this.currentId = refId;
+    // });
   }
 
   render() {

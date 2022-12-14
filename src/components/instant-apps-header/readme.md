@@ -7,20 +7,21 @@
 
 ## Properties
 
-| Property           | Attribute             | Description                                                                                                                                         | Type                | Default                         |
-| ------------------ | --------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------- | ------------------------------- |
-| `backgroundColor`  | `background-color`    | Background color to display in header - accepts a hexidecimal value i.e. `#000000`.                                                                 | `string`            | `undefined`                     |
-| `customHeaderCss`  | `custom-header-css`   | CSS styles to be used in conjuction with `custom-header-html`. IMPORTANT: SANITIZE YOUR CSS BEFORE PASSING IT IN TO AVOID SECURITY VULNERABILITIES. | `string`            | `undefined`                     |
-| `customHeaderHtml` | `custom-header-html`  | HTML code for custom headers. IMPORTANT: SANITIZE YOUR HTML BEFORE PASSING IT IN TO AVOID SECURITY VULNERABILITIES.                                 | `string`            | `undefined`                     |
-| `fontFamily`       | `font-family`         | Font family to use for text                                                                                                                         | `string`            | `'var(--calcite-sans-family);'` |
-| `infoButton`       | `info-button`         | Display info button at the end of the title.                                                                                                        | `boolean`           | `false`                         |
-| `infoIsOpen`       | `info-is-open`        | Keeps track of the info 'open' state                                                                                                                | `boolean`           | `false`                         |
-| `logoImage`        | `logo-image`          | Image URL for logo. Displays at the start of the header.                                                                                            | `string`            | `undefined`                     |
-| `logoImageAltText` | `logo-image-alt-text` | Alternate text for header logo.                                                                                                                     | `string`            | `undefined`                     |
-| `logoLink`         | `logo-link`           | Logo URL to link out to another page.                                                                                                               | `string`            | `undefined`                     |
-| `logoScale`        | `logo-scale`          | Adjusts scale of logo image.                                                                                                                        | `"l" \| "m" \| "s"` | `'m'`                           |
-| `textColor`        | `text-color`          | Text color to display in header - accepts a hexidecimal value i.e. `#FFFFFF`.                                                                       | `string`            | `undefined`                     |
-| `titleText`        | `title-text`          | Main text to display in header.                                                                                                                     | `string`            | `undefined`                     |
+| Property                | Attribute                 | Description                                                                         | Type                | Default                         |
+| ----------------------- | ------------------------- | ----------------------------------------------------------------------------------- | ------------------- | ------------------------------- |
+| `backgroundColor`       | `background-color`        | Background color to display in header - accepts a hexidecimal value i.e. `#000000`. | `string`            | `undefined`                     |
+| `customHeaderCss`       | `custom-header-css`       | CSS styles to be used in conjuction with `custom-header-html`.                      | `string`            | `undefined`                     |
+| `customHeaderHtml`      | `custom-header-html`      | HTML code for custom headers.                                                       | `string`            | `undefined`                     |
+| `fontFamily`            | `font-family`             | Font family to use for text                                                         | `string`            | `'var(--calcite-sans-family);'` |
+| `infoButton`            | `info-button`             | Display info button at the end of the title.                                        | `boolean`           | `false`                         |
+| `infoIsOpen`            | `info-is-open`            | Keeps track of the info 'open' state                                                | `boolean`           | `false`                         |
+| `logoImage`             | `logo-image`              | Image URL for logo. Displays at the start of the header.                            | `string`            | `undefined`                     |
+| `logoImageAltText`      | `logo-image-alt-text`     | Alternate text for header logo.                                                     | `string`            | `undefined`                     |
+| `logoLink`              | `logo-link`               | Logo URL to link out to another page.                                               | `string`            | `undefined`                     |
+| `logoScale`             | `logo-scale`              | Adjusts scale of logo image.                                                        | `"l" \| "m" \| "s"` | `'m'`                           |
+| `mobileWidthBreakpoint` | `mobile-width-breakpoint` | Mobile breakpoint value in pixels(px).                                              | `number`            | `widthBreakpoints.medium[1]`    |
+| `textColor`             | `text-color`              | Text color to display in header - accepts a hexidecimal value i.e. `#FFFFFF`.       | `string`            | `undefined`                     |
+| `titleText`             | `title-text`              | Main text to display in header.                                                     | `string`            | `undefined`                     |
 
 
 ## Events
@@ -39,10 +40,19 @@
 
 ## CSS Custom Properties
 
-| Name                               | Description                               |
-| ---------------------------------- | ----------------------------------------- |
-| `--instant-apps-header-height`     | Height for header. Default: auto;         |
-| `--instant-apps-header-min-height` | Minimum height for header. Default: 50px; |
+| Name                                               | Description                                                         |
+| -------------------------------------------------- | ------------------------------------------------------------------- |
+| `--instant-apps-header-height`                     | Height for header. Default: auto;                                   |
+| `--instant-apps-header-height--logo-scale--l`      | Header height when logo scale is set to 'l'. Default value is 80px. |
+| `--instant-apps-header-height--logo-scale--m`      | Header height when logo scale is set to 'm'. Default value is 70px. |
+| `--instant-apps-header-height--logo-scale--s`      | Header height when logo scale is set to 's'. Default value is 55px. |
+| `--instant-apps-header-logo-height--logo-scale--l` | Logo height when logo scale is set to 'l'. Default value: 60px.     |
+| `--instant-apps-header-logo-height--logo-scale--m` | Logo height when logo scale is set to 'm'. Default value: 50px.     |
+| `--instant-apps-header-logo-height--logo-scale--s` | Logo height when logo scale is set to 's'. Default value: 35px.     |
+| `--instant-apps-header-logo-width--logo-scale--l`  | Logo width when logo scale is set to 'l'. Default value: 60px.      |
+| `--instant-apps-header-logo-width--logo-scale--m`  | Logo width when logo scale is set to 'm'. Default value: 50px.      |
+| `--instant-apps-header-logo-width--logo-scale--s`  | Logo width when logo scale is set to 's'. Default value: 35px.      |
+| `--instant-apps-header-min-height`                 | Minimum height for header. Default: 50px;                           |
 
 
 ----------------------------------------------

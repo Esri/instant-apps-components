@@ -23,6 +23,51 @@
  */
  --instant-apps-header-min-height: 50px;
 
+    /**
+ * @prop --instant-apps-header-height--logo-scale--s: Header height when logo scale is set to 's'. Default value is 55px.
+ */
+ --instant-apps-header-height--logo-scale--s: 55px;
+
+    /**
+ * @prop --instant-apps-header-logo-width--logo-scale--s: Logo width when logo scale is set to 's'. Default value: 35px.
+ */
+ --instant-apps-header-logo-width--logo-scale--s: 35px;
+
+    /**
+ * @prop  --instant-apps-header-logo-height--logo-scale--s: Logo height when logo scale is set to 's'. Default value: 35px. 
+ */
+ --instant-apps-header-logo-height--logo-scale--s: 35px;
+
+    /**
+ * @prop --instant-apps-header-height--logo-scale--m:  Header height when logo scale is set to 'm'. Default value is 70px.
+ */
+ --instant-apps-header-height--logo-scale--m: 70px;
+
+    /**
+ * @prop --instant-apps-header-logo-width--logo-scale--m: Logo width when logo scale is set to 'm'. Default value: 50px.
+ */
+ --instant-apps-header-logo-width--logo-scale--m: 50px;
+
+    /**
+ * @prop  --instant-apps-header-logo-height--logo-scale--m: Logo height when logo scale is set to 'm'. Default value: 50px.
+ */
+ --instant-apps-header-logo-height--logo-scale--m: 50px;
+
+     /**
+ * @prop  --instant-apps-header-height--logo-scale--l:  Header height when logo scale is set to 'l'. Default value is 80px.
+ */
+ --instant-apps-header-height--logo-scale--l: 80px;
+
+    /**
+ * @prop  --instant-apps-header-logo-width--logo-scale--l: Logo width when logo scale is set to 'l'. Default value: 60px.
+ */
+ --instant-apps-header-logo-width--logo-scale--l: 60px;
+
+    /**
+ * @prop --instant-apps-header-logo-height--logo-scale--l: Logo height when logo scale is set to 'l'. Default value: 60px.
+ */
+ --instant-apps-header-logo-height--logo-scale--l: 60px;
+
   width: 100%;
   .instant-apps-header--standard {
     box-sizing: border-box;
@@ -41,6 +86,7 @@
     .instant-apps-header__header-content {
       display: flex;
       align-items: center;
+      max-width: 100%;
 
       a {
         display: flex;
@@ -60,6 +106,8 @@
         color: var(--calcite-ui-text-1);
         font-weight: 430;
         white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
       }
 
       #infoButton {
@@ -79,8 +127,10 @@
     padding: 5px 10px;
   }
 
+
+
   .instant-apps-header__logo-height--s {
-    height: 55px;
+    height: var(--instant-apps-header-height--logo-scale--s);
     .instant-apps-header__header-content {
       h1 {
         font-size: 18px;
@@ -89,20 +139,20 @@
 
   }
   .instant-apps-header__logo-scale--s {
-    width: 35px;
-    height: 35px;
+    width: var(--instant-apps-header-logo-width--logo-scale--s);
+    height: var(--instant-apps-header-logo-height--logo-scale--s);
   }
 
   .instant-apps-header__logo-height--m {
-    height: 70px;
+    height: var(--instant-apps-header-height--logo-scale--m);
   }
   .instant-apps-header__logo-scale--m {
-    width: 50px;
-    height: 50px;
+    width: var(--instant-apps-header-logo-width--logo-scale--m);
+    height: var(--instant-apps-header-logo-height--logo-scale--m);
   }
 
   .instant-apps-header__logo-height--l {
-    height: 80px;
+    height: var(--instant-apps-header-height--logo-scale--l);
     .instant-apps-header__header-content {
       h1 {
         font-size: 22px;
@@ -110,8 +160,8 @@
     }
   }
   .instant-apps-header__logo-scale--l {
-    width: 60px;
-    height: 60px;
+    width: var(--instant-apps-header-logo-width--logo-scale--l);
+    height: var(--instant-apps-header-logo-height--logo-scale--l);
   }
 
   .instant-apps-header__logo-height--s,
@@ -120,11 +170,11 @@
     padding-right: 10px;
   }
 
-    .instant-apps-header--rtl.instant-apps-header__logo-height--s,
-    .instant-apps-header--rtl.instant-apps-header__logo-height--m,
-    .instant-apps-header--rtl.instant-apps-header__logo-height--l {
-      padding-right: 0;
-      padding-left: 10px;
-    }
+  .instant-apps-header--rtl.instant-apps-header__logo-height--s,
+  .instant-apps-header--rtl.instant-apps-header__logo-height--m,
+  .instant-apps-header--rtl.instant-apps-header__logo-height--l {
+    padding-right: 0;
+    padding-left: 10px;
+  }
   
 }

@@ -43,6 +43,7 @@
   <body>
     <calcite-shell>
       <instant-apps-header
+        id="instant-apps-header"
         slot="header"
         title-text="10.3 Interactive Legend"
         text-color="#f8f8f8"
@@ -60,57 +61,95 @@
     </calcite-shell>
 
     <script>
-      require([
-        'esri/WebMap',
-        'esri/views/MapView',
-        'esri/layers/FeatureLayer',
-        'esri/widgets/FeatureTable',
-        'esri/core/watchUtils',
-        'esri/widgets/Legend',
-        'esri/config',
-        'esri/widgets/Home',
-      ], (WebMap, MapView, FeatureLayer, FeatureTable, watchUtils, Legend, esriConfig, Home) => {
-        esriConfig.portalUrl = 'https://holistic.mapsdevext.arcgis.com';
-        const webmapConfig = { portalItem: { id: '7e252d7ebdc448378e7d1c3ff15c5703' } };
-        const map = new WebMap(webmapConfig);
+        require([
+          'esri/WebMap',
+          'esri/views/MapView',
+          'esri/layers/FeatureLayer',
+          'esri/widgets/FeatureTable',
+          'esri/core/watchUtils',
+          'esri/widgets/Legend',
+          'esri/config',
+          'esri/widgets/Home',
+        ], (WebMap, MapView, FeatureLayer, FeatureTable, watchUtils, Legend, esriConfig, Home) => {
+          esriConfig.portalUrl = 'https://holistic.mapsdevext.arcgis.com';
+          const webmapConfig = { portalItem: { id: '7e252d7ebdc448378e7d1c3ff15c5703' } };
+          const map = new WebMap(webmapConfig);
 
-        const container = 'viewDiv';
-        const view = new MapView({ map, container });
+          const container = 'viewDiv';
+          const view = new MapView({ map, container });
 
-        const home = new Home({ view });
-        view.ui.add(home, 'top-left');
+          const home = new Home({ view });
+          view.ui.add(home, 'top-left');
 
-        const calcitePanel = document.querySelector('calcite-panel');
+          const calcitePanel = document.querySelector('calcite-panel');
 
-        const initIntLegend = async () => {
-          const loadedMap = await map.loadAll();
-          const interactiveLegend = document.createElement('instant-apps-interactive-legend');
-          interactiveLegend.featureCount = true;
-          interactiveLegend.zoomTo = true;
-          // interactiveLegend.filterMode = {
-          //   type: 'effect',
-          //   effect: {
-          //     // DROP SHADOW
-          //     includedEffect: 'drop-shadow(4px, 4px, 4px, #000000)',
-          //     excludedEffect: '',
-          //     // // BLOOM
-          //     // excludedEffect: 'opacity(65%)',
-          //     // includedEffect: 'bloom(1.3, 0.75px, 0.3)',
-          //     // // GRAYSCALE
-          //     // excludedEffect: 'grayscale(100%) opacity(50%)',
-          //     // includedEffect: '',
-          //   },
-          // };
-          interactiveLegend.filterMode = {
-            type: 'filter',
+          const initIntLegend = async () => {
+            const loadedMap = await map.loadAll();
+            const interactiveLegend = document.createElement('instant-apps-interactive-legend');
+            interactiveLegend.featureCount = true;
+            interactiveLegend.zoomTo = true;
+            // interactiveLegend.filterMode = {
+            //   type: 'effect',
+            //   effect: {
+            //     // DROP SHADOW
+            //     includedEffect: 'drop-shadow(4px, 4px, 4px, #000000)',
+            //     excludedEffect: '',
+            //     // // BLOOM
+            //     // excludedEffect: 'opacity(65%)',
+            //     // includedEffect: 'bloom(1.3, 0.75px, 0.3)',
+            //     // // GRAYSCALE
+            //     // excludedEffect: 'grayscale(100%) opacity(50%)',
+            //     // includedEffect: '',
+            //   },
+            // };
+            interactiveLegend.filterMode = {
+              type: 'filter',
+            };
+            interactiveLegend.theme = 'dark';
+            interactiveLegend.view = view;
+            calcitePanel.appendChild(interactiveLegend);
           };
-          interactiveLegend.theme = 'dark';
-          interactiveLegend.view = view;
-          calcitePanel.appendChild(interactiveLegend);
-        };
 
-        view.when(initIntLegend());
-      });
+          view.when(initIntLegend());
+
+      //     const keyboardShortcuts = document.createElement("instant-apps-keyboard-shortcuts");
+      //     keyboardShortcuts.view = view;
+      //     view.ui.add(keyboardShortcuts, "bottom-right");
+
+      //       let selectedFeature = searchParams.get('selectedFeature');
+      //       let layerId;
+      //       let featureOID;
+
+      //       if (selectedFeature) {
+      //         const selectedFeatureValues = selectedFeature.split(';');
+      //         layerId = selectedFeatureValues[0];
+      //         featureOID = parseInt(selectedFeatureValues[1]);
+      //         const fLayer = view.map.findLayerById(layerId);
+      //         const query = fLayer.createQuery();
+      //         query.objectIds = [featureOID];
+      //         const queryRes = await fLayer.queryFeatures(query);
+      //         const graphic = queryRes.features[0];
+      //         view.popup.open({
+      //           features: [graphic],
+      //         });
+      //       }
+      //     });
+
+      //     const socialShare = document.querySelector('instant-apps-social-share');
+      //     socialShare.view = view;
+      //   });
+      //
+    </script>
+    //
+    <script>
+      //   const popovers = document.getElementById('popovers');
+      //   document.body.addEventListener('click', e => {
+      //     const node = e.target;
+      //     if (node.classList.contains('open')) {
+      //       const id = node.getAttribute('value');
+      //       popovers.open(id);
+      //     }
+        });
     </script>
   </body>
 </html>

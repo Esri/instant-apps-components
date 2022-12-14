@@ -5,6 +5,72 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## v1.0.0-beta.28
+
+### instant-apps-social-share
+
+- Add `shorten-share-url` to control whether to use URL shortener.
+
+## v1.0.0-beta.27
+
+### instant-apps-header
+
+- Truncate title text to prevent overflow to handle mobile devices
+
+## v1.0.0-beta.26
+
+### instant-apps-header
+
+- Fix CSS typo
+
+## v1.0.0-beta.25
+
+### instant-apps-header
+
+- Expose CSS variables to control header height and logo height if needed. 
+
+## v1.0.0-beta.24
+
+### instant-apps-header
+
+- Add `header` tag to sanitizer whitelist.
+
+## v1.0.0-beta.23
+
+### instant-apps-header
+
+- Remove sanitization from customHeaderCss property, so it doesn't mess up css formatting
+
+## v1.0.0-beta.22
+
+### instant-apps-social-share
+
+- Prevent embed width/height inputs to allow 'e', 'E', '+', and '-'
+
+## v1.0.0-beta.21
+
+### instant-apps-social-share
+
+- Prevent embed width/height inputs to allow negative values
+
+## v1.0.0-beta.20
+
+### instant-apps-header
+
+- Auto adjust 'logoScale' based off of 'medium' mobile width breakpoint
+
+## v1.0.0-beta.19
+
+### instant-apps-popovers
+
+- Expose currentId
+
+## v1.0.0-beta.18
+
+### instant-apps-popovers
+
+- Expose currentId
+
 ## v1.0.0-beta.17
 
 ### instant-apps-header
