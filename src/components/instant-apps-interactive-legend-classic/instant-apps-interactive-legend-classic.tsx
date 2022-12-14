@@ -15,6 +15,18 @@ import { validateInteractivity, generateData, updateFeatureCount, handleFilter, 
 import { loadModules } from 'esri-loader';
 
 import { FilterMode, IInteractiveLegendData } from './interfaces/interfaces';
+import {
+  ColorRampElement,
+  ColorRampStop,
+  HeatmapRampElement,
+  ImageSymbolTableElementInfo,
+  OpacityRampElement,
+  PieChartRampElement,
+  RampTitle,
+  RendererTitle,
+  StretchRampElement,
+  UnivariateColorSizeRampElement,
+} from '../../interfaces/interfaces';
 
 const CSS = {
   // jsapi styles
