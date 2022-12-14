@@ -139,6 +139,13 @@ export class InstantAppsInteractiveLegendClassic {
     this.reactiveUtils = reactiveUtils;
     this.handles = new Handles();
     this.intl = intl;
+
+    const observer = new MutationObserver(() => {
+      this.reRender = !this.reRender;
+    });
+    observer.observe(document.body, {
+      attributes: true,
+    });
   }
 
   async componentDidLoad() {

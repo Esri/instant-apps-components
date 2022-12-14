@@ -33,7 +33,7 @@
     <link rel="stylesheet" type="text/css" href="https://unpkg.com/@esri/calcite-components@1.0.0-next.660/dist/calcite/calcite.css" />
     <script type="module" src="/build/instant-apps-components.esm.js"></script>
     <script nomodule src="/build/instant-apps-components.js"></script>
-    <link rel="stylesheet" href="https://js.arcgis.com/4.25/esri/themes/dark/main.css" />
+    <link id="esriStylesheet" rel="stylesheet" href="https://js.arcgis.com/4.25/esri/themes/light/main.css" />
     <script src="https://js.arcgis.com/4.25/"></script>
     <script>
       require(['esri/WebMap', 'esri/views/MapView', 'esri/layers/FeatureLayer', 'esri/core/reactiveUtils', 'esri/widgets/Legend', 'esri/config', 'esri/widgets/Home'], (
@@ -57,6 +57,38 @@
 
         const home = new Home({ view });
         view.ui.add(home, 'top-left');
+
+        const themeButton = document.createElement('calcite-button');
+        themeButton.id = 'theme';
+        themeButton.innerText = 'Toggle theme';
+
+        let theme = 'light';
+
+        const esriStylesheet = document.getElementById('esriStylesheet');
+
+        themeButton.addEventListener('click', () => {
+          theme = theme === 'light' ? 'dark' : 'light';
+          esriStylesheet.href = `https://js.arcgis.com/4.25/esri/themes/${theme}/main.css`;
+          document.body.classList.remove('calcite-theme-light', 'calcite-theme-dark');
+          document.body.classList.add(`calcite-theme-${theme}`);
+        });
+
+        view.ui.add(themeButton, 'top-right');
+
+        const sidePanelButton = document.createElement('calcite-button');
+        sidePanelButton.id = 'sidePanel';
+        sidePanelButton.innerText = 'Switch side';
+
+        let side = 'start';
+
+        const sidePanel = document.getElementById('shellPanel');
+
+        sidePanelButton.addEventListener('click', () => {
+          side = side === 'start' ? 'end' : 'start';
+          sidePanel.setAttribute('slot', `panel-${side}`);
+        });
+
+        view.ui.add(sidePanelButton, 'top-right');
 
         const initIntLegend = async () => {
           const loadedMap = await map.loadAll();
@@ -87,7 +119,7 @@
     </script>
   </head>
 
-  <body class="calcite-theme-dark">
+  <body class="calcite-theme-light">
     <calcite-shell>
       <instant-apps-header
         slot="header"
@@ -98,14 +130,16 @@
         logo-image-alt-text="ArcGIS Instant Apps logo"
         logo-link="https://www.esri.com/en-us/arcgis/products/arcgis-instant-apps/overview"
       >
-        <instant-apps-social-share slot="actions-end" popover-button-icon-scale="s"></instant-apps-social-share>
+        <instant-apps-social-share class="calcite-theme-dark" slot="actions-end" popover-button-icon-scale="s"></instant-apps-social-share>
       </instant-apps-header>
-      <calcite-shell-panel slot="panel-end">
+      <calcite-shell-panel id="shellPanel" slot="panel-start">
         <calcite-panel>
           <instant-apps-interactive-legend feature-count="true" zoom-to="true"></instant-apps-interactive-legend>
         </calcite-panel>
       </calcite-shell-panel>
       <div id="viewDiv"></div>
     </calcite-shell>
+
+    <button id="theme">Toggle theme</button>
   </body>
 </html>
