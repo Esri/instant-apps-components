@@ -1,5 +1,5 @@
 /*
- *   Copyright (c) 2022 Esri
+ *   Copyright (c) 2023 Esri
  *   All rights reserved.
  *   Licensed under the Apache License, Version 2.0 (the "License");
  *   you may not use this file except in compliance with the License.
@@ -55,7 +55,7 @@ Popover.args = {
   socialMedia: true,
   displayTipText: true,
   scale: 'm',
-  successMessage: ''
+  successMessage: '',
 };
 
 export const Inline = Template.bind({});
@@ -66,5 +66,5 @@ Inline.args = {
   socialMedia: true,
   displayTipText: true,
   scale: 'm',
-  successMessage: ''
+  successMessage: '',
 };

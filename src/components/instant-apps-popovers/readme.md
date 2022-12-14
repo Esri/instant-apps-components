@@ -1,9 +1,6 @@
 # instant-apps-popovers
 
-
-
 <!-- Auto Generated Below -->
-
 
 ## Properties
 
@@ -14,54 +11,37 @@
 | `inTour`              | `in-tour`    |             | `boolean`                                    | `undefined`               |
 | `instantAppsPopovers` | --           |             | `Map<string, HTMLInstantAppsPopoverElement>` | `new Map()`               |
 
-
 ## Methods
 
 ### `beginTour() => Promise<void>`
 
-
-
 #### Returns
 
 Type: `Promise<void>`
-
-
 
 ### `close(key: string) => Promise<void>`
 
-
-
 #### Returns
 
 Type: `Promise<void>`
-
-
 
 ### `endTour() => Promise<void>`
 
-
-
 #### Returns
 
 Type: `Promise<void>`
-
-
 
 ### `open(key: string) => Promise<void>`
 
-
-
 #### Returns
 
 Type: `Promise<void>`
 
-
-
-
-----------------------------------------------
+---
 
 ## License
-COPYRIGHT © 2022 Esri
+
+COPYRIGHT © 2023 Esri
 
 All rights reserved under the copyright laws of the United States and applicable international laws, treaties, and conventions.
 
@@ -72,4 +52,3 @@ See use restrictions at http://www.esri.com/legal/pdfs/mla_e204_e300/english
 For additional information, contact: Environmental Systems Research Institute, Inc. Attn: Contracts and Legal Services Department 380 New York Street Redlands, California, USA 92373 USA
 
 email: contracts@esri.com
-

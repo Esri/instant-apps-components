@@ -26,7 +26,7 @@ import {
   RendererTitle,
   StretchRampElement,
   UnivariateColorSizeRampElement,
-} from '../../interfaces/interfaces';
+} from '../../../interfaces/interfaces';
 
 const CSS = {
   // jsapi styles
@@ -592,29 +592,29 @@ export class InstantAppsInteractiveLegendClassic {
     if (this.data) {
       const data = this.data[activeLayerInfo.layer.id];
       const category = data.categories.get(elementInfo.value);
-      selected = category?.selected;
+      // If no items are selected, then apply 'selected' style to all -- UX
+      const noneSelected = Array.from(data.categories.entries()).every(entry => !entry[1].selected);
+      selected = noneSelected || category?.selected;
       count = this.intl.formatNumber(category?.count as number);
     }
 
     return isInteractive ? (
       // Regular LegendElementInfo
-      <div
+      <button
         onClick={() => {
           handleFilter(this.data?.[layer?.id], elementInfo, infoIndex, this.filterMode);
           this.reRender = !this.reRender;
         }}
         class={`${CSS.layerRow} ${CSS.interactiveLayerRow}${selected ? ` ${CSS.infoSelected}` : ''}`}
       >
-        <div>
-          <div class={`${CSS.symbolContainer}${imageryLayerInfoStretched}${sizeRamp}`}>{content}</div>
-          <div class={`${CSS.layerInfo}${imageryLayerInfoStretched}`}>{this.getTitle(this.messages, elementInfo.label, false) || ''}</div>
-        </div>
+        <div class={`${CSS.symbolContainer}${imageryLayerInfoStretched}${sizeRamp}`}>{content}</div>
+        <div class={`${CSS.layerInfo}${imageryLayerInfoStretched}`}>{this.getTitle(this.messages, elementInfo.label, false) || ''}</div>
         {this.featureCount ? (
           <span key="element-info-count" class={CSS.countText}>
             {count}
           </span>
         ) : null}
-      </div>
+      </button>
     ) : (
       <div class={CSS.layerRow}>
         <div class={`${CSS.symbolContainer}${imageryLayerInfoStretched}${sizeRamp}`}>{content}</div>

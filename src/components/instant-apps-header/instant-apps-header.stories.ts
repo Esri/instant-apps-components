@@ -1,5 +1,5 @@
 /*
- *   Copyright (c) 2022 Esri
+ *   Copyright (c) 2023 Esri
  *   All rights reserved.
  *   Licensed under the Apache License, Version 2.0 (the "License");
  *   you may not use this file except in compliance with the License.
@@ -27,14 +27,16 @@ export default {
 };
 
 const Template = ({ titleText, backgroundColor, textColor, logoImage, logoImageAltText, logoLink }) =>
-  html`<div style="height: 70px;"><instant-apps-header
-  title-text="${titleText}"
-  background-color="${backgroundColor}"
-  text-color="${textColor}"
-  logo-image="${logoImage}"
-  logo-image-alt-text="${logoImageAltText}"
-  logo-link="${logoLink}"
-></instant-apps-header></div>`;
+  html`<div style="height: 70px;">
+    <instant-apps-header
+      title-text="${titleText}"
+      background-color="${backgroundColor}"
+      text-color="${textColor}"
+      logo-image="${logoImage}"
+      logo-image-alt-text="${logoImageAltText}"
+      logo-link="${logoLink}"
+    ></instant-apps-header>
+  </div>`;
 
 export const Standard = Template.bind({});
 Standard.args = { titleText: 'Instant Apps: Header', backgroundColor: '#0079c1', textColor: '#ffffff' };

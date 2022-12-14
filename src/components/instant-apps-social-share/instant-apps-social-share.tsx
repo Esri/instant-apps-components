@@ -1,5 +1,5 @@
 /*
- *   Copyright (c) 2022 Esri
+ *   Copyright (c) 2023 Esri
  *   All rights reserved.
  *   Licensed under the Apache License, Version 2.0 (the "License");
  *   you may not use this file except in compliance with the License.
@@ -178,7 +178,7 @@ export class InstantAppsSocialShare {
   /**
    * Provides an alternate to the success.url message "App URL copied to clipboard."
    */
-  @Prop({ reflect: true }) successMessage: string = "";
+  @Prop({ reflect: true }) successMessage: string = '';
 
   /**
    * Configure the default URL parameters that are appended to the generated share URL.
@@ -641,9 +641,9 @@ export class InstantAppsSocialShare {
       case 'twitter':
       case 'linkedIn':
         if (isSafari) {
-          socialWin = window.open("", '_blank');
+          socialWin = window.open('', '_blank');
           if (this.shortenShareUrl) {
-            urlToUse = await this.shortenUrl(this.shareUrl) || urlToUse;
+            urlToUse = (await this.shortenUrl(this.shareUrl)) || urlToUse;
           }
         }
         const urlData = {

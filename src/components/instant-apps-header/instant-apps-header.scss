@@ -1,5 +1,5 @@
 /*
- *   Copyright (c) 2022 Esri
+ *   Copyright (c) 2023 Esri
  *   All rights reserved.
  *   Licensed under the Apache License, Version 2.0 (the "License");
  *   you may not use this file except in compliance with the License.
@@ -16,57 +16,57 @@
   /**
  * @prop --instant-apps-header-height: Height for header. Default: auto;
  */
- --instant-apps-header-height: auto;
+  --instant-apps-header-height: auto;
 
-   /**
+  /**
  * @prop --instant-apps-header-min-height: Minimum height for header. Default: 50px;
  */
- --instant-apps-header-min-height: 50px;
+  --instant-apps-header-min-height: 50px;
 
-    /**
+  /**
  * @prop --instant-apps-header-height--logo-scale--s: Header height when logo scale is set to 's'. Default value is 55px.
  */
- --instant-apps-header-height--logo-scale--s: 55px;
+  --instant-apps-header-height--logo-scale--s: 55px;
 
-    /**
+  /**
  * @prop --instant-apps-header-logo-width--logo-scale--s: Logo width when logo scale is set to 's'. Default value: 35px.
  */
- --instant-apps-header-logo-width--logo-scale--s: 35px;
+  --instant-apps-header-logo-width--logo-scale--s: 35px;
 
-    /**
+  /**
  * @prop  --instant-apps-header-logo-height--logo-scale--s: Logo height when logo scale is set to 's'. Default value: 35px. 
  */
- --instant-apps-header-logo-height--logo-scale--s: 35px;
+  --instant-apps-header-logo-height--logo-scale--s: 35px;
 
-    /**
+  /**
  * @prop --instant-apps-header-height--logo-scale--m:  Header height when logo scale is set to 'm'. Default value is 70px.
  */
- --instant-apps-header-height--logo-scale--m: 70px;
+  --instant-apps-header-height--logo-scale--m: 70px;
 
-    /**
+  /**
  * @prop --instant-apps-header-logo-width--logo-scale--m: Logo width when logo scale is set to 'm'. Default value: 50px.
  */
- --instant-apps-header-logo-width--logo-scale--m: 50px;
+  --instant-apps-header-logo-width--logo-scale--m: 50px;
 
-    /**
+  /**
  * @prop  --instant-apps-header-logo-height--logo-scale--m: Logo height when logo scale is set to 'm'. Default value: 50px.
  */
- --instant-apps-header-logo-height--logo-scale--m: 50px;
+  --instant-apps-header-logo-height--logo-scale--m: 50px;
 
-     /**
+  /**
  * @prop  --instant-apps-header-height--logo-scale--l:  Header height when logo scale is set to 'l'. Default value is 80px.
  */
- --instant-apps-header-height--logo-scale--l: 80px;
+  --instant-apps-header-height--logo-scale--l: 80px;
 
-    /**
+  /**
  * @prop  --instant-apps-header-logo-width--logo-scale--l: Logo width when logo scale is set to 'l'. Default value: 60px.
  */
- --instant-apps-header-logo-width--logo-scale--l: 60px;
+  --instant-apps-header-logo-width--logo-scale--l: 60px;
 
-    /**
+  /**
  * @prop --instant-apps-header-logo-height--logo-scale--l: Logo height when logo scale is set to 'l'. Default value: 60px.
  */
- --instant-apps-header-logo-height--logo-scale--l: 60px;
+  --instant-apps-header-logo-height--logo-scale--l: 60px;
 
   width: 100%;
   .instant-apps-header--standard {
@@ -127,8 +127,6 @@
     padding: 5px 10px;
   }
 
-
-
   .instant-apps-header__logo-height--s {
     height: var(--instant-apps-header-height--logo-scale--s);
     .instant-apps-header__header-content {
@@ -136,7 +134,6 @@
         font-size: 18px;
       }
     }
-
   }
   .instant-apps-header__logo-scale--s {
     width: var(--instant-apps-header-logo-width--logo-scale--s);
@@ -156,7 +153,7 @@
     .instant-apps-header__header-content {
       h1 {
         font-size: 22px;
-        }
+      }
     }
   }
   .instant-apps-header__logo-scale--l {
@@ -176,5 +173,4 @@
     padding-right: 0;
     padding-left: 10px;
   }
-  
 }

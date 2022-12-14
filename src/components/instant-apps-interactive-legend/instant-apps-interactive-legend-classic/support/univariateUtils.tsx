@@ -10,7 +10,7 @@ import { createProjector } from 'maquette';
 
 import { h } from '@stencil/core';
 import { loadModules } from 'esri-loader';
-import { ColorRampElement, SizeRampElement, UnivariateColorSizeRampElement } from '../../../interfaces/interfaces';
+import { ColorRampElement, SizeRampElement, UnivariateColorSizeRampElement } from '../../../../interfaces/interfaces';
 
 // // esri.widgets
 // import type {

@@ -5,7 +5,7 @@
  * It contains typing information for all components that exist in this project.
  */
 import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
-import { FilterMode } from "./components/instant-apps-interactive-legend-classic/interfaces/interfaces";
+import { FilterMode } from "./components/instant-apps-interactive-legend/instant-apps-interactive-legend-classic/interfaces/interfaces";
 import { InstantAppsPopovers } from "./components/instant-apps-popovers/instant-apps-popovers";
 export namespace Components {
     interface InstantAppsHeader {
@@ -71,10 +71,6 @@ export namespace Components {
           * Filter mode to use when filtering features.
          */
         "filterMode": FilterMode;
-        /**
-          * Specify a light or dark theme for the UI.
-         */
-        "theme": 'light' | 'dark';
         /**
           * Reference to Map View or Scene View
          */
@@ -332,10 +328,6 @@ declare namespace LocalJSX {
           * Filter mode to use when filtering features.
          */
         "filterMode"?: FilterMode;
-        /**
-          * Specify a light or dark theme for the UI.
-         */
-        "theme"?: 'light' | 'dark';
         /**
           * Reference to Map View or Scene View
          */

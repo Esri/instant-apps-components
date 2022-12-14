@@ -1,5 +1,5 @@
 /*
- *   Copyright (c) 2022 Esri
+ *   Copyright (c) 2023 Esri
  *   All rights reserved.
  *   Licensed under the Apache License, Version 2.0 (the "License");
  *   you may not use this file except in compliance with the License.
@@ -52,7 +52,7 @@ export class InstantAppsHeader {
         div: ['id', 'class', 'style', 'role'],
         span: ['id', 'class', 'style', 'role'],
         figure: ['class', 'style'],
-        header: ['id', 'class', 'style', 'role']
+        header: ['id', 'class', 'style', 'role'],
       },
     },
     true,

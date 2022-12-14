@@ -1,5 +1,5 @@
 import { Component, h, Prop } from '@stencil/core';
-import { loadModules } from '../../utils/loadModules';
+import { loadModules } from '../../../utils/loadModules';
 
 import { generateFillAttributes, generateStrokeAttributes, renderDef, renderShape, getTransformMatrix, computeBBox, getBoundingBox } from './support/svgUtils';
 
