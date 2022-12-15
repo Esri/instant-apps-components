@@ -1,4 +1,4 @@
-import { Component, h, Prop, Element, State } from '@stencil/core';
+import { Component, h, Prop, Element, State, forceUpdate } from '@stencil/core';
 
 import {
   getUnivariateColorRampPreview,
@@ -10,7 +10,7 @@ import {
 
 import { isImageryStretchedLegend } from './support/styleUtils';
 
-import { validateInteractivity, generateData, updateFeatureCount, handleFilter, showAll, zoomTo } from './support/helpers';
+import { validateInteractivity, generateData, handleFeatureCount, handleFilter, showAll, zoomTo } from './support/helpers';
 
 import { loadModules } from 'esri-loader';
 
@@ -66,7 +66,6 @@ const CSS = {
 
   // instant-apps-interactive-legend
   layerCaptionBtnContainer: 'instant-apps-interactive-legend__layer-caption-btn-container',
-  countText: 'instant-apps-interactive-legend__info-count-text',
   interactiveLayerRow: 'instant-apps-interactive-legend__layer-row--interactive',
   infoSelected: 'instant-apps-interactive-legend-element-info--selected',
 };
@@ -151,31 +150,16 @@ export class InstantAppsInteractiveLegendClassic {
   async componentDidLoad() {
     await this.reactiveUtils.whenOnce(() => this.legendvm);
     await (this.legendvm?.view?.map as __esri.WebMap).loadAll();
-    this.data = await generateData(this.legendvm, this.reactiveUtils, this.featureCount);
+    this.data = await generateData(this.legendvm, this.reactiveUtils);
+    if (this.featureCount) {
+      const data = await handleFeatureCount(this.legendvm, this.data);
+      this.data = data;
+
+      this.handleFeatureCount();
+    }
 
     const featureCountKey = 'feature-count';
-
-    if (this.handles.has(featureCountKey)) {
-      this.handles.remove(featureCountKey);
-    }
-
-    if (this.featureCount) {
-      this.handles.add(
-        this.reactiveUtils.when(
-          () => !this.legendvm?.view?.stationary,
-          () => {
-            this.reactiveUtils.when(
-              () => !this.legendvm?.view?.interacting,
-              () => {
-                updateFeatureCount(this.legendvm, this.data, this);
-              },
-              { once: true },
-            );
-          },
-        ),
-        featureCountKey,
-      );
-    }
+    if (this.handles.has(featureCountKey)) this.handles.remove(featureCountKey);
 
     this.reRender = !this.reRender;
   }
@@ -615,7 +599,6 @@ export class InstantAppsInteractiveLegendClassic {
     const imageryLayerInfoStretched = isStretched ? ` ${CSS.imageryLayerInfoStretched}` : '';
     const sizeRamp = !isStretched && isSizeRamp ? ` ${CSS.sizeRamp}` : '';
 
-    let count;
     let selected;
 
     if (this.data) {
@@ -624,9 +607,8 @@ export class InstantAppsInteractiveLegendClassic {
       // If no items are selected, then apply 'selected' style to all -- UX
       const noneSelected = Array.from(data.categories.entries()).every(entry => !entry[1].selected);
       selected = noneSelected || category?.selected;
-      count = this.intl.formatNumber(category?.count as number) ?? 0;
     }
-
+    console.log(this.data);
     return isInteractive ? (
       // Regular LegendElementInfo
       <button
@@ -639,9 +621,12 @@ export class InstantAppsInteractiveLegendClassic {
         <div class={`${CSS.symbolContainer}${imageryLayerInfoStretched}${sizeRamp}`}>{content}</div>
         <div class={`${CSS.layerInfo}${imageryLayerInfoStretched}`}>{this.getTitle(this.messages, elementInfo.label, false) || ''}</div>
         {this.featureCount ? (
-          <span key="element-info-count" class={CSS.countText}>
-            {count}
-          </span>
+          <instant-apps-interactive-legend-count
+            categoryId={elementInfo.label}
+            layerId={activeLayerInfo.layer.id}
+            data={this.data}
+            legendvm={this.legendvm}
+          ></instant-apps-interactive-legend-count>
         ) : null}
       </button>
     ) : (
@@ -733,5 +718,25 @@ export class InstantAppsInteractiveLegendClassic {
 
   isRendererTitle(_titleInfo: any, isRamp: boolean): _titleInfo is RendererTitle {
     return !isRamp;
+  }
+
+  handleFeatureCount() {
+    this.handles.add(
+      this.reactiveUtils.when(
+        () => !this.legendvm.view?.stationary,
+        () => {
+          this.reactiveUtils.when(
+            () => !this.legendvm.view?.interacting,
+            async () => {
+              const selector = 'instant-apps-interactive-legend-count';
+              const countNodes = document.querySelectorAll(selector);
+              await handleFeatureCount(this.legendvm, this.data);
+              countNodes.forEach(countNode => forceUpdate(countNode));
+            },
+            { once: true },
+          );
+        },
+      ),
+    );
   }
 }

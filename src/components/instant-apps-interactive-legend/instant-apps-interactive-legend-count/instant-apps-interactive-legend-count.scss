@@ -1,0 +1,11 @@
+:host {
+  display: flex;
+  align-items: center;
+}
+
+.instant-apps-interactive-legend__info-count-text {
+  position: absolute;
+  right: 5%;
+  font-size: var(--instant-apps-interactive-legend-info-font-size);
+  color: var(--instant-apps-interactive-legend-secondary-color);
+}
