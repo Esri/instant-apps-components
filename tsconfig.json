@@ -19,7 +19,8 @@
     "jsxFactory": "h",
     "importHelpers": true,
     "lib": ["DOM", "DOM.Iterable", "ScriptHost", "ES2020", "ES2021"],
-    "resolveJsonModule": true
+    "resolveJsonModule": true,
+    "esModuleInterop": true
   },
   "files": ["node_modules/@esri/calcite-components/dist/types/components.d.ts"],
   "include": ["src"],

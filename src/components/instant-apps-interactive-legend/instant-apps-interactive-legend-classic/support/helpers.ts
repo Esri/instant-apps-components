@@ -141,7 +141,7 @@ async function createInteractiveLegendDataForLayer(
         selected: false,
         legendElementInfo,
       };
-      categories.set(legendElementInfo.value, category);
+      categories.set(legendElementInfo.label, category);
     });
 
     // Generated expression to apply to layer filters
@@ -156,7 +156,7 @@ async function createInteractiveLegendDataForLayer(
         selected: false,
         legendElementInfo,
       };
-      categories.set(legendElementInfo.value, category);
+      categories.set(legendElementInfo.label, category);
     });
 
     // Generated expression to apply to layer filters
@@ -175,16 +175,21 @@ export async function getInfoCount(
   infoIndex: number,
   legendElement,
   legendElementInfos,
-): Promise<number> {
+): Promise<number | undefined> {
   const query = fLayerView.createQuery();
   const where = generateQueryExpression(info, field, infoIndex, legendElement, legendElementInfos);
   query.where = where;
   query.geometry = extent;
-  const featureCount = await fLayerView.queryFeatureCount(query);
-  return featureCount;
+  try {
+    const featureCount = await fLayerView.queryFeatureCount(query);
+    return featureCount;
+  } catch (err) {
+    console.error("FAILURE AT 'getInfoCount': ", err);
+  }
+  return;
 }
 
-export async function updateFeatureCount(legendvm: __esri.LegendViewModel, data: IInteractiveLegendData): Promise<void> {
+export async function updateFeatureCount(legendvm: __esri.LegendViewModel, data: IInteractiveLegendData, component): Promise<void> {
   const { view } = legendvm;
 
   legendvm.activeLayerInfos.forEach(async activeLayerInfo => {
@@ -204,10 +209,12 @@ export async function updateFeatureCount(legendvm: __esri.LegendViewModel, data:
     legendElement?.infos?.forEach((legendElementInfo, legendElementInfoIndex) => {
       const count = counts[legendElementInfoIndex];
       totalCount += count;
-      const category = categories?.get(legendElementInfo.value) as ICategory;
-      category.count = count;
+      const category = categories?.get(legendElementInfo.label) as ICategory;
+      if (category) category.count = count;
     });
     dataForALI.totalCount = totalCount;
+    // component.reRender = !component.reRender;
+    // console.log('called');
   });
 }
 
@@ -215,7 +222,7 @@ function generateQueryExpressions(data: IIntLegendLayerData, info: any, infoInde
   const { field, legendElement, categories } = data;
   const legendElementInfos = Array.from(categories);
   const queryExpression = generateQueryExpression(info, field, infoIndex, legendElement, legendElementInfos, '');
-  const category = categories.get(info.value) as ICategory;
+  const category = categories.get(info.label) as ICategory;
   category.selected = !category?.selected;
   const hasOneValue = legendElementInfos && legendElementInfos.length === 1;
   const queryExpressions = data?.queryExpressions;

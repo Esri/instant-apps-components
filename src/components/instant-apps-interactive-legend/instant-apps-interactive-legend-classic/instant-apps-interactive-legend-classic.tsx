@@ -161,11 +161,16 @@ export class InstantAppsInteractiveLegendClassic {
 
     if (this.featureCount) {
       this.handles.add(
-        this.reactiveUtils.watch(
-          () => this.legendvm?.view?.updating,
+        this.reactiveUtils.when(
+          () => !this.legendvm?.view?.stationary,
           () => {
-            updateFeatureCount(this.legendvm, this.data);
-            this.reRender = !this.reRender;
+            this.reactiveUtils.when(
+              () => !this.legendvm?.view?.interacting,
+              () => {
+                updateFeatureCount(this.legendvm, this.data, this);
+              },
+              { once: true },
+            );
           },
         ),
         featureCountKey,
@@ -313,32 +318,49 @@ export class InstantAppsInteractiveLegendClassic {
     }
 
     const tableClass = isChild ? CSS.layerChildTable : CSS.layerTable;
+    const showAllButton = (
+      <calcite-button
+        key="show-all-button"
+        id="showAll"
+        onClick={() => {
+          showAll(this.data?.[layer?.id]);
+          this.reRender = !this.reRender;
+        }}
+        icon-start="list-check-all"
+        appearance="outline"
+        round="true"
+      ></calcite-button>
+    );
+    const zoomToButton = (
+      <calcite-button
+        key="zoom-to-button"
+        id="zoomTo"
+        onClick={() => {
+          zoomTo(this.data?.[layer?.id], this.legendvm.view as __esri.MapView);
+          this.reRender = !this.reRender;
+        }}
+        icon-start="magnifying-glass-plus"
+        appearance="outline"
+        round="true"
+      ></calcite-button>
+    );
     const caption = title ? (
       <div class={CSS.layerCaption}>
         {title}
         {isInteractive ? (
-          <div class={CSS.layerCaptionBtnContainer}>
-            <calcite-button
-              onClick={() => {
-                showAll(this.data?.[layer?.id]);
-                this.reRender = !this.reRender;
-              }}
-              icon-start="list-check-all"
-              appearance="outline"
-              round="true"
-            />
-            {this.zoomTo ? (
-              <calcite-button
-                key="zoom-to-button"
-                onClick={() => {
-                  zoomTo(this.data?.[layer?.id], this.legendvm.view as __esri.MapView);
-                  this.reRender = !this.reRender;
-                }}
-                icon-start="magnifying-glass-plus"
-                appearance="outline"
-                round="true"
-              />
-            ) : null}
+          <div key="layer-caption-btn-container" class={CSS.layerCaptionBtnContainer}>
+            {showAllButton}
+            <calcite-tooltip reference-element="showAll" placement="top">
+              Show all
+            </calcite-tooltip>
+            {this.zoomTo
+              ? [
+                  zoomToButton,
+                  <calcite-tooltip reference-element="zoomTo" placement="top">
+                    Zoom to
+                  </calcite-tooltip>,
+                ]
+              : null}
           </div>
         ) : null}
       </div>
@@ -598,11 +620,11 @@ export class InstantAppsInteractiveLegendClassic {
 
     if (this.data) {
       const data = this.data[activeLayerInfo.layer.id];
-      const category = data.categories.get(elementInfo.value);
+      const category = data.categories.get(elementInfo.label);
       // If no items are selected, then apply 'selected' style to all -- UX
       const noneSelected = Array.from(data.categories.entries()).every(entry => !entry[1].selected);
       selected = noneSelected || category?.selected;
-      count = this.intl.formatNumber(category?.count as number);
+      count = this.intl.formatNumber(category?.count as number) ?? 0;
     }
 
     return isInteractive ? (
