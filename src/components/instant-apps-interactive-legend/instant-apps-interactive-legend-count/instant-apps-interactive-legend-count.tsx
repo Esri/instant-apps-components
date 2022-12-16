@@ -73,5 +73,14 @@ export class InstantAppsInteractiveLegendCount {
     return this.intl.formatNumber(count as number);
   }
 
-  getTotalFeatureCount() {}
+  getTotalFeatureCount() {
+    const { data, layerId } = this;
+    if (!data || !layerId) return '';
+    const dataFromActiveLayerInfo = data[layerId];
+    const { categories } = dataFromActiveLayerInfo;
+    const total = Array.from(categories.entries())
+      .map(entry => entry[1].count)
+      .reduce((acc: number, curr: number) => acc + curr);
+    return this.intl.formatNumber(total as number);
+  }
 }

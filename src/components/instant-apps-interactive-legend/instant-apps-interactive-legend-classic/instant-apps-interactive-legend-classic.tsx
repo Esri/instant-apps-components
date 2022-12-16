@@ -204,7 +204,9 @@ export class InstantAppsInteractiveLegendClassic {
         <div key={key} class={`${CSS.service} ${CSS.groupLayer}`}>
           <header>
             <h3 class={`${CSS.header} ${CSS.label}`}>{activeLayerInfo.title}</h3>
-            <span>Total feature count: 50,000</span>
+            {this.featureCount ? (
+              <instant-apps-interactive-legend-count data={this.data} layer-id={activeLayerInfo.layer.id} show-total={true}></instant-apps-interactive-legend-count>
+            ) : null}
           </header>
           {layers}
         </div>
@@ -235,7 +237,9 @@ export class InstantAppsInteractiveLegendClassic {
         <div key={key} class={`${CSS.service}${layerClasses}`} tabIndex={0}>
           <header>
             <h3 class={`${CSS.header} ${CSS.label}`}>{activeLayerInfo.title}</h3>
-            {this.featureCount ? <span key="total-feature-count-text">Total feature count: {totalFeatureCount}</span> : null}
+            {this.featureCount ? (
+              <instant-apps-interactive-legend-count data={this.data} layer-id={activeLayerInfo.layer.id} show-total={true}></instant-apps-interactive-legend-count>
+            ) : null}
           </header>
           <div class={CSS.layer}>{filteredElements}</div>
         </div>
@@ -608,7 +612,6 @@ export class InstantAppsInteractiveLegendClassic {
       const noneSelected = Array.from(data.categories.entries()).every(entry => !entry[1].selected);
       selected = noneSelected || category?.selected;
     }
-    console.log(this.data);
     return isInteractive ? (
       // Regular LegendElementInfo
       <button
@@ -723,18 +726,12 @@ export class InstantAppsInteractiveLegendClassic {
   handleFeatureCount() {
     this.handles.add(
       this.reactiveUtils.when(
-        () => !this.legendvm.view?.stationary,
-        () => {
-          this.reactiveUtils.when(
-            () => !this.legendvm.view?.interacting,
-            async () => {
-              const selector = 'instant-apps-interactive-legend-count';
-              const countNodes = document.querySelectorAll(selector);
-              await handleFeatureCount(this.legendvm, this.data);
-              countNodes.forEach(countNode => forceUpdate(countNode));
-            },
-            { once: true },
-          );
+        () => !this.legendvm.view?.updating,
+        async () => {
+          const selector = 'instant-apps-interactive-legend-count';
+          const countNodes = document.querySelectorAll(selector);
+          await handleFeatureCount(this.legendvm, this.data);
+          countNodes.forEach(countNode => forceUpdate(countNode));
         },
       ),
     );
