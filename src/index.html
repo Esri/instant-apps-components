@@ -36,6 +36,10 @@
       h2 {
         margin-bottom: 0.5rem;
       }
+
+      #feature {
+        padding: 5%;
+      }
     </style>
     <script type="module" src="https://unpkg.com/@esri/calcite-components@1.0.0-next.681/dist/calcite/calcite.esm.js"></script>
     <link rel="stylesheet" type="text/css" href="https://unpkg.com/@esri/calcite-components@1.0.0-next.681/dist/calcite/calcite.css" />
@@ -44,19 +48,21 @@
     <link id="esriStylesheet" rel="stylesheet" href="https://js.arcgis.com/4.25/esri/themes/light/main.css" />
     <script src="https://js.arcgis.com/4.25/"></script>
     <script>
-      require(['esri/WebMap', 'esri/views/MapView', 'esri/layers/FeatureLayer', 'esri/core/reactiveUtils', 'esri/widgets/Legend', 'esri/config', 'esri/widgets/Home'], (
-        WebMap,
-        MapView,
-        FeatureLayer,
-        reactiveUtils,
-        Legend,
-        esriConfig,
-        Home,
-      ) => {
-        esriConfig.portalUrl = 'https://catsqa.mapsdevext.arcgis.com';
+      require([
+        'esri/WebMap',
+        'esri/views/MapView',
+        'esri/layers/FeatureLayer',
+        'esri/core/reactiveUtils',
+        'esri/widgets/Legend',
+        'esri/widgets/LayerList',
+        'esri/widgets/Feature',
+        'esri/config',
+        'esri/widgets/Home',
+      ], (WebMap, MapView, FeatureLayer, reactiveUtils, Legend, LayerList, Feature, esriConfig, Home) => {
+        esriConfig.portalUrl = 'https://jsapi.maps.arcgis.com';
         const map = new WebMap({
           portalItem: {
-            id: '23e07a3286a04e12bc0fb929c27fd367',
+            id: 'ddf28dc057b8400dbfa148ef403f7c57',
           },
         });
 
@@ -69,6 +75,8 @@
         setUpTheme();
         setUpDock();
         initIntLegend();
+        createLayerList();
+        createFeatureWidget();
 
         async function initIntLegend() {
           const loadedMap = await map.loadAll();
@@ -91,6 +99,48 @@
             type: 'filter',
           };
           interactiveLegend.view = view;
+        }
+
+        function createLayerList() {
+          const layerList = new LayerList({
+            view,
+            container: document.getElementById('layerList'),
+          });
+        }
+
+        let highlightedFeature = null;
+
+        async function createFeatureWidget() {
+          const featureInstructionsNode = document.getElementById('featureInstructions');
+          const popup = await reactiveUtils.whenOnce(() => view?.popup);
+
+          popup.autoOpenEnabled = false;
+
+          const featureWidget = new Feature({
+            view,
+            container: document.getElementById('feature'),
+          });
+          await view.map.loadAll();
+          const layer = view.map.findLayerById('PowerPlants_WorldResourcesInstitute_7264');
+          view.whenLayerView(layer).then(layerView => {
+            view.on('click', event => {
+              if (featureInstructionsNode) featureInstructionsNode.remove();
+              view.hitTest(event).then(async response => {
+                // check if a feature is returned from the hurricanesLayer
+                if (response.results.length) {
+                  const graphic = response.results[0].graphic;
+                  // do something with the graphic
+                  if (highlightedFeature) {
+                    highlightedFeature.remove();
+                    highlightedFeature = null;
+                  }
+                  highlightedFeature = layerView.highlight(graphic);
+
+                  featureWidget.graphic = graphic;
+                }
+              });
+            });
+          });
         }
 
         function setUpTheme() {
@@ -166,6 +216,11 @@
               <span>Filter features in the Interactive Legend</span>
             </header>
             <instant-apps-interactive-legend feature-count="true" zoom-to="true"></instant-apps-interactive-legend>
+            <!-- <div id="layerList"></div> -->
+            <!-- <div id="feature">
+              <span id="featureInstructions">Select a feature on the map</span>
+              <div id="featureWidget"></div>
+            </div> -->
           </calcite-panel>
         </calcite-flow>
       </calcite-shell-panel>

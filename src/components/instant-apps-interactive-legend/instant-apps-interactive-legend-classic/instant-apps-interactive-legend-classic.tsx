@@ -231,8 +231,6 @@ export class InstantAppsInteractiveLegendClassic {
 
       const layerClasses = !!activeLayerInfo.parent ? ` ${CSS.groupLayerChild}` : '';
 
-      const totalFeatureCount = this.featureCount ? this.intl.formatNumber(this.data?.[activeLayerInfo?.layer?.id]?.totalCount as number) : null;
-
       return (
         <div key={key} class={`${CSS.service}${layerClasses}`} tabIndex={0}>
           <header>
@@ -332,8 +330,16 @@ export class InstantAppsInteractiveLegendClassic {
         round="true"
       ></calcite-button>
     );
+
+    const expanded = this.getExpanded(activeLayerInfo, legendElementIndex);
+
     const caption = title ? (
       <div class={CSS.layerCaption}>
+        <calcite-action
+          onclick={this.toggleExpanded(activeLayerInfo, legendElementIndex)}
+          icon={expanded === false ? 'chevron-right' : 'chevron-down'}
+          appearance="transparent"
+        ></calcite-action>
         {title}
         {isInteractive ? (
           <div key="layer-caption-btn-container" class={CSS.layerCaptionBtnContainer}>
@@ -359,7 +365,7 @@ export class InstantAppsInteractiveLegendClassic {
     return (
       <div class={`${tableClass}${tableClasses}`}>
         {caption}
-        {content}
+        {expanded === false ? null : content}
       </div>
     );
   }
@@ -609,14 +615,15 @@ export class InstantAppsInteractiveLegendClassic {
       const data = this.data[activeLayerInfo.layer.id];
       const category = data.categories.get(elementInfo.label);
       // If no items are selected, then apply 'selected' style to all -- UX
-      const noneSelected = Array.from(data.categories.entries()).every(entry => !entry[1].selected);
+      const noneSelected = Array.from(data.categories.entries()).every(entry => !entry[1].selected) && data.queryExpressions[0] !== '1=0';
       selected = noneSelected || category?.selected;
     }
     return isInteractive ? (
       // Regular LegendElementInfo
       <button
         onClick={() => {
-          handleFilter(this.data?.[layer?.id], elementInfo, infoIndex, this.filterMode);
+          const dataFromActiveLayerInfo = this.data?.[layer?.id];
+          handleFilter(dataFromActiveLayerInfo, elementInfo, infoIndex, this.filterMode);
           this.reRender = !this.reRender;
         }}
         class={`${CSS.layerRow} ${CSS.interactiveLayerRow}${selected ? ` ${CSS.infoSelected}` : ''}`}
@@ -735,5 +742,16 @@ export class InstantAppsInteractiveLegendClassic {
         },
       ),
     );
+  }
+
+  getExpanded(activeLayerInfo: __esri.ActiveLayerInfo, legendElementIndex: number): boolean {
+    return this.data?.[activeLayerInfo?.layer?.id]?.expanded?.[legendElementIndex];
+  }
+
+  toggleExpanded(activeLayerInfo: __esri.ActiveLayerInfo, legendElementIndex: number) {
+    return () => {
+      this.data[activeLayerInfo?.layer.id].expanded[legendElementIndex] = !this.data[activeLayerInfo?.layer.id].expanded[legendElementIndex];
+      this.reRender = !this.reRender;
+    };
   }
 }

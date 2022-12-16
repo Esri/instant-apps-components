@@ -129,7 +129,7 @@ async function createInteractiveLegendDataForLayer(
   const queryExpressions = [];
 
   // Total feature count
-  return Promise.resolve({ categories, field, queryExpressions, totalCount: null, fLayerView, legendElement });
+  return Promise.resolve({ categories, field, queryExpressions, totalCount: null, fLayerView, legendElement, expanded: activeLayerInfo.legendElements.map(() => true) });
 }
 
 function generateQueryExpressions(data: IIntLegendLayerData, info: any, infoIndex: number): void {

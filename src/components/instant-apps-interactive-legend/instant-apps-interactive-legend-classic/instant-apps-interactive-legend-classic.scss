@@ -33,16 +33,18 @@
   }
 
   .esri-legend__layer-caption {
+    calcite-action {
+      margin-right: 5px;
+    }
     display: flex;
     align-items: center;
-    justify-content: space-between;
     font-size: var(--instant-apps-interactive-legend-field-name-font-size);
     background-color: var(--instant-apps-interactive-legend-secondary-background-color);
     color: var(--instant-apps-interactive-legend-secondary-color);
   }
 
   .instant-apps-interactive-legend__layer-caption-btn-container {
-    display: flex;
+    margin-left: auto;
     calcite-button {
       margin: 2px;
     }
