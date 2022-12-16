@@ -28,6 +28,14 @@
         margin: 0;
         padding: 0;
       }
+
+      instant-apps-social-share {
+        --instant-apps-social-share-popover-button-icon-color: #ffffff;
+      }
+
+      h2 {
+        margin-bottom: 0.5rem;
+      }
     </style>
     <script type="module" src="https://unpkg.com/@esri/calcite-components@1.0.0-next.681/dist/calcite/calcite.esm.js"></script>
     <link rel="stylesheet" type="text/css" href="https://unpkg.com/@esri/calcite-components@1.0.0-next.681/dist/calcite/calcite.css" />
@@ -58,37 +66,43 @@
         const home = new Home({ view });
         view.ui.add(home, 'top-left');
 
-        const themeButton = document.createElement('calcite-button');
-        themeButton.id = 'theme';
-        themeButton.innerText = 'Toggle theme';
+        const themeButton = document.getElementById('theme');
 
         let theme = 'light';
+        let themeIcon;
+        let themeText;
 
         const esriStylesheet = document.getElementById('esriStylesheet');
 
         themeButton.addEventListener('click', () => {
           theme = theme === 'light' ? 'dark' : 'light';
+          themeIcon = theme === 'light' ? 'moon' : 'brightness';
+          themeText = theme === 'light' ? 'Dark mode' : 'Light mode';
           esriStylesheet.href = `https://js.arcgis.com/4.25/esri/themes/${theme}/main.css`;
           document.body.classList.remove('calcite-theme-light', 'calcite-theme-dark');
           document.body.classList.add(`calcite-theme-${theme}`);
+          themeButton.setAttribute('icon', themeIcon);
+          themeButton.setAttribute('text', themeText);
         });
 
-        view.ui.add(themeButton, 'top-right');
-
-        const sidePanelButton = document.createElement('calcite-button');
-        sidePanelButton.id = 'sidePanel';
-        sidePanelButton.innerText = 'Switch side';
+        const sidePanelButton = document.getElementById('sidePanel');
 
         let side = 'start';
+        let sideIcon;
+        let sideText;
 
         const sidePanel = document.getElementById('shellPanel');
+        const actionBar = document.getElementById('actionBar');
 
         sidePanelButton.addEventListener('click', () => {
           side = side === 'start' ? 'end' : 'start';
+          sideIcon = side === 'start' ? 'dock-right' : 'dock-left';
+          sideText = side === 'start' ? 'Dock right' : 'Dock left';
           sidePanel.setAttribute('slot', `panel-${side}`);
+          actionBar.setAttribute('position', side);
+          sidePanelButton.setAttribute('icon', sideIcon);
+          sidePanelButton.setAttribute('text', sideText);
         });
-
-        view.ui.add(sidePanelButton, 'top-right');
 
         const initIntLegend = async () => {
           const loadedMap = await map.loadAll();
@@ -123,23 +137,34 @@
     <calcite-shell>
       <instant-apps-header
         slot="header"
-        title-text="2023.R01 Interactive Legend"
-        text-color="#f8f8f8"
-        background-color="#151515"
+        title-text="Interactive Legend (2023.R01)"
+        text-color="#ffffff"
+        background-color="#2d5308"
         logo-image="https://www.esri.com/content/dam/esrisites/en-us/common/icons/product-logos/arcgis-instant-apps-64.svg"
         logo-image-alt-text="ArcGIS Instant Apps logo"
         logo-link="https://www.esri.com/en-us/arcgis/products/arcgis-instant-apps/overview"
       >
-        <instant-apps-social-share class="calcite-theme-dark" slot="actions-end" popover-button-icon-scale="s"></instant-apps-social-share>
+        <instant-apps-social-share slot="actions-end" popover-button-icon-scale="s" share-button-color="inverse"></instant-apps-social-share>
       </instant-apps-header>
       <calcite-shell-panel id="shellPanel" slot="panel-start">
-        <calcite-panel>
-          <instant-apps-interactive-legend feature-count="true" zoom-to="true"></instant-apps-interactive-legend>
-        </calcite-panel>
+        <calcite-action-bar id="actionBar" slot="action-bar" expanded>
+          <calcite-action icon="popup" text="Popup"></calcite-action>
+          <calcite-action icon="layers" text="Layer list"></calcite-action>
+          <calcite-action icon="legend" text="Interactive legend" active></calcite-action>
+          <calcite-action id="theme" slot="bottom-actions" icon="moon" text="Dark mode"></calcite-action>
+          <calcite-action id="sidePanel" slot="bottom-actions" icon="dock-right" text="Dock right"></calcite-action>
+        </calcite-action-bar>
+        <calcite-flow>
+          <calcite-panel>
+            <header slot="header-content">
+              <h2>Interactive Legend</h2>
+              <span>Filter features in the Interactive Legend</span>
+            </header>
+            <instant-apps-interactive-legend feature-count="true" zoom-to="true"></instant-apps-interactive-legend>
+          </calcite-panel>
+        </calcite-flow>
       </calcite-shell-panel>
       <div id="viewDiv"></div>
     </calcite-shell>
-
-    <button id="theme">Toggle theme</button>
   </body>
 </html>
