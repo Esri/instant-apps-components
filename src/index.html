@@ -66,47 +66,12 @@
         const home = new Home({ view });
         view.ui.add(home, 'top-left');
 
-        const themeButton = document.getElementById('theme');
+        setUpTheme();
+        setUpDock();
+        initIntLegend();
 
-        let theme = 'light';
-        let themeIcon;
-        let themeText;
-
-        const esriStylesheet = document.getElementById('esriStylesheet');
-
-        themeButton.addEventListener('click', () => {
-          theme = theme === 'light' ? 'dark' : 'light';
-          themeIcon = theme === 'light' ? 'moon' : 'brightness';
-          themeText = theme === 'light' ? 'Dark mode' : 'Light mode';
-          esriStylesheet.href = `https://js.arcgis.com/4.25/esri/themes/${theme}/main.css`;
-          document.body.classList.remove('calcite-theme-light', 'calcite-theme-dark');
-          document.body.classList.add(`calcite-theme-${theme}`);
-          themeButton.setAttribute('icon', themeIcon);
-          themeButton.setAttribute('text', themeText);
-        });
-
-        const sidePanelButton = document.getElementById('sidePanel');
-
-        let side = 'start';
-        let sideIcon;
-        let sideText;
-
-        const sidePanel = document.getElementById('shellPanel');
-        const actionBar = document.getElementById('actionBar');
-
-        sidePanelButton.addEventListener('click', () => {
-          side = side === 'start' ? 'end' : 'start';
-          sideIcon = side === 'start' ? 'dock-right' : 'dock-left';
-          sideText = side === 'start' ? 'Dock right' : 'Dock left';
-          sidePanel.setAttribute('slot', `panel-${side}`);
-          actionBar.setAttribute('position', side);
-          sidePanelButton.setAttribute('icon', sideIcon);
-          sidePanelButton.setAttribute('text', sideText);
-        });
-
-        const initIntLegend = async () => {
+        async function initIntLegend() {
           const loadedMap = await map.loadAll();
-
           // interactiveLegend.filterMode = {
           //   type: 'effect',
           //   effect: {
@@ -121,14 +86,54 @@
           //     // includedEffect: '',
           //   },
           // };
-
           const interactiveLegend = document.querySelector('instant-apps-interactive-legend');
           interactiveLegend.filterMode = {
             type: 'filter',
           };
           interactiveLegend.view = view;
-        };
-        initIntLegend();
+        }
+
+        function setUpTheme() {
+          const themeButton = document.getElementById('theme');
+
+          let theme = 'light';
+          let themeIcon;
+          let themeText;
+
+          const esriStylesheet = document.getElementById('esriStylesheet');
+
+          themeButton.addEventListener('click', () => {
+            theme = theme === 'light' ? 'dark' : 'light';
+            themeIcon = theme === 'light' ? 'moon' : 'brightness';
+            themeText = theme === 'light' ? 'Dark mode' : 'Light mode';
+            esriStylesheet.href = `https://js.arcgis.com/4.25/esri/themes/${theme}/main.css`;
+            document.body.classList.remove('calcite-theme-light', 'calcite-theme-dark');
+            document.body.classList.add(`calcite-theme-${theme}`);
+            themeButton.setAttribute('icon', themeIcon);
+            themeButton.setAttribute('text', themeText);
+          });
+        }
+
+        function setUpDock() {
+          const sidePanelButton = document.getElementById('sidePanel');
+
+          let side = 'start';
+          let sideIcon;
+          let sideText;
+
+          const sidePanel = document.getElementById('shellPanel');
+          const actionBar = document.getElementById('actionBar');
+
+          sidePanelButton.addEventListener('click', () => {
+            side = side === 'start' ? 'end' : 'start';
+            sideIcon = side === 'start' ? 'dock-right' : 'dock-left';
+            sideText = side === 'start' ? 'Dock right' : 'Dock left';
+            sidePanel.setAttribute('slot', `panel-${side}`);
+            actionBar.setAttribute('position', side);
+            sidePanelButton.setAttribute('icon', sideIcon);
+            sidePanelButton.setAttribute('text', sideText);
+          });
+        }
       });
     </script>
   </head>
@@ -148,9 +153,9 @@
       </instant-apps-header>
       <calcite-shell-panel id="shellPanel" slot="panel-start">
         <calcite-action-bar id="actionBar" slot="action-bar" expanded>
-          <calcite-action icon="popup" text="Popup"></calcite-action>
-          <calcite-action icon="layers" text="Layer list"></calcite-action>
           <calcite-action icon="legend" text="Interactive legend" active></calcite-action>
+          <calcite-action icon="layers" text="Layer list"></calcite-action>
+          <calcite-action icon="popup" text="Popup"></calcite-action>
           <calcite-action id="theme" slot="bottom-actions" icon="moon" text="Dark mode"></calcite-action>
           <calcite-action id="sidePanel" slot="bottom-actions" icon="dock-right" text="Dock right"></calcite-action>
         </calcite-action-bar>
