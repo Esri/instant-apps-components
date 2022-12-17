@@ -65,6 +65,7 @@ const CSS = {
   hidden: 'esri-hidden',
 
   // instant-apps-interactive-legend
+  interacitveLegendHeader: 'instant-apps-interactive-legend__header',
   layerCaptionBtnContainer: 'instant-apps-interactive-legend__layer-caption-btn-container',
   interactiveLayerRow: 'instant-apps-interactive-legend__layer-row--interactive',
   infoSelected: 'instant-apps-interactive-legend-element-info--selected',
@@ -233,11 +234,19 @@ export class InstantAppsInteractiveLegendClassic {
 
       return (
         <div key={key} class={`${CSS.service}${layerClasses}`} tabIndex={0}>
-          <header>
-            <h3 class={`${CSS.header} ${CSS.label}`}>{activeLayerInfo.title}</h3>
-            {this.featureCount ? (
-              <instant-apps-interactive-legend-count data={this.data} layer-id={activeLayerInfo.layer.id} show-total={true}></instant-apps-interactive-legend-count>
-            ) : null}
+          <header class={CSS.interacitveLegendHeader}>
+            <span>
+              <h3 class={`${CSS.header} ${CSS.label}`}>{activeLayerInfo.title}</h3>
+              {this.featureCount ? (
+                <instant-apps-interactive-legend-count data={this.data} layer-id={activeLayerInfo.layer.id} show-total={true}></instant-apps-interactive-legend-count>
+              ) : null}
+            </span>
+            <calcite-dropdown onclick={(e: Event) => e.stopPropagation()} position="bottom-trailing" width="l">
+              <calcite-action scale="m" icon="chevron-down" slot="trigger"></calcite-action>
+              <calcite-dropdown-item selected>Global Power Plants</calcite-dropdown-item>
+              <calcite-dropdown-item>NASA Splashdown</calcite-dropdown-item>
+              <calcite-dropdown-item>Hurricanes</calcite-dropdown-item>
+            </calcite-dropdown>
           </header>
           <div class={CSS.layer}>{filteredElements}</div>
         </div>
