@@ -14,7 +14,7 @@ import { validateInteractivity, generateData, handleFeatureCount, handleFilter, 
 
 import { loadModules } from 'esri-loader';
 
-import { FilterMode, IInteractiveLegendData } from './interfaces/interfaces';
+import { FilterMode, IInteractiveLegendData, IIntLegendLayerData } from './interfaces/interfaces';
 import {
   ColorRampElement,
   ColorRampStop,
@@ -313,6 +313,10 @@ export class InstantAppsInteractiveLegendClassic {
     }
 
     const tableClass = isChild ? CSS.layerChildTable : CSS.layerTable;
+
+    const intLegendLayerData = this.getIntLegendLayerData(layer as __esri.FeatureLayer);
+    const disableShowAll = this.checkNoneSelected(intLegendLayerData) || this.checkAllSelected(intLegendLayerData);
+
     const showAllButton = (
       <calcite-button
         key="show-all-button"
@@ -324,6 +328,7 @@ export class InstantAppsInteractiveLegendClassic {
         icon-start="list-check-all"
         appearance="outline"
         round="true"
+        disabled={disableShowAll}
       ></calcite-button>
     );
     const zoomToButton = (
@@ -621,10 +626,10 @@ export class InstantAppsInteractiveLegendClassic {
     let selected;
 
     if (this.data) {
-      const data = this.data[activeLayerInfo.layer.id];
+      const data = this.getIntLegendLayerData(layer as __esri.FeatureLayer);
       const category = data.categories.get(elementInfo.label);
       // If no items are selected, then apply 'selected' style to all -- UX
-      const noneSelected = Array.from(data.categories.entries()).every(entry => !entry[1].selected) && data.queryExpressions[0] !== '1=0';
+      const noneSelected = this.checkNoneSelected(data);
       selected = noneSelected || category?.selected;
     }
     return isInteractive ? (
@@ -762,5 +767,17 @@ export class InstantAppsInteractiveLegendClassic {
       this.data[activeLayerInfo?.layer.id].expanded[legendElementIndex] = !this.data[activeLayerInfo?.layer.id].expanded[legendElementIndex];
       this.reRender = !this.reRender;
     };
+  }
+
+  getIntLegendLayerData(fLayer: __esri.FeatureLayer): IIntLegendLayerData {
+    return this.data?.[fLayer?.id];
+  }
+
+  checkNoneSelected(data: IIntLegendLayerData): boolean {
+    return data && Array.from(data.categories.entries()).every(entry => !entry[1].selected) && data.queryExpressions[0] !== '1=0';
+  }
+
+  checkAllSelected(data: IIntLegendLayerData): boolean {
+    return data && Array.from(data.categories.entries()).every(entry => entry[1].selected);
   }
 }
