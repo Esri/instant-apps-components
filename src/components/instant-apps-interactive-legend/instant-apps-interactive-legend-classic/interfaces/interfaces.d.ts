@@ -25,5 +25,6 @@ export interface IIntLegendLayerData {
 }
 
 export interface IInteractiveLegendData {
-  [layerId: string]: IIntLegendLayerData;
+  layerId: IIntLegendLayerData;
+  selectedLayerId: string;
 }

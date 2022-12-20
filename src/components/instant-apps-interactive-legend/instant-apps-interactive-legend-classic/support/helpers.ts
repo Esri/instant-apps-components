@@ -68,6 +68,8 @@ export function validateInteractivity(activeLayerInfo: __esri.ActiveLayerInfo, l
 }
 
 export async function generateData(legendViewModel: __esri.LegendViewModel, reactiveUtils: __esri.reactiveUtils): Promise<IInteractiveLegendData> {
+  await (legendViewModel.view.map as __esri.WebMap).loadAll();
+
   // Step 1. Create data object to return
   const data = {} as IInteractiveLegendData;
 
@@ -81,6 +83,8 @@ export async function generateData(legendViewModel: __esri.LegendViewModel, reac
   // Step 4. Store resolved data
   const intLegendLayerDataObjs = await Promise.all(intLegendDataPromises);
   intLegendLayerDataObjs.forEach(intLegendLayerDataObj => (data[intLegendLayerDataObj.fLayerView.layer.id] = intLegendLayerDataObj));
+  data['selectedLayerId'] = Object.keys(data)[0];
+
   return data;
 }
 
@@ -336,11 +340,12 @@ export async function handleFeatureCount(legendViewModel: __esri.LegendViewModel
     const dataFromActiveLayerInfo = data[activeLayerInfo.layer.id];
     const layerId = activeLayerInfo.layer.id;
 
-    dataFromActiveLayerInfo.categories.forEach((category, key) => {
+    dataFromActiveLayerInfo?.categories?.forEach((category, key) => {
       const count = dataCount[layerId][key];
       category.count = count;
     });
   });
+
   return Promise.resolve(updatedData);
 }
 
@@ -353,7 +358,8 @@ export async function getInfoCount(
   info: any,
   infoIndex: number,
   legendElement: __esri.LegendElement,
-): Promise<{ [categoryId: string]: number } | null> {
+): Promise<{ [categoryId: string]: number } | null | undefined> {
+  if (!fLayerView) return;
   const query = fLayerView.createQuery();
   const where = generateQueryExpression(info, field, infoIndex, legendElement, legendElement.infos as any);
   query.where = where;

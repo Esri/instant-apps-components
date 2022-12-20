@@ -60,12 +60,13 @@ export class InstantAppsInteractiveLegendCount {
     );
   }
 
-  getCount(): string {
+  getCount(): string | undefined {
     const { data, layerId, categoryId } = this;
 
     if (!data || !layerId || !categoryId) return '';
 
     const dataFromActiveLayerInfo = data[layerId];
+    if (!dataFromActiveLayerInfo) return;
     const { categories } = dataFromActiveLayerInfo;
     const category = categories.get(categoryId) as ICategory;
     const { count } = category;
@@ -77,9 +78,10 @@ export class InstantAppsInteractiveLegendCount {
     const { data, layerId } = this;
     if (!data || !layerId) return '';
     const dataFromActiveLayerInfo = data[layerId];
+    if (!dataFromActiveLayerInfo) return;
     const { categories } = dataFromActiveLayerInfo;
     const total = Array.from(categories.entries())
-      .map(entry => entry[1].count)
+      .map((entry: any) => entry?.[1]?.count)
       .reduce((acc: number, curr: number) => acc + curr);
     return this.intl.formatNumber(total as number);
   }

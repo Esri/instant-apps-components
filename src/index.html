@@ -59,10 +59,17 @@
         'esri/config',
         'esri/widgets/Home',
       ], (WebMap, MapView, FeatureLayer, reactiveUtils, Legend, LayerList, Feature, esriConfig, Home) => {
-        esriConfig.portalUrl = 'https://jsapi.maps.arcgis.com';
+        // esriConfig.portalUrl = 'https://jsapi.maps.arcgis.com';
+        // const map = new WebMap({
+        //   portalItem: {
+        //     id: 'ddf28dc057b8400dbfa148ef403f7c57',
+        //   },
+        // });
+
+        esriConfig.portalUrl = 'https://nw-brews.mapsdevext.arcgis.com';
         const map = new WebMap({
           portalItem: {
-            id: 'ddf28dc057b8400dbfa148ef403f7c57',
+            id: 'a8cd1c8e54534a19921df80dd6d4846e',
           },
         });
 
@@ -80,6 +87,13 @@
 
         async function initIntLegend() {
           const loadedMap = await map.loadAll();
+
+          const interactiveLegend = document.querySelector('instant-apps-interactive-legend');
+
+          interactiveLegend.filterMode = {
+            type: 'filter',
+          };
+
           // interactiveLegend.filterMode = {
           //   type: 'effect',
           //   effect: {
@@ -94,10 +108,7 @@
           //     // includedEffect: '',
           //   },
           // };
-          const interactiveLegend = document.querySelector('instant-apps-interactive-legend');
-          interactiveLegend.filterMode = {
-            type: 'filter',
-          };
+
           interactiveLegend.view = view;
         }
 

@@ -152,6 +152,15 @@ export class InstantAppsInteractiveLegendClassic {
     await this.reactiveUtils.whenOnce(() => this.legendvm);
     await (this.legendvm?.view?.map as __esri.WebMap).loadAll();
     this.data = await generateData(this.legendvm, this.reactiveUtils);
+
+    this.reactiveUtils.on(
+      () => this.legendvm?.activeLayerInfos,
+      'change',
+      async () => {
+        this.data = await generateData(this.legendvm, this.reactiveUtils);
+      },
+    );
+
     if (this.featureCount) {
       const data = await handleFeatureCount(this.legendvm, this.data);
       this.data = data;
@@ -181,6 +190,7 @@ export class InstantAppsInteractiveLegendClassic {
   }
 
   renderLegendForLayer(activeLayerInfo: __esri.ActiveLayerInfo) {
+    if (this.data?.selectedLayerId !== activeLayerInfo?.layer.id) return;
     if (!activeLayerInfo.ready) {
       if (this.reactiveUtils) {
         this.reactiveUtils.when(
@@ -242,10 +252,18 @@ export class InstantAppsInteractiveLegendClassic {
               ) : null}
             </span>
             <calcite-dropdown onclick={(e: Event) => e.stopPropagation()} position="bottom-trailing" width="l">
+              {this.legendvm?.activeLayerInfos?.toArray()?.map(activeLayerInfo => (
+                <calcite-dropdown-item
+                  onclick={() => {
+                    this.data.selectedLayerId = activeLayerInfo?.layer?.id;
+                    this.reRender = !this.reRender;
+                  }}
+                  selected={activeLayerInfo?.layer?.id === this.data?.selectedLayerId}
+                >
+                  {activeLayerInfo?.layer?.title}
+                </calcite-dropdown-item>
+              ))}
               <calcite-action scale="m" icon="chevron-down" slot="trigger"></calcite-action>
-              <calcite-dropdown-item selected>Global Power Plants</calcite-dropdown-item>
-              <calcite-dropdown-item>NASA Splashdown</calcite-dropdown-item>
-              <calcite-dropdown-item>Hurricanes</calcite-dropdown-item>
             </calcite-dropdown>
           </header>
           <div class={CSS.layer}>{filteredElements}</div>
@@ -627,7 +645,7 @@ export class InstantAppsInteractiveLegendClassic {
 
     if (this.data) {
       const data = this.getIntLegendLayerData(layer as __esri.FeatureLayer);
-      const category = data.categories.get(elementInfo.label);
+      const category = data?.categories?.get(elementInfo?.label);
       // If no items are selected, then apply 'selected' style to all -- UX
       const noneSelected = this.checkNoneSelected(data);
       selected = noneSelected || category?.selected;
