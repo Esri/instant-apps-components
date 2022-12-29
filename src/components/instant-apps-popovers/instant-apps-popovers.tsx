@@ -1,3 +1,11 @@
+/*
+ *   Copyright (c) 2022 Esri
+ *   All rights reserved under the copyright laws of the United States and applicable international laws, treaties, and conventions.
+ *   This material is licensed for use under the Esri Master License Agreement (MLA), and is bound by the terms of that agreement.
+ *   You may redistribute and use this code without modification, provided you adhere to the terms of the MLA and include this copyright notice.
+ *   See use restrictions at http://www.esri.com/legal/pdfs/mla_e204_e300/english
+ */
+
 import { Component, Host, h, Prop, Element, Method } from '@stencil/core';
 
 @Component({
@@ -34,11 +42,11 @@ export class InstantAppsPopovers {
       popover.index = popoverIndex;
       this.instantAppsPopovers.set(refId, popover);
     });
-    // this.host.addEventListener('calcitePopoverOpen', e => {
-    //   const node = e.target as HTMLCalcitePopoverElement;
-    //   const refId = node.getAttribute('ref-id') as string;
-    //   this.currentId = refId;
-    // });
+    this.host.addEventListener('calcitePopoverOpen', e => {
+      const node = e.target as HTMLCalcitePopoverElement;
+      const refId = node.getAttribute('ref-id') as string;
+      this.currentId = refId;
+    });
   }
 
   render() {

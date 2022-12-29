@@ -5,3 +5,9 @@ export interface MobileWidthBreakpoint {
   large: number[];
   xlarge: number[];
 }
+
+// Messages
+export interface InstantAppsPopoverMessageOverrides {
+  popoverAction?: string;
+  of?: string;
+}

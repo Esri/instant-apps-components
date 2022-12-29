@@ -1,15 +1,9 @@
 <!-- /*
  *   Copyright (c) 2022 Esri
- *   All rights reserved.
- *   Licensed under the Apache License, Version 2.0 (the "License");
- *   you may not use this file except in compliance with the License.
- *   You may obtain a copy of the License at
- *   http://www.apache.org/licenses/LICENSE-2.0
- *   Unless required by applicable law or agreed to in writing, software
- *   distributed under the License is distributed on an "AS IS" BASIS,
- *   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *   See the License for the specific language governing permissions and
- *   limitations under the License.
+ *   All rights reserved under the copyright laws of the United States and applicable international laws, treaties, and conventions.
+ *   This material is licensed for use under the Esri Master License Agreement (MLA), and is bound by the terms of that agreement.
+ *   You may redistribute and use this code without modification, provided you adhere to the terms of the MLA and include this copyright notice.
+ *   See use restrictions at http://www.esri.com/legal/pdfs/mla_e204_e300/english
  */ -->
 
 <!DOCTYPE html>
@@ -20,10 +14,10 @@
     <title>ArcGIS Instant Apps Components</title>
 
     <link rel="stylesheet" href="https://js.arcgis.com/4.24/esri/themes/light/main.css" />
-    <script src="https://js.arcgis.com/4.24/"></script>
+    <script src="https://js.arcgis.com/4.25/"></script>
 
-    <script type="module" src="https://unpkg.com/@esri/calcite-components@1.0.0-beta.83/dist/calcite/calcite.esm.js"></script>
-    <link rel="stylesheet" type="text/css" href="https://unpkg.com/@esri/calcite-components@1.0.0-beta.83/dist/calcite/calcite.css" />
+    <script type="module" src="https://unpkg.com/@esri/calcite-components@1.0.0-beta.99/dist/calcite/calcite.esm.js"></script>
+    <link rel="stylesheet" type="text/css" href="https://unpkg.com/@esri/calcite-components@1.0.0-beta.99/dist/calcite/calcite.css" />
     <script type="module" src="/build/instant-apps-components.esm.js"></script>
     <script nomodule src="/build/instant-apps-components.js"></script>
 
@@ -70,7 +64,7 @@
       >
         <instant-apps-social-share slot="actions-end" popover-button-icon-scale="s"></instant-apps-social-share>
       </instant-apps-header>
-      <calcite-shell-panel slot="primary-panel">
+      <calcite-shell-panel slot="panel-start">
         <calcite-action-bar slot="action-bar">
           <calcite-action id="one" icon="map" text="One"></calcite-action>
           <calcite-action id="two" icon="layers" text="Two"></calcite-action>
@@ -123,12 +117,12 @@
       </div>
     </instant-apps-popovers>
     <script>
-      require(['esri/WebMap', 'esri/views/MapView', 'esri/layers/FeatureLayer', 'esri/widgets/FeatureTable', 'esri/core/watchUtils'], (
+      require(['esri/WebMap', 'esri/views/MapView', 'esri/layers/FeatureLayer', 'esri/widgets/FeatureTable', 'esri/core/reactiveUtils'], (
         WebMap,
         MapView,
         FeatureLayer,
         FeatureTable,
-        watchUtils,
+        reactiveUtils,
       ) => {
         const map = new WebMap({
           portalItem: {
@@ -153,10 +147,9 @@
         view.when(async () => {
           const loadedMap = await map.loadAll();
 
-
-        const keyboardShortcuts = document.createElement("instant-apps-keyboard-shortcuts");
-        keyboardShortcuts.view = view;
-        view.ui.add(keyboardShortcuts, "bottom-right");
+          const keyboardShortcuts = document.createElement('instant-apps-keyboard-shortcuts');
+          keyboardShortcuts.view = view;
+          view.ui.add(keyboardShortcuts, 'bottom-right');
 
           let selectedFeature = searchParams.get('selectedFeature');
           let layerId;

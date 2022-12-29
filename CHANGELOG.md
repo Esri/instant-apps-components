@@ -5,6 +5,18 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## v1.0.0-beta.29
+
+### General
+
+- Address @esri/calcite-components breaking changes
+
+### instant-apps-social-share
+
+- Provide the option for an alternate success message
+- Refresh the shareUrl each time it is generated
+- Support restrictions of sharing to iOS and macOS
+
 ## v1.0.0-beta.28
 
 ### instant-apps-social-share
@@ -27,7 +39,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### instant-apps-header
 
-- Expose CSS variables to control header height and logo height if needed. 
+- Expose CSS variables to control header height and logo height if needed.
 
 ## v1.0.0-beta.24
 
