@@ -373,3 +373,15 @@ export async function getInfoCount(
   }
   return Promise.resolve(null);
 }
+
+export function getIntLegendLayerData(fLayer: __esri.FeatureLayer, data): IIntLegendLayerData {
+  return data?.[fLayer?.id];
+}
+
+export function checkNoneSelected(data: IIntLegendLayerData): boolean {
+  return data && Array.from(data.categories.entries()).every(entry => !entry[1].selected) && data.queryExpressions[0] !== '1=0';
+}
+
+export function checkAllSelected(data: IIntLegendLayerData): boolean {
+  return data && Array.from(data.categories.entries()).every(entry => entry[1].selected);
+}

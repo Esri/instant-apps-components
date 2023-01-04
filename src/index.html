@@ -45,8 +45,8 @@
     <link rel="stylesheet" type="text/css" href="https://unpkg.com/@esri/calcite-components@1.0.0-beta.99/dist/calcite/calcite.css" />
     <script type="module" src="/build/instant-apps-components.esm.js"></script>
     <script nomodule src="/build/instant-apps-components.js"></script>
-    <link id="esriStylesheet" rel="stylesheet" href="https://js.arcgis.com/4.25/esri/themes/light/main.css" />
-    <script src="https://js.arcgis.com/4.25/"></script>
+    <link id="esriStylesheet" rel="stylesheet" href="https://jsdev.arcgis.com/4.26/esri/themes/light/main.css" />
+    <script src="https://jsdev.arcgis.com/4.26/"></script>
     <script>
       require([
         'esri/WebMap',
@@ -66,10 +66,10 @@
         //   },
         // });
 
-        esriConfig.portalUrl = 'https://nw-brews.mapsdevext.arcgis.com';
+        esriConfig.portalUrl = 'https://holistic.mapsdevext.arcgis.com';
         const map = new WebMap({
           portalItem: {
-            id: 'a8cd1c8e54534a19921df80dd6d4846e',
+            id: '7e252d7ebdc448378e7d1c3ff15c5703',
           },
         });
 
@@ -82,8 +82,8 @@
         setUpTheme();
         setUpDock();
         initIntLegend();
-        createLayerList();
-        createFeatureWidget();
+        // createLayerList();
+        // createFeatureWidget();
 
         async function initIntLegend() {
           const loadedMap = await map.loadAll();

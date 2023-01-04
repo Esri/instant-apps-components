@@ -10,11 +10,11 @@ import {
 
 import { isImageryStretchedLegend } from './support/styleUtils';
 
-import { validateInteractivity, generateData, handleFeatureCount, handleFilter, showAll, zoomTo } from './support/helpers';
+import { validateInteractivity, generateData, handleFeatureCount, handleFilter, getIntLegendLayerData, checkNoneSelected } from './support/helpers';
 
 import { loadModules } from 'esri-loader';
 
-import { FilterMode, IInteractiveLegendData, IIntLegendLayerData } from './interfaces/interfaces';
+import { FilterMode, IInteractiveLegendData } from './interfaces/interfaces';
 import {
   ColorRampElement,
   ColorRampStop,
@@ -27,7 +27,6 @@ import {
   StretchRampElement,
   UnivariateColorSizeRampElement,
 } from '../../../interfaces/interfaces';
-import { MenuPlacement } from '@esri/calcite-components/dist/types/utils/floating-ui';
 
 const CSS = {
   // jsapi styles
@@ -87,6 +86,9 @@ export class InstantAppsInteractiveLegendClassic {
   reactiveUtils: __esri.reactiveUtils;
   handles: __esri.Handles;
   intl: __esri.intl;
+
+  @State()
+  isLoading = true;
 
   @State()
   data: IInteractiveLegendData;
@@ -171,7 +173,7 @@ export class InstantAppsInteractiveLegendClassic {
 
     const featureCountKey = 'feature-count';
     if (this.handles.has(featureCountKey)) this.handles.remove(featureCountKey);
-
+    this.isLoading = false;
     this.reRender = !this.reRender;
   }
 
@@ -183,7 +185,9 @@ export class InstantAppsInteractiveLegendClassic {
         .toArray()
         .map(activeLayerInfo => this.renderLegendForLayer(activeLayerInfo))
         .filter(layer => !!layer);
-    return (
+    return this.isLoading ? (
+      <calcite-loader scale="m" label="Loading interactive legend" text="Loading interactive legend"></calcite-loader>
+    ) : (
       <div class={this.el.classList.contains('calcite-theme-dark') ? 'calcite-theme-dark' : 'calcite-theme-light'}>
         {filteredLayers && filteredLayers.length ? filteredLayers : <div class={CSS.message}>{this.messages?.noLegend}</div>}
       </div>
@@ -214,12 +218,12 @@ export class InstantAppsInteractiveLegendClassic {
 
       return (
         <div key={key} class={`${CSS.service} ${CSS.groupLayer}`}>
-          <header>
-            <h3 class={`${CSS.header} ${CSS.label}`}>{activeLayerInfo.title}</h3>
-            {this.featureCount ? (
-              <instant-apps-interactive-legend-count data={this.data} layer-id={activeLayerInfo.layer.id} show-total={true}></instant-apps-interactive-legend-count>
-            ) : null}
-          </header>
+          <instant-apps-interactive-legend-caption
+            data={this.data}
+            legendvm={this.legendvm}
+            feature-count={this.featureCount}
+            activeLayerInfo={activeLayerInfo}
+          ></instant-apps-interactive-legend-caption>
           {layers}
         </div>
       );
@@ -245,28 +249,8 @@ export class InstantAppsInteractiveLegendClassic {
 
       return (
         <div key={key} class={`${CSS.service}${layerClasses}`} tabIndex={0}>
-          <header class={CSS.interacitveLegendHeader}>
-            <span>
-              <h3 class={`${CSS.header} ${CSS.label}`}>{activeLayerInfo.title}</h3>
-              {this.featureCount ? (
-                <instant-apps-interactive-legend-count data={this.data} layer-id={activeLayerInfo.layer.id} show-total={true}></instant-apps-interactive-legend-count>
-              ) : null}
-            </span>
-            <calcite-dropdown onClick={(e: Event) => e.stopPropagation()} placement={'menu-placement' as MenuPlacement} width="l">
-              {this.legendvm?.activeLayerInfos?.toArray()?.map(activeLayerInfo => (
-                <calcite-dropdown-item
-                  onClick={() => {
-                    this.data.selectedLayerId = activeLayerInfo?.layer?.id;
-                    this.reRender = !this.reRender;
-                  }}
-                  selected={activeLayerInfo?.layer?.id === this.data?.selectedLayerId}
-                >
-                  {activeLayerInfo?.layer?.title}
-                </calcite-dropdown-item>
-              ))}
-              <calcite-action scale="m" icon="chevron-down" slot="trigger" text="Open"></calcite-action>
-            </calcite-dropdown>
-          </header>
+          <instant-apps-interactive-legend-caption data={this.data} legendvm={this.legendvm} feature-count={this.featureCount} activeLayerInfo={activeLayerInfo} />
+
           <div class={CSS.layer}>{filteredElements}</div>
         </div>
       );
@@ -333,66 +317,21 @@ export class InstantAppsInteractiveLegendClassic {
 
     const tableClass = isChild ? CSS.layerChildTable : CSS.layerTable;
 
-    const intLegendLayerData = this.getIntLegendLayerData(layer as __esri.FeatureLayer);
-    const disableShowAll = this.checkNoneSelected(intLegendLayerData) || this.checkAllSelected(intLegendLayerData);
-
-    const showAllButton = (
-      <calcite-button
-        key="show-all-button"
-        id="showAll"
-        onClick={() => {
-          showAll(this.data?.[layer?.id]);
-          this.reRender = !this.reRender;
-        }}
-        icon-start="list-check-all"
-        appearance="outline"
-        round={true}
-        disabled={disableShowAll}
-      ></calcite-button>
-    );
-    const zoomToButton = (
-      <calcite-button
-        key="zoom-to-button"
-        id="zoomTo"
-        onClick={() => {
-          zoomTo(this.data?.[layer?.id], this.legendvm.view as __esri.MapView);
-          this.reRender = !this.reRender;
-        }}
-        icon-start="magnifying-glass-plus"
-        appearance="outline"
-        round={true}
-      ></calcite-button>
-    );
-
     const expanded = this.getExpanded(activeLayerInfo, legendElementIndex);
 
-    const caption = title ? (
-      <div class={CSS.layerCaption}>
-        <calcite-action
-          onClick={this.toggleExpanded(activeLayerInfo, legendElementIndex)}
-          icon={expanded === false ? 'chevron-right' : 'chevron-down'}
-          appearance="transparent"
-          text={expanded === false ? 'Open' : 'Close'}
-        ></calcite-action>
-        {title}
-        {isInteractive ? (
-          <div key="layer-caption-btn-container" class={CSS.layerCaptionBtnContainer}>
-            {showAllButton}
-            <calcite-tooltip reference-element="showAll" placement="top" label="Show all">
-              Show all
-            </calcite-tooltip>
-            {this.zoomTo
-              ? [
-                  zoomToButton,
-                  <calcite-tooltip reference-element="zoomTo" placement="top" label="Zoom to">
-                    Zoom to
-                  </calcite-tooltip>,
-                ]
-              : null}
-          </div>
-        ) : null}
-      </div>
-    ) : null;
+    const caption = (
+      <instant-apps-interactive-legend-layer-caption
+        data={this.data}
+        legendvm={this.legendvm}
+        activeLayerInfo={activeLayerInfo}
+        layer={layer as __esri.FeatureLayer}
+        title={title}
+        legendElementIndex={legendElementIndex}
+        zoomTo={this.zoomTo}
+        isInteractive={isInteractive}
+        expanded={expanded}
+      />
+    );
 
     const tableClasses = isSizeRamp || !isChild ? ` ${CSS.layerTableSizeRamp}` : '';
 
@@ -646,10 +585,10 @@ export class InstantAppsInteractiveLegendClassic {
     let selected;
 
     if (this.data) {
-      const data = this.getIntLegendLayerData(layer as __esri.FeatureLayer);
+      const data = getIntLegendLayerData(layer as __esri.FeatureLayer, this.data);
       const category = data?.categories?.get(elementInfo?.label);
       // If no items are selected, then apply 'selected' style to all -- UX
-      const noneSelected = this.checkNoneSelected(data);
+      const noneSelected = checkNoneSelected(data);
       selected = noneSelected || category?.selected;
     }
     return isInteractive ? (
@@ -780,24 +719,5 @@ export class InstantAppsInteractiveLegendClassic {
 
   getExpanded(activeLayerInfo: __esri.ActiveLayerInfo, legendElementIndex: number): boolean {
     return this.data?.[activeLayerInfo?.layer?.id]?.expanded?.[legendElementIndex];
-  }
-
-  toggleExpanded(activeLayerInfo: __esri.ActiveLayerInfo, legendElementIndex: number) {
-    return () => {
-      this.data[activeLayerInfo?.layer.id].expanded[legendElementIndex] = !this.data[activeLayerInfo?.layer.id].expanded[legendElementIndex];
-      this.reRender = !this.reRender;
-    };
-  }
-
-  getIntLegendLayerData(fLayer: __esri.FeatureLayer): IIntLegendLayerData {
-    return this.data?.[fLayer?.id];
-  }
-
-  checkNoneSelected(data: IIntLegendLayerData): boolean {
-    return data && Array.from(data.categories.entries()).every(entry => !entry[1].selected) && data.queryExpressions[0] !== '1=0';
-  }
-
-  checkAllSelected(data: IIntLegendLayerData): boolean {
-    return data && Array.from(data.categories.entries()).every(entry => entry[1].selected);
   }
 }

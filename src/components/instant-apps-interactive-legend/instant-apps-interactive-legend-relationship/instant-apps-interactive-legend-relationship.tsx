@@ -27,7 +27,7 @@ const CSS = {
 @Component({
   tag: 'instant-apps-interactive-legend-relationship',
   styleUrl: 'instant-apps-interactive-legend-relationship.scss',
-  shadow: false,
+  scoped: false,
 })
 export class InstantAppsInteractiveLegendRelationship {
   symbolUtils: any;
