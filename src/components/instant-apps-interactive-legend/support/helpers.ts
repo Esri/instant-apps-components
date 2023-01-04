@@ -1,6 +1,6 @@
 import { loadModules } from 'esri-loader';
 // import { ColorRampStop, HeatmapRampStop, OpacityRampStop, SizeRampStop } from '../../../../interfaces/interfaces';
-import { IInteractiveLegendData, ICategories, IIntLegendLayerData, ICategory, FilterMode } from '../interfaces/interfaces';
+import { IInteractiveLegendData, ICategories, IIntLegendLayerData, ICategory, FilterMode } from '../instant-apps-interactive-legend-classic/interfaces/interfaces';
 import { getMergedEffect } from './effects';
 
 export function validateInteractivity(activeLayerInfo: __esri.ActiveLayerInfo, legendElement: any, legendElementIndex: number): boolean {

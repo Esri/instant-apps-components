@@ -1,6 +1,6 @@
-import { Component, h, Prop, State } from '@stencil/core';
+import { Component, h, Prop, State, Event, EventEmitter } from '@stencil/core';
 
-import { checkAllSelected, checkNoneSelected, getIntLegendLayerData, showAll, zoomTo } from '../instant-apps-interactive-legend-classic/support/helpers';
+import { showAll, zoomTo } from '../support/helpers';
 const CSS = {
   layerCaption: 'esri-legend__layer-caption',
   layerCaptionBtnContainer: 'instant-apps-interactive-legend__layer-caption-btn-container',
@@ -25,7 +25,7 @@ export class InstantAppsInteractiveLegendLayerCaption {
   layer: __esri.FeatureLayer;
 
   @Prop()
-  title: string;
+  titleText: string;
 
   @Prop()
   legendElementIndex: number;
@@ -42,22 +42,30 @@ export class InstantAppsInteractiveLegendLayerCaption {
   @State()
   reRender = false;
 
-  render() {
-    const intLegendLayerData = getIntLegendLayerData(this.layer as __esri.FeatureLayer, this.data);
-    const disableShowAll = checkNoneSelected(intLegendLayerData) || checkAllSelected(intLegendLayerData);
+  @Event({
+    eventName: 'legendLayerCaption',
+    composed: true,
+    cancelable: true,
+    bubbles: true,
+  })
+  legendLayerCaptionEvent: EventEmitter<boolean>;
 
+  emitLegendLayerCaption() {
+    this.legendLayerCaptionEvent.emit();
+  }
+
+  render() {
     const showAllButton = (
       <calcite-button
         key="show-all-button"
         id="showAll"
         onClick={() => {
           showAll(this.data?.[this.layer?.id]);
-          this.reRender = !this.reRender;
+          this.emitLegendLayerCaption();
         }}
         icon-start="list-check-all"
         appearance="outline"
         round={true}
-        disabled={disableShowAll}
       ></calcite-button>
     );
 
@@ -67,7 +75,7 @@ export class InstantAppsInteractiveLegendLayerCaption {
         id="zoomTo"
         onClick={() => {
           zoomTo(this.data?.[this.layer?.id], this.legendvm.view as __esri.MapView);
-          this.reRender = !this.reRender;
+          this.emitLegendLayerCaption();
         }}
         icon-start="magnifying-glass-plus"
         appearance="outline"
@@ -75,7 +83,7 @@ export class InstantAppsInteractiveLegendLayerCaption {
       ></calcite-button>
     );
 
-    return this.title ? (
+    return this.titleText ? (
       <div class={CSS.layerCaption}>
         <calcite-action
           onClick={this.toggleExpanded(this.activeLayerInfo, this.legendElementIndex)}
@@ -83,7 +91,7 @@ export class InstantAppsInteractiveLegendLayerCaption {
           appearance="transparent"
           text={this.expanded === false ? 'Open' : 'Close'}
         ></calcite-action>
-        {this.title}
+        {this.titleText}
         {this.isInteractive ? (
           <div key="layer-caption-btn-container" class={CSS.layerCaptionBtnContainer}>
             {showAllButton}
@@ -106,7 +114,9 @@ export class InstantAppsInteractiveLegendLayerCaption {
 
   toggleExpanded(activeLayerInfo: __esri.ActiveLayerInfo, legendElementIndex: number): () => void {
     return () => {
-      this.data[activeLayerInfo?.layer.id].expanded[legendElementIndex] = !this.data[activeLayerInfo?.layer.id].expanded[legendElementIndex];
+      const expanded = !this.data[activeLayerInfo?.layer.id].expanded[legendElementIndex];
+      this.data[activeLayerInfo?.layer.id].expanded[legendElementIndex] = expanded;
+      this.emitLegendLayerCaption();
       this.reRender = !this.reRender;
     };
   }

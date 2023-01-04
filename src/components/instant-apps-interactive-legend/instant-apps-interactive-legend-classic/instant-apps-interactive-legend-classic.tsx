@@ -6,11 +6,11 @@ import {
   getUnivariateColorRampMargin,
   getUnivariateAboveAndBelowRampElements,
   getUnivariateColorSizeRampElements,
-} from './support/univariateUtils';
+} from '../support/univariateUtils';
 
-import { isImageryStretchedLegend } from './support/styleUtils';
+import { isImageryStretchedLegend } from '../support/styleUtils';
 
-import { validateInteractivity, generateData, handleFeatureCount, handleFilter, getIntLegendLayerData, checkNoneSelected } from './support/helpers';
+import { validateInteractivity, generateData, handleFeatureCount, handleFilter, getIntLegendLayerData, checkNoneSelected } from '../support/helpers';
 
 import { loadModules } from 'esri-loader';
 
@@ -175,6 +175,10 @@ export class InstantAppsInteractiveLegendClassic {
     if (this.handles.has(featureCountKey)) this.handles.remove(featureCountKey);
     this.isLoading = false;
     this.reRender = !this.reRender;
+
+    document.addEventListener('legendLayerCaption', () => {
+      this.reRender = !this.reRender;
+    });
   }
 
   render() {
@@ -250,7 +254,6 @@ export class InstantAppsInteractiveLegendClassic {
       return (
         <div key={key} class={`${CSS.service}${layerClasses}`} tabIndex={0}>
           <instant-apps-interactive-legend-caption data={this.data} legendvm={this.legendvm} feature-count={this.featureCount} activeLayerInfo={activeLayerInfo} />
-
           <div class={CSS.layer}>{filteredElements}</div>
         </div>
       );
@@ -325,7 +328,7 @@ export class InstantAppsInteractiveLegendClassic {
         legendvm={this.legendvm}
         activeLayerInfo={activeLayerInfo}
         layer={layer as __esri.FeatureLayer}
-        title={title}
+        titleText={title}
         legendElementIndex={legendElementIndex}
         zoomTo={this.zoomTo}
         isInteractive={isInteractive}

@@ -124,7 +124,7 @@ export namespace Components {
         "layer": __esri.FeatureLayer;
         "legendElementIndex": number;
         "legendvm": __esri.LegendViewModel;
-        "title": string;
+        "titleText": string;
         "zoomTo": boolean;
     }
     interface InstantAppsInteractiveLegendRelationship {
@@ -230,6 +230,10 @@ export namespace Components {
 export interface InstantAppsHeaderCustomEvent<T> extends CustomEvent<T> {
     detail: T;
     target: HTMLInstantAppsHeaderElement;
+}
+export interface InstantAppsInteractiveLegendLayerCaptionCustomEvent<T> extends CustomEvent<T> {
+    detail: T;
+    target: HTMLInstantAppsInteractiveLegendLayerCaptionElement;
 }
 declare global {
     interface HTMLInstantAppsHeaderElement extends Components.InstantAppsHeader, HTMLStencilElement {
@@ -438,7 +442,8 @@ declare namespace LocalJSX {
         "layer"?: __esri.FeatureLayer;
         "legendElementIndex"?: number;
         "legendvm"?: __esri.LegendViewModel;
-        "title"?: string;
+        "onLegendLayerCaption"?: (event: InstantAppsInteractiveLegendLayerCaptionCustomEvent<boolean>) => void;
+        "titleText"?: string;
         "zoomTo"?: boolean;
     }
     interface InstantAppsInteractiveLegendRelationship {
