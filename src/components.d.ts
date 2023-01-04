@@ -7,6 +7,8 @@
 import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
 import { FilterMode, IInteractiveLegendData } from "./components/instant-apps-interactive-legend/instant-apps-interactive-legend-classic/interfaces/interfaces";
 import { InstantAppsPopovers } from "./components/instant-apps-popovers/instant-apps-popovers";
+import { LogicalPlacement } from "@esri/calcite-components/dist/types/utils/floating-ui";
+import { InstantAppsPopoverMessageOverrides } from "./interfaces/interfaces";
 export namespace Components {
     interface InstantAppsHeader {
         /**
@@ -124,13 +126,12 @@ export namespace Components {
         "imgAlt": string;
         "imgSrc": string;
         "index": number;
-        "intlOf": string;
-        "intlPopoverAction": string;
         "mediaSrc": string;
+        "messageOverrides": InstantAppsPopoverMessageOverrides;
         "pagination": boolean;
         "parent": InstantAppsPopovers;
-        "placement": string;
-        "popoverAction": Function;
+        "placement": LogicalPlacement;
+        "popoverAction": (event: MouseEvent) => void;
         "popoverTitle": string;
         "refId": string;
         "referenceElement": string | HTMLElement;
@@ -166,7 +167,7 @@ export namespace Components {
         /**
           * Configures the placement of the success message popover for the 'Copy Link' button. See options here: https://github.com/Esri/calcite-components/blob/v1.0.0-beta.83/src/utils/popper.ts#L34
          */
-        "inlineSuccessPopoverPlacement": any;
+        "inlineSuccessPopoverPlacement": LogicalPlacement;
         /**
           * Renders tool as a popover with a trigger button, or inline to place in a custom container.
          */
@@ -206,6 +207,10 @@ export namespace Components {
          */
         "view": __esri.MapView | __esri.SceneView;
     }
+}
+export interface InstantAppsHeaderCustomEvent<T> extends CustomEvent<T> {
+    detail: T;
+    target: HTMLInstantAppsHeaderElement;
 }
 declare global {
     interface HTMLInstantAppsHeaderElement extends Components.InstantAppsHeader, HTMLStencilElement {
@@ -323,7 +328,7 @@ declare namespace LocalJSX {
         /**
           * Fires when the info button is clicked.
          */
-        "onInfoIsOpenChanged"?: (event: CustomEvent<boolean>) => void;
+        "onInfoIsOpenChanged"?: (event: InstantAppsHeaderCustomEvent<boolean>) => void;
         /**
           * Text color to display in header - accepts a hexidecimal value i.e. `#FFFFFF`.
          */
@@ -395,13 +400,12 @@ declare namespace LocalJSX {
         "imgAlt"?: string;
         "imgSrc"?: string;
         "index"?: number;
-        "intlOf"?: string;
-        "intlPopoverAction"?: string;
         "mediaSrc"?: string;
+        "messageOverrides"?: InstantAppsPopoverMessageOverrides;
         "pagination"?: boolean;
         "parent"?: InstantAppsPopovers;
-        "placement"?: string;
-        "popoverAction"?: Function;
+        "placement"?: LogicalPlacement;
+        "popoverAction"?: (event: MouseEvent) => void;
         "popoverTitle"?: string;
         "refId"?: string;
         "referenceElement"?: string | HTMLElement;
@@ -433,7 +437,7 @@ declare namespace LocalJSX {
         /**
           * Configures the placement of the success message popover for the 'Copy Link' button. See options here: https://github.com/Esri/calcite-components/blob/v1.0.0-beta.83/src/utils/popper.ts#L34
          */
-        "inlineSuccessPopoverPlacement"?: any;
+        "inlineSuccessPopoverPlacement"?: LogicalPlacement;
         /**
           * Renders tool as a popover with a trigger button, or inline to place in a custom container.
          */

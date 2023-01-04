@@ -1,9 +1,19 @@
+/*
+ *   Copyright (c) 2022 Esri
+ *   All rights reserved under the copyright laws of the United States and applicable international laws, treaties, and conventions.
+ *   This material is licensed for use under the Esri Master License Agreement (MLA), and is bound by the terms of that agreement.
+ *   You may redistribute and use this code without modification, provided you adhere to the terms of the MLA and include this copyright notice.
+ *   See use restrictions at http://www.esri.com/legal/pdfs/mla_e204_e300/english
+ */
+
 import { Component, h, Element, Prop, State } from '@stencil/core';
 import { InstantAppsPopovers } from '../instant-apps-popovers/instant-apps-popovers';
 
 import Popover_T9n from '../../assets/t9n/instant-apps-popover/resources.json';
 
 import { getLocaleComponentStrings } from '../../utils/locale';
+import { LogicalPlacement } from '@esri/calcite-components/dist/types/utils/floating-ui';
+import { InstantAppsPopoverMessageOverrides } from '../../interfaces/interfaces';
 
 const CSS = {
   content: 'instant-apps-popover__content',
@@ -70,7 +80,7 @@ export class InstantAppsPopover {
   parent: InstantAppsPopovers;
 
   @Prop()
-  placement: string = 'trailing-start';
+  placement: LogicalPlacement = 'trailing-start';
 
   @Prop()
   refId: string;
@@ -86,20 +96,21 @@ export class InstantAppsPopover {
   disableAction = false;
 
   @Prop()
-  popoverAction: Function;
-
-  @Prop()
-  intlPopoverAction: string;
-
-  @Prop()
-  intlOf: string = 'of';
+  popoverAction: (event: MouseEvent) => void;
 
   // Internal State
   @State()
   messages: typeof Popover_T9n;
 
-  componentDidLoad() {
-    this.getMessages();
+  @Prop()
+  messageOverrides: InstantAppsPopoverMessageOverrides;
+
+  async componentDidLoad() {
+    await this.getMessages();
+    this.messages = {
+      ...this.messages,
+      ...this.messageOverrides,
+    };
   }
 
   componentDidUpdate() {
@@ -111,23 +122,25 @@ export class InstantAppsPopover {
       <calcite-popover
         ref={(el: HTMLCalcitePopoverElement) => (this.popoverEl = el)}
         heading={this.popoverTitle}
-        auto-close="true"
+        auto-close={true}
         placement={this.placement}
-        intl-close={this.messages?.close}
-        trigger-disabled="true"
+        messageOverrides={{ close: this.messages?.close }}
+        trigger-disabled={true}
         ref-id={this.refId}
-        dismissible="true"
+        closable={true}
+        referenceElement={this.referenceElement}
+        label={this.popoverTitle}
       >
         <div class={`${CSS.content}${this.disableAction ? ` ${CSS.actionDisabled}` : ''}`}>
           {!this.disableAction ? (
             <calcite-action
               key="popover-action"
               class={CSS.action}
-              onclick={this.popoverAction}
+              onClick={this.popoverAction}
               icon={document.dir === 'rtl' ? 'chevron-right' : 'chevron-left'}
-              compact="true"
-              text-enabled="true"
-              text={this.intlPopoverAction ? this.intlPopoverAction : this.messages?.back}
+              compact={true}
+              text-enabled={true}
+              text={(this.messageOverrides?.popoverAction ? this.messageOverrides.popoverAction : this.messages.back) as string}
             />
           ) : null}
           <section>
@@ -138,7 +151,7 @@ export class InstantAppsPopover {
           {this.pagination ? (
             <div key={`iac-popover-footer-${this.index}`} class={CSS.footer}>
               <span>
-                {this.index + 1} {this.intlOf} {this.parent?.instantAppsPopovers?.size}
+                {this.index + 1} {this.messages?.of} {this.parent?.instantAppsPopovers?.size}
               </span>
               {this.renderPagination()}
             </div>
@@ -156,7 +169,7 @@ export class InstantAppsPopover {
     return (
       <div key="pagination-button-container" class={CSS.buttonContainer}>
         {!isFirst ? (
-          <calcite-button key="prev" onClick={() => parent?.previous()} appearance="outline" color="neutral">
+          <calcite-button key="prev" onClick={() => parent?.previous()} appearance="outline" kind="neutral">
             {messages?.back}
           </calcite-button>
         ) : null}
@@ -179,5 +192,6 @@ export class InstantAppsPopover {
   async getMessages() {
     const messages = await getLocaleComponentStrings(this.el);
     this.messages = messages[0] as typeof Popover_T9n;
+    return Promise.resolve();
   }
 }

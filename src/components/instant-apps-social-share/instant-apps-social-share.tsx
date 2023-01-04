@@ -1,15 +1,9 @@
 /*
- *   Copyright (c) 2023 Esri
- *   All rights reserved.
- *   Licensed under the Apache License, Version 2.0 (the "License");
- *   you may not use this file except in compliance with the License.
- *   You may obtain a copy of the License at
- *   http://www.apache.org/licenses/LICENSE-2.0
- *   Unless required by applicable law or agreed to in writing, software
- *   distributed under the License is distributed on an "AS IS" BASIS,
- *   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *   See the License for the specific language governing permissions and
- *   limitations under the License.
+ *   Copyright (c) 2022 Esri
+ *   All rights reserved under the copyright laws of the United States and applicable international laws, treaties, and conventions.
+ *   This material is licensed for use under the Esri Master License Agreement (MLA), and is bound by the terms of that agreement.
+ *   You may redistribute and use this code without modification, provided you adhere to the terms of the MLA and include this copyright notice.
+ *   See use restrictions at http://www.esri.com/legal/pdfs/mla_e204_e300/english
  */
 
 import { Component, h, Prop, State, Element, Host } from '@stencil/core';
@@ -19,6 +13,7 @@ import { loadModules } from '../../utils/loadModules';
 import SocialShare_T9n from '../../assets/t9n/instant-apps-social-share/resources.json';
 
 import { getLocaleComponentStrings } from '../../utils/locale';
+import { LogicalPlacement } from '@esri/calcite-components/dist/types/utils/floating-ui';
 // import { PopperPlacement } from '@esri/calcite-components/dist/types/utils/popper';
 
 type ShareItemOptions = 'link' | 'facebook' | 'twitter' | 'linkedIn';
@@ -190,7 +185,7 @@ export class InstantAppsSocialShare {
    * See options here: https://github.com/Esri/calcite-components/blob/v1.0.0-beta.83/src/utils/popper.ts#L34
    */
   @Prop({ reflect: true })
-  inlineSuccessPopoverPlacement: any = 'trailing';
+  inlineSuccessPopoverPlacement: LogicalPlacement = 'trailing';
 
   // INTERNAL STATE
   // T9N
@@ -331,7 +326,7 @@ export class InstantAppsSocialShare {
               <calcite-popover
                 ref={(el: HTMLCalcitePopoverElement) => (this.popoverRef = el)}
                 label={this.messages?.share?.label}
-                reference-element="shareButton"
+                referenceElement="shareButton"
                 placement="bottom-start"
                 scale={this.scale}
               >
@@ -342,7 +337,7 @@ export class InstantAppsSocialShare {
                 onClick={this.togglePopover.bind(this)}
                 id="shareButton"
                 class={CSS.popoverButton}
-                color={this.shareButtonColor}
+                kind={this.shareButtonColor}
                 appearance="transparent"
                 label={this.messages?.share?.label}
                 title={this.messages?.share?.label}
@@ -356,7 +351,7 @@ export class InstantAppsSocialShare {
               <calcite-popover
                 ref={(el: HTMLCalcitePopoverElement) => (this.copyLinkPopoverRef = el)}
                 label={this.messages?.share?.label}
-                reference-element="copyToClipboard"
+                referenceElement="copyToClipboard"
                 placement={this.inlineSuccessPopoverPlacement}
                 scale={this.scale}
               >
@@ -365,7 +360,7 @@ export class InstantAppsSocialShare {
               <calcite-popover
                 ref={(el: HTMLCalcitePopoverElement) => (this.copyEmbedPopoverRef = el)}
                 label={this.messages?.share?.label}
-                reference-element="copyEmbedToClipboard"
+                referenceElement="copyEmbedToClipboard"
                 placement={this.inlineSuccessPopoverPlacement}
                 scale={this.scale}
               >
