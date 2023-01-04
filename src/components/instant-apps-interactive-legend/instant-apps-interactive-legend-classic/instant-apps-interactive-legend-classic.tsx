@@ -27,6 +27,7 @@ import {
   StretchRampElement,
   UnivariateColorSizeRampElement,
 } from '../../../interfaces/interfaces';
+import { MenuPlacement } from '@esri/calcite-components/dist/types/utils/floating-ui';
 
 const CSS = {
   // jsapi styles
@@ -251,10 +252,10 @@ export class InstantAppsInteractiveLegendClassic {
                 <instant-apps-interactive-legend-count data={this.data} layer-id={activeLayerInfo.layer.id} show-total={true}></instant-apps-interactive-legend-count>
               ) : null}
             </span>
-            <calcite-dropdown onclick={(e: Event) => e.stopPropagation()} position="bottom-trailing" width="l">
+            <calcite-dropdown onClick={(e: Event) => e.stopPropagation()} placement={'menu-placement' as MenuPlacement} width="l">
               {this.legendvm?.activeLayerInfos?.toArray()?.map(activeLayerInfo => (
                 <calcite-dropdown-item
-                  onclick={() => {
+                  onClick={() => {
                     this.data.selectedLayerId = activeLayerInfo?.layer?.id;
                     this.reRender = !this.reRender;
                   }}
@@ -263,7 +264,7 @@ export class InstantAppsInteractiveLegendClassic {
                   {activeLayerInfo?.layer?.title}
                 </calcite-dropdown-item>
               ))}
-              <calcite-action scale="m" icon="chevron-down" slot="trigger"></calcite-action>
+              <calcite-action scale="m" icon="chevron-down" slot="trigger" text="Open"></calcite-action>
             </calcite-dropdown>
           </header>
           <div class={CSS.layer}>{filteredElements}</div>
@@ -345,7 +346,7 @@ export class InstantAppsInteractiveLegendClassic {
         }}
         icon-start="list-check-all"
         appearance="outline"
-        round="true"
+        round={true}
         disabled={disableShowAll}
       ></calcite-button>
     );
@@ -359,7 +360,7 @@ export class InstantAppsInteractiveLegendClassic {
         }}
         icon-start="magnifying-glass-plus"
         appearance="outline"
-        round="true"
+        round={true}
       ></calcite-button>
     );
 
@@ -368,21 +369,22 @@ export class InstantAppsInteractiveLegendClassic {
     const caption = title ? (
       <div class={CSS.layerCaption}>
         <calcite-action
-          onclick={this.toggleExpanded(activeLayerInfo, legendElementIndex)}
+          onClick={this.toggleExpanded(activeLayerInfo, legendElementIndex)}
           icon={expanded === false ? 'chevron-right' : 'chevron-down'}
           appearance="transparent"
+          text={expanded === false ? 'Open' : 'Close'}
         ></calcite-action>
         {title}
         {isInteractive ? (
           <div key="layer-caption-btn-container" class={CSS.layerCaptionBtnContainer}>
             {showAllButton}
-            <calcite-tooltip reference-element="showAll" placement="top">
+            <calcite-tooltip reference-element="showAll" placement="top" label="Show all">
               Show all
             </calcite-tooltip>
             {this.zoomTo
               ? [
                   zoomToButton,
-                  <calcite-tooltip reference-element="zoomTo" placement="top">
+                  <calcite-tooltip reference-element="zoomTo" placement="top" label="Zoom to">
                     Zoom to
                   </calcite-tooltip>,
                 ]
