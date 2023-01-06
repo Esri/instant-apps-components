@@ -109,6 +109,14 @@ export class InstantAppsSocialShare {
   })
   shareUrl: string = window.location.href;
 
+  /**
+   * Auto update share URL.
+   */
+  @Prop({
+    mutable: true,
+  })
+  autoUpdateShareUrl: boolean = true;
+
   @Prop({
     reflect: true,
   })
@@ -694,8 +702,10 @@ export class InstantAppsSocialShare {
 
   // VIEW LOGIC
   async generateShareUrl(): Promise<string> {
-    // Update shareUrl--it may have changes since the component was loaded
-    this.shareUrl = window.location.href;
+    if (this.autoUpdateShareUrl) {
+      // Update shareUrl--it may have changes since the component was loaded
+      this.shareUrl = window.location.href;
+    }
 
     // If view is not ready
     if (!this.view || !this.view?.ready) {

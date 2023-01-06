@@ -98,6 +98,10 @@ export namespace Components {
     }
     interface InstantAppsSocialShare {
         /**
+          * Auto update share URL.
+         */
+        "autoUpdateShareUrl": boolean;
+        /**
           * Configure the default URL parameters that are appended to the generated share URL.
          */
         "defaultUrlParams": { center?: boolean; level?: boolean; viewpoint?: boolean; selectedFeature?: boolean; hiddenLayers?: boolean } | null;
@@ -289,6 +293,10 @@ declare namespace LocalJSX {
         "instantAppsPopovers"?: Map<string, HTMLInstantAppsPopoverElement>;
     }
     interface InstantAppsSocialShare {
+        /**
+          * Auto update share URL.
+         */
+        "autoUpdateShareUrl"?: boolean;
         /**
           * Configure the default URL parameters that are appended to the generated share URL.
          */
