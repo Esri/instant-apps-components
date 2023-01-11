@@ -66,12 +66,18 @@
         //   },
         // });
 
-        esriConfig.portalUrl = 'https://holistic.mapsdevext.arcgis.com';
+        esriConfig.portalUrl = 'https://catsqa.mapsdevext.arcgis.com';
         const map = new WebMap({
           portalItem: {
-            id: '7e252d7ebdc448378e7d1c3ff15c5703',
+            id: '34a3ea499f9c49078e48773ddb96b680',
           },
         });
+
+        //         const map = new WebMap({
+        //   portalItem: {
+        //     id: '04d45a4a8ec64788a12cdca809475fc7',
+        //   },
+        // });
 
         const container = document.getElementById('viewDiv');
         const view = new MapView({ map, container });
@@ -84,6 +90,9 @@
         initIntLegend();
         // createLayerList();
         // createFeatureWidget();
+
+        const legend = new Legend({ view });
+        view.ui.add(legend, "bottom-left");
 
         async function initIntLegend() {
           const loadedMap = await map.loadAll();
@@ -167,7 +176,7 @@
             theme = theme === 'light' ? 'dark' : 'light';
             themeIcon = theme === 'light' ? 'moon' : 'brightness';
             themeText = theme === 'light' ? 'Dark mode' : 'Light mode';
-            esriStylesheet.href = `https://js.arcgis.com/4.25/esri/themes/${theme}/main.css`;
+            esriStylesheet.href = `https://jsdev.arcgis.com/4.26/esri/themes/${theme}/main.css`;
             document.body.classList.remove('calcite-theme-light', 'calcite-theme-dark');
             document.body.classList.add(`calcite-theme-${theme}`);
             themeButton.setAttribute('icon', themeIcon);

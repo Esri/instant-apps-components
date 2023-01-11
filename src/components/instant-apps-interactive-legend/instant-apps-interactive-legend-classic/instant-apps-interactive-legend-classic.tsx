@@ -1,4 +1,4 @@
-import { Component, h, Prop, Element, State, forceUpdate } from '@stencil/core';
+import { Component, h, Prop, Element, State, forceUpdate, Watch } from '@stencil/core';
 
 import {
   getUnivariateColorRampPreview,
@@ -130,6 +130,12 @@ export class InstantAppsInteractiveLegendClassic {
 
   @Prop()
   messages;
+
+  @State()
+  rampContainer: HTMLDivElement;
+
+  @Watch('rampContainer')
+  appendToRampContainer() {}
 
   /**
    * TODO: Property to specify layout type
@@ -510,9 +516,14 @@ export class InstantAppsInteractiveLegendClassic {
 
     const rampDiv = legendElement.preview;
     const opacityRampClass = isOpacityRamp ? CSS.opacityRamp : '';
+
+    // if (this.rampContainer) {
+    //   this.rampContainer.appendChild(rampDiv as HTMLElement);
+    // }
+
     if (rampDiv) {
       rampDiv.classList.add(CSS.colorRamp);
-      rampDiv.classList.add(opacityRampClass);
+      if (opacityRampClass) rampDiv.classList.add(opacityRampClass);
     }
 
     if (opacity != null && rampDiv) {
@@ -525,14 +536,18 @@ export class InstantAppsInteractiveLegendClassic {
 
     const symbolContainerStyles = { width: `${GRADIENT_WIDTH}px` },
       rampLabelsContainerStyles = { height: rampDiv?.style?.height };
-
     return (
       <div class={CSS.layerRow}>
-        <div class={CSS.symbolContainer} style={symbolContainerStyles}>
-          <div class={CSS.rampContainer} innerHTML={`${rampDiv?.outerHTML}`}></div>
+        <div class={CSS.symbolContainer} style={{ ...symbolContainerStyles }}>
+          <div
+            ref={el => {
+              el?.appendChild(rampDiv as HTMLElement);
+            }}
+            class={CSS.rampContainer}
+          ></div>
         </div>
         <div class={CSS.layerInfo}>
-          <div class={CSS.rampLabelsContainer} style={rampLabelsContainerStyles}>
+          <div class={CSS.rampLabelsContainer} style={{ ...rampLabelsContainerStyles }}>
             {labelsContent}
           </div>
         </div>

@@ -93,7 +93,7 @@ export class InstantAppsInteractiveLegend {
   @Watch('handles')
   @Watch('reactiveUtils')
   @Watch('view')
-  async initApp(): Promise<void> {
+  async init(): Promise<void> {
     if (!this.reactiveUtils || !this.view || !this.handles) return;
     try {
       const { on } = this.reactiveUtils;
@@ -110,7 +110,7 @@ export class InstantAppsInteractiveLegend {
         ),
       ]);
     } catch (err) {
-      console.error('Failed at "initApp": ', err);
+      console.error('Failed at "init": ', err);
     }
   }
 
