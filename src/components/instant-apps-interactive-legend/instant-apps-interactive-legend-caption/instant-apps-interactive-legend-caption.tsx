@@ -1,5 +1,6 @@
 import { MenuPlacement } from '@esri/calcite-components/dist/types/utils/floating-ui';
 import { Component, h, Prop, State } from '@stencil/core';
+import { validateInteractivity } from '../support/helpers';
 
 const CSS = {
   label: 'esri-legend__service-label',
@@ -29,28 +30,32 @@ export class InstantAppsInteractiveLegendCaption {
   data: any;
 
   render() {
+    const isInteractive = validateInteractivity(this.activeLayerInfo);
+    const activeLayerInfos = this.legendvm?.activeLayerInfos?.toArray();
     return (
       <header class={CSS.interacitveLegendHeader}>
         <span>
           <h3 class={`${CSS.header} ${CSS.label}`}>{this.activeLayerInfo?.title}</h3>
-          {this.featureCount ? (
+          {this.featureCount && isInteractive ? (
             <instant-apps-interactive-legend-count data={this.data} layer-id={this.activeLayerInfo?.layer?.id} show-total={true}></instant-apps-interactive-legend-count>
           ) : null}
         </span>
-        <calcite-dropdown onClick={(e: Event) => e.stopPropagation()} placement={'menu-placement' as MenuPlacement} width="l">
-          {this.legendvm?.activeLayerInfos?.toArray()?.map(activeLayerInfo => (
-            <calcite-dropdown-item
-              onClick={() => {
-                this.data.selectedLayerId = activeLayerInfo?.layer?.id;
-                this.reRender = !this.reRender;
-              }}
-              selected={activeLayerInfo?.layer?.id === this.data?.selectedLayerId}
-            >
-              {activeLayerInfo?.layer?.title}
-            </calcite-dropdown-item>
-          ))}
-          <calcite-action scale="m" icon="chevron-down" slot="trigger" text="Open"></calcite-action>
-        </calcite-dropdown>
+        {activeLayerInfos?.length > 1 ? (
+          <calcite-dropdown onClick={(e: Event) => e.stopPropagation()} placement={'menu-placement' as MenuPlacement} width="l">
+            {activeLayerInfos?.map(activeLayerInfo => (
+              <calcite-dropdown-item
+                onClick={() => {
+                  this.data.selectedLayerId = activeLayerInfo?.layer?.id;
+                  this.reRender = !this.reRender;
+                }}
+                selected={activeLayerInfo?.layer?.id === this.data?.selectedLayerId}
+              >
+                {activeLayerInfo?.layer?.title}
+              </calcite-dropdown-item>
+            ))}
+            <calcite-action scale="m" icon="chevron-down" slot="trigger" text="Open"></calcite-action>
+          </calcite-dropdown>
+        ) : null}
       </header>
     );
   }

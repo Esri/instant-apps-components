@@ -3,10 +3,10 @@ import { loadModules } from 'esri-loader';
 import { IInteractiveLegendData, ICategories, IIntLegendLayerData, ICategory, FilterMode } from '../instant-apps-interactive-legend-classic/interfaces/interfaces';
 import { getMergedEffect } from './effects';
 
-export function validateInteractivity(activeLayerInfo: __esri.ActiveLayerInfo, legendElement: any, legendElementIndex: number): boolean {
+export function validateInteractivity(activeLayerInfo: __esri.ActiveLayerInfo, legendElement?: any, legendElementIndex?: number): boolean {
   const fLayer = activeLayerInfo.layer as __esri.FeatureLayer;
   const field = (fLayer?.renderer as any)?.field;
-  const { type } = legendElement;
+  const type = legendElement?.type;
   const layerView = activeLayerInfo.get('layerView') as __esri.LayerView;
   const classBreakInfos = layerView?.get('layer.renderer.classBreakInfos') as __esri.ClassBreak[];
   const uniqueValueInfos = layerView?.get('layer.renderer.uniqueValueInfos') && field;
@@ -18,13 +18,12 @@ export function validateInteractivity(activeLayerInfo: __esri.ActiveLayerInfo, l
   const hasMoreThanOneClassBreak = layerView && classBreakInfos && classBreakInfos.length > 1;
 
   const authoringInfoType = layerView?.get('layer.renderer.authoringInfo.type');
-  const isPredominance = authoringInfoType === 'predominance';
   const classifyDataCheckedColorRamp = authoringInfoType === 'class-breaks-color';
   const classifyDataCheckedSizeRamp = authoringInfoType === 'class-breaks-size';
 
   const singleSymbol = legendElement?.infos?.length === 1 && !field;
 
-  const isRelationship = authoringInfoType === 'relationship' && legendElement.type !== 'size-ramp';
+  // const isRelationship = authoringInfoType === 'relationship' && legendElement?.type !== 'size-ramp';
 
   const isFeatureLayer = activeLayerInfo?.get('layer.type') === 'feature';
 
@@ -34,18 +33,18 @@ export function validateInteractivity(activeLayerInfo: __esri.ActiveLayerInfo, l
 
   const validate =
     oneClassBreak ||
-    (isPredominance && !isSizeRamp) ||
+    (checkPredominance(layerView as __esri.FeatureLayerView) && !isSizeRamp) ||
     (classifyDataCheckedColorRamp && field) ||
     (classifyDataCheckedSizeRamp && field) ||
     (singleSymbol && !field && field !== null) ||
-    isRelationship ||
+    // isRelationship ||
     uniqueValueInfos
       ? true
       : false;
 
-  const hasClustering = activeLayerInfo?.get('layer.featureReduction') && activeLayerInfo?.legendElements[legendElementIndex]?.type === 'size-ramp';
+  const hasClustering = activeLayerInfo?.get('layer.featureReduction') && activeLayerInfo?.legendElements[legendElementIndex as number]?.type === 'size-ramp';
 
-  const isSingleSymbol = legendElement.type === 'symbol-table' && legendElement?.infos?.length === 1;
+  const isSingleSymbol = legendElement?.type === 'symbol-table' && legendElement?.infos?.length === 1;
 
   const hasColorRamp = !activeLayerInfo?.legendElements.every(legendElement => legendElement.type !== 'color-ramp');
 
@@ -57,8 +56,10 @@ export function validateInteractivity(activeLayerInfo: __esri.ActiveLayerInfo, l
 
   const isUnclassifiedSizeRamp = legendElement?.infos?.every(info => typeof info.value === 'number');
 
+  const isBinning = activeLayerInfo?.legendElements?.[0]?.type === 'symbol-table' && activeLayerInfo?.legendElements?.[1]?.type === 'color-ramp';
+
   const isValidated =
-    isFeatureLayer && !hasClustering && !opacityRamp && !heatmapRamp && !singleSymbolColor && !singleSymbolSize && !isUnclassifiedSizeRamp
+    isFeatureLayer && !hasClustering && !opacityRamp && !heatmapRamp && !singleSymbolColor && !singleSymbolSize && !isUnclassifiedSizeRamp && !isBinning
       ? classBreakInfos
         ? moreThanOneClassBreak || validate
         : oneClassBreak || validate
@@ -130,22 +131,36 @@ async function createInteractiveLegendDataForLayer(
   });
 
   // Generated expression to apply to layer filters
-  const queryExpressions = [];
+  const queryExpressions: string[] = [];
 
   // Total feature count
   return Promise.resolve({ categories, field, queryExpressions, totalCount: null, fLayerView, legendElement, expanded: activeLayerInfo.legendElements.map(() => true) });
 }
 
 function generateQueryExpressions(data: IIntLegendLayerData, info: any, infoIndex: number): void {
-  const { field, legendElement, categories } = data;
+  const { field, legendElement, categories, fLayerView } = data;
   const legendElementInfos = Array.from(categories);
-  const queryExpression = generateQueryExpression(info, field, infoIndex, legendElement, legendElementInfos, '');
+
+  const isPredominance = checkPredominance(fLayerView);
+
+  const queryExpression = isPredominance ? handlePredominanceExpression(info, fLayerView) : generateQueryExpression(info, field, infoIndex, legendElement, legendElementInfos, '');
   const category = categories.get(info.label) as ICategory;
   category.selected = !category?.selected;
   const hasOneValue = legendElementInfos && legendElementInfos.length === 1;
   const queryExpressions = data?.queryExpressions;
-  const expressionIndex = queryExpressions.indexOf(queryExpression);
-  if (queryExpressions.length === 0 || expressionIndex === -1) {
+  const expressionIndex = queryExpressions.indexOf(queryExpression as string);
+
+  if (isPredominance) {
+    const queryExpression = handlePredominanceExpression(info, fLayerView) as string;
+
+    const expressionIndex = queryExpressions.indexOf(queryExpression);
+    if (queryExpressions.length === 0 || expressionIndex === -1) {
+      if (queryExpressions && queryExpressions[0] === '1=0') {
+        queryExpressions.splice(0, 1);
+      }
+      queryExpressions.push(queryExpression);
+    }
+  } else if (queryExpressions.length === 0 || expressionIndex === -1) {
     if (queryExpressions && queryExpressions[0] === '1=0') {
       queryExpressions.splice(0, 1);
     }
@@ -361,7 +376,10 @@ export async function getInfoCount(
 ): Promise<{ [categoryId: string]: number } | null | undefined> {
   if (!fLayerView) return;
   const query = fLayerView.createQuery();
-  const where = generateQueryExpression(info, field, infoIndex, legendElement, legendElement.infos as any);
+  const where = checkPredominance(fLayerView)
+    ? handlePredominanceExpression(info, fLayerView)
+    : generateQueryExpression(info, field, infoIndex, legendElement, legendElement.infos as any);
+
   query.where = where;
   query.geometry = extent;
 
@@ -384,4 +402,85 @@ export function checkNoneSelected(data: IIntLegendLayerData): boolean {
 
 export function checkAllSelected(data: IIntLegendLayerData): boolean {
   return data && Array.from(data.categories.entries()).every(entry => entry[1].selected);
+}
+
+export function handlePredominanceExpression(elementInfo: any, fLayerView: __esri.FeatureLayerView): string {
+  const featureLayerView = fLayerView;
+  const authoringInfo = featureLayerView ? (featureLayerView.layer.renderer.authoringInfo as any) : null;
+  const fields = authoringInfo ? authoringInfo.fields : null;
+  const expressionArr: string[] = [];
+  if (!fields) {
+    return '';
+  }
+  if (elementInfo.hasOwnProperty('value')) {
+    fields.forEach(field => {
+      if (elementInfo.value === field) {
+        return;
+      }
+      const sqlQuery = `(${elementInfo.value} > ${field} OR (${field} IS NULL AND ${elementInfo.value} <> 0 AND ${elementInfo.value} IS NOT NULL))`;
+
+      expressionArr.push(sqlQuery);
+    });
+    return expressionArr.join(' AND ');
+  } else {
+    const queryForZeroes: string[] = [];
+    fields.forEach(field => {
+      queryForZeroes.push(`${field} = 0`);
+    });
+
+    const otherExpression: string[] = [];
+    if (fields.length > 2) {
+      fields.forEach(field1 => {
+        fields.forEach(field2 => {
+          if (field1 === field2) {
+            return;
+          }
+          const queryForMultiplePredominance: string[] = [];
+          fields.forEach(field3 => {
+            if (field1 === field3 || field2 === field3) {
+              return;
+            }
+            queryForMultiplePredominance.push(`${field1} = ${field2} AND (${field1} > ${field3} OR ${field1} >= ${field3})`);
+          });
+          otherExpression.push(`(${queryForMultiplePredominance.join(' AND ')})`);
+        });
+      });
+
+      const isNull: string[] = [];
+
+      fields.forEach(field => {
+        isNull.push(`${field} IS NULL`);
+      });
+      const generatedOtherExpression = `(${queryForZeroes.join(' AND ')}) OR (${otherExpression.join(' OR ')}) OR (${isNull.join(' AND ')})`;
+      return generatedOtherExpression;
+    } else {
+      const expressions: string[] = [];
+      fields.forEach(field1 => {
+        fields.forEach(field2 => {
+          if (field1 === field2) {
+            return;
+          }
+          expressions.push(`${field1} = ${field2}`);
+          expressions.push(`(${queryForZeroes.join(' AND ')})`);
+        });
+      });
+
+      const zeroAndNull: string[] = [];
+      fields.forEach(field1 => {
+        fields.forEach(field2 => {
+          if (field1 === field2) {
+            return;
+          }
+          zeroAndNull.push(`(${field1} = 0 AND ${field2} IS NULL) OR (${field1} IS NULL AND ${field2} IS NULL)`);
+        });
+      });
+
+      return `(${expressions.join(' OR ')}) OR (${zeroAndNull.join(' OR ')})`;
+    }
+  }
+}
+
+export function checkPredominance(fLayerView: __esri.FeatureLayerView): boolean {
+  const authoringInfoType = fLayerView?.get('layer.renderer.authoringInfo.type');
+  return authoringInfoType === 'predominance';
 }

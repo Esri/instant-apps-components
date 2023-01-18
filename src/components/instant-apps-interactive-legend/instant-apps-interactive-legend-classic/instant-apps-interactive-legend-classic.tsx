@@ -65,7 +65,7 @@ const CSS = {
   hidden: 'esri-hidden',
 
   // instant-apps-interactive-legend
-  interacitveLegendHeader: 'instant-apps-interactive-legend__header',
+  interactiveLegendHeader: 'instant-apps-interactive-legend__header',
   layerCaptionBtnContainer: 'instant-apps-interactive-legend__layer-caption-btn-container',
   interactiveLayerRow: 'instant-apps-interactive-legend__layer-row--interactive',
   infoSelected: 'instant-apps-interactive-legend-element-info--selected',
@@ -276,7 +276,8 @@ export class InstantAppsInteractiveLegendClassic {
     const isInteractive = validateInteractivity(activeLayerInfo, legendElement, legendElementIndex);
 
     // build symbol table or size ramp
-    if (legendElement.type === 'symbol-table' || isSizeRamp) {
+    const isNotRelationship = (activeLayerInfo?.layer as __esri.FeatureLayer)?.renderer?.authoringInfo?.type !== 'relationship'; // TEMP
+    if ((legendElement.type === 'symbol-table' || isSizeRamp) && isNotRelationship) {
       const rows = (legendElement.infos as any)
         .map((info: any, infoIndex: number) =>
           this.renderLegendForElementInfo(info, layer, effectList, isSizeRamp, legendElement, activeLayerInfo, legendElementIndex, infoIndex, isInteractive),
@@ -290,12 +291,9 @@ export class InstantAppsInteractiveLegendClassic {
       content = this.renderLegendForRamp(legendElement, layer.opacity);
     } else if (legendElement.type === 'relationship-ramp') {
       content = (
-        <instant-apps-interactive-legend-relationship
-          element={legendElement}
-          relationship-element-id={this.intLegendId}
-          opacity={layer.opacity}
-          effectlist={effectList}
-        ></instant-apps-interactive-legend-relationship>
+        <span class={CSS.layerRow}>
+          <b>Relationship drawing style is currently not supported.</b>
+        </span>
       );
     } else if (legendElement.type === 'pie-chart-ramp') {
       content = this.renderPieChartRamp(legendElement);
@@ -305,12 +303,10 @@ export class InstantAppsInteractiveLegendClassic {
       content = this.renderUnivariateColorSizeRamp(legendElement, layer.opacity, effectList);
     }
 
-    if (!content) {
-      return null;
-    }
+    if (!content) return null;
 
     const titleObj = legendElement.title;
-    let title;
+    let title: string | null = null;
 
     if (typeof titleObj === 'string') {
       title = titleObj;
@@ -320,7 +316,7 @@ export class InstantAppsInteractiveLegendClassic {
       if (this.isRendererTitle(titleObj, isColorRamp || isOpacityRamp) && titleObj.title) {
         title = `${(titleObj as RendererTitle).title} (${genTitle})`;
       } else {
-        title = genTitle;
+        title = genTitle as any;
       }
     }
 
@@ -334,7 +330,7 @@ export class InstantAppsInteractiveLegendClassic {
         legendvm={this.legendvm}
         activeLayerInfo={activeLayerInfo}
         layer={layer as __esri.FeatureLayer}
-        titleText={title}
+        titleText={title as string}
         legendElementIndex={legendElementIndex}
         zoomTo={this.zoomTo}
         isInteractive={isInteractive}
@@ -343,7 +339,6 @@ export class InstantAppsInteractiveLegendClassic {
     );
 
     const tableClasses = isSizeRamp || !isChild ? ` ${CSS.layerTableSizeRamp}` : '';
-
     return (
       <div class={`${tableClass}${tableClasses}`}>
         {caption}

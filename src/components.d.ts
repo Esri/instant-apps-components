@@ -127,12 +127,6 @@ export namespace Components {
         "titleText": string;
         "zoomTo": boolean;
     }
-    interface InstantAppsInteractiveLegendRelationship {
-        "effectlist": any;
-        "element": any;
-        "opacity": number;
-        "relationshipElementId": string;
-    }
     interface InstantAppsKeyboardShortcuts {
         /**
           * MapView or SceneView to reference when URL parameter values are generated, i.e. center, level, viewpoint, etc.
@@ -282,12 +276,6 @@ declare global {
         prototype: HTMLInstantAppsInteractiveLegendLayerCaptionElement;
         new (): HTMLInstantAppsInteractiveLegendLayerCaptionElement;
     };
-    interface HTMLInstantAppsInteractiveLegendRelationshipElement extends Components.InstantAppsInteractiveLegendRelationship, HTMLStencilElement {
-    }
-    var HTMLInstantAppsInteractiveLegendRelationshipElement: {
-        prototype: HTMLInstantAppsInteractiveLegendRelationshipElement;
-        new (): HTMLInstantAppsInteractiveLegendRelationshipElement;
-    };
     interface HTMLInstantAppsKeyboardShortcutsElement extends Components.InstantAppsKeyboardShortcuts, HTMLStencilElement {
     }
     var HTMLInstantAppsKeyboardShortcutsElement: {
@@ -320,7 +308,6 @@ declare global {
         "instant-apps-interactive-legend-count": HTMLInstantAppsInteractiveLegendCountElement;
         "instant-apps-interactive-legend-element-info": HTMLInstantAppsInteractiveLegendElementInfoElement;
         "instant-apps-interactive-legend-layer-caption": HTMLInstantAppsInteractiveLegendLayerCaptionElement;
-        "instant-apps-interactive-legend-relationship": HTMLInstantAppsInteractiveLegendRelationshipElement;
         "instant-apps-keyboard-shortcuts": HTMLInstantAppsKeyboardShortcutsElement;
         "instant-apps-popover": HTMLInstantAppsPopoverElement;
         "instant-apps-popovers": HTMLInstantAppsPopoversElement;
@@ -450,12 +437,6 @@ declare namespace LocalJSX {
         "titleText"?: string;
         "zoomTo"?: boolean;
     }
-    interface InstantAppsInteractiveLegendRelationship {
-        "effectlist"?: any;
-        "element"?: any;
-        "opacity"?: number;
-        "relationshipElementId"?: string;
-    }
     interface InstantAppsKeyboardShortcuts {
         /**
           * MapView or SceneView to reference when URL parameter values are generated, i.e. center, level, viewpoint, etc.
@@ -557,7 +538,6 @@ declare namespace LocalJSX {
         "instant-apps-interactive-legend-count": InstantAppsInteractiveLegendCount;
         "instant-apps-interactive-legend-element-info": InstantAppsInteractiveLegendElementInfo;
         "instant-apps-interactive-legend-layer-caption": InstantAppsInteractiveLegendLayerCaption;
-        "instant-apps-interactive-legend-relationship": InstantAppsInteractiveLegendRelationship;
         "instant-apps-keyboard-shortcuts": InstantAppsKeyboardShortcuts;
         "instant-apps-popover": InstantAppsPopover;
         "instant-apps-popovers": InstantAppsPopovers;
@@ -575,7 +555,6 @@ declare module "@stencil/core" {
             "instant-apps-interactive-legend-count": LocalJSX.InstantAppsInteractiveLegendCount & JSXBase.HTMLAttributes<HTMLInstantAppsInteractiveLegendCountElement>;
             "instant-apps-interactive-legend-element-info": LocalJSX.InstantAppsInteractiveLegendElementInfo & JSXBase.HTMLAttributes<HTMLInstantAppsInteractiveLegendElementInfoElement>;
             "instant-apps-interactive-legend-layer-caption": LocalJSX.InstantAppsInteractiveLegendLayerCaption & JSXBase.HTMLAttributes<HTMLInstantAppsInteractiveLegendLayerCaptionElement>;
-            "instant-apps-interactive-legend-relationship": LocalJSX.InstantAppsInteractiveLegendRelationship & JSXBase.HTMLAttributes<HTMLInstantAppsInteractiveLegendRelationshipElement>;
             "instant-apps-keyboard-shortcuts": LocalJSX.InstantAppsKeyboardShortcuts & JSXBase.HTMLAttributes<HTMLInstantAppsKeyboardShortcutsElement>;
             "instant-apps-popover": LocalJSX.InstantAppsPopover & JSXBase.HTMLAttributes<HTMLInstantAppsPopoverElement>;
             "instant-apps-popovers": LocalJSX.InstantAppsPopovers & JSXBase.HTMLAttributes<HTMLInstantAppsPopoversElement>;

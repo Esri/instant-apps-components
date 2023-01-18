@@ -62,18 +62,25 @@
         // esriConfig.portalUrl = 'https://jsapi.maps.arcgis.com';
         // const map = new WebMap({
         //   portalItem: {
-        //     id: 'ddf28dc057b8400dbfa148ef403f7c57',
+        //     id: 'ddf28dc057b8400dbfa148ef403f7c57', // Categories
         //   },
         // });
 
         esriConfig.portalUrl = 'https://catsqa.mapsdevext.arcgis.com';
         const map = new WebMap({
           portalItem: {
-            id: '34a3ea499f9c49078e48773ddb96b680',
+            // id: '34a3ea499f9c49078e48773ddb96b680', // Binning
+            // id: '04d45a4a8ec64788a12cdca809475fc7', // Relationship
+            id: '38f48c45c80449c3b023332e7b33d643', // Count and amounts size
+            // id: '23e07a3286a04e12bc0fb929c27fd367', // Count and amounts color
+            // id: '3fbf765a51874d06a59a0cd3ffffe3ec', // Predominance and size
+            // id: '0db1fe1cb39f4da881f26b15f8657afc', // Clustering
+            // id: '3a084a71a960468fba08141b768dfcd1', // Classify data unchecked
+            // id: '95001deb526f464198540924727394ad', // Single feature and preominance,
           },
         });
 
-        //         const map = new WebMap({
+        // const map = new WebMap({
         //   portalItem: {
         //     id: '04d45a4a8ec64788a12cdca809475fc7',
         //   },
@@ -92,7 +99,7 @@
         // createFeatureWidget();
 
         const legend = new Legend({ view });
-        view.ui.add(legend, "bottom-left");
+        view.ui.add(legend, 'bottom-left');
 
         async function initIntLegend() {
           const loadedMap = await map.loadAll();
