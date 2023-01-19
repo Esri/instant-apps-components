@@ -195,8 +195,9 @@ export class InstantAppsInteractiveLegendClassic {
         .toArray()
         .map(activeLayerInfo => this.renderLegendForLayer(activeLayerInfo))
         .filter(layer => !!layer);
+
     return this.isLoading ? (
-      <calcite-loader scale="m" label="Loading interactive legend" text="Loading interactive legend"></calcite-loader>
+      <calcite-loader scale="m" label={this.messages?.loading} text={this.messages?.loading}></calcite-loader>
     ) : (
       <div class={this.el.classList.contains('calcite-theme-dark') ? 'calcite-theme-dark' : 'calcite-theme-light'}>
         {filteredLayers && filteredLayers.length ? filteredLayers : <div class={CSS.message}>{this.messages?.noLegend}</div>}
@@ -233,6 +234,7 @@ export class InstantAppsInteractiveLegendClassic {
             legendvm={this.legendvm}
             feature-count={this.featureCount}
             activeLayerInfo={activeLayerInfo}
+            messages={this.messages}
           ></instant-apps-interactive-legend-caption>
           {layers}
         </div>
@@ -259,7 +261,13 @@ export class InstantAppsInteractiveLegendClassic {
 
       return (
         <div key={key} class={`${CSS.service}${layerClasses}`} tabIndex={0}>
-          <instant-apps-interactive-legend-caption data={this.data} legendvm={this.legendvm} feature-count={this.featureCount} activeLayerInfo={activeLayerInfo} />
+          <instant-apps-interactive-legend-caption
+            data={this.data}
+            legendvm={this.legendvm}
+            feature-count={this.featureCount}
+            activeLayerInfo={activeLayerInfo}
+            messages={this.messages}
+          />
           <div class={CSS.layer}>{filteredElements}</div>
         </div>
       );
@@ -292,7 +300,7 @@ export class InstantAppsInteractiveLegendClassic {
     } else if (legendElement.type === 'relationship-ramp') {
       content = (
         <span class={CSS.layerRow}>
-          <b>Relationship drawing style is currently not supported.</b>
+          <b>{this.messages?.relationship?.notSupported}</b>
         </span>
       );
     } else if (legendElement.type === 'pie-chart-ramp') {
@@ -335,6 +343,7 @@ export class InstantAppsInteractiveLegendClassic {
         zoomTo={this.zoomTo}
         isInteractive={isInteractive}
         expanded={expanded}
+        messages={this.messages}
       />
     );
 
@@ -622,6 +631,7 @@ export class InstantAppsInteractiveLegendClassic {
             layerId={activeLayerInfo.layer.id}
             data={this.data}
             legendvm={this.legendvm}
+            messages={this.messages}
           ></instant-apps-interactive-legend-count>
         ) : null}
       </button>

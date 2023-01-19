@@ -29,6 +29,9 @@ export class InstantAppsInteractiveLegendCaption {
   @Prop()
   data: any;
 
+  @Prop()
+  messages;
+
   render() {
     const isInteractive = validateInteractivity(this.activeLayerInfo);
     const activeLayerInfos = this.legendvm?.activeLayerInfos?.toArray();
@@ -37,7 +40,12 @@ export class InstantAppsInteractiveLegendCaption {
         <span>
           <h3 class={`${CSS.header} ${CSS.label}`}>{this.activeLayerInfo?.title}</h3>
           {this.featureCount && isInteractive ? (
-            <instant-apps-interactive-legend-count data={this.data} layer-id={this.activeLayerInfo?.layer?.id} show-total={true}></instant-apps-interactive-legend-count>
+            <instant-apps-interactive-legend-count
+              data={this.data}
+              layer-id={this.activeLayerInfo?.layer?.id}
+              show-total={true}
+              messages={this.messages}
+            ></instant-apps-interactive-legend-count>
           ) : null}
         </span>
         {activeLayerInfos?.length > 1 ? (
@@ -53,7 +61,7 @@ export class InstantAppsInteractiveLegendCaption {
                 {activeLayerInfo?.layer?.title}
               </calcite-dropdown-item>
             ))}
-            <calcite-action scale="m" icon="chevron-down" slot="trigger" text="Open"></calcite-action>
+            <calcite-action scale="m" icon="chevron-down" slot="trigger" label={this.messages?.open} text={this.messages?.open}></calcite-action>
           </calcite-dropdown>
         ) : null}
       </header>

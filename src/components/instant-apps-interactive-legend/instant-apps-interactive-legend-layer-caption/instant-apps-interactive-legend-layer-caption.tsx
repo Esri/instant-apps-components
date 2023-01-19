@@ -39,6 +39,9 @@ export class InstantAppsInteractiveLegendLayerCaption {
   @Prop()
   expanded: boolean;
 
+  @Prop()
+  messages;
+
   @State()
   reRender = false;
 
@@ -89,20 +92,21 @@ export class InstantAppsInteractiveLegendLayerCaption {
           onClick={this.toggleExpanded(this.activeLayerInfo, this.legendElementIndex)}
           icon={this.expanded === false ? 'chevron-right' : 'chevron-down'}
           appearance="transparent"
-          text={this.expanded === false ? 'Open' : 'Close'}
+          text={this.expanded === false ? this.messages?.expand : this.messages?.collapse}
+          label={this.expanded === false ? this.messages?.expand : this.messages?.collapse}
         ></calcite-action>
         {this.titleText}
         {this.isInteractive ? (
           <div key="layer-caption-btn-container" class={CSS.layerCaptionBtnContainer}>
             {showAllButton}
-            <calcite-tooltip reference-element="showAll" placement="top" label="Show all">
-              Show all
+            <calcite-tooltip reference-element="showAll" placement="top" label={this.messages?.showAll}>
+              {this.messages?.showAll}
             </calcite-tooltip>
             {this.zoomTo
               ? [
                   zoomToButton,
-                  <calcite-tooltip reference-element="zoomTo" placement="top" label="Zoom to">
-                    Zoom to
+                  <calcite-tooltip reference-element="zoomTo" placement="top" label={this.messages?.zoomTo}>
+                    {this.messages?.zoomTo}
                   </calcite-tooltip>,
                 ]
               : null}

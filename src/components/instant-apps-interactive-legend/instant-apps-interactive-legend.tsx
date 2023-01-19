@@ -4,6 +4,8 @@ import { loadModules } from '../../utils/loadModules';
 
 import { FilterMode } from './instant-apps-interactive-legend-classic/interfaces/interfaces';
 
+import { getLocaleComponentStrings } from '../../utils/locale';
+
 const CSS = {
   esri: {
     base: 'esri-legend',
@@ -72,6 +74,8 @@ export class InstantAppsInteractiveLegend {
     type: 'filter',
   };
 
+  @State() messages;
+
   async componentWillLoad() {
     const observer = new MutationObserver(() => {
       this.reRender = !this.reRender;
@@ -80,6 +84,10 @@ export class InstantAppsInteractiveLegend {
       attributes: true,
     });
     await this.initializeModules();
+  }
+
+  async componentDidLoad() {
+    await this.getMessages();
   }
 
   async initializeModules() {
@@ -128,6 +136,7 @@ export class InstantAppsInteractiveLegend {
             zoom-to={this.zoomTo}
             filter-mode={this.filterMode}
             feature-count={this.featureCount}
+            messages={this.messages}
           />
         ) : null}
       </div>
@@ -162,5 +171,17 @@ export class InstantAppsInteractiveLegend {
     const { light, dark } = CSS.calcite.theme;
     const isDarkTheme = document.body.classList.contains(dark);
     return isDarkTheme ? dark : light;
+  }
+
+  async getMessages(): Promise<any> {
+    let messages;
+    try {
+      const res = await getLocaleComponentStrings(this.el);
+      messages = res[0];
+      this.messages = messages;
+    } catch (err) {
+      Promise.reject(err);
+    } finally {
+    }
   }
 }

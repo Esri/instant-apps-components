@@ -31,6 +31,9 @@ export class InstantAppsInteractiveLegendCount {
   @Prop()
   categoryId: string; //LegendElementInfo.label
 
+  @Prop()
+  messages;
+
   @State()
   reRender: boolean = false;
 
@@ -50,7 +53,7 @@ export class InstantAppsInteractiveLegendCount {
     return (
       <Host>
         {this.showTotal ? (
-          `Total feature count: ${this.getTotalFeatureCount()}`
+          `${this.messages?.totalFeatureCount}: ${this.getTotalFeatureCount()}`
         ) : (
           <span key="element-info-count" class={CSS.countText}>
             {this.getCount()}
