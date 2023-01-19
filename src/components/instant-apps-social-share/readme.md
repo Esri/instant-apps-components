@@ -2,6 +2,7 @@
 
 <!-- Auto Generated Below -->
 
+
 ## Properties
 
 | Property                        | Attribute                          | Description                                                                                                                                                                                  | Type                                                                                                                                                                                                                                                                                                              | Default                |
@@ -24,6 +25,7 @@
 | `successMessage`                | `success-message`                  | Provides an alternate to the success.url message "App URL copied to clipboard."                                                                                                              | `string`                                                                                                                                                                                                                                                                                                          | `''`                   |
 | `view`                          | --                                 | MapView or SceneView to reference when URL parameter values are generated, i.e. center, level, viewpoint, etc.                                                                               | `MapView \| SceneView`                                                                                                                                                                                                                                                                                            | `undefined`            |
 
+
 ## CSS Custom Properties
 
 | Name                                              | Description                                                                                 |
@@ -35,10 +37,10 @@
 | `--instant-apps-social-share-width-horizontal--m` | Width of component when `share-icons-layout` is set to `horizontal` and scale is set to 'm' |
 | `--instant-apps-social-share-width-horizontal--s` | Width of component when `share-icons-layout` is set to `horizontal` and scale is set to 's' |
 
----
+
+----------------------------------------------
 
 ## License
-
 COPYRIGHT © 2023 Esri
 
 All rights reserved under the copyright laws of the United States and applicable international laws, treaties, and conventions.
@@ -50,3 +52,4 @@ See use restrictions at http://www.esri.com/legal/pdfs/mla_e204_e300/english
 For additional information, contact: Environmental Systems Research Institute, Inc. Attn: Contracts and Legal Services Department 380 New York Street Redlands, California, USA 92373 USA
 
 email: contracts@esri.com
+

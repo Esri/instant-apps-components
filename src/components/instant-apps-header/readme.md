@@ -2,6 +2,7 @@
 
 <!-- Auto Generated Below -->
 
+
 ## Properties
 
 | Property                | Attribute                 | Description                                                                         | Type                | Default                         |
@@ -20,17 +21,20 @@
 | `textColor`             | `text-color`              | Text color to display in header - accepts a hexidecimal value i.e. `#FFFFFF`.       | `string`            | `undefined`                     |
 | `titleText`             | `title-text`              | Main text to display in header.                                                     | `string`            | `undefined`                     |
 
+
 ## Events
 
 | Event               | Description                            | Type                   |
 | ------------------- | -------------------------------------- | ---------------------- |
 | `infoIsOpenChanged` | Fires when the info button is clicked. | `CustomEvent<boolean>` |
 
+
 ## Slots
 
 | Slot            | Description                                                                                        |
 | --------------- | -------------------------------------------------------------------------------------------------- |
 | `"actions-end"` | Used to slot an action at the end of the header i.e. `calcite-action`, `instant-apps-social-share` |
+
 
 ## CSS Custom Properties
 
@@ -48,10 +52,10 @@
 | `--instant-apps-header-logo-width--logo-scale--s`  | Logo width when logo scale is set to 's'. Default value: 35px.      |
 | `--instant-apps-header-min-height`                 | Minimum height for header. Default: 50px;                           |
 
----
+
+----------------------------------------------
 
 ## License
-
 COPYRIGHT © 2023 Esri
 
 All rights reserved under the copyright laws of the United States and applicable international laws, treaties, and conventions.
@@ -63,3 +67,4 @@ See use restrictions at http://www.esri.com/legal/pdfs/mla_e204_e300/english
 For additional information, contact: Environmental Systems Research Institute, Inc. Attn: Contracts and Legal Services Department 380 New York Street Redlands, California, USA 92373 USA
 
 email: contracts@esri.com
+
