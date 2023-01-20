@@ -1,5 +1,4 @@
 import { loadModules } from 'esri-loader';
-// import { ColorRampStop, HeatmapRampStop, OpacityRampStop, SizeRampStop } from '../../../../interfaces/interfaces';
 import { IInteractiveLegendData, ICategories, IIntLegendLayerData, ICategory, FilterMode } from '../instant-apps-interactive-legend-classic/interfaces/interfaces';
 import { getMergedEffect } from './effects';
 
@@ -23,7 +22,7 @@ export function validateInteractivity(activeLayerInfo: __esri.ActiveLayerInfo, l
 
   const singleSymbol = legendElement?.infos?.length === 1 && !field;
 
-  // const isRelationship = authoringInfoType === 'relationship' && legendElement?.type !== 'size-ramp';
+  // const isRelationship = authoringInfoType === 'relationship' && legendElement?.type !== 'size-ramp'; // TODO
 
   const isFeatureLayer = activeLayerInfo?.get('layer.type') === 'feature';
 
@@ -294,34 +293,6 @@ export async function zoomTo(data: IIntLegendLayerData, view: __esri.MapView): P
   } catch {}
 }
 
-// export async function handleFeatureCount(legendvm: __esri.LegendViewModel, data: IInteractiveLegendData): Promise<void> {
-//   const { view } = legendvm;
-
-//   legendvm.activeLayerInfos.forEach(async activeLayerInfo => {
-// const legendElement = activeLayerInfo.legendElements[0] as __esri.LegendElement;
-// const dataForALI = data[activeLayerInfo.layer.id];
-// const categories = dataForALI.categories;
-// const fLayer = activeLayerInfo.layer as __esri.FeatureLayer;
-// const fLayerView = data[activeLayerInfo?.layer?.id]?.fLayerView;
-// const field = fLayer.renderer?.get('field') as string;
-//     const countPromises = [] as any;
-//     legendElement?.infos?.forEach(async (legendElementInfo, legendElementInfoIndex) => {
-//       const countPromise = getInfoCount(view.extent, fLayerView, field, legendElementInfo, legendElementInfoIndex, legendElement, legendElement.infos).then(res => res);
-//       countPromises.push(countPromise);
-//     });
-//     const counts = (await Promise.all(countPromises)) as number[];
-//     let totalCount = 0;
-//     legendElement?.infos?.forEach((legendElementInfo, legendElementInfoIndex) => {
-//       const count = counts[legendElementInfoIndex];
-//       totalCount += count;
-//       const category = categories?.get(legendElementInfo.label) as ICategory;
-//       if (category) category.count = count;
-//     });
-//     dataForALI.totalCount = totalCount;
-//   });
-//   return Promise.resolve();
-// }
-
 export async function handleFeatureCount(legendViewModel: __esri.LegendViewModel, data: IInteractiveLegendData): Promise<IInteractiveLegendData> {
   let updatedData = { ...data };
   const { activeLayerInfos } = legendViewModel;
@@ -363,8 +334,6 @@ export async function handleFeatureCount(legendViewModel: __esri.LegendViewModel
 
   return Promise.resolve(updatedData);
 }
-
-// type LegendElementInfos = ColorRampStop[] | HeatmapRampStop[] | OpacityRampStop[] | SizeRampStop[] | SymbolTableElementType[]
 
 export async function getInfoCount(
   extent: __esri.Extent,

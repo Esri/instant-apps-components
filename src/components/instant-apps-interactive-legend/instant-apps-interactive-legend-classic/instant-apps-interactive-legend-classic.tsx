@@ -1,4 +1,4 @@
-import { Component, h, Prop, Element, State, forceUpdate, Watch } from '@stencil/core';
+import { Component, h, Prop, Element, State, forceUpdate } from '@stencil/core';
 
 import {
   getUnivariateColorRampPreview,
@@ -130,18 +130,6 @@ export class InstantAppsInteractiveLegendClassic {
 
   @Prop()
   messages;
-
-  @State()
-  rampContainer: HTMLDivElement;
-
-  @Watch('rampContainer')
-  appendToRampContainer() {}
-
-  /**
-   * TODO: Property to specify layout type
-   */
-  // @Prop()
-  // readonly type: 'classic' = 'classic';
 
   async componentWillLoad() {
     const [intl, reactiveUtils, Handles] = await loadModules(['esri/intl', 'esri/core/reactiveUtils', 'esri/core/Handles']);
@@ -279,7 +267,7 @@ export class InstantAppsInteractiveLegendClassic {
       isOpacityRamp = legendElement.type === 'opacity-ramp',
       isSizeRamp = legendElement.type === 'size-ramp';
 
-    let content = null;
+    let content: any = null;
 
     const isInteractive = validateInteractivity(activeLayerInfo, legendElement, legendElementIndex);
 
@@ -360,7 +348,7 @@ export class InstantAppsInteractiveLegendClassic {
     return <div innerHTML={`${legendElement.preview?.outerHTML}`}></div>;
   }
 
-  renderUnivariateAboveAndBelowRamp(legendElement: UnivariateColorSizeRampElement, opacity: number, effectList: any) {
+  async renderUnivariateAboveAndBelowRamp(legendElement: UnivariateColorSizeRampElement, opacity: number, effectList: any) {
     const { sizeRampElement, colorRampElement } = getUnivariateAboveAndBelowRampElements(legendElement, opacity);
 
     if (!sizeRampElement) {
@@ -370,22 +358,22 @@ export class InstantAppsInteractiveLegendClassic {
     const colorRampAboveHeight = getUnivariateColorRampSize(sizeRampElement, 'above', true);
     const colorRampBelowHeight = getUnivariateColorRampSize(sizeRampElement, 'below', true);
     const colorRampWidth = 12;
-    const colorRampAbovePreview = getUnivariateColorRampPreview(colorRampElement, {
+    const colorRampAbovePreview = (await getUnivariateColorRampPreview(colorRampElement, {
       width: colorRampWidth,
       height: colorRampAboveHeight,
       rampAlignment: 'vertical',
       opacity,
       type: 'above',
       effectList,
-    }) as any;
-    const colorRampBelowPreview = getUnivariateColorRampPreview(colorRampElement, {
+    })) as any;
+    const colorRampBelowPreview = (await getUnivariateColorRampPreview(colorRampElement, {
       width: colorRampWidth,
       height: colorRampBelowHeight,
       rampAlignment: 'vertical',
       opacity,
       type: 'below',
       effectList,
-    }) as any;
+    })) as any;
     const colorRampTopMargin = getUnivariateColorRampMargin(sizeRampElement);
 
     const labels = (sizeRampElement as any).infos.map(stop => stop.label);
@@ -520,10 +508,6 @@ export class InstantAppsInteractiveLegendClassic {
 
     const rampDiv = legendElement.preview;
     const opacityRampClass = isOpacityRamp ? CSS.opacityRamp : '';
-
-    // if (this.rampContainer) {
-    //   this.rampContainer.appendChild(rampDiv as HTMLElement);
-    // }
 
     if (rampDiv) {
       rampDiv.classList.add(CSS.colorRamp);
