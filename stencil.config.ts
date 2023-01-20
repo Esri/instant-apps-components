@@ -4,7 +4,6 @@ import nodePolyfills from 'rollup-plugin-node-polyfills';
 
 export const config: Config = {
   namespace: 'instant-apps-components',
-  sourceMap: true,
   outputTargets: [
     {
       type: 'dist',

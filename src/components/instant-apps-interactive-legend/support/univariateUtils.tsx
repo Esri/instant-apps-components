@@ -1,23 +1,9 @@
 import { pt2px } from './screenUtils';
-
-// esri.libs.maquette
 import type { Projector } from 'maquette';
 import { createProjector } from 'maquette';
-
-// esri.symbols.support
-
-// import { renderColorRampPreviewHTML } from 'esri/symbols/support/symbolUtils';
-
 import { h } from '@stencil/core';
 import { loadModules } from 'esri-loader';
 import { ColorRampElement, SizeRampElement, UnivariateColorSizeRampElement } from '../../../interfaces/interfaces';
-
-// // esri.widgets
-// import type {
-//   SizeRampElement,
-//   ColorRampElement,
-//   UnivariateColorSizeRampElement
-// } from "../../../interfaces";
 
 const projector: Projector = createProjector();
 const separatorWidth = 10;
