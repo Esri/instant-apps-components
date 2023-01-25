@@ -2,7 +2,6 @@
 [![npm version][npm-img]][npm-url]
 
 [npm-img]: https://img.shields.io/npm/v/@esri/instant-apps-components.svg?color=%23007ac2&style=flat-square
-
 [npm-url]: https://www.npmjs.com/package/@esri/instant-apps-components
 
 # Instant Apps Components
@@ -81,7 +80,7 @@ We welcome contributions to this project. See [CONTRIBUTING.md](./CONTRIBUTING.m
 
 ## License
 
-COPYRIGHT © 2022 Esri
+COPYRIGHT © 2023 Esri
 
 All rights reserved under the copyright laws of the United States and applicable international laws, treaties, and conventions.
 
