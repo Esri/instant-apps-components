@@ -134,7 +134,7 @@ export class InstantAppsInteractiveLegend {
             class={theme}
             legendvm={this.legendvm}
             zoom-to={this.zoomTo}
-            filter-mode={this.filterMode}
+            filterMode={this.filterMode}
             feature-count={this.featureCount}
             messages={this.messages}
           />
