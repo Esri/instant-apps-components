@@ -1,4 +1,4 @@
-import { Component, h, Prop, Element, State, forceUpdate } from '@stencil/core';
+import { Component, h, Prop, Element, State, forceUpdate, Watch } from '@stencil/core';
 
 import {
   getUnivariateColorRampPreview,
@@ -131,6 +131,11 @@ export class InstantAppsInteractiveLegendClassic {
   @Prop()
   messages;
 
+  @Watch('featureCount')
+  async updateFeatureCount() {
+    this.updateFeatureCountData();
+  }
+
   async componentWillLoad() {
     const [intl, reactiveUtils, Handles] = await loadModules(['esri/intl', 'esri/core/reactiveUtils', 'esri/core/Handles']);
     this.reactiveUtils = reactiveUtils;
@@ -158,12 +163,7 @@ export class InstantAppsInteractiveLegendClassic {
       },
     );
 
-    if (this.featureCount) {
-      const data = await handleFeatureCount(this.legendvm, this.data);
-      this.data = data;
-
-      this.handleFeatureCount();
-    }
+    this.updateFeatureCountData();
 
     const featureCountKey = 'feature-count';
     if (this.handles.has(featureCountKey)) this.handles.remove(featureCountKey);
@@ -726,5 +726,14 @@ export class InstantAppsInteractiveLegendClassic {
 
   getExpanded(activeLayerInfo: __esri.ActiveLayerInfo, legendElementIndex: number): boolean {
     return this.data?.[activeLayerInfo?.layer?.id]?.expanded?.[legendElementIndex];
+  }
+
+  async updateFeatureCountData() {
+    if (this.featureCount) {
+      const data = await handleFeatureCount(this.legendvm, this.data);
+      this.data = data;
+
+      this.handleFeatureCount();
+    }
   }
 }
