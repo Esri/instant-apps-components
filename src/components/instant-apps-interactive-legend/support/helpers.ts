@@ -68,19 +68,22 @@ export function validateInteractivity(activeLayerInfo: __esri.ActiveLayerInfo, l
 }
 
 export async function generateData(legendViewModel: __esri.LegendViewModel, reactiveUtils: __esri.reactiveUtils): Promise<IInteractiveLegendData> {
-  await (legendViewModel.view.map as __esri.WebMap).loadAll();
+  const map = await (legendViewModel.view.map as __esri.WebMap).loadAll();
 
-  // Step 1. Create data object to return
+  // Create data object to return
   const data = {} as IInteractiveLegendData;
 
-  // Step 2. Set up Interactive Legend Data for each layer using it's corresponding active layer info
-  // Step 2a. Array of promises - needed due to queryFeatureCount and whenLayerView calls
+  // Set up Interactive Legend Data for each layer using it's corresponding active layer info
+  // Array of promises - needed due to queryFeatureCount and whenLayerView calls
   const intLegendDataPromises = [] as Promise<IIntLegendLayerData>[];
 
-  // Step 3. Iterate through each Active Layer Info and create data bucket for each layer
+  // Iterate through each Active Layer Info and create data bucket for each layer
+  const fLayers = map.allLayers.filter(layer => layer.type === 'feature');
+  await reactiveUtils.whenOnce(() => fLayers?.length === legendViewModel.activeLayerInfos?.length);
+
   legendViewModel.activeLayerInfos.forEach(activeLayerInfoCallback(intLegendDataPromises, legendViewModel, reactiveUtils));
 
-  // Step 4. Store resolved data
+  // Store resolved data
   const intLegendLayerDataObjs = await Promise.all(intLegendDataPromises);
   intLegendLayerDataObjs.forEach(intLegendLayerDataObj => (data[intLegendLayerDataObj.fLayerView.layer.id] = intLegendLayerDataObj));
   data['selectedLayerId'] = Object.keys(data)[0];
@@ -106,7 +109,7 @@ async function createInteractiveLegendDataForLayer(
   reactiveUtils: __esri.reactiveUtils,
 ): Promise<IIntLegendLayerData> {
   // Get first Legend Element from Active LayerInfo - only first legend element will be interactive
-  await reactiveUtils.whenOnce(() => activeLayerInfo?.legendElements?.length > 0);
+  await reactiveUtils.whenOnce(() => activeLayerInfo?.ready && activeLayerInfo?.legendElements?.length > 0);
   const legendElement = activeLayerInfo.legendElements[0] as __esri.LegendElement;
 
   // Each active layer info will have it's own property in object - we'll use the layer ID to categorize each layer
@@ -133,7 +136,18 @@ async function createInteractiveLegendDataForLayer(
   const queryExpressions: string[] = [];
 
   // Total feature count
-  return Promise.resolve({ categories, field, queryExpressions, totalCount: null, fLayerView, legendElement, expanded: activeLayerInfo.legendElements.map(() => true) });
+  return Promise.resolve({
+    categories,
+    field,
+    queryExpressions,
+    totalCount: null,
+    fLayerView,
+    legendElement,
+    expanded: {
+      layer: true,
+      legendElements: activeLayerInfo.legendElements.map(() => true),
+    },
+  });
 }
 
 function generateQueryExpressions(data: IIntLegendLayerData, info: any, infoIndex: number): void {
