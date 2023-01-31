@@ -11,9 +11,17 @@
 | ----------------- | --------------- | ----------- | ----------------- | ----------- |
 | `activeLayerInfo` | --              |             | `ActiveLayerInfo` | `undefined` |
 | `data`            | `data`          |             | `any`             | `undefined` |
+| `expanded`        | `expanded`      |             | `boolean`         | `undefined` |
 | `featureCount`    | `feature-count` |             | `boolean`         | `undefined` |
 | `legendvm`        | --              |             | `LegendViewModel` | `undefined` |
 | `messages`        | `messages`      |             | `any`             | `undefined` |
+
+
+## Events
+
+| Event                | Description | Type                   |
+| -------------------- | ----------- | ---------------------- |
+| `legendLayerCaption` |             | `CustomEvent<boolean>` |
 
 
 ## Dependencies
