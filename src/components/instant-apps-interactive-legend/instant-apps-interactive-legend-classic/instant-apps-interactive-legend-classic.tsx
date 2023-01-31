@@ -153,26 +153,26 @@ export class InstantAppsInteractiveLegendClassic {
   async componentDidLoad() {
     await this.reactiveUtils.whenOnce(() => this.legendvm);
     await (this.legendvm?.view?.map as __esri.WebMap).loadAll();
-    this.data = await generateData(this.legendvm, this.reactiveUtils);
+    try {
+      this.data = await generateData(this.legendvm, this.reactiveUtils);
+      this.isLoading = false;
 
-    this.reactiveUtils.on(
-      () => this.legendvm?.activeLayerInfos,
-      'change',
-      async () => {
-        this.data = await generateData(this.legendvm, this.reactiveUtils);
-      },
-    );
+      this.reactiveUtils.on(
+        () => this.legendvm?.activeLayerInfos,
+        'change',
+        async () => (this.data = await generateData(this.legendvm, this.reactiveUtils)),
+      );
 
-    this.updateFeatureCountData();
+      this.updateFeatureCountData();
 
-    const featureCountKey = 'feature-count';
-    if (this.handles.has(featureCountKey)) this.handles.remove(featureCountKey);
-    this.isLoading = false;
-    this.reRender = !this.reRender;
-
-    document.addEventListener('legendLayerCaption', () => {
+      const featureCountKey = 'feature-count';
+      if (this.handles.has(featureCountKey)) this.handles.remove(featureCountKey);
       this.reRender = !this.reRender;
-    });
+
+      document.addEventListener('legendLayerCaption', () => (this.reRender = !this.reRender));
+    } catch (err) {
+      console.error(err);
+    }
   }
 
   render() {
@@ -194,14 +194,11 @@ export class InstantAppsInteractiveLegendClassic {
   }
 
   renderLegendForLayer(activeLayerInfo: __esri.ActiveLayerInfo) {
-    if (this.data?.selectedLayerId !== activeLayerInfo?.layer.id) return;
     if (!activeLayerInfo.ready) {
       if (this.reactiveUtils) {
         this.reactiveUtils.when(
           () => activeLayerInfo?.ready,
-          () => {
-            this.reRender = !this.reRender;
-          },
+          () => (this.reRender = !this.reRender),
         );
       }
       return null;
@@ -214,7 +211,7 @@ export class InstantAppsInteractiveLegendClassic {
 
     if (hasChildren) {
       const layers = activeLayerInfo.children.map(childActiveLayerInfo => this.renderLegendForLayer(childActiveLayerInfo)).toArray();
-
+      const expanded = this.getLayerExpanded(activeLayerInfo);
       return (
         <div key={key} class={`${CSS.service} ${CSS.groupLayer}`}>
           <instant-apps-interactive-legend-caption
@@ -223,6 +220,7 @@ export class InstantAppsInteractiveLegendClassic {
             feature-count={this.featureCount}
             activeLayerInfo={activeLayerInfo}
             messages={this.messages}
+            expanded={expanded}
           ></instant-apps-interactive-legend-caption>
           {layers}
         </div>
@@ -247,6 +245,7 @@ export class InstantAppsInteractiveLegendClassic {
 
       const layerClasses = !!activeLayerInfo.parent ? ` ${CSS.groupLayerChild}` : '';
 
+      const expanded = this.getLayerExpanded(activeLayerInfo);
       return (
         <div key={key} class={`${CSS.service}${layerClasses}`} tabIndex={0}>
           <instant-apps-interactive-legend-caption
@@ -255,8 +254,13 @@ export class InstantAppsInteractiveLegendClassic {
             feature-count={this.featureCount}
             activeLayerInfo={activeLayerInfo}
             messages={this.messages}
+            expanded={expanded}
           />
-          <div class={CSS.layer}>{filteredElements}</div>
+          {expanded === false ? null : (
+            <div key={`${activeLayerInfo?.layer?.id}-legend-layer`} class={CSS.layer}>
+              {filteredElements}
+            </div>
+          )}
         </div>
       );
     }
@@ -318,7 +322,7 @@ export class InstantAppsInteractiveLegendClassic {
 
     const tableClass = isChild ? CSS.layerChildTable : CSS.layerTable;
 
-    const expanded = this.getExpanded(activeLayerInfo, legendElementIndex);
+    const expanded = this.getLegendElementsExpanded(activeLayerInfo, legendElementIndex);
 
     const caption = (
       <instant-apps-interactive-legend-layer-caption
@@ -595,7 +599,7 @@ export class InstantAppsInteractiveLegendClassic {
       const category = data?.categories?.get(elementInfo?.label);
       // If no items are selected, then apply 'selected' style to all -- UX
       const noneSelected = checkNoneSelected(data);
-      selected = noneSelected || category?.selected;
+      selected = data?.categories?.size === 1 ? !category?.selected : noneSelected || category?.selected;
     }
     return isInteractive ? (
       // Regular LegendElementInfo
@@ -724,8 +728,12 @@ export class InstantAppsInteractiveLegendClassic {
     );
   }
 
-  getExpanded(activeLayerInfo: __esri.ActiveLayerInfo, legendElementIndex: number): boolean {
-    return this.data?.[activeLayerInfo?.layer?.id]?.expanded?.[legendElementIndex];
+  getLayerExpanded(activeLayerInfo: __esri.ActiveLayerInfo): boolean {
+    return this.data?.[activeLayerInfo?.layer?.id]?.expanded?.layer;
+  }
+
+  getLegendElementsExpanded(activeLayerInfo: __esri.ActiveLayerInfo, legendElementIndex: number): boolean {
+    return this.data?.[activeLayerInfo?.layer?.id]?.expanded?.legendElements?.[legendElementIndex];
   }
 
   async updateFeatureCountData() {

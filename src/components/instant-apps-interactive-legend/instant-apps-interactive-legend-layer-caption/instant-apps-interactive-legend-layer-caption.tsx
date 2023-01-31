@@ -118,8 +118,8 @@ export class InstantAppsInteractiveLegendLayerCaption {
 
   toggleExpanded(activeLayerInfo: __esri.ActiveLayerInfo, legendElementIndex: number): () => void {
     return () => {
-      const expanded = !this.data[activeLayerInfo?.layer.id].expanded[legendElementIndex];
-      this.data[activeLayerInfo?.layer.id].expanded[legendElementIndex] = expanded;
+      const expanded = !this.data[activeLayerInfo?.layer.id].expanded.legendElements[legendElementIndex];
+      this.data[activeLayerInfo?.layer.id].expanded.legendElements[legendElementIndex] = expanded;
       this.emitLegendLayerCaption();
       this.reRender = !this.reRender;
     };

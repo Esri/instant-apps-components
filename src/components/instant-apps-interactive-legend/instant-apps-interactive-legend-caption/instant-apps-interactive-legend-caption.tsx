@@ -1,11 +1,11 @@
-import { MenuPlacement } from '@esri/calcite-components/dist/types/utils/floating-ui';
-import { Component, h, Prop, State } from '@stencil/core';
+import { Component, EventEmitter, h, Prop, State, Event } from '@stencil/core';
 import { validateInteractivity } from '../support/helpers';
 
 const CSS = {
   label: 'esri-legend__service-label',
   header: 'esri-widget__heading',
   interacitveLegendHeader: 'instant-apps-interactive-legend__header',
+  headerActionContainer: 'instant-apps-interactive-legend__header-action-container',
 };
 
 @Component({
@@ -32,39 +32,50 @@ export class InstantAppsInteractiveLegendCaption {
   @Prop()
   messages;
 
+  @Prop()
+  expanded: boolean;
+
+  @Event({
+    eventName: 'legendLayerCaption',
+    composed: true,
+    cancelable: true,
+    bubbles: true,
+  })
+  legendLayerCaptionEvent: EventEmitter<boolean>;
+
+  emitLegendLayerCaption() {
+    this.legendLayerCaptionEvent.emit();
+  }
+
   render() {
     const isInteractive = validateInteractivity(this.activeLayerInfo);
-    const activeLayerInfos = this.legendvm?.activeLayerInfos?.toArray();
+    const isNotExpanded = this.expanded === false;
+    const expandCollapseText = isNotExpanded ? this.messages?.expand : this.messages?.collapse;
     return (
       <header class={CSS.interacitveLegendHeader}>
         <span>
-          <h3 class={`${CSS.header} ${CSS.label}`}>{this.activeLayerInfo?.title}</h3>
+          <span class={CSS.headerActionContainer}>
+            <calcite-action
+              onClick={() => this.toggleExpanded(this.activeLayerInfo)}
+              icon={isNotExpanded ? 'chevron-right' : 'chevron-down'}
+              appearance="transparent"
+              text={expandCollapseText}
+              label={expandCollapseText}
+            />
+            <h3 class={`${CSS.header} ${CSS.label}`}>{this.activeLayerInfo?.title}</h3>
+          </span>
           {this.featureCount && isInteractive ? (
-            <instant-apps-interactive-legend-count
-              data={this.data}
-              layer-id={this.activeLayerInfo?.layer?.id}
-              show-total={true}
-              messages={this.messages}
-            ></instant-apps-interactive-legend-count>
+            <instant-apps-interactive-legend-count data={this.data} layer-id={this.activeLayerInfo?.layer?.id} show-total={true} messages={this.messages} />
           ) : null}
         </span>
-        {activeLayerInfos?.length > 1 ? (
-          <calcite-dropdown onClick={(e: Event) => e.stopPropagation()} placement={'menu-placement' as MenuPlacement} width="l">
-            {activeLayerInfos?.map(activeLayerInfo => (
-              <calcite-dropdown-item
-                onClick={() => {
-                  this.data.selectedLayerId = activeLayerInfo?.layer?.id;
-                  this.reRender = !this.reRender;
-                }}
-                selected={activeLayerInfo?.layer?.id === this.data?.selectedLayerId}
-              >
-                {activeLayerInfo?.layer?.title}
-              </calcite-dropdown-item>
-            ))}
-            <calcite-action scale="m" icon="chevron-down" slot="trigger" label={this.messages?.open} text={this.messages?.open}></calcite-action>
-          </calcite-dropdown>
-        ) : null}
       </header>
     );
+  }
+
+  toggleExpanded(activeLayerInfo: __esri.ActiveLayerInfo): void {
+    const expanded = !this.data[activeLayerInfo?.layer.id].expanded.layer;
+    this.data[activeLayerInfo?.layer.id].expanded.layer = expanded;
+    this.emitLegendLayerCaption();
+    this.reRender = !this.reRender;
   }
 }

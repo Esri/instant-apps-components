@@ -17,7 +17,6 @@
     padding: 0;
   }
 
-  // .esri-widget__heading,
   .esri-legend__layer-body,
   .esri-legend__layer,
   .esri-legend__layer-table {
@@ -50,6 +49,7 @@
 
   .esri-legend__layer-cell.esri-legend__layer-cell--info {
     font-size: var(--instant-apps-interactive-legend-info-font-size);
+    text-align: left;
   }
 
   .esri-legend__layer-cell,

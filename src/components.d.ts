@@ -85,6 +85,7 @@ export namespace Components {
     interface InstantAppsInteractiveLegendCaption {
         "activeLayerInfo": __esri.ActiveLayerInfo;
         "data": any;
+        "expanded": boolean;
         "featureCount": boolean;
         "legendvm": __esri.LegendViewModel;
         "messages": any;
@@ -229,6 +230,10 @@ export namespace Components {
 export interface InstantAppsHeaderCustomEvent<T> extends CustomEvent<T> {
     detail: T;
     target: HTMLInstantAppsHeaderElement;
+}
+export interface InstantAppsInteractiveLegendCaptionCustomEvent<T> extends CustomEvent<T> {
+    detail: T;
+    target: HTMLInstantAppsInteractiveLegendCaptionElement;
 }
 export interface InstantAppsInteractiveLegendLayerCaptionCustomEvent<T> extends CustomEvent<T> {
     detail: T;
@@ -388,9 +393,11 @@ declare namespace LocalJSX {
     interface InstantAppsInteractiveLegendCaption {
         "activeLayerInfo"?: __esri.ActiveLayerInfo;
         "data"?: any;
+        "expanded"?: boolean;
         "featureCount"?: boolean;
         "legendvm"?: __esri.LegendViewModel;
         "messages"?: any;
+        "onLegendLayerCaption"?: (event: InstantAppsInteractiveLegendCaptionCustomEvent<boolean>) => void;
     }
     interface InstantAppsInteractiveLegendClassic {
         /**
