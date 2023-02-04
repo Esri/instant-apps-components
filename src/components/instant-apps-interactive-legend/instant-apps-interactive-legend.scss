@@ -5,5 +5,9 @@
   .esri-legend {
     height: 100%;
   }
+
+  .esri-legend.esri-component.esri-widget.esri-widget--panel {
+    margin: 0;
+  }
 }
 
