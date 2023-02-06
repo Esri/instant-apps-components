@@ -29,6 +29,7 @@ const CSS = {
 })
 export class InstantAppsInteractiveLegend {
   ref: HTMLInstantAppsInteractiveLegendClassicElement;
+  legendMessages;
 
   @Element()
   el: HTMLElement;
@@ -91,10 +92,16 @@ export class InstantAppsInteractiveLegend {
   }
 
   async initializeModules() {
-    const [Handles, reactiveUtils, Widget] = await loadModules(['esri/core/Handles', 'esri/core/reactiveUtils', 'esri/widgets/Widget']);
+    const [Handles, reactiveUtils, Widget, Legend] = await loadModules(['esri/core/Handles', 'esri/core/reactiveUtils', 'esri/widgets/Widget', 'esri/widgets/Legend']);
     this.handles = new Handles();
     this.reactiveUtils = reactiveUtils;
     this.widget = new Widget();
+    const legend = new Legend();
+    await reactiveUtils.whenOnce(() => legend?.messages);
+    this.messages = {
+      ...this.messages,
+      ...legend.messages,
+    };
     return Promise.resolve();
   }
 
@@ -186,7 +193,10 @@ export class InstantAppsInteractiveLegend {
     try {
       const res = await getLocaleComponentStrings(this.el);
       messages = res[0];
-      this.messages = messages;
+      this.messages = {
+        ...this.messages,
+        ...messages,
+      };
     } catch (err) {
       Promise.reject(err);
     } finally {

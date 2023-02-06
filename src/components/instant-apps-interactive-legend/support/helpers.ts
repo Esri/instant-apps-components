@@ -57,8 +57,10 @@ export function validateInteractivity(activeLayerInfo: __esri.ActiveLayerInfo, l
 
   const isBinning = activeLayerInfo?.legendElements?.[0]?.type === 'symbol-table' && activeLayerInfo?.legendElements?.[1]?.type === 'color-ramp';
 
+  const isDotDensity = authoringInfoType === 'dot-density';
+
   const isValidated =
-    isFeatureLayer && !hasClustering && !opacityRamp && !heatmapRamp && !singleSymbolColor && !singleSymbolSize && !isUnclassifiedSizeRamp && !isBinning
+    isFeatureLayer && !hasClustering && !opacityRamp && !heatmapRamp && !singleSymbolColor && !singleSymbolSize && !isUnclassifiedSizeRamp && !isBinning && !isDotDensity
       ? classBreakInfos
         ? moreThanOneClassBreak || validate
         : oneClassBreak || validate
