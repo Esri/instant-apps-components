@@ -117,28 +117,36 @@ export class InstantAppsInteractiveLegend {
           () => this._refreshActiveLayerInfos(this?.legendvm?.activeLayerInfos, this.reactiveUtils),
         ),
       ]);
+
+      // Re-renders layers on layer visibility toggle
+      this.legendvm?.view?.map?.allLayers?.forEach(layer => {
+        if (layer.type === 'feature') {
+          const watcher = this.reactiveUtils.watch(
+            () => layer.visible,
+            async () => (this.reRender = !this.reRender),
+          );
+          this.handles.add(watcher);
+        }
+      });
     } catch (err) {
       console.error('Failed at "init": ', err);
     }
   }
 
   render() {
-    const isReady = this.legendvm?.activeLayerInfos?.length > 0;
     const theme = this._getTheme();
     const { base, component, widget, widgetPanel } = CSS.esri;
     return (
       <div class={this.widget?.classes(base, component, widget, widgetPanel)}>
-        {isReady ? (
-          <instant-apps-interactive-legend-classic
-            ref={(el: HTMLInstantAppsInteractiveLegendClassicElement) => (this.ref = el)}
-            class={theme}
-            legendvm={this.legendvm}
-            zoom-to={this.zoomTo}
-            filterMode={this.filterMode}
-            feature-count={this.featureCount}
-            messages={this.messages}
-          />
-        ) : null}
+        <instant-apps-interactive-legend-classic
+          ref={(el: HTMLInstantAppsInteractiveLegendClassicElement) => (this.ref = el)}
+          class={theme}
+          legendvm={this.legendvm}
+          zoom-to={this.zoomTo}
+          filterMode={this.filterMode}
+          feature-count={this.featureCount}
+          messages={this.messages}
+        />
       </div>
     );
   }

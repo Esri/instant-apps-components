@@ -89,14 +89,14 @@ export class InstantAppsPopovers {
   async open(key: string): Promise<void> {
     return this.beforeOpen().then(() => {
       const popover = this.instantAppsPopovers.get(key)?.firstElementChild as HTMLCalcitePopoverElement;
-      popover.toggle(true);
+      popover.open = true;
     });
   }
 
   @Method()
   async close(key: string): Promise<void> {
     const popover = this.instantAppsPopovers.get(key)?.firstElementChild as HTMLCalcitePopoverElement;
-    popover.toggle(false);
+    popover.open = false;
   }
 
   @Method()

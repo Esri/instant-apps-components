@@ -213,7 +213,7 @@ export class InstantAppsSocialShare {
     this.getMessages();
     this.setupAutoCloseListeners();
     if (this.mode === 'popover') {
-      if (this.opened) this.popoverRef.toggle(true);
+      if (this.opened) this.popoverRef.open = true;
       this.popoverRef.addEventListener('calcitePopoverOpen', () => {
         if (!this.shareListRef) return;
         const firstNode = this.shareListRef.children[0] as HTMLLIElement;
@@ -277,11 +277,11 @@ export class InstantAppsSocialShare {
   autoCloseCallback() {
     if (this.mode === 'popover') {
       this.opened = false;
-      this.popoverRef?.toggle(this.opened);
+      this.popoverRef.open = this.opened;
     } else {
-      this.copyLinkPopoverRef?.toggle(false);
+      if (this.copyLinkPopoverRef) this.copyLinkPopoverRef.open = false;
       this.inlineCopyLinkOpened = false;
-      this.copyEmbedPopoverRef?.toggle(false);
+      if (this.copyEmbedPopoverRef) this.copyEmbedPopoverRef.open = false;
       this.inlineCopyEmbedOpened = false;
     }
   }
@@ -604,12 +604,12 @@ export class InstantAppsSocialShare {
   togglePopover(event: Event) {
     event.stopPropagation();
     this.opened = !this.opened;
-    this.popoverRef.toggle(this.opened);
+    this.popoverRef.open = this.opened;
   }
 
   closePopover() {
     this.opened = false;
-    this.popoverRef.toggle(this.opened);
+    this.popoverRef.open = this.opened;
   }
 
   async handleShareItem(type: ShareItemOptions) {
@@ -628,12 +628,12 @@ export class InstantAppsSocialShare {
       case 'link':
         navigator.clipboard.writeText(urlToUse);
         if (this.embed) {
-          this.copyEmbedPopoverRef.toggle(false);
+          this.copyEmbedPopoverRef.open = false;
           this.inlineCopyEmbedOpened = false;
         }
         if (this.mode === 'inline') {
-          this.copyLinkPopoverRef.toggle(true);
-          setTimeout(() => this.copyLinkPopoverRef.toggle(false), 3000);
+          this.copyLinkPopoverRef.open = true;
+          setTimeout(() => (this.copyLinkPopoverRef.open = false), 3000);
         }
         this.inlineCopyLinkOpened = true;
         this.copied = true;
@@ -693,10 +693,10 @@ export class InstantAppsSocialShare {
 
   copyEmbedCode() {
     navigator.clipboard.writeText(this.getEmbedCode());
-    this.copyLinkPopoverRef.toggle(false);
+    this.copyLinkPopoverRef.open = false;
     this.inlineCopyLinkOpened = false;
-    this.copyEmbedPopoverRef.toggle(true);
-    setTimeout(() => this.copyEmbedPopoverRef.toggle(false), 3000);
+    this.copyEmbedPopoverRef.open = true;
+    setTimeout(() => (this.copyEmbedPopoverRef.open = false), 3000);
     this.inlineCopyEmbedOpened = true;
   }
 

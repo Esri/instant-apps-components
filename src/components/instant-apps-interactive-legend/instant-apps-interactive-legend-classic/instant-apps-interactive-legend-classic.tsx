@@ -154,22 +154,15 @@ export class InstantAppsInteractiveLegendClassic {
     await this.reactiveUtils.whenOnce(() => this.legendvm);
     await (this.legendvm?.view?.map as __esri.WebMap).loadAll();
     try {
+      // Initial data setup
       this.data = await generateData(this.legendvm, this.reactiveUtils);
-      this.isLoading = false;
 
-      this.reactiveUtils.on(
-        () => this.legendvm?.activeLayerInfos,
-        'change',
-        async () => (this.data = await generateData(this.legendvm, this.reactiveUtils)),
-      );
-
+      // Initial setup of feature count
       this.updateFeatureCountData();
 
-      const featureCountKey = 'feature-count';
-      if (this.handles.has(featureCountKey)) this.handles.remove(featureCountKey);
-      this.reRender = !this.reRender;
+      this.isLoading = false;
 
-      document.addEventListener('legendLayerCaption', () => (this.reRender = !this.reRender));
+      this.setupWatchersAndListeners();
     } catch (err) {
       console.error(err);
     }
@@ -221,7 +214,7 @@ export class InstantAppsInteractiveLegendClassic {
             activeLayerInfo={activeLayerInfo}
             messages={this.messages}
             expanded={expanded}
-          ></instant-apps-interactive-legend-caption>
+          />
           {layers}
         </div>
       );
@@ -743,5 +736,31 @@ export class InstantAppsInteractiveLegendClassic {
 
       this.handleFeatureCount();
     }
+  }
+
+  setupWatchersAndListeners(): void {
+    // Refreshes interactive legend data on active layer info update
+    this.reactiveUtils.on(
+      () => this.legendvm?.activeLayerInfos,
+      'change',
+      async () => (this.data = await generateData(this.legendvm, this.reactiveUtils)),
+    );
+
+    // Re-renders layers on layer visibility toggle
+    this.legendvm?.view?.map?.allLayers?.forEach(layer => {
+      if (layer.type === 'feature') {
+        const watcher = this.reactiveUtils.watch(
+          () => layer.visible,
+          async () => {
+            await this.updateFeatureCount();
+            this.reRender = !this.reRender;
+          },
+        );
+        this.handles.add(watcher);
+      }
+    });
+
+    // Re-renders UI on legendLayerCaption event - expand/collapse of caption
+    document.addEventListener('legendLayerCaption', () => (this.reRender = !this.reRender));
   }
 }
