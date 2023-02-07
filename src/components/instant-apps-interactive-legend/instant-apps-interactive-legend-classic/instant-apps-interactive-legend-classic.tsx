@@ -215,7 +215,7 @@ export class InstantAppsInteractiveLegendClassic {
             messages={this.messages}
             expanded={expanded}
           />
-          {layers}
+          {expanded ? layers : null}
         </div>
       );
     }
@@ -332,9 +332,10 @@ export class InstantAppsInteractiveLegendClassic {
       />
     );
 
-    const tableClasses = isSizeRamp || !isChild ? ` ${CSS.layerTableSizeRamp}` : '';
+    const tableClasses = (isSizeRamp || !isChild) && !isColorRamp ? ` ${CSS.layerTableSizeRamp}` : '';
+    const nonInteractiveClass = !isInteractive ? ' instant-apps-interactive-legend__non-interactive' : '';
     return (
-      <div class={`${tableClass}${tableClasses}`}>
+      <div class={`${tableClass}${tableClasses}${nonInteractiveClass}`}>
         {caption}
         {expanded === false ? null : content}
       </div>
@@ -740,10 +741,16 @@ export class InstantAppsInteractiveLegendClassic {
 
   setupWatchersAndListeners(): void {
     // Refreshes interactive legend data on active layer info update
+    this.legendvm?.activeLayerInfos?.forEach(async () => {
+      this.data = await generateData(this.legendvm, this.reactiveUtils);
+    });
+
     this.reactiveUtils.on(
       () => this.legendvm?.activeLayerInfos,
       'change',
-      async () => (this.data = await generateData(this.legendvm, this.reactiveUtils)),
+      async () => {
+        this.data = await generateData(this.legendvm, this.reactiveUtils);
+      },
     );
 
     // Re-renders layers on layer visibility toggle
