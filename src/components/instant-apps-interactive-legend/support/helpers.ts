@@ -57,8 +57,10 @@ export function validateInteractivity(activeLayerInfo: __esri.ActiveLayerInfo, l
 
   const isBinning = activeLayerInfo?.legendElements?.[0]?.type === 'symbol-table' && activeLayerInfo?.legendElements?.[1]?.type === 'color-ramp';
 
+  const isDotDensity = authoringInfoType === 'dot-density';
+
   const isValidated =
-    isFeatureLayer && !hasClustering && !opacityRamp && !heatmapRamp && !singleSymbolColor && !singleSymbolSize && !isUnclassifiedSizeRamp && !isBinning
+    isFeatureLayer && !hasClustering && !opacityRamp && !heatmapRamp && !singleSymbolColor && !singleSymbolSize && !isUnclassifiedSizeRamp && !isBinning && !isDotDensity
       ? classBreakInfos
         ? moreThanOneClassBreak || validate
         : oneClassBreak || validate
@@ -68,8 +70,6 @@ export function validateInteractivity(activeLayerInfo: __esri.ActiveLayerInfo, l
 }
 
 export async function generateData(legendViewModel: __esri.LegendViewModel, reactiveUtils: __esri.reactiveUtils): Promise<IInteractiveLegendData> {
-  const map = await (legendViewModel.view.map as __esri.WebMap).loadAll();
-
   // Create data object to return
   const data = {} as IInteractiveLegendData;
 
@@ -78,9 +78,6 @@ export async function generateData(legendViewModel: __esri.LegendViewModel, reac
   const intLegendDataPromises = [] as Promise<IIntLegendLayerData>[];
 
   // Iterate through each Active Layer Info and create data bucket for each layer
-  const fLayers = map.allLayers.filter(layer => layer.type === 'feature');
-  await reactiveUtils.whenOnce(() => fLayers?.length === legendViewModel.activeLayerInfos?.length);
-
   legendViewModel.activeLayerInfos.forEach(activeLayerInfoCallback(intLegendDataPromises, legendViewModel, reactiveUtils));
 
   // Store resolved data
@@ -100,6 +97,12 @@ function activeLayerInfoCallback(
     // Step 3a. Push to promises array since there are promises within function
     const intLegendDataPromise = createInteractiveLegendDataForLayer(legendViewModel, activeLayerInfo, reactiveUtils).then(res => res);
     intLegendDataPromises.push(intLegendDataPromise);
+
+    // Take ACLs children into account
+    activeLayerInfo.children.forEach(child => {
+      const intLegendDataPromise = createInteractiveLegendDataForLayer(legendViewModel, child, reactiveUtils).then(res => res);
+      intLegendDataPromises.push(intLegendDataPromise);
+    });
   };
 }
 
@@ -109,7 +112,7 @@ async function createInteractiveLegendDataForLayer(
   reactiveUtils: __esri.reactiveUtils,
 ): Promise<IIntLegendLayerData> {
   // Get first Legend Element from Active LayerInfo - only first legend element will be interactive
-  await reactiveUtils.whenOnce(() => activeLayerInfo?.ready && activeLayerInfo?.legendElements?.length > 0);
+  await reactiveUtils.whenOnce(() => activeLayerInfo?.ready);
   const legendElement = activeLayerInfo.legendElements[0] as __esri.LegendElement;
 
   // Each active layer info will have it's own property in object - we'll use the layer ID to categorize each layer
@@ -320,7 +323,7 @@ export async function handleFeatureCount(legendViewModel: __esri.LegendViewModel
     const fLayerView = data[activeLayerInfo?.layer?.id]?.fLayerView;
     const field = fLayer.renderer?.get('field') as string;
 
-    legendElement.infos?.forEach((info, infoIndex) => countPromises.push(getInfoCount(legendViewModel.view.extent, fLayerView, field, info, infoIndex, legendElement)));
+    legendElement?.infos?.forEach((info, infoIndex) => countPromises.push(getInfoCount(legendViewModel.view.extent, fLayerView, field, info, infoIndex, legendElement)));
   });
 
   const countResponses = await Promise.all(countPromises);

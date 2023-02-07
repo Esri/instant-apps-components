@@ -11,7 +11,8 @@
   --instant-apps-interactive-legend-info-item-background--selected: #c7ebff;
   --instant-apps-interactive-legend-info-item-color--selected: var(--calcite-ui-text-2);
   --instant-apps-interactive-legend-secondary-background-color: var(--calcite-ui-background);
-  --instant-apps-interactive-legend-ui-padding: 15px 10px;
+  --instant-apps-interactive-legend-ui-margin: 20px 15px;
+  --instant-apps-interactive-legend-ui-padding: 20px 15px;
 
   .esri-legend__service {
     padding: 0;
@@ -19,7 +20,8 @@
 
   .esri-legend__layer-body,
   .esri-legend__layer,
-  .esri-legend__layer-table {
+  .esri-legend__layer-table,
+  .esri-legend__group-layer-child {
     margin: 0;
     overflow-x: hidden;
   }
@@ -58,6 +60,19 @@
     align-items: center;
   }
 
+  .instant-apps-interactive-legend__non-interactive .esri-legend__layer-body {
+    display: block;
+    margin: var(--instant-apps-interactive-legend-ui-margin);
+  }
+
+  .instant-apps-interactive-legend__non-interactive .esri-legend__layer-row {
+    display: table-row;
+  }
+
+  .instant-apps-interactive-legend__non-interactive .esri-legend__layer-cell {
+    display: table-cell;
+  }
+
   .esri-legend__layer-cell--symbols {
     justify-content: center;
     width: 20%;
@@ -78,7 +93,6 @@
     color: var(--instant-apps-interactive-legend-secondary-color);
   }
 
-  // .esri-widget__heading header,
   .esri-legend__layer-row,
   .esri-legend__layer-caption {
     padding: var(--instant-apps-interactive-legend-ui-padding);

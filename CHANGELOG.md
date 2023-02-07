@@ -5,11 +5,17 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## v1.0.0-beta.35
+
+### instant-apps-interactive-legend(beta)
+
+- Add support for sub layers, unsupported drawing style bug fixes, layer redraw bug fix.
+
 ## v1.0.0-beta.34
 
 ### a11y
 
-- Converted use of `px` to `rem` for font-size CSS values to honor font size browser settings. 
+- Converted use of `px` to `rem` for font-size CSS values to honor font size browser settings.
 
 ## v1.0.0-beta.33
 
