@@ -180,7 +180,7 @@ export class InstantAppsInteractiveLegendClassic {
     return this.isLoading ? (
       <calcite-loader scale="m" label={this.messages?.loading} text={this.messages?.loading}></calcite-loader>
     ) : (
-      <div class={this.el.classList.contains('calcite-theme-dark') ? 'calcite-theme-dark' : 'calcite-theme-light'}>
+      <div class={this.el.classList.contains('calcite-mode-dark') ? 'calcite-mode-dark' : 'calcite-mode-light'}>
         {filteredLayers && filteredLayers.length ? filteredLayers : <div class={CSS.message}>{this.messages?.noLegend}</div>}
       </div>
     );
