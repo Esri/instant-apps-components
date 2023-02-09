@@ -5,6 +5,17 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## v1.0.0-beta.37
+
+### instant-apps-interactive-legend(beta)
+
+- Selection/hover state color tweaks
+
+### Other:
+
+- Update usage of `calcite-theme-x` to `calcite-mode-x`.
+- Updated @esri/calcite-components to 1.0.4.
+
 ## v1.0.0-beta.36
 
 ### instant-apps-interactive-legend(beta)

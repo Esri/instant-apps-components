@@ -1,7 +1,7 @@
 {
   "homepage": "https://esri.github.io/instant-apps-components",
   "name": "@esri/instant-apps-components",
-  "version": "1.0.0-beta.36",
+  "version": "1.0.0-beta.37",
   "description": "Reusable ArcGIS Instant Apps web components.",
   "main": "dist/index.cjs.js",
   "module": "dist/index.js",
@@ -40,7 +40,7 @@
   },
   "devDependencies": {
     "@babel/core": "7.16.5",
-    "@esri/calcite-components": "^1.0.3",
+    "@esri/calcite-components": "^1.0.4",
     "@stencil/sass": "^2.0.1",
     "@storybook/addon-a11y": "^6.4.9",
     "@storybook/addon-actions": "^6.4.9",

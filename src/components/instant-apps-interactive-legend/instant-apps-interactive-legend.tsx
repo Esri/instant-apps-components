@@ -16,8 +16,8 @@ const CSS = {
   },
   calcite: {
     theme: {
-      light: 'calcite-theme-light',
-      dark: 'calcite-theme-dark',
+      light: 'calcite-mode-light',
+      dark: 'calcite-mode-dark',
     },
   },
 };
