@@ -13,10 +13,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=5.0" />
     <title>ArcGIS Instant Apps Components</title>
 
-    <link rel="stylesheet" href="https://js.arcgis.com/4.24/esri/themes/light/main.css" />
-    <script src="https://js.arcgis.com/4.25/"></script>
-    <script type="module" src="https://js.arcgis.com/calcite-components/1.0.0-beta.99/calcite.esm.js"></script>
-    <link rel="stylesheet" type="text/css" href="https://js.arcgis.com/calcite-components/1.0.0-beta.99/calcite.css" />
+    <link rel="stylesheet" href="https://js.arcgis.com/4.24/esri/themes/dark/main.css" />
+    <script src="https://js.arcgis.com/4.26/"></script>
+    <script type="module" src="https://js.arcgis.com/calcite-components/1.0.5/calcite.esm.js"></script>
+    <link rel="stylesheet" type="text/css" href="https://js.arcgis.com/calcite-components/1.0.5/calcite.css" />
     <script type="module" src="/build/instant-apps-components.esm.js"></script>
     <script nomodule src="/build/instant-apps-components.js"></script>
 
@@ -48,7 +48,7 @@
   </head>
 
   <body>
-    <calcite-shell class="calcite-theme-dark">
+    <calcite-shell class="calcite-mode-dark">
       <instant-apps-header
         id="instant-apps-header"
         slot="header"
@@ -82,7 +82,7 @@
       <div id="viewDiv"></div>
     </calcite-shell>
     <instant-apps-popovers id="popovers">
-      <div slot="popovers" class="calcite-theme-dark">
+      <div slot="popovers" class="calcite-mode-dark">
         <instant-apps-popover
           id="onePopover"
           reference-element="one"
