@@ -63,6 +63,10 @@ export namespace Components {
           * Main text to display in header.
          */
         "titleText": string;
+        /**
+          * Url to link out to from title text
+         */
+        "titleTextLink": string;
     }
     interface InstantAppsInteractiveLegend {
         /**
@@ -131,7 +135,7 @@ export namespace Components {
     }
     interface InstantAppsKeyboardShortcuts {
         /**
-          * MapView or SceneView to reference when URL parameter values are generated, i.e. center, level, viewpoint, etc.
+          * MapView or SceneView to determine shortcuts to display.
          */
         "view": __esri.MapView | __esri.SceneView;
     }
@@ -371,6 +375,10 @@ declare namespace LocalJSX {
           * Main text to display in header.
          */
         "titleText"?: string;
+        /**
+          * Url to link out to from title text
+         */
+        "titleTextLink"?: string;
     }
     interface InstantAppsInteractiveLegend {
         /**
@@ -441,7 +449,7 @@ declare namespace LocalJSX {
     }
     interface InstantAppsKeyboardShortcuts {
         /**
-          * MapView or SceneView to reference when URL parameter values are generated, i.e. center, level, viewpoint, etc.
+          * MapView or SceneView to determine shortcuts to display.
          */
         "view"?: __esri.MapView | __esri.SceneView;
     }
