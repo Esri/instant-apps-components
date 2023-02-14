@@ -211,7 +211,7 @@ export class InstantAppsHeader {
   }
   renderTitle() {
     return this.titleText && this.titleTextLink ? (
-      <a href={`${this.titleTextLink}`} target="_blank">
+      <a href={`${this.titleTextLink}`} rel="noopener noreferrer" target="_blank">
         <h1 style={{ color: this.textColor }}>{this.titleText}</h1>
       </a>
     ) : (
