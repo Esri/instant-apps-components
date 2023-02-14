@@ -20,6 +20,7 @@
 | `mobileWidthBreakpoint` | `mobile-width-breakpoint` | Mobile breakpoint value in pixels(px).                                              | `number`            | `widthBreakpoints.medium[1]`    |
 | `textColor`             | `text-color`              | Text color to display in header - accepts a hexidecimal value i.e. `#FFFFFF`.       | `string`            | `undefined`                     |
 | `titleText`             | `title-text`              | Main text to display in header.                                                     | `string`            | `undefined`                     |
+| `titleTextLink`         | `title-text-link`         | Url to link out to from title text                                                  | `string`            | `undefined`                     |
 
 
 ## Events

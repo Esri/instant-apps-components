@@ -12,6 +12,7 @@ export default {
   title: 'Header',
   argTypes: {
     titleText: { control: 'text' },
+    titleTextLink: { control: 'text' },
     backgroundColor: { control: 'color' },
     textColor: { control: 'color' },
     logoImage: { control: 'text' },
@@ -20,10 +21,11 @@ export default {
   },
 };
 
-const Template = ({ titleText, backgroundColor, textColor, logoImage, logoImageAltText, logoLink }) =>
+const Template = ({ titleText, titleTextLink, backgroundColor, textColor, logoImage, logoImageAltText, logoLink }) =>
   html`<div style="height: 70px;">
     <instant-apps-header
       title-text="${titleText}"
+      title-text-link="${titleTextLink}"
       background-color="${backgroundColor}"
       text-color="${textColor}"
       logo-image="${logoImage}"

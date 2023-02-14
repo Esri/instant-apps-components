@@ -64,6 +64,10 @@ export class InstantAppsHeader {
   @Prop() titleText: string;
 
   /**
+   * Url to link out to from title text
+   */
+  @Prop() titleTextLink: string;
+  /**
    * Background color to display in header - accepts a hexidecimal value i.e. `#000000`.
    */
   @Prop() backgroundColor: string;
@@ -166,6 +170,7 @@ export class InstantAppsHeader {
   render() {
     const hasEmptyLogo = this.logoImage === 'undefined' || this.logoImage?.split('?')?.[0] === 'undefined' || this.logoImage?.split('?')?.[0] === '' || !this.logoImage;
     const logo = this.renderLogo(hasEmptyLogo);
+    const title = this.renderTitle();
     return (
       <Host>
         {this.customHeaderHtml ? (
@@ -177,7 +182,7 @@ export class InstantAppsHeader {
           >
             <span class={CSS.headerContent}>
               {logo}
-              <h1 style={{ color: this.textColor }}>{this.titleText}</h1>
+              {title}
               {this.infoButton ? (
                 <button id="infoButton" onClick={this.toggleInfo.bind(this)}>
                   <calcite-icon icon="information-f" scale="s" />
@@ -202,6 +207,15 @@ export class InstantAppsHeader {
       <img class={`${CSS.logoScale}${this.logoScale}`} src={`${this.logoImage}`} alt={this.logoImageAltText} />
     ) : (
       ''
+    );
+  }
+  renderTitle() {
+    return this.titleText && this.titleTextLink ? (
+      <a href={`${this.titleTextLink}`} rel="noopener noreferrer" target="_blank">
+        <h1 style={{ color: this.textColor }}>{this.titleText}</h1>
+      </a>
+    ) : (
+      <h1 style={{ color: this.textColor }}>{this.titleText}</h1>
     );
   }
 
