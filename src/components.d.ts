@@ -135,7 +135,7 @@ export namespace Components {
     }
     interface InstantAppsKeyboardShortcuts {
         /**
-          * MapView or SceneView to determine shortcuts to display.
+          * MapView or SceneView to reference when URL parameter values are generated, i.e. center, level, viewpoint, etc.
          */
         "view": __esri.MapView | __esri.SceneView;
     }
@@ -449,7 +449,7 @@ declare namespace LocalJSX {
     }
     interface InstantAppsKeyboardShortcuts {
         /**
-          * MapView or SceneView to determine shortcuts to display.
+          * MapView or SceneView to reference when URL parameter values are generated, i.e. center, level, viewpoint, etc.
          */
         "view"?: __esri.MapView | __esri.SceneView;
     }
