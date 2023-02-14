@@ -11,6 +11,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Added string translations
 
+### instant-apps-header
+
+- Added `titleTextLink` property to link out from title text. 
+
 ## v1.0.0-beta.38
 
 ### @esri/calcite-components
