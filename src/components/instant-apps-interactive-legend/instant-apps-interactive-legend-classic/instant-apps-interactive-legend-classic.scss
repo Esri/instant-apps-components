@@ -68,6 +68,10 @@
     margin: var(--instant-apps-interactive-legend-ui-margin);
   }
 
+  .instant-apps-interactive-legend__non-interactive.instant-apps-interactive-legend__nested-unique-symbol > .esri-legend__layer-body {
+    margin: 0;
+  }
+
   .instant-apps-interactive-legend__non-interactive .esri-legend__layer-row {
     display: table-row;
   }

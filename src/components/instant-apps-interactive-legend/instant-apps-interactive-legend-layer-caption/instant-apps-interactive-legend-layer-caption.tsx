@@ -87,7 +87,9 @@ export class InstantAppsInteractiveLegendLayerCaption {
       ></calcite-button>
     );
 
-    return (
+    const isNestedUniqueSymbols = this.activeLayerInfo?.legendElements?.[0]?.infos?.every?.(info => info?.type === 'symbol-table');
+
+    return !isNestedUniqueSymbols ? (
       <div class={CSS.layerCaption}>
         <calcite-action
           onClick={this.toggleExpanded(this.activeLayerInfo, this.legendElementIndex)}
@@ -114,7 +116,9 @@ export class InstantAppsInteractiveLegendLayerCaption {
           </div>
         ) : null}
       </div>
-    );
+    ) : this.titleText ? (
+      <div class={CSS.layerCaption}>{this.titleText}</div>
+    ) : null;
   }
 
   toggleExpanded(activeLayerInfo: __esri.ActiveLayerInfo, legendElementIndex: number): () => void {
