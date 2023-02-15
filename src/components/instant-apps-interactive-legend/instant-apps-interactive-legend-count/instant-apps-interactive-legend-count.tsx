@@ -3,7 +3,14 @@ import { ICategory, IInteractiveLegendData } from '../instant-apps-interactive-l
 import { loadModules } from 'esri-loader';
 
 const CSS = {
-  countText: 'instant-apps-interactive-legend__info-count-text',
+  countText: ' instant-apps-interactive-legend__info-count-text',
+  countTextSelected: ' instant-apps-interactive-legend__info-count-text--selected',
+  calcite: {
+    theme: {
+      light: 'calcite-mode-light',
+      dark: 'calcite-mode-dark',
+    },
+  },
 };
 
 @Component({
@@ -37,6 +44,9 @@ export class InstantAppsInteractiveLegendCount {
   @State()
   reRender: boolean = false;
 
+  @Prop()
+  selected: boolean;
+
   @Watch('data')
   updateUI() {
     this.reRender = !this.reRender;
@@ -55,7 +65,7 @@ export class InstantAppsInteractiveLegendCount {
         {this.showTotal ? (
           `${this.messages?.totalFeatureCount}: ${this.getTotalFeatureCount()}`
         ) : (
-          <span key="element-info-count" class={CSS.countText}>
+          <span key="element-info-count" class={`${CSS.countText} ${this._getTheme()}${this.selected ? CSS.countTextSelected : ''}`}>
             {this.getCount()}
           </span>
         )}
@@ -65,8 +75,8 @@ export class InstantAppsInteractiveLegendCount {
 
   getCount(): string | undefined {
     const { data, layerId, categoryId } = this;
-
-    if (!data || !layerId || !categoryId) return '';
+    const isSingleElement = data[layerId]?.categories?.size;
+    if ((!data || !layerId || !categoryId) && !isSingleElement) return '';
 
     const dataFromActiveLayerInfo = data[layerId];
     if (!dataFromActiveLayerInfo) return;
@@ -87,5 +97,11 @@ export class InstantAppsInteractiveLegendCount {
       .map((entry: any) => entry?.[1]?.count)
       .reduce((acc: number, curr: number) => acc + curr);
     return this.intl.formatNumber(total as number);
+  }
+
+  private _getTheme(): string {
+    const { light, dark } = CSS.calcite.theme;
+    const isDarkTheme = document.body.classList.contains(dark);
+    return isDarkTheme ? dark : light;
   }
 }

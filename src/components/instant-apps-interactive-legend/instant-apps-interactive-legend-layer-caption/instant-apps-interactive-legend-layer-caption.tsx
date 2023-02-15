@@ -58,19 +58,20 @@ export class InstantAppsInteractiveLegendLayerCaption {
   }
 
   render() {
-    const showAllButton = (
-      <calcite-button
-        key="show-all-button"
-        id="showAll"
-        onClick={() => {
-          showAll(this.data?.[this.layer?.id]);
-          this.emitLegendLayerCaption();
-        }}
-        icon-start="list-check-all"
-        appearance="outline"
-        round={true}
-      ></calcite-button>
-    );
+    const showAllButton =
+      this.data?.[this.layer?.id]?.categories?.size > 1 ? (
+        <calcite-button
+          key="show-all-button"
+          id="showAll"
+          onClick={() => {
+            showAll(this.data?.[this.layer?.id]);
+            this.emitLegendLayerCaption();
+          }}
+          icon-start="list-check-all"
+          appearance="outline"
+          round={true}
+        ></calcite-button>
+      ) : null;
 
     const zoomToButton = (
       <calcite-button
@@ -86,7 +87,7 @@ export class InstantAppsInteractiveLegendLayerCaption {
       ></calcite-button>
     );
 
-    return this.titleText ? (
+    return (
       <div class={CSS.layerCaption}>
         <calcite-action
           onClick={this.toggleExpanded(this.activeLayerInfo, this.legendElementIndex)}
@@ -113,7 +114,7 @@ export class InstantAppsInteractiveLegendLayerCaption {
           </div>
         ) : null}
       </div>
-    ) : null;
+    );
   }
 
   toggleExpanded(activeLayerInfo: __esri.ActiveLayerInfo, legendElementIndex: number): () => void {
