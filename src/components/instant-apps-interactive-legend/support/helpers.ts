@@ -59,8 +59,19 @@ export function validateInteractivity(activeLayerInfo: __esri.ActiveLayerInfo, l
 
   const isDotDensity = authoringInfoType === 'dot-density';
 
+  const isNestedUniqueSymbols = activeLayerInfo?.legendElements?.[0]?.infos?.every?.(info => info?.type === 'symbol-table');
+
   const isValidated =
-    isFeatureLayer && !hasClustering && !opacityRamp && !heatmapRamp && !singleSymbolColor && !singleSymbolSize && !isUnclassifiedSizeRamp && !isBinning && !isDotDensity
+    isFeatureLayer &&
+    !hasClustering &&
+    !opacityRamp &&
+    !heatmapRamp &&
+    !singleSymbolColor &&
+    !singleSymbolSize &&
+    !isUnclassifiedSizeRamp &&
+    !isBinning &&
+    !isDotDensity &&
+    !isNestedUniqueSymbols
       ? classBreakInfos
         ? moreThanOneClassBreak || validate
         : oneClassBreak || validate

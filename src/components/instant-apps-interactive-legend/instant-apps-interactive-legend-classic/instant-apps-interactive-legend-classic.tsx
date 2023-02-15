@@ -334,8 +334,11 @@ export class InstantAppsInteractiveLegendClassic {
 
     const tableClasses = (isSizeRamp || !isChild) && !isColorRamp ? ` ${CSS.layerTableSizeRamp}` : '';
     const nonInteractiveClass = !isInteractive ? ' instant-apps-interactive-legend__non-interactive' : '';
+    const nestedUniqueSymbolClass = activeLayerInfo?.legendElements?.[0]?.infos?.every?.(info => info?.type === 'symbol-table')
+      ? ' instant-apps-interactive-legend__nested-unique-symbol'
+      : '';
     return (
-      <div class={`${tableClass}${tableClasses}${nonInteractiveClass}`}>
+      <div class={`${tableClass}${tableClasses}${nonInteractiveClass}${nestedUniqueSymbolClass}`}>
         {caption}
         {expanded === false ? null : content}
       </div>
@@ -751,6 +754,13 @@ export class InstantAppsInteractiveLegendClassic {
       'change',
       async () => {
         this.data = await generateData(this.legendvm, this.reactiveUtils);
+      },
+    );
+
+    this.reactiveUtils.watch(
+      () => this.legendvm?.view?.updating,
+      () => {
+        this.updateFeatureCount();
       },
     );
 
