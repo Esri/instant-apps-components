@@ -14,6 +14,7 @@
 | `layerId`    | `layer-id`    |             | `string`                 | `undefined` |
 | `legendvm`   | --            |             | `LegendViewModel`        | `undefined` |
 | `messages`   | `messages`    |             | `any`                    | `undefined` |
+| `selected`   | `selected`    |             | `boolean`                | `undefined` |
 | `showTotal`  | `show-total`  |             | `boolean`                | `false`     |
 
 
