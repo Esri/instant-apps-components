@@ -10,3 +10,7 @@
   font-size: var(--instant-apps-interactive-legend-info-font-size);
   color: var(--instant-apps-interactive-legend-secondary-color);
 }
+
+.calcite-mode-dark.instant-apps-interactive-legend__info-count-text.instant-apps-interactive-legend__info-count-text--selected {
+  color: var(--calcite-ui-text-inverse);
+}

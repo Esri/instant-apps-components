@@ -83,7 +83,6 @@ export async function generateData(legendViewModel: __esri.LegendViewModel, reac
   // Store resolved data
   const intLegendLayerDataObjs = await Promise.all(intLegendDataPromises);
   intLegendLayerDataObjs.forEach(intLegendLayerDataObj => (data[intLegendLayerDataObj.fLayerView.layer.id] = intLegendLayerDataObj));
-  data['selectedLayerId'] = Object.keys(data)[0];
 
   return data;
 }
@@ -132,7 +131,7 @@ async function createInteractiveLegendDataForLayer(
       selected: false,
       legendElementInfo,
     };
-    categories.set(legendElementInfo.label, category);
+    categories.set(legendElementInfo.label ?? fLayerView?.layer?.id, category);
   });
 
   // Generated expression to apply to layer filters
@@ -140,6 +139,7 @@ async function createInteractiveLegendDataForLayer(
 
   // Total feature count
   return Promise.resolve({
+    title: fLayerView?.layer?.title,
     categories,
     field,
     queryExpressions,
@@ -160,7 +160,7 @@ function generateQueryExpressions(data: IIntLegendLayerData, info: any, infoInde
   const isPredominance = checkPredominance(fLayerView);
 
   const queryExpression = isPredominance ? handlePredominanceExpression(info, fLayerView) : generateQueryExpression(info, field, infoIndex, legendElement, legendElementInfos, '');
-  const category = categories.get(info.label) as ICategory;
+  const category = categories.get(info.label ?? fLayerView?.layer?.id) as ICategory;
   category.selected = !category?.selected;
   const hasOneValue = legendElementInfos && legendElementInfos.length === 1;
   const queryExpressions = data?.queryExpressions;
@@ -324,6 +324,15 @@ export async function handleFeatureCount(legendViewModel: __esri.LegendViewModel
     const field = fLayer.renderer?.get('field') as string;
 
     legendElement?.infos?.forEach((info, infoIndex) => countPromises.push(getInfoCount(legendViewModel.view.extent, fLayerView, field, info, infoIndex, legendElement)));
+
+    activeLayerInfo.children.forEach(async aclChild => {
+      const legendElement = aclChild.legendElements[0] as __esri.LegendElement;
+      const fLayer = aclChild.layer as __esri.FeatureLayer;
+      const fLayerView = data[aclChild?.layer?.id]?.fLayerView;
+      const field = fLayer.renderer?.get('field') as string;
+
+      legendElement?.infos?.forEach((info, infoIndex) => countPromises.push(getInfoCount(legendViewModel.view.extent, fLayerView, field, info, infoIndex, legendElement)));
+    });
   });
 
   const countResponses = await Promise.all(countPromises);
@@ -347,6 +356,16 @@ export async function handleFeatureCount(legendViewModel: __esri.LegendViewModel
       const count = dataCount[layerId][key];
       category.count = count;
     });
+
+    activeLayerInfo.children.forEach(aclChild => {
+      const dataFromActiveLayerInfo = data[aclChild.layer.id];
+      const layerId = activeLayerInfo.layer.id;
+
+      dataFromActiveLayerInfo?.categories?.forEach((category, key) => {
+        const count = dataCount?.[layerId]?.[key];
+        category.count = count;
+      });
+    });
   });
 
   return Promise.resolve(updatedData);
@@ -366,12 +385,12 @@ export async function getInfoCount(
     ? handlePredominanceExpression(info, fLayerView)
     : generateQueryExpression(info, field, infoIndex, legendElement, legendElement.infos as any);
 
-  query.where = where;
+  query.where = where === '1=0' ? '1=1' : where;
   query.geometry = extent;
 
   try {
     const featureCount = await fLayerView.queryFeatureCount(query);
-    return Promise.resolve({ [info.label]: featureCount });
+    return Promise.resolve({ [info.label ?? fLayerView?.layer?.id]: featureCount });
   } catch (err) {
     console.error("FAILURE AT 'getInfoCount': ", err);
   }

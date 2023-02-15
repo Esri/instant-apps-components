@@ -119,6 +119,7 @@ export namespace Components {
         "layerId": string;
         "legendvm": __esri.LegendViewModel;
         "messages": any;
+        "selected": boolean;
         "showTotal": boolean;
     }
     interface InstantAppsInteractiveLegendLayerCaption {
@@ -432,6 +433,7 @@ declare namespace LocalJSX {
         "layerId"?: string;
         "legendvm"?: __esri.LegendViewModel;
         "messages"?: any;
+        "selected"?: boolean;
         "showTotal"?: boolean;
     }
     interface InstantAppsInteractiveLegendLayerCaption {
