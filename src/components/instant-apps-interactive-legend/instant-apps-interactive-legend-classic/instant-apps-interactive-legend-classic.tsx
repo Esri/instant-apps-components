@@ -11,6 +11,7 @@ import {
 import { isImageryStretchedLegend } from '../support/styleUtils';
 
 import { validateInteractivity, generateData, handleFeatureCount, handleFilter, getIntLegendLayerData, checkNoneSelected } from '../support/helpers';
+import { setupRelationshipDrawingStyle } from '../support/relationshipRampUtils';
 
 import { loadModules } from 'esri-loader';
 
@@ -86,6 +87,7 @@ export class InstantAppsInteractiveLegendClassic {
   reactiveUtils: __esri.reactiveUtils;
   handles: __esri.Handles;
   intl: __esri.intl;
+  symbolUtils;
 
   @State()
   isLoading = true;
@@ -136,11 +138,21 @@ export class InstantAppsInteractiveLegendClassic {
     this.updateFeatureCountData();
   }
 
+  // @Prop()
+  // relationshipRef;
+
+  // @Watch('relationshipRef')
+  // async updateRelationshipRef() {
+  //   console.log('test');
+  // }
+
   async componentWillLoad() {
-    const [intl, reactiveUtils, Handles] = await loadModules(['esri/intl', 'esri/core/reactiveUtils', 'esri/core/Handles']);
+    const [intl, reactiveUtils, Handles, symbolUtils] = await loadModules(['esri/intl', 'esri/core/reactiveUtils', 'esri/core/Handles', 'esri/symbols/support/symbolUtils']);
+
     this.reactiveUtils = reactiveUtils;
     this.handles = new Handles();
     this.intl = intl;
+    this.symbolUtils = symbolUtils;
 
     const observer = new MutationObserver(() => {
       this.reRender = !this.reRender;
@@ -269,8 +281,9 @@ export class InstantAppsInteractiveLegendClassic {
     const isInteractive = validateInteractivity(activeLayerInfo, legendElement, legendElementIndex);
 
     // build symbol table or size ramp
-    const isNotRelationship = (activeLayerInfo?.layer as __esri.FeatureLayer)?.renderer?.authoringInfo?.type !== 'relationship'; // TEMP
-    if ((legendElement.type === 'symbol-table' || isSizeRamp) && isNotRelationship) {
+    const isRelationshipRamp = legendElement?.type === 'relationship-ramp'; // TEMP
+    // if ((legendElement.type === 'symbol-table' || isSizeRamp) && isNotRelationship) {
+    if (legendElement.type === 'symbol-table' || isSizeRamp) {
       const rows = (legendElement.infos as any)
         .map((info: any, infoIndex: number) =>
           this.renderLegendForElementInfo(info, layer, effectList, isSizeRamp, legendElement, activeLayerInfo, legendElementIndex, infoIndex, isInteractive),
@@ -283,11 +296,7 @@ export class InstantAppsInteractiveLegendClassic {
     } else if (legendElement.type === 'color-ramp' || legendElement.type === 'opacity-ramp' || legendElement.type === 'heatmap-ramp' || legendElement.type === 'stretch-ramp') {
       content = this.renderLegendForRamp(legendElement, layer.opacity);
     } else if (legendElement.type === 'relationship-ramp') {
-      content = (
-        <span class={CSS.layerRow}>
-          <b>{this.messages?.relationship?.notSupported}</b>
-        </span>
-      );
+      content = this.renderRelationshipRamp(activeLayerInfo, legendElement);
     } else if (legendElement.type === 'pie-chart-ramp') {
       content = this.renderPieChartRamp(legendElement);
     } else if (legendElement.type === 'univariate-above-and-below-ramp') {
@@ -337,9 +346,10 @@ export class InstantAppsInteractiveLegendClassic {
     const nestedUniqueSymbolClass = activeLayerInfo?.legendElements?.[0]?.infos?.every?.(info => info?.type === 'symbol-table')
       ? ' instant-apps-interactive-legend__nested-unique-symbol'
       : '';
+
     return (
       <div class={`${tableClass}${tableClasses}${nonInteractiveClass}${nestedUniqueSymbolClass}`}>
-        {caption}
+        {!isRelationshipRamp ? caption : null}
         {expanded === false ? null : content}
       </div>
     );
@@ -347,6 +357,20 @@ export class InstantAppsInteractiveLegendClassic {
 
   renderPieChartRamp(legendElement: PieChartRampElement) {
     return <div innerHTML={`${legendElement.preview?.outerHTML}`}></div>;
+  }
+
+  renderRelationshipRamp(activeLayerInfo: __esri.ActiveLayerInfo, legendElement) {
+    const relationshipRamp = this.symbolUtils.renderRelationshipRampPreviewHTML((activeLayerInfo.layer as __esri.FeatureLayer).renderer);
+    this.applyRelationshipRampInteractivity(relationshipRamp, activeLayerInfo, legendElement);
+
+    const outerHTML = relationshipRamp?.outerHTML;
+    return <div key="relationship-ramp" innerHTML={`${outerHTML}`} />;
+  }
+
+  applyRelationshipRampInteractivity(relationshipRamp: HTMLElement, activeLayerInfo: __esri.ActiveLayerInfo, legendElement) {
+    const gNode = relationshipRamp.querySelector('.esri-relationship-ramp--diamond__middle-column--ramp svg g') as HTMLElement;
+    const rampSVG = gNode.children;
+    setupRelationshipDrawingStyle(rampSVG, activeLayerInfo, legendElement, this.data, this.filterMode);
   }
 
   async renderUnivariateAboveAndBelowRamp(legendElement: UnivariateColorSizeRampElement, opacity: number, effectList: any) {
@@ -697,7 +721,7 @@ export class InstantAppsInteractiveLegendClassic {
     }
 
     return bundleKey
-      ? this.intl.substitute(bundleKey === 'showField' ? '{field}' : messages[bundleKey], {
+      ? this.intl?.substitute(bundleKey === 'showField' ? '{field}' : messages[bundleKey], {
           field: titleInfo.field,
           normField: titleInfo.normField,
         })
