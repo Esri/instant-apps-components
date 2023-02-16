@@ -144,8 +144,9 @@ export class InstantAppsInteractiveLegend {
     const theme = this._getTheme();
     const { base, component, widget, widgetPanel } = CSS.esri;
     return (
-      <div class={this.widget?.classes(base, component, widget, widgetPanel)}>
+      <div key="interactive-legend" class={this.widget?.classes(base, component, widget, widgetPanel)}>
         <instant-apps-interactive-legend-classic
+          key="interactive-legend-classic"
           ref={(el: HTMLInstantAppsInteractiveLegendClassicElement) => (this.ref = el)}
           class={theme}
           legendvm={this.legendvm}

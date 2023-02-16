@@ -1,4 +1,4 @@
-import { Component, h, Prop, Element, State, forceUpdate, Watch } from '@stencil/core';
+import { Component, h, Prop, Element, State, Watch } from '@stencil/core';
 
 import {
   getUnivariateColorRampPreview,
@@ -11,7 +11,6 @@ import {
 import { isImageryStretchedLegend } from '../support/styleUtils';
 
 import { validateInteractivity, generateData, handleFeatureCount, handleFilter, getIntLegendLayerData, checkNoneSelected } from '../support/helpers';
-import { setupRelationshipDrawingStyle } from '../support/relationshipRampUtils';
 
 import { loadModules } from 'esri-loader';
 
@@ -87,7 +86,6 @@ export class InstantAppsInteractiveLegendClassic {
   reactiveUtils: __esri.reactiveUtils;
   handles: __esri.Handles;
   intl: __esri.intl;
-  symbolUtils;
 
   @State()
   isLoading = true;
@@ -138,21 +136,12 @@ export class InstantAppsInteractiveLegendClassic {
     this.updateFeatureCountData();
   }
 
-  // @Prop()
-  // relationshipRef;
-
-  // @Watch('relationshipRef')
-  // async updateRelationshipRef() {
-  //   console.log('test');
-  // }
-
   async componentWillLoad() {
-    const [intl, reactiveUtils, Handles, symbolUtils] = await loadModules(['esri/intl', 'esri/core/reactiveUtils', 'esri/core/Handles', 'esri/symbols/support/symbolUtils']);
+    const [intl, reactiveUtils, Handles] = await loadModules(['esri/intl', 'esri/core/reactiveUtils', 'esri/core/Handles']);
 
     this.reactiveUtils = reactiveUtils;
     this.handles = new Handles();
     this.intl = intl;
-    this.symbolUtils = symbolUtils;
 
     const observer = new MutationObserver(() => {
       this.reRender = !this.reRender;
@@ -192,7 +181,7 @@ export class InstantAppsInteractiveLegendClassic {
     return this.isLoading ? (
       <calcite-loader scale="m" label={this.messages?.loading} text={this.messages?.loading}></calcite-loader>
     ) : (
-      <div class={this.el.classList.contains('calcite-mode-dark') ? 'calcite-mode-dark' : 'calcite-mode-light'}>
+      <div key="interactive-legend-classic-container" class={this.el.classList.contains('calcite-mode-dark') ? 'calcite-mode-dark' : 'calcite-mode-light'}>
         {filteredLayers && filteredLayers.length ? filteredLayers : <div class={CSS.message}>{this.messages?.noLegend}</div>}
       </div>
     );
@@ -296,7 +285,15 @@ export class InstantAppsInteractiveLegendClassic {
     } else if (legendElement.type === 'color-ramp' || legendElement.type === 'opacity-ramp' || legendElement.type === 'heatmap-ramp' || legendElement.type === 'stretch-ramp') {
       content = this.renderLegendForRamp(legendElement, layer.opacity);
     } else if (legendElement.type === 'relationship-ramp') {
-      content = this.renderRelationshipRamp(activeLayerInfo, legendElement);
+      content = (
+        <instant-apps-interactive-legend-relationship
+          key="relationship-ramp"
+          data={this.data}
+          filterMode={this.filterMode}
+          activeLayerInfo={activeLayerInfo}
+          legendElement={legendElement}
+        />
+      );
     } else if (legendElement.type === 'pie-chart-ramp') {
       content = this.renderPieChartRamp(legendElement);
     } else if (legendElement.type === 'univariate-above-and-below-ramp') {
@@ -357,20 +354,6 @@ export class InstantAppsInteractiveLegendClassic {
 
   renderPieChartRamp(legendElement: PieChartRampElement) {
     return <div innerHTML={`${legendElement.preview?.outerHTML}`}></div>;
-  }
-
-  renderRelationshipRamp(activeLayerInfo: __esri.ActiveLayerInfo, legendElement) {
-    const relationshipRamp = this.symbolUtils.renderRelationshipRampPreviewHTML((activeLayerInfo.layer as __esri.FeatureLayer).renderer);
-    this.applyRelationshipRampInteractivity(relationshipRamp, activeLayerInfo, legendElement);
-
-    const outerHTML = relationshipRamp?.outerHTML;
-    return <div key="relationship-ramp" innerHTML={`${outerHTML}`} />;
-  }
-
-  applyRelationshipRampInteractivity(relationshipRamp: HTMLElement, activeLayerInfo: __esri.ActiveLayerInfo, legendElement) {
-    const gNode = relationshipRamp.querySelector('.esri-relationship-ramp--diamond__middle-column--ramp svg g') as HTMLElement;
-    const rampSVG = gNode.children;
-    setupRelationshipDrawingStyle(rampSVG, activeLayerInfo, legendElement, this.data, this.filterMode);
   }
 
   async renderUnivariateAboveAndBelowRamp(legendElement: UnivariateColorSizeRampElement, opacity: number, effectList: any) {
@@ -736,19 +719,19 @@ export class InstantAppsInteractiveLegendClassic {
     return !isRamp;
   }
 
-  handleFeatureCount() {
-    this.handles.add(
-      this.reactiveUtils.when(
-        () => !this.legendvm.view?.updating,
-        async () => {
-          const selector = 'instant-apps-interactive-legend-count';
-          const countNodes = document.querySelectorAll(selector);
-          await handleFeatureCount(this.legendvm, this.data);
-          countNodes.forEach(countNode => forceUpdate(countNode));
-        },
-      ),
-    );
-  }
+  // handleFeatureCount() {
+  //   this.handles.add(
+  //     this.reactiveUtils.when(
+  //       () => !this.legendvm.view?.updating,
+  //       async () => {
+  //         const selector = 'instant-apps-interactive-legend-count';
+  //         const countNodes = document.querySelectorAll(selector);
+  //         await handleFeatureCount(this.legendvm, this.data);
+  //         countNodes.forEach(countNode => forceUpdate(countNode));
+  //       },
+  //     ),
+  //   );
+  // }
 
   getLayerExpanded(activeLayerInfo: __esri.ActiveLayerInfo): boolean {
     return this.data?.[activeLayerInfo?.layer?.id]?.expanded?.layer;
@@ -763,7 +746,7 @@ export class InstantAppsInteractiveLegendClassic {
       const data = await handleFeatureCount(this.legendvm, this.data);
       this.data = data;
 
-      this.handleFeatureCount();
+      // this.handleFeatureCount();
     }
   }
 
@@ -781,12 +764,12 @@ export class InstantAppsInteractiveLegendClassic {
       },
     );
 
-    this.reactiveUtils.watch(
-      () => this.legendvm?.view?.updating,
-      () => {
-        this.updateFeatureCount();
-      },
-    );
+    // this.reactiveUtils.watch(
+    //   () => this.legendvm?.view?.updating,
+    //   () => {
+    //     this.updateFeatureCount();
+    //   },
+    // );
 
     // Re-renders layers on layer visibility toggle
     this.legendvm?.view?.map?.allLayers?.forEach(layer => {

@@ -365,7 +365,6 @@ function applyEventHandlers(activeLayerInfo, legendElement, data, filterMode) {
     const j = cell.getAttribute('data-feature-j') as string;
     const focus = cell.getAttribute('data-cell-focus') as string;
     cell.onclick = () => {
-      console.log(i, j, focus, cell);
       handleFilter(i, j, focus, activeLayerInfo, legendElement, data, filterMode);
       handleSelectedElement(cell);
       // if (featureCountEnabled) {
@@ -374,7 +373,6 @@ function applyEventHandlers(activeLayerInfo, legendElement, data, filterMode) {
     };
     // cell.onkeydown = event => {
     //   if (event.keyCode === 32) {
-    //     console.log(i, j, focus, cell);
     //       handleFilter(i, j, focus);
     //     //   _handleSelectedElement(cell);
     //     //   if (featureCountEnabled) {
@@ -416,7 +414,6 @@ async function handleFilter(i: string, j: string, focus: string, activeLayerInfo
   const { authoringInfo } = activeLayerInfo.layer.renderer;
   const { field1, field2 } = authoringInfo;
   const { queryExpressions, fLayerView } = data[activeLayerInfo.layer.id];
-  console.log(data);
   if (legendElement.type === 'relationship-ramp' && authoringInfo && field1 && field2) {
     const expressionParams = generateExpressionParams(field1, field2, authoringInfo, i, j, focus) as any;
 
@@ -447,7 +444,6 @@ async function handleFilter(i: string, j: string, focus: string, activeLayerInfo
     //       excludedEffect: `grayscale(${grayScale}%) opacity(${opacity}%)`
     //     });
     //   } else
-    console.log(filterMode);
     if (filterMode?.type === 'filter') {
       const [FeatureFilter] = await loadModules(['esri/layers/support/FeatureFilter']);
       fLayerView.filter = new FeatureFilter({
