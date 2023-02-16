@@ -138,7 +138,8 @@ export namespace Components {
         "activeLayerInfo": __esri.ActiveLayerInfo;
         "data": IInteractiveLegendData;
         "filterMode": FilterMode;
-        "legendElement": any;
+        "legendElement": __esri.RelationshipRampElement;
+        "relationshipRamp": HTMLDivElement;
     }
     interface InstantAppsKeyboardShortcuts {
         /**
@@ -466,7 +467,8 @@ declare namespace LocalJSX {
         "activeLayerInfo"?: __esri.ActiveLayerInfo;
         "data"?: IInteractiveLegendData;
         "filterMode"?: FilterMode;
-        "legendElement"?: any;
+        "legendElement"?: __esri.RelationshipRampElement;
+        "relationshipRamp"?: HTMLDivElement;
     }
     interface InstantAppsKeyboardShortcuts {
         /**

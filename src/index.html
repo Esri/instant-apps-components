@@ -41,8 +41,8 @@
         padding: 5%;
       }
     </style>
-    <script type="module" src="https://unpkg.com/@esri/calcite-components@1.0.6/dist/calcite/calcite.esm.js"></script>
-    <link rel="stylesheet" type="text/css" href="https://unpkg.com/@esri/calcite-components@1.0.6/dist/calcite/calcite.css" />
+    <script type="module" src="https://js.arcgis.com/calcite-components/1.0.7/calcite.esm.js"></script>
+    <link rel="stylesheet" type="text/css" href="https://js.arcgis.com/calcite-components/1.0.7/calcite.css" />
     <script type="module" src="/build/instant-apps-components.esm.js"></script>
     <script nomodule src="/build/instant-apps-components.js"></script>
     <link id="esriStylesheet" rel="stylesheet" href="https://jsdev.arcgis.com/4.26/esri/themes/light/main.css" />
@@ -201,8 +201,8 @@
             themeIcon = theme === 'light' ? 'moon' : 'brightness';
             themeText = theme === 'light' ? 'Dark mode' : 'Light mode';
             esriStylesheet.href = `https://jsdev.arcgis.com/4.26/esri/themes/${theme}/main.css`;
-            document.body.classList.remove('calcite-theme-light', 'calcite-theme-dark');
-            document.body.classList.add(`calcite-theme-${theme}`);
+            document.body.classList.remove('calcite-mode-light', 'calcite-mode-dark');
+            document.body.classList.add(`calcite-mode-${theme}`);
             themeButton.setAttribute('icon', themeIcon);
             themeButton.setAttribute('text', themeText);
           });
@@ -232,7 +232,7 @@
     </script>
   </head>
 
-  <body class="calcite-theme-light">
+  <body class="calcite-mode-light">
     <calcite-shell>
       <instant-apps-header
         slot="header"
