@@ -93,8 +93,8 @@ export class InstantAppsInteractiveLegendClassic {
   @State()
   data: IInteractiveLegendData;
 
-  @State()
-  reRender = false;
+  // @State()
+  // reRender = false;
 
   @State()
   intLegendId: string;
@@ -131,11 +131,6 @@ export class InstantAppsInteractiveLegendClassic {
   @Prop()
   messages;
 
-  @Watch('featureCount')
-  async updateFeatureCount() {
-    this.updateFeatureCountData();
-  }
-
   async componentWillLoad() {
     const [intl, reactiveUtils, Handles] = await loadModules(['esri/intl', 'esri/core/reactiveUtils', 'esri/core/Handles']);
 
@@ -143,12 +138,12 @@ export class InstantAppsInteractiveLegendClassic {
     this.handles = new Handles();
     this.intl = intl;
 
-    const observer = new MutationObserver(() => {
-      this.reRender = !this.reRender;
-    });
-    observer.observe(document.body, {
-      attributes: true,
-    });
+    // const observer = new MutationObserver(() => {
+    //   this.reRender = !this.reRender;
+    // });
+    // observer.observe(document.body, {
+    //   attributes: true,
+    // });
   }
 
   async componentDidLoad() {
@@ -192,7 +187,9 @@ export class InstantAppsInteractiveLegendClassic {
       if (this.reactiveUtils) {
         this.reactiveUtils.when(
           () => activeLayerInfo?.ready,
-          () => (this.reRender = !this.reRender),
+          () => {
+            // this.reRender = !this.reRender;
+          },
         );
       }
       return null;
@@ -216,7 +213,7 @@ export class InstantAppsInteractiveLegendClassic {
             messages={this.messages}
             expanded={expanded}
           />
-          {expanded ? layers : null}
+          <div class={expanded ? 'show' : 'hide'}>{layers}</div>
         </div>
       );
     }
@@ -250,11 +247,9 @@ export class InstantAppsInteractiveLegendClassic {
             messages={this.messages}
             expanded={expanded}
           />
-          {expanded === false ? null : (
-            <div key={`${activeLayerInfo?.layer?.id}-legend-layer`} class={CSS.layer}>
-              {filteredElements}
-            </div>
-          )}
+          <div key={`${activeLayerInfo?.layer?.id}-legend-layer`} class={`${CSS.layer}${expanded === false ? ' hide' : ' show'}`}>
+            {filteredElements}
+          </div>
         </div>
       );
     }
@@ -292,6 +287,7 @@ export class InstantAppsInteractiveLegendClassic {
           filterMode={this.filterMode}
           activeLayerInfo={activeLayerInfo}
           legendElement={legendElement}
+          messages={this.messages}
         />
       );
     } else if (legendElement.type === 'pie-chart-ramp') {
@@ -321,7 +317,7 @@ export class InstantAppsInteractiveLegendClassic {
 
     const tableClass = isChild ? CSS.layerChildTable : CSS.layerTable;
 
-    const expanded = this.getLegendElementsExpanded(activeLayerInfo, legendElementIndex);
+    const expanded = this.getLegendElementsExpanded(activeLayerInfo, isRelationshipRamp ? 0 : legendElementIndex);
 
     const caption = (
       <instant-apps-interactive-legend-layer-caption
@@ -346,8 +342,12 @@ export class InstantAppsInteractiveLegendClassic {
 
     return (
       <div class={`${tableClass}${tableClasses}${nonInteractiveClass}${nestedUniqueSymbolClass}`}>
-        {!isRelationshipRamp ? caption : null}
-        {expanded === false ? null : content}
+        <div key="caption" class={`${!isRelationshipRamp ? 'show' : 'hide'}`}>
+          {caption}
+        </div>
+        <div key="content" class={`${expanded === false ? 'hide' : 'show'}`}>
+          {content}
+        </div>
       </div>
     );
   }
@@ -611,7 +611,7 @@ export class InstantAppsInteractiveLegendClassic {
         onClick={() => {
           const dataFromActiveLayerInfo = this.data?.[layer?.id];
           handleFilter(dataFromActiveLayerInfo, elementInfo, infoIndex, this.filterMode);
-          this.reRender = !this.reRender;
+          // this.reRender = !this.reRender;
         }}
         class={`${CSS.layerRow} ${CSS.interactiveLayerRow}${selected ? ` ${CSS.infoSelected}` : ''}`}
       >
@@ -719,20 +719,6 @@ export class InstantAppsInteractiveLegendClassic {
     return !isRamp;
   }
 
-  // handleFeatureCount() {
-  //   this.handles.add(
-  //     this.reactiveUtils.when(
-  //       () => !this.legendvm.view?.updating,
-  //       async () => {
-  //         const selector = 'instant-apps-interactive-legend-count';
-  //         const countNodes = document.querySelectorAll(selector);
-  //         await handleFeatureCount(this.legendvm, this.data);
-  //         countNodes.forEach(countNode => forceUpdate(countNode));
-  //       },
-  //     ),
-  //   );
-  // }
-
   getLayerExpanded(activeLayerInfo: __esri.ActiveLayerInfo): boolean {
     return this.data?.[activeLayerInfo?.layer?.id]?.expanded?.layer;
   }
@@ -764,21 +750,13 @@ export class InstantAppsInteractiveLegendClassic {
       },
     );
 
-    // this.reactiveUtils.watch(
-    //   () => this.legendvm?.view?.updating,
-    //   () => {
-    //     this.updateFeatureCount();
-    //   },
-    // );
-
     // Re-renders layers on layer visibility toggle
     this.legendvm?.view?.map?.allLayers?.forEach(layer => {
       if (layer.type === 'feature') {
         const watcher = this.reactiveUtils.watch(
           () => layer.visible,
           async () => {
-            await this.updateFeatureCount();
-            this.reRender = !this.reRender;
+            // this.reRender = !this.reRender;
           },
         );
         this.handles.add(watcher);
@@ -786,6 +764,8 @@ export class InstantAppsInteractiveLegendClassic {
     });
 
     // Re-renders UI on legendLayerCaption event - expand/collapse of caption
-    document.addEventListener('legendLayerCaption', () => (this.reRender = !this.reRender));
+    document.addEventListener('legendLayerCaption', () => {
+      // this.reRender = !this.reRender;
+    });
   }
 }

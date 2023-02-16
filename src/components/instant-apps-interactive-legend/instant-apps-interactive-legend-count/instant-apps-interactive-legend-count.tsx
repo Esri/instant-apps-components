@@ -41,16 +41,16 @@ export class InstantAppsInteractiveLegendCount {
   @Prop()
   messages;
 
-  @State()
-  reRender: boolean = false;
+  // @State()
+  // reRender: boolean = false;
 
   @Prop()
   selected: boolean;
 
-  @Watch('data')
-  updateUI() {
-    this.reRender = !this.reRender;
-  }
+  // @Watch('data')
+  // updateUI() {
+  //   this.reRender = !this.reRender;
+  // }
 
   async componentWillLoad() {
     const [intl, reactiveUtils, Handles] = await loadModules(['esri/intl', 'esri/core/reactiveUtils', 'esri/core/Handles']);

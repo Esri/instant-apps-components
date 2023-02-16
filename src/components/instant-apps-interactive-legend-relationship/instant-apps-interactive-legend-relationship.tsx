@@ -4,6 +4,10 @@ import { FilterMode, IInteractiveLegendData } from '../instant-apps-interactive-
 
 const RELATIONSHIP_DIAMOND_SELECTOR = '.esri-relationship-ramp--diamond__middle-column--ramp svg g';
 
+const CSS = {
+  instructionalText: 'instant-apps-interactive-legend-relationship__instructional-text',
+};
+
 @Component({
   tag: 'instant-apps-interactive-legend-relationship',
   styleUrl: 'instant-apps-interactive-legend-relationship.scss',
@@ -31,6 +35,9 @@ export class InstantAppsInteractiveLegendRelationship {
   @Prop()
   relationshipRamp: HTMLDivElement;
 
+  @Prop()
+  messages;
+
   @Watch('data')
   @Watch('legendElement')
   @Watch('activeLayerInfo')
@@ -45,7 +52,29 @@ export class InstantAppsInteractiveLegendRelationship {
   }
 
   render() {
-    return <Host>{this.renderRelationshipRamp()}</Host>;
+    return (
+      <Host>
+        <div
+          ref={(node: HTMLDivElement) => {
+            const styleSheet = node?.querySelector('relationshipStyles');
+            if (!styleSheet) {
+              const css = document.createElement('style');
+              css.id = 'relationshipStyles';
+              css.innerHTML = `
+                rect:hover {
+                  cursor: pointer;
+                  opacity: 0.8;
+                }
+          `;
+              node?.appendChild(css);
+            }
+          }}
+        >
+          <span class={CSS.instructionalText}>{this.messages?.relationship?.instructionalText}</span>
+          {this.renderRelationshipRamp()}
+        </div>
+      </Host>
+    );
   }
 
   renderRelationshipRamp(): HTMLElement {

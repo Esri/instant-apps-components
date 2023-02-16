@@ -14,8 +14,8 @@ const CSS = {
   scoped: true,
 })
 export class InstantAppsInteractiveLegendCaption {
-  @State()
-  reRender = false;
+  // @State()
+  // reRender = false;
 
   @Prop()
   legendvm: __esri.LegendViewModel;
@@ -76,6 +76,6 @@ export class InstantAppsInteractiveLegendCaption {
     const expanded = !this.data[activeLayerInfo?.layer.id].expanded.layer;
     this.data[activeLayerInfo?.layer.id].expanded.layer = expanded;
     this.emitLegendLayerCaption();
-    this.reRender = !this.reRender;
+    // this.reRender = !this.reRender;
   }
 }

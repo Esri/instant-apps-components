@@ -42,8 +42,8 @@ export class InstantAppsInteractiveLegendLayerCaption {
   @Prop()
   messages;
 
-  @State()
-  reRender = false;
+  // @State()
+  // reRender = false;
 
   @Event({
     eventName: 'legendLayerCaption',
@@ -65,7 +65,7 @@ export class InstantAppsInteractiveLegendLayerCaption {
           id="showAll"
           onClick={() => {
             showAll(this.data?.[this.layer?.id]);
-            this.emitLegendLayerCaption();
+            // this.emitLegendLayerCaption();
           }}
           icon-start="list-check-all"
           appearance="outline"
@@ -79,7 +79,7 @@ export class InstantAppsInteractiveLegendLayerCaption {
         id="zoomTo"
         onClick={() => {
           zoomTo(this.data?.[this.layer?.id], this.legendvm.view as __esri.MapView);
-          this.emitLegendLayerCaption();
+          // this.emitLegendLayerCaption();
         }}
         icon-start="magnifying-glass-plus"
         appearance="outline"
@@ -88,6 +88,7 @@ export class InstantAppsInteractiveLegendLayerCaption {
     );
 
     const isNestedUniqueSymbols = this.activeLayerInfo?.legendElements?.[0]?.infos?.every?.(info => info?.type === 'symbol-table');
+    const isRelationship = this.activeLayerInfo?.legendElements[1]?.type === 'relationship-ramp';
 
     return !isNestedUniqueSymbols ? (
       <div class={CSS.layerCaption}>
@@ -99,7 +100,7 @@ export class InstantAppsInteractiveLegendLayerCaption {
           label={this.expanded === false ? this.messages?.expand : this.messages?.collapse}
         ></calcite-action>
         {this.titleText}
-        {this.isInteractive ? (
+        {this.isInteractive || isRelationship ? (
           <div key="layer-caption-btn-container" class={CSS.layerCaptionBtnContainer}>
             {showAllButton}
             <calcite-tooltip reference-element="showAll" placement="top" label={this.messages?.showAll}>
@@ -126,7 +127,7 @@ export class InstantAppsInteractiveLegendLayerCaption {
       const expanded = !this.data[activeLayerInfo?.layer.id].expanded.legendElements[legendElementIndex];
       this.data[activeLayerInfo?.layer.id].expanded.legendElements[legendElementIndex] = expanded;
       this.emitLegendLayerCaption();
-      this.reRender = !this.reRender;
+      // this.reRender = !this.reRender;
     };
   }
 }

@@ -139,6 +139,7 @@ export namespace Components {
         "data": IInteractiveLegendData;
         "filterMode": FilterMode;
         "legendElement": __esri.RelationshipRampElement;
+        "messages": any;
         "relationshipRamp": HTMLDivElement;
     }
     interface InstantAppsKeyboardShortcuts {
@@ -468,6 +469,7 @@ declare namespace LocalJSX {
         "data"?: IInteractiveLegendData;
         "filterMode"?: FilterMode;
         "legendElement"?: __esri.RelationshipRampElement;
+        "messages"?: any;
         "relationshipRamp"?: HTMLDivElement;
     }
     interface InstantAppsKeyboardShortcuts {
