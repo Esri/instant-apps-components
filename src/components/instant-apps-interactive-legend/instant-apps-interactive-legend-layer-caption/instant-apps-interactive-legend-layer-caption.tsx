@@ -1,6 +1,7 @@
 import { Component, h, Prop } from '@stencil/core';
 
 import { showAll, zoomTo } from '../support/helpers';
+import { interactiveLegendState, store } from '../support/store';
 const CSS = {
   layerCaption: 'esri-legend__layer-caption',
   layerCaptionBtnContainer: 'instant-apps-interactive-legend__layer-caption-btn-container',
@@ -12,9 +13,6 @@ const CSS = {
   scoped: true,
 })
 export class InstantAppsInteractiveLegendLayerCaption {
-  @Prop()
-  data;
-
   @Prop()
   legendvm: __esri.LegendViewModel;
 
@@ -44,12 +42,14 @@ export class InstantAppsInteractiveLegendLayerCaption {
 
   render() {
     const showAllButton =
-      this.data?.[this.layer?.id]?.categories?.size > 1 ? (
+      interactiveLegendState.data?.[this.layer?.id]?.categories?.size > 1 ? (
         <calcite-button
           key="show-all-button"
           id="showAll"
           onClick={() => {
-            showAll(this.data?.[this.layer?.id]);
+            const layerData = showAll(interactiveLegendState.data?.[this.layer?.id]);
+            const data = { ...interactiveLegendState.data, [this.layer.id]: layerData };
+            store.set('data', data);
           }}
           icon-start="list-check-all"
           appearance="outline"
@@ -62,7 +62,7 @@ export class InstantAppsInteractiveLegendLayerCaption {
         key="zoom-to-button"
         id="zoomTo"
         onClick={() => {
-          zoomTo(this.data?.[this.layer?.id], this.legendvm.view as __esri.MapView);
+          zoomTo(interactiveLegendState.data?.[this.layer?.id], this.legendvm.view as __esri.MapView);
         }}
         icon-start="magnifying-glass-plus"
         appearance="outline"
@@ -107,8 +107,10 @@ export class InstantAppsInteractiveLegendLayerCaption {
 
   toggleExpanded(activeLayerInfo: __esri.ActiveLayerInfo, legendElementIndex: number): () => void {
     return () => {
-      const expanded = !this.data[activeLayerInfo?.layer.id].expanded.legendElements[legendElementIndex];
-      this.data[activeLayerInfo?.layer.id].expanded.legendElements[legendElementIndex] = expanded;
+      const expanded = !interactiveLegendState.data[activeLayerInfo?.layer.id].expanded.legendElements[legendElementIndex];
+      interactiveLegendState.data[activeLayerInfo?.layer.id].expanded.legendElements[legendElementIndex] = expanded;
+      const data = { ...interactiveLegendState.data };
+      store.set('data', data);
     };
   }
 }

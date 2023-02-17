@@ -35,6 +35,7 @@
     "@a11y/focus-trap": "^1.0.5",
     "@esri/arcgis-html-sanitizer": "^3.0.1",
     "@stencil/core": "2.20.0",
+    "@stencil/store": "^2.0.3",
     "esri-loader": "^3.7.0",
     "maquette": "^3.5.3"
   },

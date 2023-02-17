@@ -1,6 +1,8 @@
 import { Component, h, Prop } from '@stencil/core';
 import { validateInteractivity } from '../support/helpers';
 
+import { interactiveLegendState, store } from '../support/store';
+
 const CSS = {
   label: 'esri-legend__service-label',
   header: 'esri-widget__heading',
@@ -24,20 +26,18 @@ export class InstantAppsInteractiveLegendCaption {
   activeLayerInfo: __esri.ActiveLayerInfo;
 
   @Prop()
-  data: any;
-
-  @Prop()
   messages;
 
   @Prop()
   expanded: boolean;
 
   render() {
+    console.log('rendered');
     const isInteractive = validateInteractivity(this.activeLayerInfo);
     const isNotExpanded = this.expanded === false;
     const expandCollapseText = isNotExpanded ? this.messages?.expand : this.messages?.collapse;
     return (
-      <header class={CSS.interacitveLegendHeader}>
+      <header key={`${this.activeLayerInfo?.layer?.id}-header`} class={CSS.interacitveLegendHeader}>
         <span>
           <span class={CSS.headerActionContainer}>
             <calcite-action
@@ -50,7 +50,7 @@ export class InstantAppsInteractiveLegendCaption {
             <h3 class={`${CSS.header} ${CSS.label}`}>{this.activeLayerInfo?.title}</h3>
           </span>
           {this.featureCount && isInteractive ? (
-            <instant-apps-interactive-legend-count data={this.data} layer-id={this.activeLayerInfo?.layer?.id} show-total={true} messages={this.messages} />
+            <instant-apps-interactive-legend-count layer-id={this.activeLayerInfo?.layer?.id} show-total={true} messages={this.messages} legendvm={this.legendvm} />
           ) : null}
         </span>
       </header>
@@ -58,7 +58,9 @@ export class InstantAppsInteractiveLegendCaption {
   }
 
   toggleExpanded(activeLayerInfo: __esri.ActiveLayerInfo): void {
-    const expanded = !this.data[activeLayerInfo?.layer.id].expanded.layer;
-    this.data[activeLayerInfo?.layer.id].expanded.layer = expanded;
+    const expanded = !interactiveLegendState.data[activeLayerInfo?.layer.id].expanded.layer;
+    interactiveLegendState.data[activeLayerInfo?.layer.id].expanded.layer = expanded;
+    const data = { ...interactiveLegendState.data };
+    store.set('data', data);
   }
 }

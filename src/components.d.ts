@@ -5,7 +5,7 @@
  * It contains typing information for all components that exist in this project.
  */
 import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
-import { FilterMode, IInteractiveLegendData } from "./components/instant-apps-interactive-legend/instant-apps-interactive-legend-classic/interfaces/interfaces";
+import { FilterMode } from "./components/instant-apps-interactive-legend/instant-apps-interactive-legend-classic/interfaces/interfaces";
 import { InstantAppsPopovers } from "./components/instant-apps-popovers/instant-apps-popovers";
 import { LogicalPlacement } from "@esri/calcite-components/dist/types/utils/floating-ui";
 import { InstantAppsPopoverMessageOverrides } from "./interfaces/interfaces";
@@ -88,7 +88,6 @@ export namespace Components {
     }
     interface InstantAppsInteractiveLegendCaption {
         "activeLayerInfo": __esri.ActiveLayerInfo;
-        "data": any;
         "expanded": boolean;
         "featureCount": boolean;
         "legendvm": __esri.LegendViewModel;
@@ -115,7 +114,6 @@ export namespace Components {
     }
     interface InstantAppsInteractiveLegendCount {
         "categoryId": string;
-        "data": IInteractiveLegendData;
         "layerId": string;
         "legendvm": __esri.LegendViewModel;
         "messages": any;
@@ -124,7 +122,6 @@ export namespace Components {
     }
     interface InstantAppsInteractiveLegendLayerCaption {
         "activeLayerInfo": __esri.ActiveLayerInfo;
-        "data": any;
         "expanded": boolean;
         "isInteractive": boolean;
         "layer": __esri.FeatureLayer;
@@ -136,7 +133,6 @@ export namespace Components {
     }
     interface InstantAppsInteractiveLegendRelationship {
         "activeLayerInfo": __esri.ActiveLayerInfo;
-        "data": IInteractiveLegendData;
         "filterMode": FilterMode;
         "legendElement": __esri.RelationshipRampElement;
         "messages": any;
@@ -408,7 +404,6 @@ declare namespace LocalJSX {
     }
     interface InstantAppsInteractiveLegendCaption {
         "activeLayerInfo"?: __esri.ActiveLayerInfo;
-        "data"?: any;
         "expanded"?: boolean;
         "featureCount"?: boolean;
         "legendvm"?: __esri.LegendViewModel;
@@ -435,7 +430,6 @@ declare namespace LocalJSX {
     }
     interface InstantAppsInteractiveLegendCount {
         "categoryId"?: string;
-        "data"?: IInteractiveLegendData;
         "layerId"?: string;
         "legendvm"?: __esri.LegendViewModel;
         "messages"?: any;
@@ -444,7 +438,6 @@ declare namespace LocalJSX {
     }
     interface InstantAppsInteractiveLegendLayerCaption {
         "activeLayerInfo"?: __esri.ActiveLayerInfo;
-        "data"?: any;
         "expanded"?: boolean;
         "isInteractive"?: boolean;
         "layer"?: __esri.FeatureLayer;
@@ -456,7 +449,6 @@ declare namespace LocalJSX {
     }
     interface InstantAppsInteractiveLegendRelationship {
         "activeLayerInfo"?: __esri.ActiveLayerInfo;
-        "data"?: IInteractiveLegendData;
         "filterMode"?: FilterMode;
         "legendElement"?: __esri.RelationshipRampElement;
         "messages"?: any;

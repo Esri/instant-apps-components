@@ -301,13 +301,14 @@ export async function handleFilter(data: IIntLegendLayerData, info: any, infoInd
   }
 }
 
-export function showAll(data: IIntLegendLayerData): void {
+export function showAll(data: IIntLegendLayerData): IIntLegendLayerData {
   data.queryExpressions = [];
   if (data?.fLayerView?.filter?.where) data.fLayerView.filter.where = '';
   if (data?.fLayerView?.featureEffect?.filter?.where) (data.fLayerView as any).featureEffect = null;
   data.categories.forEach(category => {
     category.selected = false;
   });
+  return data;
 }
 
 export async function zoomTo(data: IIntLegendLayerData, view: __esri.MapView): Promise<void> {

@@ -1,6 +1,7 @@
 import { Component, h, Prop, Host, Watch } from '@stencil/core';
 import { loadModules } from 'esri-loader';
-import { FilterMode, IInteractiveLegendData } from '../instant-apps-interactive-legend-classic/interfaces/interfaces';
+import { FilterMode } from '../instant-apps-interactive-legend-classic/interfaces/interfaces';
+import { interactiveLegendState } from '../support/store';
 
 const RELATIONSHIP_DIAMOND_SELECTOR = '.esri-relationship-ramp--diamond__middle-column--ramp svg g';
 
@@ -16,9 +17,6 @@ const CSS = {
 export class InstantAppsInteractiveLegendRelationship {
   symbolUtils;
   cellNodeCounter: number = 0;
-
-  @Prop()
-  data: IInteractiveLegendData;
 
   @Prop()
   filterMode: FilterMode;
@@ -51,7 +49,7 @@ export class InstantAppsInteractiveLegendRelationship {
   componentDidLoad() {
     // Re-renders UI on legendLayerCaption event - expand/collapse of caption
     document.addEventListener('legendLayerCaption', () => {
-      const cleared = this.data[this.activeLayerInfo.layer.id].queryExpressions.length === 0;
+      const cleared = interactiveLegendState.data[this.activeLayerInfo.layer.id].queryExpressions.length === 0;
       const gNode = this.relationshipRamp.querySelector(RELATIONSHIP_DIAMOND_SELECTOR) as HTMLElement;
       const children = gNode.children;
       const cellGroup = children ? Array.from(children) : null;
@@ -100,7 +98,7 @@ export class InstantAppsInteractiveLegendRelationship {
   }
 
   applyRelationshipRampInteractivity(): void {
-    if (!this.relationshipRamp || !this.activeLayerInfo || !this.legendElement || !this.data) return;
+    if (!this.relationshipRamp || !this.activeLayerInfo || !this.legendElement || !interactiveLegendState.data) return;
     let intervalId = setInterval(() => {
       const gNode = this.relationshipRamp.querySelector(RELATIONSHIP_DIAMOND_SELECTOR) as HTMLElement;
       if (gNode) {
@@ -519,7 +517,7 @@ export class InstantAppsInteractiveLegendRelationship {
     const fLayer = this.activeLayerInfo.layer as __esri.FeatureLayer;
     const { authoringInfo } = fLayer.renderer;
     const { field1, field2 } = authoringInfo;
-    const { queryExpressions, fLayerView } = this.data[this.activeLayerInfo.layer.id];
+    const { queryExpressions, fLayerView } = interactiveLegendState.data[this.activeLayerInfo.layer.id];
     if (this.legendElement.type === 'relationship-ramp' && authoringInfo && field1 && field2) {
       const expressionParams = this.generateExpressionParams(field1, field2, authoringInfo, i, j, focus) as any;
 
