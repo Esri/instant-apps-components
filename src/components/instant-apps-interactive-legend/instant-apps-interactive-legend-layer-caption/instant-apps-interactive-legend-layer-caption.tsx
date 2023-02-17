@@ -1,4 +1,4 @@
-import { Component, h, Prop, State, Event, EventEmitter } from '@stencil/core';
+import { Component, h, Prop } from '@stencil/core';
 
 import { showAll, zoomTo } from '../support/helpers';
 const CSS = {
@@ -42,21 +42,6 @@ export class InstantAppsInteractiveLegendLayerCaption {
   @Prop()
   messages;
 
-  // @State()
-  // reRender = false;
-
-  @Event({
-    eventName: 'legendLayerCaption',
-    composed: true,
-    cancelable: true,
-    bubbles: true,
-  })
-  legendLayerCaptionEvent: EventEmitter<boolean>;
-
-  emitLegendLayerCaption() {
-    this.legendLayerCaptionEvent.emit();
-  }
-
   render() {
     const showAllButton =
       this.data?.[this.layer?.id]?.categories?.size > 1 ? (
@@ -65,7 +50,6 @@ export class InstantAppsInteractiveLegendLayerCaption {
           id="showAll"
           onClick={() => {
             showAll(this.data?.[this.layer?.id]);
-            // this.emitLegendLayerCaption();
           }}
           icon-start="list-check-all"
           appearance="outline"
@@ -79,7 +63,6 @@ export class InstantAppsInteractiveLegendLayerCaption {
         id="zoomTo"
         onClick={() => {
           zoomTo(this.data?.[this.layer?.id], this.legendvm.view as __esri.MapView);
-          // this.emitLegendLayerCaption();
         }}
         icon-start="magnifying-glass-plus"
         appearance="outline"
@@ -126,8 +109,6 @@ export class InstantAppsInteractiveLegendLayerCaption {
     return () => {
       const expanded = !this.data[activeLayerInfo?.layer.id].expanded.legendElements[legendElementIndex];
       this.data[activeLayerInfo?.layer.id].expanded.legendElements[legendElementIndex] = expanded;
-      this.emitLegendLayerCaption();
-      // this.reRender = !this.reRender;
     };
   }
 }

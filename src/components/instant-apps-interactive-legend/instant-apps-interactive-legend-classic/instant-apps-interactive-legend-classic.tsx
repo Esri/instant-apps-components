@@ -1,4 +1,4 @@
-import { Component, h, Prop, Element, State, Watch } from '@stencil/core';
+import { Component, h, Prop, Element, State } from '@stencil/core';
 
 import {
   getUnivariateColorRampPreview,
@@ -93,9 +93,6 @@ export class InstantAppsInteractiveLegendClassic {
   @State()
   data: IInteractiveLegendData;
 
-  // @State()
-  // reRender = false;
-
   @State()
   intLegendId: string;
 
@@ -137,13 +134,6 @@ export class InstantAppsInteractiveLegendClassic {
     this.reactiveUtils = reactiveUtils;
     this.handles = new Handles();
     this.intl = intl;
-
-    // const observer = new MutationObserver(() => {
-    //   this.reRender = !this.reRender;
-    // });
-    // observer.observe(document.body, {
-    //   attributes: true,
-    // });
   }
 
   async componentDidLoad() {
@@ -184,14 +174,6 @@ export class InstantAppsInteractiveLegendClassic {
 
   renderLegendForLayer(activeLayerInfo: __esri.ActiveLayerInfo) {
     if (!activeLayerInfo.ready) {
-      if (this.reactiveUtils) {
-        this.reactiveUtils.when(
-          () => activeLayerInfo?.ready,
-          () => {
-            // this.reRender = !this.reRender;
-          },
-        );
-      }
       return null;
     }
 
@@ -611,7 +593,6 @@ export class InstantAppsInteractiveLegendClassic {
         onClick={() => {
           const dataFromActiveLayerInfo = this.data?.[layer?.id];
           handleFilter(dataFromActiveLayerInfo, elementInfo, infoIndex, this.filterMode);
-          // this.reRender = !this.reRender;
         }}
         class={`${CSS.layerRow} ${CSS.interactiveLayerRow}${selected ? ` ${CSS.infoSelected}` : ''}`}
       >
@@ -749,23 +730,5 @@ export class InstantAppsInteractiveLegendClassic {
         this.data = await generateData(this.legendvm, this.reactiveUtils);
       },
     );
-
-    // Re-renders layers on layer visibility toggle
-    this.legendvm?.view?.map?.allLayers?.forEach(layer => {
-      if (layer.type === 'feature') {
-        const watcher = this.reactiveUtils.watch(
-          () => layer.visible,
-          async () => {
-            // this.reRender = !this.reRender;
-          },
-        );
-        this.handles.add(watcher);
-      }
-    });
-
-    // Re-renders UI on legendLayerCaption event - expand/collapse of caption
-    document.addEventListener('legendLayerCaption', () => {
-      // this.reRender = !this.reRender;
-    });
   }
 }

@@ -1,4 +1,4 @@
-import { Component, Host, h, Prop, State, Watch } from '@stencil/core';
+import { Component, Host, h, Prop } from '@stencil/core';
 import { ICategory, IInteractiveLegendData } from '../instant-apps-interactive-legend-classic/interfaces/interfaces';
 import { loadModules } from 'esri-loader';
 
@@ -41,16 +41,8 @@ export class InstantAppsInteractiveLegendCount {
   @Prop()
   messages;
 
-  // @State()
-  // reRender: boolean = false;
-
   @Prop()
   selected: boolean;
-
-  // @Watch('data')
-  // updateUI() {
-  //   this.reRender = !this.reRender;
-  // }
 
   async componentWillLoad() {
     const [intl, reactiveUtils, Handles] = await loadModules(['esri/intl', 'esri/core/reactiveUtils', 'esri/core/Handles']);

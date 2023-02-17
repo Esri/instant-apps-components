@@ -1,6 +1,6 @@
-import { Component, h, Prop, State, Host, Watch } from '@stencil/core';
+import { Component, h, Prop, Host, Watch } from '@stencil/core';
 import { loadModules } from 'esri-loader';
-import { FilterMode, IInteractiveLegendData } from '../instant-apps-interactive-legend/instant-apps-interactive-legend-classic/interfaces/interfaces';
+import { FilterMode, IInteractiveLegendData } from '../instant-apps-interactive-legend-classic/interfaces/interfaces';
 
 const RELATIONSHIP_DIAMOND_SELECTOR = '.esri-relationship-ramp--diamond__middle-column--ramp svg g';
 
@@ -16,9 +16,6 @@ const CSS = {
 export class InstantAppsInteractiveLegendRelationship {
   symbolUtils;
   cellNodeCounter: number = 0;
-
-  @State()
-  reRender = false;
 
   @Prop()
   data: IInteractiveLegendData;
@@ -49,6 +46,24 @@ export class InstantAppsInteractiveLegendRelationship {
   async componentWillLoad() {
     const [symbolUtils] = await loadModules(['esri/symbols/support/symbolUtils']);
     this.symbolUtils = symbolUtils;
+  }
+
+  componentDidLoad() {
+    // Re-renders UI on legendLayerCaption event - expand/collapse of caption
+    document.addEventListener('legendLayerCaption', () => {
+      const cleared = this.data[this.activeLayerInfo.layer.id].queryExpressions.length === 0;
+      const gNode = this.relationshipRamp.querySelector(RELATIONSHIP_DIAMOND_SELECTOR) as HTMLElement;
+      const children = gNode.children;
+      const cellGroup = children ? Array.from(children) : null;
+      if (cleared) {
+        cellGroup?.forEach(cell => {
+          cell.removeAttribute('stroke');
+          cell.removeAttribute('stroke-width');
+          cell.removeAttribute('stroke-opacity');
+          cell.classList.remove('esri-interactive-legend--selected-cell');
+        });
+      }
+    });
   }
 
   render() {

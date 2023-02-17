@@ -1,4 +1,4 @@
-import { Component, EventEmitter, h, Prop, State, Event } from '@stencil/core';
+import { Component, h, Prop } from '@stencil/core';
 import { validateInteractivity } from '../support/helpers';
 
 const CSS = {
@@ -14,9 +14,6 @@ const CSS = {
   scoped: true,
 })
 export class InstantAppsInteractiveLegendCaption {
-  // @State()
-  // reRender = false;
-
   @Prop()
   legendvm: __esri.LegendViewModel;
 
@@ -34,18 +31,6 @@ export class InstantAppsInteractiveLegendCaption {
 
   @Prop()
   expanded: boolean;
-
-  @Event({
-    eventName: 'legendLayerCaption',
-    composed: true,
-    cancelable: true,
-    bubbles: true,
-  })
-  legendLayerCaptionEvent: EventEmitter<boolean>;
-
-  emitLegendLayerCaption() {
-    this.legendLayerCaptionEvent.emit();
-  }
 
   render() {
     const isInteractive = validateInteractivity(this.activeLayerInfo);
@@ -75,7 +60,5 @@ export class InstantAppsInteractiveLegendCaption {
   toggleExpanded(activeLayerInfo: __esri.ActiveLayerInfo): void {
     const expanded = !this.data[activeLayerInfo?.layer.id].expanded.layer;
     this.data[activeLayerInfo?.layer.id].expanded.layer = expanded;
-    this.emitLegendLayerCaption();
-    // this.reRender = !this.reRender;
   }
 }

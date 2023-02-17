@@ -22,7 +22,7 @@ export function validateInteractivity(activeLayerInfo: __esri.ActiveLayerInfo, l
 
   const singleSymbol = legendElement?.infos?.length === 1 && !field;
 
-  // const isRelationship = authoringInfoType === 'relationship' && legendElement?.type !== 'size-ramp'; // TODO
+  const isRelationshipRamp = authoringInfoType === 'relationship' && legendElement?.type !== 'size-ramp' && legendElement?.type !== 'symbol-table';
 
   const isFeatureLayer = activeLayerInfo?.get('layer.type') === 'feature';
 
@@ -36,7 +36,7 @@ export function validateInteractivity(activeLayerInfo: __esri.ActiveLayerInfo, l
     (classifyDataCheckedColorRamp && field) ||
     (classifyDataCheckedSizeRamp && field) ||
     (singleSymbol && !field && field !== null) ||
-    // isRelationship ||
+    isRelationshipRamp ||
     uniqueValueInfos
       ? true
       : false;
