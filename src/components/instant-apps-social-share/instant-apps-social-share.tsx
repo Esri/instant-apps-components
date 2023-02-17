@@ -58,6 +58,7 @@ const CSS = {
   },
   rtl: {
     optionText: `${base}__option-text--rtl`,
+    textArea: `${base}__text-area--rtl`,
   },
 };
 
@@ -541,6 +542,7 @@ export class InstantAppsSocialShare {
 
   renderEmbed() {
     const embedMessages = this.messages?.embed;
+    const textarea_RTL = document.dir === 'rtl' ? ` ${CSS.rtl.textArea}` : '';
     return (
       <div class={CSS.embed.container}>
         <span class={CSS.embed.header}>
@@ -549,7 +551,7 @@ export class InstantAppsSocialShare {
         </span>
         <div class={CSS.embed.embedCode.container}>
           <div class={CSS.embed.embedCode.textArea}>
-            <textarea ref={el => (this.embedCodeRef = el)} cols={30} rows={5} readonly value={this.getEmbedCode()} />
+            <textarea ref={el => (this.embedCodeRef = el)} cols={30} rows={5} readonly class={textarea_RTL} value={this.getEmbedCode()} />
             <button id="copyEmbedToClipboard" onClick={this.copyEmbedCode.bind(this)} class={CSS.embed.embedCode.copyButton}>
               <calcite-icon icon="copy" scale={this.scale} />
               <span>{embedMessages?.copy}</span>

@@ -204,6 +204,10 @@ $hoverDark: #262626;
         color: var(--instant-apps-social-share-embed-text-area-text);
       }
 
+      .instant-apps-social-share__text-area--rtl {
+        text-align: left;
+      }
+
       &-dimensions {
         display: flex;
         justify-content: space-between;
