@@ -32,7 +32,6 @@ export class InstantAppsInteractiveLegendCaption {
   expanded: boolean;
 
   render() {
-    console.log('rendered');
     const isInteractive = validateInteractivity(this.activeLayerInfo);
     const isNotExpanded = this.expanded === false;
     const expandCollapseText = isNotExpanded ? this.messages?.expand : this.messages?.collapse;

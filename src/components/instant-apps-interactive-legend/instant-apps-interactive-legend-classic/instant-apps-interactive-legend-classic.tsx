@@ -89,6 +89,9 @@ export class InstantAppsInteractiveLegendClassic {
   intl: __esri.intl;
 
   @State()
+  reRender = false;
+
+  @State()
   isLoading = true;
 
   @State()
@@ -139,15 +142,9 @@ export class InstantAppsInteractiveLegendClassic {
     await (this.legendvm?.view?.map as __esri.WebMap).loadAll();
     try {
       // Initial data setup
-      const data = await generateData(this.legendvm, this.reactiveUtils);
 
-      store.set('data', data);
-
-      // Initial setup of feature count
-      // this.updateFeatureCountData();
-
+      this.generateData();
       this.isLoading = false;
-
       this.setupWatchersAndListeners();
     } catch (err) {
       console.error(err);
@@ -592,8 +589,9 @@ export class InstantAppsInteractiveLegendClassic {
       // Regular LegendElementInfo
       <button
         onClick={() => {
-          const dataFromActiveLayerInfo = interactiveLegendState.data?.[layer?.id];
+          const dataFromActiveLayerInfo = { ...interactiveLegendState.data?.[layer?.id] };
           handleFilter(dataFromActiveLayerInfo, elementInfo, infoIndex, this.filterMode);
+          store.set('data', { ...interactiveLegendState.data, [layer?.id]: dataFromActiveLayerInfo });
         }}
         class={`${CSS.layerRow} ${CSS.interactiveLayerRow}${selected ? ` ${CSS.infoSelected}` : ''}`}
       >
@@ -708,26 +706,28 @@ export class InstantAppsInteractiveLegendClassic {
     return interactiveLegendState.data?.[activeLayerInfo?.layer?.id]?.expanded?.legendElements?.[legendElementIndex];
   }
 
-  async updateFeatureCountData() {
-    if (this.featureCount) {
-      const data = await handleFeatureCount(this.legendvm, interactiveLegendState.data);
-      store.set('data', data);
-      // this.handleFeatureCount();
-    }
-  }
-
   setupWatchersAndListeners(): void {
     // Refreshes interactive legend data on active layer info update
-    this.legendvm?.activeLayerInfos?.forEach(async () => {
-      interactiveLegendState.data = await generateData(this.legendvm, this.reactiveUtils);
-    });
+    this.legendvm?.activeLayerInfos?.forEach(async () => this.generateData());
 
     this.reactiveUtils.on(
       () => this.legendvm?.activeLayerInfos,
       'change',
-      async () => {
-        interactiveLegendState.data = await generateData(this.legendvm, this.reactiveUtils);
-      },
+      () => this.generateData(),
     );
+  }
+
+  async generateData(): Promise<void> {
+    if (this.featureCount) {
+      const data = await generateData(this.legendvm, this.reactiveUtils);
+      store.set('data', data);
+
+      const dataWithFeatureCount = await handleFeatureCount(this.legendvm, interactiveLegendState.data);
+      store.set('data', dataWithFeatureCount);
+    } else {
+      const data = await generateData(this.legendvm, this.reactiveUtils);
+      store.set('data', data);
+    }
+    this.reRender = !this.reRender;
   }
 }
