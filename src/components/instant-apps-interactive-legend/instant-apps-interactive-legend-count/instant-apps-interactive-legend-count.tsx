@@ -57,10 +57,10 @@ export class InstantAppsInteractiveLegendCount {
         this.reactiveUtils.watch(
           () => this.legendvm?.view?.updating,
           async () => {
-            this.reRender = !this.reRender;
             const data = await handleFeatureCount(this.legendvm, interactiveLegendState.data);
             const layerData = data[this.layerId];
             interactiveLegendState.data[layerData] = layerData;
+            this.reRender = !this.reRender;
           },
           { initial: true },
         );

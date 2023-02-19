@@ -1,4 +1,4 @@
-import { Component, h, Prop, Element, State } from '@stencil/core';
+import { Component, h, Prop, Element, State, Listen, forceUpdate } from '@stencil/core';
 import { interactiveLegendState, store } from '../support/store';
 
 import {
@@ -129,6 +129,11 @@ export class InstantAppsInteractiveLegendClassic {
   @Prop()
   messages;
 
+  @Listen('showAllSelected', { target: 'window' })
+  showAllSelectedEmitted() {
+    this.reRender = !this.reRender;
+  }
+
   async componentWillLoad() {
     const [intl, reactiveUtils, Handles] = await loadModules(['esri/intl', 'esri/core/reactiveUtils', 'esri/core/Handles']);
 
@@ -142,7 +147,6 @@ export class InstantAppsInteractiveLegendClassic {
     await (this.legendvm?.view?.map as __esri.WebMap).loadAll();
     try {
       // Initial data setup
-
       this.generateData();
       this.isLoading = false;
       this.setupWatchersAndListeners();
@@ -191,7 +195,6 @@ export class InstantAppsInteractiveLegendClassic {
             feature-count={this.featureCount}
             activeLayerInfo={activeLayerInfo}
             messages={this.messages}
-            expanded={expanded}
           />
           <div key={`${key}-child-layers`} class={expanded ? 'show' : 'hide'}>
             {layers}
@@ -227,9 +230,8 @@ export class InstantAppsInteractiveLegendClassic {
             feature-count={this.featureCount}
             activeLayerInfo={activeLayerInfo}
             messages={this.messages}
-            expanded={expanded}
           />
-          <div key={`${activeLayerInfo?.layer?.id}-legend-layer`} class={`${CSS.layer}${expanded === false ? ' hide' : ' show'}`}>
+          <div key={`${activeLayerInfo?.layer?.id}-legend-layer`} id={`${activeLayerInfo?.layer?.id}-legend-layer`} class={`${CSS.layer}${expanded === false ? ' hide' : ' show'}`}>
             {filteredElements}
           </div>
         </div>
@@ -247,8 +249,7 @@ export class InstantAppsInteractiveLegendClassic {
     const isInteractive = validateInteractivity(activeLayerInfo, legendElement, legendElementIndex);
 
     // build symbol table or size ramp
-    const isRelationshipRamp = legendElement?.type === 'relationship-ramp'; // TEMP
-    // if ((legendElement.type === 'symbol-table' || isSizeRamp) && isNotRelationship) {
+    const isRelationshipRamp = legendElement?.type === 'relationship-ramp';
     if (legendElement.type === 'symbol-table' || isSizeRamp) {
       const rows = (legendElement.infos as any)
         .map((info: any, infoIndex: number) =>
@@ -322,10 +323,10 @@ export class InstantAppsInteractiveLegendClassic {
 
     return (
       <div class={`${tableClass}${tableClasses}${nonInteractiveClass}${nestedUniqueSymbolClass}`}>
-        <div key="caption" class={`${!isRelationshipRamp ? 'show' : 'hide'}`}>
+        <div key="caption" id={`${activeLayerInfo?.layer?.id}-legend-element-caption`} class={`${!isRelationshipRamp ? 'show' : 'hide'}`}>
           {caption}
         </div>
-        <div key="content" class={`${expanded === false ? 'hide' : 'show'}`}>
+        <div key="content" id={`${activeLayerInfo?.layer?.id}-legend-element-content-${legendElementIndex}`} class={`${expanded === false ? 'hide' : 'show'}`}>
           {content}
         </div>
       </div>
@@ -721,13 +722,14 @@ export class InstantAppsInteractiveLegendClassic {
     if (this.featureCount) {
       const data = await generateData(this.legendvm, this.reactiveUtils);
       store.set('data', data);
-
       const dataWithFeatureCount = await handleFeatureCount(this.legendvm, interactiveLegendState.data);
       store.set('data', dataWithFeatureCount);
     } else {
       const data = await generateData(this.legendvm, this.reactiveUtils);
       store.set('data', data);
     }
-    this.reRender = !this.reRender;
+    forceUpdate(this.el);
+
+    // this.reRender = !this.reRender;
   }
 }

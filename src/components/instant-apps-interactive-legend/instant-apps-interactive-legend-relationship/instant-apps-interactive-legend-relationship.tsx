@@ -1,4 +1,4 @@
-import { Component, h, Prop, Host, Watch } from '@stencil/core';
+import { Component, h, Prop, Host, Watch, State, Listen } from '@stencil/core';
 import { loadModules } from 'esri-loader';
 import { FilterMode } from '../instant-apps-interactive-legend-classic/interfaces/interfaces';
 import { interactiveLegendState } from '../support/store';
@@ -17,6 +17,7 @@ const CSS = {
 export class InstantAppsInteractiveLegendRelationship {
   symbolUtils;
   cellNodeCounter: number = 0;
+  relationshipRamp: HTMLDivElement;
 
   @Prop()
   filterMode: FilterMode;
@@ -28,17 +29,26 @@ export class InstantAppsInteractiveLegendRelationship {
   legendElement: __esri.RelationshipRampElement;
 
   @Prop()
-  relationshipRamp: HTMLDivElement;
-
-  @Prop()
   messages;
 
-  @Watch('data')
-  @Watch('legendElement')
-  @Watch('activeLayerInfo')
-  @Watch('relationshipRamp')
   applyInteractivity() {
     this.applyRelationshipRampInteractivity();
+  }
+
+  @Listen('showAllSelected', { target: 'window' })
+  showAllSelectedEmitted() {
+    const cleared = interactiveLegendState.data[this.activeLayerInfo.layer.id].queryExpressions.length === 0;
+    const gNode = this.relationshipRamp.querySelector(RELATIONSHIP_DIAMOND_SELECTOR) as HTMLElement;
+    const children = gNode.children;
+    const cellGroup = children ? Array.from(children) : null;
+    if (cleared) {
+      cellGroup?.forEach(cell => {
+        cell.removeAttribute('stroke');
+        cell.removeAttribute('stroke-width');
+        cell.removeAttribute('stroke-opacity');
+        cell.classList.remove('esri-interactive-legend--selected-cell');
+      });
+    }
   }
 
   async componentWillLoad() {
@@ -46,47 +56,28 @@ export class InstantAppsInteractiveLegendRelationship {
     this.symbolUtils = symbolUtils;
   }
 
-  componentDidLoad() {
-    // Re-renders UI on legendLayerCaption event - expand/collapse of caption
-    document.addEventListener('legendLayerCaption', () => {
-      const cleared = interactiveLegendState.data[this.activeLayerInfo.layer.id].queryExpressions.length === 0;
-      const gNode = this.relationshipRamp.querySelector(RELATIONSHIP_DIAMOND_SELECTOR) as HTMLElement;
-      const children = gNode.children;
-      const cellGroup = children ? Array.from(children) : null;
-      if (cleared) {
-        cellGroup?.forEach(cell => {
-          cell.removeAttribute('stroke');
-          cell.removeAttribute('stroke-width');
-          cell.removeAttribute('stroke-opacity');
-          cell.classList.remove('esri-interactive-legend--selected-cell');
-        });
-      }
-    });
-  }
-
   render() {
     return (
-      <Host>
-        <div
-          ref={(node: HTMLDivElement) => {
-            const styleSheet = node?.querySelector('relationshipStyles');
-            if (!styleSheet) {
-              const css = document.createElement('style');
-              css.id = 'relationshipStyles';
-              css.innerHTML = `
+      <div
+        key="asdfasfadsf"
+        ref={(node: HTMLDivElement) => {
+          const styleSheet = node?.querySelector('relationshipStyles');
+          if (!styleSheet) {
+            const css = document.createElement('style');
+            css.id = 'relationshipStyles';
+            css.innerHTML = `
                 rect:hover {
                   cursor: pointer;
                   opacity: 0.8;
                 }
           `;
-              node?.appendChild(css);
-            }
-          }}
-        >
-          <span class={CSS.instructionalText}>{this.messages?.relationship?.instructionalText}</span>
-          {this.renderRelationshipRamp()}
-        </div>
-      </Host>
+            node?.appendChild(css);
+          }
+        }}
+      >
+        <span class={CSS.instructionalText}>{this.messages?.relationship?.instructionalText}</span>
+        {this.renderRelationshipRamp()}
+      </div>
     );
   }
 
@@ -94,7 +85,16 @@ export class InstantAppsInteractiveLegendRelationship {
     const renderer = (this.activeLayerInfo?.layer as __esri.FeatureLayer).renderer;
     const relationshipRamp = this.symbolUtils.renderRelationshipRampPreviewHTML(renderer);
     const outerHTML = relationshipRamp?.outerHTML;
-    return <div ref={(node: HTMLDivElement) => (this.relationshipRamp = node)} key="relationship-ramp-diamond" innerHTML={`${outerHTML}`} />;
+    return (
+      <div
+        ref={(node: HTMLDivElement) => {
+          this.relationshipRamp = node;
+          this.applyRelationshipRampInteractivity();
+        }}
+        key="relationship-ramp-diamond"
+        innerHTML={`${outerHTML}`}
+      />
+    );
   }
 
   applyRelationshipRampInteractivity(): void {
@@ -470,46 +470,15 @@ export class InstantAppsInteractiveLegendRelationship {
       cell.onclick = () => {
         this.handleFilter(i, j, focus);
         this.handleSelectedElement(cell);
-        // if (featureCountEnabled) {
-        //   _queryFeatureCount();
-        // }
       };
-      // cell.onkeydown = event => {
-      //   if (event.keyCode === 32) {
-      //       handleFilter(i, j, focus);
-      //     //   _handleSelectedElement(cell);
-      //     //   if (featureCountEnabled) {
-      //     //     _queryFeatureCount();
-      //     //   }
-      //   }
-      // };
-
-      //   if (featureCountEnabled) {
-      //     const { authoringInfo } = layerView.layer.renderer;
-      //     const { field1, field2 } = authoringInfo;
-      //     const expressionParams = _generateExpressionParams(
-      //       field1,
-      //       field2,
-      //       authoringInfo,
-      //       i,
-      //       j,
-      //       focus
-      //     ) as any;
-
-      //     const queryExpression = _generateExpressionForRelationship(
-      //       expressionParams
-      //     );
-      //     queryCountExpressions.push(queryExpression);
-      //     const { numClasses } = colorRampProperties;
-      //     const { length } = queryCountExpressions;
-      //     if (
-      //       (numClasses === 2 && length === 4 && cellIndex === 3) ||
-      //       (numClasses === 3 && length === 9 && cellIndex === 8) ||
-      //       (numClasses === 4 && length === 16 && cellIndex === 15)
-      //     ) {
-      //       _generateTotalFeatureCount();
-      //     }
-      //   }
+      cell.onkeydown = e => {
+        const { key } = e;
+        const isActionKey = key === 'Enter' || key === 'Space';
+        if (isActionKey) {
+          this.handleFilter(i, j, focus);
+          this.handleSelectedElement(cell);
+        }
+      };
     });
   }
 

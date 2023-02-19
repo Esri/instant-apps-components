@@ -88,7 +88,6 @@ export namespace Components {
     }
     interface InstantAppsInteractiveLegendCaption {
         "activeLayerInfo": __esri.ActiveLayerInfo;
-        "expanded": boolean;
         "featureCount": boolean;
         "legendvm": __esri.LegendViewModel;
         "messages": any;
@@ -136,7 +135,6 @@ export namespace Components {
         "filterMode": FilterMode;
         "legendElement": __esri.RelationshipRampElement;
         "messages": any;
-        "relationshipRamp": HTMLDivElement;
     }
     interface InstantAppsKeyboardShortcuts {
         /**
@@ -239,6 +237,10 @@ export namespace Components {
 export interface InstantAppsHeaderCustomEvent<T> extends CustomEvent<T> {
     detail: T;
     target: HTMLInstantAppsHeaderElement;
+}
+export interface InstantAppsInteractiveLegendLayerCaptionCustomEvent<T> extends CustomEvent<T> {
+    detail: T;
+    target: HTMLInstantAppsInteractiveLegendLayerCaptionElement;
 }
 declare global {
     interface HTMLInstantAppsHeaderElement extends Components.InstantAppsHeader, HTMLStencilElement {
@@ -404,7 +406,6 @@ declare namespace LocalJSX {
     }
     interface InstantAppsInteractiveLegendCaption {
         "activeLayerInfo"?: __esri.ActiveLayerInfo;
-        "expanded"?: boolean;
         "featureCount"?: boolean;
         "legendvm"?: __esri.LegendViewModel;
         "messages"?: any;
@@ -444,6 +445,7 @@ declare namespace LocalJSX {
         "legendElementIndex"?: number;
         "legendvm"?: __esri.LegendViewModel;
         "messages"?: any;
+        "onShowAllSelected"?: (event: InstantAppsInteractiveLegendLayerCaptionCustomEvent<boolean>) => void;
         "titleText"?: string;
         "zoomTo"?: boolean;
     }
@@ -452,7 +454,6 @@ declare namespace LocalJSX {
         "filterMode"?: FilterMode;
         "legendElement"?: __esri.RelationshipRampElement;
         "messages"?: any;
-        "relationshipRamp"?: HTMLDivElement;
     }
     interface InstantAppsKeyboardShortcuts {
         /**

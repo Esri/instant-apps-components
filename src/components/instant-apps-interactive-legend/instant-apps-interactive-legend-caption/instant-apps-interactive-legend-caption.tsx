@@ -1,7 +1,7 @@
-import { Component, h, Prop } from '@stencil/core';
+import { Component, h, Prop, Element, forceUpdate } from '@stencil/core';
 import { validateInteractivity } from '../support/helpers';
 
-import { interactiveLegendState, store } from '../support/store';
+import { interactiveLegendState } from '../support/store';
 
 const CSS = {
   label: 'esri-legend__service-label',
@@ -28,20 +28,22 @@ export class InstantAppsInteractiveLegendCaption {
   @Prop()
   messages;
 
-  @Prop()
-  expanded: boolean;
+  @Element()
+  el;
 
   render() {
     const isInteractive = validateInteractivity(this.activeLayerInfo);
-    const isNotExpanded = this.expanded === false;
-    const expandCollapseText = isNotExpanded ? this.messages?.expand : this.messages?.collapse;
+
+    const expanded = interactiveLegendState?.data[this.activeLayerInfo?.layer?.id]?.expanded?.layer;
+
+    const expandCollapseText = expanded ? this.messages?.collapse : this.messages?.expand;
     return (
       <header key={`${this.activeLayerInfo?.layer?.id}-header`} class={CSS.interacitveLegendHeader}>
         <span>
           <span class={CSS.headerActionContainer}>
             <calcite-action
-              onClick={() => this.toggleExpanded(this.activeLayerInfo)}
-              icon={isNotExpanded ? 'chevron-right' : 'chevron-down'}
+              onClick={this.toggleExpanded(this.activeLayerInfo)}
+              icon={expanded ? 'chevron-down' : 'chevron-right'}
               appearance="transparent"
               text={expandCollapseText}
               label={expandCollapseText}
@@ -56,10 +58,18 @@ export class InstantAppsInteractiveLegendCaption {
     );
   }
 
-  toggleExpanded(activeLayerInfo: __esri.ActiveLayerInfo): void {
-    const expanded = !interactiveLegendState.data[activeLayerInfo?.layer.id].expanded.layer;
-    interactiveLegendState.data[activeLayerInfo?.layer.id].expanded.layer = expanded;
-    const data = { ...interactiveLegendState.data };
-    store.set('data', data);
+  toggleExpanded(activeLayerInfo: __esri.ActiveLayerInfo): () => void {
+    return () => {
+      const expanded = !interactiveLegendState.data[activeLayerInfo?.layer.id].expanded.layer;
+      interactiveLegendState.data[activeLayerInfo?.layer?.id].expanded.layer = expanded;
+      const id = `${activeLayerInfo?.layer?.id}-legend-layer`;
+      const node = document.getElementById(id);
+      if (node?.classList.contains('show')) {
+        node?.classList.replace('show', 'hide');
+      } else {
+        node?.classList.replace('hide', 'show');
+      }
+      forceUpdate(this.el);
+    };
   }
 }
