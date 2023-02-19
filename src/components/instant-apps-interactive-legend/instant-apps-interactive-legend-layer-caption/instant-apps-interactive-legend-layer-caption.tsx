@@ -127,7 +127,7 @@ export class InstantAppsInteractiveLegendLayerCaption {
 
       const fLayer = activeLayerInfo.layer as __esri.FeatureLayer;
 
-      if (fLayer.renderer.authoringInfo.type === 'relationship') {
+      if (fLayer?.renderer?.authoringInfo?.type === 'relationship') {
         const id = `${activeLayerInfo?.layer?.id}-legend-element-content-0`;
         const id2 = `${activeLayerInfo?.layer?.id}-legend-element-content-1`;
         const node = document.getElementById(id);
