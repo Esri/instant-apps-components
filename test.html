@@ -1,0 +1,286 @@
+<!-- /*
+ *   Copyright (c) 2023 Esri
+ *   All rights reserved.
+ *   Licensed under the Apache License, Version 2.0 (the "License");
+ *   you may not use this file except in compliance with the License.
+ *   You may obtain a copy of the License at
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *   Unless required by applicable law or agreed to in writing, software
+ *   distributed under the License is distributed on an "AS IS" BASIS,
+ *   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *   See the License for the specific language governing permissions and
+ *   limitations under the License.
+ */ -->
+
+<!DOCTYPE html>
+<html dir="ltr" lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=5.0" />
+    <title>ArcGIS Instant Apps Components</title>
+    <style>
+      html,
+      body,
+      #viewDiv {
+        box-sizing: border-box;
+        width: 100%;
+        height: 100%;
+        margin: 0;
+        padding: 0;
+      }
+
+      instant-apps-social-share {
+        --instant-apps-social-share-popover-button-icon-color: #ffffff;
+      }
+
+      h2 {
+        margin-bottom: 0.5rem;
+      }
+
+      #feature {
+        padding: 5%;
+      }
+    </style>
+    <script type="module" src="https://js.arcgis.com/calcite-components/1.0.7/calcite.esm.js"></script>
+    <link rel="stylesheet" type="text/css" href="https://js.arcgis.com/calcite-components/1.0.7/calcite.css" />
+    <script type="module" src="/build/instant-apps-components.esm.js"></script>
+    <script nomodule src="/build/instant-apps-components.js"></script>
+    <link id="esriStylesheet" rel="stylesheet" href="https://jsdev.arcgis.com/4.26/esri/themes/light/main.css" />
+    <script src="https://jsdev.arcgis.com/4.26/"></script>
+    <style></style>
+    <script>
+      require([
+        'esri/WebMap',
+        'esri/views/MapView',
+        'esri/layers/FeatureLayer',
+        'esri/core/reactiveUtils',
+        'esri/widgets/Legend',
+        'esri/widgets/LayerList',
+        'esri/widgets/Feature',
+        'esri/config',
+        'esri/widgets/Home',
+        'esri/widgets/Expand',
+      ], (WebMap, MapView, FeatureLayer, reactiveUtils, Legend, LayerList, Feature, esriConfig, Home, Expand) => {
+        // esriConfig.portalUrl = 'https://jsapi.maps.arcgis.com';
+        // const map = new WebMap({
+        //   portalItem: {
+        //     id: 'ddf28dc057b8400dbfa148ef403f7c57', // Categories
+        //   },
+        // });
+
+        // esriConfig.portalUrl = 'https://catsqa.mapsdevext.arcgis.com';
+        // const map = new WebMap({
+        //   portalItem: {
+        //     // id: '34a3ea499f9c49078e48773ddb96b680', // Binning - not working
+        //     // id: '04d45a4a8ec64788a12cdca809475fc7', // Relationship
+        //     // id: '38f48c45c80449c3b023332e7b33d643', // Count and amounts size
+        //     // id: '23e07a3286a04e12bc0fb929c27fd367', // Count and amounts color
+        //     // id: '3fbf765a51874d06a59a0cd3ffffe3ec', // Predominance and size
+        //     // id: '0db1fe1cb39f4da881f26b15f8657afc', // Clustering
+        //     // id: '3a084a71a960468fba08141b768dfcd1', // Classify data unchecked
+        //     // id: '95001deb526f464198540924727394ad', // Single feature and preominance,
+        //   },
+        // });
+
+        // esriConfig.portalUrl = 'https://loc.maps.arcgis.com';
+        // const map = new WebMap({
+        //   portalItem: {
+        //     id: 'cc5e28de905f4583ba489ec07240543d',
+        //   },
+        // });
+
+        esriConfig.portalUrl = 'https://holistic.mapsdevext.arcgis.com';
+        const map = new WebMap({
+          portalItem: {
+            // id: '3fbf765a51874d06a59a0cd3ffffe3ec',
+            // id: '6bc4607ceba1455cb889ad045257f0fd',
+            // id: 'e75a42650ca346a1bcf1ec5218545dc6', // Group
+            id: '48081a203538410d807f46bdb33bdeb2', // Other
+          },
+        });
+
+        const container = document.getElementById('viewDiv');
+        const view = new MapView({ map, container });
+
+        const home = new Home({ view });
+        view.ui.add(home, 'top-left');
+
+        setUpTheme();
+        setUpDock();
+        initIntLegend();
+        // createLayerList();
+        // createFeatureWidget();
+
+        const legend = new Legend({ view });
+        view.ui.add(legend, 'bottom-right');
+
+        async function initIntLegend() {
+          const loadedMap = await map.loadAll();
+
+          const interactiveLegend = document.createElement('instant-apps-interactive-legend');
+          interactiveLegend.featureCount = true;
+          interactiveLegend.zoomTo = true;
+
+          interactiveLegend.filterMode = {
+            type: 'filter',
+          };
+
+          // interactiveLegend.filterMode = {
+          //   type: 'effect',
+          //   effect: {
+          //     // DROP SHADOW
+          //     includedEffect: 'drop-shadow(4px, 4px, 4px, #000000)',
+          //     excludedEffect: '',
+          //     // // BLOOM
+          //     // excludedEffect: 'opacity(65%)',
+          //     // includedEffect: 'bloom(1.3, 0.75px, 0.3)',
+          //     // // GRAYSCALE
+          //     // excludedEffect: 'grayscale(100%) opacity(50%)',
+          //     // includedEffect: '',
+          //   },
+          // };
+
+          interactiveLegend.view = view;
+
+          const container = document.createElement('div');
+          container.appendChild(interactiveLegend);
+
+          const calcitePanel = document.querySelector('calcite-panel');
+          calcitePanel.appendChild(container);
+
+          // const expand = new Expand({
+          //   view,
+          //   content: container,
+          //   expanded: true,
+          // });
+
+          // view.ui.add(expand, 'bottom-left');
+        }
+
+        function createLayerList() {
+          const layerList = new LayerList({
+            view,
+            container: document.getElementById('layerList'),
+          });
+        }
+
+        let highlightedFeature = null;
+
+        async function createFeatureWidget() {
+          const featureInstructionsNode = document.getElementById('featureInstructions');
+          const popup = await reactiveUtils.whenOnce(() => view?.popup);
+
+          popup.autoOpenEnabled = false;
+
+          const featureWidget = new Feature({
+            view,
+            container: document.getElementById('feature'),
+          });
+          await view.map.loadAll();
+          const layer = view.map.findLayerById('PowerPlants_WorldResourcesInstitute_7264');
+          view.whenLayerView(layer).then(layerView => {
+            view.on('click', event => {
+              if (featureInstructionsNode) featureInstructionsNode.remove();
+              view.hitTest(event).then(async response => {
+                // check if a feature is returned from the hurricanesLayer
+                if (response.results.length) {
+                  const graphic = response.results[0].graphic;
+                  // do something with the graphic
+                  if (highlightedFeature) {
+                    highlightedFeature.remove();
+                    highlightedFeature = null;
+                  }
+                  highlightedFeature = layerView.highlight(graphic);
+
+                  featureWidget.graphic = graphic;
+                }
+              });
+            });
+          });
+        }
+
+        function setUpTheme() {
+          const themeButton = document.getElementById('theme');
+
+          let theme = 'light';
+          let themeIcon;
+          let themeText;
+
+          const esriStylesheet = document.getElementById('esriStylesheet');
+
+          themeButton.addEventListener('click', () => {
+            theme = theme === 'light' ? 'dark' : 'light';
+            themeIcon = theme === 'light' ? 'moon' : 'brightness';
+            themeText = theme === 'light' ? 'Dark mode' : 'Light mode';
+            esriStylesheet.href = `https://jsdev.arcgis.com/4.26/esri/themes/${theme}/main.css`;
+            document.body.classList.remove('calcite-mode-light', 'calcite-mode-dark');
+            document.body.classList.add(`calcite-mode-${theme}`);
+            themeButton.setAttribute('icon', themeIcon);
+            themeButton.setAttribute('text', themeText);
+          });
+        }
+
+        function setUpDock() {
+          const sidePanelButton = document.getElementById('sidePanel');
+
+          let side = 'start';
+          let sideIcon;
+          let sideText;
+
+          const sidePanel = document.getElementById('shellPanel');
+          const actionBar = document.getElementById('actionBar');
+
+          sidePanelButton.addEventListener('click', () => {
+            side = side === 'start' ? 'end' : 'start';
+            sideIcon = side === 'start' ? 'dock-right' : 'dock-left';
+            sideText = side === 'start' ? 'Dock right' : 'Dock left';
+            sidePanel.setAttribute('slot', `panel-${side}`);
+            actionBar.setAttribute('position', side);
+            sidePanelButton.setAttribute('icon', sideIcon);
+            sidePanelButton.setAttribute('text', sideText);
+          });
+        }
+      });
+    </script>
+  </head>
+
+  <body class="calcite-mode-light">
+    <calcite-shell>
+      <instant-apps-header
+        slot="header"
+        title-text="Interactive Legend (2023.R01)"
+        text-color="#ffffff"
+        background-color="#2d5308"
+        logo-image="https://www.esri.com/content/dam/esrisites/en-us/common/icons/product-logos/arcgis-instant-apps-64.svg"
+        logo-image-alt-text="ArcGIS Instant Apps logo"
+        logo-link="https://www.esri.com/en-us/arcgis/products/arcgis-instant-apps/overview"
+      >
+        <instant-apps-social-share slot="actions-end" popover-button-icon-scale="s" share-button-color="inverse"></instant-apps-social-share>
+      </instant-apps-header>
+      <calcite-shell-panel id="shellPanel" slot="panel-start">
+        <calcite-action-bar id="actionBar" slot="action-bar" expanded>
+          <calcite-action icon="legend" text="Interactive legend" active></calcite-action>
+          <calcite-action icon="layers" text="Layer list"></calcite-action>
+          <calcite-action icon="popup" text="Popup"></calcite-action>
+          <calcite-action id="theme" slot="bottom-actions" icon="moon" text="Dark mode"></calcite-action>
+          <calcite-action id="sidePanel" slot="bottom-actions" icon="dock-right" text="Dock right"></calcite-action>
+        </calcite-action-bar>
+        <calcite-flow>
+          <calcite-panel>
+            <header slot="header-content">
+              <h2>Interactive Legend</h2>
+              <span>Filter features in the Interactive Legend</span>
+            </header>
+            <!-- <instant-apps-interactive-legend feature-count="true" zoom-to="true"></instant-apps-interactive-legend> -->
+            <!-- <div id="layerList"></div> -->
+            <!-- <div id="feature">
+              <span id="featureInstructions">Select a feature on the map</span>
+              <div id="featureWidget"></div>
+            </div> -->
+          </calcite-panel>
+        </calcite-flow>
+      </calcite-shell-panel>
+      <div id="viewDiv"></div>
+    </calcite-shell>
+  </body>
+</html>
