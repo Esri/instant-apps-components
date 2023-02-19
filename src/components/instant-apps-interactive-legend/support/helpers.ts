@@ -242,7 +242,7 @@ function generateQueryExpression(info: any, field: string, infoIndex: number, le
           }
         });
         const noExpression = expressionList.join(' AND ');
-        return field ? `${noExpression} OR ${field} IS NULL` : '';
+        return field && noExpression ? `${noExpression} OR ${field} IS NULL` : '';
       }
     } else {
       const singleQuote = value.indexOf("'") !== -1 ? value.split("'").join("''") : null;

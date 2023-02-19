@@ -196,7 +196,7 @@ export class InstantAppsInteractiveLegendClassic {
             activeLayerInfo={activeLayerInfo}
             messages={this.messages}
           />
-          <div key={`${key}-child-layers`} class={expanded ? 'show' : 'hide'}>
+          <div key={`${key}-child-layers`} id={`${activeLayerInfo?.layer?.id}-legend-layer`} class={expanded ? 'show' : 'hide'}>
             {layers}
           </div>
         </div>
