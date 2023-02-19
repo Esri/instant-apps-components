@@ -729,7 +729,5 @@ export class InstantAppsInteractiveLegendClassic {
       store.set('data', data);
     }
     forceUpdate(this.el);
-
-    // this.reRender = !this.reRender;
   }
 }

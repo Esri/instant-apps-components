@@ -524,7 +524,6 @@ export class InstantAppsInteractiveLegendRelationship {
           timeExtent: fLayerView?.filter?.timeExtent ? fLayerView.filter.timeExtent : null,
         });
       }
-      //   _setSearchExpression(where);
     }
   }
 
@@ -597,30 +596,4 @@ export class InstantAppsInteractiveLegendRelationship {
       cellClass.remove('esri-interactive-legend--selected-cell');
     }
   }
-
-  //   // _setSearchExpression
-  //   setSearchExpression(filterExpression: string): void {
-  //     if (!searchViewModel) {
-  //       return;
-  //     }
-
-  //     searchViewModel.sources.forEach(
-  //       (searchSource: __esri.LayerSearchSource) => {
-  //         layerListViewModel.operationalItems.forEach(operationalItem => {
-  //           if (
-  //             searchSource.layer &&
-  //             searchSource.layer.id === operationalItem.layer.id
-  //           ) {
-  //             if (filterExpression) {
-  //               searchSource.filter = {
-  //                 where: filterExpression
-  //               };
-  //             } else {
-  //               searchSource.filter = null;
-  //             }
-  //           }
-  //         });
-  //       }
-  //     );
-  //   }
 }
