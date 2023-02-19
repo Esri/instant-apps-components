@@ -97,7 +97,11 @@ export class InstantAppsInteractiveLegendLayerCaption {
           text={expanded === false ? this.messages?.expand : this.messages?.collapse}
           label={expanded === false ? this.messages?.expand : this.messages?.collapse}
         ></calcite-action>
-        {this.titleText}
+        {this.titleText ? (
+          <span key={`legend-layer-caption-text-${this.activeLayerInfo?.layer?.id}-${this.legendElementIndex}`} class="instant-apps-interactive-legend__legend-layer-caption-text">
+            {this.titleText}
+          </span>
+        ) : null}
         {this.isInteractive || isRelationship ? (
           <div key="layer-caption-btn-container" class={CSS.layerCaptionBtnContainer}>
             {showAllButton}

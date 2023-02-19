@@ -82,10 +82,19 @@
         //   },
         // });
 
-        esriConfig.portalUrl = 'https://loc.maps.arcgis.com';
+        // esriConfig.portalUrl = 'https://loc.maps.arcgis.com';
+        // const map = new WebMap({
+        //   portalItem: {
+        //     id: 'cc5e28de905f4583ba489ec07240543d',
+        //   },
+        // });
+
+        esriConfig.portalUrl = 'https://holistic.mapsdevext.arcgis.com';
         const map = new WebMap({
           portalItem: {
-            id: 'cc5e28de905f4583ba489ec07240543d',
+            // id: '3fbf765a51874d06a59a0cd3ffffe3ec',
+            // id: '6bc4607ceba1455cb889ad045257f0fd',
+            id: 'e75a42650ca346a1bcf1ec5218545dc6',
           },
         });
 
@@ -101,8 +110,8 @@
         // createLayerList();
         // createFeatureWidget();
 
-        // const legend = new Legend({ view });
-        // view.ui.add(legend, 'bottom-right');
+        const legend = new Legend({ view });
+        view.ui.add(legend, 'bottom-right');
 
         async function initIntLegend() {
           const loadedMap = await map.loadAll();

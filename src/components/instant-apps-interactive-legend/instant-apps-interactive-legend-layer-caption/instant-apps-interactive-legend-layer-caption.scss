@@ -24,6 +24,17 @@
     color: var(--instant-apps-interactive-legend-secondary-color);
   }
 
+  .instant-apps-interactive-legend__legend-layer-caption-text {
+    margin-bottom: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 1; /* number of lines to show */
+    line-clamp: 1;
+    -webkit-box-orient: vertical;
+    line-height: normal;
+  }
+
   .instant-apps-interactive-legend__layer-caption-btn-container {
     white-space: nowrap;
     margin-left: auto;
