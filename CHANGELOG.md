@@ -5,6 +5,18 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## v1.0.0-beta.43
+
+### instant-apps-social-share
+
+- Explicitly set `text-align: left` text within textarea of embed mode while in RTL languages.
+
+## v1.0.0-beta.42
+
+### @esri/calcite-components
+
+- Upgrade to v1.0.7
+
 ## v1.0.0-beta.41
 
 ### instant-apps-interactive-legend(beta)
