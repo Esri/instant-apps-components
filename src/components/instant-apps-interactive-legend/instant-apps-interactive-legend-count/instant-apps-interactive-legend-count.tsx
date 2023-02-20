@@ -1,7 +1,7 @@
-import { Component, Host, h, Prop, State } from '@stencil/core';
+import { Component, h, Prop, State } from '@stencil/core';
 import { ICategory } from '../instant-apps-interactive-legend-classic/interfaces/interfaces';
 import { loadModules } from 'esri-loader';
-import { interactiveLegendState, store } from '../support/store';
+import { interactiveLegendState } from '../support/store';
 import { handleFeatureCount } from '../support/helpers';
 
 const CSS = {

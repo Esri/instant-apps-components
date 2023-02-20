@@ -1,4 +1,4 @@
-import { Component, h, Prop, Host, Watch, State, Listen } from '@stencil/core';
+import { Component, h, Prop, Listen } from '@stencil/core';
 import { loadModules } from 'esri-loader';
 import { FilterMode } from '../instant-apps-interactive-legend-classic/interfaces/interfaces';
 import { interactiveLegendState } from '../support/store';
