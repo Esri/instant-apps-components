@@ -1,6 +1,8 @@
-import { Component, Host, h, Prop, State, Watch } from '@stencil/core';
-import { ICategory, IInteractiveLegendData } from '../instant-apps-interactive-legend-classic/interfaces/interfaces';
+import { Component, h, Prop, State } from '@stencil/core';
+import { ICategory } from '../instant-apps-interactive-legend-classic/interfaces/interfaces';
 import { loadModules } from 'esri-loader';
+import { interactiveLegendState } from '../support/store';
+import { handleFeatureCount } from '../support/helpers';
 
 const CSS = {
   countText: ' instant-apps-interactive-legend__info-count-text',
@@ -27,9 +29,6 @@ export class InstantAppsInteractiveLegendCount {
   showTotal: boolean = false;
 
   @Prop()
-  data: IInteractiveLegendData;
-
-  @Prop()
   legendvm: __esri.LegendViewModel;
 
   @Prop()
@@ -41,44 +40,57 @@ export class InstantAppsInteractiveLegendCount {
   @Prop()
   messages;
 
-  @State()
-  reRender: boolean = false;
-
   @Prop()
   selected: boolean;
 
-  @Watch('data')
-  updateUI() {
-    this.reRender = !this.reRender;
-  }
+  @State()
+  reRender;
 
   async componentWillLoad() {
     const [intl, reactiveUtils, Handles] = await loadModules(['esri/intl', 'esri/core/reactiveUtils', 'esri/core/Handles']);
     this.intl = intl;
     this.reactiveUtils = reactiveUtils;
     this.handles = new Handles();
+    this.reactiveUtils.when(
+      () => this.legendvm,
+      () => {
+        this.reactiveUtils.watch(
+          () => this.legendvm?.view?.updating,
+          async () => {
+            const data = await handleFeatureCount(this.legendvm, interactiveLegendState.data);
+            const layerData = data[this.layerId];
+            interactiveLegendState.data[layerData] = layerData;
+            this.reRender = !this.reRender;
+          },
+          { initial: true },
+        );
+      },
+      { initial: true, once: true },
+    );
   }
 
   render() {
     return (
-      <Host>
+      <div key="int-legend-count">
         {this.showTotal ? (
-          `${this.messages?.totalFeatureCount}: ${this.getTotalFeatureCount()}`
+          <span>
+            {this.messages?.totalFeatureCount}: {this.getTotalFeatureCount()}
+          </span>
         ) : (
           <span key="element-info-count" class={`${CSS.countText} ${this._getTheme()}${this.selected ? CSS.countTextSelected : ''}`}>
             {this.getCount()}
           </span>
         )}
-      </Host>
+      </div>
     );
   }
 
   getCount(): string | undefined {
-    const { data, layerId, categoryId } = this;
-    const isSingleElement = data[layerId]?.categories?.size;
-    if ((!data || !layerId || !categoryId) && !isSingleElement) return '';
+    const { layerId, categoryId } = this;
+    const isSingleElement = interactiveLegendState.data[layerId]?.categories?.size;
+    if ((!interactiveLegendState.data || !layerId || !categoryId) && !isSingleElement) return '';
 
-    const dataFromActiveLayerInfo = data[layerId];
+    const dataFromActiveLayerInfo = interactiveLegendState.data[layerId];
     if (!dataFromActiveLayerInfo) return;
     const { categories } = dataFromActiveLayerInfo;
     const category = categories.get(categoryId) as ICategory;
@@ -88,9 +100,9 @@ export class InstantAppsInteractiveLegendCount {
   }
 
   getTotalFeatureCount() {
-    const { data, layerId } = this;
-    if (!data || !layerId) return '';
-    const dataFromActiveLayerInfo = data[layerId];
+    const { layerId } = this;
+    if (!interactiveLegendState.data || !layerId) return '';
+    const dataFromActiveLayerInfo = interactiveLegendState.data[layerId];
     if (!dataFromActiveLayerInfo) return;
     const { categories } = dataFromActiveLayerInfo;
     const total = Array.from(categories.entries())

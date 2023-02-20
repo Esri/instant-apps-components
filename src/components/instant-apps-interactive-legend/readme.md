@@ -24,6 +24,7 @@
 graph TD;
   instant-apps-interactive-legend --> instant-apps-interactive-legend-classic
   instant-apps-interactive-legend-classic --> instant-apps-interactive-legend-caption
+  instant-apps-interactive-legend-classic --> instant-apps-interactive-legend-relationship
   instant-apps-interactive-legend-classic --> instant-apps-interactive-legend-layer-caption
   instant-apps-interactive-legend-classic --> instant-apps-interactive-legend-count
   instant-apps-interactive-legend-caption --> instant-apps-interactive-legend-count

@@ -1,5 +1,7 @@
-import { Component, EventEmitter, h, Prop, State, Event } from '@stencil/core';
+import { Component, h, Prop, Element, forceUpdate } from '@stencil/core';
 import { validateInteractivity } from '../support/helpers';
+
+import { interactiveLegendState } from '../support/store';
 
 const CSS = {
   label: 'esri-legend__service-label',
@@ -14,9 +16,6 @@ const CSS = {
   scoped: true,
 })
 export class InstantAppsInteractiveLegendCaption {
-  @State()
-  reRender = false;
-
   @Prop()
   legendvm: __esri.LegendViewModel;
 
@@ -27,37 +26,24 @@ export class InstantAppsInteractiveLegendCaption {
   activeLayerInfo: __esri.ActiveLayerInfo;
 
   @Prop()
-  data: any;
-
-  @Prop()
   messages;
 
-  @Prop()
-  expanded: boolean;
-
-  @Event({
-    eventName: 'legendLayerCaption',
-    composed: true,
-    cancelable: true,
-    bubbles: true,
-  })
-  legendLayerCaptionEvent: EventEmitter<boolean>;
-
-  emitLegendLayerCaption() {
-    this.legendLayerCaptionEvent.emit();
-  }
+  @Element()
+  el;
 
   render() {
     const isInteractive = validateInteractivity(this.activeLayerInfo);
-    const isNotExpanded = this.expanded === false;
-    const expandCollapseText = isNotExpanded ? this.messages?.expand : this.messages?.collapse;
+
+    const expanded = interactiveLegendState?.data[this.activeLayerInfo?.layer?.id]?.expanded?.layer;
+
+    const expandCollapseText = expanded ? this.messages?.collapse : this.messages?.expand;
     return (
-      <header class={CSS.interacitveLegendHeader}>
+      <header key={`${this.activeLayerInfo?.layer?.id}-header`} class={CSS.interacitveLegendHeader}>
         <span>
           <span class={CSS.headerActionContainer}>
             <calcite-action
-              onClick={() => this.toggleExpanded(this.activeLayerInfo)}
-              icon={isNotExpanded ? 'chevron-right' : 'chevron-down'}
+              onClick={this.toggleExpanded(this.activeLayerInfo)}
+              icon={expanded ? 'chevron-down' : 'chevron-right'}
               appearance="transparent"
               text={expandCollapseText}
               label={expandCollapseText}
@@ -65,17 +51,25 @@ export class InstantAppsInteractiveLegendCaption {
             <h3 class={`${CSS.header} ${CSS.label}`}>{this.activeLayerInfo?.title}</h3>
           </span>
           {this.featureCount && isInteractive ? (
-            <instant-apps-interactive-legend-count data={this.data} layer-id={this.activeLayerInfo?.layer?.id} show-total={true} messages={this.messages} />
+            <instant-apps-interactive-legend-count layer-id={this.activeLayerInfo?.layer?.id} show-total={true} messages={this.messages} legendvm={this.legendvm} />
           ) : null}
         </span>
       </header>
     );
   }
 
-  toggleExpanded(activeLayerInfo: __esri.ActiveLayerInfo): void {
-    const expanded = !this.data[activeLayerInfo?.layer.id].expanded.layer;
-    this.data[activeLayerInfo?.layer.id].expanded.layer = expanded;
-    this.emitLegendLayerCaption();
-    this.reRender = !this.reRender;
+  toggleExpanded(activeLayerInfo: __esri.ActiveLayerInfo): () => void {
+    return () => {
+      const expanded = !interactiveLegendState.data[activeLayerInfo?.layer.id].expanded.layer;
+      interactiveLegendState.data[activeLayerInfo?.layer?.id].expanded.layer = expanded;
+      const id = `${activeLayerInfo?.layer?.id}-legend-layer`;
+      const node = document.getElementById(id);
+      if (node?.classList.contains('show')) {
+        node?.classList.replace('show', 'hide');
+      } else {
+        node?.classList.replace('hide', 'show');
+      }
+      forceUpdate(this.el);
+    };
   }
 }

@@ -1,4 +1,5 @@
-import { Component, h, Prop, Element, State, forceUpdate, Watch } from '@stencil/core';
+import { Component, h, Prop, Element, State, Listen, forceUpdate } from '@stencil/core';
+import { interactiveLegendState, store } from '../support/store';
 
 import {
   getUnivariateColorRampPreview,
@@ -14,7 +15,7 @@ import { validateInteractivity, generateData, handleFeatureCount, handleFilter, 
 
 import { loadModules } from 'esri-loader';
 
-import { FilterMode, IInteractiveLegendData } from './interfaces/interfaces';
+import { FilterMode } from './interfaces/interfaces';
 import {
   ColorRampElement,
   ColorRampStop,
@@ -88,13 +89,10 @@ export class InstantAppsInteractiveLegendClassic {
   intl: __esri.intl;
 
   @State()
-  isLoading = true;
-
-  @State()
-  data: IInteractiveLegendData;
-
-  @State()
   reRender = false;
+
+  @State()
+  isLoading = true;
 
   @State()
   intLegendId: string;
@@ -131,23 +129,17 @@ export class InstantAppsInteractiveLegendClassic {
   @Prop()
   messages;
 
-  @Watch('featureCount')
-  async updateFeatureCount() {
-    this.updateFeatureCountData();
+  @Listen('showAllSelected', { target: 'window' })
+  showAllSelectedEmitted() {
+    this.reRender = !this.reRender;
   }
 
   async componentWillLoad() {
     const [intl, reactiveUtils, Handles] = await loadModules(['esri/intl', 'esri/core/reactiveUtils', 'esri/core/Handles']);
+
     this.reactiveUtils = reactiveUtils;
     this.handles = new Handles();
     this.intl = intl;
-
-    const observer = new MutationObserver(() => {
-      this.reRender = !this.reRender;
-    });
-    observer.observe(document.body, {
-      attributes: true,
-    });
   }
 
   async componentDidLoad() {
@@ -155,13 +147,8 @@ export class InstantAppsInteractiveLegendClassic {
     await (this.legendvm?.view?.map as __esri.WebMap).loadAll();
     try {
       // Initial data setup
-      this.data = await generateData(this.legendvm, this.reactiveUtils);
-
-      // Initial setup of feature count
-      this.updateFeatureCountData();
-
+      this.generateData();
       this.isLoading = false;
-
       this.setupWatchersAndListeners();
     } catch (err) {
       console.error(err);
@@ -178,9 +165,9 @@ export class InstantAppsInteractiveLegendClassic {
         .filter(layer => !!layer);
 
     return this.isLoading ? (
-      <calcite-loader scale="m" label={this.messages?.loading} text={this.messages?.loading}></calcite-loader>
+      <calcite-loader key="interactive-legend-loader" scale="m" label={this.messages?.loading} text={this.messages?.loading}></calcite-loader>
     ) : (
-      <div class={this.el.classList.contains('calcite-mode-dark') ? 'calcite-mode-dark' : 'calcite-mode-light'}>
+      <div key="interactive-legend-classic-container" class={this.el.classList.contains('calcite-mode-dark') ? 'calcite-mode-dark' : 'calcite-mode-light'}>
         {filteredLayers && filteredLayers.length ? filteredLayers : <div class={CSS.message}>{this.messages?.noLegend}</div>}
       </div>
     );
@@ -188,12 +175,6 @@ export class InstantAppsInteractiveLegendClassic {
 
   renderLegendForLayer(activeLayerInfo: __esri.ActiveLayerInfo) {
     if (!activeLayerInfo.ready) {
-      if (this.reactiveUtils) {
-        this.reactiveUtils.when(
-          () => activeLayerInfo?.ready,
-          () => (this.reRender = !this.reRender),
-        );
-      }
       return null;
     }
 
@@ -205,17 +186,19 @@ export class InstantAppsInteractiveLegendClassic {
     if (hasChildren) {
       const layers = activeLayerInfo.children.map(childActiveLayerInfo => this.renderLegendForLayer(childActiveLayerInfo)).toArray();
       const expanded = this.getLayerExpanded(activeLayerInfo);
+
       return (
-        <div key={key} class={`${CSS.service} ${CSS.groupLayer}`}>
+        <div key={`${key}-group`} class={`${CSS.service} ${CSS.groupLayer}`}>
           <instant-apps-interactive-legend-caption
-            data={this.data}
+            key={`${key}-child-caption`}
             legendvm={this.legendvm}
             feature-count={this.featureCount}
             activeLayerInfo={activeLayerInfo}
             messages={this.messages}
-            expanded={expanded}
           />
-          {expanded ? layers : null}
+          <div key={`${key}-child-layers`} id={`${activeLayerInfo?.layer?.id}-legend-layer`} class={expanded ? 'show' : 'hide'}>
+            {layers}
+          </div>
         </div>
       );
     }
@@ -240,20 +223,17 @@ export class InstantAppsInteractiveLegendClassic {
 
       const expanded = this.getLayerExpanded(activeLayerInfo);
       return (
-        <div key={key} class={`${CSS.service}${layerClasses}`} tabIndex={0}>
+        <div key={`${key}-layer`} class={`${CSS.service}${layerClasses}`} tabIndex={0}>
           <instant-apps-interactive-legend-caption
-            data={this.data}
+            key={`${key}-caption`}
             legendvm={this.legendvm}
             feature-count={this.featureCount}
             activeLayerInfo={activeLayerInfo}
             messages={this.messages}
-            expanded={expanded}
           />
-          {expanded === false ? null : (
-            <div key={`${activeLayerInfo?.layer?.id}-legend-layer`} class={CSS.layer}>
-              {filteredElements}
-            </div>
-          )}
+          <div key={`${activeLayerInfo?.layer?.id}-legend-layer`} id={`${activeLayerInfo?.layer?.id}-legend-layer`} class={`${CSS.layer}${expanded === false ? ' hide' : ' show'}`}>
+            {filteredElements}
+          </div>
         </div>
       );
     }
@@ -269,8 +249,8 @@ export class InstantAppsInteractiveLegendClassic {
     const isInteractive = validateInteractivity(activeLayerInfo, legendElement, legendElementIndex);
 
     // build symbol table or size ramp
-    const isNotRelationship = (activeLayerInfo?.layer as __esri.FeatureLayer)?.renderer?.authoringInfo?.type !== 'relationship'; // TEMP
-    if ((legendElement.type === 'symbol-table' || isSizeRamp) && isNotRelationship) {
+    const isRelationshipRamp = legendElement?.type === 'relationship-ramp';
+    if (legendElement.type === 'symbol-table' || isSizeRamp) {
       const rows = (legendElement.infos as any)
         .map((info: any, infoIndex: number) =>
           this.renderLegendForElementInfo(info, layer, effectList, isSizeRamp, legendElement, activeLayerInfo, legendElementIndex, infoIndex, isInteractive),
@@ -284,9 +264,13 @@ export class InstantAppsInteractiveLegendClassic {
       content = this.renderLegendForRamp(legendElement, layer.opacity);
     } else if (legendElement.type === 'relationship-ramp') {
       content = (
-        <span class={CSS.layerRow}>
-          <b>{this.messages?.relationship?.notSupported}</b>
-        </span>
+        <instant-apps-interactive-legend-relationship
+          key="relationship-ramp"
+          filterMode={this.filterMode}
+          activeLayerInfo={activeLayerInfo}
+          legendElement={legendElement}
+          messages={this.messages}
+        />
       );
     } else if (legendElement.type === 'pie-chart-ramp') {
       content = this.renderPieChartRamp(legendElement);
@@ -315,11 +299,10 @@ export class InstantAppsInteractiveLegendClassic {
 
     const tableClass = isChild ? CSS.layerChildTable : CSS.layerTable;
 
-    const expanded = this.getLegendElementsExpanded(activeLayerInfo, legendElementIndex);
+    const expanded = this.getLegendElementsExpanded(activeLayerInfo, isRelationshipRamp ? 0 : legendElementIndex);
 
     const caption = (
       <instant-apps-interactive-legend-layer-caption
-        data={this.data}
         legendvm={this.legendvm}
         activeLayerInfo={activeLayerInfo}
         layer={layer as __esri.FeatureLayer}
@@ -337,10 +320,15 @@ export class InstantAppsInteractiveLegendClassic {
     const nestedUniqueSymbolClass = activeLayerInfo?.legendElements?.[0]?.infos?.every?.(info => info?.type === 'symbol-table')
       ? ' instant-apps-interactive-legend__nested-unique-symbol'
       : '';
+
     return (
       <div class={`${tableClass}${tableClasses}${nonInteractiveClass}${nestedUniqueSymbolClass}`}>
-        {caption}
-        {expanded === false ? null : content}
+        <div key="caption" id={`${activeLayerInfo?.layer?.id}-legend-element-caption`} class={`${!isRelationshipRamp ? 'show' : 'hide'}`}>
+          {caption}
+        </div>
+        <div key="content" id={`${activeLayerInfo?.layer?.id}-legend-element-content-${legendElementIndex}`} class={`${expanded === false ? 'hide' : 'show'}`}>
+          {content}
+        </div>
       </div>
     );
   }
@@ -591,8 +579,8 @@ export class InstantAppsInteractiveLegendClassic {
 
     let selected;
 
-    if (this.data) {
-      const data = getIntLegendLayerData(layer as __esri.FeatureLayer, this.data);
+    if (interactiveLegendState.data) {
+      const data = getIntLegendLayerData(layer as __esri.FeatureLayer, interactiveLegendState.data);
       const category = data?.categories?.get(elementInfo?.label ?? layer?.id);
       // If no items are selected, then apply 'selected' style to all -- UX
       const noneSelected = checkNoneSelected(data);
@@ -602,9 +590,9 @@ export class InstantAppsInteractiveLegendClassic {
       // Regular LegendElementInfo
       <button
         onClick={() => {
-          const dataFromActiveLayerInfo = this.data?.[layer?.id];
+          const dataFromActiveLayerInfo = { ...interactiveLegendState.data?.[layer?.id] };
           handleFilter(dataFromActiveLayerInfo, elementInfo, infoIndex, this.filterMode);
-          this.reRender = !this.reRender;
+          store.set('data', { ...interactiveLegendState.data, [layer?.id]: dataFromActiveLayerInfo });
         }}
         class={`${CSS.layerRow} ${CSS.interactiveLayerRow}${selected ? ` ${CSS.infoSelected}` : ''}`}
       >
@@ -614,7 +602,6 @@ export class InstantAppsInteractiveLegendClassic {
           <instant-apps-interactive-legend-count
             categoryId={elementInfo.label ?? layer?.id}
             layerId={activeLayerInfo.layer.id}
-            data={this.data}
             legendvm={this.legendvm}
             messages={this.messages}
             selected={selected}
@@ -697,7 +684,7 @@ export class InstantAppsInteractiveLegendClassic {
     }
 
     return bundleKey
-      ? this.intl.substitute(bundleKey === 'showField' ? '{field}' : messages[bundleKey], {
+      ? this.intl?.substitute(bundleKey === 'showField' ? '{field}' : messages[bundleKey], {
           field: titleInfo.field,
           normField: titleInfo.normField,
         })
@@ -712,73 +699,35 @@ export class InstantAppsInteractiveLegendClassic {
     return !isRamp;
   }
 
-  handleFeatureCount() {
-    this.handles.add(
-      this.reactiveUtils.when(
-        () => !this.legendvm.view?.updating,
-        async () => {
-          const selector = 'instant-apps-interactive-legend-count';
-          const countNodes = document.querySelectorAll(selector);
-          await handleFeatureCount(this.legendvm, this.data);
-          countNodes.forEach(countNode => forceUpdate(countNode));
-        },
-      ),
-    );
-  }
-
   getLayerExpanded(activeLayerInfo: __esri.ActiveLayerInfo): boolean {
-    return this.data?.[activeLayerInfo?.layer?.id]?.expanded?.layer;
+    return interactiveLegendState.data?.[activeLayerInfo?.layer?.id]?.expanded?.layer;
   }
 
   getLegendElementsExpanded(activeLayerInfo: __esri.ActiveLayerInfo, legendElementIndex: number): boolean {
-    return this.data?.[activeLayerInfo?.layer?.id]?.expanded?.legendElements?.[legendElementIndex];
-  }
-
-  async updateFeatureCountData() {
-    if (this.featureCount) {
-      const data = await handleFeatureCount(this.legendvm, this.data);
-      this.data = data;
-
-      this.handleFeatureCount();
-    }
+    return interactiveLegendState.data?.[activeLayerInfo?.layer?.id]?.expanded?.legendElements?.[legendElementIndex];
   }
 
   setupWatchersAndListeners(): void {
     // Refreshes interactive legend data on active layer info update
-    this.legendvm?.activeLayerInfos?.forEach(async () => {
-      this.data = await generateData(this.legendvm, this.reactiveUtils);
-    });
+    this.legendvm?.activeLayerInfos?.forEach(async () => this.generateData());
 
     this.reactiveUtils.on(
       () => this.legendvm?.activeLayerInfos,
       'change',
-      async () => {
-        this.data = await generateData(this.legendvm, this.reactiveUtils);
-      },
+      () => this.generateData(),
     );
+  }
 
-    this.reactiveUtils.watch(
-      () => this.legendvm?.view?.updating,
-      () => {
-        this.updateFeatureCount();
-      },
-    );
-
-    // Re-renders layers on layer visibility toggle
-    this.legendvm?.view?.map?.allLayers?.forEach(layer => {
-      if (layer.type === 'feature') {
-        const watcher = this.reactiveUtils.watch(
-          () => layer.visible,
-          async () => {
-            await this.updateFeatureCount();
-            this.reRender = !this.reRender;
-          },
-        );
-        this.handles.add(watcher);
-      }
-    });
-
-    // Re-renders UI on legendLayerCaption event - expand/collapse of caption
-    document.addEventListener('legendLayerCaption', () => (this.reRender = !this.reRender));
+  async generateData(): Promise<void> {
+    if (this.featureCount) {
+      const data = await generateData(this.legendvm, this.reactiveUtils);
+      store.set('data', data);
+      const dataWithFeatureCount = await handleFeatureCount(this.legendvm, interactiveLegendState.data);
+      store.set('data', dataWithFeatureCount);
+    } else {
+      const data = await generateData(this.legendvm, this.reactiveUtils);
+      store.set('data', data);
+    }
+    forceUpdate(this.el);
   }
 }

@@ -1,6 +1,7 @@
-import { Component, h, Prop, State, Event, EventEmitter } from '@stencil/core';
+import { Component, h, Prop, EventEmitter, Event, forceUpdate, Element } from '@stencil/core';
 
 import { showAll, zoomTo } from '../support/helpers';
+import { interactiveLegendState } from '../support/store';
 const CSS = {
   layerCaption: 'esri-legend__layer-caption',
   layerCaptionBtnContainer: 'instant-apps-interactive-legend__layer-caption-btn-container',
@@ -12,9 +13,6 @@ const CSS = {
   scoped: true,
 })
 export class InstantAppsInteractiveLegendLayerCaption {
-  @Prop()
-  data;
-
   @Prop()
   legendvm: __esri.LegendViewModel;
 
@@ -42,35 +40,33 @@ export class InstantAppsInteractiveLegendLayerCaption {
   @Prop()
   messages;
 
-  @State()
-  reRender = false;
-
   @Event({
-    eventName: 'legendLayerCaption',
+    eventName: 'showAllSelected',
     composed: true,
     cancelable: true,
     bubbles: true,
   })
-  legendLayerCaptionEvent: EventEmitter<boolean>;
+  showAllSelectedEvent: EventEmitter<boolean>;
 
-  emitLegendLayerCaption() {
-    this.legendLayerCaptionEvent.emit();
-  }
+  @Element()
+  el;
 
   render() {
     const showAllButton =
-      this.data?.[this.layer?.id]?.categories?.size > 1 ? (
+      interactiveLegendState.data?.[this.layer?.id]?.categories?.size > 1 ? (
         <calcite-button
           key="show-all-button"
           id="showAll"
           onClick={() => {
-            showAll(this.data?.[this.layer?.id]);
-            this.emitLegendLayerCaption();
+            const layerData = showAll(interactiveLegendState.data?.[this.layer?.id]);
+            interactiveLegendState.data[this.layer.id] = layerData;
+            this.showAllSelectedEvent.emit();
           }}
           icon-start="list-check-all"
           appearance="outline"
           round={true}
-        ></calcite-button>
+          label={this.messages?.showAll}
+        />
       ) : null;
 
     const zoomToButton = (
@@ -78,28 +74,35 @@ export class InstantAppsInteractiveLegendLayerCaption {
         key="zoom-to-button"
         id="zoomTo"
         onClick={() => {
-          zoomTo(this.data?.[this.layer?.id], this.legendvm.view as __esri.MapView);
-          this.emitLegendLayerCaption();
+          zoomTo(interactiveLegendState.data?.[this.layer?.id], this.legendvm.view as __esri.MapView);
         }}
         icon-start="magnifying-glass-plus"
         appearance="outline"
         round={true}
-      ></calcite-button>
+        label={this.messages?.zoomTo}
+      />
     );
 
     const isNestedUniqueSymbols = this.activeLayerInfo?.legendElements?.[0]?.infos?.every?.(info => info?.type === 'symbol-table');
+    const isRelationship = this.activeLayerInfo?.legendElements[1]?.type === 'relationship-ramp';
+
+    const expanded = interactiveLegendState?.data?.[this.activeLayerInfo?.layer?.id]?.expanded?.legendElements[this?.legendElementIndex];
 
     return !isNestedUniqueSymbols ? (
       <div class={CSS.layerCaption}>
         <calcite-action
           onClick={this.toggleExpanded(this.activeLayerInfo, this.legendElementIndex)}
-          icon={this.expanded === false ? 'chevron-right' : 'chevron-down'}
+          icon={expanded === false ? 'chevron-right' : 'chevron-down'}
           appearance="transparent"
-          text={this.expanded === false ? this.messages?.expand : this.messages?.collapse}
-          label={this.expanded === false ? this.messages?.expand : this.messages?.collapse}
+          text={expanded === false ? this.messages?.expand : this.messages?.collapse}
+          label={expanded === false ? this.messages?.expand : this.messages?.collapse}
         ></calcite-action>
-        {this.titleText}
-        {this.isInteractive ? (
+        {this.titleText ? (
+          <span key={`legend-layer-caption-text-${this.activeLayerInfo?.layer?.id}-${this.legendElementIndex}`} class="instant-apps-interactive-legend__legend-layer-caption-text">
+            {this.titleText}
+          </span>
+        ) : null}
+        {this.isInteractive || isRelationship ? (
           <div key="layer-caption-btn-container" class={CSS.layerCaptionBtnContainer}>
             {showAllButton}
             <calcite-tooltip reference-element="showAll" placement="top" label={this.messages?.showAll}>
@@ -123,10 +126,37 @@ export class InstantAppsInteractiveLegendLayerCaption {
 
   toggleExpanded(activeLayerInfo: __esri.ActiveLayerInfo, legendElementIndex: number): () => void {
     return () => {
-      const expanded = !this.data[activeLayerInfo?.layer.id].expanded.legendElements[legendElementIndex];
-      this.data[activeLayerInfo?.layer.id].expanded.legendElements[legendElementIndex] = expanded;
-      this.emitLegendLayerCaption();
-      this.reRender = !this.reRender;
+      const expanded = !interactiveLegendState.data[activeLayerInfo?.layer.id].expanded.legendElements[legendElementIndex];
+      interactiveLegendState.data[activeLayerInfo?.layer?.id].expanded.legendElements[legendElementIndex] = expanded;
+
+      const fLayer = activeLayerInfo.layer as __esri.FeatureLayer;
+
+      if (fLayer?.renderer?.authoringInfo?.type === 'relationship') {
+        const id = `${activeLayerInfo?.layer?.id}-legend-element-content-0`;
+        const id2 = `${activeLayerInfo?.layer?.id}-legend-element-content-1`;
+        const node = document.getElementById(id);
+        const node2 = document.getElementById(id2);
+        if (node?.classList.contains('show')) {
+          node?.classList.replace('show', 'hide');
+        } else {
+          node?.classList.replace('hide', 'show');
+        }
+        if (node2?.classList.contains('show')) {
+          node2?.classList.replace('show', 'hide');
+        } else {
+          node2?.classList.replace('hide', 'show');
+        }
+      } else {
+        const id = `${activeLayerInfo?.layer?.id}-legend-element-content-${legendElementIndex}`;
+        const node = document.getElementById(id);
+        if (node?.classList.contains('show')) {
+          node?.classList.replace('show', 'hide');
+        } else {
+          node?.classList.replace('hide', 'show');
+        }
+      }
+
+      forceUpdate(this.el);
     };
   }
 }

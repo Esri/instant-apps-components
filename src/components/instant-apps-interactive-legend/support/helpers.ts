@@ -22,7 +22,7 @@ export function validateInteractivity(activeLayerInfo: __esri.ActiveLayerInfo, l
 
   const singleSymbol = legendElement?.infos?.length === 1 && !field;
 
-  // const isRelationship = authoringInfoType === 'relationship' && legendElement?.type !== 'size-ramp'; // TODO
+  const isRelationshipRamp = authoringInfoType === 'relationship' && legendElement?.type !== 'size-ramp' && legendElement?.type !== 'symbol-table';
 
   const isFeatureLayer = activeLayerInfo?.get('layer.type') === 'feature';
 
@@ -36,7 +36,7 @@ export function validateInteractivity(activeLayerInfo: __esri.ActiveLayerInfo, l
     (classifyDataCheckedColorRamp && field) ||
     (classifyDataCheckedSizeRamp && field) ||
     (singleSymbol && !field && field !== null) ||
-    // isRelationship ||
+    isRelationshipRamp ||
     uniqueValueInfos
       ? true
       : false;
@@ -242,7 +242,7 @@ function generateQueryExpression(info: any, field: string, infoIndex: number, le
           }
         });
         const noExpression = expressionList.join(' AND ');
-        return field ? `${noExpression} OR ${field} IS NULL` : '';
+        return field && noExpression ? `${noExpression} OR ${field} IS NULL` : '';
       }
     } else {
       const singleQuote = value.indexOf("'") !== -1 ? value.split("'").join("''") : null;
@@ -301,13 +301,14 @@ export async function handleFilter(data: IIntLegendLayerData, info: any, infoInd
   }
 }
 
-export function showAll(data: IIntLegendLayerData): void {
+export function showAll(data: IIntLegendLayerData): IIntLegendLayerData {
   data.queryExpressions = [];
   if (data?.fLayerView?.filter?.where) data.fLayerView.filter.where = '';
   if (data?.fLayerView?.featureEffect?.filter?.where) (data.fLayerView as any).featureEffect = null;
   data.categories.forEach(category => {
     category.selected = false;
   });
+  return data;
 }
 
 export async function zoomTo(data: IIntLegendLayerData, view: __esri.MapView): Promise<void> {

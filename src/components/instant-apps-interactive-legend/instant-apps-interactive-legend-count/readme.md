@@ -7,15 +7,14 @@
 
 ## Properties
 
-| Property     | Attribute     | Description | Type                     | Default     |
-| ------------ | ------------- | ----------- | ------------------------ | ----------- |
-| `categoryId` | `category-id` |             | `string`                 | `undefined` |
-| `data`       | --            |             | `IInteractiveLegendData` | `undefined` |
-| `layerId`    | `layer-id`    |             | `string`                 | `undefined` |
-| `legendvm`   | --            |             | `LegendViewModel`        | `undefined` |
-| `messages`   | `messages`    |             | `any`                    | `undefined` |
-| `selected`   | `selected`    |             | `boolean`                | `undefined` |
-| `showTotal`  | `show-total`  |             | `boolean`                | `false`     |
+| Property     | Attribute     | Description | Type              | Default     |
+| ------------ | ------------- | ----------- | ----------------- | ----------- |
+| `categoryId` | `category-id` |             | `string`          | `undefined` |
+| `layerId`    | `layer-id`    |             | `string`          | `undefined` |
+| `legendvm`   | --            |             | `LegendViewModel` | `undefined` |
+| `messages`   | `messages`    |             | `any`             | `undefined` |
+| `selected`   | `selected`    |             | `boolean`         | `undefined` |
+| `showTotal`  | `show-total`  |             | `boolean`         | `false`     |
 
 
 ## Dependencies

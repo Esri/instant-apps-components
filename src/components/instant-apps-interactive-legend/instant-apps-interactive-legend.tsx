@@ -35,9 +35,6 @@ export class InstantAppsInteractiveLegend {
   el: HTMLElement;
 
   @State()
-  reRender: boolean = false;
-
-  @State()
   handles: __esri.Handles;
 
   @State()
@@ -78,12 +75,6 @@ export class InstantAppsInteractiveLegend {
   @State() messages;
 
   async componentWillLoad() {
-    const observer = new MutationObserver(() => {
-      this.reRender = !this.reRender;
-    });
-    observer.observe(document.body, {
-      attributes: true,
-    });
     await this.initializeModules();
   }
 
@@ -124,17 +115,6 @@ export class InstantAppsInteractiveLegend {
           () => this._refreshActiveLayerInfos(this?.legendvm?.activeLayerInfos, this.reactiveUtils),
         ),
       ]);
-
-      // Re-renders layers on layer visibility toggle
-      this.legendvm?.view?.map?.allLayers?.forEach(layer => {
-        if (layer.type === 'feature') {
-          const watcher = this.reactiveUtils.watch(
-            () => layer.visible,
-            async () => (this.reRender = !this.reRender),
-          );
-          this.handles.add(watcher);
-        }
-      });
     } catch (err) {
       console.error('Failed at "init": ', err);
     }
@@ -144,8 +124,9 @@ export class InstantAppsInteractiveLegend {
     const theme = this._getTheme();
     const { base, component, widget, widgetPanel } = CSS.esri;
     return (
-      <div class={this.widget?.classes(base, component, widget, widgetPanel)}>
+      <div key="interactive-legend" class={this.widget?.classes(base, component, widget, widgetPanel)}>
         <instant-apps-interactive-legend-classic
+          key="interactive-legend-classic"
           ref={(el: HTMLInstantAppsInteractiveLegendClassicElement) => (this.ref = el)}
           class={theme}
           legendvm={this.legendvm}
@@ -162,16 +143,11 @@ export class InstantAppsInteractiveLegend {
     if (!activeLayerInfos) return;
     this.handles.removeAll();
     activeLayerInfos.forEach(activeLayerInfo => this._renderOnActiveLayerInfoChange(activeLayerInfo, reactiveUtils));
-    this.reRender = !this.reRender;
   }
 
   private _renderOnActiveLayerInfoChange(activeLayerInfo: __esri.ActiveLayerInfo, reactiveUtils: __esri.reactiveUtils): void {
-    const { watch, on } = this.reactiveUtils;
-    const infoVersionHandle = watch(
-      () => activeLayerInfo.version,
-      () => (this.reRender = !this.reRender),
-    );
-    this.handles.add(infoVersionHandle, `version_${(activeLayerInfo?.layer as any)?.uid}`);
+    const { on } = this.reactiveUtils;
+
     const childrenChangeHandle = on(
       () => activeLayerInfo.children,
       'change',

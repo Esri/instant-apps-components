@@ -10,7 +10,6 @@
 | Property             | Attribute              | Description | Type              | Default     |
 | -------------------- | ---------------------- | ----------- | ----------------- | ----------- |
 | `activeLayerInfo`    | --                     |             | `ActiveLayerInfo` | `undefined` |
-| `data`               | `data`                 |             | `any`             | `undefined` |
 | `expanded`           | `expanded`             |             | `boolean`         | `undefined` |
 | `isInteractive`      | `is-interactive`       |             | `boolean`         | `undefined` |
 | `layer`              | --                     |             | `FeatureLayer`    | `undefined` |
@@ -23,9 +22,9 @@
 
 ## Events
 
-| Event                | Description | Type                   |
-| -------------------- | ----------- | ---------------------- |
-| `legendLayerCaption` |             | `CustomEvent<boolean>` |
+| Event             | Description | Type                   |
+| ----------------- | ----------- | ---------------------- |
+| `showAllSelected` |             | `CustomEvent<boolean>` |
 
 
 ## Dependencies
