@@ -327,9 +327,15 @@ export class InstantAppsInteractiveLegendClassic {
       ? ' instant-apps-interactive-legend__nested-unique-symbol'
       : '';
 
+    const singleSymbol = legendElement?.infos?.length === 1 && !((activeLayerInfo?.layer as __esri.FeatureLayer)?.renderer as any)?.field;
+
     return (
       <div class={`${tableClass}${tableClasses}${nonInteractiveClass}${nestedUniqueSymbolClass}`}>
-        <div key="caption" id={`${activeLayerInfo?.layer?.id}-legend-element-caption`} class={`${!isRelationshipRamp ? 'show' : 'hide'}`}>
+        <div
+          key="caption"
+          id={`${activeLayerInfo?.layer?.id}-legend-element-caption`}
+          class={`${isRelationshipRamp || (!title && !this.zoomTo && singleSymbol) ? 'hide' : 'show'}`}
+        >
           {caption}
         </div>
         <div key="content" id={`${activeLayerInfo?.layer?.id}-legend-element-content-${legendElementIndex}`} class={`${expanded === false ? 'hide' : 'show'}`}>

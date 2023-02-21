@@ -41,6 +41,7 @@ export class InstantAppsInteractiveLegendCaption {
       <header key={`${this.activeLayerInfo?.layer?.id}-header`} class={CSS.interacitveLegendHeader}>
         <span>
           <span class={CSS.headerActionContainer}>
+            <h3 class={`${CSS.header} ${CSS.label}`}>{this.activeLayerInfo?.title}</h3>
             <calcite-action
               onClick={this.toggleExpanded(this.activeLayerInfo)}
               icon={expanded ? 'chevron-down' : 'chevron-right'}
@@ -48,7 +49,6 @@ export class InstantAppsInteractiveLegendCaption {
               text={expandCollapseText}
               label={expandCollapseText}
             />
-            <h3 class={`${CSS.header} ${CSS.label}`}>{this.activeLayerInfo?.title}</h3>
           </span>
           {this.featureCount && isInteractive ? (
             <instant-apps-interactive-legend-count layer-id={this.activeLayerInfo?.layer?.id} show-total={true} messages={this.messages} legendvm={this.legendvm} />

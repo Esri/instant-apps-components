@@ -15,16 +15,19 @@
 
   .esri-legend__layer-caption {
     calcite-action {
-      margin-right: 5px;
+      margin-left: 5px;
     }
     display: flex;
     align-items: center;
+    justify-content: space-between;
     font-size: var(--instant-apps-interactive-legend-field-name-font-size);
     background-color: var(--instant-apps-interactive-legend-secondary-background-color);
     color: var(--instant-apps-interactive-legend-secondary-color);
   }
 
   .instant-apps-interactive-legend__legend-layer-caption-text {
+    display: inline-block;
+    margin-left: 2.5px;
     margin-bottom: 0;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -41,6 +44,10 @@
     calcite-button {
       margin: 2px;
     }
+  }
+
+  .instant-apps-interactive-legend__layer-caption-btn-container--no-text {
+    margin-left: unset;
   }
 
   .esri-legend__layer-caption {
