@@ -166,7 +166,7 @@ async function createInteractiveLegendDataForLayer(
 
 function generateQueryExpressions(data: IIntLegendLayerData, info: any, infoIndex: number): void {
   const { field, legendElement, categories, fLayerView } = data;
-  const legendElementInfos = Array.from(categories);
+  const legendElementInfos = legendElement?.infos;
 
   const isPredominance = checkPredominance(fLayerView);
 
@@ -205,7 +205,7 @@ function generateQueryExpressions(data: IIntLegendLayerData, info: any, infoInde
   }
 }
 
-function generateQueryExpression(info: any, field: string, infoIndex: number, legendElement: __esri.LegendElement, legendElementInfos: any[], normalizationField?: string): string {
+function generateQueryExpression(info: any, field: string, infoIndex: number, legendElement: __esri.LegendElement, legendElementInfos: any, normalizationField?: string): string {
   const { value } = info;
   if (legendElement.type === 'symbol-table') {
     // Classify data size/color ramp
@@ -230,7 +230,7 @@ function generateQueryExpression(info: any, field: string, infoIndex: number, le
         // Types unique symbols - 'Other' category
         const expressionList = [] as string[];
         legendElementInfos?.forEach(legendElementInfo => {
-          if (info.value) {
+          if (legendElementInfo?.value) {
             const { value } = legendElementInfo;
             const singleQuote = value.indexOf("'") !== -1 ? value.split("'").join("''") : null;
             const expression = singleQuote
@@ -299,6 +299,7 @@ export async function handleFilter(data: IIntLegendLayerData, info: any, infoInd
       }) as __esri.FeatureEffect;
     }
   }
+  return Promise.resolve();
 }
 
 export function showAll(data: IIntLegendLayerData): IIntLegendLayerData {

@@ -85,7 +85,7 @@ const univariateColorRampStyles = { display: 'table-cell', verticalAlign: 'middl
 })
 export class InstantAppsInteractiveLegendClassic {
   reactiveUtils: __esri.reactiveUtils;
-  handles: __esri.Handles;
+  handles: __esri.Handles | null;
   intl: __esri.intl;
 
   @State()
@@ -147,12 +147,18 @@ export class InstantAppsInteractiveLegendClassic {
     await (this.legendvm?.view?.map as __esri.WebMap).loadAll();
     try {
       // Initial data setup
-      this.generateData();
+      await this.generateData();
       this.isLoading = false;
       this.setupWatchersAndListeners();
     } catch (err) {
       console.error(err);
     }
+  }
+
+  disconnectedCallback() {
+    this.handles?.removeAll();
+    this.handles?.destroy();
+    this.handles = null;
   }
 
   render() {
@@ -589,9 +595,9 @@ export class InstantAppsInteractiveLegendClassic {
     return isInteractive ? (
       // Regular LegendElementInfo
       <button
-        onClick={() => {
+        onClick={async () => {
           const dataFromActiveLayerInfo = { ...interactiveLegendState.data?.[layer?.id] };
-          handleFilter(dataFromActiveLayerInfo, elementInfo, infoIndex, this.filterMode);
+          await handleFilter(dataFromActiveLayerInfo, elementInfo, infoIndex, this.filterMode);
           store.set('data', { ...interactiveLegendState.data, [layer?.id]: dataFromActiveLayerInfo });
         }}
         class={`${CSS.layerRow} ${CSS.interactiveLayerRow}${selected ? ` ${CSS.infoSelected}` : ''}`}
@@ -709,12 +715,26 @@ export class InstantAppsInteractiveLegendClassic {
 
   setupWatchersAndListeners(): void {
     // Refreshes interactive legend data on active layer info update
-    this.legendvm?.activeLayerInfos?.forEach(async () => this.generateData());
+    this.legendvm?.activeLayerInfos?.forEach(async activeLayerInfo => {
+      await this.generateData();
+      activeLayerInfo.children.forEach(async () => await this.generateData());
+    });
 
-    this.reactiveUtils.on(
-      () => this.legendvm?.activeLayerInfos,
-      'change',
-      () => this.generateData(),
+    this.handles?.add(
+      this.reactiveUtils.on(
+        () => this.legendvm?.activeLayerInfos,
+        'change',
+        async activeLayerInfo => {
+          await this.generateData();
+          this.handles?.add(
+            this.reactiveUtils.on(
+              () => activeLayerInfo.children,
+              'change',
+              async () => await this.generateData(),
+            ),
+          );
+        },
+      ),
     );
   }
 
@@ -729,5 +749,6 @@ export class InstantAppsInteractiveLegendClassic {
       store.set('data', data);
     }
     forceUpdate(this.el);
+    return Promise.resolve();
   }
 }

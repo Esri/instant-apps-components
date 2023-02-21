@@ -2,15 +2,21 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  margin-left: auto;
 }
 
 .instant-apps-interactive-legend__info-count-text {
-  position: absolute;
-  right: 5%;
   font-size: var(--instant-apps-interactive-legend-info-font-size);
   color: var(--instant-apps-interactive-legend-secondary-color);
 }
 
 .calcite-mode-dark.instant-apps-interactive-legend__info-count-text.instant-apps-interactive-legend__info-count-text--selected {
   color: var(--calcite-ui-text-inverse);
+}
+
+html[dir='rtl'] {
+  :host {
+    margin-left: 0;
+    margin-right: auto;
+  }
 }
