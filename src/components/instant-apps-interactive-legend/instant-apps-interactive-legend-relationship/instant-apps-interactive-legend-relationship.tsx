@@ -1,6 +1,7 @@
 import { Component, h, Prop, Listen } from '@stencil/core';
 import { loadModules } from 'esri-loader';
 import { FilterMode } from '../instant-apps-interactive-legend-classic/interfaces/interfaces';
+import { getMergedEffect } from '../support/effects';
 import { interactiveLegendState } from '../support/store';
 
 const RELATIONSHIP_DIAMOND_SELECTOR = '.esri-relationship-ramp--diamond__middle-column--ramp svg g';
@@ -59,7 +60,6 @@ export class InstantAppsInteractiveLegendRelationship {
   render() {
     return (
       <div
-        key="asdfasfadsf"
         ref={(node: HTMLDivElement) => {
           const styleSheet = node?.querySelector('relationshipStyles');
           if (!styleSheet) {
@@ -502,27 +502,25 @@ export class InstantAppsInteractiveLegendRelationship {
         }
       }
       const where = queryExpressions.join(' OR ');
-      //   if (filterMode === "mute") {
-      //     const opacity = opacity || opacity === 0 ? opacity : 30;
-      //     const grayScale =
-      //       grayScale || grayScale === 0 ? grayScale : 100;
+      const timeExtent = fLayerView?.filter?.timeExtent ?? null;
 
-      //     layerView.effect = new FeatureEffect({
-      //       filter: new FeatureFilter({
-      //         where,
-      //         timeExtent: layerView?.effect?.filter?.timeExtent
-      //           ? layerView.effect.filter.timeExtent
-      //           : null
-      //       }),
-      //       excludedEffect: `grayscale(${grayScale}%) opacity(${opacity}%)`
-      //     });
-      //   } else
+      const [FeatureFilter, FeatureEffect] = await loadModules(['esri/layers/support/FeatureFilter', 'esri/layers/support/FeatureEffect']);
+
       if (this.filterMode?.type === 'filter') {
-        const [FeatureFilter] = await loadModules(['esri/layers/support/FeatureFilter']);
         fLayerView.filter = new FeatureFilter({
           where,
           timeExtent: fLayerView?.filter?.timeExtent ? fLayerView.filter.timeExtent : null,
         });
+      } else if (this.filterMode?.effect) {
+        const { includedEffect, excludedEffect } = this.filterMode.effect;
+        const mergedExcludedEffect = await getMergedEffect(excludedEffect, fLayerView, 'excludedEffect');
+        const mergedIncludedEffect = await getMergedEffect(includedEffect, fLayerView, 'includedEffect');
+
+        fLayerView.featureEffect = new FeatureEffect({
+          filter: new FeatureFilter({ where, timeExtent }),
+          includedEffect: mergedIncludedEffect,
+          excludedEffect: mergedExcludedEffect,
+        }) as __esri.FeatureEffect;
       }
     }
   }
