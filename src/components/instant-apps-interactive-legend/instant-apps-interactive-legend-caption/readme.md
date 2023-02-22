@@ -11,6 +11,7 @@
 | ----------------- | --------------- | ----------- | ----------------- | ----------- |
 | `activeLayerInfo` | --              |             | `ActiveLayerInfo` | `undefined` |
 | `featureCount`    | `feature-count` |             | `boolean`         | `undefined` |
+| `isChild`         | `is-child`      |             | `boolean`         | `false`     |
 | `legendvm`        | --              |             | `LegendViewModel` | `undefined` |
 | `messages`        | `messages`      |             | `any`             | `undefined` |
 
