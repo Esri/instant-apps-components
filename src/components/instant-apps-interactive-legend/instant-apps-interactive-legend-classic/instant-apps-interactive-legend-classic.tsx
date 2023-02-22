@@ -179,7 +179,7 @@ export class InstantAppsInteractiveLegendClassic {
     );
   }
 
-  renderLegendForLayer(activeLayerInfo: __esri.ActiveLayerInfo) {
+  renderLegendForLayer(activeLayerInfo: __esri.ActiveLayerInfo, isChild?: boolean) {
     if (!activeLayerInfo.ready) {
       return null;
     }
@@ -190,7 +190,7 @@ export class InstantAppsInteractiveLegendClassic {
     // const labelNode = activeLayerInfo.title ? Heading({ level: this.headingLevel, class: (CSS.header, CSS.label) }, activeLayerInfo.title) : null;
 
     if (hasChildren) {
-      const layers = activeLayerInfo.children.map(childActiveLayerInfo => this.renderLegendForLayer(childActiveLayerInfo)).toArray();
+      const layers = activeLayerInfo.children.map(childActiveLayerInfo => this.renderLegendForLayer(childActiveLayerInfo, true)).toArray();
       const expanded = this.getLayerExpanded(activeLayerInfo);
 
       return (
@@ -236,6 +236,7 @@ export class InstantAppsInteractiveLegendClassic {
             feature-count={this.featureCount}
             activeLayerInfo={activeLayerInfo}
             messages={this.messages}
+            isChild={!!isChild}
           />
           <div key={`${activeLayerInfo?.layer?.id}-legend-layer`} id={`${activeLayerInfo?.layer?.id}-legend-layer`} class={`${CSS.layer}${expanded === false ? ' hide' : ' show'}`}>
             {filteredElements}

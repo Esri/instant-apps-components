@@ -13,6 +13,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Swap zoom/show all with collapsible actions
   - Double scroll bar
   - Dark mode support for relationship drawing style's instructional text
+  - Legend caption for group layer - css updates
 
 ## v1.0.0-beta.45
 

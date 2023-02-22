@@ -31,17 +31,23 @@ export class InstantAppsInteractiveLegendCaption {
   @Element()
   el;
 
+  @Prop()
+  isChild = false;
+
   render() {
     const isInteractive = validateInteractivity(this.activeLayerInfo);
 
     const expanded = interactiveLegendState?.data[this.activeLayerInfo?.layer?.id]?.expanded?.layer;
 
     const expandCollapseText = expanded ? this.messages?.collapse : this.messages?.expand;
+
+    const isChild = this.isChild ? ' instant-apps-interactive-legend__heading-text--group-item' : '';
+
     return (
       <header key={`${this.activeLayerInfo?.layer?.id}-header`} class={CSS.interacitveLegendHeader}>
         <span>
           <span class={CSS.headerActionContainer}>
-            <h3 class={`${CSS.header} ${CSS.label}`}>{this.activeLayerInfo?.title}</h3>
+            <h3 class={`${CSS.header} ${CSS.label}${isChild}`}>{this.activeLayerInfo?.title}</h3>
             <calcite-action
               onClick={this.toggleExpanded(this.activeLayerInfo)}
               icon={expanded ? 'chevron-down' : 'chevron-right'}
