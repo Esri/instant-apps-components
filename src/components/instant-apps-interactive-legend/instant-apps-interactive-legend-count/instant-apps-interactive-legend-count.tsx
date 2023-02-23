@@ -96,7 +96,7 @@ export class InstantAppsInteractiveLegendCount {
     const category = categories.get(categoryId) as ICategory;
     const { count } = category;
 
-    return this.intl.formatNumber(count as number);
+    return count !== null ? this.intl.formatNumber(count as number) : '';
   }
 
   getTotalFeatureCount() {

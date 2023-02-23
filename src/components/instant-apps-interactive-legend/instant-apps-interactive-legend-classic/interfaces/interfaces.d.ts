@@ -15,6 +15,7 @@ export interface ICategory {
 export type ICategories = Map<string, ICategory>;
 
 export interface IIntLegendLayerData {
+  activeLayerInfo: __esri.ActiveLayerInfo;
   categories: ICategories;
   field: string;
   queryExpressions: (string | null)[];

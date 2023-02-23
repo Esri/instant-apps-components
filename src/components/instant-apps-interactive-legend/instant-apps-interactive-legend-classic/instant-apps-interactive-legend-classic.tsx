@@ -143,16 +143,19 @@ export class InstantAppsInteractiveLegendClassic {
   }
 
   async componentDidLoad() {
-    await this.reactiveUtils.whenOnce(() => this.legendvm);
-    await (this.legendvm?.view?.map as __esri.WebMap).loadAll();
     try {
-      // Initial data setup
-      await this.generateData();
-      this.isLoading = false;
-      this.setupWatchersAndListeners();
-    } catch (err) {
-      console.error(err);
-    }
+      await this.reactiveUtils.whenOnce(() => this.legendvm?.view);
+      this.legendvm.view.when(async () => {
+        try {
+          await (this.legendvm?.view?.map as __esri.WebMap).loadAll();
+          await this.reactiveUtils.whenOnce(() => this.legendvm?.view?.updating === false);
+          // Initial data setup
+          await this.generateData();
+          this.isLoading = false;
+          this.setupWatchersAndListeners();
+        } catch {}
+      });
+    } catch {}
   }
 
   disconnectedCallback() {
