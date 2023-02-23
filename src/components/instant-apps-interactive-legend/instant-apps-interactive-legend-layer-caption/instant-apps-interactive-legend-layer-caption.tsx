@@ -88,22 +88,12 @@ export class InstantAppsInteractiveLegendLayerCaption {
 
     const expanded = interactiveLegendState?.data?.[this.activeLayerInfo?.layer?.id]?.expanded?.legendElements[this?.legendElementIndex];
 
+    const noText = !this.titleText ? ' instant-apps-interactive-legend__layer-caption-btn-container--no-text' : '';
+
     return !isNestedUniqueSymbols ? (
       <div class={CSS.layerCaption}>
-        <calcite-action
-          onClick={this.toggleExpanded(this.activeLayerInfo, this.legendElementIndex)}
-          icon={expanded === false ? 'chevron-right' : 'chevron-down'}
-          appearance="transparent"
-          text={expanded === false ? this.messages?.expand : this.messages?.collapse}
-          label={expanded === false ? this.messages?.expand : this.messages?.collapse}
-        ></calcite-action>
-        {this.titleText ? (
-          <span key={`legend-layer-caption-text-${this.activeLayerInfo?.layer?.id}-${this.legendElementIndex}`} class="instant-apps-interactive-legend__legend-layer-caption-text">
-            {this.titleText}
-          </span>
-        ) : null}
         {this.isInteractive || isRelationship ? (
-          <div key="layer-caption-btn-container" class={CSS.layerCaptionBtnContainer}>
+          <div key="layer-caption-btn-container" class={`${CSS.layerCaptionBtnContainer}${noText}`}>
             {showAllButton}
             <calcite-tooltip reference-element="showAll" placement="top" label={this.messages?.showAll}>
               {this.messages?.showAll}
@@ -118,6 +108,18 @@ export class InstantAppsInteractiveLegendLayerCaption {
               : null}
           </div>
         ) : null}
+        {this.titleText ? (
+          <span key={`legend-layer-caption-text-${this.activeLayerInfo?.layer?.id}-${this.legendElementIndex}`} class="instant-apps-interactive-legend__legend-layer-caption-text">
+            {this.titleText}
+          </span>
+        ) : null}
+        <calcite-action
+          onClick={this.toggleExpanded(this.activeLayerInfo, this.legendElementIndex)}
+          icon={expanded === false ? 'chevron-right' : 'chevron-down'}
+          appearance="transparent"
+          text={expanded === false ? this.messages?.expand : this.messages?.collapse}
+          label={expanded === false ? this.messages?.expand : this.messages?.collapse}
+        ></calcite-action>
       </div>
     ) : this.titleText ? (
       <div class={CSS.layerCaption}>{this.titleText}</div>

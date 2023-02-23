@@ -42,6 +42,12 @@
       -webkit-box-orient: vertical;
       line-height: normal;
     }
+
+    .instant-apps-interactive-legend__heading-text--group-item {
+      -webkit-line-clamp: 1; /* number of lines to show */
+      line-clamp: 1;
+    }
+
     span {
       width: 100%;
       font-size: var(--instant-apps-interactive-legend-total-feature-count-font-size);
@@ -51,6 +57,7 @@
     .instant-apps-interactive-legend__header-action-container {
       display: flex;
       align-items: center;
+      justify-content: space-between;
     }
   }
 

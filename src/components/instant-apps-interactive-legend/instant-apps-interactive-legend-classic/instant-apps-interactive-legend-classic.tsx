@@ -179,7 +179,7 @@ export class InstantAppsInteractiveLegendClassic {
     );
   }
 
-  renderLegendForLayer(activeLayerInfo: __esri.ActiveLayerInfo) {
+  renderLegendForLayer(activeLayerInfo: __esri.ActiveLayerInfo, isChild?: boolean) {
     if (!activeLayerInfo.ready) {
       return null;
     }
@@ -190,7 +190,7 @@ export class InstantAppsInteractiveLegendClassic {
     // const labelNode = activeLayerInfo.title ? Heading({ level: this.headingLevel, class: (CSS.header, CSS.label) }, activeLayerInfo.title) : null;
 
     if (hasChildren) {
-      const layers = activeLayerInfo.children.map(childActiveLayerInfo => this.renderLegendForLayer(childActiveLayerInfo)).toArray();
+      const layers = activeLayerInfo.children.map(childActiveLayerInfo => this.renderLegendForLayer(childActiveLayerInfo, true)).toArray();
       const expanded = this.getLayerExpanded(activeLayerInfo);
 
       return (
@@ -236,6 +236,7 @@ export class InstantAppsInteractiveLegendClassic {
             feature-count={this.featureCount}
             activeLayerInfo={activeLayerInfo}
             messages={this.messages}
+            isChild={!!isChild}
           />
           <div key={`${activeLayerInfo?.layer?.id}-legend-layer`} id={`${activeLayerInfo?.layer?.id}-legend-layer`} class={`${CSS.layer}${expanded === false ? ' hide' : ' show'}`}>
             {filteredElements}
@@ -327,9 +328,15 @@ export class InstantAppsInteractiveLegendClassic {
       ? ' instant-apps-interactive-legend__nested-unique-symbol'
       : '';
 
+    const singleSymbol = legendElement?.infos?.length === 1 && !((activeLayerInfo?.layer as __esri.FeatureLayer)?.renderer as any)?.field;
+
     return (
       <div class={`${tableClass}${tableClasses}${nonInteractiveClass}${nestedUniqueSymbolClass}`}>
-        <div key="caption" id={`${activeLayerInfo?.layer?.id}-legend-element-caption`} class={`${!isRelationshipRamp ? 'show' : 'hide'}`}>
+        <div
+          key="caption"
+          id={`${activeLayerInfo?.layer?.id}-legend-element-caption`}
+          class={`${isRelationshipRamp || (!title && !this.zoomTo && singleSymbol) ? 'hide' : 'show'}`}
+        >
           {caption}
         </div>
         <div key="content" id={`${activeLayerInfo?.layer?.id}-legend-element-content-${legendElementIndex}`} class={`${expanded === false ? 'hide' : 'show'}`}>
