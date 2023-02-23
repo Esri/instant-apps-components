@@ -153,9 +153,13 @@ export class InstantAppsInteractiveLegendClassic {
           await this.generateData();
           this.isLoading = false;
           this.setupWatchersAndListeners();
-        } catch {}
+        } catch {
+          this.isLoading = false;
+        }
       });
-    } catch {}
+    } catch {
+      this.isLoading = false;
+    }
   }
 
   disconnectedCallback() {
