@@ -44,9 +44,15 @@ export class InstantAppsInteractiveLegendCount {
   selected: boolean;
 
   @State()
-  reRender;
+  reRender = false;
 
   async componentWillLoad() {
+    const observer = new MutationObserver(() => {
+      this.reRender = !this.reRender;
+    });
+    observer.observe(document.body, {
+      attributes: true,
+    });
     const [intl, reactiveUtils, Handles] = await loadModules(['esri/intl', 'esri/core/reactiveUtils', 'esri/core/Handles']);
     this.intl = intl;
     this.reactiveUtils = reactiveUtils;
@@ -96,7 +102,7 @@ export class InstantAppsInteractiveLegendCount {
     const category = categories.get(categoryId) as ICategory;
     const { count } = category;
 
-    return this.intl.formatNumber(count as number);
+    return count !== null ? this.intl.formatNumber(count as number) : '';
   }
 
   getTotalFeatureCount() {

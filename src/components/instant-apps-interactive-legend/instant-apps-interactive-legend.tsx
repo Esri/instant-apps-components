@@ -74,7 +74,16 @@ export class InstantAppsInteractiveLegend {
 
   @State() messages;
 
+  @State()
+  reRender = false;
+
   async componentWillLoad() {
+    const observer = new MutationObserver(() => {
+      this.reRender = !this.reRender;
+    });
+    observer.observe(document.body, {
+      attributes: true,
+    });
     await this.initializeModules();
   }
 

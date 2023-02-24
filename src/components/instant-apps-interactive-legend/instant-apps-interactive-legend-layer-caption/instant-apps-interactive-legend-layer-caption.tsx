@@ -109,7 +109,10 @@ export class InstantAppsInteractiveLegendLayerCaption {
           </div>
         ) : null}
         {this.titleText ? (
-          <span key={`legend-layer-caption-text-${this.activeLayerInfo?.layer?.id}-${this.legendElementIndex}`} class="instant-apps-interactive-legend__legend-layer-caption-text">
+          <span
+            key={`legend-layer-caption-text-${this.activeLayerInfo?.layer?.id}-${this.legendElementIndex}`}
+            class={`instant-apps-interactive-legend__legend-layer-caption-text`}
+          >
             {this.titleText}
           </span>
         ) : null}

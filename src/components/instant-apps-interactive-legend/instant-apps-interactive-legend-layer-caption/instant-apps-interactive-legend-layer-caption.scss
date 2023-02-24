@@ -23,11 +23,15 @@
     font-size: var(--instant-apps-interactive-legend-field-name-font-size);
     background-color: var(--instant-apps-interactive-legend-secondary-background-color);
     color: var(--instant-apps-interactive-legend-secondary-color);
+
+    calcite-action {
+      margin-left: auto;
+    }
   }
 
   .instant-apps-interactive-legend__legend-layer-caption-text {
     display: inline-block;
-    margin-left: 2.5px;
+    margin-left: 5px;
     margin-bottom: 0;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -40,14 +44,9 @@
 
   .instant-apps-interactive-legend__layer-caption-btn-container {
     white-space: nowrap;
-    margin-left: auto;
     calcite-button {
       margin: 2px;
     }
-  }
-
-  .instant-apps-interactive-legend__layer-caption-btn-container--no-text {
-    margin-left: unset;
   }
 
   .esri-legend__layer-caption {
@@ -56,5 +55,16 @@
 
   .esri-legend__layer-caption {
     padding: var(--instant-apps-interactive-legend-ui-padding);
+  }
+}
+
+html[dir='rtl'] {
+  :host {
+    .esri-legend__layer-caption {
+      calcite-action {
+        margin-left: unset;
+        margin-right: auto;
+      }
+    }
   }
 }
