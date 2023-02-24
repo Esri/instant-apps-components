@@ -135,6 +135,12 @@ export class InstantAppsInteractiveLegendClassic {
   }
 
   async componentWillLoad() {
+    const observer = new MutationObserver(() => {
+      this.reRender = !this.reRender;
+    });
+    observer.observe(document.body, {
+      attributes: true,
+    });
     const [intl, reactiveUtils, Handles] = await loadModules(['esri/intl', 'esri/core/reactiveUtils', 'esri/core/Handles']);
 
     this.reactiveUtils = reactiveUtils;
