@@ -349,42 +349,56 @@ export async function zoomTo(data: IIntLegendLayerData, view: __esri.MapView): P
 
 export async function handleFeatureCount(legendViewModel: __esri.LegendViewModel, data: IInteractiveLegendData): Promise<IInteractiveLegendData> {
   let updatedData = { ...data };
+
   const { activeLayerInfos } = legendViewModel;
 
-  let dataCount: { [categoryId: string]: number } = {};
-  const countPromises: any[] = [];
+  let dataCount: { [layerId: string]: { [categoryId: string]: number } } = {};
+
+  const countPromises: { [key: string]: any[] } = {};
 
   activeLayerInfos.forEach(async activeLayerInfo => {
     const legendElement = activeLayerInfo.legendElements[0] as __esri.LegendElement;
     const fLayer = activeLayerInfo.layer as __esri.FeatureLayer;
     const fLayerView = data[activeLayerInfo?.layer?.id]?.fLayerView;
     const field = fLayer.renderer?.get('field') as string;
+    const counts: Promise<{ [categoryId: string]: number | null } | null | undefined>[] = [];
 
-    legendElement?.infos?.forEach((info, infoIndex) => countPromises.push(getInfoCount(legendViewModel.view.extent, fLayerView, field, info, infoIndex, legendElement)));
+    legendElement?.infos?.forEach((info, infoIndex) => {
+      counts.push(getInfoCount(legendViewModel.view.extent, fLayerView, field, info, infoIndex, legendElement));
+      countPromises[activeLayerInfo.layer.id] = counts;
+    });
 
     activeLayerInfo.children.forEach(async aclChild => {
+      const childCounts: Promise<{ [categoryId: string]: number | null } | null | undefined>[] = [];
       const legendElement = aclChild.legendElements[0] as __esri.LegendElement;
       const fLayer = aclChild.layer as __esri.FeatureLayer;
       const fLayerView = data[aclChild?.layer?.id]?.fLayerView;
       const field = fLayer.renderer?.get('field') as string;
 
-      legendElement?.infos?.forEach((info, infoIndex) => countPromises.push(getInfoCount(legendViewModel.view.extent, fLayerView, field, info, infoIndex, legendElement)));
+      legendElement?.infos?.forEach((info, infoIndex) => childCounts.push(getInfoCount(legendViewModel.view.extent, fLayerView, field, info, infoIndex, legendElement)));
+
+      countPromises[aclChild.layer.id] = childCounts;
     });
   });
+  for (const countPromise in countPromises) {
+    let countObj = dataCount[countPromise] as Object;
 
-  const countResponses = await Promise.all(countPromises);
+    if (!countObj) countObj = dataCount[countPromise] = {};
 
-  activeLayerInfos.forEach(activeLayerInfo => {
-    countResponses.forEach(countRes => {
-      const countObj = dataCount[activeLayerInfo.layer.id] as Object;
+    const countRes = await Promise.all(countPromises[countPromise]);
+    const layerCountObj = {};
 
-      dataCount[activeLayerInfo.layer.id] = {
-        ...countObj,
-        ...countRes,
-      };
+    countRes.forEach(countResItem => {
+      const id = Object.keys(countResItem)[0];
+      layerCountObj[id] = countResItem[id];
     });
-  });
 
+    if (countPromise) countObj[countPromise] = layerCountObj;
+
+    dataCount[countPromise] = {
+      ...countObj[countPromise],
+    };
+  }
   activeLayerInfos.forEach(activeLayerInfo => {
     const dataFromActiveLayerInfo = data[activeLayerInfo.layer.id];
     const layerId = activeLayerInfo.layer.id;
@@ -395,11 +409,11 @@ export async function handleFeatureCount(legendViewModel: __esri.LegendViewModel
     });
 
     activeLayerInfo.children.forEach(aclChild => {
-      const dataFromActiveLayerInfo = data[aclChild.layer.id];
-      const layerId = activeLayerInfo.layer.id;
+      const childLayerId = aclChild.layer.id;
+      const dataFromActiveLayerInfo = data[childLayerId];
 
       dataFromActiveLayerInfo?.categories?.forEach((category, key) => {
-        const count = dataCount?.[layerId]?.[key];
+        const count = dataCount?.[childLayerId]?.[key];
         category.count = count;
       });
     });
