@@ -744,13 +744,13 @@ export class InstantAppsInteractiveLegendClassic {
       this.reactiveUtils.on(
         () => this.legendvm?.activeLayerInfos,
         'change',
-        async activeLayerInfo => {
-          await this.generateData();
+        activeLayerInfo => {
+          this.reRender = !this.reRender;
           this.handles?.add(
             this.reactiveUtils.on(
               () => activeLayerInfo.children,
               'change',
-              async () => await this.generateData(),
+              () => (this.reRender = !this.reRender),
             ),
           );
         },

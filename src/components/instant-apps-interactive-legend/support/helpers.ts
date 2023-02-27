@@ -182,7 +182,9 @@ function generateQueryExpressions(data: IIntLegendLayerData, info: any, infoInde
 
   const isPredominance = checkPredominance(fLayerView);
 
-  const queryExpression = isPredominance ? handlePredominanceExpression(info, fLayerView) : generateQueryExpression(info, field, infoIndex, legendElement, legendElementInfos, '');
+  const queryExpression = isPredominance
+    ? (handlePredominanceExpression(info, fLayerView) as string)
+    : generateQueryExpression(info, field, infoIndex, legendElement, legendElementInfos, '');
   const category = categories.get(info.label ?? fLayerView?.layer?.id) as ICategory;
   category.selected = !category?.selected;
   const hasOneValue = legendElementInfos && legendElementInfos.length === 1;
@@ -190,15 +192,25 @@ function generateQueryExpressions(data: IIntLegendLayerData, info: any, infoInde
   const expressionIndex = queryExpressions.indexOf(queryExpression as string);
 
   if (isPredominance) {
-    const queryExpression = handlePredominanceExpression(info, fLayerView) as string;
-
     const expressionIndex = queryExpressions.indexOf(queryExpression);
     if (queryExpressions.length === 0 || expressionIndex === -1) {
       if (queryExpressions && queryExpressions[0] === '1=0') {
         queryExpressions.splice(0, 1);
       }
       queryExpressions.push(queryExpression);
+    } else if (queryExpressions && queryExpressions.length === 1 && queryExpression === queryExpressions[0]) {
+      queryExpressions[0] = '1=0';
+    } else if (queryExpressions && queryExpressions.length === 1) {
+      queryExpressions[0] = queryExpression;
+    } else if (queryExpressions && queryExpressions.length === 1 && queryExpression !== queryExpressions[0] && queryExpressions[0] === '1=0') {
+      queryExpressions[0] = queryExpression;
+    } else if (queryExpressions && queryExpressions.length === 1 && queryExpression === queryExpressions[0] && queryExpressions[0] === '1=0') {
+      queryExpressions[0] = null;
+    } else {
+      queryExpressions.splice(expressionIndex, 1);
     }
+
+    queryExpressions.join(' OR ');
   } else if (queryExpressions.length === 0 || expressionIndex === -1) {
     if (queryExpressions && queryExpressions[0] === '1=0') {
       queryExpressions.splice(0, 1);
@@ -330,7 +342,7 @@ export async function zoomTo(data: IIntLegendLayerData, view: __esri.MapView): P
   query.where = where;
 
   try {
-    const geometry = await data.fLayerView.queryExtent(query);
+    const geometry = await data?.fLayerView?.layer?.queryExtent(query);
     await view.goTo(geometry);
   } catch {}
 }
@@ -410,7 +422,7 @@ export async function getInfoCount(
     ? handlePredominanceExpression(info, fLayerView)
     : generateQueryExpression(info, field, infoIndex, legendElement, legendElement.infos as any);
 
-  if (query) {
+  if (query && where) {
     query.where = where === '1=0' ? '1=1' : where;
     query.geometry = extent;
   }
@@ -436,8 +448,7 @@ export function checkAllSelected(data: IIntLegendLayerData): boolean {
   return data && Array.from(data.categories.entries()).every(entry => entry[1].selected);
 }
 
-export function handlePredominanceExpression(elementInfo: any, fLayerView: __esri.FeatureLayerView): string {
-  const featureLayerView = fLayerView;
+export function handlePredominanceExpression(elementInfo: any, featureLayerView: __esri.FeatureLayerView): string {
   const authoringInfo = featureLayerView ? (featureLayerView.layer.renderer.authoringInfo as any) : null;
   const fields = authoringInfo ? authoringInfo.fields : null;
   const expressionArr: string[] = [];
