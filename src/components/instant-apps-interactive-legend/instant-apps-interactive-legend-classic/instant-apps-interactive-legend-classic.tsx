@@ -751,7 +751,10 @@ export class InstantAppsInteractiveLegendClassic {
         const fLayerView = await this.legendvm?.view?.whenLayerView(fLayer);
         const id = `fLayerViewScale-${fLayer?.id}`;
         if (!this.handles?.has(id)) {
-          this.handles?.add(fLayerView.watch('visibleAtCurrentScale', async () => this.createDataForLayer(fLayer)));
+          this.handles?.add(
+            fLayerView.watch('visibleAtCurrentScale', async () => this.createDataForLayer(fLayer)),
+            id,
+          );
         }
       } catch {}
     });
