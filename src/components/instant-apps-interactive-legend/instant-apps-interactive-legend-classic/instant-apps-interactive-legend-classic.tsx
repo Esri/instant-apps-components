@@ -11,7 +11,15 @@ import {
 
 import { isImageryStretchedLegend } from '../support/styleUtils';
 
-import { validateInteractivity, generateData, handleFeatureCount, handleFilter, getIntLegendLayerData, checkNoneSelected } from '../support/helpers';
+import {
+  validateInteractivity,
+  generateData,
+  handleFeatureCount,
+  handleFilter,
+  getIntLegendLayerData,
+  checkNoneSelected,
+  createInteractiveLegendDataForLayer,
+} from '../support/helpers';
 
 import { loadModules } from 'esri-loader';
 
@@ -735,6 +743,32 @@ export class InstantAppsInteractiveLegendClassic {
 
   setupWatchersAndListeners(): void {
     // Refreshes interactive legend data on active layer info update
+
+    const featureLayers = this.legendvm?.view?.map?.allLayers?.filter(layer => layer?.type === 'feature');
+
+    featureLayers.forEach(async fLayer => {
+      try {
+        const fLayerView = await this.legendvm?.view?.whenLayerView(fLayer);
+        const id = `fLayerViewScale-${fLayer?.id}`;
+        if (!this.handles?.has(id)) {
+          this.handles?.add(fLayerView.watch('visibleAtCurrentScale', async () => this.createDataForLayer(fLayer)));
+        }
+      } catch {}
+    });
+
+    featureLayers?.forEach(fLayer => {
+      const id = `fLayer-${fLayer?.id}`;
+      if (!this.handles?.has(id)) {
+        this.handles?.add(
+          this.reactiveUtils?.watch(
+            () => fLayer?.visible,
+            async () => this.createDataForLayer(fLayer),
+          ),
+          id,
+        );
+      }
+    });
+
     this.legendvm?.activeLayerInfos?.forEach(async activeLayerInfo => {
       await this.generateData();
       activeLayerInfo.children.forEach(async () => await this.generateData());
@@ -744,7 +778,7 @@ export class InstantAppsInteractiveLegendClassic {
       this.reactiveUtils.on(
         () => this.legendvm?.activeLayerInfos,
         'change',
-        activeLayerInfo => {
+        async activeLayerInfo => {
           this.reRender = !this.reRender;
           this.handles?.add(
             this.reactiveUtils.on(
@@ -770,5 +804,16 @@ export class InstantAppsInteractiveLegendClassic {
     }
     forceUpdate(this.el);
     return Promise.resolve();
+  }
+
+  async createDataForLayer(fLayer): Promise<void> {
+    const data = store.get('data');
+    const dataForLayer = data?.[fLayer?.id];
+    if (!dataForLayer) {
+      const acl = this.legendvm?.activeLayerInfos?.find(acl => acl?.layer?.id === fLayer?.id);
+      const dataForLayer = await createInteractiveLegendDataForLayer(this.legendvm, acl, this.reactiveUtils);
+      store.set('data', { ...data, [fLayer?.id]: dataForLayer });
+      this.reRender = !this.reRender;
+    }
   }
 }

@@ -123,7 +123,7 @@ function activeLayerInfoCallback(
   };
 }
 
-async function createInteractiveLegendDataForLayer(
+export async function createInteractiveLegendDataForLayer(
   legendViewModel: __esri.LegendViewModel,
   activeLayerInfo: __esri.ActiveLayerInfo,
   reactiveUtils: __esri.reactiveUtils,
@@ -389,6 +389,7 @@ export async function handleFeatureCount(legendViewModel: __esri.LegendViewModel
     const layerCountObj = {};
 
     countRes.forEach(countResItem => {
+      if (!countResItem) return;
       const id = Object.keys(countResItem)[0];
       layerCountObj[id] = countResItem[id];
     });
