@@ -26,7 +26,10 @@ interface StringBundle {
 
 function fetchLocaleStringsForComponent<T extends StringBundle = StringBundle>(componentName: string, locale: string): Promise<T> {
   return new Promise((resolve, reject): void => {
-    fetch(getAssetPath(`../assets/t9n/${componentName}/resources_${locale}.json`)).then(
+    const t9nDir = '../instant-apps-assets/t9n';
+    const fileName = `resources_${locale}.json`;
+    const localeFilePath = `${t9nDir}/${componentName}/${fileName}`;
+    fetch(getAssetPath(localeFilePath)).then(
       result => {
         if (result.ok) resolve(result.json());
         else reject();
