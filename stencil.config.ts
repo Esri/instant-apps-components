@@ -2,21 +2,24 @@ import { Config } from '@stencil/core';
 import { sass } from '@stencil/sass';
 import nodePolyfills from 'rollup-plugin-node-polyfills';
 
+const t9nAssetsObj = {
+  src: './assets/t9n',
+  dest: '../instant-apps-assets/t9n',
+};
+
 export const config: Config = {
   namespace: 'instant-apps-components',
   outputTargets: [
     {
       type: 'dist',
-      copy: [
-        {
-          src: 'assets/t9n',
-          dest: '../assets/t9n',
-        },
-      ],
+      copy: [t9nAssetsObj],
       esmLoaderPath: '../loader',
     },
+    { type: 'dist-custom-elements', autoDefineCustomElements: true },
     {
-      type: 'dist-custom-elements',
+      type: 'www',
+      copy: [{ src: '**/*.html' }, { ...t9nAssetsObj, dest: 'instant-apps-assets/t9n' }],
+      serviceWorker: null, // disable service workers
     },
     {
       type: 'docs-readme',
@@ -33,10 +36,6 @@ For additional information, contact: Environmental Systems Research Institute, I
 
 email: contracts@esri.com
 `,
-    },
-    {
-      type: 'www',
-      serviceWorker: null, // disable service workers
     },
   ],
   plugins: [nodePolyfills(), sass()],
