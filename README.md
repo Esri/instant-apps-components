@@ -74,6 +74,27 @@ More info on how to write stories can be found [here](https://storybook.js.org/d
 
 Additionally, documenentation on how to provide controls to interact with the arguments of your web component dynamically can be found [here](https://storybook.js.org/docs/web-components/essentials/controls).
 
+## Setting up the components in your project:
+
+### Managing assets:
+
+In order for the library to work properly, you'll need to copy the assets to the root of your project.
+
+For example:
+
+`cp -r node_modules/@esri/instant-apps-components/dist/instant-apps-assets public/assets/instant-apps-assets`
+
+### Importing the components:
+
+In your entry file (index.ts), simply import the component(s) into your project.
+
+For example:
+
+```
+import "@esri/instant-apps-components/dist/components/instant-apps-header";
+import "@esri/instant-apps-components/dist/components/instant-apps-social-share";
+```
+
 ## Contributing
 
 We welcome contributions to this project. See [CONTRIBUTING.md](./CONTRIBUTING.md) for an overview of contribution guidelines.
