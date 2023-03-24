@@ -25,7 +25,7 @@ interface StringBundle {
 
 function fetchLocaleStringsForComponent<T extends StringBundle = StringBundle>(componentName: string, locale: string): Promise<T> {
   return new Promise((resolve, reject): void => {
-    const t9nDir = '/instant-apps-assets/t9n';
+    const t9nDir = '/assets/t9n';
     const fileName = `resources_${locale}.json`;
     const localeFilePath = `${t9nDir}/${componentName}/${fileName}`;
     const { href } = new URL(localeFilePath, window.location.href);

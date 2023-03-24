@@ -4,7 +4,7 @@ import nodePolyfills from 'rollup-plugin-node-polyfills';
 
 const t9nAssetsObj = {
   src: './assets/t9n',
-  dest: '../instant-apps-assets/t9n',
+  dest: '../assets/t9n',
 };
 
 export const config: Config = {
@@ -18,7 +18,7 @@ export const config: Config = {
     { type: 'dist-custom-elements', autoDefineCustomElements: true },
     {
       type: 'www',
-      copy: [{ src: '**/*.html' }, { ...t9nAssetsObj, dest: 'instant-apps-assets/t9n' }],
+      copy: [{ src: '**/*.html' }, { ...t9nAssetsObj, dest: 'assets/t9n' }],
       serviceWorker: null, // disable service workers
     },
     {
