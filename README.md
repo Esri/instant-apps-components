@@ -82,7 +82,7 @@ In order for the library to work properly, you'll need to copy the assets to the
 
 For example:
 
-`cp -r node_modules/@esri/instant-apps-components/dist/assets public/assets`
+`cp -r node_modules/@esri/instant-apps-components/dist/assets public`
 
 ### Importing the components:
 
