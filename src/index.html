@@ -44,11 +44,19 @@
       calcite-button {
         margin: 5px 0;
       }
+
+      .filter-header {
+        display: flex;
+      }
+
+      .filter-header calcite-icon {
+        margin-inline-end: 8px;
+      }
     </style>
   </head>
 
   <body>
-    <calcite-shell class="calcite-mode-dark">
+    <calcite-shell class="calcite-mode-light">
       <instant-apps-header
         id="instant-apps-header"
         slot="header"
@@ -77,6 +85,9 @@
             <calcite-button class="open" value="two">Open popover two</calcite-button>
             <calcite-button class="open" value="three">Open popover three</calcite-button>
           </p>
+          <instant-apps-filter-list id="filter-list">
+            <div class="filter-header" slot="header-content"><calcite-icon scale="s" icon="filter"></calcite-icon>Filter List</div>
+          </instant-apps-filter-list>
         </calcite-panel>
       </calcite-shell-panel>
       <div id="viewDiv"></div>
@@ -116,16 +127,68 @@
       </div>
     </instant-apps-popovers>
     <script>
-      require(['esri/WebMap', 'esri/views/MapView', 'esri/layers/FeatureLayer', 'esri/widgets/FeatureTable', 'esri/core/reactiveUtils'], (
+      require(['esri/WebMap', 'esri/views/MapView', 'esri/layers/FeatureLayer', 'esri/widgets/FeatureTable', 'esri/core/reactiveUtils', 'esri/config'], (
         WebMap,
         MapView,
         FeatureLayer,
         FeatureTable,
         reactiveUtils,
+        esriConfig,
       ) => {
+        const layerExpressions = [
+          {
+            id: '1774b178714-layer-8',
+            title: 'California_Fire_Perimeters Geo',
+            operator: ' AND ',
+            expressions: [
+              {
+                id: 1654881156360,
+                name: 'ALARM_DATE',
+                type: 'date',
+                field: 'ALARM_DATE',
+                index: 0,
+              },
+              {
+                definitionExpression: "(YEAR_ IN (2015,2019,2018,2017,2016)) AND (AGENCY = 'USF')",
+                id: 1654881364866,
+                index: 1,
+                name: 'USF',
+              },
+              {
+                id: 1654881457794,
+                name: 'AGENCY',
+                type: 'string',
+                field: 'AGENCY',
+                index: 2,
+              },
+              {
+                definitionExpression: "(YEAR_ IN (2015,2019,2018,2017,2016)) AND (AGENCY = 'CDF')",
+                id: 1654897065276,
+                index: 3,
+                name: 'CDF',
+              },
+              {
+                definitionExpression: "(YEAR_ IN (2015,2019,2018,2017,2016)) AND (AGENCY = 'CCO')",
+                id: 1654897087988,
+                index: 4,
+                name: 'CCO',
+              },
+              {
+                id: 1679949600960,
+                name: 'GIS_ACRES',
+                type: 'number',
+                field: 'GIS_ACRES',
+                step: '10',
+                index: 5,
+              },
+            ],
+          },
+        ];
+        esriConfig.portalUrl = 'https://nw-brews.mapsdevext.arcgis.com';
+
         const map = new WebMap({
           portalItem: {
-            id: '89cd0f1a793d4304a5581d4801b83eb1',
+            id: '8891ee1d2e0e428bb96c58b8ecf8c408',
           },
         });
 
@@ -144,8 +207,20 @@
         });
 
         view.when(async () => {
-          const loadedMap = await map.loadAll();
-
+          await view.map.loadAll();
+          const filterList = document.getElementById('filter-list');
+          filterList.view = view;
+          filterList.layerExpressions = layerExpressions;
+          filterList.closeBtnOnClick = () => console.log('close');
+          filterList.openFilters = true;
+          filterList.autoUpdateUrl = true;
+          filterList.addEventListener('filterListReset', e => {
+            console.log('filterListReset e', e);
+          });
+          filterList.addEventListener('filterUpdate', e => {
+            console.log('filterUpdate e', e);
+            console.log('urlParams: ', filterList.urlParams.getAll('filter'));
+          });
           const keyboardShortcuts = document.createElement('instant-apps-keyboard-shortcuts');
           keyboardShortcuts.view = view;
           view.ui.add(keyboardShortcuts, 'bottom-right');

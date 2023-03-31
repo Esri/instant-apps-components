@@ -1,3 +1,11 @@
+export interface GenericObject {
+  [key: string]: unknown;
+}
+
+export interface GenericStringObject {
+  [key: string]: string;
+}
+
 interface RampTitle {
   field: string;
   normField: string;
@@ -127,3 +135,58 @@ export interface InstantAppsPopoverMessageOverrides {
   popoverAction?: string;
   of?: string;
 }
+
+//FilterList
+export interface Expression {
+  id: number;
+  type?: ExpressionField;
+  active?: boolean;
+  definitionExpression?: string;
+  name: string;
+  field?: string;
+  fields?: string[] | number[];
+  selectedFields?: string[] | number[];
+  codedValues?: { [key: string]: string };
+  placeholder?: string;
+  min?: number | string;
+  max?: number | string;
+  range?: { min: string | number | undefined; max: string | number | undefined };
+  step?: number;
+}
+
+export interface LayerExpression {
+  id: string;
+  title: string;
+  expressions: Expression[];
+  operator: string;
+}
+
+export interface FilterOutput {
+  id: string;
+  definitionExpression: string;
+}
+
+interface Expressions {
+  expressions: {
+    [key: string]: { definitionExpression: string; type?: ExpressionField; min?: number; max?: number };
+  };
+  operator: string;
+}
+
+export interface FilterParam {
+  type?: 'range' | 'select';
+  layerId: string;
+  expressionId: string;
+  selectedFields?: string[];
+  range?: { min: string | number | undefined; max: string | number | undefined };
+}
+
+export interface ExtentSelector {
+  constraints: __esri.MapViewConstraints;
+  mapRotation: number;
+}
+
+type ExpressionField = 'string' | 'number' | 'date' | 'coded-value' | 'range' | 'checkbox';
+
+export type FilterLayer = __esri.FeatureLayer | __esri.ImageryLayer | __esri.WFSLayer | __esri.StreamLayer | __esri.CSVLayer | __esri.GeoJSONLayer;
+export type FilterQueryLayer = __esri.FeatureLayer | __esri.WFSLayer | __esri.CSVLayer | __esri.GeoJSONLayer;

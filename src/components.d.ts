@@ -5,11 +5,61 @@
  * It contains typing information for all components that exist in this project.
  */
 import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
+import { ExtentSelector, InstantAppsPopoverMessageOverrides, LayerExpression } from "./interfaces/interfaces";
 import { FilterMode } from "./components/instant-apps-interactive-legend/instant-apps-interactive-legend-classic/interfaces/interfaces";
 import { InstantAppsPopovers } from "./components/instant-apps-popovers/instant-apps-popovers";
 import { LogicalPlacement } from "@esri/calcite-components/dist/types/utils/floating-ui";
-import { InstantAppsPopoverMessageOverrides } from "./interfaces/interfaces";
 export namespace Components {
+    interface InstantAppsFilterList {
+        /**
+          * Auto update URL with filter params.
+         */
+        "autoUpdateUrl"?: boolean;
+        /**
+          * Display close button in footer.
+         */
+        "closeBtn"?: boolean;
+        /**
+          * Close button onClick function.
+         */
+        "closeBtnOnClick"?: () => void;
+        /**
+          * Close button text.
+         */
+        "closeBtnText"?: string;
+        /**
+          * Turn on the ability to filter by extent.
+         */
+        "extentSelector"?: boolean;
+        /**
+          * Limits filtering options based on the view's extent geometry.
+         */
+        "extentSelectorConfig"?: ExtentSelector;
+        /**
+          * Specifies the number at which section headings should start.
+         */
+        "headingLevel"?: 1 | 2 | 3 | 4 | 5 | 6 | undefined;
+        /**
+          * Use this to create filters that update a layer's definitionExpression.
+         */
+        "layerExpressions": LayerExpression[];
+        /**
+          * When `true`, the layer filter block is expanded.
+         */
+        "openFilters"?: boolean;
+        /**
+          * Turn on the ability to filter by extent.
+         */
+        "showHeader"?: boolean;
+        /**
+          * URL params set by using filters.
+         */
+        "urlParams"?: URLSearchParams;
+        /**
+          * MapView or SceneView to reference when filtering.
+         */
+        "view": __esri.MapView | __esri.SceneView;
+    }
     interface InstantAppsHeader {
         /**
           * Background color to display in header - accepts a hexidecimal value i.e. `#000000`.
@@ -235,6 +285,10 @@ export namespace Components {
         "view": __esri.MapView | __esri.SceneView;
     }
 }
+export interface InstantAppsFilterListCustomEvent<T> extends CustomEvent<T> {
+    detail: T;
+    target: HTMLInstantAppsFilterListElement;
+}
 export interface InstantAppsHeaderCustomEvent<T> extends CustomEvent<T> {
     detail: T;
     target: HTMLInstantAppsHeaderElement;
@@ -244,6 +298,12 @@ export interface InstantAppsInteractiveLegendLayerCaptionCustomEvent<T> extends 
     target: HTMLInstantAppsInteractiveLegendLayerCaptionElement;
 }
 declare global {
+    interface HTMLInstantAppsFilterListElement extends Components.InstantAppsFilterList, HTMLStencilElement {
+    }
+    var HTMLInstantAppsFilterListElement: {
+        prototype: HTMLInstantAppsFilterListElement;
+        new (): HTMLInstantAppsFilterListElement;
+    };
     interface HTMLInstantAppsHeaderElement extends Components.InstantAppsHeader, HTMLStencilElement {
     }
     var HTMLInstantAppsHeaderElement: {
@@ -311,6 +371,7 @@ declare global {
         new (): HTMLInstantAppsSocialShareElement;
     };
     interface HTMLElementTagNameMap {
+        "instant-apps-filter-list": HTMLInstantAppsFilterListElement;
         "instant-apps-header": HTMLInstantAppsHeaderElement;
         "instant-apps-interactive-legend": HTMLInstantAppsInteractiveLegendElement;
         "instant-apps-interactive-legend-caption": HTMLInstantAppsInteractiveLegendCaptionElement;
@@ -325,6 +386,64 @@ declare global {
     }
 }
 declare namespace LocalJSX {
+    interface InstantAppsFilterList {
+        /**
+          * Auto update URL with filter params.
+         */
+        "autoUpdateUrl"?: boolean;
+        /**
+          * Display close button in footer.
+         */
+        "closeBtn"?: boolean;
+        /**
+          * Close button onClick function.
+         */
+        "closeBtnOnClick"?: () => void;
+        /**
+          * Close button text.
+         */
+        "closeBtnText"?: string;
+        /**
+          * Turn on the ability to filter by extent.
+         */
+        "extentSelector"?: boolean;
+        /**
+          * Limits filtering options based on the view's extent geometry.
+         */
+        "extentSelectorConfig"?: ExtentSelector;
+        /**
+          * Specifies the number at which section headings should start.
+         */
+        "headingLevel"?: 1 | 2 | 3 | 4 | 5 | 6 | undefined;
+        /**
+          * Use this to create filters that update a layer's definitionExpression.
+         */
+        "layerExpressions"?: LayerExpression[];
+        /**
+          * Emits when the reset button is pushed.
+         */
+        "onFilterListReset"?: (event: InstantAppsFilterListCustomEvent<void>) => void;
+        /**
+          * Emits when the filter is updated.
+         */
+        "onFilterUpdate"?: (event: InstantAppsFilterListCustomEvent<void>) => void;
+        /**
+          * When `true`, the layer filter block is expanded.
+         */
+        "openFilters"?: boolean;
+        /**
+          * Turn on the ability to filter by extent.
+         */
+        "showHeader"?: boolean;
+        /**
+          * URL params set by using filters.
+         */
+        "urlParams"?: URLSearchParams;
+        /**
+          * MapView or SceneView to reference when filtering.
+         */
+        "view"?: __esri.MapView | __esri.SceneView;
+    }
     interface InstantAppsHeader {
         /**
           * Background color to display in header - accepts a hexidecimal value i.e. `#000000`.
@@ -551,6 +670,7 @@ declare namespace LocalJSX {
         "view"?: __esri.MapView | __esri.SceneView;
     }
     interface IntrinsicElements {
+        "instant-apps-filter-list": InstantAppsFilterList;
         "instant-apps-header": InstantAppsHeader;
         "instant-apps-interactive-legend": InstantAppsInteractiveLegend;
         "instant-apps-interactive-legend-caption": InstantAppsInteractiveLegendCaption;
@@ -568,6 +688,7 @@ export { LocalJSX as JSX };
 declare module "@stencil/core" {
     export namespace JSX {
         interface IntrinsicElements {
+            "instant-apps-filter-list": LocalJSX.InstantAppsFilterList & JSXBase.HTMLAttributes<HTMLInstantAppsFilterListElement>;
             "instant-apps-header": LocalJSX.InstantAppsHeader & JSXBase.HTMLAttributes<HTMLInstantAppsHeaderElement>;
             "instant-apps-interactive-legend": LocalJSX.InstantAppsInteractiveLegend & JSXBase.HTMLAttributes<HTMLInstantAppsInteractiveLegendElement>;
             "instant-apps-interactive-legend-caption": LocalJSX.InstantAppsInteractiveLegendCaption & JSXBase.HTMLAttributes<HTMLInstantAppsInteractiveLegendCaptionElement>;
