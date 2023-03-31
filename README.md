@@ -24,7 +24,7 @@ Instant Apps Components, is a library of [Web Components](https://developer.mozi
 
 You can use the stencil CLI to generate the necessary files for your web component.
 
-1. In terminal, run `stencil generate`.
+1. In terminal, run `npx stencil generate`.
 
 2. Enter the name of your web component with the following naming convention: `instant-apps-[YOUR_COMPONENT_NAME]`.
 

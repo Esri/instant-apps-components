@@ -51,7 +51,7 @@
     "@storybook/addon-knobs": "^6.4.0",
     "@storybook/addon-links": "^6.4.9",
     "@storybook/web-components": "^6.4.9",
-    "@types/arcgis-js-api": "^4.23.1",
+    "@types/arcgis-js-api": "^4.26.0",
     "@types/jest": "^26.0.24",
     "@types/sortablejs": "^1.10.7",
     "@whitespace/storybook-addon-html": "^5.0.0",

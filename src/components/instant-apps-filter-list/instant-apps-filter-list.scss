@@ -1,0 +1,123 @@
+:host {
+  display: block;
+}
+
+.instant-apps-filter-list {
+  * {
+    box-sizing: border-box;
+  }
+
+  &__container {
+    height: 100%;
+
+    calcite-block:last-of-type {
+      margin-bottom: 0;
+    }
+  }
+
+  &__footer {
+    padding: 12px;
+    display: flex;
+  }
+
+  &__item-container,
+  &__item-container--user-input {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  &__item-container:not(:last-child),
+  &__item-container--user-input:not(:last-child) {
+    padding-bottom: 20px;
+  }
+
+  &__item-container--user-input {
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+
+    > span {
+      margin: 0 0 6px;
+      font-size: 14px;
+      font-weight: normal;
+    }
+
+    calcite-combobox {
+      width: 100%;
+      font-size: 16px;
+    }
+  }
+
+  &__number-input-container {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+
+    calcite-slider {
+      width: 90%;
+    }
+  }
+
+  &__date-picker-input-container {
+    display: flex;
+    align-items: center;
+    justify-content: unset;
+    width: 100%;
+
+    calcite-action {
+      height: 48px;
+      border: 1px solid var(--calcite-ui-border-1);
+    }
+  }
+
+  &__title {
+    margin-right: 20px;
+  }
+
+  &__title > p {
+    font-size: 14px;
+    font-weight: normal;
+    margin: 0;
+  }
+
+  &__checkbox-container {
+    display: flex;
+
+    calcite-checkbox {
+      height: 18px;
+    }
+  }
+
+  &__operator-description {
+    background: white;
+    margin: 0;
+    font-size: 12px;
+    font-weight: 700;
+    padding: 12px 20px 0 20px;
+  }
+
+  &__select {
+    background: #fff;
+    border: 1px solid #a9a9a9;
+    color: #4c4c4c;
+  }
+}
+
+.instant-apps-filter-list.calcite-mode-dark {
+  .instant-apps-filter-list__header-container {
+    background: #2b2b2b;
+    color: #fff;
+  }
+
+  .instant-apps-filter-list__select {
+    background: #2b2b2b;
+    border: 1px solid #4a4a4a;
+    color: #fff;
+  }
+
+  .instant-apps-filter-list__operator-description {
+    background: #353535;
+  }
+}

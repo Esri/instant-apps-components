@@ -44,11 +44,19 @@
       calcite-button {
         margin: 5px 0;
       }
+
+      .filter-header {
+        display: flex;
+      }
+
+      .filter-header calcite-icon {
+        margin-inline-end: 8px;
+      }
     </style>
   </head>
 
   <body>
-    <calcite-shell class="calcite-mode-dark">
+    <calcite-shell class="calcite-mode-light">
       <instant-apps-header
         id="instant-apps-header"
         slot="header"
@@ -77,6 +85,9 @@
             <calcite-button class="open" value="two">Open popover two</calcite-button>
             <calcite-button class="open" value="three">Open popover three</calcite-button>
           </p>
+          <instant-apps-filter-list id="filter-list">
+            <div class="filter-header" slot="header-content"><calcite-icon scale="s" icon="filter"></calcite-icon>TESTING</div>
+          </instant-apps-filter-list>
         </calcite-panel>
       </calcite-shell-panel>
       <div id="viewDiv"></div>
@@ -116,16 +127,57 @@
       </div>
     </instant-apps-popovers>
     <script>
-      require(['esri/WebMap', 'esri/views/MapView', 'esri/layers/FeatureLayer', 'esri/widgets/FeatureTable', 'esri/core/reactiveUtils'], (
+      require(['esri/WebMap', 'esri/views/MapView', 'esri/layers/FeatureLayer', 'esri/widgets/FeatureTable', 'esri/core/reactiveUtils', 'esri/config'], (
         WebMap,
         MapView,
         FeatureLayer,
         FeatureTable,
         reactiveUtils,
+        esriConfig,
       ) => {
+        const layerExpressions = [
+          {
+            id: '17be176f3ab-layer-4',
+            title: 'Park boundary',
+            operator: ' AND ',
+            expressions: [
+              {
+                definitionExpression: 'PERIMETER >= 159790.78',
+                id: 1666973394378,
+                index: 0,
+                name: 'Test Filter',
+              },
+              {
+                id: 1680126955806,
+                name: 'NAME',
+                type: 'string',
+                field: 'NAME',
+                index: 1,
+                placeholder: 'Park name',
+              },
+            ],
+          },
+          {
+            id: '17be176f3aa-layer-3',
+            title: 'Streams',
+            operator: ' AND ',
+            expressions: [
+              {
+                id: 1680126449801,
+                name: 'Type',
+                type: 'string',
+                field: 'Type',
+                placeholder: 'Stream type',
+                index: 0,
+              },
+            ],
+          },
+        ];
+        esriConfig.portalUrl = 'https://nw-brews.mapsdevext.arcgis.com';
+
         const map = new WebMap({
           portalItem: {
-            id: '89cd0f1a793d4304a5581d4801b83eb1',
+            id: '45c9e580f4cb453a81db10d99af41b14',
           },
         });
 
@@ -144,8 +196,19 @@
         });
 
         view.when(async () => {
-          const loadedMap = await map.loadAll();
-
+          const loadedMap = await view.map.loadAll();
+          const filterList = document.getElementById('filter-list');
+          filterList.view = view;
+          filterList.layerExpressions = layerExpressions;
+          filterList.closeBtnOnClick = () => console.log('close');
+          filterList.openFilters = true;
+          filterList.addEventListener('filterListReset', e => {
+            console.log('filterListReset e', e);
+          });
+          filterList.addEventListener('filterUpdate', e => {
+            console.log('filterUpdate e', e);
+            console.log('urlParams: ', filterList.urlParams.getAll('filter'));
+          });
           const keyboardShortcuts = document.createElement('instant-apps-keyboard-shortcuts');
           keyboardShortcuts.view = view;
           view.ui.add(keyboardShortcuts, 'bottom-right');
