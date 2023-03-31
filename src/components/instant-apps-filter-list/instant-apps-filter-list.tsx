@@ -3,17 +3,7 @@ import { Component, Element, Event, EventEmitter, Host, h, State, Prop, VNode, W
 
 import FilterList_T9n from '../../assets/t9n/instant-apps-filter-list/resources.json';
 
-import {
-  Expression,
-  ExtentSelector,
-  FilterLayer,
-  FilterOutput,
-  FilterParam,
-  FilterQueryLayer,
-  GenericObject,
-  GenericStringObject,
-  LayerExpression,
-} from '../../interfaces/interfaces';
+import { Expression, ExtentSelector, FilterLayer, FilterParam, FilterQueryLayer, GenericObject, GenericStringObject, LayerExpression } from '../../interfaces/interfaces';
 import { loadModules } from '../../utils/loadModules';
 import { getLocaleComponentStrings } from '../../utils/locale';
 import { getMode } from '../../utils/mode';
@@ -761,9 +751,7 @@ export class InstantAppsFilterList {
                 expressionId: expression?.id,
               };
             }
-            if (tmpExp != null) {
-              expressions.push(JSON.stringify(tmpExp));
-            }
+            expressions.push(JSON.stringify(tmpExp));
           }
         });
       });
@@ -773,7 +761,7 @@ export class InstantAppsFilterList {
         params.delete('filter');
       }
       if (this.autoUpdateUrl) {
-        if (params && params.toString()) {
+        if (params.toString()) {
           window.history.replaceState({}, '', `${window.location.pathname}?${params} `);
         } else {
           window.history.replaceState({}, '', window.location.pathname);

@@ -196,7 +196,7 @@
         });
 
         view.when(async () => {
-          const loadedMap = await view.map.loadAll();
+          await view.map.loadAll();
           const filterList = document.getElementById('filter-list');
           filterList.view = view;
           filterList.layerExpressions = layerExpressions;
