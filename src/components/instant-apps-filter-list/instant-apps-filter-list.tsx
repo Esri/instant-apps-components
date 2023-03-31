@@ -37,7 +37,7 @@ export class InstantAppsFilterList {
   @Element() el: HTMLElement;
 
   /**
-   * Use this prop to create filters based on the LayerExpression object.
+   * Use this to create filters that update a layer's definitionExpression.
    */
   @Prop({ mutable: true }) layerExpressions: LayerExpression[];
 
@@ -178,7 +178,7 @@ export class InstantAppsFilterList {
           </div>
           <div class={CSS.checkboxContainer}>
             <calcite-checkbox
-              id={expression.definitionExpressionId}
+              id={expression.id.toString()}
               scale="l"
               checked={expression?.active}
               onCalciteCheckboxChange={this.handleCheckboxChange.bind(this, id, expression)}
@@ -219,7 +219,7 @@ export class InstantAppsFilterList {
       <label key="combo-select" class={CSS.filterUIItemContainer}>
         <span>{expression.name}</span>
         <calcite-combobox
-          id={expression.definitionExpressionId}
+          id={expression.id.toString()}
           onCalciteComboboxChange={this.handleComboSelect.bind(this, expression, layerId)}
           label={expression.name}
           placeholder={expression.placeholder}
@@ -227,7 +227,7 @@ export class InstantAppsFilterList {
           scale="s"
           max-items="6"
         >
-          {expression.selectFields?.map((field, index) => this.renderComboboxItem(expression, field, index))}
+          {expression.fields?.map((field, index) => this.renderComboboxItem(expression, field, index))}
         </calcite-combobox>
       </label>
     );
@@ -247,10 +247,9 @@ export class InstantAppsFilterList {
         const { operator } = this.layerExpressions[0];
         const operatorTranslation = operator?.trim() === 'OR' ? 'orOperator' : 'andOperator';
         return (
-          <div>
-            <p class={CSS.operatorDesc}>{this.messages?.[operatorTranslation]}</p>
+          <calcite-block class={CSS.operatorDesc} heading={this.messages?.[operatorTranslation]} open>
             {this.renderFilter(this.layerExpressions[0])}
-          </div>
+          </calcite-block>
         );
       } else if (this.layerExpressions.length > 1) {
         return this.renderLayerBlock();
@@ -265,12 +264,15 @@ export class InstantAppsFilterList {
     const step = expression?.step ? expression.step : 1;
     const check = min != null && max != null;
     const field = expression?.field ?? '';
+    const minValue = expression?.range?.min != null ? expression.range.min : min;
+    const maxValue = expression?.range?.max != null ? expression.range.max : max;
+    const value = [minValue, maxValue] as number[];
     return check ? (
-      <label key={expression?.definitionExpressionId} class={CSS.filterUIItemContainer}>
+      <label key={expression?.id.toString()} class={CSS.filterUIItemContainer}>
         <span>{expression?.name}</span>
         <div class={CSS.numberInputContainer}>
           <calcite-slider
-            id={expression?.definitionExpressionId}
+            id={expression?.id.toString()}
             onCalciteSliderChange={this.handleSliderChange.bind(this, expression, layerId)}
             min={min}
             max={max}
@@ -281,6 +283,7 @@ export class InstantAppsFilterList {
             step={step}
             labelHandles={true}
             snap={true}
+            value={value}
           ></calcite-slider>
         </div>
       </label>
@@ -290,13 +293,14 @@ export class InstantAppsFilterList {
   renderDatePicker(layerId: string, expression: Expression): VNode {
     const min = convertToDate(expression.min);
     const max = convertToDate(expression.max);
+    const value = [expression?.range?.min, expression?.range?.max] as string[];
     const check = min != null && max != null;
     return check ? (
       <label class={CSS.filterUIItemContainer}>
         <span>{expression?.name}</span>
         <div class={CSS.dateInputContainer}>
           <calcite-input-date-picker
-            id={expression?.definitionExpressionId}
+            id={expression?.id.toString()}
             onCalciteInputDatePickerChange={this.handleDatePickerRangeChange.bind(this, expression, layerId)}
             min={min}
             max={max}
@@ -304,6 +308,7 @@ export class InstantAppsFilterList {
             lang={this.locale ?? 'en'}
             overlay-positioning="fixed"
             layout="vertical"
+            value={value}
             range
           />
           <calcite-action onClick={this.handleResetDatePicker.bind(this, expression, layerId)} icon="reset" text={this.messages.resetDatePicker} scale="s" />
@@ -337,10 +342,11 @@ export class InstantAppsFilterList {
   }
 
   handleResetDatePicker(expression: Expression, layerId: string): void {
-    const datePicker = this.panelEl.querySelector(`[id='${expression.definitionExpressionId}']`) as HTMLCalciteInputDatePickerElement;
+    const datePicker = this.panelEl.querySelector(`[id='${expression.id}']`) as HTMLCalciteInputDatePickerElement;
     resetDatePicker(datePicker);
     expression.active = false;
     expression.definitionExpression = undefined;
+    expression.range = undefined;
     this.generateOutput(layerId);
   }
 
@@ -363,7 +369,6 @@ export class InstantAppsFilterList {
       const { id } = tmpLE[i];
       const expressions = tmpLE[i].expressions;
       for (let j = 0; j < expressions?.length; j++) {
-        expressions[j].definitionExpressionId = `${id}-${j}`;
         if (expressions[j].active == null && expressions[j].definitionExpression != null) {
           expressions[j].active = false;
         }
@@ -382,38 +387,58 @@ export class InstantAppsFilterList {
   handleResetFilter(): void {
     this.layerExpressions?.forEach(layerExpression => {
       layerExpression.expressions?.forEach(expression => {
-        const { definitionExpressionId, max, min, type } = expression;
+        const { type } = expression;
         if (type === 'string' || type === 'coded-value') {
-          expression.selectedFields = undefined;
-          const combobox = this.panelEl.querySelector(`[id='${definitionExpressionId}']`) as HTMLCalciteComboboxElement;
-          if (combobox != null) {
-            for (let i = 0; i < combobox.children.length; i++) {
-              const comboboxItem = combobox.children[i] as HTMLCalciteComboboxItemElement;
-              comboboxItem.selected = false;
-            }
-          }
+          this.resetCombobox(expression);
         } else if (type === 'date') {
-          expression.range = undefined;
-          const datePicker = this.panelEl.querySelector(`[id='${definitionExpressionId}']`) as HTMLCalciteInputDatePickerElement;
-          resetDatePicker(datePicker);
+          this.resetDatePicker(expression);
         } else if (type === 'number' || type === 'range') {
-          expression.range = undefined;
-          const slider = this.panelEl.querySelector(`[id='${definitionExpressionId}']`) as HTMLCalciteSliderElement;
-          if (slider != null) {
-            slider.minValue = min as number;
-            slider.maxValue = max as number;
-          }
+          this.resetNumberRange(expression);
         } else {
-          const checkbox = this.panelEl.querySelector(`[id='${definitionExpressionId}']`) as HTMLCalciteCheckboxElement;
-          if (checkbox != null) {
-            checkbox.checked = false;
-          }
+          this.resetCheckbox(expression);
         }
         expression.active = false;
       });
     });
     this.resetAllDefinitionExpressions();
     this.filterListReset.emit();
+  }
+
+  resetCombobox(expression: Expression): void {
+    const { id } = expression;
+    expression.selectedFields = undefined;
+    const combobox = this.panelEl.querySelector(`[id='${id}']`) as HTMLCalciteComboboxElement;
+    if (combobox != null) {
+      for (let i = 0; i < combobox.children.length; i++) {
+        const comboboxItem = combobox.children[i] as HTMLCalciteComboboxItemElement;
+        comboboxItem.selected = false;
+      }
+    }
+  }
+
+  resetDatePicker(expression: Expression): void {
+    const { id } = expression;
+    expression.range = undefined;
+    const datePicker = this.panelEl.querySelector(`[id='${id}']`) as HTMLCalciteInputDatePickerElement;
+    resetDatePicker(datePicker);
+  }
+
+  resetNumberRange(expression: Expression): void {
+    expression.range = undefined;
+    const { id, max, min } = expression;
+    const slider = this.panelEl.querySelector(`[id='${id}']`) as HTMLCalciteSliderElement;
+    if (slider != null) {
+      slider.minValue = min as number;
+      slider.maxValue = max as number;
+    }
+  }
+
+  resetCheckbox(expression: Expression): void {
+    const { id } = expression;
+    const checkbox = this.panelEl.querySelector(`[id='${id}']`) as HTMLCalciteCheckboxElement;
+    if (checkbox != null) {
+      checkbox.checked = false;
+    }
   }
 
   resetAllDefinitionExpressions(): void {
@@ -427,7 +452,7 @@ export class InstantAppsFilterList {
 
   async updateStringExpression(id: string, expression: Expression): Promise<boolean> {
     const { field } = expression;
-    expression.selectFields = await this.getFeatureAttributes(id, field);
+    expression.fields = await this.getFeatureAttributes(id, field);
     if (expression?.selectedFields) {
       const selectedFields = expression.selectedFields.map((field: string | number) => (typeof field === 'number' ? field : `'${handleSingleQuote(field)}'`));
       expression.definitionExpression = `${field} IN (${selectedFields.join(',')})`;
@@ -471,8 +496,6 @@ export class InstantAppsFilterList {
         } else {
           expression.definitionExpression = `${field} BETWEEN '${min}' AND '${max}'`;
         }
-        expression.start = min;
-        expression.end = max;
 
         return true;
       }
@@ -483,17 +506,17 @@ export class InstantAppsFilterList {
 
   updateCodedValueExpression(expression: Expression, layerField: __esri.Field | undefined): boolean {
     const { field } = expression;
-    const selectFields: any[] = [];
+    const fields: any[] = [];
     expression.codedValues = {};
     const domain = layerField?.domain as __esri.CodedValueDomain;
     domain?.codedValues?.forEach(cv => {
       const { code, name } = cv;
-      selectFields.push(code);
+      fields.push(code);
       if (expression.codedValues != null) {
         expression.codedValues[code] = name;
       }
     });
-    expression.selectFields = selectFields;
+    expression.fields = fields;
     if (expression?.selectedFields) {
       const selectedFields = expression.selectedFields.map((field: string | number) => (typeof field === 'number' ? field : `'${handleSingleQuote(field)}'`));
       const definitionExpression = `${field} IN (${selectedFields.join(',')})`;
@@ -722,53 +745,72 @@ export class InstantAppsFilterList {
     }
   }
 
+  createURLParamExpression(layerId: string, expression: Expression): GenericObject {
+    const { id, range, selectedFields, type } = expression;
+    if (type === 'number' || type === 'range' || type === 'date') {
+      return {
+        type: 'range',
+        layerId,
+        expressionId: id.toString(),
+        range,
+      };
+    } else if (type === 'string' || type === 'coded-value') {
+      return {
+        type: 'select',
+        layerId,
+        expressionId: id.toString(),
+        selectedFields,
+      };
+    } else {
+      return {
+        layerId,
+        expressionId: id.toString(),
+      };
+    }
+  }
+
+  autoUpdateURLCheck(params: URLSearchParams): void {
+    if (this.autoUpdateUrl) {
+      if (params.toString()) {
+        window.history.replaceState({}, '', `${window.location.pathname}?${params} `);
+      } else {
+        window.history.replaceState({}, '', window.location.pathname);
+      }
+    }
+  }
+
   generateURLParams(): void {
     if ('URLSearchParams' in window) {
       const params = new URLSearchParams(window.location.search);
       const expressions: string[] = [];
       this.layerExpressions?.forEach(layerExpr => {
         layerExpr?.expressions?.forEach(expression => {
-          const { active, range, selectedFields, type } = expression;
-          if (active) {
-            let tmpExp: GenericObject;
-            if (type === 'number' || type === 'range' || type === 'date') {
-              tmpExp = {
-                type: 'range',
-                layerId: layerExpr.id,
-                expressionId: expression?.id,
-                range,
-              };
-            } else if (type === 'string' || type === 'coded-value') {
-              tmpExp = {
-                type: 'select',
-                layerId: layerExpr.id,
-                expressionId: expression?.id,
-                selectedFields,
-              };
-            } else {
-              tmpExp = {
-                layerId: layerExpr.id,
-                expressionId: expression?.id,
-              };
-            }
-            expressions.push(JSON.stringify(tmpExp));
+          if (expression.active) {
+            const paramExpression = this.createURLParamExpression(layerExpr.id, expression);
+            expressions.push(JSON.stringify(paramExpression));
           }
         });
       });
-      if (expressions?.length > 0) {
+      if (expressions.length > 0) {
         params.set('filter', expressions.join(';'));
       } else {
         params.delete('filter');
       }
-      if (this.autoUpdateUrl) {
-        if (params.toString()) {
-          window.history.replaceState({}, '', `${window.location.pathname}?${params} `);
-        } else {
-          window.history.replaceState({}, '', window.location.pathname);
-        }
-      }
+      this.autoUpdateURLCheck(params);
       this.urlParams = params;
     }
+  }
+
+  updateFilterLayerDefExpression(defExpressions: string[], layerExpression: LayerExpression): void {
+    const { id, operator } = layerExpression;
+    const combinedExpressions =
+      defExpressions?.length > 0 && this.initDefExpressions[id] != null
+        ? `(${defExpressions.join(operator)}) AND (${this.initDefExpressions[id]})`
+        : defExpressions.length > 0
+        ? defExpressions.join(operator)
+        : this.initDefExpressions[id];
+    const fl = this.view.map.findLayerById(id) as FilterLayer;
+    fl.definitionExpression = combinedExpressions;
   }
 
   generateOutput(layerId: string): void {
@@ -782,14 +824,7 @@ export class InstantAppsFilterList {
           defExpressions.push(`(${definitionExpression})`);
         }
       }
-      const combinedExpressions =
-        defExpressions.length > 0 && this.initDefExpressions[layerId] != null
-          ? `(${defExpressions.join(layerExpression.operator)}) AND (${this.initDefExpressions[layerId]})`
-          : defExpressions.length > 0
-          ? defExpressions.join(layerExpression.operator)
-          : this.initDefExpressions[layerId];
-      const fl = this.view.map.findLayerById(layerId) as FilterLayer;
-      fl.definitionExpression = combinedExpressions;
+      this.updateFilterLayerDefExpression(defExpressions, layerExpression);
       this.generateURLParams();
       this.filterUpdate.emit();
     }

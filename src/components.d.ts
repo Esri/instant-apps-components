@@ -40,7 +40,7 @@ export namespace Components {
          */
         "headingLevel"?: 1 | 2 | 3 | 4 | 5 | 6 | undefined;
         /**
-          * Use this prop to create filters based on the LayerExpression object.
+          * Use this to create filters that update a layer's definitionExpression.
          */
         "layerExpressions": LayerExpression[];
         /**
@@ -416,7 +416,7 @@ declare namespace LocalJSX {
          */
         "headingLevel"?: 1 | 2 | 3 | 4 | 5 | 6 | undefined;
         /**
-          * Use this prop to create filters based on the LayerExpression object.
+          * Use this to create filters that update a layer's definitionExpression.
          */
         "layerExpressions"?: LayerExpression[];
         /**

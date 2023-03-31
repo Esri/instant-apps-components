@@ -139,23 +139,19 @@ export interface InstantAppsPopoverMessageOverrides {
 //FilterList
 export interface Expression {
   id: number;
-  definitionExpressionId: string;
-  name: string;
-  definitionExpression?: string;
   type?: ExpressionField;
-  field?: string;
   active?: boolean;
-  selectFields?: string[] | number[];
+  definitionExpression?: string;
+  name: string;
+  field?: string;
+  fields?: string[] | number[];
   selectedFields?: string[] | number[];
   codedValues?: { [key: string]: string };
   placeholder?: string;
   min?: number | string;
   max?: number | string;
   range?: { min: string | number | undefined; max: string | number | undefined };
-  start?: number | string;
-  end?: number | string;
   step?: number;
-  index?: number;
 }
 
 export interface LayerExpression {

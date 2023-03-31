@@ -86,7 +86,7 @@
             <calcite-button class="open" value="three">Open popover three</calcite-button>
           </p>
           <instant-apps-filter-list id="filter-list">
-            <div class="filter-header" slot="header-content"><calcite-icon scale="s" icon="filter"></calcite-icon>TESTING</div>
+            <div class="filter-header" slot="header-content"><calcite-icon scale="s" icon="filter"></calcite-icon>Filter List</div>
           </instant-apps-filter-list>
         </calcite-panel>
       </calcite-shell-panel>
@@ -137,38 +137,49 @@
       ) => {
         const layerExpressions = [
           {
-            id: '17be176f3ab-layer-4',
-            title: 'Park boundary',
+            id: '1774b178714-layer-8',
+            title: 'California_Fire_Perimeters Geo',
             operator: ' AND ',
             expressions: [
               {
-                definitionExpression: 'PERIMETER >= 159790.78',
-                id: 1666973394378,
+                id: 1654881156360,
+                name: 'ALARM_DATE',
+                type: 'date',
+                field: 'ALARM_DATE',
                 index: 0,
-                name: 'Test Filter',
               },
               {
-                id: 1680126955806,
-                name: 'NAME',
-                type: 'string',
-                field: 'NAME',
+                definitionExpression: "(YEAR_ IN (2015,2019,2018,2017,2016)) AND (AGENCY = 'USF')",
+                id: 1654881364866,
                 index: 1,
-                placeholder: 'Park name',
+                name: 'USF',
               },
-            ],
-          },
-          {
-            id: '17be176f3aa-layer-3',
-            title: 'Streams',
-            operator: ' AND ',
-            expressions: [
               {
-                id: 1680126449801,
-                name: 'Type',
+                id: 1654881457794,
+                name: 'AGENCY',
                 type: 'string',
-                field: 'Type',
-                placeholder: 'Stream type',
-                index: 0,
+                field: 'AGENCY',
+                index: 2,
+              },
+              {
+                definitionExpression: "(YEAR_ IN (2015,2019,2018,2017,2016)) AND (AGENCY = 'CDF')",
+                id: 1654897065276,
+                index: 3,
+                name: 'CDF',
+              },
+              {
+                definitionExpression: "(YEAR_ IN (2015,2019,2018,2017,2016)) AND (AGENCY = 'CCO')",
+                id: 1654897087988,
+                index: 4,
+                name: 'CCO',
+              },
+              {
+                id: 1679949600960,
+                name: 'GIS_ACRES',
+                type: 'number',
+                field: 'GIS_ACRES',
+                step: '10',
+                index: 5,
               },
             ],
           },
@@ -177,7 +188,7 @@
 
         const map = new WebMap({
           portalItem: {
-            id: '45c9e580f4cb453a81db10d99af41b14',
+            id: '8891ee1d2e0e428bb96c58b8ecf8c408',
           },
         });
 
@@ -202,6 +213,7 @@
           filterList.layerExpressions = layerExpressions;
           filterList.closeBtnOnClick = () => console.log('close');
           filterList.openFilters = true;
+          filterList.autoUpdateUrl = true;
           filterList.addEventListener('filterListReset', e => {
             console.log('filterListReset e', e);
           });
