@@ -1,6 +1,5 @@
 // https://medium.com/stencil-tricks/implementing-internationalisation-i18n-with-stencil-5e6559554117
 import { languageMap } from './languageUtil';
-import { getAssetPath } from '@stencil/core';
 
 function getComponentClosestLanguage(element: HTMLElement): string | undefined {
   const closestElement = (element.closest('[lang]') as HTMLElement) ?? element.shadowRoot?.ownerDocument?.documentElement;
@@ -26,7 +25,11 @@ interface StringBundle {
 
 function fetchLocaleStringsForComponent<T extends StringBundle = StringBundle>(componentName: string, locale: string): Promise<T> {
   return new Promise((resolve, reject): void => {
-    fetch(getAssetPath(`../assets/t9n/${componentName}/resources_${locale}.json`)).then(
+    const t9nDir = './assets/t9n';
+    const fileName = `resources_${locale}.json`;
+    const localeFilePath = `${t9nDir}/${componentName}/${fileName}`;
+    const { href } = new URL(localeFilePath, window.location.href);
+    fetch(href).then(
       result => {
         if (result.ok) resolve(result.json());
         else reject();

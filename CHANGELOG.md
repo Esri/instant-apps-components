@@ -5,6 +5,22 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## v1.0.0-beta.55
+
+- Update relative path instead of absolute path for locale assets
+
+## v1.0.0-beta.54
+
+- Revert assets path to /assets instead of /instant-apps-assets
+
+## v1.0.0-beta.53
+
+- Update fetch locale logic.
+
+## v1.0.0-beta.51 and v1.0.0-beta.52
+
+- Update asset management.
+
 ## v1.0.0-beta.50
 
 ### instant-apps-interactive-legend
