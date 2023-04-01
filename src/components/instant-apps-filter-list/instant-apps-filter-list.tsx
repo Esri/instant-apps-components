@@ -24,8 +24,8 @@ const CSS = {
 };
 
 /**
- * @slot header-content - A slot for adding custom content to the header.
- * @slot header-actions-end - A slot for adding actions or content to the end side of the header.
+ * @slot filter-header-content - A slot for adding custom content to the header.
+ * @slot filter-header-actions-end - A slot for adding actions or content to the end side of the header.
  */
 
 @Component({
@@ -34,7 +34,7 @@ const CSS = {
   shadow: true,
 })
 export class InstantAppsFilterList {
-  @Element() el: HTMLElement;
+  @Element() hostElement: HTMLElement;
 
   /**
    * Use this to create filters that update a layer's definitionExpression.
@@ -44,8 +44,7 @@ export class InstantAppsFilterList {
   /**
    * Auto update URL with filter params.
    */
-  @Prop()
-  autoUpdateUrl?: boolean = false;
+  @Prop() autoUpdateUrl?: boolean = false;
 
   /**
    * Display close button in footer.
@@ -78,16 +77,6 @@ export class InstantAppsFilterList {
   @Prop() extentSelectorConfig?: ExtentSelector;
 
   /**
-   * Specifies the number at which section headings should start.
-   */
-  @Prop() headingLevel?: 1 | 2 | 3 | 4 | 5 | 6 | undefined;
-
-  /**
-   * Turn on the ability to filter by extent.
-   */
-  @Prop() showHeader?: boolean = false;
-
-  /**
    * URL params set by using filters.
    */
   @Prop({ mutable: true }) urlParams?: URLSearchParams;
@@ -117,9 +106,9 @@ export class InstantAppsFilterList {
   panelEl: HTMLCalcitePanelElement;
 
   async componentWillLoad(): Promise<void> {
-    this.baseClass = getMode(this.el) === 'dark' ? baseClassDark : baseClassLight;
+    this.baseClass = getMode(this.hostElement) === 'dark' ? baseClassDark : baseClassLight;
     await this.initializeModules();
-    await this.getMessages();
+    this.getMessages();
     this.disabled = this.layerExpressions?.length ? undefined : true;
   }
 
@@ -156,9 +145,9 @@ export class InstantAppsFilterList {
     const footer = this.closeBtn ? this.renderFullFooter() : this.renderFooter();
     return (
       <Host>
-        <calcite-panel class={this.baseClass} ref={el => (this.panelEl = el as HTMLCalcitePanelElement)} heading={this.messages.selectFilter} headingLevel={this.headingLevel}>
-          <slot slot="header-content" name="header-content"></slot>
-          <slot slot="header-actions-end" name="header-actions-end"></slot>
+        <calcite-panel class={this.baseClass} ref={el => (this.panelEl = el as HTMLCalcitePanelElement)}>
+          <slot slot="header-content" name="filter-header-content"></slot>
+          <slot slot="header-actions-end" name="filter-header-actions-end"></slot>
           <div key="filter-container" class={CSS.filterContainer}>
             {filterConfig}
             {footer}
@@ -278,8 +267,8 @@ export class InstantAppsFilterList {
             max={max}
             minValue={min}
             maxValue={max}
-            min-label={this.messages.minSlider.replace('{field}', field)}
-            max-label={this.messages.maxSlider.replace('{field}', field)}
+            min-label={this.messages?.minSlider.replace('{field}', field)}
+            max-label={this.messages?.maxSlider.replace('{field}', field)}
             step={step}
             labelHandles={true}
             snap={true}
@@ -311,7 +300,7 @@ export class InstantAppsFilterList {
             value={value}
             range
           />
-          <calcite-action onClick={this.handleResetDatePicker.bind(this, expression, layerId)} icon="reset" text={this.messages.resetDatePicker} scale="s" />
+          <calcite-action onClick={this.handleResetDatePicker.bind(this, expression, layerId)} icon="reset" text={this.messages?.resetDatePicker} scale="s" />
         </div>
       </label>
     ) : null;
@@ -321,18 +310,18 @@ export class InstantAppsFilterList {
     return (
       <div class={CSS.footer} slot="footer">
         <calcite-button appearance="outline" width="full" disabled={this.disabled} onClick={this.handleResetFilter.bind(this)}>
-          {this.messages.resetFilter}
+          {this.messages?.resetFilter}
         </calcite-button>
       </div>
     );
   }
 
   renderFullFooter(): VNode {
-    const closeText = this.closeBtnText != null ? this.closeBtnText : this.messages.close;
+    const closeText = this.closeBtnText != null ? this.closeBtnText : this.messages?.close;
     return (
       <div class={CSS.footer} slot="footer">
         <calcite-button appearance="outline" width="half" disabled={this.disabled} onClick={this.handleResetFilter.bind(this)}>
-          {this.messages.resetFilter}
+          {this.messages?.resetFilter}
         </calcite-button>
         <calcite-button appearance="solid" width="half" kind="brand" onClick={this.closeBtnOnClick?.bind(this)}>
           {closeText}
@@ -380,7 +369,7 @@ export class InstantAppsFilterList {
   }
 
   async getMessages(): Promise<void> {
-    const messages = await getLocaleComponentStrings(this.el);
+    const messages = await getLocaleComponentStrings(this.hostElement);
     this.messages = messages[0] as typeof FilterList_T9n;
   }
 
