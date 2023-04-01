@@ -36,10 +36,6 @@ export namespace Components {
          */
         "extentSelectorConfig"?: ExtentSelector;
         /**
-          * Specifies the number at which section headings should start.
-         */
-        "headingLevel"?: 1 | 2 | 3 | 4 | 5 | 6 | undefined;
-        /**
           * Use this to create filters that update a layer's definitionExpression.
          */
         "layerExpressions": LayerExpression[];
@@ -47,10 +43,6 @@ export namespace Components {
           * When `true`, the layer filter block is expanded.
          */
         "openFilters"?: boolean;
-        /**
-          * Turn on the ability to filter by extent.
-         */
-        "showHeader"?: boolean;
         /**
           * URL params set by using filters.
          */
@@ -412,10 +404,6 @@ declare namespace LocalJSX {
          */
         "extentSelectorConfig"?: ExtentSelector;
         /**
-          * Specifies the number at which section headings should start.
-         */
-        "headingLevel"?: 1 | 2 | 3 | 4 | 5 | 6 | undefined;
-        /**
           * Use this to create filters that update a layer's definitionExpression.
          */
         "layerExpressions"?: LayerExpression[];
@@ -431,10 +419,6 @@ declare namespace LocalJSX {
           * When `true`, the layer filter block is expanded.
          */
         "openFilters"?: boolean;
-        /**
-          * Turn on the ability to filter by extent.
-         */
-        "showHeader"?: boolean;
         /**
           * URL params set by using filters.
          */
