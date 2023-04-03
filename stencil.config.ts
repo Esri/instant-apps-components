@@ -1,6 +1,7 @@
 import { Config } from '@stencil/core';
 import { sass } from '@stencil/sass';
 import nodePolyfills from 'rollup-plugin-node-polyfills';
+import { reactOutputTarget } from '@stencil/react-output-target';
 
 const t9nAssetsObj = {
   src: './assets/t9n',
@@ -21,6 +22,11 @@ export const config: Config = {
       copy: [{ src: '**/*.html' }, { ...t9nAssetsObj, dest: 'assets/t9n' }],
       serviceWorker: null, // disable service workers
     },
+    reactOutputTarget({
+      componentCorePackage: 'instant-apps-components',
+      proxiesFile: '../instant-apps-components-react/src/components/stencil-generated/index.ts',
+      includeDefineCustomElements: true,
+    }),
     {
       type: 'docs-readme',
       footer: `## License
