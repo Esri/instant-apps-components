@@ -23,7 +23,7 @@ export const config: Config = {
       serviceWorker: null, // disable service workers
     },
     reactOutputTarget({
-      componentCorePackage: 'instant-apps-components',
+      componentCorePackage: '@esri/instant-apps-components',
       proxiesFile: '../instant-apps-components-react/src/components/stencil-generated/index.ts',
       includeDefineCustomElements: true,
     }),
