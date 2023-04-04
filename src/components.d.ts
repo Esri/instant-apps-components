@@ -5,11 +5,65 @@
  * It contains typing information for all components that exist in this project.
  */
 import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
-import { ExtentSelector, InstantAppsPopoverMessageOverrides, LayerExpression } from "./interfaces/interfaces";
+import { ExportOutput, ExtentSelector, InstantAppsPopoverMessageOverrides, LayerExpression, PopoverPlacement } from "./interfaces/interfaces";
 import { FilterMode } from "./components/instant-apps-interactive-legend/instant-apps-interactive-legend-classic/interfaces/interfaces";
 import { InstantAppsPopovers } from "./components/instant-apps-popovers/instant-apps-popovers";
 import { LogicalPlacement } from "@esri/calcite-components/dist/types/utils/floating-ui";
 export namespace Components {
+    interface InstantAppsExport {
+        /**
+          * Export header name, updated in input.
+         */
+        "headerTitle"?: string;
+        /**
+          * When `true`, include header theme in export.
+         */
+        "includeHeaderTheme"?: boolean;
+        /**
+          * When `true`, include legend in export.
+         */
+        "includeLegend"?: boolean;
+        /**
+          * When `true`, include map in export.
+         */
+        "includeMap"?: boolean;
+        /**
+          * Renders tool as a popover with a trigger button, or inline to place in a custom container.
+         */
+        "mode": 'popover' | 'inline';
+        /**
+          * Output to use to set up export.
+         */
+        "output"?: ExportOutput;
+        /**
+          * Determines where the component will be positioned relative to the `referenceElement`.
+         */
+        "popoverPlacement"?: PopoverPlacement;
+        /**
+          * Determines the type of positioning to use for the overlaid content. Using `"absolute"` will work for most cases. The component will be positioned inside of overflowing parent containers and will affect the container's layout. `"fixed"` value should be used to escape an overflowing parent container, or when the reference element's position CSS property is `"fixed"`.
+         */
+        "popoverPositioning"?: 'absolute' | 'fixed';
+        /**
+          * Adjusts the scale of the action button.
+         */
+        "scale"?: 's' | 'm' | 'l';
+        /**
+          * Show header title input.
+         */
+        "showHeaderTitle"?: boolean;
+        /**
+          * Show header theme checkbox.
+         */
+        "showIncludeHeaderTheme"?: boolean;
+        /**
+          * Show include legend checkbox.
+         */
+        "showIncludeLegend"?: boolean;
+        /**
+          * Show include map checkbox.
+         */
+        "showIncludeMap"?: boolean;
+    }
     interface InstantAppsFilterList {
         /**
           * Auto update URL with filter params.
@@ -285,6 +339,10 @@ export namespace Components {
         "view": __esri.MapView | __esri.SceneView;
     }
 }
+export interface InstantAppsExportCustomEvent<T> extends CustomEvent<T> {
+    detail: T;
+    target: HTMLInstantAppsExportElement;
+}
 export interface InstantAppsFilterListCustomEvent<T> extends CustomEvent<T> {
     detail: T;
     target: HTMLInstantAppsFilterListElement;
@@ -298,6 +356,12 @@ export interface InstantAppsInteractiveLegendLayerCaptionCustomEvent<T> extends 
     target: HTMLInstantAppsInteractiveLegendLayerCaptionElement;
 }
 declare global {
+    interface HTMLInstantAppsExportElement extends Components.InstantAppsExport, HTMLStencilElement {
+    }
+    var HTMLInstantAppsExportElement: {
+        prototype: HTMLInstantAppsExportElement;
+        new (): HTMLInstantAppsExportElement;
+    };
     interface HTMLInstantAppsFilterListElement extends Components.InstantAppsFilterList, HTMLStencilElement {
     }
     var HTMLInstantAppsFilterListElement: {
@@ -371,6 +435,7 @@ declare global {
         new (): HTMLInstantAppsSocialShareElement;
     };
     interface HTMLElementTagNameMap {
+        "instant-apps-export": HTMLInstantAppsExportElement;
         "instant-apps-filter-list": HTMLInstantAppsFilterListElement;
         "instant-apps-header": HTMLInstantAppsHeaderElement;
         "instant-apps-interactive-legend": HTMLInstantAppsInteractiveLegendElement;
@@ -386,6 +451,64 @@ declare global {
     }
 }
 declare namespace LocalJSX {
+    interface InstantAppsExport {
+        /**
+          * Export header name, updated in input.
+         */
+        "headerTitle"?: string;
+        /**
+          * When `true`, include header theme in export.
+         */
+        "includeHeaderTheme"?: boolean;
+        /**
+          * When `true`, include legend in export.
+         */
+        "includeLegend"?: boolean;
+        /**
+          * When `true`, include map in export.
+         */
+        "includeMap"?: boolean;
+        /**
+          * Renders tool as a popover with a trigger button, or inline to place in a custom container.
+         */
+        "mode"?: 'popover' | 'inline';
+        /**
+          * Emits when the export button is clicked.
+         */
+        "onExportBtnClick"?: (event: InstantAppsExportCustomEvent<void>) => void;
+        /**
+          * Output to use to set up export.
+         */
+        "output"?: ExportOutput;
+        /**
+          * Determines where the component will be positioned relative to the `referenceElement`.
+         */
+        "popoverPlacement"?: PopoverPlacement;
+        /**
+          * Determines the type of positioning to use for the overlaid content. Using `"absolute"` will work for most cases. The component will be positioned inside of overflowing parent containers and will affect the container's layout. `"fixed"` value should be used to escape an overflowing parent container, or when the reference element's position CSS property is `"fixed"`.
+         */
+        "popoverPositioning"?: 'absolute' | 'fixed';
+        /**
+          * Adjusts the scale of the action button.
+         */
+        "scale"?: 's' | 'm' | 'l';
+        /**
+          * Show header title input.
+         */
+        "showHeaderTitle"?: boolean;
+        /**
+          * Show header theme checkbox.
+         */
+        "showIncludeHeaderTheme"?: boolean;
+        /**
+          * Show include legend checkbox.
+         */
+        "showIncludeLegend"?: boolean;
+        /**
+          * Show include map checkbox.
+         */
+        "showIncludeMap"?: boolean;
+    }
     interface InstantAppsFilterList {
         /**
           * Auto update URL with filter params.
@@ -670,6 +793,7 @@ declare namespace LocalJSX {
         "view"?: __esri.MapView | __esri.SceneView;
     }
     interface IntrinsicElements {
+        "instant-apps-export": InstantAppsExport;
         "instant-apps-filter-list": InstantAppsFilterList;
         "instant-apps-header": InstantAppsHeader;
         "instant-apps-interactive-legend": InstantAppsInteractiveLegend;
@@ -688,6 +812,7 @@ export { LocalJSX as JSX };
 declare module "@stencil/core" {
     export namespace JSX {
         interface IntrinsicElements {
+            "instant-apps-export": LocalJSX.InstantAppsExport & JSXBase.HTMLAttributes<HTMLInstantAppsExportElement>;
             "instant-apps-filter-list": LocalJSX.InstantAppsFilterList & JSXBase.HTMLAttributes<HTMLInstantAppsFilterListElement>;
             "instant-apps-header": LocalJSX.InstantAppsHeader & JSXBase.HTMLAttributes<HTMLInstantAppsHeaderElement>;
             "instant-apps-interactive-legend": LocalJSX.InstantAppsInteractiveLegend & JSXBase.HTMLAttributes<HTMLInstantAppsInteractiveLegendElement>;

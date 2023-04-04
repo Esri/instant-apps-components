@@ -85,6 +85,7 @@
             <calcite-button class="open" value="two">Open popover two</calcite-button>
             <calcite-button class="open" value="three">Open popover three</calcite-button>
           </p>
+          <instant-apps-export id="export"></instant-apps-export>
           <instant-apps-filter-list id="filter-list">
             <div class="filter-header" slot="header-content"><calcite-icon scale="s" icon="filter"></calcite-icon>Filter List</div>
           </instant-apps-filter-list>
@@ -204,6 +205,12 @@
           container: 'viewDiv',
           zoom,
           center,
+        });
+
+        const exportPDF = document.getElementById('export');
+        exportPDF.headerTitle = 'Instant Apps: Header (Shared Theme)';
+        exportPDF.addEventListener('exportBtnClick', e => {
+          console.log('exportBtnClick: ', e.target.output);
         });
 
         view.when(async () => {

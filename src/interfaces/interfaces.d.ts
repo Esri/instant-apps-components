@@ -190,3 +190,34 @@ type ExpressionField = 'string' | 'number' | 'date' | 'coded-value' | 'range' | 
 
 export type FilterLayer = __esri.FeatureLayer | __esri.ImageryLayer | __esri.WFSLayer | __esri.StreamLayer | __esri.CSVLayer | __esri.GeoJSONLayer;
 export type FilterQueryLayer = __esri.FeatureLayer | __esri.WFSLayer | __esri.CSVLayer | __esri.GeoJSONLayer;
+
+// Export
+export interface ExportOutput {
+  headerTitle?: string;
+  includeHeaderTheme?: boolean;
+  includeLegend?: boolean;
+  includeMap?: boolean;
+}
+
+export type PopoverPlacement =
+  | 'auto'
+  | 'top'
+  | 'right'
+  | 'bottom'
+  | 'left'
+  | 'top-start'
+  | 'top-end'
+  | 'right-start'
+  | 'right-end'
+  | 'bottom-start'
+  | 'bottom-end'
+  | 'left-start'
+  | 'left-end'
+  | 'auto-start'
+  | 'auto-end'
+  | 'leading-start'
+  | 'leading'
+  | 'leading-end'
+  | 'trailing-end'
+  | 'trailing'
+  | 'trailing-start';
