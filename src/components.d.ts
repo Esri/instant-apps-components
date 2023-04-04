@@ -9,6 +9,7 @@ import { ExtentSelector, InstantAppsPopoverMessageOverrides, LayerExpression } f
 import { FilterMode } from "./components/instant-apps-interactive-legend/instant-apps-interactive-legend-classic/interfaces/interfaces";
 import { InstantAppsPopovers } from "./components/instant-apps-popovers/instant-apps-popovers";
 import { LogicalPlacement } from "@esri/calcite-components/dist/types/utils/floating-ui";
+import { ScoreboardData } from "./components/instant-apps-scoreboard/types/interfaces";
 export namespace Components {
     interface InstantAppsFilterList {
         /**
@@ -212,6 +213,10 @@ export namespace Components {
         "instantAppsPopovers": Map<string, HTMLInstantAppsPopoverElement>;
         "open": (key: string) => Promise<void>;
     }
+    interface InstantAppsScoreboard {
+        "data": ScoreboardData;
+        "view": __esri.MapView | __esri.SceneView;
+    }
     interface InstantAppsSocialShare {
         /**
           * Auto update share URL.
@@ -356,6 +361,12 @@ declare global {
         prototype: HTMLInstantAppsPopoversElement;
         new (): HTMLInstantAppsPopoversElement;
     };
+    interface HTMLInstantAppsScoreboardElement extends Components.InstantAppsScoreboard, HTMLStencilElement {
+    }
+    var HTMLInstantAppsScoreboardElement: {
+        prototype: HTMLInstantAppsScoreboardElement;
+        new (): HTMLInstantAppsScoreboardElement;
+    };
     interface HTMLInstantAppsSocialShareElement extends Components.InstantAppsSocialShare, HTMLStencilElement {
     }
     var HTMLInstantAppsSocialShareElement: {
@@ -374,6 +385,7 @@ declare global {
         "instant-apps-keyboard-shortcuts": HTMLInstantAppsKeyboardShortcutsElement;
         "instant-apps-popover": HTMLInstantAppsPopoverElement;
         "instant-apps-popovers": HTMLInstantAppsPopoversElement;
+        "instant-apps-scoreboard": HTMLInstantAppsScoreboardElement;
         "instant-apps-social-share": HTMLInstantAppsSocialShareElement;
     }
 }
@@ -589,6 +601,10 @@ declare namespace LocalJSX {
         "inTour"?: boolean;
         "instantAppsPopovers"?: Map<string, HTMLInstantAppsPopoverElement>;
     }
+    interface InstantAppsScoreboard {
+        "data"?: ScoreboardData;
+        "view"?: __esri.MapView | __esri.SceneView;
+    }
     interface InstantAppsSocialShare {
         /**
           * Auto update share URL.
@@ -665,6 +681,7 @@ declare namespace LocalJSX {
         "instant-apps-keyboard-shortcuts": InstantAppsKeyboardShortcuts;
         "instant-apps-popover": InstantAppsPopover;
         "instant-apps-popovers": InstantAppsPopovers;
+        "instant-apps-scoreboard": InstantAppsScoreboard;
         "instant-apps-social-share": InstantAppsSocialShare;
     }
 }
@@ -683,6 +700,7 @@ declare module "@stencil/core" {
             "instant-apps-keyboard-shortcuts": LocalJSX.InstantAppsKeyboardShortcuts & JSXBase.HTMLAttributes<HTMLInstantAppsKeyboardShortcutsElement>;
             "instant-apps-popover": LocalJSX.InstantAppsPopover & JSXBase.HTMLAttributes<HTMLInstantAppsPopoverElement>;
             "instant-apps-popovers": LocalJSX.InstantAppsPopovers & JSXBase.HTMLAttributes<HTMLInstantAppsPopoversElement>;
+            "instant-apps-scoreboard": LocalJSX.InstantAppsScoreboard & JSXBase.HTMLAttributes<HTMLInstantAppsScoreboardElement>;
             "instant-apps-social-share": LocalJSX.InstantAppsSocialShare & JSXBase.HTMLAttributes<HTMLInstantAppsSocialShareElement>;
         }
     }
