@@ -1,0 +1,28 @@
+{
+    "items": [
+        {
+            "label": "AVERAGE FEMALE POPULATION",
+            "value": "60k"
+        },
+        {
+            "label": "AVERAGE MALE POPUPLATION",
+            "value": "50k"
+        },
+        {
+            "label": "AVERAGE CLOWN POPULATION",
+            "value": "500k"
+        },
+        {
+            "label": "AVERAGE GOAT POPULATION",
+            "value": "60k"
+        },
+        {
+            "label": "AVERAGE WITCH POPULATION",
+            "value": "100k"
+        },
+        {
+            "label": "AVERAGE WIZARD POPULATION",
+            "value": "80k"
+        }
+    ]
+}
