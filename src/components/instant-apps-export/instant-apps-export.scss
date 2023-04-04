@@ -4,6 +4,7 @@
 * @prop --export-action-icon-hover-color: Popup's trigger button's icon color when hovered over.
 * @prop --export-background: Export's container background color.
 * @prop --export-text-color: Export's container text color.
+* @prop --export-width: Export's container width.
 */
 
 :host {
@@ -13,6 +14,7 @@
   --export-action-icon-hover-color: var(--calcite-ui-text-1);
   --export-background: var(--calcite-ui-foreground-1);
   --export-text-color: var(--calcite-ui-text-1);
+  --export-width: 250px;
 }
 
 .instant-apps-export {
@@ -21,6 +23,7 @@
   }
 
   &__container {
+    width: var(--export-width);
     padding: 12px;
     background: var(--export-background);
     --calcite-ui-text-1: var(--export-text-color);
