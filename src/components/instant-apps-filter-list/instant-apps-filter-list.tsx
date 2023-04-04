@@ -267,8 +267,8 @@ export class InstantAppsFilterList {
             max={max}
             minValue={min}
             maxValue={max}
-            min-label={this.messages?.minSlider.replace('{field}', field)}
-            max-label={this.messages?.maxSlider.replace('{field}', field)}
+            min-label={this.messages?.minSlider?.replace('{field}', field)}
+            max-label={this.messages?.maxSlider?.replace('{field}', field)}
             step={step}
             labelHandles={true}
             snap={true}
