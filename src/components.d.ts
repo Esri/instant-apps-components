@@ -5,7 +5,7 @@
  * It contains typing information for all components that exist in this project.
  */
 import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
-import { ExtentSelector, InstantAppsPopoverMessageOverrides, LayerExpression } from "./interfaces/interfaces";
+import { ExtentSelector, IMeasureConfiguration, InstantAppsPopoverMessageOverrides, LayerExpression } from "./interfaces/interfaces";
 import { FilterMode } from "./components/instant-apps-interactive-legend/instant-apps-interactive-legend-classic/interfaces/interfaces";
 import { InstantAppsPopovers } from "./components/instant-apps-popovers/instant-apps-popovers";
 import { LogicalPlacement } from "@esri/calcite-components/dist/types/utils/floating-ui";
@@ -185,6 +185,24 @@ export namespace Components {
          */
         "view": __esri.MapView | __esri.SceneView;
     }
+    interface InstantAppsMeasurement {
+        "areaUnit": __esri.AreaUnit;
+        "linearUnit": __esri.LengthUnit;
+        /**
+          * MapView or SceneView
+         */
+        "view": __esri.MapView | __esri.SceneView;
+    }
+    interface InstantAppsMeasurementTool {
+        "activateTool": (value: string) => Promise<void>;
+        /**
+          * Clears the state of the search widget
+          * @returns Promise that resolves when the operation is complete
+         */
+        "clear": () => Promise<void>;
+        "measureConfiguration": IMeasureConfiguration;
+        "view": __esri.MapView | __esri.SceneView;
+    }
     interface InstantAppsPopover {
         "content": string;
         "disableAction": boolean;
@@ -344,6 +362,18 @@ declare global {
         prototype: HTMLInstantAppsKeyboardShortcutsElement;
         new (): HTMLInstantAppsKeyboardShortcutsElement;
     };
+    interface HTMLInstantAppsMeasurementElement extends Components.InstantAppsMeasurement, HTMLStencilElement {
+    }
+    var HTMLInstantAppsMeasurementElement: {
+        prototype: HTMLInstantAppsMeasurementElement;
+        new (): HTMLInstantAppsMeasurementElement;
+    };
+    interface HTMLInstantAppsMeasurementToolElement extends Components.InstantAppsMeasurementTool, HTMLStencilElement {
+    }
+    var HTMLInstantAppsMeasurementToolElement: {
+        prototype: HTMLInstantAppsMeasurementToolElement;
+        new (): HTMLInstantAppsMeasurementToolElement;
+    };
     interface HTMLInstantAppsPopoverElement extends Components.InstantAppsPopover, HTMLStencilElement {
     }
     var HTMLInstantAppsPopoverElement: {
@@ -372,6 +402,8 @@ declare global {
         "instant-apps-interactive-legend-layer-caption": HTMLInstantAppsInteractiveLegendLayerCaptionElement;
         "instant-apps-interactive-legend-relationship": HTMLInstantAppsInteractiveLegendRelationshipElement;
         "instant-apps-keyboard-shortcuts": HTMLInstantAppsKeyboardShortcutsElement;
+        "instant-apps-measurement": HTMLInstantAppsMeasurementElement;
+        "instant-apps-measurement-tool": HTMLInstantAppsMeasurementToolElement;
         "instant-apps-popover": HTMLInstantAppsPopoverElement;
         "instant-apps-popovers": HTMLInstantAppsPopoversElement;
         "instant-apps-social-share": HTMLInstantAppsSocialShareElement;
@@ -566,6 +598,18 @@ declare namespace LocalJSX {
          */
         "view"?: __esri.MapView | __esri.SceneView;
     }
+    interface InstantAppsMeasurement {
+        "areaUnit"?: __esri.AreaUnit;
+        "linearUnit"?: __esri.LengthUnit;
+        /**
+          * MapView or SceneView
+         */
+        "view"?: __esri.MapView | __esri.SceneView;
+    }
+    interface InstantAppsMeasurementTool {
+        "measureConfiguration"?: IMeasureConfiguration;
+        "view"?: __esri.MapView | __esri.SceneView;
+    }
     interface InstantAppsPopover {
         "content"?: string;
         "disableAction"?: boolean;
@@ -663,6 +707,8 @@ declare namespace LocalJSX {
         "instant-apps-interactive-legend-layer-caption": InstantAppsInteractiveLegendLayerCaption;
         "instant-apps-interactive-legend-relationship": InstantAppsInteractiveLegendRelationship;
         "instant-apps-keyboard-shortcuts": InstantAppsKeyboardShortcuts;
+        "instant-apps-measurement": InstantAppsMeasurement;
+        "instant-apps-measurement-tool": InstantAppsMeasurementTool;
         "instant-apps-popover": InstantAppsPopover;
         "instant-apps-popovers": InstantAppsPopovers;
         "instant-apps-social-share": InstantAppsSocialShare;
@@ -681,6 +727,8 @@ declare module "@stencil/core" {
             "instant-apps-interactive-legend-layer-caption": LocalJSX.InstantAppsInteractiveLegendLayerCaption & JSXBase.HTMLAttributes<HTMLInstantAppsInteractiveLegendLayerCaptionElement>;
             "instant-apps-interactive-legend-relationship": LocalJSX.InstantAppsInteractiveLegendRelationship & JSXBase.HTMLAttributes<HTMLInstantAppsInteractiveLegendRelationshipElement>;
             "instant-apps-keyboard-shortcuts": LocalJSX.InstantAppsKeyboardShortcuts & JSXBase.HTMLAttributes<HTMLInstantAppsKeyboardShortcutsElement>;
+            "instant-apps-measurement": LocalJSX.InstantAppsMeasurement & JSXBase.HTMLAttributes<HTMLInstantAppsMeasurementElement>;
+            "instant-apps-measurement-tool": LocalJSX.InstantAppsMeasurementTool & JSXBase.HTMLAttributes<HTMLInstantAppsMeasurementToolElement>;
             "instant-apps-popover": LocalJSX.InstantAppsPopover & JSXBase.HTMLAttributes<HTMLInstantAppsPopoverElement>;
             "instant-apps-popovers": LocalJSX.InstantAppsPopovers & JSXBase.HTMLAttributes<HTMLInstantAppsPopoversElement>;
             "instant-apps-social-share": LocalJSX.InstantAppsSocialShare & JSXBase.HTMLAttributes<HTMLInstantAppsSocialShareElement>;

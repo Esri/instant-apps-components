@@ -190,3 +190,8 @@ type ExpressionField = 'string' | 'number' | 'date' | 'coded-value' | 'range' | 
 
 export type FilterLayer = __esri.FeatureLayer | __esri.ImageryLayer | __esri.WFSLayer | __esri.StreamLayer | __esri.CSVLayer | __esri.GeoJSONLayer;
 export type FilterQueryLayer = __esri.FeatureLayer | __esri.WFSLayer | __esri.CSVLayer | __esri.GeoJSONLayer;
+
+export interface IMeasureConfiguration {
+  areaUnit: __esri.AreaUnit;
+  linearUnit: __esri.LengthUnit;
+}

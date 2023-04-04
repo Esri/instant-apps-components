@@ -1,0 +1,11 @@
+:host {
+  display: flex;
+    calcite-action-bar{
+      width:320px;
+      justify-content: space-evenly;
+      flex-direction: row;
+    }
+    calcite-panel{
+      width:100%;
+    }
+}
