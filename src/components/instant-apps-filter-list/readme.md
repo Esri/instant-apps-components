@@ -6,7 +6,7 @@
 
 ```
 <instant-apps-filter-list layerExpressions={layerExpressions} view={view}>
-  <div class="filter-header" slot="header-content"><calcite-icon scale="s" icon="filter"></calcite-icon>Filter List</div>
+  <div class="filter-header" slot="filter-header-content"><calcite-icon scale="s" icon="filter"></calcite-icon>Filter List</div>
 </instant-apps-filter-list>
 ```
 
@@ -95,20 +95,19 @@ const layerExpressions = [
 
 ## Properties
 
-| Property               | Attribute         | Description                                                            | Type                                      | Default     |
-| ---------------------- | ----------------- | ---------------------------------------------------------------------- | ----------------------------------------- | ----------- |
-| `autoUpdateUrl`        | `auto-update-url` | Auto update URL with filter params.                                    | `boolean \| undefined`                    | `false`     |
-| `closeBtn`             | `close-btn`       | Display close button in footer.                                        | `boolean \| undefined`                    | `false`     |
-| `closeBtnOnClick`      | --                | Close button onClick function.                                         | `(() => void) \| undefined`               | `undefined` |
-| `closeBtnText`         | `close-btn-text`  | Close button text.                                                     | `string \| undefined`                     | `undefined` |
-| `extentSelector`       | `extent-selector` | Turn on the ability to filter by extent.                               | `boolean \| undefined`                    | `false`     |
-| `extentSelectorConfig` | --                | Limits filtering options based on the view's extent geometry.          | `ExtentSelector \| undefined`             | `undefined` |
-| `headingLevel`         | `heading-level`   | Specifies the number at which section headings should start.           | `1 \| 2 \| 3 \| 4 \| 5 \| 6 \| undefined` | `undefined` |
-| `layerExpressions`     | --                | Use this to create filters that update a layer's definitionExpression. | `LayerExpression[]`                       | `undefined` |
-| `openFilters`          | `open-filters`    | When `true`, the layer filter block is expanded.                       | `boolean \| undefined`                    | `false`     |
-| `showHeader`           | `show-header`     | Turn on the ability to filter by extent.                               | `boolean \| undefined`                    | `false`     |
-| `urlParams`            | --                | URL params set by using filters.                                       | `URLSearchParams \| undefined`            | `undefined` |
-| `view`                 | --                | MapView or SceneView to reference when filtering.                      | `MapView \| SceneView`                    | `undefined` |
+| Property               | Attribute         | Description                                                            | Type                           | Default     |
+| ---------------------- | ----------------- | ---------------------------------------------------------------------- | ------------------------------ | ----------- |
+| `autoUpdateUrl`        | `auto-update-url` | Auto update URL with filter params.                                    | `boolean \| undefined`         | `false`     |
+| `closeBtn`             | `close-btn`       | Display close button in footer.                                        | `boolean \| undefined`         | `false`     |
+| `closeBtnOnClick`      | --                | Close button onClick function.                                         | `(() => void) \| undefined`    | `undefined` |
+| `closeBtnText`         | `close-btn-text`  | Close button text.                                                     | `string \| undefined`          | `undefined` |
+| `extentSelector`       | `extent-selector` | Turn on the ability to filter by extent.                               | `boolean \| undefined`         | `false`     |
+| `extentSelectorConfig` | --                | Limits filtering options based on the view's extent geometry.          | `ExtentSelector \| undefined`  | `undefined` |
+| `layerExpressions`     | --                | Use this to create filters that update a layer's definitionExpression. | `LayerExpression[]`            | `undefined` |
+| `openFilters`          | `open-filters`    | When `true`, the layer filter block is expanded.                       | `boolean \| undefined`         | `false`     |
+| `urlParams`            | --                | URL params set by using filters.                                       | `URLSearchParams \| undefined` | `undefined` |
+| `view`                 | --                | MapView or SceneView to reference when filtering.                      | `MapView \| SceneView`         | `undefined` |
+
 
 
 ## Events
@@ -121,10 +120,10 @@ const layerExpressions = [
 
 ## Slots
 
-| Slot                   | Description                                                         |
-| ---------------------- | ------------------------------------------------------------------- |
-| `"header-actions-end"` | A slot for adding actions or content to the end side of the header. |
-| `"header-content"`     | A slot for adding custom content to the header.                     |
+| Slot                          | Description                                                         |
+| ----------------------------- | ------------------------------------------------------------------- |
+| `"filter-header-actions-end"` | A slot for adding actions or content to the end side of the header. |
+| `"filter-header-content"`     | A slot for adding custom content to the header.                     |
 
 
 ----------------------------------------------

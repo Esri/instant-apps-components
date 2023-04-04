@@ -87,7 +87,7 @@
           </p>
           <instant-apps-export id="export"></instant-apps-export>
           <instant-apps-filter-list id="filter-list">
-            <div class="filter-header" slot="header-content"><calcite-icon scale="s" icon="filter"></calcite-icon>Filter List</div>
+            <div class="filter-header" slot="filter-header-content"><calcite-icon scale="s" icon="filter"></calcite-icon>Filter List</div>
           </instant-apps-filter-list>
         </calcite-panel>
       </calcite-shell-panel>
@@ -220,7 +220,6 @@
           filterList.layerExpressions = layerExpressions;
           filterList.closeBtnOnClick = () => console.log('close');
           filterList.openFilters = true;
-          filterList.autoUpdateUrl = true;
           filterList.addEventListener('filterListReset', e => {
             console.log('filterListReset e', e);
           });
