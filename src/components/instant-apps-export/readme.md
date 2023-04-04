@@ -33,14 +33,14 @@
 
 ## CSS Custom Properties
 
-| Name                               | Description                                            |
-| ---------------------------------- | ------------------------------------------------------ |
-| `--export-action-icon-color`       | Popup's trigger button's icon color.                   |
-| `--export-action-icon-hover-color` | Popup's trigger button's icon color when hovered over. |
-| `--export-action-width`            | Popup's trigger button's width.                        |
-| `--export-background`              | Export's container background color.                   |
-| `--export-text-color`              | Export's container text color.                         |
-| `--export-width`                   | Export's container width.                              |
+| Name                                            | Description                                            |
+| ----------------------------------------------- | ------------------------------------------------------ |
+| `--instant-apps-export-action-icon-color`       | Popup's trigger button's icon color.                   |
+| `--instant-apps-export-action-icon-hover-color` | Popup's trigger button's icon color when hovered over. |
+| `--instant-apps-export-action-width`            | Popup's trigger button's width.                        |
+| `--instant-apps-export-background`              | Export's container background color.                   |
+| `--instant-apps-export-text-color`              | Export's container text color.                         |
+| `--instant-apps-export-width`                   | Export's container width.                              |
 
 
 ----------------------------------------------
