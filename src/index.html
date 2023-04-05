@@ -31,8 +31,6 @@
       margin: 0;
       padding: 0;
     }
-
-  
   </style>
 </head>
 
@@ -54,7 +52,7 @@
         reactiveUtils,
         esriConfig
       ) => {
-        
+
         esriConfig.portalUrl = 'https://webapps.maps.arcgis.com';
         const map = new WebScene({
           portalItem: {
@@ -72,37 +70,50 @@
 
         const data = {
           items: [
-                {
-                    label: "AVERAGE FEMALE POPULATION",
-                    value: "60K"
-                },
-                {
-                    label: "AVERAGE MALE POPULATION",
-                    value: "50K"
-                },
-                {
-                    label: "AVERAGE CLOWN POPULATION",
-                    value: "500K"
-                },
-                {
-                    label: "AVERAGE GOAT POPULATION",
-                    value: "60K"
-                },
-                {
-                    label: "AVERAGE WITCH POPULATION",
-                    value: "100K"
-                },
-                {
-                    label: "AVERAGE WIZARD POPULATION",
-                    value: "80K"
-                }
+            {
+              id: "1650e5e4ded-layer-2",
+              field: "Level_",
+              label: "Level",
+              value: "60k"
+            },
+            {
+              id: "1650e5e4ded-layer-2",
+              field: "Number_affected",
+              label: "Number_affected",
+              value: "50k"
+            },
+            {
+              id: "16a9b6628df-layer-1",
+              field: "SLR_table_SLR6COUNT",
+              label: "SLR 6 COUNT",
+              value: "500k"
+            },
+            {
+              id: "16a9b6628df-layer-1",
+              field: "SLR_table_SLR5COUNT",
+              label: "SLR 5 COUNT",
+              value: "150k"
+            },
+            {
+              id: "16a9b6628df-layer-1",
+              field: "SLR_table_SLR4COUNT",
+              label: "SLR 4 COUNT",
+              value: "80k"
+            },
+            {
+              id: "16a9b6628df-layer-1",
+              field: "SLR_table_SLR3COUNT",
+              label: "SLR 3 COUNT",
+              value: "20k"
+            }
           ]
         };
 
-          const scoreboard = document.createElement("instant-apps-scoreboard");          
-          scoreboard.view = view;
-          scoreboard.data = data;
-          view.ui.add(scoreboard, "manual");
+        const scoreboard = document.createElement("instant-apps-scoreboard");
+        scoreboard.view = view;
+        scoreboard.data = data;
+        scoreboard.position = "bottom";
+        view.ui.add(scoreboard, "manual");
 
       });
     </script>

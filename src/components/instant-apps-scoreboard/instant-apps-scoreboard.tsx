@@ -8,7 +8,7 @@ import { loadModules } from 'esri-loader';
 import { getLocaleComponentStrings } from '../../utils/locale';
 
 // Types
-import { Scoreboard, ScoreboardData, ScoreboardItem, ScoreboardState } from './types/interfaces';
+import { Scoreboard, ScoreboardData, ScoreboardItem, ScoreboardState, ScoreboardPosition } from './types/interfaces';
 
 // T9n
 import Scoreboard_t9n from '../../assets/t9n/instant-apps-scoreboard/resources.json';
@@ -23,6 +23,12 @@ const CSS = {
   item: `${__BASE__}item`,
   label: `${__BASE__}item-label`,
   value: `${__BASE__}item-value`,
+  position: {
+    bottom: `${__BASE__}position--bottom`,
+    side: `${__BASE__}position--side`,
+    left: `${__BASE__}position--left`,
+    right: `${__BASE__}position--right`,
+  },
 };
 
 @Component({
@@ -39,6 +45,8 @@ export class InstantAppsScoreboard {
   @Prop() view: __esri.MapView | __esri.SceneView;
 
   @Prop() data: ScoreboardData;
+
+  @Prop() position: ScoreboardPosition = Scoreboard.Bottom;
 
   @State() state: ScoreboardState;
 
@@ -106,7 +114,8 @@ export class InstantAppsScoreboard {
     const isLoading = state === Scoreboard.Loading;
     const isDisabled = state === Scoreboard.Disabled;
     const progress = isLoading ? this.renderProgress() : null;
-    return <Host>{isDisabled ? this.renderNotice() : [progress, this.renderBase()]}</Host>;
+    const positionClass = this.getPositionClass();
+    return <Host class={positionClass}>{isDisabled ? this.renderNotice() : [progress, this.renderBase()]}</Host>;
   }
 
   renderBase(): HTMLDivElement {
@@ -169,5 +178,11 @@ export class InstantAppsScoreboard {
       console.error('FAILED TO LOAD MESSAGES');
       Promise.reject();
     }
+  }
+
+  getPositionClass(): string {
+    const { bottom, left, right, side } = CSS.position;
+    const leftRight = `${this.position === Scoreboard.Left ? left : right} ${side}`;
+    return this.position === Scoreboard.Bottom ? bottom : leftRight;
   }
 }

@@ -1,48 +1,101 @@
+$backgroundColor: var(--calcite-ui-foreground-1);
+$borderColor: var(--calcite-ui-border-1);
+
 :host {
   display: block;
-  left: 50%;
-  bottom: 0;
-  transform: translate(-50%, -15px);
-
   .instant-apps-scoreboard {
-    padding: 1rem;
-    background-color: #fff;
-    border: 1px solid #dfdfdf;
-    font-size: 2rem;
-    min-width: 25vw;
-    max-width: 75vw;
+    padding: 1.75%;
+    background-color: $backgroundColor;
+    border: 1px solid $borderColor;
     box-shadow: 0px 3px 15px rgba(0, 0, 0, 0.2);
     border-radius: 3px;
 
     calcite-loader {
-      --calcite-loader-padding: 2rem;
+      --calcite-loader-padding: 0;
+    }
+
+    &__items,
+    &__item {
+      box-sizing: border-box;
+      display: flex;
     }
 
     &__items {
-      display: flex;
       list-style-type: none;
-      padding: 0;
+      padding-left: 0;
       margin: 0;
-      margin-left: 8rem;
-      margin-right: 8rem;
+      width: 100%;
     }
 
     &__item {
-      display: flex;
       flex-direction: column;
-      justify-content: center;
+      justify-content: flex-end;
       align-items: center;
-      margin: 1rem 1.5rem;
+      padding: 1%;
 
       &-label {
-        font-size: 0.6875em;
+        box-sizing: border-box;
+        line-height: 24px;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        line-clamp: 2;
+        word-break: break-word;
+      }
+
+      &-label {
+        font-size: 1rem;
         font-weight: 400;
       }
 
       &-value {
-        font-size: 1.25em;
+        font-size: 1.5rem;
         font-weight: 900;
       }
     }
   }
+}
+
+:host(.instant-apps-scoreboard__position--bottom) {
+  left: 50%;
+  bottom: 0;
+  transform: translate(-50%, -15px);
+  .instant-apps-scoreboard {
+    min-width: 65vw;
+    &__item {
+      width: 16.67%;
+      vertical-align: top;
+    }
+  }
+}
+
+:host(.instant-apps-scoreboard__position--side) {
+  top: 50%;
+  left: 15px;
+  transform: translateY(-50%);
+  .instant-apps-scoreboard {
+    display: flex;
+    align-items: center;
+    height: 65vh;
+    width: 10vw;
+    &__items {
+      flex-direction: column;
+    }
+    &__item {
+      width: 100%;
+      margin-top: 2.5vh;
+      margin-bottom: 2.5vh;
+    }
+  }
+}
+
+:host(.instant-apps-scoreboard__position--left) {
+  left: 15px;
+}
+
+:host(.instant-apps-scoreboard__position--right) {
+  left: unset;
+  right: 15px;
 }
