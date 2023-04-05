@@ -111,7 +111,7 @@
             if (center) center = center.split(';').map(item => parseFloat(item));
             if (zoom) zoom = parseInt(zoom);
 
-            const view = new MapView({
+            new MapView({
                 map,
                 container: 'viewDiv',
                 zoom,
