@@ -1,13 +1,17 @@
-$backgroundColor: var(--calcite-ui-foreground-1);
 $borderColor: var(--calcite-ui-border-1);
+$boxShadow: 0px 3px 15px rgba(0, 0, 0, 0.2);
 
 :host {
   display: block;
+  --instant-apps-scoreboard-background-color: var(--calcite-ui-foreground-1);
+  --instant-apps-scoreboard-text-color: var(--calcite-ui-text-1);
+  background-color: var(--instant-apps-scoreboard-background-color);
+  color: var(--instant-apps-scoreboard-text-color);
   .instant-apps-scoreboard {
+    box-sizing: border-box;
     padding: 1.75%;
-    background-color: $backgroundColor;
     border: 1px solid $borderColor;
-    box-shadow: 0px 3px 15px rgba(0, 0, 0, 0.2);
+    box-shadow: $boxShadow;
     border-radius: 3px;
 
     calcite-loader {
@@ -51,6 +55,9 @@ $borderColor: var(--calcite-ui-border-1);
       }
 
       &-value {
+        display: inline-block;
+        min-width: 43px;
+        min-height: 29px;
         font-size: 1.5rem;
         font-weight: 900;
       }

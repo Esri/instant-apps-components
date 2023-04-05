@@ -31,17 +31,91 @@
       margin: 0;
       padding: 0;
     }
+
+    #settings {
+      box-sizing: border-box;
+      margin: 10px;
+      padding: 10px;
+      background-color: #fff;
+      border-radius: 3px;
+      box-shadow: 0px 3px 15px rgba(0, 0, 0, 0.2);
+    }
+
+    .group {
+      margin-bottom: 20px;
+    }
+
+    .group-label {
+      display: inline-block;
+      font-size: 15px;
+      font-weight: 600;
+      margin-bottom: 5px;
+    }
+
+    .group-content {
+      padding-left: 10px;
+    }
+
+    calcite-label:last-child {
+      --calcite-label-margin-bottom: 0;
+    }
+
+    calcite-color-picker-swatch {
+      cursor: pointer;
+    }
+
+
   </style>
 </head>
 
 <body>
   <calcite-shell class="calcite-mode-light">
-    <instant-apps-header id="instant-apps-header" slot="header" title-text="Observer | Mt. Everest Weather Stations"
+    <instant-apps-header id="instant-apps-header" slot="header" title-text="Instant Apps Components: Scoreboard | Mt. Everest Weather Stations"
       text-color="#151515" background-color="#ffffff"
       logo-image="https://www.esri.com/content/dam/esrisites/en-us/common/icons/product-logos/arcgis-instant-apps-64.svg"
       logo-image-alt-text="ArcGIS Instant Apps logo"
       logo-link="https://www.esri.com/en-us/arcgis/products/arcgis-instant-apps/overview">
     </instant-apps-header>
+    <calcite-shell-panel slot="panel-start">
+      <calcite-panel heading="Scoreboard" description="Configure the scoreboard component">
+        <div id="settings">
+          <div class="group">
+            <span class="group-label">Layout</span>
+            <div class="group-content">
+              <calcite-label>
+                Position
+                <calcite-select id="position">
+                  <calcite-option value="bottom">Bottom</calcite-option>
+                  <calcite-option value="left">Left</calcite-option>
+                  <calcite-option value="right">Right</calcite-option>
+                </calcite-select>
+              </calcite-label>
+            </div>
+
+          </div>
+
+          <div class="group">
+            <span class="group-label">Theme</span>
+            <div class="group-content">
+              <calcite-label layout="inline-space-between">
+                Background color
+                <calcite-color-picker-swatch id="backgroundColorSwatch" color="#f8f8f8" />
+              </calcite-label>
+              <calcite-label layout="inline-space-between">
+                Text color
+                <calcite-color-picker-swatch id="textColorSwatch"  color="#151515"/>
+              </calcite-label>
+            </div>
+          </div>
+        </div>
+      </calcite-panel>
+    </calcite-shell-panel>
+    <calcite-popover reference-element="backgroundColorSwatch" auto-close="true" pointer-disabled="true">
+      <calcite-color-picker id="backgroundColorPicker" hide-channels="true" hide-saved="true" value="#f8f8f8"></calcite-color-picker>
+    </calcite-popover>
+    <calcite-popover reference-element="textColorSwatch" auto-close="true" pointer-disabled="true">
+      <calcite-color-picker id="textColorPicker" hide-channels="true" hide-saved="true" value="#151515"></calcite-color-picker>
+    </calcite-popover>
     <div id="viewDiv"></div>
     </div>
     </instant-apps-popovers>
@@ -70,7 +144,7 @@
 
         const data = {
           items: [
-            {
+      {
               id: "1650e5e4ded-layer-2",
               field: "Level_",
               label: "Level",
@@ -115,6 +189,22 @@
         scoreboard.position = "bottom";
         view.ui.add(scoreboard, "manual");
 
+        const position = document.getElementById("position");
+        position.addEventListener("calciteSelectChange", (e) => scoreboard.position = e.target.value);
+
+        const backgroundColorPicker = document.getElementById("backgroundColorPicker");
+        const backgroundColorSwatch = document.getElementById("backgroundColorSwatch");
+        backgroundColorPicker.addEventListener("calciteColorPickerChange", (e) => {
+          backgroundColorSwatch.color = e.target.value;
+          scoreboard.style.backgroundColor = e.target.value;
+        });
+
+        const textColorPicker = document.getElementById("textColorPicker");
+        const textColorSwatch = document.getElementById("textColorSwatch");
+        textColorPicker.addEventListener("calciteColorPickerChange", (e) => {
+          textColorSwatch.color= e.target.value;
+          scoreboard.style.color = e.target.value;
+        });
       });
     </script>
 
