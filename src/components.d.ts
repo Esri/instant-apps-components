@@ -5,7 +5,7 @@
  * It contains typing information for all components that exist in this project.
  */
 import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
-import { ExtentSelector, IMeasureConfiguration, InstantAppsPopoverMessageOverrides, LayerExpression } from "./interfaces/interfaces";
+import { ActiveTool, ExtentSelector, IMeasureConfiguration, InstantAppsPopoverMessageOverrides, LayerExpression } from "./interfaces/interfaces";
 import { FilterMode } from "./components/instant-apps-interactive-legend/instant-apps-interactive-legend-classic/interfaces/interfaces";
 import { InstantAppsPopovers } from "./components/instant-apps-popovers/instant-apps-popovers";
 import { LogicalPlacement } from "@esri/calcite-components/dist/types/utils/floating-ui";
@@ -186,20 +186,16 @@ export namespace Components {
         "view": __esri.MapView | __esri.SceneView;
     }
     interface InstantAppsMeasurement {
-        "areaUnit": __esri.AreaUnit;
-        "linearUnit": __esri.LengthUnit;
+        "areaUnit"?: __esri.AreaUnit;
+        "coordinateFormat"?: string;
+        "linearUnit"?: __esri.LengthUnit;
         /**
           * MapView or SceneView
          */
         "view": __esri.MapView | __esri.SceneView;
     }
     interface InstantAppsMeasurementTool {
-        "activateTool": (value: string) => Promise<void>;
-        /**
-          * Clears the state of the search widget
-          * @returns Promise that resolves when the operation is complete
-         */
-        "clear": () => Promise<void>;
+        "activeTool": ActiveTool;
         "measureConfiguration": IMeasureConfiguration;
         "view": __esri.MapView | __esri.SceneView;
     }
@@ -306,6 +302,10 @@ export interface InstantAppsHeaderCustomEvent<T> extends CustomEvent<T> {
 export interface InstantAppsInteractiveLegendLayerCaptionCustomEvent<T> extends CustomEvent<T> {
     detail: T;
     target: HTMLInstantAppsInteractiveLegendLayerCaptionElement;
+}
+export interface InstantAppsMeasurementCustomEvent<T> extends CustomEvent<T> {
+    detail: T;
+    target: HTMLInstantAppsMeasurementElement;
 }
 declare global {
     interface HTMLInstantAppsFilterListElement extends Components.InstantAppsFilterList, HTMLStencilElement {
@@ -600,13 +600,19 @@ declare namespace LocalJSX {
     }
     interface InstantAppsMeasurement {
         "areaUnit"?: __esri.AreaUnit;
+        "coordinateFormat"?: string;
         "linearUnit"?: __esri.LengthUnit;
+        /**
+          * Emits when there is an active measure tool to allow app devs to disable other tools/popups when tools are active .
+         */
+        "onMeasureActive"?: (event: InstantAppsMeasurementCustomEvent<boolean>) => void;
         /**
           * MapView or SceneView
          */
         "view"?: __esri.MapView | __esri.SceneView;
     }
     interface InstantAppsMeasurementTool {
+        "activeTool"?: ActiveTool;
         "measureConfiguration"?: IMeasureConfiguration;
         "view"?: __esri.MapView | __esri.SceneView;
     }

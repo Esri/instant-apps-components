@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-import { Component, Element, Host, h, Method, Prop, State, VNode } from '@stencil/core';
-import { IMeasureConfiguration } from '../../../interfaces/interfaces';
+import { Component, Element, Host, h, Prop, VNode, Watch } from '@stencil/core';
+import { ActiveTool, IMeasureConfiguration } from '../../../interfaces/interfaces';
 
 import { loadModules } from '../../../utils/loadModules';
 const base = 'instant-apps-measurement-tool';
@@ -26,7 +26,7 @@ const CSS = {
 @Component({
   tag: 'instant-apps-measurement-tool',
   styleUrl: 'instant-apps-measurement-tool.scss',
-  shadow: true,
+  scoped: true,
 })
 export class MeasurementTool {
   //--------------------------------------------------------------------------
@@ -45,19 +45,7 @@ export class MeasurementTool {
   @Prop() view: __esri.MapView | __esri.SceneView;
 
   @Prop() measureConfiguration: IMeasureConfiguration;
-
-  //--------------------------------------------------------------------------
-  //
-  //  State (internal)
-  //
-  //--------------------------------------------------------------------------
-  // TODO Add coordinate formats for coord conversion
-  // figure out why ESRi widget styles aren't applied...
-  /**
-   * string: Text entered by the end user.
-   * Used to search against the locator.
-   */
-  @State() _activeTool: string;
+  @Prop() activeTool: ActiveTool;
 
   //--------------------------------------------------------------------------
   //
@@ -67,6 +55,8 @@ export class MeasurementTool {
 
   protected Measurement: typeof import('esri/widgets/Measurement');
   protected CoordinateConversion: typeof import('esri/widgets/CoordinateConversion');
+  protected Conversion: typeof import('esri/widgets/CoordinateConversion/support/Conversion');
+
   /**
    * HTMLElement: The container div for the measurement widget
    */
@@ -74,9 +64,6 @@ export class MeasurementTool {
 
   protected _coordinateElement: HTMLElement;
 
-  /**
-   * esri/widgets/Measurement
-   */
   protected _measureWidget: __esri.Measurement;
 
   protected _coordinateWidget: __esri.CoordinateConversion;
@@ -86,28 +73,20 @@ export class MeasurementTool {
   //  Watch handlers
   //
   //--------------------------------------------------------------------------
-
-  //--------------------------------------------------------------------------
-  //
-  //  Methods (public)
-  //
-  //--------------------------------------------------------------------------
-
-  /**
-   * Clears the state of the search widget
-   *
-   * @returns Promise that resolves when the operation is complete
-   */
-  @Method()
-  async clear(): Promise<void> {
+  @Watch('activeTool')
+  _activeToolHandler(value: string) {
+    const viewType = this.view.type;
+    if (!this._measureWidget) return;
     this._measureWidget.clear();
+    this._coordinateElement?.classList.add(CSS.hide);
+    if (value === 'distance') {
+      this._measureWidget.activeTool = viewType === '2d' ? 'distance' : 'direct-line';
+    } else if (value === 'area') {
+      this._measureWidget.activeTool = 'area';
+    } else if (value === 'point') {
+      this._coordinateElement?.classList.remove(CSS.hide);
+    }
   }
-
-  //--------------------------------------------------------------------------
-  //
-  //  Events (public)
-  //
-  //--------------------------------------------------------------------------
 
   //--------------------------------------------------------------------------
   //
@@ -115,25 +94,13 @@ export class MeasurementTool {
   //
   //--------------------------------------------------------------------------
 
-  /**
-   * StencilJS: Called once just after the component is first connected to the DOM.
-   *
-   * @returns Promise when complete
-   */
   async componentWillLoad(): Promise<void> {
     await this._initModules();
   }
 
-  /**
-   * StencilJS: Called once just after the component is fully loaded and the first render() occurs.
-   */
   componentDidLoad(): void {
     this._init();
   }
-
-  /**
-   * Renders the component.
-   */
   render(): VNode {
     return (
       <Host>
@@ -168,15 +135,19 @@ export class MeasurementTool {
    * @protected
    */
   protected async _initModules(): Promise<void> {
-    const [Measurement, CoordinateConversion] = await loadModules(['esri/widgets/Measurement', 'esri/widgets/CoordinateConversion']);
+    const [Measurement, CoordinateConversion, Conversion] = await loadModules([
+      'esri/widgets/Measurement',
+      'esri/widgets/CoordinateConversion',
+      'esri/widgets/CoordinateConversion/support/Conversion',
+    ]);
     this.Measurement = Measurement;
     this.CoordinateConversion = CoordinateConversion;
+    this.Conversion = Conversion;
   }
 
   /**
    * Initialize the measurement widget
    *
-   * @returns Promise resolving when function is done
    */
   protected _init(): void {
     this._initMeasurementWidget();
@@ -195,22 +166,13 @@ export class MeasurementTool {
   }
   protected _initCoordinateWidget(): void {
     if (this?.view && this._coordinateElement) {
-      this._coordinateWidget = new this.CoordinateConversion({ view: this.view, container: this._coordinateElement });
-    }
-  }
-
-  @Method()
-  activateTool(value: string): void {
-    const viewType = this.view.type;
-    if (!this._measureWidget) return;
-    this._measureWidget.clear();
-    this._coordinateElement?.classList.add(CSS.hide);
-    if (value === 'distance') {
-      this._measureWidget.activeTool = viewType === '2d' ? 'distance' : 'direct-line';
-    } else if (value === 'area') {
-      this._measureWidget.activeTool = 'area';
-    } else if (value === 'point') {
-      this._coordinateElement?.classList.remove(CSS.hide);
+      this._coordinateWidget = new this.CoordinateConversion({ view: this.view, storageEnabled: false, container: this._coordinateElement });
+      if (this?.measureConfiguration?.coordinateFormat !== null && this?.measureConfiguration?.coordinateFormat !== undefined) {
+        const format = this._coordinateWidget.formats.find(f => {
+          return f.name === this.measureConfiguration.coordinateFormat;
+        });
+        this._coordinateWidget?.conversions?.splice(0, 0, new this.Conversion({ format }));
+      }
     }
   }
 }

@@ -187,11 +187,12 @@ export interface ExtentSelector {
 }
 
 type ExpressionField = 'string' | 'number' | 'date' | 'coded-value' | 'range' | 'checkbox';
-
+type ActiveTool = 'distance' | 'point' | 'area' | 'clear';
 export type FilterLayer = __esri.FeatureLayer | __esri.ImageryLayer | __esri.WFSLayer | __esri.StreamLayer | __esri.CSVLayer | __esri.GeoJSONLayer;
 export type FilterQueryLayer = __esri.FeatureLayer | __esri.WFSLayer | __esri.CSVLayer | __esri.GeoJSONLayer;
 
 export interface IMeasureConfiguration {
-  areaUnit: __esri.AreaUnit;
-  linearUnit: __esri.LengthUnit;
+  areaUnit?: __esri.AreaUnit;
+  linearUnit?: __esri.LengthUnit;
+  coordinateFormat?: string;
 }

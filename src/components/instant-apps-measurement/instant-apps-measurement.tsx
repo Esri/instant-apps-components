@@ -6,18 +6,19 @@
  *   See use restrictions at http://www.esri.com/legal/pdfs/mla_e204_e300/english
  */
 
-import { Component, Host, State, Prop, Element, h } from '@stencil/core';
+import { Component, Host, State, Prop, Event, EventEmitter, Element, h } from '@stencil/core';
 
 import Measurement_T9n from '../../assets/t9n/instant-apps-measurement/resources.json';
 
 import { getLocaleComponentStrings } from '../../utils/locale';
+
 const CSS = {
   content: 'instant-apps-measurement__content',
 };
 @Component({
   tag: 'instant-apps-measurement',
   styleUrl: 'instant-apps-measurement.scss',
-  shadow: true,
+  scoped: true,
 })
 export class InstantAppsMeasurement {
   // HOST ELEMENT
@@ -29,12 +30,18 @@ export class InstantAppsMeasurement {
    * MapView or SceneView
    */
   @Prop() view: __esri.MapView | __esri.SceneView;
+  @Prop() areaUnit?: __esri.AreaUnit;
+  @Prop() linearUnit?: __esri.LengthUnit;
+  @Prop() coordinateFormat?: string;
 
-  measureTool;
+  /**
+   * Emits when there is an active measure tool
+   * to allow app devs to disable other tools/popups when
+   * tools are active .
+   */
+  @Event() measureActive: EventEmitter<boolean>;
 
-  @Prop() areaUnit: __esri.AreaUnit;
-  @Prop() linearUnit: __esri.LengthUnit;
-
+  measureTool: HTMLInstantAppsMeasurementToolElement | undefined;
   async componentWillLoad() {
     await this.getMessages();
   }
@@ -46,29 +53,31 @@ export class InstantAppsMeasurement {
   }
 
   render() {
+    const { messages, view, coordinateFormat, areaUnit, linearUnit } = this;
     return (
       <Host>
         <calcite-panel class={CSS.content}>
           <calcite-action-bar expand-disabled={true} layout="horizontal">
-            <calcite-action text={this.messages?.line} icon="measure" data-value="distance" onClick={this._handleToolClick.bind(this)}></calcite-action>
-            <calcite-action text={this.messages?.area} icon="measure-area" data-value="area" onClick={this._handleToolClick.bind(this)}></calcite-action>
-            <calcite-action text={this.messages?.point} icon="pin-plus" data-value="point" onClick={this._handleToolClick.bind(this)}></calcite-action>
-            <calcite-action text={this.messages?.clear} icon="trash" data-value="clear" onClick={this._handleToolClick.bind(this)}></calcite-action>
+            <calcite-action text={messages?.line} icon="measure" data-value="distance" onClick={this._handleToolClick.bind(this)}></calcite-action>
+            <calcite-action text={messages?.area} icon="measure-area" data-value="area" onClick={this._handleToolClick.bind(this)}></calcite-action>
+            <calcite-action text={messages?.point} icon="pin-plus" data-value="point" onClick={this._handleToolClick.bind(this)}></calcite-action>
+            <calcite-action text={messages?.clear} icon="trash" data-value="clear" onClick={this._handleToolClick.bind(this)}></calcite-action>
           </calcite-action-bar>
           <instant-apps-measurement-tool
             ref={el => {
               this.measureTool = el;
             }}
-            view={this.view}
-            measureConfiguration={{ areaUnit: this.areaUnit, linearUnit: this.linearUnit }}
+            view={view}
+            measureConfiguration={{ coordinateFormat, areaUnit, linearUnit }}
           ></instant-apps-measurement-tool>
         </calcite-panel>
       </Host>
     );
   }
-
   protected _handleToolClick(e) {
+    if (!this?.measureTool) return;
     const tool = e?.target?.dataset['value'];
-    this?.measureTool.activateTool(tool);
+    this.measureTool.activeTool = tool;
+    this.measureActive.emit(tool === undefined || tool === 'clear' ? false : true);
   }
 }

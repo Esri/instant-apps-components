@@ -5,9 +5,9 @@
 
 ## Properties
 
-| Property | Attribute | Description                                             | Type                   | Default     |
-| -------- | --------- | ------------------------------------------------------- | ---------------------- | ----------- |
-| `view`   | --        | MapView or SceneView to determine shortcuts to display. | `MapView \| SceneView` | `undefined` |
+| Property | Attribute | Description                                                                                                    | Type                   | Default     |
+| -------- | --------- | -------------------------------------------------------------------------------------------------------------- | ---------------------- | ----------- |
+| `view`   | --        | MapView or SceneView to reference when URL parameter values are generated, i.e. center, level, viewpoint, etc. | `MapView \| SceneView` | `undefined` |
 
 
 ----------------------------------------------
