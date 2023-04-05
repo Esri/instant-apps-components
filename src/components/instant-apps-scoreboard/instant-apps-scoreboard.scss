@@ -70,9 +70,17 @@ $boxShadow: 0px 3px 15px rgba(0, 0, 0, 0.2);
   bottom: 0;
   transform: translate(-50%, -15px);
   .instant-apps-scoreboard {
-    min-width: 65vw;
+    display: flex;
+    justify-content: center;
+    min-width: 25vw;
+    &__items {
+      display: flex;
+      justify-content: center;
+    }
+
     &__item {
-      width: 16.67%;
+      min-width: 10vw;
+      // width: 16.67%;
       vertical-align: top;
     }
   }
@@ -85,7 +93,7 @@ $boxShadow: 0px 3px 15px rgba(0, 0, 0, 0.2);
   .instant-apps-scoreboard {
     display: flex;
     align-items: center;
-    height: 65vh;
+    min-height: 25vh;
     width: 10vw;
     &__items {
       flex-direction: column;

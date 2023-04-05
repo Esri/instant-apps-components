@@ -8,125 +8,158 @@
 
 <!DOCTYPE html>
 <html dir="ltr" lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=5.0" />
+    <title>Instant Apps Components: Scoreboard</title>
 
-<head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=5.0" />
-  <title>ArcGIS Instant Apps Components</title>
+    <link rel="stylesheet" href="https://jsdev.arcgis.com/4.27/esri/themes/light/main.css" />
+    <script src="https://jsdev.arcgis.com/4.27/"></script>
+    <script type="module" src="https://js.arcgis.com/calcite-components/1.0.7/calcite.esm.js"></script>
+    <link rel="stylesheet" type="text/css" href="https://js.arcgis.com/calcite-components/1.0.7/calcite.css" />
+    <script type="module" src="/build/instant-apps-components.esm.js"></script>
+    <script nomodule src="/build/instant-apps-components.js"></script>
 
-  <link rel="stylesheet" href="https://jsdev.arcgis.com/4.27/esri/themes/light/main.css" />
-  <script src="https://jsdev.arcgis.com/4.27/"></script>
-  <script type="module" src="https://js.arcgis.com/calcite-components/1.0.7/calcite.esm.js"></script>
-  <link rel="stylesheet" type="text/css" href="https://js.arcgis.com/calcite-components/1.0.7/calcite.css" />
-  <script type="module" src="/build/instant-apps-components.esm.js"></script>
-  <script nomodule src="/build/instant-apps-components.js"></script>
+    <style>
+      html,
+      body,
+      #viewDiv {
+        box-sizing: border-box;
+        width: 100%;
+        height: 100%;
+        margin: 0;
+        padding: 0;
+      }
 
-  <style>
-    html,
-    body,
-    #viewDiv {
-      box-sizing: border-box;
-      width: 100%;
-      height: 100%;
-      margin: 0;
-      padding: 0;
-    }
+      #settings {
+        box-sizing: border-box;
+        margin: 10px;
+        padding: 10px;
+        background-color: #fff;
+        border-radius: 3px;
+        box-shadow: 0px 3px 15px rgba(0, 0, 0, 0.2);
+      }
 
-    #settings {
-      box-sizing: border-box;
-      margin: 10px;
-      padding: 10px;
-      background-color: #fff;
-      border-radius: 3px;
-      box-shadow: 0px 3px 15px rgba(0, 0, 0, 0.2);
-    }
+      .group {
+        margin-bottom: 20px;
+      }
 
-    .group {
-      margin-bottom: 20px;
-    }
+      .group-label {
+        display: inline-block;
+        font-size: 15px;
+        font-weight: 600;
+        margin-bottom: 5px;
+      }
 
-    .group-label {
-      display: inline-block;
-      font-size: 15px;
-      font-weight: 600;
-      margin-bottom: 5px;
-    }
+      .group-content {
+        padding-left: 10px;
+      }
 
-    .group-content {
-      padding-left: 10px;
-    }
+      calcite-label:last-child {
+        --calcite-label-margin-bottom: 0;
+      }
 
-    calcite-label:last-child {
-      --calcite-label-margin-bottom: 0;
-    }
+      calcite-color-picker-swatch {
+        cursor: pointer;
+      }
 
-    calcite-color-picker-swatch {
-      cursor: pointer;
-    }
+      calcite-button {
+        margin-top: 10px;
+      }
+    </style>
+  </head>
 
-
-  </style>
-</head>
-
-<body>
-  <calcite-shell class="calcite-mode-light">
-    <instant-apps-header id="instant-apps-header" slot="header" title-text="Instant Apps Components: Scoreboard | Mt. Everest Weather Stations"
-      text-color="#151515" background-color="#ffffff"
-      logo-image="https://www.esri.com/content/dam/esrisites/en-us/common/icons/product-logos/arcgis-instant-apps-64.svg"
-      logo-image-alt-text="ArcGIS Instant Apps logo"
-      logo-link="https://www.esri.com/en-us/arcgis/products/arcgis-instant-apps/overview">
-    </instant-apps-header>
-    <calcite-shell-panel slot="panel-start">
-      <calcite-panel heading="Scoreboard" description="Configure the scoreboard component">
-        <div id="settings">
-          <div class="group">
-            <span class="group-label">Layout</span>
-            <div class="group-content">
-              <calcite-label>
-                Position
-                <calcite-select id="position">
-                  <calcite-option value="bottom">Bottom</calcite-option>
-                  <calcite-option value="left">Left</calcite-option>
-                  <calcite-option value="right">Right</calcite-option>
-                </calcite-select>
-              </calcite-label>
+  <body>
+    <calcite-shell class="calcite-mode-light">
+      <instant-apps-header
+        id="instant-apps-header"
+        slot="header"
+        title-text="Instant Apps Components: Scoreboard | Mt. Everest Weather Stations"
+        text-color="#151515"
+        background-color="#ffffff"
+        logo-image="https://www.esri.com/content/dam/esrisites/en-us/common/icons/product-logos/arcgis-instant-apps-64.svg"
+        logo-image-alt-text="ArcGIS Instant Apps logo"
+        logo-link="https://www.esri.com/en-us/arcgis/products/arcgis-instant-apps/overview"
+      >
+      </instant-apps-header>
+      <calcite-shell-panel slot="panel-start">
+        <calcite-panel heading="Scoreboard" description="Configure the scoreboard component">
+          <div id="settings">
+            <div class="group">
+              <span class="group-label">Layout</span>
+              <div class="group-content">
+                <calcite-label>
+                  Position
+                  <calcite-select id="position">
+                    <calcite-option value="bottom">Bottom</calcite-option>
+                    <calcite-option value="left">Left</calcite-option>
+                    <calcite-option value="right">Right</calcite-option>
+                  </calcite-select>
+                </calcite-label>
+              </div>
             </div>
-
-          </div>
-
-          <div class="group">
-            <span class="group-label">Theme</span>
-            <div class="group-content">
-              <calcite-label layout="inline-space-between">
-                Background color
-                <calcite-color-picker-swatch id="backgroundColorSwatch" color="#f8f8f8" />
-              </calcite-label>
-              <calcite-label layout="inline-space-between">
-                Text color
-                <calcite-color-picker-swatch id="textColorSwatch"  color="#151515"/>
-              </calcite-label>
+            <div class="group">
+              <span class="group-label">Theme</span>
+              <div class="group-content">
+                <calcite-label layout="inline-space-between">
+                  Background color
+                  <calcite-color-picker-swatch id="backgroundColorSwatch" color="#f8f8f8" />
+                </calcite-label>
+                <calcite-label layout="inline-space-between">
+                  Text color
+                  <calcite-color-picker-swatch id="textColorSwatch" color="#151515" />
+                </calcite-label>
+              </div>
+            </div>
+            <div class="group">
+              <div class="group-label">Attribute data</div>
+              <calcite-value-list id="attrData" drag-enabled="true"></calcite-value-list>
+              <calcite-button icon-start="plus" appearance="outline-fill" width="full">Add statistic</calcite-button>
             </div>
           </div>
+        </calcite-panel>
+      </calcite-shell-panel>
+      <div id="viewDiv"></div>
+      <calcite-popover reference-element="backgroundColorSwatch" auto-close="true" pointer-disabled="true">
+        <calcite-color-picker id="backgroundColorPicker" hide-channels="true" hide-saved="true" value="#f8f8f8"></calcite-color-picker>
+      </calcite-popover>
+      <calcite-popover reference-element="textColorSwatch" auto-close="true" pointer-disabled="true">
+        <calcite-color-picker id="textColorPicker" hide-channels="true" hide-saved="true" value="#151515"></calcite-color-picker>
+      </calcite-popover>
+      <calcite-modal id="fieldModal" close-button-disabled="true">
+        <span slot="header">Edit statistic</span>
+        <div slot="content">
+          <calcite-label>
+            Field
+            <calcite-input id="fieldInput" disabled></calcite-input>
+          </calcite-label>
+          <calcite-label>
+            Label
+            <calcite-input id="labelInput"></calcite-input>
+          </calcite-label>
+          <calcite-label id="operatorInput">
+            Operator
+            <calcite-select>
+              <calcite-option value="count">Count</calcite-option>
+              <calcite-option value="avg">Average</calcite-option>
+              <calcite-option value="sum">Sum</calcite-option>
+              <calcite-option value="min">Minimum value</calcite-option>
+              <calcite-option value="max">Maximum value</calcite-option>
+            </calcite-select>
+          </calcite-label>
         </div>
-      </calcite-panel>
-    </calcite-shell-panel>
-    <calcite-popover reference-element="backgroundColorSwatch" auto-close="true" pointer-disabled="true">
-      <calcite-color-picker id="backgroundColorPicker" hide-channels="true" hide-saved="true" value="#f8f8f8"></calcite-color-picker>
-    </calcite-popover>
-    <calcite-popover reference-element="textColorSwatch" auto-close="true" pointer-disabled="true">
-      <calcite-color-picker id="textColorPicker" hide-channels="true" hide-saved="true" value="#151515"></calcite-color-picker>
-    </calcite-popover>
-    <div id="viewDiv"></div>
-    </div>
-    </instant-apps-popovers>
+        <calcite-button slot="primary" id="done">Done</calcite-button>
+      </calcite-modal>
+    </calcite-shell>
     <script>
-      require(['esri/WebScene', 'esri/views/SceneView', 'esri/core/reactiveUtils', 'esri/config'], (
+      require(['esri/WebScene', 'esri/views/SceneView', 'esri/core/reactiveUtils', 'esri/config', 'esri/core/Collection'], (
         WebScene,
         SceneView,
         reactiveUtils,
-        esriConfig
+        esriConfig,
+        Collection,
       ) => {
-
+        // Set up web scene/view
         esriConfig.portalUrl = 'https://webapps.maps.arcgis.com';
         const map = new WebScene({
           portalItem: {
@@ -138,76 +171,163 @@
           map: map,
           container: 'viewDiv',
           ui: {
-            components: []
-          }
+            components: [],
+          },
         });
 
-        const data = {
+        // Init dummy data
+        let data = {
           items: [
-      {
-              id: "1650e5e4ded-layer-2",
-              field: "Level_",
-              label: "Level",
-              value: "60k"
+            {
+              id: '1650e5e4ded-layer-2',
+              field: 'Level_',
+              label: 'Level',
+              value: '60k',
             },
             {
-              id: "1650e5e4ded-layer-2",
-              field: "Number_affected",
-              label: "Number_affected",
-              value: "50k"
+              id: '1650e5e4ded-layer-2',
+              field: 'Number_affected',
+              label: 'Number_affected',
+              value: '50k',
             },
             {
-              id: "16a9b6628df-layer-1",
-              field: "SLR_table_SLR6COUNT",
-              label: "SLR 6 COUNT",
-              value: "500k"
+              id: '16a9b6628df-layer-1',
+              field: 'SLR_table_SLR6COUNT',
+              label: 'SLR 6 COUNT',
+              value: '500k',
             },
             {
-              id: "16a9b6628df-layer-1",
-              field: "SLR_table_SLR5COUNT",
-              label: "SLR 5 COUNT",
-              value: "150k"
+              id: '16a9b6628df-layer-1',
+              field: 'SLR_table_SLR5COUNT',
+              label: 'SLR 5 COUNT',
+              value: '150k',
             },
             {
-              id: "16a9b6628df-layer-1",
-              field: "SLR_table_SLR4COUNT",
-              label: "SLR 4 COUNT",
-              value: "80k"
+              id: '16a9b6628df-layer-1',
+              field: 'SLR_table_SLR4COUNT',
+              label: 'SLR 4 COUNT',
+              value: '80k',
             },
             {
-              id: "16a9b6628df-layer-1",
-              field: "SLR_table_SLR3COUNT",
-              label: "SLR 3 COUNT",
-              value: "20k"
-            }
-          ]
+              id: '16a9b6628df-layer-1',
+              field: 'SLR_table_SLR3COUNT',
+              label: 'SLR 3 COUNT',
+              value: '20k',
+            },
+          ],
         };
 
-        const scoreboard = document.createElement("instant-apps-scoreboard");
+        // variable to store field that is being edited
+        let currentField = null;
+
+        // Modal nodes
+        const modal = document.getElementById('fieldModal');
+        const fieldInput = document.getElementById('fieldInput');
+        const labelInput = document.getElementById('labelInput');
+        const operatorInput = document.getElementById('operatorInput');
+        const done = document.getElementById('done');
+
+        // Confirm edits
+        done.addEventListener('click', () => {
+          const dataCollection = new Collection([...data.items]);
+          const obj = dataCollection.find(itemToFind => `${itemToFind.id}${itemToFind.field}` === currentField);
+          obj.label = labelInput.value;
+          obj.operator = operatorInput.value;
+          const items = dataCollection.toArray();
+          const valueListItem = document.getElementById(`${currentField}-value-list-item`);
+          valueListItem.label = labelInput.value;
+          console.log(valueListItem);
+          data = { items };
+          scoreboard.data = data;
+          modal.open = false;
+          currentField = null;
+        });
+
+        // Creates value list items based off of dummy data
+        const createCalciteValueListItem = () => {
+          const attrData = document.getElementById('attrData');
+          data.items.forEach(item => {
+            const valueListItem = document.createElement('calcite-value-list-item');
+            const editAction = document.createElement('calcite-action');
+
+            editAction.setAttribute('slot', 'actions-end');
+            editAction.setAttribute('icon', 'pencil');
+            const id = `${item.id}${item.field}`;
+            valueListItem.id = `${id}-value-list-item`;
+            editAction.id = id;
+            editAction.label = 'Edit';
+            editAction.text = 'Edit';
+
+            editAction.addEventListener('click', e => {
+              currentField = id;
+              const dataCollection = new Collection([...data.items]);
+              const obj = dataCollection.find(itemToFind => `${itemToFind.id}${itemToFind.field}` === id);
+              const { field, label, operator } = obj;
+              fieldInput.value = field;
+              labelInput.value = label;
+              operatorInput.value = operator;
+              modal.open = true;
+            });
+
+            valueListItem.appendChild(editAction);
+
+            valueListItem.label = item.label;
+            valueListItem.value = id;
+
+            valueListItem.removable = true;
+            attrData.appendChild(valueListItem);
+          });
+        };
+
+        createCalciteValueListItem();
+
+        // Update data on item re-order
+        attrData.addEventListener('calciteListOrderChange', e => {
+          const values = e.detail;
+          const items_tmp = new Collection([...data.items]);
+          const items = values.map(value => items_tmp.find(item => `${item.id}${item.field}` === value));
+          data = { items };
+          scoreboard.data = data;
+        });
+
+        // Update data on item removal
+        attrData.addEventListener('calciteListItemRemove', e => {
+          const value = e.target.value;
+          const items = new Collection([...data.items]);
+          const itemToRemove = items.find(item => `${item.id}${item.field}` === value);
+          items.remove(itemToRemove);
+          data = { items: items.toArray() };
+          scoreboard.data = data;
+        });
+
+        // Create instant-apps-scoreboard
+        const scoreboard = document.createElement('instant-apps-scoreboard');
         scoreboard.view = view;
         scoreboard.data = data;
-        scoreboard.position = "bottom";
-        view.ui.add(scoreboard, "manual");
+        scoreboard.position = 'bottom';
+        view.ui.add(scoreboard, 'manual');
 
-        const position = document.getElementById("position");
-        position.addEventListener("calciteSelectChange", (e) => scoreboard.position = e.target.value);
+        // Listeners
+        // Position
+        const position = document.getElementById('position');
+        position.addEventListener('calciteSelectChange', e => (scoreboard.position = e.target.value));
 
-        const backgroundColorPicker = document.getElementById("backgroundColorPicker");
-        const backgroundColorSwatch = document.getElementById("backgroundColorSwatch");
-        backgroundColorPicker.addEventListener("calciteColorPickerChange", (e) => {
+        // Background color
+        const backgroundColorPicker = document.getElementById('backgroundColorPicker');
+        const backgroundColorSwatch = document.getElementById('backgroundColorSwatch');
+        backgroundColorPicker.addEventListener('calciteColorPickerChange', e => {
           backgroundColorSwatch.color = e.target.value;
           scoreboard.style.backgroundColor = e.target.value;
         });
 
-        const textColorPicker = document.getElementById("textColorPicker");
-        const textColorSwatch = document.getElementById("textColorSwatch");
-        textColorPicker.addEventListener("calciteColorPickerChange", (e) => {
-          textColorSwatch.color= e.target.value;
+        // Text color
+        const textColorPicker = document.getElementById('textColorPicker');
+        const textColorSwatch = document.getElementById('textColorSwatch');
+        textColorPicker.addEventListener('calciteColorPickerChange', e => {
+          textColorSwatch.color = e.target.value;
           scoreboard.style.color = e.target.value;
         });
       });
     </script>
-
-</body>
-
+  </body>
 </html>
