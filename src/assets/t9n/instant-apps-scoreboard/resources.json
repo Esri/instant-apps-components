@@ -1,5 +1,6 @@
 {
     "loading": "Loading",
+    "noData": "N/A",
     "error": {
         "title": "No data available",
         "message": "This app has not been configured to display feature attribute statistics."

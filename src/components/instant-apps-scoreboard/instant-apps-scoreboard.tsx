@@ -173,28 +173,24 @@ export class InstantAppsScoreboard {
     const iconType = { previous, next };
     return (
       <div class={CSS.itemsContainer}>
-        {dataSurpassesLimit ? (
-          <calcite-action
-            onclick={this.previousItem.bind(this)}
-            icon={isBeginning ? ScoreboardIcons.Blank : iconType.previous}
-            disabled={isBeginning}
-            alignment={iconPosition}
-            scale="l"
-            appearance="transparent"
-          />
-        ) : null}
+        <calcite-action
+          onclick={this.previousItem.bind(this)}
+          icon={isBeginning ? ScoreboardIcons.Blank : iconType.previous}
+          disabled={isBeginning}
+          alignment={iconPosition}
+          scale="l"
+          appearance="transparent"
+        />
 
         {this.renderItems()}
-        {dataSurpassesLimit ? (
-          <calcite-action
-            onclick={this.nextItem.bind(this)}
-            icon={isEnd ? ScoreboardIcons.Blank : iconType.next}
-            disabled={isEnd}
-            alignment={iconPosition}
-            scale="l"
-            appearance="transparent"
-          />
-        ) : null}
+        <calcite-action
+          onclick={this.nextItem.bind(this)}
+          icon={isEnd ? ScoreboardIcons.Blank : iconType.next}
+          disabled={isEnd}
+          alignment={iconPosition}
+          scale="l"
+          appearance="transparent"
+        />
       </div>
     );
   }
@@ -211,7 +207,7 @@ export class InstantAppsScoreboard {
     return (
       <li class={CSS.item}>
         <span class={CSS.label}>{label}</span>
-        <span class={CSS.value}>{value ?? 'N/A'}</span>
+        <span class={CSS.value}>{value ?? this.messages?.noData}</span>
       </li>
     );
   }
