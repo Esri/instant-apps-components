@@ -8,7 +8,7 @@ import { loadModules } from 'esri-loader';
 import { getLocaleComponentStrings } from '../../utils/locale';
 
 // Types
-import { Scoreboard, ScoreboardData, ScoreboardItem, ScoreboardState, ScoreboardPosition } from './types/interfaces';
+import { Scoreboard, ScoreboardData, ScoreboardItem, ScoreboardState, ScoreboardPosition, ScoreboardMode } from './types/interfaces';
 
 // T9n
 import Scoreboard_t9n from '../../assets/t9n/instant-apps-scoreboard/resources.json';
@@ -29,6 +29,10 @@ const CSS = {
     left: `${__BASE__}position--left`,
     right: `${__BASE__}position--right`,
   },
+  mode: {
+    floating: `${__BASE__}mode--floating`,
+    pinned: `${__BASE__}mode--pinned`,
+  },
 };
 
 @Component({
@@ -47,6 +51,8 @@ export class InstantAppsScoreboard {
   @Prop() data: ScoreboardData;
 
   @Prop() position: ScoreboardPosition = Scoreboard.Bottom;
+
+  @Prop() mode: ScoreboardMode = Scoreboard.Floating;
 
   @State() state: ScoreboardState;
 
@@ -115,7 +121,9 @@ export class InstantAppsScoreboard {
     const isDisabled = state === Scoreboard.Disabled;
     const progress = isLoading ? this.renderProgress() : null;
     const positionClass = this.getPositionClass();
-    return <Host class={positionClass}>{isDisabled ? this.renderNotice() : [progress, this.renderBase()]}</Host>;
+    const styleClass = this.getStyleClass();
+    console.log(styleClass);
+    return <Host class={`${positionClass} ${styleClass}`}>{isDisabled ? this.renderNotice() : [progress, this.renderBase()]}</Host>;
   }
 
   renderBase(): HTMLDivElement {
@@ -184,5 +192,10 @@ export class InstantAppsScoreboard {
     const { bottom, left, right, side } = CSS.position;
     const leftRight = `${this.position === Scoreboard.Left ? left : right} ${side}`;
     return this.position === Scoreboard.Bottom ? bottom : leftRight;
+  }
+
+  getStyleClass(): string {
+    const { floating, pinned } = CSS.mode;
+    return this.mode === Scoreboard.Floating ? floating : pinned;
   }
 }

@@ -9,7 +9,7 @@ import { ExtentSelector, InstantAppsPopoverMessageOverrides, LayerExpression } f
 import { FilterMode } from "./components/instant-apps-interactive-legend/instant-apps-interactive-legend-classic/interfaces/interfaces";
 import { InstantAppsPopovers } from "./components/instant-apps-popovers/instant-apps-popovers";
 import { LogicalPlacement } from "@esri/calcite-components/dist/types/utils/floating-ui";
-import { ScoreboardData, ScoreboardPosition } from "./components/instant-apps-scoreboard/types/interfaces";
+import { ScoreboardData, ScoreboardMode, ScoreboardPosition } from "./components/instant-apps-scoreboard/types/interfaces";
 export namespace Components {
     interface InstantAppsFilterList {
         /**
@@ -215,6 +215,7 @@ export namespace Components {
     }
     interface InstantAppsScoreboard {
         "data": ScoreboardData;
+        "mode": ScoreboardMode;
         "position": ScoreboardPosition;
         "view": __esri.MapView | __esri.SceneView;
     }
@@ -604,6 +605,7 @@ declare namespace LocalJSX {
     }
     interface InstantAppsScoreboard {
         "data"?: ScoreboardData;
+        "mode"?: ScoreboardMode;
         "position"?: ScoreboardPosition;
         "view"?: __esri.MapView | __esri.SceneView;
     }

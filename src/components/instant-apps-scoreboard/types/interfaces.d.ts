@@ -19,8 +19,12 @@ export const enum Scoreboard {
   Bottom = 'bottom',
   Left = 'left',
   Right = 'right',
+  Floating = 'floating',
+  Pinned = 'pinned',
 }
 
 export type ScoreboardState = Scoreboard.Loading | Scoreboard.Disabled | Scoreboard.Complete;
 
 export type ScoreboardPosition = Scoreboard.Bottom | Scoreboard.Left | Scoreboard.Right;
+
+export type ScoreboardMode = Scoreboard.Floating | Scoreboard.Pinned;

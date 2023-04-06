@@ -66,13 +66,10 @@ $boxShadow: 0px 3px 15px rgba(0, 0, 0, 0.2);
 }
 
 :host(.instant-apps-scoreboard__position--bottom) {
-  left: 50%;
   bottom: 0;
-  transform: translate(-50%, -15px);
   .instant-apps-scoreboard {
     display: flex;
     justify-content: center;
-    min-width: 25vw;
     &__items {
       display: flex;
       justify-content: center;
@@ -80,37 +77,75 @@ $boxShadow: 0px 3px 15px rgba(0, 0, 0, 0.2);
 
     &__item {
       min-width: 10vw;
-      // width: 16.67%;
       vertical-align: top;
     }
   }
 }
 
+:host(.instant-apps-scoreboard__position--bottom.instant-apps-scoreboard__mode--floating) {
+  left: 50%;
+  transform: translate(-50%, -15px);
+  .instant-apps-scoreboard {
+    min-width: 25vw;
+  }
+}
+
+:host(.instant-apps-scoreboard__position--bottom.instant-apps-scoreboard__mode--pinned) {
+  left: unset;
+  bottom: 0;
+  transform: unset;
+  width: 100%;
+  .instant-apps-scoreboard {
+    min-width: unset;
+  }
+}
+
 :host(.instant-apps-scoreboard__position--side) {
-  top: 50%;
-  left: 15px;
-  transform: translateY(-50%);
   .instant-apps-scoreboard {
     display: flex;
     align-items: center;
-    min-height: 25vh;
     width: 10vw;
     &__items {
       flex-direction: column;
     }
     &__item {
       width: 100%;
-      margin-top: 2.5vh;
-      margin-bottom: 2.5vh;
+      margin-top: 4vh;
+      margin-bottom: 4vh;
     }
   }
 }
 
-:host(.instant-apps-scoreboard__position--left) {
+:host(.instant-apps-scoreboard__position--side.instant-apps-scoreboard__mode--floating) {
+  top: 50%;
+  left: 15px;
+  transform: translateY(-50%);
+}
+
+:host(.instant-apps-scoreboard__position--side.instant-apps-scoreboard__mode--pinned) {
+  top: unset;
+  left: unset;
+  transform: unset;
+  height: 100%;
+  .instant-apps-scoreboard {
+    height: 100%;
+  }
+}
+
+:host(.instant-apps-scoreboard__position--left.instant-apps-scoreboard__mode--floating) {
   left: 15px;
 }
 
-:host(.instant-apps-scoreboard__position--right) {
+:host(.instant-apps-scoreboard__position--right.instant-apps-scoreboard__mode--floating) {
   left: unset;
   right: 15px;
+}
+
+:host(.instant-apps-scoreboard__position--left.instant-apps-scoreboard__mode--pinned) {
+  left: 0;
+}
+
+:host(.instant-apps-scoreboard__position--right.instant-apps-scoreboard__mode--pinned) {
+  left: unset;
+  right: 0;
 }

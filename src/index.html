@@ -89,6 +89,13 @@
               <span class="group-label">Layout</span>
               <div class="group-content">
                 <calcite-label>
+                  Style
+                  <calcite-segmented-control id="mode" width="full">
+                    <calcite-segmented-control-item checked value="floating">Floating</calcite-segmented-control-item>
+                    <calcite-segmented-control-item value="pinned">Pinned</calcite-segmented-control-item>
+                  </calcite-segmented-control>
+                </calcite-label>
+                <calcite-label>
                   Position
                   <calcite-select id="position">
                     <calcite-option value="bottom">Bottom</calcite-option>
@@ -311,6 +318,11 @@
         // Position
         const position = document.getElementById('position');
         position.addEventListener('calciteSelectChange', e => (scoreboard.position = e.target.value));
+
+        const mode = document.getElementById('mode');
+        mode.addEventListener('calciteSegmentedControlChange', e => {
+          scoreboard.mode = e.target.value;
+        });
 
         // Background color
         const backgroundColorPicker = document.getElementById('backgroundColorPicker');
