@@ -122,7 +122,6 @@ export class InstantAppsScoreboard {
     const progress = isLoading ? this.renderProgress() : null;
     const positionClass = this.getPositionClass();
     const styleClass = this.getStyleClass();
-    console.log(styleClass);
     return <Host class={`${positionClass} ${styleClass}`}>{isDisabled ? this.renderNotice() : [progress, this.renderBase()]}</Host>;
   }
 
