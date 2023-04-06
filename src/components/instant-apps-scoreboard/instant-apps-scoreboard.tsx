@@ -1,5 +1,5 @@
 // @stencil/core
-import { Component, Host, h, Prop, State, Element } from '@stencil/core';
+import { Component, Host, h, Prop, State, Element, Watch } from '@stencil/core';
 
 // esri-loader
 import { loadModules } from 'esri-loader';
@@ -8,7 +8,7 @@ import { loadModules } from 'esri-loader';
 import { getLocaleComponentStrings } from '../../utils/locale';
 
 // Types
-import { Scoreboard, ScoreboardData, ScoreboardItem, ScoreboardState, ScoreboardPosition, ScoreboardMode } from './types/interfaces';
+import { Scoreboard, ScoreboardData, ScoreboardItem, ScoreboardState, ScoreboardPosition, ScoreboardMode, ScoreboardIcons, ScoreboardAlignment } from './types/interfaces';
 
 // T9n
 import Scoreboard_t9n from '../../assets/t9n/instant-apps-scoreboard/resources.json';
@@ -19,6 +19,7 @@ const KEY_PREFIX = `${BASE}--`;
 const __BASE__ = `${BASE}__`;
 const CSS = {
   BASE,
+  itemsContainer: `${__BASE__}items-container`,
   items: `${__BASE__}items`,
   item: `${__BASE__}item`,
   label: `${__BASE__}item-label`,
@@ -34,6 +35,8 @@ const CSS = {
     pinned: `${__BASE__}mode--pinned`,
   },
 };
+
+const ITEM_LIMIT = 6;
 
 @Component({
   tag: 'instant-apps-scoreboard',
@@ -57,6 +60,31 @@ export class InstantAppsScoreboard {
   @State() state: ScoreboardState;
 
   @State() messages: typeof Scoreboard_t9n;
+
+  @State() itemIndex = 0;
+
+  @Watch('data')
+  generateUIDs() {
+    this.data.items.forEach(this.uidGeneratorCallback());
+  }
+
+  uidGeneratorCallback(): (item: ScoreboardItem) => void {
+    return (item: ScoreboardItem) => {
+      const randNum = Math.random();
+      const randomInt = Math.floor(Math.random() * 10) + 11;
+      const randStr = randNum.toString(randomInt).replace('0.', '');
+      const uid = randStr;
+      item['uid'] = uid;
+    };
+  }
+
+  getUIDs(): string[] {
+    return this.data.items.map(item => item['uid']);
+  }
+
+  connectedCallback() {
+    this.generateUIDs();
+  }
 
   async componentWillLoad(): Promise<void> {
     try {
@@ -131,12 +159,36 @@ export class InstantAppsScoreboard {
 
   renderContent(): HTMLCalciteLoaderElement | HTMLUListElement | null {
     const { state } = this;
-    return state === Scoreboard.Loading ? this.renderLoader() : state === Scoreboard.Complete ? this.renderItems() : null;
+    return state === Scoreboard.Loading ? this.renderLoader() : state === Scoreboard.Complete ? this.renderItemsContainer() : null;
+  }
+
+  renderItemsContainer() {
+    const isBeginning = this.itemIndex === 0;
+    const isEnd = this.isLastItem();
+    const isBottom = this.position === Scoreboard.Bottom;
+    const iconPosition = isBottom ? ScoreboardAlignment.Start : ScoreboardAlignment.Center;
+    const previous = isBottom ? ScoreboardIcons.Left : ScoreboardIcons.Up;
+    const next = isBottom ? ScoreboardIcons.Right : ScoreboardIcons.Down;
+    const iconType = { previous, next };
+    return (
+      <div class={CSS.itemsContainer}>
+        <calcite-action
+          onclick={this.previousItem.bind(this)}
+          icon={isBeginning ? ScoreboardIcons.Blank : iconType.previous}
+          disabled={isBeginning}
+          alignment={iconPosition}
+          scale="l"
+        />
+        {this.renderItems()}
+        <calcite-action onclick={this.nextItem.bind(this)} icon={isEnd ? ScoreboardIcons.Blank : iconType.next} disabled={isEnd} alignment={iconPosition} scale="l" />
+      </div>
+    );
   }
 
   renderItems(): HTMLUListElement {
     const { items } = CSS;
-    const scoreboardItems = this.data.items.map(item => this.renderItem(item));
+    const dataToDisplay = this.getItemsToDisplay();
+    const scoreboardItems = dataToDisplay.map(item => this.renderItem(item));
     return <ul class={items}>{scoreboardItems}</ul>;
   }
 
@@ -164,7 +216,7 @@ export class InstantAppsScoreboard {
   renderNotice(): HTMLCalciteNoticeElement {
     const errMessages = this.messages?.error;
     return (
-      <calcite-notice closable open icon="exclamation-mark-triangle" kind="warning">
+      <calcite-notice closable open icon={ScoreboardIcons.Warning} kind={Scoreboard.Warning}>
         <div slot="title">{errMessages?.title}</div>
         <div slot="message">{errMessages?.message}</div>
       </calcite-notice>
@@ -196,5 +248,24 @@ export class InstantAppsScoreboard {
   getStyleClass(): string {
     const { floating, pinned } = CSS.mode;
     return this.mode === Scoreboard.Floating ? floating : pinned;
+  }
+
+  getItemsToDisplay(): ScoreboardItem[] {
+    return this.data.items.slice(this.itemIndex, ITEM_LIMIT + this.itemIndex);
+  }
+
+  nextItem(): void {
+    this.itemIndex = this.itemIndex + 1;
+  }
+
+  previousItem(): void {
+    this.itemIndex = this.itemIndex - 1;
+  }
+
+  isLastItem(): boolean {
+    const lastItems = this.data.items.slice(this.data.items.length - ITEM_LIMIT);
+    const uidsOfLast = lastItems.map(item => item['uid']);
+    const uidsOfCurrent = this.data.items.slice(this.itemIndex, this.itemIndex + ITEM_LIMIT).map(item => item['uid']);
+    return uidsOfLast.every((val, index) => val === uidsOfCurrent[index]);
   }
 }

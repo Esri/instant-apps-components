@@ -9,13 +9,24 @@ $boxShadow: 0px 3px 15px rgba(0, 0, 0, 0.2);
   color: var(--instant-apps-scoreboard-text-color);
   .instant-apps-scoreboard {
     box-sizing: border-box;
-    padding: 1.75%;
     border: 1px solid $borderColor;
     box-shadow: $boxShadow;
     border-radius: 3px;
 
     calcite-loader {
       --calcite-loader-padding: 0;
+    }
+
+    calcite-action {
+      --calcite-ui-opacity-disabled: 1;
+    }
+
+    &__items-container {
+      display: flex;
+
+      calcite-action {
+        height: 100%;
+      }
     }
 
     &__items,
@@ -28,6 +39,7 @@ $boxShadow: 0px 3px 15px rgba(0, 0, 0, 0.2);
       list-style-type: none;
       padding-left: 0;
       margin: 0;
+      padding: 1.75%;
       width: 100%;
     }
 
@@ -84,6 +96,7 @@ $boxShadow: 0px 3px 15px rgba(0, 0, 0, 0.2);
 
 :host(.instant-apps-scoreboard__position--bottom.instant-apps-scoreboard__mode--floating) {
   left: 50%;
+  max-width: calc(100% - 30px);
   transform: translate(-50%, -15px);
   .instant-apps-scoreboard {
     min-width: 25vw;
@@ -97,6 +110,11 @@ $boxShadow: 0px 3px 15px rgba(0, 0, 0, 0.2);
   width: 100%;
   .instant-apps-scoreboard {
     min-width: unset;
+
+    &__items-container {
+      width: 100%;
+      justify-content: space-between;
+    }
   }
 }
 
@@ -104,14 +122,24 @@ $boxShadow: 0px 3px 15px rgba(0, 0, 0, 0.2);
   .instant-apps-scoreboard {
     display: flex;
     align-items: center;
-    width: 10vw;
+    width: 100%;
+
+    &__items-container {
+      flex-direction: column;
+      height: 100%;
+      calcite-action {
+        height: unset;
+        width: 100%;
+      }
+    }
+
     &__items {
       flex-direction: column;
     }
     &__item {
-      width: 100%;
-      margin-top: 4vh;
-      margin-bottom: 4vh;
+      width: 10vw;
+      margin-top: 3.25vh;
+      margin-bottom: 3.25vh;
     }
   }
 }
@@ -120,6 +148,7 @@ $boxShadow: 0px 3px 15px rgba(0, 0, 0, 0.2);
   top: 50%;
   left: 15px;
   transform: translateY(-50%);
+  max-height: calc(100% - 30px);
 }
 
 :host(.instant-apps-scoreboard__position--side.instant-apps-scoreboard__mode--pinned) {
@@ -129,6 +158,10 @@ $boxShadow: 0px 3px 15px rgba(0, 0, 0, 0.2);
   height: 100%;
   .instant-apps-scoreboard {
     height: 100%;
+
+    &__items-container {
+      justify-content: space-between;
+    }
   }
 }
 

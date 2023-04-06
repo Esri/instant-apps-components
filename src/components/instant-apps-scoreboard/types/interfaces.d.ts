@@ -5,7 +5,10 @@ export interface ScoreboardData {
 }
 
 export interface ScoreboardItem {
-  id?: string;
+  layer?: {
+    url: string;
+    id: string;
+  };
   field?: string;
   label: string;
   value?: string;
@@ -21,10 +24,23 @@ export const enum Scoreboard {
   Right = 'right',
   Floating = 'floating',
   Pinned = 'pinned',
+  Warning = 'warning',
+}
+
+export const enum ScoreboardIcons {
+  Up = 'chevron-up',
+  Down = 'chevron-down',
+  Left = 'chevron-left',
+  Right = 'chevron-right',
+  Warning = 'exclamation-mark-triangle',
+  Blank = 'blank',
+}
+
+export const enum ScoreboardAlignment {
+  Start = 'start',
+  Center = 'center',
 }
 
 export type ScoreboardState = Scoreboard.Loading | Scoreboard.Disabled | Scoreboard.Complete;
-
 export type ScoreboardPosition = Scoreboard.Bottom | Scoreboard.Left | Scoreboard.Right;
-
 export type ScoreboardMode = Scoreboard.Floating | Scoreboard.Pinned;
