@@ -108,31 +108,34 @@
             <div class="group">
               <span class="group-label">Theme</span>
               <div class="group-content">
-                <calcite-label layout="inline-space-between">
+                <calcite-label>
                   Background color
-                  <calcite-color-picker-swatch id="backgroundColorSwatch" color="#f8f8f8" />
+                  <calcite-select id="themeColorSelect" width="m"> </calcite-select>
+                  <!-- <calcite-color-picker-swatch id="backgroundColorSwatch" color="#f8f8f8" /> -->
                 </calcite-label>
-                <calcite-label layout="inline-space-between">
+                <!-- <calcite-label layout="inline-space-between">
                   Text color
                   <calcite-color-picker-swatch id="textColorSwatch" color="#151515" />
-                </calcite-label>
+                </calcite-label> -->
               </div>
             </div>
             <div class="group">
               <div class="group-label">Attribute data</div>
-              <calcite-value-list id="attrData" drag-enabled="true"></calcite-value-list>
-              <calcite-button icon-start="plus" appearance="outline-fill" width="full">Add statistic</calcite-button>
+              <div class="group-content">
+                <calcite-value-list id="attrData" drag-enabled="true"></calcite-value-list>
+                <calcite-button icon-start="plus" appearance="outline-fill" width="full">Add statistic</calcite-button>
+              </div>
             </div>
           </div>
         </calcite-panel>
       </calcite-shell-panel>
       <div id="viewDiv"></div>
-      <calcite-popover reference-element="backgroundColorSwatch" auto-close="true" pointer-disabled="true">
+      <!-- <calcite-popover reference-element="backgroundColorSwatch" auto-close="true" pointer-disabled="true">
         <calcite-color-picker id="backgroundColorPicker" hide-channels="true" hide-saved="true" value="#f8f8f8"></calcite-color-picker>
-      </calcite-popover>
-      <calcite-popover reference-element="textColorSwatch" auto-close="true" pointer-disabled="true">
+      </calcite-popover> -->
+      <!-- <calcite-popover reference-element="textColorSwatch" auto-close="true" pointer-disabled="true">
         <calcite-color-picker id="textColorPicker" hide-channels="true" hide-saved="true" value="#151515"></calcite-color-picker>
-      </calcite-popover>
+      </calcite-popover> -->
       <calcite-modal id="fieldModal" close-button-disabled="true">
         <span slot="header">Edit statistic</span>
         <div slot="content">
@@ -239,8 +242,81 @@
               label: 'SLR 3 COUNT',
               value: '20k',
             },
+            {
+              layer: {
+                id: '16a9b6628df-layer-1',
+                url: '',
+              },
+              field: 'SLR_table_SLR3COUNT',
+              label: 'SLR 3 COUNT',
+              value: '20k',
+            },
+            {
+              layer: {
+                id: '16a9b6628df-layer-1',
+                url: '',
+              },
+              field: 'SLR_table_SLR3COUNT',
+              label: 'SLR 3 COUNT',
+              value: '20k',
+            },
           ],
         };
+
+        const themes = [
+          {
+            label: 'Default',
+            background: 'var(--calcite-ui-foreground-1)',
+            color: 'var(--calcite-ui-text-1)',
+          },
+          {
+            label: 'Blue',
+            background: '#E4EFF8',
+            color: '#151515',
+          },
+          {
+            label: 'Purple',
+            background: '#CAB9FA',
+            color: '#151515',
+          },
+          {
+            label: 'Red',
+            background: '#EE8173',
+            color: '#151515',
+          },
+          {
+            label: 'Green',
+            background: '#2D3F21',
+            color: '#FFFFFF',
+          },
+          {
+            label: 'Dark gray',
+            background: '#474747',
+            color: '#FFFFFF',
+          },
+          {
+            label: 'Dark Brown',
+            background: '#403C13',
+            color: '#FFFFFF',
+          },
+          {
+            label: 'Brown',
+            background: '#835D2B',
+            color: '#FFFFFF',
+          },
+        ];
+
+        const themeColorSelect = document.getElementById('themeColorSelect');
+        themes.forEach(theme => {
+          const selectItem = document.createElement('calcite-option');
+          selectItem.label = theme.label;
+          const { background, color } = theme;
+          selectItem.value = {
+            background,
+            color,
+          };
+          themeColorSelect.appendChild(selectItem);
+        });
 
         // variable to store field that is being edited
         let currentField = null;
@@ -343,20 +419,40 @@
         });
 
         // Background color
-        const backgroundColorPicker = document.getElementById('backgroundColorPicker');
-        const backgroundColorSwatch = document.getElementById('backgroundColorSwatch');
-        backgroundColorPicker.addEventListener('calciteColorPickerChange', e => {
-          backgroundColorSwatch.color = e.target.value;
-          scoreboard.style.backgroundColor = e.target.value;
+        // const backgroundColorPicker = document.getElementById('backgroundColorPicker');
+        // const backgroundColorSwatch = document.getElementById('backgroundColorSwatch');
+        // backgroundColorPicker.addEventListener('calciteColorPickerChange', e => {
+        //   backgroundColorSwatch.color = e.target.value;
+        //   scoreboard.style.backgroundColor = e.target.value;
+        // });
+
+        themeColorSelect.addEventListener('calciteSelectChange', e => {
+          const { background, color } = e.target.value;
+          let customStylesheet = document.getElementById('custom');
+
+          if (!customStylesheet) {
+            customStylesheet = document.createElement('style');
+            customStylesheet.id = 'custom';
+            document.head.appendChild(customStylesheet);
+          }
+          customStylesheet.innerHTML = `
+              instant-apps-scoreboard {
+                --instant-apps-scoreboard-background-color: ${background};
+                --instant-apps-scoreboard-text-color: ${color};
+              }
+            `;
+
+          scoreboard.style.backgroundColor = background;
+          scoreboard.style.color = color;
         });
 
-        // Text color
-        const textColorPicker = document.getElementById('textColorPicker');
-        const textColorSwatch = document.getElementById('textColorSwatch');
-        textColorPicker.addEventListener('calciteColorPickerChange', e => {
-          textColorSwatch.color = e.target.value;
-          scoreboard.style.color = e.target.value;
-        });
+        // // Text color
+        // const textColorPicker = document.getElementById('textColorPicker');
+        // const textColorSwatch = document.getElementById('textColorSwatch');
+        // textColorPicker.addEventListener('calciteColorPickerChange', e => {
+        //   textColorSwatch.color = e.target.value;
+        //   scoreboard.style.color = e.target.value;
+        // });
       });
     </script>
   </body>

@@ -163,6 +163,7 @@ export class InstantAppsScoreboard {
   }
 
   renderItemsContainer() {
+    const dataSurpassesLimit = this.data.items.length > ITEM_LIMIT;
     const isBeginning = this.itemIndex === 0;
     const isEnd = this.isLastItem();
     const isBottom = this.position === Scoreboard.Bottom;
@@ -172,15 +173,28 @@ export class InstantAppsScoreboard {
     const iconType = { previous, next };
     return (
       <div class={CSS.itemsContainer}>
-        <calcite-action
-          onclick={this.previousItem.bind(this)}
-          icon={isBeginning ? ScoreboardIcons.Blank : iconType.previous}
-          disabled={isBeginning}
-          alignment={iconPosition}
-          scale="l"
-        />
+        {dataSurpassesLimit ? (
+          <calcite-action
+            onclick={this.previousItem.bind(this)}
+            icon={isBeginning ? ScoreboardIcons.Blank : iconType.previous}
+            disabled={isBeginning}
+            alignment={iconPosition}
+            scale="l"
+            appearance="transparent"
+          />
+        ) : null}
+
         {this.renderItems()}
-        <calcite-action onclick={this.nextItem.bind(this)} icon={isEnd ? ScoreboardIcons.Blank : iconType.next} disabled={isEnd} alignment={iconPosition} scale="l" />
+        {dataSurpassesLimit ? (
+          <calcite-action
+            onclick={this.nextItem.bind(this)}
+            icon={isEnd ? ScoreboardIcons.Blank : iconType.next}
+            disabled={isEnd}
+            alignment={iconPosition}
+            scale="l"
+            appearance="transparent"
+          />
+        ) : null}
       </div>
     );
   }
