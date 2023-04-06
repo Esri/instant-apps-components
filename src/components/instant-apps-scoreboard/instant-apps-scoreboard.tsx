@@ -211,7 +211,7 @@ export class InstantAppsScoreboard {
     return (
       <li class={CSS.item}>
         <span class={CSS.label}>{label}</span>
-        <span class={CSS.value}>{value}</span>
+        <span class={CSS.value}>{value ?? 'N/A'}</span>
       </li>
     );
   }

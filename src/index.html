@@ -110,42 +110,31 @@
               <div class="group-content">
                 <calcite-label>
                   Background color
-                  <calcite-select id="themeColorSelect" width="m"> </calcite-select>
-                  <!-- <calcite-color-picker-swatch id="backgroundColorSwatch" color="#f8f8f8" /> -->
+                  <calcite-select id="themeColorSelect" width="m" />
                 </calcite-label>
-                <!-- <calcite-label layout="inline-space-between">
-                  Text color
-                  <calcite-color-picker-swatch id="textColorSwatch" color="#151515" />
-                </calcite-label> -->
               </div>
             </div>
             <div class="group">
               <div class="group-label">Attribute data</div>
               <div class="group-content">
                 <calcite-value-list id="attrData" drag-enabled="true"></calcite-value-list>
-                <calcite-button icon-start="plus" appearance="outline-fill" width="full">Add statistic</calcite-button>
+                <calcite-button id="add" icon-start="plus" appearance="outline-fill" width="full">Add statistic</calcite-button>
               </div>
             </div>
           </div>
         </calcite-panel>
       </calcite-shell-panel>
       <div id="viewDiv"></div>
-      <!-- <calcite-popover reference-element="backgroundColorSwatch" auto-close="true" pointer-disabled="true">
-        <calcite-color-picker id="backgroundColorPicker" hide-channels="true" hide-saved="true" value="#f8f8f8"></calcite-color-picker>
-      </calcite-popover> -->
-      <!-- <calcite-popover reference-element="textColorSwatch" auto-close="true" pointer-disabled="true">
-        <calcite-color-picker id="textColorPicker" hide-channels="true" hide-saved="true" value="#151515"></calcite-color-picker>
-      </calcite-popover> -->
       <calcite-modal id="fieldModal" close-button-disabled="true">
         <span slot="header">Edit statistic</span>
         <div slot="content">
           <calcite-label>
             Field
-            <calcite-input id="fieldInput" disabled></calcite-input>
+            <calcite-input id="fieldInput" disabled />
           </calcite-label>
           <calcite-label>
             Label
-            <calcite-input id="labelInput"></calcite-input>
+            <calcite-input id="labelInput" />
           </calcite-label>
           <calcite-label id="operatorInput">
             Operator
@@ -159,6 +148,32 @@
           </calcite-label>
         </div>
         <calcite-button slot="primary" id="done">Done</calcite-button>
+      </calcite-modal>
+      <calcite-modal id="create">
+        <span slot="header">Create statistic</span>
+        <div slot="content" id="createContent">
+          <calcite-label>
+            Layer
+            <calcite-select id="layers"></calcite-select>
+          </calcite-label>
+          <calcite-label> Field <calcite-select id="fields"></calcite-select></calcite-label>
+          <calcite-label>
+            Label
+            <calcite-input id="label"></calcite-input>
+          </calcite-label>
+          <calcite-label>
+            Operator
+            <calcite-select id="operator">
+              <calcite-option value="count">Count</calcite-option>
+              <calcite-option value="avg">Average</calcite-option>
+              <calcite-option value="sum">Sum</calcite-option>
+              <calcite-option value="min">Minimum value</calcite-option>
+              <calcite-option value="max">Maximum value</calcite-option>
+            </calcite-select>
+          </calcite-label>
+        </div>
+        <calcite-button slot="secondary" appearance="outline">Cancel</calcite-button>
+        <calcite-button id="confirmCreate" slot="primary">Create</calcite-button>
       </calcite-modal>
     </calcite-shell>
     <script>
@@ -185,274 +200,342 @@
           },
         });
 
-        // Init dummy data
-        let data = {
-          items: [
-            {
-              layer: {
-                id: '1650e5e4ded-layer-2',
-                url: '',
+        view.map.loadAll().then(() => {
+          // Init dummy data
+          let data = {
+            items: [
+              {
+                layer: {
+                  id: '1650e5e4ded-layer-2',
+                  url: 'https://services7.arcgis.com/wdgKFvvZvYZ3Biji/arcgis/rest/services/Baltimore_impact_slr/SceneServer',
+                },
+                field: 'Level_',
+                label: 'Level',
+                value: '60k',
               },
-              field: 'Level_',
-              label: 'Level',
-              value: '60k',
-            },
-            {
-              layer: {
-                id: '1650e5e4ded-layer-2',
-                url: '',
+              {
+                layer: {
+                  id: '1650e5e4ded-layer-2',
+                  url: 'https://services7.arcgis.com/wdgKFvvZvYZ3Biji/arcgis/rest/services/Baltimore_impact_slr/SceneServer',
+                },
+                field: 'Number_affected',
+                label: 'Number_affected',
+                value: '50k',
               },
-              field: 'Number_affected',
-              label: 'Number_affected',
-              value: '50k',
-            },
-            {
-              layer: {
-                id: '16a9b6628df-layer-1',
-                url: '',
+              {
+                layer: {
+                  id: '16a9b6628df-layer-1',
+                  url: 'https://services7.arcgis.com/wdgKFvvZvYZ3Biji/arcgis/rest/services/Baltimore_bldgs_slr/SceneServer',
+                },
+                field: 'SLR_table_SLR6COUNT',
+                label: 'SLR 6 COUNT',
+                value: '500k',
               },
-              field: 'SLR_table_SLR6COUNT',
-              label: 'SLR 6 COUNT',
-              value: '500k',
-            },
-            {
-              layer: {
-                id: '16a9b6628df-layer-1',
-                url: '',
+              {
+                layer: {
+                  id: '16a9b6628df-layer-1',
+                  url: 'https://services7.arcgis.com/wdgKFvvZvYZ3Biji/arcgis/rest/services/Baltimore_bldgs_slr/SceneServer',
+                },
+                field: 'SLR_table_SLR5COUNT',
+                label: 'SLR 5 COUNT',
+                value: '150k',
               },
-              field: 'SLR_table_SLR5COUNT',
-              label: 'SLR 5 COUNT',
-              value: '150k',
-            },
-            {
-              layer: {
-                id: '16a9b6628df-layer-1',
-                url: '',
+              {
+                layer: {
+                  id: '16a9b6628df-layer-1',
+                  url: 'https://services7.arcgis.com/wdgKFvvZvYZ3Biji/arcgis/rest/services/Baltimore_bldgs_slr/SceneServer',
+                },
+                field: 'SLR_table_SLR4COUNT',
+                label: 'SLR 4 COUNT',
+                value: '80k',
               },
-              field: 'SLR_table_SLR4COUNT',
-              label: 'SLR 4 COUNT',
-              value: '80k',
-            },
-            {
-              layer: {
-                id: '16a9b6628df-layer-1',
-                url: '',
+              {
+                layer: {
+                  id: '16a9b6628df-layer-1',
+                  url: 'https://services7.arcgis.com/wdgKFvvZvYZ3Biji/arcgis/rest/services/Baltimore_bldgs_slr/SceneServer',
+                },
+                field: 'SLR_table_SLR3COUNT',
+                label: 'SLR 3 COUNT',
+                value: '20k',
               },
-              field: 'SLR_table_SLR3COUNT',
-              label: 'SLR 3 COUNT',
-              value: '20k',
-            },
-            {
-              layer: {
-                id: '16a9b6628df-layer-1',
-                url: '',
-              },
-              field: 'SLR_table_SLR3COUNT',
-              label: 'SLR 3 COUNT',
-              value: '20k',
-            },
-            {
-              layer: {
-                id: '16a9b6628df-layer-1',
-                url: '',
-              },
-              field: 'SLR_table_SLR3COUNT',
-              label: 'SLR 3 COUNT',
-              value: '20k',
-            },
-          ],
-        };
-
-        const themes = [
-          {
-            label: 'Default',
-            background: 'var(--calcite-ui-foreground-1)',
-            color: 'var(--calcite-ui-text-1)',
-          },
-          {
-            label: 'Blue',
-            background: '#E4EFF8',
-            color: '#151515',
-          },
-          {
-            label: 'Purple',
-            background: '#CAB9FA',
-            color: '#151515',
-          },
-          {
-            label: 'Red',
-            background: '#EE8173',
-            color: '#151515',
-          },
-          {
-            label: 'Green',
-            background: '#2D3F21',
-            color: '#FFFFFF',
-          },
-          {
-            label: 'Dark gray',
-            background: '#474747',
-            color: '#FFFFFF',
-          },
-          {
-            label: 'Dark Brown',
-            background: '#403C13',
-            color: '#FFFFFF',
-          },
-          {
-            label: 'Brown',
-            background: '#835D2B',
-            color: '#FFFFFF',
-          },
-        ];
-
-        const themeColorSelect = document.getElementById('themeColorSelect');
-        themes.forEach(theme => {
-          const selectItem = document.createElement('calcite-option');
-          selectItem.label = theme.label;
-          const { background, color } = theme;
-          selectItem.value = {
-            background,
-            color,
+            ],
           };
-          themeColorSelect.appendChild(selectItem);
-        });
+          const themes = [
+            {
+              label: 'Default',
+              background: 'var(--calcite-ui-foreground-1)',
+              color: 'var(--calcite-ui-text-1)',
+            },
+            {
+              label: 'Blue',
+              background: '#E4EFF8',
+              color: '#151515',
+            },
+            {
+              label: 'Purple',
+              background: '#CAB9FA',
+              color: '#151515',
+            },
+            {
+              label: 'Red',
+              background: '#EE8173',
+              color: '#151515',
+            },
+            {
+              label: 'Green',
+              background: '#2D3F21',
+              color: '#FFFFFF',
+            },
+            {
+              label: 'Dark gray',
+              background: '#474747',
+              color: '#FFFFFF',
+            },
+            {
+              label: 'Dark Brown',
+              background: '#403C13',
+              color: '#FFFFFF',
+            },
+            {
+              label: 'Brown',
+              background: '#835D2B',
+              color: '#FFFFFF',
+            },
+          ];
 
-        // variable to store field that is being edited
-        let currentField = null;
-
-        // Modal nodes
-        const modal = document.getElementById('fieldModal');
-        const fieldInput = document.getElementById('fieldInput');
-        const labelInput = document.getElementById('labelInput');
-        const operatorInput = document.getElementById('operatorInput');
-        const done = document.getElementById('done');
-
-        // Confirm edits
-        done.addEventListener('click', () => {
-          const dataCollection = new Collection([...data.items]);
-          const obj = dataCollection.find(itemToFind => `${itemToFind.id}${itemToFind.field}` === currentField);
-          obj.label = labelInput.value;
-          obj.operator = operatorInput.value;
-          const items = dataCollection.toArray();
-          const valueListItem = document.getElementById(`${currentField}-value-list-item`);
-          valueListItem.label = labelInput.value;
-          console.log(valueListItem);
-          data = { items };
-          scoreboard.data = data;
-          modal.open = false;
-          currentField = null;
-        });
-
-        // Creates value list items based off of dummy data
-        const createCalciteValueListItem = () => {
-          const attrData = document.getElementById('attrData');
-          data.items.forEach(item => {
-            const valueListItem = document.createElement('calcite-value-list-item');
-            const editAction = document.createElement('calcite-action');
-
-            editAction.setAttribute('slot', 'actions-end');
-            editAction.setAttribute('icon', 'pencil');
-            const id = `${item.id}${item.field}`;
-            valueListItem.id = `${id}-value-list-item`;
-            editAction.id = id;
-            editAction.label = 'Edit';
-            editAction.text = 'Edit';
-
-            editAction.addEventListener('click', e => {
-              currentField = id;
-              const dataCollection = new Collection([...data.items]);
-              const obj = dataCollection.find(itemToFind => `${itemToFind.id}${itemToFind.field}` === id);
-              const { field, label, operator } = obj;
-              fieldInput.value = field;
-              labelInput.value = label;
-              operatorInput.value = operator;
-              modal.open = true;
-            });
-
-            valueListItem.appendChild(editAction);
-
-            valueListItem.label = item.label;
-            valueListItem.value = id;
-
-            valueListItem.removable = true;
-            attrData.appendChild(valueListItem);
+          // Init theme selector
+          const themeColorSelect = document.getElementById('themeColorSelect');
+          themes.forEach(theme => {
+            const selectItem = document.createElement('calcite-option');
+            selectItem.label = theme.label;
+            const { background, color } = theme;
+            selectItem.value = {
+              background,
+              color,
+            };
+            themeColorSelect.appendChild(selectItem);
           });
-        };
 
-        createCalciteValueListItem();
+          // variable to store field that is being edited
+          let currentId = null;
 
-        // Update data on item re-order
-        attrData.addEventListener('calciteListOrderChange', e => {
-          const values = e.detail;
-          const items_tmp = new Collection([...data.items]);
-          const items = values.map(value => items_tmp.find(item => `${item.id}${item.field}` === value));
-          data = { items };
+          // Modal nodes
+          const modal = document.getElementById('fieldModal');
+          const fieldInput = document.getElementById('fieldInput');
+          const labelInput = document.getElementById('labelInput');
+          const operatorInput = document.getElementById('operatorInput');
+          const done = document.getElementById('done');
+
+          const getLayers = () => {
+            return view.map.allLayers.filter(layer => !layer.isTable && (layer.type === 'feature') | (layer.type === 'scene'));
+          };
+
+          // Creation
+          // Obj to store created data
+          let dataToCreate = {};
+          const createModal = document.getElementById('create');
+          const layers = getLayers();
+          const layersInput = document.getElementById('layers');
+          const fieldsInput = document.getElementById('fields');
+          const labelInput_Create = document.getElementById('label');
+          const operatorInput_Create = document.getElementById('operator');
+          layers.forEach(async (layer, layerIndex) => {
+            const option = document.createElement('calcite-option');
+            option.label = layer.title;
+            option.value = layer.id;
+            layersInput.appendChild(option);
+          });
+
+          const getFields = layer => {
+            return layer.fields.filter(field => field.type === 'integer');
+          };
+
+          const initialDataToCreate = async () => {
+            const firstLayer = layers.getItemAt(0);
+            const layerToLoad = await firstLayer.load();
+            generateFields(layerToLoad);
+            const field = getFields(layerToLoad)[0];
+            dataToCreate = {
+              layer: {
+                id: layerToLoad.id,
+                url: layerToLoad.url,
+              },
+              field: field.name,
+              label: field.alias,
+              operator: 'count',
+            };
+            labelInput_Create.value = field.alias;
+          };
+
+          initialDataToCreate();
+
+          const generateFields = loadedLayer => {
+            const fields = getFields(loadedLayer);
+            fieldsInput.innerHTML = '';
+            fields.forEach((field, index) => {
+              const option = document.createElement('calcite-option');
+              option.label = field.alias;
+              option.value = field.name;
+              fieldsInput.appendChild(option);
+            });
+          };
+
+          layersInput.addEventListener('calciteSelectChange', async e => {
+            const layerId = e.target.value;
+            const layer = layers.find(layer => layer.id === layerId);
+            const loadedLayer = await layer.load();
+            generateFields(loadedLayer);
+            const field = getFields(loadedLayer)[0];
+            dataToCreate = {
+              layer: { id: layerId, url: layer.url },
+              field,
+              label: field.alias,
+            };
+            labelInput_Create.value = field.alias;
+          });
+
+          fieldsInput.addEventListener('calciteSelectChange', async e => {
+            dataToCreate['field'] = e.target.value;
+          });
+          labelInput_Create.addEventListener('calciteInputChange', e => {
+            dataToCreate['label'] = e.target.value;
+          });
+          operatorInput_Create.addEventListener('calciteSelectChange', e => {
+            dataToCreate['operator'] = e.target.value;
+          });
+          const confirmCreate = document.getElementById('confirmCreate');
+          confirmCreate.addEventListener('click', () => {
+            const dataCopy = { ...data };
+            dataCopy.items = [...dataCopy.items, dataToCreate];
+            data = dataCopy;
+            scoreboard.data = dataCopy;
+            createCalciteValueListItem();
+            dataToCreate = {};
+            createModal.open = false;
+          });
+          const add = document.getElementById('add');
+          add.addEventListener('click', () => {
+            createModal.open = true;
+          });
+
+          const findItem = (items, value) => items.find((item, index) => `${item.layer.id}${item.field}-${index}` === value);
+
+          // Edit
+          done.addEventListener('click', () => {
+            const dataCollection = new Collection([...data.items]);
+
+            const obj = findItem(dataCollection, currentId);
+            obj.label = labelInput.value;
+            obj.operator = operatorInput.value;
+            const items = dataCollection.toArray();
+            const valueListItem = document.getElementById(`${currentId}-value-list-item`);
+            valueListItem.label = labelInput.value;
+            data = { items };
+            scoreboard.data = data;
+            modal.open = false;
+            currentId = null;
+          });
+
+          // Creates value list items based off of dummy data
+          const createCalciteValueListItem = () => {
+            const attrData = document.getElementById('attrData');
+            attrData.innerHTML = '';
+            data.items.forEach((item, index) => {
+              const valueListItem = document.createElement('calcite-value-list-item');
+              const editAction = document.createElement('calcite-action');
+
+              editAction.setAttribute('slot', 'actions-end');
+              editAction.setAttribute('icon', 'pencil');
+              const id = `${item.layer.id}${item.field}-${index}`;
+              valueListItem.id = `${id}-value-list-item`;
+              editAction.id = id;
+              editAction.label = 'Edit';
+              editAction.text = 'Edit';
+
+              editAction.addEventListener('click', e => {
+                currentId = id;
+                const dataCollection = new Collection([...data.items]);
+                const obj = findItem(dataCollection, id);
+                const { field, label, operator } = obj;
+                fieldInput.value = field;
+                labelInput.value = label;
+                operatorInput.value = operator;
+                modal.open = true;
+              });
+
+              valueListItem.appendChild(editAction);
+
+              valueListItem.label = item.label;
+              valueListItem.value = id;
+
+              valueListItem.removable = true;
+              attrData.appendChild(valueListItem);
+            });
+          };
+
+          createCalciteValueListItem();
+
+          // Re-order
+          attrData.addEventListener('calciteListOrderChange', e => {
+            const values = e.detail;
+            const items_tmp = new Collection([...data.items]);
+            const items = values.map((value, index) => {
+              const item = findItem(items_tmp, value);
+              return item;
+            });
+            data = { items };
+            scoreboard.data = data;
+            createCalciteValueListItem();
+          });
+
+          // Delete
+          attrData.addEventListener('calciteListItemRemove', e => {
+            const value = e.target.value;
+            const items = new Collection([...data.items]);
+            const itemToRemove = findItem(items, value);
+            items.remove(itemToRemove);
+            data = { items: items.toArray() };
+            scoreboard.data = data;
+            createCalciteValueListItem();
+          });
+
+          // Create instant-apps-scoreboard
+          const scoreboard = document.createElement('instant-apps-scoreboard');
+          scoreboard.view = view;
           scoreboard.data = data;
-        });
+          scoreboard.position = 'bottom';
+          view.ui.add(scoreboard, 'manual');
 
-        // Update data on item removal
-        attrData.addEventListener('calciteListItemRemove', e => {
-          const value = e.target.value;
-          const items = new Collection([...data.items]);
-          const itemToRemove = items.find(item => `${item.id}${item.field}` === value);
-          items.remove(itemToRemove);
-          data = { items: items.toArray() };
-          scoreboard.data = data;
-        });
+          // Listeners
+          // Position
+          const position = document.getElementById('position');
+          position.addEventListener('calciteSelectChange', e => (scoreboard.position = e.target.value));
 
-        // Create instant-apps-scoreboard
-        const scoreboard = document.createElement('instant-apps-scoreboard');
-        scoreboard.view = view;
-        scoreboard.data = data;
-        scoreboard.position = 'bottom';
-        view.ui.add(scoreboard, 'manual');
+          const mode = document.getElementById('mode');
+          mode.addEventListener('calciteSegmentedControlChange', e => {
+            scoreboard.mode = e.target.value;
+          });
 
-        // Listeners
-        // Position
-        const position = document.getElementById('position');
-        position.addEventListener('calciteSelectChange', e => (scoreboard.position = e.target.value));
+          themeColorSelect.addEventListener('calciteSelectChange', e => {
+            const { background, color } = e.target.value;
+            let customStylesheet = document.getElementById('custom');
 
-        const mode = document.getElementById('mode');
-        mode.addEventListener('calciteSegmentedControlChange', e => {
-          scoreboard.mode = e.target.value;
-        });
-
-        // Background color
-        // const backgroundColorPicker = document.getElementById('backgroundColorPicker');
-        // const backgroundColorSwatch = document.getElementById('backgroundColorSwatch');
-        // backgroundColorPicker.addEventListener('calciteColorPickerChange', e => {
-        //   backgroundColorSwatch.color = e.target.value;
-        //   scoreboard.style.backgroundColor = e.target.value;
-        // });
-
-        themeColorSelect.addEventListener('calciteSelectChange', e => {
-          const { background, color } = e.target.value;
-          let customStylesheet = document.getElementById('custom');
-
-          if (!customStylesheet) {
-            customStylesheet = document.createElement('style');
-            customStylesheet.id = 'custom';
-            document.head.appendChild(customStylesheet);
-          }
-          customStylesheet.innerHTML = `
+            if (!customStylesheet) {
+              customStylesheet = document.createElement('style');
+              customStylesheet.id = 'custom';
+              document.head.appendChild(customStylesheet);
+            }
+            customStylesheet.innerHTML = `
               instant-apps-scoreboard {
                 --instant-apps-scoreboard-background-color: ${background};
                 --instant-apps-scoreboard-text-color: ${color};
               }
             `;
 
-          scoreboard.style.backgroundColor = background;
-          scoreboard.style.color = color;
+            scoreboard.style.backgroundColor = background;
+            scoreboard.style.color = color;
+          });
         });
-
-        // // Text color
-        // const textColorPicker = document.getElementById('textColorPicker');
-        // const textColorSwatch = document.getElementById('textColorSwatch');
-        // textColorPicker.addEventListener('calciteColorPickerChange', e => {
-        //   textColorSwatch.color = e.target.value;
-        //   scoreboard.style.color = e.target.value;
-        // });
       });
     </script>
   </body>
