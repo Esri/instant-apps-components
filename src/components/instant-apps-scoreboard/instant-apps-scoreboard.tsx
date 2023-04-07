@@ -17,6 +17,8 @@ import {
   ScoreboardMode,
   ScoreboardIcons,
   ScoreboardAlignment,
+  ScoreboardScale,
+  ScoreboardAppearance,
   AcceptableLayers,
   AcceptableLayerViews,
 } from './types/interfaces';
@@ -62,7 +64,6 @@ export class InstantAppsScoreboard {
   Collection: typeof import('esri/core/Collection');
   handles: __esri.Handles;
   intl: __esri.intl;
-  previousData;
 
   // Host element
   @Element() el: HTMLElement;
@@ -126,39 +127,41 @@ export class InstantAppsScoreboard {
   async calculateScoreboardData(): Promise<void> {
     if (this.layers.length === 0 || this.layerViews.length === 0) return;
     this.state = Scoreboard.Calculating;
-    const tempData = { items: [...this.data.items] };
-    const promises: any = [];
-    tempData.items.forEach(async item => {
-      const stat = {
-        onStatisticField: item.field,
-        outStatisticFieldName: `${item.field}_${item.operation}`,
-        statisticType: item.operation,
-      } as __esri.StatisticDefinition;
-
+    const data_temp = { items: [...this.data.items] };
+    const queryFeaturePromises: Promise<__esri.FeatureSet>[] = [];
+    data_temp.items.forEach(async item => {
+      const { field, operation } = item;
+      const onStatisticField = field;
+      const outStatisticFieldName = `${field}_${operation}`;
+      const statisticType = operation;
+      const statDefinition = { onStatisticField, outStatisticFieldName, statisticType } as __esri.StatisticDefinition;
       const layer = this.layers.find(layer => layer.id === item?.layer?.id);
       if (!layer) return;
       const query = layer.createQuery();
-      query.outStatistics = [stat];
-      const res = layer.queryFeatures(query);
-      promises.push(res);
+      query.outStatistics = [statDefinition];
+      const queryFeaturesRes = layer.queryFeatures(query);
+      queryFeaturePromises.push(queryFeaturesRes);
     });
 
-    const completedStats = await Promise.all(promises);
+    const completedStats = await Promise.all(queryFeaturePromises);
 
     completedStats.forEach((stat, statIndex) => {
-      const value = Object.values(stat.features[0].attributes)[0] as number;
-
-      const formattedNumber = this.intl.formatNumber(value, {
+      const features = stat.features;
+      const feature = features[0];
+      const { attributes } = feature;
+      const attrValues = Object.values(attributes);
+      const value = attrValues[0] as number;
+      const numFormatOptions = {
         notation: 'compact',
         compactDisplay: 'short',
-      });
+      } as Intl.NumberFormatOptions;
+      const formattedNumber = this.intl.formatNumber(value, numFormatOptions);
 
-      tempData.items[statIndex].value = `${formattedNumber}`;
+      data_temp.items[statIndex].value = `${formattedNumber}`;
     });
-    this.data.items = [...tempData.items];
+    this.data.items = [...data_temp.items];
     this.state = Scoreboard.Complete;
     if (!this.initialCalulcate) this.initialCalulcate = true;
-    this.previousData = this.data;
   }
 
   // Lifecycle methods
@@ -281,6 +284,17 @@ export class InstantAppsScoreboard {
   }
 
   renderItemsContainer(): HTMLDivElement {
+    const [previousButton, nextButton] = this.renderPreviousNextButtons();
+    return (
+      <div class={CSS.itemsContainer}>
+        {previousButton}
+        {this.renderItems()}
+        {nextButton}
+      </div>
+    );
+  }
+
+  renderPreviousNextButtons(): HTMLCalciteActionElement[] {
     const isBelowOrAtLimit = this.data?.items?.length <= ITEM_LIMIT;
     const isBeginning = this.itemIndex === 0;
     const isEnd = this.isLastItem();
@@ -289,28 +303,15 @@ export class InstantAppsScoreboard {
     const previous = isBottom ? ScoreboardIcons.Left : ScoreboardIcons.Up;
     const next = isBottom ? ScoreboardIcons.Right : ScoreboardIcons.Down;
     const iconType = { previous, next };
-    return (
-      <div class={CSS.itemsContainer}>
-        <calcite-action
-          onclick={this.previousItem.bind(this)}
-          icon={isBeginning || isBelowOrAtLimit ? ScoreboardIcons.Blank : iconType.previous}
-          disabled={isBeginning || isBelowOrAtLimit}
-          alignment={iconPosition}
-          scale="l"
-          appearance="transparent"
-        />
-
-        {this.renderItems()}
-        <calcite-action
-          onclick={this.nextItem.bind(this)}
-          icon={isEnd || isBelowOrAtLimit ? ScoreboardIcons.Blank : iconType.next}
-          disabled={isEnd || isBelowOrAtLimit}
-          alignment={iconPosition}
-          scale="l"
-          appearance="transparent"
-        />
-      </div>
-    );
+    const previousIcon = isBeginning || isBelowOrAtLimit ? ScoreboardIcons.Blank : iconType.previous;
+    const nextIcon = isEnd || isBelowOrAtLimit ? ScoreboardIcons.Blank : iconType.next;
+    const isDisabled = { previous: isBeginning || isBelowOrAtLimit, next: isEnd || isBelowOrAtLimit };
+    const appearance = ScoreboardAppearance.Transparent;
+    const scale = ScoreboardScale.Large;
+    return [
+      <calcite-action onclick={this.previousItem.bind(this)} icon={previousIcon} disabled={isDisabled.previous} alignment={iconPosition} scale={scale} appearance={appearance} />,
+      <calcite-action onclick={this.nextItem.bind(this)} icon={nextIcon} disabled={isDisabled.next} alignment={iconPosition} scale={scale} appearance={appearance} />,
+    ];
   }
 
   renderItems(): HTMLUListElement {
@@ -324,7 +325,9 @@ export class InstantAppsScoreboard {
     const { label, value } = scoreboardItem;
     return (
       <li class={CSS.item}>
-        <span class={CSS.label}>{label}</span>
+        <span class={CSS.label} title={label}>
+          {label}
+        </span>
         <span class={CSS.value}>
           {!value && this.state === Scoreboard.Calculating && !this.initialCalulcate ? (
             <span class={CSS.valuePlaceholder} />

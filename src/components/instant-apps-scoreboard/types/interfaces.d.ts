@@ -37,6 +37,16 @@ export const enum ScoreboardIcons {
   Blank = 'blank',
 }
 
+export const enum ScoreboardScale {
+  Small = 's',
+  Medium = 'm',
+  Large = 'l',
+}
+
+export const enum ScoreboardAppearance {
+  Transparent = 'transparent',
+}
+
 export const enum ScoreboardAlignment {
   Start = 'start',
   Center = 'center',

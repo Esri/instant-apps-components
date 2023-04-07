@@ -190,7 +190,7 @@
             </calcite-select>
           </calcite-label>
         </div>
-        <calcite-button slot="secondary" appearance="outline">Cancel</calcite-button>
+        <calcite-button id="cancelCreate" slot="secondary" appearance="outline">Cancel</calcite-button>
         <calcite-button id="confirmCreate" slot="primary">Create</calcite-button>
       </calcite-modal>
     </calcite-shell>
@@ -449,6 +449,11 @@
             data = dataCopy;
             scoreboard.data = data;
             createCalciteValueListItem();
+            initialDataToCreate();
+            createModal.open = false;
+          });
+          const cancelCreate = document.getElementById('cancelCreate');
+          cancelCreate.addEventListener('click', () => {
             initialDataToCreate();
             createModal.open = false;
           });
