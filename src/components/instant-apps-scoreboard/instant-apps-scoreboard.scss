@@ -64,11 +64,22 @@ $boxShadow: 0px 3px 15px rgba(0, 0, 0, 0.2);
       }
 
       &-value {
-        display: inline-block;
-        min-width: 43px;
-        min-height: 29px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-width: 32px;
+        min-height: 32px;
+        margin-top: 5px;
         font-size: 1.5rem;
         font-weight: 900;
+      }
+
+      &-value-placeholder {
+        display: inline-block;
+        width: 32px;
+        height: 32px;
+        background-color: var(--calcite-ui-foreground-3);
+        border-radius: 4px;
       }
     }
   }
@@ -135,8 +146,8 @@ $boxShadow: 0px 3px 15px rgba(0, 0, 0, 0.2);
     }
     &__item {
       width: 10vw;
-      margin-top: 3.25vh;
-      margin-bottom: 3.25vh;
+      margin-top: 2vh;
+      margin-bottom: 2vh;
     }
   }
 }

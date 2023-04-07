@@ -22,8 +22,7 @@
 
     <style>
       html,
-      body,
-      #viewDiv {
+      body {
         box-sizing: border-box;
         width: 100%;
         height: 100%;
@@ -38,6 +37,20 @@
         background-color: #fff;
         border-radius: 3px;
         box-shadow: 0px 3px 15px rgba(0, 0, 0, 0.2);
+      }
+
+      #mockAppContainer {
+        display: flex;
+        flex-direction: column;
+        width: 100%;
+        height: 100%;
+      }
+
+      #viewDiv {
+        margin: 0;
+        padding: 0;
+        width: 100%;
+        flex-grow: 1;
       }
 
       .group {
@@ -84,6 +97,7 @@
       </instant-apps-header>
       <calcite-shell-panel slot="panel-start">
         <calcite-panel heading="Scoreboard" description="Configure the scoreboard component">
+          <calcite-scrim id="scrim" loading></calcite-scrim>
           <div id="settings">
             <div class="group">
               <span class="group-label">Layout</span>
@@ -124,7 +138,11 @@
           </div>
         </calcite-panel>
       </calcite-shell-panel>
-      <div id="viewDiv"></div>
+      <div id="mockAppContainer">
+        <instant-apps-header id="instant-apps-header" slot="header" title-text="Observer | Mt. Everest Weather Stations" text-color="#151515" background-color="#ffffff">
+        </instant-apps-header>
+        <div id="viewDiv"></div>
+      </div>
       <calcite-modal id="fieldModal" close-button-disabled="true">
         <span slot="header">Edit statistic</span>
         <div slot="content">
@@ -136,9 +154,9 @@
             Label
             <calcite-input id="labelInput" />
           </calcite-label>
-          <calcite-label id="operatorInput">
-            Operator
-            <calcite-select>
+          <calcite-label>
+            Operation
+            <calcite-select id="editOperationInput">
               <calcite-option value="count">Count</calcite-option>
               <calcite-option value="avg">Average</calcite-option>
               <calcite-option value="sum">Sum</calcite-option>
@@ -162,8 +180,8 @@
             <calcite-input id="label"></calcite-input>
           </calcite-label>
           <calcite-label>
-            Operator
-            <calcite-select id="operator">
+            Operation
+            <calcite-select id="createOperationInput">
               <calcite-option value="count">Count</calcite-option>
               <calcite-option value="avg">Average</calcite-option>
               <calcite-option value="sum">Sum</calcite-option>
@@ -184,6 +202,117 @@
         esriConfig,
         Collection,
       ) => {
+        // Init dummy data
+        let data = {
+          items: [
+            {
+              layer: {
+                id: '16a9b6628df-layer-1',
+                url: 'https://services7.arcgis.com/wdgKFvvZvYZ3Biji/arcgis/rest/services/Baltimore_bldgs_slr/SceneServer',
+              },
+              field: 'SLR_table_SLR6COUNT',
+              label: 'SLR 6 - Count',
+              operation: 'count',
+            },
+            {
+              layer: {
+                id: '16a9b6628df-layer-1',
+                url: 'https://services7.arcgis.com/wdgKFvvZvYZ3Biji/arcgis/rest/services/Baltimore_bldgs_slr/SceneServer',
+              },
+              field: 'SLR_table_SLR6COUNT',
+              label: 'SLR 6 - Average',
+              operation: 'avg',
+            },
+            {
+              layer: {
+                id: '16a9b6628df-layer-1',
+                url: 'https://services7.arcgis.com/wdgKFvvZvYZ3Biji/arcgis/rest/services/Baltimore_bldgs_slr/SceneServer',
+              },
+              field: 'SLR_table_SLR6COUNT',
+              label: 'SLR 6 - Sum',
+              operation: 'sum',
+            },
+            {
+              layer: {
+                id: '16a9b6628df-layer-1',
+                url: 'https://services7.arcgis.com/wdgKFvvZvYZ3Biji/arcgis/rest/services/Baltimore_bldgs_slr/SceneServer',
+              },
+              field: 'SLR_table_SLR6COUNT',
+              label: 'SLR 6 - Min',
+              operation: 'min',
+            },
+            {
+              layer: {
+                id: '16a9b6628df-layer-1',
+                url: 'https://services7.arcgis.com/wdgKFvvZvYZ3Biji/arcgis/rest/services/Baltimore_bldgs_slr/SceneServer',
+              },
+              field: 'SLR_table_SLR6COUNT',
+              label: 'SLR 6 - Count',
+              operation: 'max',
+            },
+            {
+              layer: {
+                id: '1650e5e4ded-layer-2',
+                url: 'https://services7.arcgis.com/wdgKFvvZvYZ3Biji/arcgis/rest/services/Baltimore_impact_slr/SceneServer',
+              },
+              field: 'Number_affected',
+              label: 'Num affected - Sum',
+              operation: 'sum',
+            },
+            {
+              layer: {
+                id: '1650e5e4ded-layer-2',
+                url: 'https://services7.arcgis.com/wdgKFvvZvYZ3Biji/arcgis/rest/services/Baltimore_impact_slr/SceneServer',
+              },
+              field: 'Level_',
+              label: 'Max value of levels',
+              operation: 'max',
+            },
+          ],
+        };
+        const themes = [
+          {
+            label: 'Default',
+            background: 'var(--calcite-ui-foreground-1)',
+            color: 'var(--calcite-ui-text-1)',
+          },
+          {
+            label: 'Blue',
+            background: '#E4EFF8',
+            color: '#151515',
+          },
+          {
+            label: 'Purple',
+            background: '#CAB9FA',
+            color: '#151515',
+          },
+          {
+            label: 'Red',
+            background: '#EE8173',
+            color: '#151515',
+          },
+          {
+            label: 'Green',
+            background: '#2D3F21',
+            color: '#FFFFFF',
+          },
+          {
+            label: 'Dark gray',
+            background: '#474747',
+            color: '#FFFFFF',
+          },
+          {
+            label: 'Dark Brown',
+            background: '#403C13',
+            color: '#FFFFFF',
+          },
+          {
+            label: 'Brown',
+            background: '#835D2B',
+            color: '#FFFFFF',
+          },
+        ];
+
         // Set up web scene/view
         esriConfig.portalUrl = 'https://webapps.maps.arcgis.com';
         const map = new WebScene({
@@ -200,122 +329,28 @@
           },
         });
 
-        view.map.loadAll().then(() => {
-          // Init dummy data
-          let data = {
-            items: [
-              {
-                layer: {
-                  id: '1650e5e4ded-layer-2',
-                  url: 'https://services7.arcgis.com/wdgKFvvZvYZ3Biji/arcgis/rest/services/Baltimore_impact_slr/SceneServer',
-                },
-                field: 'Level_',
-                label: 'Level',
-                operation: 'sum',
-              },
-              {
-                layer: {
-                  id: '1650e5e4ded-layer-2',
-                  url: 'https://services7.arcgis.com/wdgKFvvZvYZ3Biji/arcgis/rest/services/Baltimore_impact_slr/SceneServer',
-                },
-                field: 'Number_affected',
-                label: 'Number_affected',
-                operation: 'avg',
-              },
-              {
-                layer: {
-                  id: '16a9b6628df-layer-1',
-                  url: 'https://services7.arcgis.com/wdgKFvvZvYZ3Biji/arcgis/rest/services/Baltimore_bldgs_slr/SceneServer',
-                },
-                field: 'SLR_table_SLR6COUNT',
-                label: 'SLR 6 COUNT',
-                operation: 'min',
-              },
-              {
-                layer: {
-                  id: '16a9b6628df-layer-1',
-                  url: 'https://services7.arcgis.com/wdgKFvvZvYZ3Biji/arcgis/rest/services/Baltimore_bldgs_slr/SceneServer',
-                },
-                field: 'SLR_table_SLR5COUNT',
-                label: 'SLR 5 COUNT',
-                operation: 'max',
-              },
-              {
-                layer: {
-                  id: '16a9b6628df-layer-1',
-                  url: 'https://services7.arcgis.com/wdgKFvvZvYZ3Biji/arcgis/rest/services/Baltimore_bldgs_slr/SceneServer',
-                },
-                field: 'SLR_table_SLR4COUNT',
-                label: 'SLR 4 COUNT',
-                operation: 'count',
-              },
-              {
-                layer: {
-                  id: '16a9b6628df-layer-1',
-                  url: 'https://services7.arcgis.com/wdgKFvvZvYZ3Biji/arcgis/rest/services/Baltimore_bldgs_slr/SceneServer',
-                },
-                field: 'SLR_table_SLR3COUNT',
-                label: 'SLR 3 COUNT',
-                operation: 'sum',
-              },
-            ],
+        const scoreboard = document.createElement('instant-apps-scoreboard');
+        scoreboard.view = view;
+        scoreboard.data = data;
+        scoreboard.position = 'bottom';
+        view.ui.add(scoreboard, 'manual');
+
+        // Init theme selector
+        const themeColorSelect = document.getElementById('themeColorSelect');
+        themes.forEach(theme => {
+          const selectItem = document.createElement('calcite-option');
+          selectItem.label = theme.label;
+          const { background, color } = theme;
+          selectItem.value = {
+            background,
+            color,
           };
-          const themes = [
-            {
-              label: 'Default',
-              background: 'var(--calcite-ui-foreground-1)',
-              color: 'var(--calcite-ui-text-1)',
-            },
-            {
-              label: 'Blue',
-              background: '#E4EFF8',
-              color: '#151515',
-            },
-            {
-              label: 'Purple',
-              background: '#CAB9FA',
-              color: '#151515',
-            },
-            {
-              label: 'Red',
-              background: '#EE8173',
-              color: '#151515',
-            },
-            {
-              label: 'Green',
-              background: '#2D3F21',
-              color: '#FFFFFF',
-            },
-            {
-              label: 'Dark gray',
-              background: '#474747',
-              color: '#FFFFFF',
-            },
-            {
-              label: 'Dark Brown',
-              background: '#403C13',
-              color: '#FFFFFF',
-            },
-            {
-              label: 'Brown',
-              background: '#835D2B',
-              color: '#FFFFFF',
-            },
-          ];
+          themeColorSelect.appendChild(selectItem);
+        });
 
-          // Init theme selector
-          const themeColorSelect = document.getElementById('themeColorSelect');
-          themes.forEach(theme => {
-            const selectItem = document.createElement('calcite-option');
-            selectItem.label = theme.label;
-            const { background, color } = theme;
-            selectItem.value = {
-              background,
-              color,
-            };
-            themeColorSelect.appendChild(selectItem);
-          });
-
+        view.map.loadAll().then(() => {
+          const scrim = document.getElementById('scrim');
+          scrim.remove();
           // variable to store field that is being edited
           let currentId = null;
 
@@ -323,34 +358,31 @@
           const modal = document.getElementById('fieldModal');
           const fieldInput = document.getElementById('fieldInput');
           const labelInput = document.getElementById('labelInput');
-          const operatorInput = document.getElementById('operatorInput');
+          const editOperationInput = document.getElementById('editOperationInput');
           const done = document.getElementById('done');
 
           const getLayers = () => {
-            return view.map.allLayers.filter(layer => !layer.isTable && (layer.type === 'feature') | (layer.type === 'scene'));
+            return view.map.allLayers.filter(layer => {
+              return !layer.isTable && (layer.type === 'feature') | (layer.type === 'scene');
+            });
           };
 
           // Creation
           // Obj to store created data
           let dataToCreate = {};
           const createModal = document.getElementById('create');
-          const layers = getLayers();
+          let layers = getLayers();
           const layersInput = document.getElementById('layers');
           const fieldsInput = document.getElementById('fields');
           const labelInput_Create = document.getElementById('label');
-          const operatorInput_Create = document.getElementById('operator');
-          layers.forEach(async (layer, layerIndex) => {
-            const option = document.createElement('calcite-option');
-            option.label = layer.title;
-            option.value = layer.id;
-            layersInput.appendChild(option);
-          });
+          const operationInput_Create = document.getElementById('createOperationInput');
 
           const getFields = layer => {
             return layer.fields.filter(field => field.type === 'integer');
           };
 
           const initialDataToCreate = async () => {
+            layers = layers.filter(layer => layer.associatedLayer);
             const firstLayer = layers.getItemAt(0);
             const layerToLoad = await firstLayer.load();
             generateFields(layerToLoad);
@@ -362,12 +394,19 @@
               },
               field: field.name,
               label: field.alias,
-              operator: 'count',
+              operation: 'count',
             };
             labelInput_Create.value = field.alias;
           };
 
           initialDataToCreate();
+
+          layers.forEach(async (layer, layerIndex) => {
+            const option = document.createElement('calcite-option');
+            option.label = layer.title;
+            option.value = layer.id;
+            layersInput.appendChild(option);
+          });
 
           const generateFields = loadedLayer => {
             const fields = getFields(loadedLayer);
@@ -400,17 +439,17 @@
           labelInput_Create.addEventListener('calciteInputChange', e => {
             dataToCreate['label'] = e.target.value;
           });
-          operatorInput_Create.addEventListener('calciteSelectChange', e => {
-            dataToCreate['operator'] = e.target.value;
+          operationInput_Create.addEventListener('calciteSelectChange', e => {
+            dataToCreate['operation'] = e.target.value;
           });
           const confirmCreate = document.getElementById('confirmCreate');
           confirmCreate.addEventListener('click', () => {
             const dataCopy = { ...data };
             dataCopy.items = [...dataCopy.items, dataToCreate];
             data = dataCopy;
-            scoreboard.data = dataCopy;
+            scoreboard.data = data;
             createCalciteValueListItem();
-            dataToCreate = {};
+            initialDataToCreate();
             createModal.open = false;
           });
           const add = document.getElementById('add');
@@ -426,7 +465,7 @@
 
             const obj = findItem(dataCollection, currentId);
             obj.label = labelInput.value;
-            obj.operator = operatorInput.value;
+            obj.operation = editOperationInput.value;
             const items = dataCollection.toArray();
             const valueListItem = document.getElementById(`${currentId}-value-list-item`);
             valueListItem.label = labelInput.value;
@@ -456,10 +495,10 @@
                 currentId = id;
                 const dataCollection = new Collection([...data.items]);
                 const obj = findItem(dataCollection, id);
-                const { field, label, operator } = obj;
+                const { field, label, operation } = obj;
                 fieldInput.value = field;
                 labelInput.value = label;
-                operatorInput.value = operator;
+                editOperationInput.value = operation;
                 modal.open = true;
               });
 
@@ -498,13 +537,6 @@
             scoreboard.data = data;
             createCalciteValueListItem();
           });
-
-          // Create instant-apps-scoreboard
-          const scoreboard = document.createElement('instant-apps-scoreboard');
-          scoreboard.view = view;
-          scoreboard.data = data;
-          scoreboard.position = 'bottom';
-          view.ui.add(scoreboard, 'manual');
 
           // Listeners
           // Position

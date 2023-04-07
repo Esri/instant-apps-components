@@ -19,6 +19,7 @@ export const enum Scoreboard {
   Loading = 'loading',
   Disabled = 'disabled',
   Complete = 'complete',
+  Calculating = 'calculating',
   Bottom = 'bottom',
   Left = 'left',
   Right = 'right',
@@ -41,7 +42,7 @@ export const enum ScoreboardAlignment {
   Center = 'center',
 }
 
-export type ScoreboardState = Scoreboard.Loading | Scoreboard.Disabled | Scoreboard.Complete;
+export type ScoreboardState = Scoreboard.Loading | Scoreboard.Disabled | Scoreboard.Complete | Scoreboard.Calculating;
 export type ScoreboardPosition = Scoreboard.Bottom | Scoreboard.Left | Scoreboard.Right;
 export type ScoreboardMode = Scoreboard.Floating | Scoreboard.Pinned;
 export type AcceptableLayerViews = __esri.FeatureLayerView | __esri.SceneLayerView;
