@@ -59,7 +59,7 @@ const ITEM_LIMIT = 6;
 })
 export class InstantAppsScoreboard {
   // Variables
-  initialCalulcate: boolean = false; // Flag to check for initial calculation
+  initialCalculate: boolean = false; // Flag to check for initial calculation
   reactiveUtils: __esri.reactiveUtils;
   Collection: typeof import('esri/core/Collection');
   handles: __esri.Handles;
@@ -126,42 +126,73 @@ export class InstantAppsScoreboard {
   @Watch('layerViews')
   async calculateScoreboardData(): Promise<void> {
     if (this.layers.length === 0 || this.layerViews.length === 0) return;
+
     this.state = Scoreboard.Calculating;
+
     const data_temp = { items: [...this.data.items] };
+
     const queryFeaturePromises: Promise<__esri.FeatureSet>[] = [];
-    data_temp.items.forEach(async item => {
+    this.queryStats(data_temp, queryFeaturePromises);
+
+    const queryFeaturesRes = await Promise.all(queryFeaturePromises);
+    this.handleQueryFeaturesResponses(queryFeaturesRes, data_temp);
+
+    this.data.items = [...data_temp.items];
+
+    this.state = Scoreboard.Complete;
+
+    if (!this.initialCalculate) this.initialCalculate = true;
+  }
+
+  queryStats(data: ScoreboardData, queryFeaturePromises: Promise<__esri.FeatureSet>[]): void {
+    const getStatsDefinition: (item: ScoreboardItem) => __esri.StatisticDefinition = (item: ScoreboardItem): __esri.StatisticDefinition => {
       const { field, operation } = item;
       const onStatisticField = field;
       const outStatisticFieldName = `${field}_${operation}`;
       const statisticType = operation;
-      const statDefinition = { onStatisticField, outStatisticFieldName, statisticType } as __esri.StatisticDefinition;
-      const layer = this.layers.find(layer => layer.id === item?.layer?.id);
-      if (!layer) return;
-      const query = layer.createQuery();
-      query.outStatistics = [statDefinition];
-      const queryFeaturesRes = layer.queryFeatures(query);
-      queryFeaturePromises.push(queryFeaturesRes);
-    });
+      return { onStatisticField, outStatisticFieldName, statisticType } as __esri.StatisticDefinition;
+    };
 
-    const completedStats = await Promise.all(queryFeaturePromises);
+    const queryFeaturesForItem: () => (item: ScoreboardItem) => Promise<void> = () => {
+      return async (item: ScoreboardItem) => {
+        const statDefinition = getStatsDefinition(item);
+        const layer = this.layers.find(layer => layer.id === item?.layer?.id);
+        if (!layer) return;
+        const query = layer.createQuery();
+        query.outStatistics = [statDefinition];
+        const queryFeaturesRes = layer.queryFeatures(query);
+        queryFeaturePromises.push(queryFeaturesRes);
+      };
+    };
 
-    completedStats.forEach((stat, statIndex) => {
+    data.items.forEach(queryFeaturesForItem());
+  }
+
+  handleQueryFeaturesResponses(queryFeaturesRes: __esri.FeatureSet[], data: ScoreboardData) {
+    const getValue: (stat: __esri.FeatureSet) => number = (stat: __esri.FeatureSet): number => {
       const features = stat.features;
       const feature = features[0];
       const { attributes } = feature;
       const attrValues = Object.values(attributes);
-      const value = attrValues[0] as number;
-      const numFormatOptions = {
-        notation: 'compact',
-        compactDisplay: 'short',
-      } as Intl.NumberFormatOptions;
-      const formattedNumber = this.intl.formatNumber(value, numFormatOptions);
+      return attrValues[0] as number;
+    };
 
-      data_temp.items[statIndex].value = `${formattedNumber}`;
-    });
-    this.data.items = [...data_temp.items];
-    this.state = Scoreboard.Complete;
-    if (!this.initialCalulcate) this.initialCalulcate = true;
+    const getNumberFormatOptions: () => Intl.NumberFormatOptions = (): Intl.NumberFormatOptions => {
+      const notation = 'compact';
+      const compactDisplay = 'short';
+      return { notation, compactDisplay };
+    };
+
+    const updateItemValue: () => (stat: __esri.FeatureSet, statIndex: number) => void = () => {
+      return (stat: __esri.FeatureSet, statIndex: number) => {
+        const value = getValue(stat);
+        const numberFormatOptions = getNumberFormatOptions();
+        const formattedNumber = this.intl.formatNumber(value, numberFormatOptions);
+        data.items[statIndex].value = `${formattedNumber}`;
+      };
+    };
+
+    queryFeaturesRes.forEach(updateItemValue());
   }
 
   // Lifecycle methods
@@ -329,7 +360,7 @@ export class InstantAppsScoreboard {
           {label}
         </span>
         <span class={CSS.value}>
-          {!value && this.state === Scoreboard.Calculating && !this.initialCalulcate ? (
+          {!value && this.state === Scoreboard.Calculating && !this.initialCalculate ? (
             <span class={CSS.valuePlaceholder} />
           ) : this.state === Scoreboard.Complete ? (
             value ?? this.messages?.noData
