@@ -69,12 +69,25 @@ export class InstantAppsScoreboard {
   @Element() el: HTMLElement;
 
   // Public properties
+
+  /**
+   * MapView or SceneView to reference extent, viewpoint, and layers in map to perform calculations.
+   */
   @Prop() view: __esri.MapView | __esri.SceneView;
 
+  /**
+   * Data on layers, field attribute info, operations, for each scoreboard item
+   */
   @Prop() data: ScoreboardData;
 
+  /**
+   * Position of scoreboard i.e. 'bottom', 'left', or 'right'.
+   */
   @Prop() position: ScoreboardPosition = Scoreboard.Bottom;
 
+  /**
+   * Mode of scoreboard i.e. 'floating' or 'pinned'.
+   */
   @Prop() mode: ScoreboardMode = Scoreboard.Floating;
 
   // Internal state
@@ -90,14 +103,14 @@ export class InstantAppsScoreboard {
 
   // Watch methods
   @Watch('data')
-  generateUIDs(): void {
+  protected generateUIDs(): void {
     this.itemIndex = 0;
     const { items } = this.data;
     items.forEach(this.uidGeneratorCallback());
   }
 
   @Watch('data')
-  storeLayers(): void {
+  protected storeLayers(): void {
     this.state = Scoreboard.Calculating;
     const layerIds = this.data.items.map(item => item?.layer?.id);
     const isNotTable = (layer: __esri.Layer) => !(layer as any).isTable;
@@ -108,7 +121,7 @@ export class InstantAppsScoreboard {
   }
 
   @Watch('layers')
-  async storeLayerViews(): Promise<void> {
+  protected async storeLayerViews(): Promise<void> {
     if (this.layers.length > 0) {
       const promises: Promise<AcceptableLayerViews>[] = [];
       this.layers.forEach(layer => {
@@ -124,7 +137,7 @@ export class InstantAppsScoreboard {
   }
 
   @Watch('layerViews')
-  async calculateScoreboardData(): Promise<void> {
+  protected async calculateScoreboardData(): Promise<void> {
     if (this.layers.length === 0 || this.layerViews.length === 0) return;
 
     this.state = Scoreboard.Calculating;
@@ -144,7 +157,7 @@ export class InstantAppsScoreboard {
     if (!this.initialCalculate) this.initialCalculate = true;
   }
 
-  queryStats(data: ScoreboardData, queryFeaturePromises: Promise<__esri.FeatureSet>[]): void {
+  protected queryStats(data: ScoreboardData, queryFeaturePromises: Promise<__esri.FeatureSet>[]): void {
     const getStatsDefinition: (item: ScoreboardItem) => __esri.StatisticDefinition = (item: ScoreboardItem): __esri.StatisticDefinition => {
       const { field, operation } = item;
       const onStatisticField = field;
@@ -168,7 +181,7 @@ export class InstantAppsScoreboard {
     data.items.forEach(queryFeaturesForItem());
   }
 
-  handleQueryFeaturesResponses(queryFeaturesRes: __esri.FeatureSet[], data: ScoreboardData) {
+  protected handleQueryFeaturesResponses(queryFeaturesRes: __esri.FeatureSet[], data: ScoreboardData) {
     const getValue: (stat: __esri.FeatureSet) => number = (stat: __esri.FeatureSet): number => {
       const features = stat.features;
       const feature = features[0];
@@ -233,7 +246,7 @@ export class InstantAppsScoreboard {
   }
 
   // Initialize methods
-  async getMessages(): Promise<void> {
+  protected async getMessages(): Promise<void> {
     let messages: typeof Scoreboard_t9n;
     try {
       const res = await getLocaleComponentStrings(this.el);
@@ -249,7 +262,7 @@ export class InstantAppsScoreboard {
     }
   }
 
-  async initializeModules(): Promise<void> {
+  protected async initializeModules(): Promise<void> {
     try {
       const [Handles, reactiveUtils, Collection, intl] = await loadModules(['esri/core/Handles', 'esri/core/reactiveUtils', 'esri/core/Collection', 'esri/intl']);
 
@@ -270,7 +283,7 @@ export class InstantAppsScoreboard {
     }
   }
 
-  uidGeneratorCallback(): (item: ScoreboardItem) => void {
+  protected uidGeneratorCallback(): (item: ScoreboardItem) => void {
     return (item: ScoreboardItem) => {
       const randNum = Math.random();
       const randomInt = Math.floor(Math.random() * 10) + 11;
@@ -280,7 +293,7 @@ export class InstantAppsScoreboard {
     };
   }
 
-  async loadMapResources(): Promise<void> {
+  protected async loadMapResources(): Promise<void> {
     const { map } = this.view;
     const webItem = map as __esri.WebMap | __esri.WebScene;
     try {
@@ -398,30 +411,30 @@ export class InstantAppsScoreboard {
   // End of render methods
 
   // Get methods
-  getPositionClass(): string {
+  protected getPositionClass(): string {
     const { bottom, left, right, side } = CSS.position;
     const leftRight = `${this.position === Scoreboard.Left ? left : right} ${side}`;
     return this.position === Scoreboard.Bottom ? bottom : leftRight;
   }
 
-  getStyleClass(): string {
+  protected getStyleClass(): string {
     const { floating, pinned } = CSS.mode;
     return this.mode === Scoreboard.Floating ? floating : pinned;
   }
 
-  getItemsToDisplay(): ScoreboardItem[] {
+  protected getItemsToDisplay(): ScoreboardItem[] {
     return this.data.items.slice(this.itemIndex, ITEM_LIMIT + this.itemIndex);
   }
 
-  nextItem(): void {
+  protected nextItem(): void {
     this.itemIndex = this.itemIndex + 1;
   }
 
-  previousItem(): void {
+  protected previousItem(): void {
     this.itemIndex = this.itemIndex - 1;
   }
 
-  isLastItem(): boolean {
+  protected isLastItem(): boolean {
     const lastItems = this.data.items.slice(this.data.items.length - ITEM_LIMIT);
     const uidsOfLast = lastItems.map(item => item['uid']);
     const uidsOfCurrent = this.data.items.slice(this.itemIndex, this.itemIndex + ITEM_LIMIT).map(item => item['uid']);

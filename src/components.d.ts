@@ -214,9 +214,21 @@ export namespace Components {
         "open": (key: string) => Promise<void>;
     }
     interface InstantAppsScoreboard {
+        /**
+          * Data on layers, field attribute info, operations, for each scoreboard item
+         */
         "data": ScoreboardData;
+        /**
+          * Mode of scoreboard i.e. 'floating' or 'pinned'.
+         */
         "mode": ScoreboardMode;
+        /**
+          * Position of scoreboard i.e. 'bottom', 'left', or 'right'.
+         */
         "position": ScoreboardPosition;
+        /**
+          * MapView or SceneView to reference extent, viewpoint, and layers in map to perform calculations.
+         */
         "view": __esri.MapView | __esri.SceneView;
     }
     interface InstantAppsSocialShare {
@@ -604,9 +616,21 @@ declare namespace LocalJSX {
         "instantAppsPopovers"?: Map<string, HTMLInstantAppsPopoverElement>;
     }
     interface InstantAppsScoreboard {
+        /**
+          * Data on layers, field attribute info, operations, for each scoreboard item
+         */
         "data"?: ScoreboardData;
+        /**
+          * Mode of scoreboard i.e. 'floating' or 'pinned'.
+         */
         "mode"?: ScoreboardMode;
+        /**
+          * Position of scoreboard i.e. 'bottom', 'left', or 'right'.
+         */
         "position"?: ScoreboardPosition;
+        /**
+          * MapView or SceneView to reference extent, viewpoint, and layers in map to perform calculations.
+         */
         "view"?: __esri.MapView | __esri.SceneView;
     }
     interface InstantAppsSocialShare {

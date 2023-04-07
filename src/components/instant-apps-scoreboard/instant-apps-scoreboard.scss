@@ -1,8 +1,20 @@
+/*
+ *   Copyright (c) 2023 Esri
+ *   All rights reserved under the copyright laws of the United States and applicable international laws, treaties, and conventions.
+ *   This material is licensed for use under the Esri Master License Agreement (MLA), and is bound by the terms of that agreement.
+ *   You may redistribute and use this code without modification, provided you adhere to the terms of the MLA and include this copyright notice.
+ *   See use restrictions at http://www.esri.com/legal/pdfs/mla_e204_e300/english
+ */
+
 $borderColor: var(--calcite-ui-border-1);
 $boxShadow: 0px 3px 15px rgba(0, 0, 0, 0.2);
 
 :host {
   display: block;
+  /**
+ * @prop --instant-apps-scoreboard-background-color: Background color of scoreboard.
+ * @prop --instant-apps-scoreboard-text-color: Text color of scoreboard.
+ */
   --instant-apps-scoreboard-background-color: var(--calcite-ui-foreground-1);
   --instant-apps-scoreboard-text-color: var(--calcite-ui-text-1);
   background-color: var(--instant-apps-scoreboard-background-color);
