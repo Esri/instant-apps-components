@@ -8,7 +8,18 @@ import { loadModules } from 'esri-loader';
 import { getLocaleComponentStrings } from '../../utils/locale';
 
 // Types
-import { Scoreboard, ScoreboardData, ScoreboardItem, ScoreboardState, ScoreboardPosition, ScoreboardMode, ScoreboardIcons, ScoreboardAlignment } from './types/interfaces';
+import {
+  Scoreboard,
+  ScoreboardData,
+  ScoreboardItem,
+  ScoreboardState,
+  ScoreboardPosition,
+  ScoreboardMode,
+  ScoreboardIcons,
+  ScoreboardAlignment,
+  AcceptableLayers,
+  AcceptableLayerViews,
+} from './types/interfaces';
 
 // T9n
 import Scoreboard_t9n from '../../assets/t9n/instant-apps-scoreboard/resources.json';
@@ -46,6 +57,8 @@ const ITEM_LIMIT = 6;
 export class InstantAppsScoreboard {
   handles: __esri.Handles;
   reactiveUtils: __esri.reactiveUtils;
+  Collection: typeof import('esri/core/Collection');
+  intl: __esri.intl;
 
   @Element() el: HTMLElement;
 
@@ -63,9 +76,77 @@ export class InstantAppsScoreboard {
 
   @State() itemIndex = 0;
 
+  @State() layers: __esri.Collection<__esri.FeatureLayer | __esri.SceneLayer>;
+
+  @State() layerViews: __esri.Collection<__esri.FeatureLayerView | __esri.SceneLayerView>;
+
   @Watch('data')
   generateUIDs() {
-    this.data.items.forEach(this.uidGeneratorCallback());
+    const { items } = this.data;
+    items.forEach(this.uidGeneratorCallback());
+  }
+
+  @Watch('data')
+  storeLayers(): void {
+    const layerIds = this.data.items.map(item => item?.layer?.id);
+    const isNotTable = (layer: __esri.Layer) => !(layer as any).isTable;
+    const isAcceptableLayer = (layer: __esri.Layer) => layer.type === 'feature' || layer.type === 'scene';
+    const notAddedYet = (layer: __esri.Layer) => layerIds.indexOf(layer.id) > -1;
+    const validateLayer = (layer: __esri.Layer) => isNotTable(layer) && isAcceptableLayer(layer) && notAddedYet(layer);
+    this.layers = this.view.map.allLayers.filter(layer => validateLayer(layer)) as __esri.Collection<__esri.FeatureLayer | __esri.SceneLayer>;
+  }
+
+  @Watch('layers')
+  async storeLayerViews(): Promise<void> {
+    if (this.layers.length > 0) {
+      const promises: Promise<AcceptableLayerViews>[] = [];
+      this.layers.forEach(layer => {
+        const layerToLoad = layer as AcceptableLayers;
+        const layerViewToLoad = this.view.whenLayerView(layerToLoad) as Promise<unknown>;
+        promises.push(layerViewToLoad as Promise<AcceptableLayerViews>);
+      });
+      const settledPromises = await Promise.allSettled(promises);
+      const fulfilledPromises: PromiseSettledResult<AcceptableLayerViews>[] = settledPromises.filter(promise => promise.status == 'fulfilled' && promise.value);
+      const layerViews = fulfilledPromises.map(fulfilledPromise => (fulfilledPromise as PromiseFulfilledResult<AcceptableLayerViews>).value);
+      this.layerViews = new this.Collection([...layerViews]);
+    }
+  }
+
+  @Watch('layerViews')
+  async calculateScoreboardData(): Promise<void> {
+    this.state = Scoreboard.Loading;
+
+    const tempData = { items: [...this.data.items] };
+    const promises: any = [];
+    tempData.items.forEach(async item => {
+      const stat = {
+        onStatisticField: item.field, // service field for 2015 population
+        outStatisticFieldName: `${item.field}_${item.operation}`,
+        statisticType: item.operation,
+      } as __esri.StatisticDefinition;
+
+      const layer = this.layers.find(layer => layer.id === item?.layer?.id);
+      if (!layer) return;
+      const query = layer.createQuery();
+      query.outStatistics = [stat];
+      const res = layer.queryFeatures(query);
+      promises.push(res);
+    });
+
+    const completedStats = await Promise.all(promises);
+
+    completedStats.forEach((stat, statIndex) => {
+      const value = Object.values(stat.features[0].attributes)[0] as number;
+
+      const formattedNumber = this.intl.formatNumber(value, {
+        notation: 'compact',
+        compactDisplay: 'short',
+      });
+
+      tempData.items[statIndex].value = `${formattedNumber}`;
+    });
+    this.data.items = [...tempData.items];
+    this.state = Scoreboard.Complete;
   }
 
   uidGeneratorCallback(): (item: ScoreboardItem) => void {
@@ -110,6 +191,7 @@ export class InstantAppsScoreboard {
     try {
       await this.reactiveUtils.whenOnce(() => this.view?.ready);
       await this.loadMapResources();
+      this.storeLayers();
       this.state = Scoreboard.Complete;
     } catch {
       this.state = Scoreboard.Disabled;
@@ -119,9 +201,13 @@ export class InstantAppsScoreboard {
 
   async initializeModules(): Promise<void> {
     try {
-      const [Handles, reactiveUtils] = await loadModules(['esri/core/Handles', 'esri/core/reactiveUtils']);
+      const [Handles, reactiveUtils, Collection, intl] = await loadModules(['esri/core/Handles', 'esri/core/reactiveUtils', 'esri/core/Collection', 'esri/intl']);
       this.reactiveUtils = reactiveUtils;
       this.handles = new Handles();
+      this.Collection = Collection;
+      this.intl = intl;
+      this.layers = new Collection();
+      this.layerViews = new Collection();
       return Promise.resolve();
     } catch (err) {
       console.error(err);
@@ -163,7 +249,6 @@ export class InstantAppsScoreboard {
   }
 
   renderItemsContainer() {
-    const dataSurpassesLimit = this.data.items.length > ITEM_LIMIT;
     const isBeginning = this.itemIndex === 0;
     const isEnd = this.isLastItem();
     const isBottom = this.position === Scoreboard.Bottom;

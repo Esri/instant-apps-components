@@ -44,3 +44,5 @@ export const enum ScoreboardAlignment {
 export type ScoreboardState = Scoreboard.Loading | Scoreboard.Disabled | Scoreboard.Complete;
 export type ScoreboardPosition = Scoreboard.Bottom | Scoreboard.Left | Scoreboard.Right;
 export type ScoreboardMode = Scoreboard.Floating | Scoreboard.Pinned;
+export type AcceptableLayerViews = __esri.FeatureLayerView | __esri.SceneLayerView;
+export type AcceptableLayers = __esri.FeatureLayer | __esri.SceneLayer;
