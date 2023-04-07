@@ -390,6 +390,7 @@ export class InstantAppsFilterList {
       });
     });
     this.resetAllDefinitionExpressions();
+    this.generateURLParams();
     this.filterListReset.emit();
   }
 
@@ -713,7 +714,8 @@ export class InstantAppsFilterList {
   handleURLParams(): void {
     if ('URLSearchParams' in window) {
       const params = new URLSearchParams(document.location.search);
-      const filters = params.getAll('filter');
+      const filters = params.get('filter')?.split(';');
+
       filters?.forEach(filter => {
         const tmpFilter = JSON.parse(filter) as FilterParam;
         this.layerExpressions?.forEach(layerExpression => {
