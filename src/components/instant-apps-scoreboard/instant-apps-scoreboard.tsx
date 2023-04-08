@@ -123,6 +123,7 @@ export class InstantAppsScoreboard {
   @Watch('layers')
   protected async storeLayerViews(): Promise<void> {
     if (this.layers.length > 0) {
+      this.layers.forEach(layer => (layer.outFields = ['*']));
       const promises: Promise<AcceptableLayerViews>[] = [];
       this.layers.forEach(layer => {
         const layerToLoad = layer as AcceptableLayers;
@@ -132,6 +133,9 @@ export class InstantAppsScoreboard {
       const settledPromises = await Promise.allSettled(promises);
       const fulfilledPromises: PromiseSettledResult<AcceptableLayerViews>[] = settledPromises.filter(promise => promise.status == 'fulfilled' && promise.value);
       const layerViews = fulfilledPromises.map(fulfilledPromise => (fulfilledPromise as PromiseFulfilledResult<AcceptableLayerViews>).value);
+      const layerViewUpdatePromises: Promise<boolean>[] = [];
+      layerViews.forEach(layerView => layerViewUpdatePromises.push(this.reactiveUtils.whenOnce(() => !layerView.updating)));
+      await Promise.all(layerViewUpdatePromises);
       this.layerViews = new this.Collection([...layerViews]);
     }
   }
@@ -166,19 +170,22 @@ export class InstantAppsScoreboard {
       return { onStatisticField, outStatisticFieldName, statisticType } as __esri.StatisticDefinition;
     };
 
-    const queryFeaturesForItem: () => (item: ScoreboardItem) => Promise<void> = () => {
+    const queryFeaturesForItem_LayerView: () => (item: ScoreboardItem) => Promise<void> = () => {
       return async (item: ScoreboardItem) => {
+        const layerView = this.layerViews.find(layerView => layerView.layer.id === item?.layer?.id);
+        if (!layerView) return;
         const statDefinition = getStatsDefinition(item);
-        const layer = this.layers.find(layer => layer.id === item?.layer?.id);
-        if (!layer) return;
-        const query = layer.createQuery();
+        const query = layerView.createQuery();
         query.outStatistics = [statDefinition];
-        const queryFeaturesRes = layer.queryFeatures(query);
+
+        query.geometry = this.view.extent;
+
+        const queryFeaturesRes = layerView.queryFeatures(query);
         queryFeaturePromises.push(queryFeaturesRes);
       };
     };
 
-    data.items.forEach(queryFeaturesForItem());
+    data.items.forEach(queryFeaturesForItem_LayerView());
   }
 
   protected handleQueryFeaturesResponses(queryFeaturesRes: __esri.FeatureSet[], data: ScoreboardData) {
