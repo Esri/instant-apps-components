@@ -84,7 +84,7 @@
   </head>
 
   <body>
-    <calcite-shell class="calcite-mode-light">
+    <calcite-shell>
       <instant-apps-header
         id="instant-apps-header"
         slot="header"
@@ -125,10 +125,10 @@
               <div class="group-content">
                 <calcite-label>
                   Select a theme
-                  <calcite-select id="themeColorLightDark" width="m">
-                    <calcite-option value="light">Light</calcite-option>
-                    <calcite-option value="dark">Dark</calcite-option>
-                  </calcite-select>
+                  <calcite-segmented-control id="themeColorLightDark" width="full">
+                    <calcite-segmented-control-item checked value="light">Light</calcite-segmented-control-item>
+                    <calcite-segmented-control-item value="dark">Dark</calcite-segmented-control-item>
+                  </calcite-segmented-control>
                 </calcite-label>
                 <calcite-label>
                   Background color
@@ -310,7 +310,7 @@
             color: '#FFFFFF',
           },
           {
-            label: 'Dark Brown',
+            label: 'Dark green',
             background: '#403C13',
             color: '#FFFFFF',
           },
@@ -332,9 +332,13 @@
         const view = new SceneView({
           map: map,
           container: 'viewDiv',
+          ui: {
+            components: [],
+          },
         });
 
         const scoreboard = document.createElement('instant-apps-scoreboard');
+        scoreboard.classList.add('calcite-mode-light');
         scoreboard.view = view;
         scoreboard.data = data;
         scoreboard.position = 'bottom';
@@ -583,20 +587,23 @@
 
           const themeColorLightDark = document.getElementById('themeColorLightDark');
 
-          themeColorLightDark.addEventListener('calciteSelectChange', e => {
+          themeColorLightDark.addEventListener('calciteSegmentedControlChange', e => {
             const value = e.target.value;
-            const calciteModePrefix = 'calcite-mode-';
-            const light = `${calciteModePrefix}light`;
-            const dark = `${calciteModePrefix}dark`;
-            const calciteMode = { light, dark };
 
-            if (value === 'dark') {
-              scoreboard.classList.remove(light);
-              scoreboard.classList.add(dark);
-            } else {
-              scoreboard.classList.remove(dark);
-              scoreboard.classList.add(light);
-            }
+            const light_mode = 'light';
+            const dark_mode = 'dark';
+
+            const calciteModePrefix = 'calcite-mode-';
+            const light = `${calciteModePrefix}${light_mode}`;
+            const dark = `${calciteModePrefix}${dark_mode}`;
+
+            const isDark = value === dark_mode;
+
+            const addedClass = !isDark ? light : dark;
+            const removedClass = isDark ? light : dark;
+
+            scoreboard.classList.remove(removedClass);
+            scoreboard.classList.add(addedClass);
           });
         });
       });
