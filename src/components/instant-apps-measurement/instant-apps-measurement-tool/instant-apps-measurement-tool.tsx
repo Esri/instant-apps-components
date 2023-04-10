@@ -104,14 +104,6 @@ export class InstantAppsMeasurementTool {
     this._init();
   }
   render(): VNode {
-    const coordinates = this?.measureConfiguration?.includeCoordinates ? (
-      <div
-        class={CSS.hide}
-        ref={el => {
-          this._coordinateElement = el as HTMLElement;
-        }}
-      />
-    ) : null;
     return (
       <Host>
         <div class={CSS.base}>
@@ -120,8 +112,14 @@ export class InstantAppsMeasurementTool {
               this._measureElement = el as HTMLElement;
             }}
           />
+
+          <div
+            class={CSS.hide}
+            ref={el => {
+              this._coordinateElement = el as HTMLElement;
+            }}
+          />
         </div>
-        {coordinates}
       </Host>
     );
   }
@@ -146,10 +144,9 @@ export class InstantAppsMeasurementTool {
       'esri/widgets/CoordinateConversion/support/Conversion',
     ]);
     this.Measurement = Measurement;
-    if (this?.measureConfiguration?.includeCoordinates) {
-      this.CoordinateConversion = CoordinateConversion;
-      this.Conversion = Conversion;
-    }
+
+    this.CoordinateConversion = CoordinateConversion;
+    this.Conversion = Conversion;
   }
 
   /**
@@ -158,9 +155,8 @@ export class InstantAppsMeasurementTool {
    */
   protected _init(): void {
     this._initMeasurementWidget();
-    if (this?.measureConfiguration?.includeCoordinates) {
-      this._initCoordinateWidget();
-    }
+
+    this._initCoordinateWidget();
   }
 
   /**
