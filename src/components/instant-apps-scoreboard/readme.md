@@ -1,6 +1,6 @@
 # instant-apps-scoreboard
 
-
+Calculates and displays a series of statistics based on a layer(s) and field attributes.
 
 <!-- Auto Generated Below -->
 
