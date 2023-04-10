@@ -177,7 +177,10 @@ export class InstantAppsScoreboard {
 
     this.scoreboardDataUpdatedHandler();
 
-    if (!this.initialCalculate) this.initialCalculate = true;
+    if (!this.initialCalculate) {
+      this.initStationaryWatcher();
+      this.initialCalculate = true;
+    }
   }
 
   // Lifecycle methods
@@ -354,11 +357,12 @@ export class InstantAppsScoreboard {
 
   renderValue(scoreboardItem: ScoreboardItem): HTMLSpanElement {
     const { displayValue } = scoreboardItem;
-    const showPlaceholder = !displayValue && this.state === Scoreboard.Calculating && !this.initialCalculate;
+    const isCalculating = this.state === Scoreboard.Calculating;
+    const isDisabled = this.state === Scoreboard.Disabled;
+    const showPlaceholder = !displayValue && isCalculating && !this.initialCalculate;
     const valueToDisplay = displayValue ? displayValue : this.messages?.noData;
-    const isComplete = this.state === Scoreboard.Complete;
-    const isLoading = this.state === Scoreboard.Loading;
-    const content = showPlaceholder ? this.renderValuePlaceholder() : isComplete || isLoading ? valueToDisplay : '';
+
+    const content = showPlaceholder ? this.renderValuePlaceholder() : !isDisabled ? valueToDisplay : '';
     return <span class={CSS.value}>{content}</span>;
   }
 
@@ -483,5 +487,26 @@ export class InstantAppsScoreboard {
     };
 
     queryFeaturesRes.forEach(updateItemValue());
+  }
+
+  protected initStationaryWatcher(): void {
+    const { handles, reactiveUtils } = this;
+    const { when } = reactiveUtils;
+    const whenOnceConfig = { once: true, initial: true };
+
+    const isNotInteractingWatcher = () => {
+      return when(
+        () => !this.view?.interacting,
+        () => this.calculateScoreboardData(),
+        whenOnceConfig,
+      );
+    };
+    const stationaryWatcher: () => __esri.WatchHandle = () => {
+      return when(
+        () => this.view?.stationary,
+        () => isNotInteractingWatcher(),
+      );
+    };
+    handles.add(stationaryWatcher());
   }
 }
