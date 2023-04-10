@@ -5,7 +5,7 @@
  * It contains typing information for all components that exist in this project.
  */
 import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
-import { ExtentSelector, InstantAppsPopoverMessageOverrides, LayerExpression } from "./interfaces/interfaces";
+import { ActiveTool, ExtentSelector, IMeasureConfiguration, InstantAppsPopoverMessageOverrides, LayerExpression } from "./interfaces/interfaces";
 import { FilterMode } from "./components/instant-apps-interactive-legend/instant-apps-interactive-legend-classic/interfaces/interfaces";
 import { InstantAppsPopovers } from "./components/instant-apps-popovers/instant-apps-popovers";
 import { LogicalPlacement } from "@esri/calcite-components/dist/types/utils/floating-ui";
@@ -186,6 +186,20 @@ export namespace Components {
          */
         "view": __esri.MapView | __esri.SceneView;
     }
+    interface InstantAppsMeasurement {
+        "areaUnit"?: __esri.AreaUnit;
+        "coordinateFormat"?: string;
+        "linearUnit"?: __esri.LengthUnit;
+        /**
+          * MapView or SceneView
+         */
+        "view": __esri.MapView | __esri.SceneView;
+    }
+    interface InstantAppsMeasurementTool {
+        "activeTool": ActiveTool;
+        "measureConfiguration": IMeasureConfiguration;
+        "view": __esri.MapView | __esri.SceneView;
+    }
     interface InstantAppsPopover {
         "content": string;
         "disableAction": boolean;
@@ -308,6 +322,10 @@ export interface InstantAppsInteractiveLegendLayerCaptionCustomEvent<T> extends 
     detail: T;
     target: HTMLInstantAppsInteractiveLegendLayerCaptionElement;
 }
+export interface InstantAppsMeasurementCustomEvent<T> extends CustomEvent<T> {
+    detail: T;
+    target: HTMLInstantAppsMeasurementElement;
+}
 export interface InstantAppsScoreboardCustomEvent<T> extends CustomEvent<T> {
     detail: T;
     target: HTMLInstantAppsScoreboardElement;
@@ -367,6 +385,18 @@ declare global {
         prototype: HTMLInstantAppsKeyboardShortcutsElement;
         new (): HTMLInstantAppsKeyboardShortcutsElement;
     };
+    interface HTMLInstantAppsMeasurementElement extends Components.InstantAppsMeasurement, HTMLStencilElement {
+    }
+    var HTMLInstantAppsMeasurementElement: {
+        prototype: HTMLInstantAppsMeasurementElement;
+        new (): HTMLInstantAppsMeasurementElement;
+    };
+    interface HTMLInstantAppsMeasurementToolElement extends Components.InstantAppsMeasurementTool, HTMLStencilElement {
+    }
+    var HTMLInstantAppsMeasurementToolElement: {
+        prototype: HTMLInstantAppsMeasurementToolElement;
+        new (): HTMLInstantAppsMeasurementToolElement;
+    };
     interface HTMLInstantAppsPopoverElement extends Components.InstantAppsPopover, HTMLStencilElement {
     }
     var HTMLInstantAppsPopoverElement: {
@@ -401,6 +431,8 @@ declare global {
         "instant-apps-interactive-legend-layer-caption": HTMLInstantAppsInteractiveLegendLayerCaptionElement;
         "instant-apps-interactive-legend-relationship": HTMLInstantAppsInteractiveLegendRelationshipElement;
         "instant-apps-keyboard-shortcuts": HTMLInstantAppsKeyboardShortcutsElement;
+        "instant-apps-measurement": HTMLInstantAppsMeasurementElement;
+        "instant-apps-measurement-tool": HTMLInstantAppsMeasurementToolElement;
         "instant-apps-popover": HTMLInstantAppsPopoverElement;
         "instant-apps-popovers": HTMLInstantAppsPopoversElement;
         "instant-apps-scoreboard": HTMLInstantAppsScoreboardElement;
@@ -596,6 +628,24 @@ declare namespace LocalJSX {
          */
         "view"?: __esri.MapView | __esri.SceneView;
     }
+    interface InstantAppsMeasurement {
+        "areaUnit"?: __esri.AreaUnit;
+        "coordinateFormat"?: string;
+        "linearUnit"?: __esri.LengthUnit;
+        /**
+          * Emits when there is an active measure tool to allow app devs to disable other tools/popups when tools are active .
+         */
+        "onMeasureActive"?: (event: InstantAppsMeasurementCustomEvent<boolean>) => void;
+        /**
+          * MapView or SceneView
+         */
+        "view"?: __esri.MapView | __esri.SceneView;
+    }
+    interface InstantAppsMeasurementTool {
+        "activeTool"?: ActiveTool;
+        "measureConfiguration"?: IMeasureConfiguration;
+        "view"?: __esri.MapView | __esri.SceneView;
+    }
     interface InstantAppsPopover {
         "content"?: string;
         "disableAction"?: boolean;
@@ -715,6 +765,8 @@ declare namespace LocalJSX {
         "instant-apps-interactive-legend-layer-caption": InstantAppsInteractiveLegendLayerCaption;
         "instant-apps-interactive-legend-relationship": InstantAppsInteractiveLegendRelationship;
         "instant-apps-keyboard-shortcuts": InstantAppsKeyboardShortcuts;
+        "instant-apps-measurement": InstantAppsMeasurement;
+        "instant-apps-measurement-tool": InstantAppsMeasurementTool;
         "instant-apps-popover": InstantAppsPopover;
         "instant-apps-popovers": InstantAppsPopovers;
         "instant-apps-scoreboard": InstantAppsScoreboard;
@@ -734,6 +786,8 @@ declare module "@stencil/core" {
             "instant-apps-interactive-legend-layer-caption": LocalJSX.InstantAppsInteractiveLegendLayerCaption & JSXBase.HTMLAttributes<HTMLInstantAppsInteractiveLegendLayerCaptionElement>;
             "instant-apps-interactive-legend-relationship": LocalJSX.InstantAppsInteractiveLegendRelationship & JSXBase.HTMLAttributes<HTMLInstantAppsInteractiveLegendRelationshipElement>;
             "instant-apps-keyboard-shortcuts": LocalJSX.InstantAppsKeyboardShortcuts & JSXBase.HTMLAttributes<HTMLInstantAppsKeyboardShortcutsElement>;
+            "instant-apps-measurement": LocalJSX.InstantAppsMeasurement & JSXBase.HTMLAttributes<HTMLInstantAppsMeasurementElement>;
+            "instant-apps-measurement-tool": LocalJSX.InstantAppsMeasurementTool & JSXBase.HTMLAttributes<HTMLInstantAppsMeasurementToolElement>;
             "instant-apps-popover": LocalJSX.InstantAppsPopover & JSXBase.HTMLAttributes<HTMLInstantAppsPopoverElement>;
             "instant-apps-popovers": LocalJSX.InstantAppsPopovers & JSXBase.HTMLAttributes<HTMLInstantAppsPopoversElement>;
             "instant-apps-scoreboard": LocalJSX.InstantAppsScoreboard & JSXBase.HTMLAttributes<HTMLInstantAppsScoreboardElement>;
