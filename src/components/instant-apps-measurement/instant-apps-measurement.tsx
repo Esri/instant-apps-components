@@ -33,6 +33,7 @@ export class InstantAppsMeasurement {
   @Prop() areaUnit?: __esri.AreaUnit;
   @Prop() linearUnit?: __esri.LengthUnit;
   @Prop() coordinateFormat?: string;
+  @Prop() includeCoordinates?: boolean = true;
 
   /**
    * Emits when there is an active measure tool
@@ -53,14 +54,18 @@ export class InstantAppsMeasurement {
   }
 
   render() {
-    const { messages, view, coordinateFormat, areaUnit, linearUnit } = this;
+    const { messages, view, coordinateFormat, areaUnit, linearUnit, includeCoordinates } = this;
+    const pointAction = includeCoordinates ? (
+      <calcite-action text={messages?.point} icon="pin-plus" data-value="point" onClick={this._handleToolClick.bind(this)}></calcite-action>
+    ) : null;
+
     return (
       <Host>
         <calcite-panel class={CSS.content}>
           <calcite-action-bar expand-disabled={true} layout="horizontal">
             <calcite-action text={messages?.line} icon="measure" data-value="distance" onClick={this._handleToolClick.bind(this)}></calcite-action>
             <calcite-action text={messages?.area} icon="measure-area" data-value="area" onClick={this._handleToolClick.bind(this)}></calcite-action>
-            <calcite-action text={messages?.point} icon="pin-plus" data-value="point" onClick={this._handleToolClick.bind(this)}></calcite-action>
+            {pointAction}
             <calcite-action text={messages?.clear} icon="trash" data-value="clear" onClick={this._handleToolClick.bind(this)}></calcite-action>
           </calcite-action-bar>
           <instant-apps-measurement-tool
@@ -68,7 +73,7 @@ export class InstantAppsMeasurement {
               this.measureTool = el;
             }}
             view={view}
-            measureConfiguration={{ coordinateFormat, areaUnit, linearUnit }}
+            measureConfiguration={{ coordinateFormat, areaUnit, linearUnit, includeCoordinates }}
           ></instant-apps-measurement-tool>
         </calcite-panel>
       </Host>

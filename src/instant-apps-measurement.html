@@ -38,10 +38,10 @@
     <div id="viewDiv"></div>
 
     <script>
-        require(['esri/WebMap', 'esri/widgets/Expand', 'esri/views/MapView', 'esri/core/reactiveUtils', 'esri/config'], (
+        require(['esri/WebMap', 'esri/widgets/Expand', 'esri/views/SceneView', 'esri/core/reactiveUtils', 'esri/config'], (
             WebMap,
             Expand,
-            MapView,
+            SceneView,
             reactiveUtils,
             esriConfig,
         ) => {
@@ -61,7 +61,7 @@
             if (center) center = center.split(';').map(item => parseFloat(item));
             if (zoom) zoom = parseInt(zoom);
 
-            const view = new MapView({
+            const view = new SceneView({
                 map,
                 container: 'viewDiv',
                 zoom,
@@ -72,6 +72,8 @@
             measure.view = view;
             measure.areaUnit = "hectares";
             measure.linearUnit = "nautical-miles";
+            measure.includeCoordinates = false;
+
             // disable popups when measure tools are active 
             measure.addEventListener("measureActive", (e) => {
                 view.popup.autoOpenEnabled = !e?.detail;

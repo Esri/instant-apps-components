@@ -78,7 +78,9 @@ export class InstantAppsMeasurementTool {
     const viewType = this.view.type;
     if (!this._measureWidget) return;
     this._measureWidget.clear();
-    this._coordinateElement?.classList.add(CSS.hide);
+    if (this?._coordinateElement) {
+      this?._coordinateElement?.classList.add(CSS.hide);
+    }
     if (value === 'distance') {
       this._measureWidget.activeTool = viewType === '2d' ? 'distance' : 'direct-line';
     } else if (value === 'area') {
@@ -102,6 +104,14 @@ export class InstantAppsMeasurementTool {
     this._init();
   }
   render(): VNode {
+    const coordinates = this?.measureConfiguration?.includeCoordinates ? (
+      <div
+        class={CSS.hide}
+        ref={el => {
+          this._coordinateElement = el as HTMLElement;
+        }}
+      />
+    ) : null;
     return (
       <Host>
         <div class={CSS.base}>
@@ -110,13 +120,8 @@ export class InstantAppsMeasurementTool {
               this._measureElement = el as HTMLElement;
             }}
           />
-          <div
-            class={CSS.hide}
-            ref={el => {
-              this._coordinateElement = el as HTMLElement;
-            }}
-          />
         </div>
+        {coordinates}
       </Host>
     );
   }
@@ -141,8 +146,10 @@ export class InstantAppsMeasurementTool {
       'esri/widgets/CoordinateConversion/support/Conversion',
     ]);
     this.Measurement = Measurement;
-    this.CoordinateConversion = CoordinateConversion;
-    this.Conversion = Conversion;
+    if (this?.measureConfiguration?.includeCoordinates) {
+      this.CoordinateConversion = CoordinateConversion;
+      this.Conversion = Conversion;
+    }
   }
 
   /**
@@ -151,7 +158,9 @@ export class InstantAppsMeasurementTool {
    */
   protected _init(): void {
     this._initMeasurementWidget();
-    this._initCoordinateWidget();
+    if (this?.measureConfiguration?.includeCoordinates) {
+      this._initCoordinateWidget();
+    }
   }
 
   /**

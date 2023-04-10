@@ -188,6 +188,7 @@ export namespace Components {
     interface InstantAppsMeasurement {
         "areaUnit"?: __esri.AreaUnit;
         "coordinateFormat"?: string;
+        "includeCoordinates"?: boolean;
         "linearUnit"?: __esri.LengthUnit;
         /**
           * MapView or SceneView
@@ -601,6 +602,7 @@ declare namespace LocalJSX {
     interface InstantAppsMeasurement {
         "areaUnit"?: __esri.AreaUnit;
         "coordinateFormat"?: string;
+        "includeCoordinates"?: boolean;
         "linearUnit"?: __esri.LengthUnit;
         /**
           * Emits when there is an active measure tool to allow app devs to disable other tools/popups when tools are active .
