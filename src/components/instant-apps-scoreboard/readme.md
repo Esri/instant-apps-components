@@ -15,6 +15,13 @@
 | `view`     | --         | MapView or SceneView to reference extent, viewpoint, and layers in map to perform calculations. | `MapView \| SceneView`                                     | `undefined`           |
 
 
+## Events
+
+| Event                   | Description                                                 | Type                          |
+| ----------------------- | ----------------------------------------------------------- | ----------------------------- |
+| `scoreboardDataUpdated` | Emits when scoreboard data has been calculated and updated. | `CustomEvent<ScoreboardData>` |
+
+
 ## CSS Custom Properties
 
 | Name                                         | Description                     |

@@ -1,5 +1,5 @@
 // @stencil/core
-import { Component, Host, h, Prop, State, Element, Watch } from '@stencil/core';
+import { Component, Host, h, Prop, State, Element, Watch, Event, EventEmitter } from '@stencil/core';
 
 // esri-loader
 import { loadModules } from 'esri-loader';
@@ -27,6 +27,7 @@ import {
 import Scoreboard_t9n from '../../assets/t9n/instant-apps-scoreboard/resources.json';
 
 // Constants
+const ITEM_LIMIT = 6;
 const BASE = 'instant-apps-scoreboard';
 const KEY_PREFIX = `${BASE}--`;
 const __BASE__ = `${BASE}__`;
@@ -49,8 +50,6 @@ const CSS = {
     pinned: `${__BASE__}mode--pinned`,
   },
 };
-
-const ITEM_LIMIT = 6;
 
 @Component({
   tag: 'instant-apps-scoreboard',
@@ -100,6 +99,23 @@ export class InstantAppsScoreboard {
   @State() layers: __esri.Collection<__esri.FeatureLayer | __esri.SceneLayer>;
 
   @State() layerViews: __esri.Collection<__esri.FeatureLayerView | __esri.SceneLayerView>;
+
+  // Events
+
+  /**
+   * Emits when scoreboard data has been calculated and updated.
+   */
+  @Event({
+    eventName: 'scoreboardDataUpdated',
+    composed: true,
+    cancelable: true,
+    bubbles: true,
+  })
+  scoreboardDataUpdated: EventEmitter<ScoreboardData>;
+
+  scoreboardDataUpdatedHandler(): void {
+    this.scoreboardDataUpdated.emit(this.data);
+  }
 
   // Watchers
   @Watch('data')
@@ -158,6 +174,8 @@ export class InstantAppsScoreboard {
     this.data.items = [...data_temp.items];
 
     this.state = Scoreboard.Complete;
+
+    this.scoreboardDataUpdatedHandler();
 
     if (!this.initialCalculate) this.initialCalculate = true;
   }
@@ -271,7 +289,6 @@ export class InstantAppsScoreboard {
     const isDisabled = state === Scoreboard.Disabled;
     const progress = isLoading || isCalculating ? this.renderProgress() : null;
     const positionClass = this.getPositionClass;
-    console.log(positionClass);
     const styleClass = this.getStyleClass;
     return <Host class={`${positionClass} ${styleClass}`}>{isDisabled ? this.renderNotice() : [progress, this.renderBase()]}</Host>;
   }
@@ -324,25 +341,29 @@ export class InstantAppsScoreboard {
   }
 
   renderItem(scoreboardItem: ScoreboardItem): HTMLLIElement {
-    const { label, value } = scoreboardItem;
+    const { label } = scoreboardItem;
     return (
       <li class={CSS.item}>
         <span class={CSS.label} title={label}>
           {label}
         </span>
-        <span class={CSS.value}>
-          {!value && this.state === Scoreboard.Calculating && !this.initialCalculate ? (
-            <span class={CSS.valuePlaceholder} />
-          ) : this.state === Scoreboard.Complete ? (
-            value ?? this.messages?.noData
-          ) : this.state === Scoreboard.Loading ? (
-            value
-          ) : (
-            ''
-          )}
-        </span>
+        {this.renderValue(scoreboardItem)}
       </li>
     );
+  }
+
+  renderValue(scoreboardItem: ScoreboardItem): HTMLSpanElement {
+    const { displayValue } = scoreboardItem;
+    const showPlaceholder = !displayValue && this.state === Scoreboard.Calculating && !this.initialCalculate;
+    const valueToDisplay = displayValue ? displayValue : this.messages?.noData;
+    const isComplete = this.state === Scoreboard.Complete;
+    const isLoading = this.state === Scoreboard.Loading;
+    const content = showPlaceholder ? this.renderValuePlaceholder() : isComplete || isLoading ? valueToDisplay : '';
+    return <span class={CSS.value}>{content}</span>;
+  }
+
+  renderValuePlaceholder(): HTMLSpanElement {
+    return <span class={CSS.valuePlaceholder} />;
   }
 
   renderProgress(): HTMLCalciteProgressElement {
@@ -456,7 +477,8 @@ export class InstantAppsScoreboard {
         const value = getValue(stat);
         const numberFormatOptions = getNumberFormatOptions();
         const formattedNumber = this.intl.formatNumber(value, numberFormatOptions);
-        data.items[statIndex].value = `${formattedNumber}`;
+        data.items[statIndex].displayValue = `${formattedNumber}`;
+        data.items[statIndex].value = value;
       };
     };
 

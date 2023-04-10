@@ -336,6 +336,8 @@
         scoreboard.position = 'bottom';
         view.ui.add(scoreboard, 'manual');
 
+        scoreboard.addEventListener('scoreboardDataUpdated', e => console.log('SCOREBOARD DATA UPDATED: ', e.detail));
+
         // Init theme selector
         const themeColorSelect = document.getElementById('themeColorSelect');
         themes.forEach(theme => {

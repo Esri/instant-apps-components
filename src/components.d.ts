@@ -308,6 +308,10 @@ export interface InstantAppsInteractiveLegendLayerCaptionCustomEvent<T> extends 
     detail: T;
     target: HTMLInstantAppsInteractiveLegendLayerCaptionElement;
 }
+export interface InstantAppsScoreboardCustomEvent<T> extends CustomEvent<T> {
+    detail: T;
+    target: HTMLInstantAppsScoreboardElement;
+}
 declare global {
     interface HTMLInstantAppsFilterListElement extends Components.InstantAppsFilterList, HTMLStencilElement {
     }
@@ -624,6 +628,10 @@ declare namespace LocalJSX {
           * Mode of scoreboard i.e. 'floating' or 'pinned'.
          */
         "mode"?: ScoreboardMode;
+        /**
+          * Emits when scoreboard data has been calculated and updated.
+         */
+        "onScoreboardDataUpdated"?: (event: InstantAppsScoreboardCustomEvent<ScoreboardData>) => void;
         /**
           * Position of scoreboard i.e. 'bottom', 'left', or 'right'.
          */

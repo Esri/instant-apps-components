@@ -11,7 +11,8 @@ export interface ScoreboardItem {
   };
   field?: string;
   label: string;
-  value?: string;
+  displayValue?: string;
+  value?: number;
   operation?: string;
 }
 
