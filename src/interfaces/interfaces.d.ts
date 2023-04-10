@@ -191,9 +191,8 @@ type ActiveTool = 'distance' | 'point' | 'area' | 'clear';
 export type FilterLayer = __esri.FeatureLayer | __esri.ImageryLayer | __esri.WFSLayer | __esri.StreamLayer | __esri.CSVLayer | __esri.GeoJSONLayer;
 export type FilterQueryLayer = __esri.FeatureLayer | __esri.WFSLayer | __esri.CSVLayer | __esri.GeoJSONLayer;
 
-export interface IMeasureConfiguration {
+export interface IMeasureUnitConfiguration {
   areaUnit?: __esri.AreaUnit;
   linearUnit?: __esri.LengthUnit;
   coordinateFormat?: string;
-  includeCoordinates?: boolean;
 }

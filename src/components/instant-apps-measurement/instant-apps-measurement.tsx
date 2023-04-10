@@ -6,11 +6,12 @@
  *   See use restrictions at http://www.esri.com/legal/pdfs/mla_e204_e300/english
  */
 
-import { Component, Host, State, Prop, Event, EventEmitter, Element, h } from '@stencil/core';
+import { Component, Host, State, Prop, Watch, Event, EventEmitter, Element, h } from '@stencil/core';
 
 import Measurement_T9n from '../../assets/t9n/instant-apps-measurement/resources.json';
 
 import { getLocaleComponentStrings } from '../../utils/locale';
+import { IMeasureUnitConfiguration } from '../../interfaces/interfaces';
 
 const CSS = {
   content: 'instant-apps-measurement__content',
@@ -29,12 +30,16 @@ export class InstantAppsMeasurement {
   /**
    * MapView or SceneView
    */
+
   @Prop() view: __esri.MapView | __esri.SceneView;
-  @Prop() areaUnit?: __esri.AreaUnit;
-  @Prop() linearUnit?: __esri.LengthUnit;
-  @Prop() coordinateFormat?: string;
+
+  @Prop() measureUnitConfiguration: IMeasureUnitConfiguration;
   @Prop() includeCoordinates?: boolean = true;
 
+  @Watch('includeCoordinates')
+  cleanUp() {
+    if (this?.measureTool) this.measureTool.activeTool = 'clear';
+  }
   /**
    * Emits when there is an active measure tool
    * to allow app devs to disable other tools/popups when
@@ -54,7 +59,8 @@ export class InstantAppsMeasurement {
   }
 
   render() {
-    const { messages, view, coordinateFormat, areaUnit, linearUnit, includeCoordinates } = this;
+    const { messages, includeCoordinates, view } = this;
+    const { coordinateFormat, areaUnit, linearUnit } = this?.measureUnitConfiguration;
     const pointAction = includeCoordinates ? (
       <calcite-action text={messages?.point} icon="pin-plus" data-value="point" onClick={this._handleToolClick.bind(this)}></calcite-action>
     ) : null;
@@ -73,7 +79,8 @@ export class InstantAppsMeasurement {
               this.measureTool = el;
             }}
             view={view}
-            measureConfiguration={{ coordinateFormat, areaUnit, linearUnit, includeCoordinates }}
+            measureUnitConfiguaration={{ coordinateFormat, areaUnit, linearUnit }}
+            includeCoordinates={includeCoordinates}
           ></instant-apps-measurement-tool>
         </calcite-panel>
       </Host>

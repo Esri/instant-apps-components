@@ -15,7 +15,7 @@
  */
 
 import { Component, Element, Host, h, Prop, VNode, Watch } from '@stencil/core';
-import { ActiveTool, IMeasureConfiguration } from '../../../interfaces/interfaces';
+import { ActiveTool, IMeasureUnitConfiguration } from '../../../interfaces/interfaces';
 
 import { loadModules } from '../../../utils/loadModules';
 const base = 'instant-apps-measurement-tool';
@@ -44,7 +44,8 @@ export class InstantAppsMeasurementTool {
 
   @Prop() view: __esri.MapView | __esri.SceneView;
 
-  @Prop() measureConfiguration: IMeasureConfiguration;
+  @Prop() measureUnitConfiguaration: IMeasureUnitConfiguration;
+  @Prop() includeCoordinates?: boolean = true;
   @Prop() activeTool: ActiveTool;
 
   //--------------------------------------------------------------------------
@@ -73,6 +74,13 @@ export class InstantAppsMeasurementTool {
   //  Watch handlers
   //
   //--------------------------------------------------------------------------
+  @Watch('includeCoordinates')
+  _activateCoordinates() {
+    if (this?.includeCoordinates) {
+      this._initCoordinateWidget();
+    }
+  }
+
   @Watch('activeTool')
   _activeToolHandler(value: string) {
     const viewType = this.view.type;
@@ -88,6 +96,11 @@ export class InstantAppsMeasurementTool {
     } else if (value === 'point') {
       this._coordinateElement?.classList.remove(CSS.hide);
     }
+  }
+  @Watch('measureConfiguration')
+  _updateFormat() {
+    if (this?._coordinateWidget) this._updateFormats();
+    if (this._measureWidget) this._updateDefaults();
   }
 
   //--------------------------------------------------------------------------
@@ -112,7 +125,6 @@ export class InstantAppsMeasurementTool {
               this._measureElement = el as HTMLElement;
             }}
           />
-
           <div
             class={CSS.hide}
             ref={el => {
@@ -155,8 +167,7 @@ export class InstantAppsMeasurementTool {
    */
   protected _init(): void {
     this._initMeasurementWidget();
-
-    this._initCoordinateWidget();
+    if (this?.includeCoordinates) this._initCoordinateWidget();
   }
 
   /**
@@ -166,18 +177,29 @@ export class InstantAppsMeasurementTool {
    */
   protected _initMeasurementWidget(): void {
     if (this.view && this._measureElement) {
-      this._measureWidget = new this.Measurement({ view: this.view, container: this._measureElement, ...this.measureConfiguration });
+      this._measureWidget = new this.Measurement({ view: this.view, container: this._measureElement, ...this.measureUnitConfiguaration });
     }
   }
   protected _initCoordinateWidget(): void {
-    if (this?.view && this._coordinateElement) {
+    if (this?.view && this._coordinateElement && !this._coordinateWidget) {
       this._coordinateWidget = new this.CoordinateConversion({ view: this.view, storageEnabled: false, container: this._coordinateElement });
-      if (this?.measureConfiguration?.coordinateFormat !== null && this?.measureConfiguration?.coordinateFormat !== undefined) {
-        const format = this._coordinateWidget.formats.find(f => {
-          return f.name === this.measureConfiguration.coordinateFormat;
-        });
-        this._coordinateWidget?.conversions?.splice(0, 0, new this.Conversion({ format }));
-      }
+      this._updateFormats();
+    }
+  }
+  protected _updateDefaults() {
+    if (!this._measureWidget) return;
+    const { areaUnit, linearUnit } = this.measureUnitConfiguaration;
+    if (areaUnit) this._measureWidget.areaUnit = areaUnit;
+    if (linearUnit) this._measureWidget.linearUnit = linearUnit;
+  }
+  protected _updateFormats() {
+    if (!this._coordinateWidget) return;
+
+    if (this?.measureUnitConfiguaration?.coordinateFormat !== null && this?.measureUnitConfiguaration?.coordinateFormat !== undefined) {
+      const format = this._coordinateWidget.formats.find(f => {
+        return f.name === this.measureUnitConfiguaration.coordinateFormat;
+      });
+      this._coordinateWidget?.conversions?.splice(0, 0, new this.Conversion({ format }));
     }
   }
 }

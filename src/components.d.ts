@@ -5,7 +5,7 @@
  * It contains typing information for all components that exist in this project.
  */
 import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
-import { ActiveTool, ExtentSelector, IMeasureConfiguration, InstantAppsPopoverMessageOverrides, LayerExpression } from "./interfaces/interfaces";
+import { ActiveTool, ExtentSelector, IMeasureUnitConfiguration, InstantAppsPopoverMessageOverrides, LayerExpression } from "./interfaces/interfaces";
 import { FilterMode } from "./components/instant-apps-interactive-legend/instant-apps-interactive-legend-classic/interfaces/interfaces";
 import { InstantAppsPopovers } from "./components/instant-apps-popovers/instant-apps-popovers";
 import { LogicalPlacement } from "@esri/calcite-components/dist/types/utils/floating-ui";
@@ -186,10 +186,8 @@ export namespace Components {
         "view": __esri.MapView | __esri.SceneView;
     }
     interface InstantAppsMeasurement {
-        "areaUnit"?: __esri.AreaUnit;
-        "coordinateFormat"?: string;
         "includeCoordinates"?: boolean;
-        "linearUnit"?: __esri.LengthUnit;
+        "measureUnitConfiguration": IMeasureUnitConfiguration;
         /**
           * MapView or SceneView
          */
@@ -197,7 +195,8 @@ export namespace Components {
     }
     interface InstantAppsMeasurementTool {
         "activeTool": ActiveTool;
-        "measureConfiguration": IMeasureConfiguration;
+        "includeCoordinates"?: boolean;
+        "measureUnitConfiguaration": IMeasureUnitConfiguration;
         "view": __esri.MapView | __esri.SceneView;
     }
     interface InstantAppsPopover {
@@ -600,10 +599,8 @@ declare namespace LocalJSX {
         "view"?: __esri.MapView | __esri.SceneView;
     }
     interface InstantAppsMeasurement {
-        "areaUnit"?: __esri.AreaUnit;
-        "coordinateFormat"?: string;
         "includeCoordinates"?: boolean;
-        "linearUnit"?: __esri.LengthUnit;
+        "measureUnitConfiguration"?: IMeasureUnitConfiguration;
         /**
           * Emits when there is an active measure tool to allow app devs to disable other tools/popups when tools are active .
          */
@@ -615,7 +612,8 @@ declare namespace LocalJSX {
     }
     interface InstantAppsMeasurementTool {
         "activeTool"?: ActiveTool;
-        "measureConfiguration"?: IMeasureConfiguration;
+        "includeCoordinates"?: boolean;
+        "measureUnitConfiguaration"?: IMeasureUnitConfiguration;
         "view"?: __esri.MapView | __esri.SceneView;
     }
     interface InstantAppsPopover {
