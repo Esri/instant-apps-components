@@ -293,11 +293,15 @@ export class InstantAppsScoreboard {
     const progress = isLoading || isCalculating ? this.renderProgress() : null;
     const positionClass = this.getPositionClass;
     const styleClass = this.getStyleClass;
-    return <Host class={`${positionClass} ${styleClass}`}>{isDisabled ? this.renderNotice() : [progress, this.renderBase()]}</Host>;
+    return <Host class={`${positionClass} ${styleClass}`}>{isDisabled ? this.renderNotice() : [progress, this.data?.items?.length > 0 ? this.renderBase() : null]}</Host>;
   }
 
   renderBase(): HTMLDivElement {
-    return <div class={BASE}>{this.renderContent()}</div>;
+    return (
+      <div key="instant-apps-scoreboard-base" class={BASE}>
+        {this.renderContent()}
+      </div>
+    );
   }
 
   renderContent(): HTMLCalciteLoaderElement | HTMLDivElement | null {
@@ -461,7 +465,7 @@ export class InstantAppsScoreboard {
     data.items.forEach(queryFeaturesForItem_LayerView());
   }
 
-  protected handleQueryFeaturesResponses(queryFeaturesRes: __esri.FeatureSet[], data: ScoreboardData) {
+  protected handleQueryFeaturesResponses(queryFeaturesRes: __esri.FeatureSet[], data: ScoreboardData): void {
     const getValue: (stat: __esri.FeatureSet) => number = (stat: __esri.FeatureSet): number => {
       const features = stat.features;
       const feature = features[0];
@@ -480,8 +484,10 @@ export class InstantAppsScoreboard {
       return (stat: __esri.FeatureSet, statIndex: number) => {
         const value = getValue(stat);
         const numberFormatOptions = getNumberFormatOptions();
-        const formattedNumber = this.intl.formatNumber(value, numberFormatOptions);
-        data.items[statIndex].displayValue = `${formattedNumber}`;
+        const isNotNull = value !== null;
+        const formattedNumber = isNotNull ? this.intl.formatNumber(value, numberFormatOptions) : null;
+        const displayValue = isNotNull ? `${formattedNumber}` : '';
+        data.items[statIndex].displayValue = displayValue;
         data.items[statIndex].value = value;
       };
     };
