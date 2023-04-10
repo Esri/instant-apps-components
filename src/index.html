@@ -88,7 +88,7 @@
       <instant-apps-header
         id="instant-apps-header"
         slot="header"
-        title-text="Instant Apps Components: Scoreboard | Mt. Everest Weather Stations"
+        title-text="Instant Apps Components: Scoreboard"
         text-color="#151515"
         background-color="#ffffff"
         logo-image="https://www.esri.com/content/dam/esrisites/en-us/common/icons/product-logos/arcgis-instant-apps-64.svg"
@@ -123,6 +123,13 @@
             <div class="group">
               <span class="group-label">Theme</span>
               <div class="group-content">
+                <calcite-label>
+                  Select a theme
+                  <calcite-select id="themeColorLightDark" width="m">
+                    <calcite-option value="light">Light</calcite-option>
+                    <calcite-option value="dark">Dark</calcite-option>
+                  </calcite-select>
+                </calcite-label>
                 <calcite-label>
                   Background color
                   <calcite-select id="themeColorSelect" width="m" />
@@ -325,9 +332,6 @@
         const view = new SceneView({
           map: map,
           container: 'viewDiv',
-          ui: {
-            components: [],
-          },
         });
 
         const scoreboard = document.createElement('instant-apps-scoreboard');
@@ -575,6 +579,24 @@
 
             scoreboard.style.backgroundColor = background;
             scoreboard.style.color = color;
+          });
+
+          const themeColorLightDark = document.getElementById('themeColorLightDark');
+
+          themeColorLightDark.addEventListener('calciteSelectChange', e => {
+            const value = e.target.value;
+            const calciteModePrefix = 'calcite-mode-';
+            const light = `${calciteModePrefix}light`;
+            const dark = `${calciteModePrefix}dark`;
+            const calciteMode = { light, dark };
+
+            if (value === 'dark') {
+              scoreboard.classList.remove(light);
+              scoreboard.classList.add(dark);
+            } else {
+              scoreboard.classList.remove(dark);
+              scoreboard.classList.add(light);
+            }
           });
         });
       });
