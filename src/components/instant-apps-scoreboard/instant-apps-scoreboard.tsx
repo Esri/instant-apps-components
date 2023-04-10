@@ -61,7 +61,7 @@ export class InstantAppsScoreboard {
   initialCalculate: boolean = false; // Flag to check for initial calculation
   reactiveUtils: __esri.reactiveUtils;
   Collection: typeof import('esri/core/Collection');
-  handles: __esri.Handles;
+  handles: __esri.Handles | null;
   intl: __esri.intl;
 
   // Host element
@@ -96,9 +96,9 @@ export class InstantAppsScoreboard {
 
   @State() itemIndex = 0;
 
-  @State() layers: __esri.Collection<__esri.FeatureLayer | __esri.SceneLayer>;
+  @State() layers: __esri.Collection<__esri.FeatureLayer | __esri.SceneLayer> | null;
 
-  @State() layerViews: __esri.Collection<__esri.FeatureLayerView | __esri.SceneLayerView>;
+  @State() layerViews: __esri.Collection<__esri.FeatureLayerView | __esri.SceneLayerView> | null;
 
   // Events
 
@@ -139,7 +139,7 @@ export class InstantAppsScoreboard {
 
   @Watch('layers')
   protected async storeLayerViews(): Promise<void> {
-    if (this.layers.length > 0) {
+    if (this.layers && this.layers.length > 0) {
       this.layers.forEach(layer => (layer.outFields = ['*']));
       const promises: Promise<AcceptableLayerViews>[] = [];
       this.layers.forEach(layer => {
@@ -159,7 +159,7 @@ export class InstantAppsScoreboard {
 
   @Watch('layerViews')
   protected async calculateScoreboardData(): Promise<void> {
-    if (this.layers.length === 0 || this.layerViews.length === 0) return;
+    if ((this.layers && this.layers.length === 0) || (this.layerViews && this.layerViews.length === 0)) return;
 
     this.state = Scoreboard.Calculating;
 
@@ -218,6 +218,24 @@ export class InstantAppsScoreboard {
       this.state = Scoreboard.Disabled;
       console.error(`${BASE}: FAILED TO LOAD MAP RESOURCES`);
     }
+  }
+
+  disconnectedCallback(): void {
+    this.state = Scoreboard.Disabled;
+
+    this.itemIndex = 0;
+
+    this.layers?.removeAll();
+    this.layers?.destroy();
+    this.layers = null;
+
+    this.layerViews?.removeAll();
+    this.layerViews?.destroy();
+    this.layerViews = null;
+
+    this.handles?.removeAll();
+    this.handles?.destroy();
+    this.handles = null;
   }
 
   // Initialize
@@ -440,7 +458,7 @@ export class InstantAppsScoreboard {
 
     const queryFeaturesForItem_LayerView: () => (item: ScoreboardItem) => Promise<void> = () => {
       return async (item: ScoreboardItem) => {
-        const layerView = this.layerViews.find(layerView => layerView.layer.id === item?.layer?.id);
+        const layerView = this.layerViews?.find(layerView => layerView.layer.id === item?.layer?.id);
         if (!layerView) return;
 
         const statDefinition = getStatsDefinition(item);
@@ -503,6 +521,6 @@ export class InstantAppsScoreboard {
         () => isNotInteractingWatcher(),
       );
     };
-    handles.add(stationaryWatcher());
+    handles?.add(stationaryWatcher());
   }
 }
