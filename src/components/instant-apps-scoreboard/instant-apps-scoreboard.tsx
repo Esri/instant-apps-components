@@ -101,12 +101,13 @@ export class InstantAppsScoreboard {
 
   @State() layerViews: __esri.Collection<__esri.FeatureLayerView | __esri.SceneLayerView>;
 
-  // Watch methods
+  // Watchers
   @Watch('data')
   protected generateUIDs(): void {
+    // Generates a series of UIDs (unique identifiers) to ensure each item is unique to properly handle comparisons
     this.itemIndex = 0;
     const { items } = this.data;
-    items.forEach(this.uidGeneratorCallback());
+    items.forEach(this.generateUID());
   }
 
   @Watch('data')
@@ -149,7 +150,7 @@ export class InstantAppsScoreboard {
     const data_temp = { items: [...this.data.items] };
 
     const queryFeaturePromises: Promise<__esri.FeatureSet>[] = [];
-    this.queryStats(data_temp, queryFeaturePromises);
+    this.queryStatDefinitions(data_temp, queryFeaturePromises);
 
     const queryFeaturesRes = await Promise.all(queryFeaturePromises);
     this.handleQueryFeaturesResponses(queryFeaturesRes, data_temp);
@@ -161,65 +162,11 @@ export class InstantAppsScoreboard {
     if (!this.initialCalculate) this.initialCalculate = true;
   }
 
-  protected queryStats(data: ScoreboardData, queryFeaturePromises: Promise<__esri.FeatureSet>[]): void {
-    const getStatsDefinition: (item: ScoreboardItem) => __esri.StatisticDefinition = (item: ScoreboardItem): __esri.StatisticDefinition => {
-      const { field, operation } = item;
-      const onStatisticField = field;
-      const outStatisticFieldName = `${field}_${operation}`;
-      const statisticType = operation;
-      return { onStatisticField, outStatisticFieldName, statisticType } as __esri.StatisticDefinition;
-    };
-
-    const queryFeaturesForItem_LayerView: () => (item: ScoreboardItem) => Promise<void> = () => {
-      return async (item: ScoreboardItem) => {
-        const layerView = this.layerViews.find(layerView => layerView.layer.id === item?.layer?.id);
-        if (!layerView) return;
-        const statDefinition = getStatsDefinition(item);
-        const query = layerView.createQuery();
-        query.outStatistics = [statDefinition];
-
-        query.geometry = this.view.extent;
-
-        const queryFeaturesRes = layerView.queryFeatures(query);
-        queryFeaturePromises.push(queryFeaturesRes);
-      };
-    };
-
-    data.items.forEach(queryFeaturesForItem_LayerView());
-  }
-
-  protected handleQueryFeaturesResponses(queryFeaturesRes: __esri.FeatureSet[], data: ScoreboardData) {
-    const getValue: (stat: __esri.FeatureSet) => number = (stat: __esri.FeatureSet): number => {
-      const features = stat.features;
-      const feature = features[0];
-      const { attributes } = feature;
-      const attrValues = Object.values(attributes);
-      return attrValues[0] as number;
-    };
-
-    const getNumberFormatOptions: () => Intl.NumberFormatOptions = (): Intl.NumberFormatOptions => {
-      const notation = 'compact';
-      const compactDisplay = 'short';
-      return { notation, compactDisplay };
-    };
-
-    const updateItemValue: () => (stat: __esri.FeatureSet, statIndex: number) => void = () => {
-      return (stat: __esri.FeatureSet, statIndex: number) => {
-        const value = getValue(stat);
-        const numberFormatOptions = getNumberFormatOptions();
-        const formattedNumber = this.intl.formatNumber(value, numberFormatOptions);
-        data.items[statIndex].value = `${formattedNumber}`;
-      };
-    };
-
-    queryFeaturesRes.forEach(updateItemValue());
-  }
-
   // Lifecycle methods
   async componentWillLoad(): Promise<void> {
     try {
       this.state = Scoreboard.Loading;
-      await this.getMessages();
+      await this.initMessages();
     } catch {
       this.state = Scoreboard.Disabled;
       return Promise.reject();
@@ -229,7 +176,7 @@ export class InstantAppsScoreboard {
         return Promise.reject();
       } else {
         try {
-          await this.initializeModules();
+          await this.initModules();
           return Promise.resolve();
         } catch {
           this.state = Scoreboard.Disabled;
@@ -252,8 +199,8 @@ export class InstantAppsScoreboard {
     }
   }
 
-  // Initialize methods
-  protected async getMessages(): Promise<void> {
+  // Initialize
+  protected async initMessages(): Promise<void> {
     let messages: typeof Scoreboard_t9n;
     try {
       const res = await getLocaleComponentStrings(this.el);
@@ -269,7 +216,7 @@ export class InstantAppsScoreboard {
     }
   }
 
-  protected async initializeModules(): Promise<void> {
+  protected async initModules(): Promise<void> {
     try {
       const [Handles, reactiveUtils, Collection, intl] = await loadModules(['esri/core/Handles', 'esri/core/reactiveUtils', 'esri/core/Collection', 'esri/intl']);
 
@@ -290,16 +237,6 @@ export class InstantAppsScoreboard {
     }
   }
 
-  protected uidGeneratorCallback(): (item: ScoreboardItem) => void {
-    return (item: ScoreboardItem) => {
-      const randNum = Math.random();
-      const randomInt = Math.floor(Math.random() * 10) + 11;
-      const randStr = randNum.toString(randomInt).replace('0.', '');
-      const uid = randStr;
-      item['uid'] = uid;
-    };
-  }
-
   protected async loadMapResources(): Promise<void> {
     const { map } = this.view;
     const webItem = map as __esri.WebMap | __esri.WebScene;
@@ -313,6 +250,19 @@ export class InstantAppsScoreboard {
     }
   }
 
+  protected generateUID(): (item: ScoreboardItem) => void {
+    return (item: ScoreboardItem) => {
+      // Generates a random number to be used for radix in Number.toString()
+      const randNum = Math.random();
+      const randomInt = Math.floor(Math.random() * 10) + 11;
+
+      // Generates a random string of characters - remove redundant '0.';
+      const randStr = randNum.toString(randomInt).replace('0.', '');
+      const uid = randStr;
+      item['uid'] = uid;
+    };
+  }
+
   // Start of render methods
   render(): HTMLInstantAppsScoreboardElement {
     const { state } = this;
@@ -320,8 +270,9 @@ export class InstantAppsScoreboard {
     const isCalculating = state === Scoreboard.Calculating;
     const isDisabled = state === Scoreboard.Disabled;
     const progress = isLoading || isCalculating ? this.renderProgress() : null;
-    const positionClass = this.getPositionClass();
-    const styleClass = this.getStyleClass();
+    const positionClass = this.getPositionClass;
+    console.log(positionClass);
+    const styleClass = this.getStyleClass;
     return <Host class={`${positionClass} ${styleClass}`}>{isDisabled ? this.renderNotice() : [progress, this.renderBase()]}</Host>;
   }
 
@@ -348,7 +299,7 @@ export class InstantAppsScoreboard {
   renderPreviousNextButtons(): HTMLCalciteActionElement[] {
     const isBelowOrAtLimit = this.data?.items?.length <= ITEM_LIMIT;
     const isBeginning = this.itemIndex === 0;
-    const isEnd = this.isLastItem();
+    const isEnd = this.isEnd;
     const isBottom = this.position === Scoreboard.Bottom;
     const iconPosition = isBottom ? ScoreboardAlignment.Start : ScoreboardAlignment.Center;
     const previous = isBottom ? ScoreboardIcons.Left : ScoreboardIcons.Up;
@@ -367,7 +318,7 @@ export class InstantAppsScoreboard {
 
   renderItems(): HTMLUListElement {
     const { items } = CSS;
-    const dataToDisplay = this.getItemsToDisplay();
+    const dataToDisplay = this.getItemsToDisplay;
     const scoreboardItems = dataToDisplay.map(item => this.renderItem(item));
     return <ul class={items}>{scoreboardItems}</ul>;
   }
@@ -417,34 +368,98 @@ export class InstantAppsScoreboard {
 
   // End of render methods
 
-  // Get methods
-  protected getPositionClass(): string {
+  // Getters
+  protected get getPositionClass(): string {
     const { bottom, left, right, side } = CSS.position;
     const leftRight = `${this.position === Scoreboard.Left ? left : right} ${side}`;
     return this.position === Scoreboard.Bottom ? bottom : leftRight;
   }
 
-  protected getStyleClass(): string {
+  protected get getStyleClass(): string {
     const { floating, pinned } = CSS.mode;
     return this.mode === Scoreboard.Floating ? floating : pinned;
   }
 
-  protected getItemsToDisplay(): ScoreboardItem[] {
+  protected get getItemsToDisplay(): ScoreboardItem[] {
     return this.data.items.slice(this.itemIndex, ITEM_LIMIT + this.itemIndex);
+  }
+
+  get isEnd(): boolean {
+    const lastItems = this.data.items.slice(this.data.items.length - ITEM_LIMIT);
+    const uidsOfLast = lastItems.map(item => item['uid']);
+    const uidsOfCurrent = this.data.items.slice(this.itemIndex, this.itemIndex + ITEM_LIMIT).map(item => item['uid']);
+    return uidsOfLast.every((val, index) => val === uidsOfCurrent[index]);
+  }
+
+  // UI interactions
+  protected previousItem(): void {
+    this.itemIndex = this.itemIndex - 1;
   }
 
   protected nextItem(): void {
     this.itemIndex = this.itemIndex + 1;
   }
 
-  protected previousItem(): void {
-    this.itemIndex = this.itemIndex - 1;
+  // Query statistic definitions (FeatreLayerView/SceneLayerView.queryFeatures())
+  protected queryStatDefinitions(data: ScoreboardData, queryFeaturePromises: Promise<__esri.FeatureSet>[]): void {
+    const getStatsDefinition: (item: ScoreboardItem) => __esri.StatisticDefinition = (item: ScoreboardItem): __esri.StatisticDefinition => {
+      const { field, operation } = item;
+      const onStatisticField = field;
+      const outStatisticFieldName = `${field}_${operation}`;
+      const statisticType = operation;
+      return { onStatisticField, outStatisticFieldName, statisticType } as __esri.StatisticDefinition;
+    };
+
+    const getStatDefinitionQuery = (layerView: __esri.FeatureLayerView | __esri.SceneLayerView, statDefinition: __esri.StatisticDefinition) => {
+      const query = layerView.createQuery();
+      const outStatistics = [statDefinition];
+      const geometry = this.view.extent;
+      query.outStatistics = outStatistics;
+      query.geometry = geometry;
+      return query;
+    };
+
+    const queryFeaturesForItem_LayerView: () => (item: ScoreboardItem) => Promise<void> = () => {
+      return async (item: ScoreboardItem) => {
+        const layerView = this.layerViews.find(layerView => layerView.layer.id === item?.layer?.id);
+        if (!layerView) return;
+
+        const statDefinition = getStatsDefinition(item);
+
+        const query = getStatDefinitionQuery(layerView, statDefinition);
+
+        const queryFeaturesRes = layerView.queryFeatures(query);
+        queryFeaturePromises.push(queryFeaturesRes);
+      };
+    };
+
+    data.items.forEach(queryFeaturesForItem_LayerView());
   }
 
-  protected isLastItem(): boolean {
-    const lastItems = this.data.items.slice(this.data.items.length - ITEM_LIMIT);
-    const uidsOfLast = lastItems.map(item => item['uid']);
-    const uidsOfCurrent = this.data.items.slice(this.itemIndex, this.itemIndex + ITEM_LIMIT).map(item => item['uid']);
-    return uidsOfLast.every((val, index) => val === uidsOfCurrent[index]);
+  protected handleQueryFeaturesResponses(queryFeaturesRes: __esri.FeatureSet[], data: ScoreboardData) {
+    const getValue: (stat: __esri.FeatureSet) => number = (stat: __esri.FeatureSet): number => {
+      const features = stat.features;
+      const feature = features[0];
+      const { attributes } = feature;
+      const attrValues = Object.values(attributes);
+      return attrValues[0] as number;
+    };
+
+    const getNumberFormatOptions: () => Intl.NumberFormatOptions = (): Intl.NumberFormatOptions => {
+      const notation = 'compact';
+      const compactDisplay = 'short';
+      return { notation, compactDisplay };
+    };
+
+    const updateItemValue: () => (stat: __esri.FeatureSet, statIndex: number) => void = () => {
+      return (stat: __esri.FeatureSet, statIndex: number) => {
+        const value = getValue(stat);
+        const numberFormatOptions = getNumberFormatOptions();
+        const formattedNumber = this.intl.formatNumber(value, numberFormatOptions);
+        data.items[statIndex].value = `${formattedNumber}`;
+      };
+    };
+
+    queryFeaturesRes.forEach(updateItemValue());
   }
 }
