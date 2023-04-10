@@ -9,6 +9,7 @@ import { ActiveTool, ExtentSelector, IMeasureConfiguration, InstantAppsPopoverMe
 import { FilterMode } from "./components/instant-apps-interactive-legend/instant-apps-interactive-legend-classic/interfaces/interfaces";
 import { InstantAppsPopovers } from "./components/instant-apps-popovers/instant-apps-popovers";
 import { LogicalPlacement } from "@esri/calcite-components/dist/types/utils/floating-ui";
+import { ScoreboardData, ScoreboardMode, ScoreboardPosition } from "./components/instant-apps-scoreboard/types/interfaces";
 export namespace Components {
     interface InstantAppsFilterList {
         /**
@@ -226,6 +227,24 @@ export namespace Components {
         "instantAppsPopovers": Map<string, HTMLInstantAppsPopoverElement>;
         "open": (key: string) => Promise<void>;
     }
+    interface InstantAppsScoreboard {
+        /**
+          * Data on layers, field attribute info, operations, for each scoreboard item
+         */
+        "data": ScoreboardData;
+        /**
+          * Mode of scoreboard i.e. 'floating' or 'pinned'.
+         */
+        "mode": ScoreboardMode;
+        /**
+          * Position of scoreboard i.e. 'bottom', 'left', or 'right'.
+         */
+        "position": ScoreboardPosition;
+        /**
+          * MapView or SceneView to reference extent, viewpoint, and layers in map to perform calculations.
+         */
+        "view": __esri.MapView | __esri.SceneView;
+    }
     interface InstantAppsSocialShare {
         /**
           * Auto update share URL.
@@ -307,6 +326,10 @@ export interface InstantAppsMeasurementCustomEvent<T> extends CustomEvent<T> {
     detail: T;
     target: HTMLInstantAppsMeasurementElement;
 }
+export interface InstantAppsScoreboardCustomEvent<T> extends CustomEvent<T> {
+    detail: T;
+    target: HTMLInstantAppsScoreboardElement;
+}
 declare global {
     interface HTMLInstantAppsFilterListElement extends Components.InstantAppsFilterList, HTMLStencilElement {
     }
@@ -386,6 +409,12 @@ declare global {
         prototype: HTMLInstantAppsPopoversElement;
         new (): HTMLInstantAppsPopoversElement;
     };
+    interface HTMLInstantAppsScoreboardElement extends Components.InstantAppsScoreboard, HTMLStencilElement {
+    }
+    var HTMLInstantAppsScoreboardElement: {
+        prototype: HTMLInstantAppsScoreboardElement;
+        new (): HTMLInstantAppsScoreboardElement;
+    };
     interface HTMLInstantAppsSocialShareElement extends Components.InstantAppsSocialShare, HTMLStencilElement {
     }
     var HTMLInstantAppsSocialShareElement: {
@@ -406,6 +435,7 @@ declare global {
         "instant-apps-measurement-tool": HTMLInstantAppsMeasurementToolElement;
         "instant-apps-popover": HTMLInstantAppsPopoverElement;
         "instant-apps-popovers": HTMLInstantAppsPopoversElement;
+        "instant-apps-scoreboard": HTMLInstantAppsScoreboardElement;
         "instant-apps-social-share": HTMLInstantAppsSocialShareElement;
     }
 }
@@ -639,6 +669,28 @@ declare namespace LocalJSX {
         "inTour"?: boolean;
         "instantAppsPopovers"?: Map<string, HTMLInstantAppsPopoverElement>;
     }
+    interface InstantAppsScoreboard {
+        /**
+          * Data on layers, field attribute info, operations, for each scoreboard item
+         */
+        "data"?: ScoreboardData;
+        /**
+          * Mode of scoreboard i.e. 'floating' or 'pinned'.
+         */
+        "mode"?: ScoreboardMode;
+        /**
+          * Emits when scoreboard data has been calculated and updated.
+         */
+        "onScoreboardDataUpdated"?: (event: InstantAppsScoreboardCustomEvent<ScoreboardData>) => void;
+        /**
+          * Position of scoreboard i.e. 'bottom', 'left', or 'right'.
+         */
+        "position"?: ScoreboardPosition;
+        /**
+          * MapView or SceneView to reference extent, viewpoint, and layers in map to perform calculations.
+         */
+        "view"?: __esri.MapView | __esri.SceneView;
+    }
     interface InstantAppsSocialShare {
         /**
           * Auto update share URL.
@@ -717,6 +769,7 @@ declare namespace LocalJSX {
         "instant-apps-measurement-tool": InstantAppsMeasurementTool;
         "instant-apps-popover": InstantAppsPopover;
         "instant-apps-popovers": InstantAppsPopovers;
+        "instant-apps-scoreboard": InstantAppsScoreboard;
         "instant-apps-social-share": InstantAppsSocialShare;
     }
 }
@@ -737,6 +790,7 @@ declare module "@stencil/core" {
             "instant-apps-measurement-tool": LocalJSX.InstantAppsMeasurementTool & JSXBase.HTMLAttributes<HTMLInstantAppsMeasurementToolElement>;
             "instant-apps-popover": LocalJSX.InstantAppsPopover & JSXBase.HTMLAttributes<HTMLInstantAppsPopoverElement>;
             "instant-apps-popovers": LocalJSX.InstantAppsPopovers & JSXBase.HTMLAttributes<HTMLInstantAppsPopoversElement>;
+            "instant-apps-scoreboard": LocalJSX.InstantAppsScoreboard & JSXBase.HTMLAttributes<HTMLInstantAppsScoreboardElement>;
             "instant-apps-social-share": LocalJSX.InstantAppsSocialShare & JSXBase.HTMLAttributes<HTMLInstantAppsSocialShareElement>;
         }
     }

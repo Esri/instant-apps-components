@@ -1,0 +1,204 @@
+/*
+ *   Copyright (c) 2023 Esri
+ *   All rights reserved under the copyright laws of the United States and applicable international laws, treaties, and conventions.
+ *   This material is licensed for use under the Esri Master License Agreement (MLA), and is bound by the terms of that agreement.
+ *   You may redistribute and use this code without modification, provided you adhere to the terms of the MLA and include this copyright notice.
+ *   See use restrictions at http://www.esri.com/legal/pdfs/mla_e204_e300/english
+ */
+
+$borderColor: var(--calcite-ui-border-1);
+$boxShadow: 0px 3px 15px rgba(0, 0, 0, 0.2);
+
+:host {
+  display: block;
+  /**
+ * @prop --instant-apps-scoreboard-background-color: Background color of scoreboard.
+ * @prop --instant-apps-scoreboard-text-color: Text color of scoreboard.
+ */
+  --instant-apps-scoreboard-background-color: var(--calcite-ui-foreground-1);
+  --instant-apps-scoreboard-text-color: var(--calcite-ui-text-1);
+  background-color: var(--instant-apps-scoreboard-background-color);
+  color: var(--instant-apps-scoreboard-text-color);
+  .instant-apps-scoreboard {
+    box-sizing: border-box;
+    border: 1px solid $borderColor;
+    box-shadow: $boxShadow;
+    border-radius: 3px;
+
+    calcite-loader {
+      --calcite-loader-padding: 1rem;
+    }
+
+    &__items-container {
+      display: flex;
+
+      calcite-action {
+        height: 100%;
+      }
+    }
+
+    &__items,
+    &__item {
+      box-sizing: border-box;
+      display: flex;
+    }
+
+    &__items {
+      list-style-type: none;
+      padding-left: 0;
+      margin: 0;
+      padding-top: 1.75%;
+      padding-bottom: 1.75%;
+      width: 100%;
+    }
+
+    &__item {
+      flex-direction: column;
+      justify-content: flex-end;
+      align-items: center;
+      padding: 1%;
+
+      &-label {
+        box-sizing: border-box;
+        line-height: 24px;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        line-clamp: 2;
+        word-break: break-word;
+      }
+
+      &-label {
+        font-size: 1rem;
+        font-weight: 400;
+      }
+
+      &-value {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-width: 32px;
+        min-height: 32px;
+        margin-top: 5px;
+        font-size: 1.5rem;
+        font-weight: 900;
+      }
+
+      &-value-placeholder {
+        display: inline-block;
+        width: 32px;
+        height: 32px;
+        background-color: var(--calcite-ui-foreground-3);
+        border-radius: 4px;
+      }
+    }
+  }
+}
+
+:host(.instant-apps-scoreboard__position--bottom) {
+  bottom: 0;
+  .instant-apps-scoreboard {
+    display: flex;
+    justify-content: center;
+    &__items {
+      display: flex;
+      justify-content: center;
+    }
+
+    &__item {
+      min-width: 10vw;
+      vertical-align: top;
+    }
+  }
+}
+
+:host(.instant-apps-scoreboard__position--bottom.instant-apps-scoreboard__mode--floating) {
+  left: 50%;
+  max-width: calc(100% - 30px);
+  transform: translate(-50%, -15px);
+  .instant-apps-scoreboard {
+    min-width: 25vw;
+  }
+}
+
+:host(.instant-apps-scoreboard__position--bottom.instant-apps-scoreboard__mode--pinned) {
+  left: unset;
+  bottom: 0;
+  transform: unset;
+  width: 100%;
+  .instant-apps-scoreboard {
+    min-width: unset;
+
+    &__items-container {
+      width: 100%;
+      justify-content: space-between;
+    }
+  }
+}
+
+:host(.instant-apps-scoreboard__position--side) {
+  .instant-apps-scoreboard {
+    display: flex;
+    align-items: center;
+    width: 100%;
+
+    &__items-container {
+      flex-direction: column;
+      height: 100%;
+      calcite-action {
+        height: unset;
+        width: 100%;
+      }
+    }
+
+    &__items {
+      flex-direction: column;
+    }
+    &__item {
+      width: 10vw;
+      margin-top: 2vh;
+      margin-bottom: 2vh;
+    }
+  }
+}
+
+:host(.instant-apps-scoreboard__position--side.instant-apps-scoreboard__mode--floating) {
+  top: 50%;
+  left: 15px;
+  transform: translateY(-50%);
+  max-height: calc(100% - 30px);
+}
+
+:host(.instant-apps-scoreboard__position--side.instant-apps-scoreboard__mode--pinned) {
+  top: unset;
+  left: unset;
+  transform: unset;
+  height: 100%;
+  .instant-apps-scoreboard {
+    height: 100%;
+
+    &__items-container {
+      justify-content: space-between;
+    }
+  }
+}
+
+:host(.instant-apps-scoreboard__position--left.instant-apps-scoreboard__mode--floating) {
+  left: 15px;
+}
+
+:host(.instant-apps-scoreboard__position--right.instant-apps-scoreboard__mode--floating) {
+  left: unset;
+  right: 15px;
+}
+
+:host(.instant-apps-scoreboard__position--left.instant-apps-scoreboard__mode--pinned) {
+  left: 0;
+}
+
+:host(.instant-apps-scoreboard__position--right.instant-apps-scoreboard__mode--pinned) {
+  left: unset;
+  right: 0;
+}
