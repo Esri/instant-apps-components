@@ -293,7 +293,7 @@ export class InstantAppsScoreboard {
     const progress = isLoading || isCalculating ? this.renderProgress() : null;
     const positionClass = this.getPositionClass;
     const styleClass = this.getStyleClass;
-    return <Host class={`${positionClass} ${styleClass}`}>{isDisabled ? this.renderNotice() : [progress, this.data?.items?.length > 0 ? this.renderBase() : null]}</Host>;
+    return <Host class={`${positionClass} ${styleClass}`}>{isDisabled ? null : [progress, this.data?.items?.length > 0 ? this.renderBase() : null]}</Host>;
   }
 
   renderBase(): HTMLDivElement {
@@ -383,16 +383,6 @@ export class InstantAppsScoreboard {
     const key = `${KEY_PREFIX}calcite-`;
     const loading = this.messages?.loading;
     return <calcite-loader key={`${key}loader`} label={loading} text={loading} scale="m" />;
-  }
-
-  renderNotice(): HTMLCalciteNoticeElement {
-    const errMessages = this.messages?.error;
-    return (
-      <calcite-notice closable open icon={ScoreboardIcons.Warning} kind={Scoreboard.Warning}>
-        <div slot="title">{errMessages?.title}</div>
-        <div slot="message">{errMessages?.message}</div>
-      </calcite-notice>
-    );
   }
 
   // End of render methods

@@ -26,7 +26,6 @@ export const enum Scoreboard {
   Right = 'right',
   Floating = 'floating',
   Pinned = 'pinned',
-  Warning = 'warning',
 }
 
 export const enum ScoreboardIcons {
@@ -34,7 +33,6 @@ export const enum ScoreboardIcons {
   Down = 'chevron-down',
   Left = 'chevron-left',
   Right = 'chevron-right',
-  Warning = 'exclamation-mark-triangle',
   Blank = 'blank',
 }
 
