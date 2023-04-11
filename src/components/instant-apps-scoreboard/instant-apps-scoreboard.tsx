@@ -151,7 +151,7 @@ export class InstantAppsScoreboard {
       const fulfilledPromises: PromiseSettledResult<AcceptableLayerViews>[] = settledPromises.filter(promise => promise.status == 'fulfilled' && promise.value);
       const layerViews = fulfilledPromises.map(fulfilledPromise => (fulfilledPromise as PromiseFulfilledResult<AcceptableLayerViews>).value);
       const layerViewUpdatePromises: Promise<boolean>[] = [];
-      layerViews.forEach(layerView => layerViewUpdatePromises.push(this.reactiveUtils.whenOnce(() => !layerView.updating)));
+      layerViews.forEach(layerView => layerViewUpdatePromises.push(this.reactiveUtils?.whenOnce(() => !layerView.updating)));
       await Promise.all(layerViewUpdatePromises);
       this.layerViews = new this.Collection([...layerViews]);
     }
@@ -210,7 +210,7 @@ export class InstantAppsScoreboard {
   async componentDidLoad(): Promise<void> {
     if (this.state === Scoreboard.Disabled) return;
     try {
-      await this.reactiveUtils.whenOnce(() => this.view?.ready);
+      await this.reactiveUtils?.whenOnce(() => this.view?.ready);
       this.generateUIDs();
       await this.loadMapResources();
       this.storeLayers();
@@ -504,23 +504,21 @@ export class InstantAppsScoreboard {
   }
 
   protected initStationaryWatcher(): void {
-    const { handles, reactiveUtils } = this;
-    const { when } = reactiveUtils;
     const whenOnceConfig = { once: true, initial: true };
 
     const isNotInteractingWatcher = () => {
-      return when(
+      return this.reactiveUtils?.when(
         () => !this.view?.interacting,
         () => this.calculateScoreboardData(),
         whenOnceConfig,
       );
     };
     const stationaryWatcher: () => __esri.WatchHandle = () => {
-      return when(
+      return this.reactiveUtils?.when(
         () => this.view?.stationary,
         () => isNotInteractingWatcher(),
       );
     };
-    handles?.add(stationaryWatcher());
+    this.handles?.add(stationaryWatcher());
   }
 }
