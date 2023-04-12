@@ -8,103 +8,97 @@
 
 <!DOCTYPE html>
 <html dir="ltr" lang="en">
-
-<head>
+  <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=5.0" />
     <title>ArcGIS Instant Apps Components</title>
 
-    <link rel="stylesheet" href="https://js.arcgis.com/4.24/esri/themes/light/main.css" />
-    <script src="https://jsdev.arcgis.com/4.27/"></script>
+    <link rel="stylesheet" href="https://js.arcgis.com/next/esri/themes/light/main.css" />
+    <script src="https://js.arcgis.com/next/init.js"></script>
     <script type="module" src="https://js.arcgis.com/calcite-components/1.0.7/calcite.esm.js"></script>
     <link rel="stylesheet" type="text/css" href="https://js.arcgis.com/calcite-components/1.0.7/calcite.css" />
     <script type="module" src="/build/instant-apps-components.esm.js"></script>
     <script nomodule src="/build/instant-apps-components.js"></script>
 
     <style>
-        html,
-        body,
-        #viewDiv {
-            box-sizing: border-box;
-            width: 100%;
-            height: 100%;
-            margin: 0;
-            padding: 0;
-        }
+      html,
+      body,
+      #viewDiv {
+        box-sizing: border-box;
+        width: 100%;
+        height: 100%;
+        margin: 0;
+        padding: 0;
+      }
     </style>
-</head>
+  </head>
 
-<body>
+  <body>
     <calcite-shell class="calcite-mode-light">
-        <instant-apps-header id="instant-apps-header" slot="header" title-text="Instant Apps: Header (Shared Theme)"
-            text-color="#f8f8f8" background-color="#151515"
-            logo-image="https://www.esri.com/content/dam/esrisites/en-us/common/icons/product-logos/arcgis-instant-apps-64.svg"
-            logo-image-alt-text="ArcGIS Instant Apps logo"
-            logo-link="https://www.esri.com/en-us/arcgis/products/arcgis-instant-apps/overview" info-button="true"
-            info-is-open="true">
-            <instant-apps-social-share slot="actions-end" share-button-color="inverse"
-                popover-button-icon-scale="s"></instant-apps-social-share>
-        </instant-apps-header>
-        <div id="viewDiv"></div>
+      <instant-apps-header
+        id="instant-apps-header"
+        slot="header"
+        title-text="Instant Apps: Header (Shared Theme)"
+        text-color="#f8f8f8"
+        background-color="#151515"
+        logo-image="https://www.esri.com/content/dam/esrisites/en-us/common/icons/product-logos/arcgis-instant-apps-64.svg"
+        logo-image-alt-text="ArcGIS Instant Apps logo"
+        logo-link="https://www.esri.com/en-us/arcgis/products/arcgis-instant-apps/overview"
+        info-button="true"
+        info-is-open="true"
+      >
+        <instant-apps-social-share slot="actions-end" share-button-color="inverse" popover-button-icon-scale="s"></instant-apps-social-share>
+      </instant-apps-header>
+      <div id="viewDiv"></div>
     </calcite-shell>
 
     <script>
-        require(['esri/WebMap', 'esri/views/MapView', 'esri/config'], (
-            WebMap,
-            MapView,
-            esriConfig,
-        ) => {
+      require(['esri/WebMap', 'esri/views/MapView', 'esri/config'], (WebMap, MapView, esriConfig) => {
+        esriConfig.portalUrl = 'https://nw-brews.mapsdevext.arcgis.com';
 
-            esriConfig.portalUrl = 'https://nw-brews.mapsdevext.arcgis.com';
-
-            const map = new WebMap({
-                portalItem: {
-                    id: '8891ee1d2e0e428bb96c58b8ecf8c408',
-                },
-            });
-
-            const url = new URL(window.location.href);
-            const searchParams = url.searchParams;
-            let center = searchParams.get('center');
-            let zoom = searchParams.get('level');
-            if (center) center = center.split(';').map(item => parseFloat(item));
-            if (zoom) zoom = parseInt(zoom);
-
-            const view = new MapView({
-                map,
-                container: 'viewDiv',
-                zoom,
-                center,
-            });
-
-            view.when(async () => {
-
-
-
-                let selectedFeature = searchParams.get('selectedFeature');
-                let layerId;
-                let featureOID;
-
-                if (selectedFeature) {
-                    const selectedFeatureValues = selectedFeature.split(';');
-                    layerId = selectedFeatureValues[0];
-                    featureOID = parseInt(selectedFeatureValues[1]);
-                    const fLayer = view.map.findLayerById(layerId);
-                    const query = fLayer.createQuery();
-                    query.objectIds = [featureOID];
-                    const queryRes = await fLayer.queryFeatures(query);
-                    const graphic = queryRes.features[0];
-                    view.popup.open({
-                        features: [graphic],
-                    });
-                }
-            });
-
-            const socialShare = document.querySelector('instant-apps-social-share');
-            socialShare.view = view;
+        const map = new WebMap({
+          portalItem: {
+            id: '8891ee1d2e0e428bb96c58b8ecf8c408',
+          },
         });
+
+        const url = new URL(window.location.href);
+        const searchParams = url.searchParams;
+        let center = searchParams.get('center');
+        let zoom = searchParams.get('level');
+        if (center) center = center.split(';').map(item => parseFloat(item));
+        if (zoom) zoom = parseInt(zoom);
+
+        const view = new MapView({
+          map,
+          container: 'viewDiv',
+          zoom,
+          center,
+        });
+
+        view.when(async () => {
+          let selectedFeature = searchParams.get('selectedFeature');
+          let layerId;
+          let featureOID;
+
+          if (selectedFeature) {
+            const selectedFeatureValues = selectedFeature.split(';');
+            layerId = selectedFeatureValues[0];
+            featureOID = parseInt(selectedFeatureValues[1]);
+            const fLayer = view.map.findLayerById(layerId);
+            const query = fLayer.createQuery();
+            query.objectIds = [featureOID];
+            const queryRes = await fLayer.queryFeatures(query);
+            const graphic = queryRes.features[0];
+            view.popup.open({
+              features: [graphic],
+            });
+          }
+        });
+
+        const socialShare = document.querySelector('instant-apps-social-share');
+        socialShare.view = view;
+      });
     </script>
-
-</body>
-
+  </body>
 </html>
