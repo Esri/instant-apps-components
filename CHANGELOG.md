@@ -11,6 +11,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - ArcGIS JS API CDN to next
   - Calcite Components to v1.0.7
 
+### instant-apps-scoreboard
+
+- Bug fixes:
+- Set min-width and min-height on load state
+- Update 'onclick' to 'onClick' to previous/next buttons
+- Added label and text to previous/next buttons
+
 ## v1.0.0-beta.60
 
 ### instant-apps-scoreboard
