@@ -8,87 +8,75 @@
 
 <!DOCTYPE html>
 <html dir="ltr" lang="en">
-
-<head>
+  <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=5.0" />
     <title>ArcGIS Instant Apps Components</title>
 
     <link rel="stylesheet" href="https://js.arcgis.com/next/esri/themes/light/main.css" />
-    <script src="https://jsdev.arcgis.com/next/"></script>
+    <script src="https://js.arcgis.com/next/init.js"></script>
     <script type="module" src="https://js.arcgis.com/calcite-components/1.0.7/calcite.esm.js"></script>
     <link rel="stylesheet" type="text/css" href="https://js.arcgis.com/calcite-components/1.0.7/calcite.css" />
     <script type="module" src="/build/instant-apps-components.esm.js"></script>
     <script nomodule src="/build/instant-apps-components.js"></script>
 
     <style>
-        html,
-        body,
-        #viewDiv {
-            width: 100%;
-            height: 100%;
-            margin: 0;
-            padding: 0;
-        }
+      html,
+      body,
+      #viewDiv {
+        width: 100%;
+        height: 100%;
+        margin: 0;
+        padding: 0;
+      }
     </style>
-</head>
+  </head>
 
-<body>
-
+  <body>
     <div id="viewDiv"></div>
 
     <script>
-        require(['esri/WebMap', 'esri/widgets/Expand', 'esri/views/MapView', 'esri/core/reactiveUtils', 'esri/config'], (
-            WebMap,
-            Expand,
-            MapView,
-            reactiveUtils,
-            esriConfig,
-        ) => {
+      require(['esri/WebMap', 'esri/widgets/Expand', 'esri/views/MapView', 'esri/core/reactiveUtils', 'esri/config'], (WebMap, Expand, MapView, reactiveUtils, esriConfig) => {
+        esriConfig.portalUrl = 'https://nw-brews.mapsdevext.arcgis.com';
 
-            esriConfig.portalUrl = 'https://nw-brews.mapsdevext.arcgis.com';
-
-            const map = new WebMap({
-                portalItem: {
-                    id: '8891ee1d2e0e428bb96c58b8ecf8c408',
-                },
-            });
-
-            const url = new URL(window.location.href);
-            const searchParams = url.searchParams;
-            let center = searchParams.get('center');
-            let zoom = searchParams.get('level');
-            if (center) center = center.split(';').map(item => parseFloat(item));
-            if (zoom) zoom = parseInt(zoom);
-
-            const view = new MapView({
-                map,
-                container: 'viewDiv',
-                zoom,
-                center,
-            });
-
-            const measure = document.createElement('instant-apps-measurement');
-            measure.view = view;
-            measure.areaUnit = "hectares";
-            measure.linearUnit = "nautical-miles";
-            // disable popups when measure tools are active 
-            measure.addEventListener("measureActive", (e) => {
-                view.popup.autoOpenEnabled = !e?.detail;
-            });
-            const measureExpand = new Expand({
-                view,
-                mode: "floating",
-                expandIcon: "measure",
-                group: "top-right",
-                content: measure,
-                expanded: true
-            });
-            view.ui.add(measureExpand, "top-right");
-
+        const map = new WebMap({
+          portalItem: {
+            id: '8891ee1d2e0e428bb96c58b8ecf8c408',
+          },
         });
+
+        const url = new URL(window.location.href);
+        const searchParams = url.searchParams;
+        let center = searchParams.get('center');
+        let zoom = searchParams.get('level');
+        if (center) center = center.split(';').map(item => parseFloat(item));
+        if (zoom) zoom = parseInt(zoom);
+
+        const view = new MapView({
+          map,
+          container: 'viewDiv',
+          zoom,
+          center,
+        });
+
+        const measure = document.createElement('instant-apps-measurement');
+        measure.view = view;
+        measure.areaUnit = 'hectares';
+        measure.linearUnit = 'nautical-miles';
+        // disable popups when measure tools are active
+        measure.addEventListener('measureActive', e => {
+          view.popup.autoOpenEnabled = !e?.detail;
+        });
+        const measureExpand = new Expand({
+          view,
+          mode: 'floating',
+          expandIcon: 'measure',
+          group: 'top-right',
+          content: measure,
+          expanded: true,
+        });
+        view.ui.add(measureExpand, 'top-right');
+      });
     </script>
-
-</body>
-
+  </body>
 </html>
