@@ -1,4 +1,6 @@
 {
     "loading": "Loading",
-    "noData": "N/A"
+    "noData": "N/A",
+    "previous": "Previous",
+    "next": "Next"
 }

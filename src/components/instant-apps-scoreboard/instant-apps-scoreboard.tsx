@@ -352,9 +352,31 @@ export class InstantAppsScoreboard {
     const isDisabled = { previous: isBeginning || isBelowOrAtLimit, next: isEnd || isBelowOrAtLimit };
     const appearance = ScoreboardAppearance.Transparent;
     const scale = ScoreboardScale.Large;
+    const t9n = {
+      previous: this.messages?.previous,
+      next: this.messages?.next,
+    };
     return [
-      <calcite-action onclick={this.previousItem.bind(this)} icon={previousIcon} disabled={isDisabled.previous} alignment={iconPosition} scale={scale} appearance={appearance} />,
-      <calcite-action onclick={this.nextItem.bind(this)} icon={nextIcon} disabled={isDisabled.next} alignment={iconPosition} scale={scale} appearance={appearance} />,
+      <calcite-action
+        onClick={this.previousItem.bind(this)}
+        icon={previousIcon}
+        disabled={isDisabled.previous}
+        alignment={iconPosition}
+        scale={scale}
+        appearance={appearance}
+        text={t9n.previous}
+        label={t9n.previous}
+      />,
+      <calcite-action
+        onClick={this.nextItem.bind(this)}
+        icon={nextIcon}
+        disabled={isDisabled.next}
+        alignment={iconPosition}
+        scale={scale}
+        appearance={appearance}
+        text={t9n.next}
+        label={t9n.next}
+      />,
     ];
   }
 
