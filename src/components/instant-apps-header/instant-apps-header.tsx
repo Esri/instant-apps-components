@@ -87,6 +87,7 @@ export class InstantAppsHeader {
    */
   @Prop({
     reflect: true,
+    mutable: true,
   })
   logoScale: 's' | 'm' | 'l' = 'm';
 

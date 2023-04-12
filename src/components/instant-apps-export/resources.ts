@@ -101,7 +101,7 @@ export const printStyling = `
 
   .instant-apps-export-print__legend-container {
     height: min-content;
-    width: max-content;
+    max-width: 8in;
     background: #fff;
     grid-area: legend;
     break-inside: avoid;
@@ -132,10 +132,6 @@ export const printStyling = `
     border-color: rgba(0,0,0,0) rgba(50,50,50,.8) rgba(0,0,0,0) rgba(0,0,0,0);
   }
 
-  .instant-apps-export-print .esri-legend--card__service-caption-container {
-    border-bottom: 1.5pt solid #323232;
-  }
-
   .instant-apps-export-print .esri-legend--card__section {
     border-left: none;
   }
@@ -151,13 +147,29 @@ export const printStyling = `
 
   .instant-apps-export-print .esri-legend--card {
     border: unset;
+    gap: 4pt;
   }
 
-  .instant-apps-export-print .esri-legend--card, .instant-apps-export-print .esri-legend--card__service {
-    border: 1pt solid #323232;
+  .instant-apps-export-print .esri-legend--card__service {
+    border: 2pt solid #323232;
   }
 
   .instant-apps-export-print__extra-container {
     padding: .25in;
+    break-inside: avoid;
+  }
+
+  .instant-apps-export-print .esri-legend--card__service-caption-container {
+    height: unset;
+    padding: 6pt;
+    border-bottom: 2pt solid #323232;
+  }
+
+  .instant-apps-export-print .esri-legend--card__service-caption-text {
+    padding-bottom: 0;
+  }
+
+  .instant-apps-export-print .esri-legend--card__section {
+    padding: 6pt;
   }
   `;

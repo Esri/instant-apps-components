@@ -1,4 +1,4 @@
-import { Component, Element, Event, EventEmitter, getMode, h, Host, Prop, State, VNode, Watch } from '@stencil/core';
+import { Component, Element, Event, EventEmitter, getMode, h, Host, Prop, State, VNode } from '@stencil/core';
 import { CalciteCheckboxCustomEvent, CalciteInputCustomEvent } from '@esri/calcite-components';
 
 import Export_T9n from '../../assets/t9n/instant-apps-export/resources.json';
@@ -123,7 +123,6 @@ export class InstantAppsExport {
   @Event() exportOutputUpdated: EventEmitter<void>;
 
   exportHandleImgLoaded: () => void;
-  legend: __esri.Legend;
   extraContainerEl: HTMLDivElement;
   legendContainerEl: HTMLDivElement;
   popoverEl: HTMLCalcitePopoverElement;
@@ -137,51 +136,28 @@ export class InstantAppsExport {
   viewContainerEl: HTMLDivElement;
   viewSectionEl: HTMLDivElement;
 
-  @Watch('view')
-  async watchPropView(): Promise<void> {
-    if (this.view != null && this.legend != null) {
-      this.legend.view = this.view;
-    }
-  }
-
-  @Watch('includeLegend')
-  watchPropIncludeLegend(): void {
-    if (this.showIncludeLegend && this.view) {
-      if (this.includeLegend) {
-        this.legendContainerEl.innerHTML = '';
-        this.legend.view = this.view;
-        this.legend.container = this.legendContainerEl;
-        this.legend.visible = !!this.includeLegend;
-      }
-    }
-  }
-
-  async componentWillLoad(): Promise<void> {
+  componentWillLoad(): void {
     this.baseClass = getMode(this.hostElement) === 'dark' ? CSS.baseDark : CSS.baseLight;
-    await this.initializeModules();
     this.getMessages();
   }
 
   componentDidLoad(): void {
     this.printContainerEl.prepend(this.printEl);
-    if (this.showIncludeLegend && this.view != null) {
-      this.legendContainerEl.innerHTML = '';
-      this.legend.view = this.view;
-      this.legend.container = this.legendContainerEl;
-      this.legend.visible = !!this.includeLegend;
-    }
   }
 
-  async initializeModules(): Promise<void> {
-    const [Legend] = await loadModules(['esri/widgets/Legend']);
-    this.legend = new Legend({
-      style: {
-        type: 'card',
-        layout: 'side-by-side',
-      },
-    });
-
-    return Promise.resolve();
+  async componentDidUpdate(): Promise<void> {
+    if (this.includeMap && this.view != null && this.showIncludeLegend && this.includeLegend && !this.legendContainerEl?.innerHTML) {
+      this.legendContainerEl.innerHTML = '';
+      const [Legend] = await loadModules(['esri/widgets/Legend']);
+      new Legend({
+        container: this.legendContainerEl,
+        view: this.view,
+        style: {
+          type: 'card',
+          layout: 'side-by-side',
+        },
+      });
+    }
   }
 
   render() {
@@ -212,17 +188,15 @@ export class InstantAppsExport {
 
   renderPanel(): VNode {
     const headerTitle = this.showHeaderTitle ? this.renderTitle() : null;
-    const includeMap = this.showIncludeMap ? this.renderCheckbox('includeMap') : null;
-    const includeLegend = this.showIncludeLegend ? this.renderCheckbox('includeLegend') : null;
-    const includePopup = this.showIncludePopup ? this.renderCheckbox('includePopup') : null;
+    const includeMap = this.showIncludeMap ? this.renderSwitch('includeMap') : null;
+    const options = this.includeMap ? this.renderMapOptions() : null;
     const print = this.renderPrint();
     const panelClass = this.mode === 'inline' ? CSS.inlineContainer : CSS.popoverContainer;
     return (
       <div class={panelClass}>
         {headerTitle}
         {includeMap}
-        {includeLegend}
-        {includePopup}
+        {options}
         <calcite-button width="full" onClick={this.exportOnClick.bind(this)} loading={this.exportIsLoading}>
           {this.messages?.export}
         </calcite-button>
@@ -240,32 +214,50 @@ export class InstantAppsExport {
     );
   }
 
-  renderCheckbox(value: string): VNode {
+  renderSwitch(value: string): VNode {
     const checked = this[value];
     return (
       <calcite-label layout="inline-space-between">
         {this.messages?.[value]}
-        <calcite-checkbox checked={checked} value={value} onCalciteCheckboxChange={this.checkboxOnChange.bind(this)}></calcite-checkbox>
+        <calcite-switch checked={checked} value={value} onCalciteSwitchChange={this.optionOnChange.bind(this)}></calcite-switch>
       </calcite-label>
     );
   }
 
+  renderMapOptions(): (VNode | null)[] {
+    const includeLegend = this.showIncludeLegend ? this.renderSwitch('includeLegend') : null;
+    const includePopup = this.showIncludePopup ? this.renderSwitch('includePopup') : null;
+    return (
+      <div>
+        {includeLegend}
+        {includePopup}
+      </div>
+    );
+  }
+
   renderPrint(): VNode {
-    const legend = this.showIncludeLegend ? this.renderLegend() : null;
-    const popup = this.showIncludePopup ? this.renderPopup() : null;
+    const printMap = this.includeMap ? this.renderPrintMap() : null;
     return (
       <div ref={(el: HTMLDivElement) => (this.printContainerEl = el)}>
         <div class={CSS.print.base} ref={(el: HTMLDivElement) => (this.printEl = el)}>
-          <div class={CSS.print.viewSection} ref={(el: HTMLDivElement) => (this.viewSectionEl = el)}>
-            <div class={CSS.print.viewContainer} ref={(el: HTMLDivElement) => (this.viewContainerEl = el)}>
-              <instant-apps-header titleText={this.headerTitle}></instant-apps-header>
-              <img class={CSS.print.view} ref={(el: HTMLImageElement) => (this.viewEl = el)} src="" />
-            </div>
-            {popup}
-            {legend}
-          </div>
+          <div>{printMap}</div>
           <div class={CSS.print.extraContainer} ref={(el: HTMLDivElement) => (this.extraContainerEl = el)}></div>
         </div>
+      </div>
+    );
+  }
+
+  renderPrintMap(): VNode {
+    const legend = this.showIncludeLegend ? this.renderLegend() : null;
+    const popup = this.showIncludePopup ? this.renderPopup() : null;
+    return (
+      <div class={CSS.print.viewSection} ref={(el: HTMLDivElement) => (this.viewSectionEl = el)}>
+        <div class={CSS.print.viewContainer} ref={(el: HTMLDivElement) => (this.viewContainerEl = el)}>
+          <instant-apps-header titleText={this.headerTitle}></instant-apps-header>
+          <img class={CSS.print.view} ref={(el: HTMLImageElement) => (this.viewEl = el)} src="" />
+        </div>
+        {popup}
+        {legend}
       </div>
     );
   }
@@ -283,7 +275,7 @@ export class InstantAppsExport {
     );
   }
 
-  checkboxOnChange(e: CalciteCheckboxCustomEvent<Event>): void {
+  optionOnChange(e: CalciteCheckboxCustomEvent<Event>): void {
     const { checked, value } = e.target;
     this[value] = checked;
   }
@@ -302,15 +294,17 @@ export class InstantAppsExport {
 
   async handleViewExportOnClick(): Promise<void> {
     if (this.view != null) {
-      if (this.showIncludeLegend && this.includeLegend) {
-        this.legend.view = this.view;
-        this.legend.container = this.legendContainerEl;
-      }
       this.exportHandleImgLoaded = this.handleImgLoaded.bind(this);
       this.addPrintStyling();
-      this.viewEl?.addEventListener('load', this.exportHandleImgLoaded);
       this.handleExtraContent();
-      await this.viewScreenshot();
+      if (this.includeMap) {
+        this.viewEl?.addEventListener('load', this.exportHandleImgLoaded);
+        this.handleExtraContent();
+        this.addPopupToPrint();
+        await this.viewScreenshot();
+      } else {
+        this.exportHandleImgLoaded();
+      }
     }
   }
 
@@ -332,17 +326,20 @@ export class InstantAppsExport {
   }
 
   handleExtraContent(): void {
-    if (this.extraContent != null) {
-      this.extraContainerEl.style.display = 'block';
-      this.extraContainerEl.append(this.extraContent.cloneNode(true));
-    } else {
-      this.extraContainerEl.style.display = 'none';
+    if (this.extraContainerEl != null) {
+      this.extraContainerEl.innerHTML = '';
+      if (this.extraContent != null) {
+        this.extraContainerEl.style.display = 'block';
+        this.extraContainerEl.append(this.extraContent.cloneNode(true));
+      } else {
+        this.extraContainerEl.style.display = 'none';
+      }
     }
   }
 
   resetPrintContent(): void {
     if (this.view != null) {
-      this.printContainerEl.prepend(this.printEl);
+      this.printContainerEl?.prepend(this.printEl);
       this.printStyleEl?.remove();
       this.printStyleEl = undefined;
       this.viewEl?.removeEventListener('load', this.exportHandleImgLoaded);
@@ -394,36 +391,40 @@ export class InstantAppsExport {
   setupViewPrintElements(): void {
     if (this.view != null) {
       document.body.prepend(this.printEl);
-      this.viewSectionEl.className = CSS.print.viewSection;
+      if (this.viewSectionEl != null) {
+        this.viewSectionEl.className = CSS.print.viewSection;
+      }
       this.handleLegendSetup();
       this.handleViewSectionDisplay();
+      const title = document.title;
+      if (this.showHeaderTitle && this.headerTitle) {
+        document.title = this.headerTitle;
+      }
       window.print();
+      document.title = title;
     }
   }
 
   handleLegendSetup(): void {
-    if (this.view != null) {
+    if (this.view != null && this.includeMap) {
       const hasLegend = this.showIncludeLegend && this.includeLegend;
       if (hasLegend) {
         this.legendContainerEl.style.display = 'block';
-        this.legend.visible = true;
         const gridGap = 8;
+        const totalMargin = '.50in';
         const fullLegendHeight = this.legendContainerEl.offsetHeight + gridGap;
-        this.viewContainerEl.style.height = `calc(100vh - ${fullLegendHeight}px - .50in)`;
-        this.viewSectionEl.style.gridTemplateRows = `calc(100vh - ${fullLegendHeight}px - .50in) auto`;
+        this.viewContainerEl.style.height = `calc(100vh - ${fullLegendHeight}px - ${totalMargin})`;
+        this.viewSectionEl.style.gridTemplateRows = `calc(100vh - ${fullLegendHeight}px - ${totalMargin}) auto`;
       } else {
         this.legendContainerEl.style.display = 'none';
-        this.legend.visible = false;
         this.viewContainerEl.style.height = '';
         this.viewSectionEl.style.gridTemplateRows = '';
       }
-      console.log('legendContainerEl: ', this.legendContainerEl);
-      console.log('legend: ', this.legend);
     }
   }
 
   handleViewSectionDisplay(): void {
-    if (this.view != null) {
+    if (this.view != null && this.includeMap) {
       const hasLegend = this.showIncludeLegend && this.includeLegend;
       const hasPopup = this.includePopup && this.view.popup.selectedFeature && this.view.popup.visible;
       if (hasLegend && hasPopup) {
@@ -438,7 +439,7 @@ export class InstantAppsExport {
   }
 
   async viewScreenshot(): Promise<void> {
-    if (this.view != null) {
+    if (this.view != null && this.includeMap) {
       const pixelRatio = 2;
       const screenshot = await this.view.takeScreenshot({ width: this.view.width * pixelRatio, height: this.view.height * pixelRatio });
       if (this.viewEl != null) this.viewEl.src = screenshot.dataUrl;
