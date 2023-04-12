@@ -12,13 +12,13 @@ import { LogicalPlacement } from "@esri/calcite-components/dist/types/utils/floa
 export namespace Components {
     interface InstantAppsExport {
         /**
+          * Extra content that will be added below the view.
+         */
+        "extraContent"?: HTMLElement;
+        /**
           * Export header name, updated in input.
          */
         "headerTitle"?: string;
-        /**
-          * When `true`, include header theme in export.
-         */
-        "includeHeaderTheme"?: boolean;
         /**
           * When `true`, include legend in export.
          */
@@ -27,6 +27,10 @@ export namespace Components {
           * When `true`, include map in export.
          */
         "includeMap"?: boolean;
+        /**
+          * When `true`, include popup in export.
+         */
+        "includePopup"?: boolean;
         /**
           * Renders tool as a popover with a trigger button, or inline to place in a custom container.
          */
@@ -52,10 +56,6 @@ export namespace Components {
          */
         "showHeaderTitle"?: boolean;
         /**
-          * Show header theme checkbox.
-         */
-        "showIncludeHeaderTheme"?: boolean;
-        /**
           * Show include legend checkbox.
          */
         "showIncludeLegend"?: boolean;
@@ -63,6 +63,14 @@ export namespace Components {
           * Show include map checkbox.
          */
         "showIncludeMap"?: boolean;
+        /**
+          * Show popup checkbox.
+         */
+        "showIncludePopup"?: boolean;
+        /**
+          * MapView or SceneView to reference when filtering.
+         */
+        "view": __esri.MapView | __esri.SceneView | undefined;
     }
     interface InstantAppsFilterList {
         /**
@@ -445,13 +453,13 @@ declare global {
 declare namespace LocalJSX {
     interface InstantAppsExport {
         /**
+          * Extra content that will be added below the view.
+         */
+        "extraContent"?: HTMLElement;
+        /**
           * Export header name, updated in input.
          */
         "headerTitle"?: string;
-        /**
-          * When `true`, include header theme in export.
-         */
-        "includeHeaderTheme"?: boolean;
         /**
           * When `true`, include legend in export.
          */
@@ -461,13 +469,17 @@ declare namespace LocalJSX {
          */
         "includeMap"?: boolean;
         /**
+          * When `true`, include popup in export.
+         */
+        "includePopup"?: boolean;
+        /**
           * Renders tool as a popover with a trigger button, or inline to place in a custom container.
          */
         "mode"?: 'popover' | 'inline';
         /**
-          * Emits when the export button is clicked.
+          * Emits when the instant-apps-export's output prop is updated after the "Export" button is clicked.
          */
-        "onExportBtnClick"?: (event: InstantAppsExportCustomEvent<void>) => void;
+        "onExportOutputUpdated"?: (event: InstantAppsExportCustomEvent<void>) => void;
         /**
           * Output to use to set up export.
          */
@@ -489,10 +501,6 @@ declare namespace LocalJSX {
          */
         "showHeaderTitle"?: boolean;
         /**
-          * Show header theme checkbox.
-         */
-        "showIncludeHeaderTheme"?: boolean;
-        /**
           * Show include legend checkbox.
          */
         "showIncludeLegend"?: boolean;
@@ -500,6 +508,14 @@ declare namespace LocalJSX {
           * Show include map checkbox.
          */
         "showIncludeMap"?: boolean;
+        /**
+          * Show popup checkbox.
+         */
+        "showIncludePopup"?: boolean;
+        /**
+          * MapView or SceneView to reference when filtering.
+         */
+        "view"?: __esri.MapView | __esri.SceneView | undefined;
     }
     interface InstantAppsFilterList {
         /**

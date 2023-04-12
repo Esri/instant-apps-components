@@ -109,7 +109,6 @@ const layerExpressions = [
 | `view`                 | --                | MapView or SceneView to reference when filtering.                      | `MapView \| SceneView`         | `undefined` |
 
 
-
 ## Events
 
 | Event             | Description                            | Type                |

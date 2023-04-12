@@ -4,7 +4,7 @@
 * @prop --instant-apps-export-action-icon-hover-color: Popup's trigger button's icon color when hovered over.
 * @prop --instant-apps-export-background: Export's container background color.
 * @prop --instant-apps-export-text-color: Export's container text color.
-* @prop --instant-apps-export-width: Export's container width.
+* @prop --instant-apps-export-popover-width: Export's popover container width.
 */
 
 :host {
@@ -14,7 +14,7 @@
   --instant-apps-export-action-icon-hover-color: var(--calcite-ui-text-1);
   --instant-apps-export-background: var(--calcite-ui-foreground-1);
   --instant-apps-export-text-color: var(--calcite-ui-text-1);
-  --instant-apps-export-width: 250px;
+  --instant-apps-export-popover-width: 250px;
 }
 
 .instant-apps-export {
@@ -22,16 +22,24 @@
     box-sizing: border-box;
   }
 
-  &__container {
-    width: var(--instant-apps-export-width);
+  &__popover-container,
+  &__inline-container {
     padding: 12px;
     background: var(--instant-apps-export-background);
     --calcite-ui-text-1: var(--instant-apps-export-text-color);
+  }
+
+  &__popover-container {
+    width: var(--instant-apps-export-popover-width);
   }
 
   calcite-action {
     width: var(--instant-apps-export-action-width);
     --calcite-ui-text-3: var(--instant-apps-export-action-icon-color);
     --calcite-ui-text-1: var(--instant-apps-export-action-icon-hover-color);
+  }
+
+  .instant-apps-export-print {
+    display: none;
   }
 }

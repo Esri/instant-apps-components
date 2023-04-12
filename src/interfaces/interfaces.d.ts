@@ -194,9 +194,9 @@ export type FilterQueryLayer = __esri.FeatureLayer | __esri.WFSLayer | __esri.CS
 // Export
 export interface ExportOutput {
   headerTitle?: string;
-  includeHeaderTheme?: boolean;
   includeLegend?: boolean;
   includeMap?: boolean;
+  includePopup?: boolean;
 }
 
 export type PopoverPlacement =
