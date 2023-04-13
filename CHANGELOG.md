@@ -5,6 +5,10 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## v1.0.0-beta.62
+
+- Add exports component that can be used to print or create a PDF of view elements, a screenshot of the view, and additional content when adding an HTML element to the `extraContent` prop in inline or popover mode. Also, allows the dev to listen for updates to the `output` prop and create their own print layout based on those options.
+
 ## v1.0.0-beta.61
 
 - Version updates
