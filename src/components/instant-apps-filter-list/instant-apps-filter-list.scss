@@ -18,6 +18,10 @@
   &__footer {
     padding: 12px;
     display: flex;
+
+    calcite-button:nth-child(2) {
+      margin-left: 6px;
+    }
   }
 
   &__item-container,

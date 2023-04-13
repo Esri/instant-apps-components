@@ -191,6 +191,37 @@ type ActiveTool = 'distance' | 'point' | 'area' | 'clear';
 export type FilterLayer = __esri.FeatureLayer | __esri.ImageryLayer | __esri.WFSLayer | __esri.StreamLayer | __esri.CSVLayer | __esri.GeoJSONLayer;
 export type FilterQueryLayer = __esri.FeatureLayer | __esri.WFSLayer | __esri.CSVLayer | __esri.GeoJSONLayer;
 
+// Export
+export interface ExportOutput {
+  headerTitle?: string;
+  includeLegend?: boolean;
+  includeMap?: boolean;
+  includePopup?: boolean;
+}
+
+export type PopoverPlacement =
+  | 'auto'
+  | 'top'
+  | 'right'
+  | 'bottom'
+  | 'left'
+  | 'top-start'
+  | 'top-end'
+  | 'right-start'
+  | 'right-end'
+  | 'bottom-start'
+  | 'bottom-end'
+  | 'left-start'
+  | 'left-end'
+  | 'auto-start'
+  | 'auto-end'
+  | 'leading-start'
+  | 'leading'
+  | 'leading-end'
+  | 'trailing-end'
+  | 'trailing'
+  | 'trailing-start';
+
 export interface IMeasureConfiguration {
   areaUnit?: __esri.AreaUnit;
   linearUnit?: __esri.LengthUnit;

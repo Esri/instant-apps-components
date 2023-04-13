@@ -54,6 +54,19 @@
 | `--instant-apps-header-min-height`                 | Minimum height for header. Default: 50px;                           |
 
 
+## Dependencies
+
+### Used by
+
+ - [instant-apps-export](../instant-apps-export)
+
+### Graph
+```mermaid
+graph TD;
+  instant-apps-export --> instant-apps-header
+  style instant-apps-header fill:#f9f,stroke:#333,stroke-width:4px
+```
+
 ----------------------------------------------
 
 ## License
