@@ -80,7 +80,7 @@
       </div>
     </calcite-shell>
     <script>
-      require(['esri/WebMap', 'esri/views/MapView', 'esri/config'], (WebMap, MapView, esriConfig) => {
+      require(['esri/WebMap', 'esri/views/MapView', 'esri/config', 'esri/widgets/ScaleBar'], (WebMap, MapView, esriConfig, ScaleBar) => {
         esriConfig.portalUrl = 'https://nw-brews.mapsdevext.arcgis.com';
 
         const map = new WebMap({
@@ -104,6 +104,16 @@
         });
 
         view.when(async () => {
+          const scaleBar = new ScaleBar({
+            view: view,
+            style: 'line',
+            // The scale bar displays both metric and non-metric units.
+          });
+
+          // Add the widget to the bottom left corner of the view
+          view.ui.add(scaleBar, {
+            position: 'bottom-left',
+          });
           const note = document.getElementById('slide-note');
           view.ui.add(note, 'bottom-right');
           note.style.visibility = 'visible';
