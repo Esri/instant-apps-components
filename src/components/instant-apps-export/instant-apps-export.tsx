@@ -287,9 +287,6 @@ export class InstantAppsExport {
   exportOnClick(): void {
     this.handleViewExportOnClick();
     this.updateExportOutput();
-    if (this.popoverEl != null) {
-      this.popoverEl.open = false;
-    }
   }
 
   async handleViewExportOnClick(): Promise<void> {
@@ -304,6 +301,10 @@ export class InstantAppsExport {
         await this.viewScreenshot();
       } else {
         this.exportHandleImgLoaded();
+      }
+    } else {
+      if (this.popoverEl != null) {
+        this.popoverEl.open = false;
       }
     }
   }
@@ -342,6 +343,9 @@ export class InstantAppsExport {
       this.printContainerEl?.prepend(this.printEl);
       this.printStyleEl?.remove();
       this.printStyleEl = undefined;
+      if (this.popoverEl != null) {
+        this.popoverEl.open = false;
+      }
       this.viewEl?.removeEventListener('load', this.exportHandleImgLoaded);
     }
   }
