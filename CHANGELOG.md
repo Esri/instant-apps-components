@@ -5,6 +5,36 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## v1.0.0-beta.61
+
+- Version updates
+  - ArcGIS JS API CDN to next
+  - Calcite Components to v1.0.7
+
+### instant-apps-scoreboard
+
+- Bug fixes:
+- Set min-width and min-height on load state
+- Update 'onclick' to 'onClick' to previous/next buttons
+- Added label and text to previous/next buttons
+
+## v1.0.0-beta.60
+
+### instant-apps-scoreboard
+
+- Bug fix: Address destructure issue.
+
+## v1.0.0-beta.59
+
+### instant-apps-scoreboard
+
+- Component to calculate and display a series of statistics based on a layer(s) and field attributes.
+
+## v1.0.0-beta.58
+
+- Add Measurement component that displays line, area, point measure tools
+- Add individual test apps
+
 ## v1.0.0-beta.57
 
 - Bug fixes:

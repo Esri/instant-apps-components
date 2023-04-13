@@ -7,6 +7,12 @@
   font-size: 0.875rem;
   background-color: var(--calcite-ui-background);
   color: var(--calcite-ui-text-1);
+  width: max-content;
+  max-height: 400px;
+  overflow: auto;
+  padding: 1.5em;
+  margin-bottom: 0;
+  
   table{
     border:none;
     border-collapse: collapse;
@@ -19,12 +25,8 @@
   }
    tr:nth-child(even){
    background-color:var(--calcite-ui-foreground-2);
-
-
   }
-  tr:nth-child(odd){
-    
-  }
+
   tr th{
     padding:0.5em 0.7em;
     font-weight: 400;

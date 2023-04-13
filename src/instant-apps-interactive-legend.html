@@ -22,36 +22,45 @@
 
     <style>
       html,
-      body {
+      body,
+      #viewDiv {
         width: 100%;
         height: 100%;
-        margin: 1em;
-        padding: 1em;
-      }
-
-      .demos {
-        display: flex;
-        flex-direction: column;
-      }
-
-      calcite-link {
-        margin: 0.5em 0;
+        margin: 0;
+        padding: 0;
       }
     </style>
   </head>
 
   <body>
-    <h3>Instant App Component Demo Apps</h3>
-    <div class="demos">
-      <calcite-link href="./instant-apps-export.html">Export to PDF</calcite-link>
-      <calcite-link href="./instant-apps-filter-list.html">Filter List</calcite-link>
-      <calcite-link href="./instant-apps-header.html">Header</calcite-link>
-      <calcite-link href="./instant-apps-interactive-legend.html">Interactive Legend</calcite-link>
-      <calcite-link href="./instant-apps-keyboard-shortcuts.html">Keyboard Shortcuts</calcite-link>
-      <calcite-link href="./instant-apps-measurement.html">Measurement</calcite-link>
-      <calcite-link href="./instant-apps-popovers.html">Popover</calcite-link>
-      <calcite-link href="./instant-apps-scoreboard.html">Scoreboard</calcite-link>
-      <calcite-link href="./instant-apps-social-share.html">Social Share</calcite-link>
-    </div>
+    <div id="viewDiv"></div>
+
+    <script>
+      require(['esri/WebMap', 'esri/widgets/Expand', 'esri/views/MapView', 'esri/core/reactiveUtils'], (WebMap, Expand, MapView, reactiveUtils) => {
+        const map = new WebMap({
+          portalItem: {
+            id: 'ddf28dc057b8400dbfa148ef403f7c57',
+          },
+        });
+
+        const view = new MapView({
+          map,
+          container: 'viewDiv',
+        });
+
+        const legend = document.createElement('instant-apps-interactive-legend');
+        legend.view = view;
+
+        const legendExpand = new Expand({
+          view,
+          mode: 'floating',
+          expandIcon: 'legend',
+          group: 'top-right',
+          content: legend,
+          expanded: true,
+        });
+        view.ui.add(legendExpand, 'top-right');
+      });
+    </script>
   </body>
 </html>
