@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## v1.0.0-beta.63
 
+### instant-apps-filter-list
+
+- Bug fix: Watch doesn't trigger initially so change method used to watch view
+
 ### instant-apps-export
 
 - Add label and checkbox for `extraContent`
