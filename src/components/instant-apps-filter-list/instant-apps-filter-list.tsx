@@ -104,12 +104,14 @@ export class InstantAppsFilterList {
   geometryJsonUtils: typeof __esri.JSONSupport;
   locale: string;
   panelEl: HTMLCalcitePanelElement;
+  reactiveUtils: __esri.reactiveUtils;
 
   async componentWillLoad(): Promise<void> {
     this.baseClass = getMode(this.hostElement) === 'dark' ? baseClassDark : baseClassLight;
     await this.initializeModules();
     this.getMessages();
     this.disabled = this.layerExpressions?.length ? undefined : true;
+    this.reactiveUtils.whenOnce(() => this.view).then(() => this.handleWhenView());
   }
 
   componentShouldUpdate(newValue: unknown, _oldValue: unknown, name: string) {
@@ -123,8 +125,9 @@ export class InstantAppsFilterList {
   }
 
   async initializeModules(): Promise<void> {
-    const [intl, geometryJsonUtils] = await loadModules(['esri/intl', 'esri/geometry/support/jsonUtils']);
+    const [intl, geometryJsonUtils, reactiveUtils] = await loadModules(['esri/intl', 'esri/geometry/support/jsonUtils', 'esri/core/reactiveUtils']);
     this.geometryJsonUtils = geometryJsonUtils;
+    this.reactiveUtils = reactiveUtils;
     this.locale = intl.getLocale();
 
     return Promise.resolve();
