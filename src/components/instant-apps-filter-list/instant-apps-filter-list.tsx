@@ -1,5 +1,5 @@
 import { CalciteCheckboxCustomEvent, CalciteInputDatePickerCustomEvent } from '@esri/calcite-components';
-import { Component, Element, Event, EventEmitter, Host, h, State, Prop, VNode, Watch } from '@stencil/core';
+import { Component, Element, Event, EventEmitter, Host, h, State, Prop, VNode } from '@stencil/core';
 
 import FilterList_T9n from '../../assets/t9n/instant-apps-filter-list/resources.json';
 
@@ -104,37 +104,30 @@ export class InstantAppsFilterList {
   geometryJsonUtils: typeof __esri.JSONSupport;
   locale: string;
   panelEl: HTMLCalcitePanelElement;
+  reactiveUtils: __esri.reactiveUtils;
 
   async componentWillLoad(): Promise<void> {
     this.baseClass = getMode(this.hostElement) === 'dark' ? baseClassDark : baseClassLight;
     await this.initializeModules();
     this.getMessages();
     this.disabled = this.layerExpressions?.length ? undefined : true;
+    this.reactiveUtils.whenOnce(() => this.view).then(() => this.handleWhenView());
+  }
+
+  componentShouldUpdate(newValue: unknown, _oldValue: unknown, name: string) {
+    if (name === 'view' && newValue != null) {
+      this.handleWhenView();
+    }
   }
 
   componentWillRender(): void {
     this.disabled = this.layerExpressions?.length > 0 ? undefined : true;
   }
 
-  @Watch('view')
-  async watchPropView(): Promise<void> {
-    if (this.view == null) return;
-    const map = this.view.map as __esri.WebMap | __esri.WebScene;
-    await map.loadAll();
-    this.initExpressions();
-    this.handleURLParams();
-    this.initDefExpressions = {};
-    map.allLayers.forEach(layer => {
-      if (supportedTypes.includes(layer.type)) {
-        const fl = layer as FilterLayer;
-        this.initDefExpressions[fl.id] = fl.definitionExpression;
-      }
-    });
-  }
-
   async initializeModules(): Promise<void> {
-    const [intl, geometryJsonUtils] = await loadModules(['esri/intl', 'esri/geometry/support/jsonUtils']);
+    const [intl, geometryJsonUtils, reactiveUtils] = await loadModules(['esri/intl', 'esri/geometry/support/jsonUtils', 'esri/core/reactiveUtils']);
     this.geometryJsonUtils = geometryJsonUtils;
+    this.reactiveUtils = reactiveUtils;
     this.locale = intl.getLocale();
 
     return Promise.resolve();
@@ -802,6 +795,21 @@ export class InstantAppsFilterList {
         : this.initDefExpressions[id];
     const fl = this.view.map.findLayerById(id) as FilterLayer;
     fl.definitionExpression = combinedExpressions;
+  }
+
+  async handleWhenView(): Promise<void> {
+    if (this.view == null) return;
+    const map = this.view.map as __esri.WebMap | __esri.WebScene;
+    await map.loadAll();
+    this.initExpressions();
+    this.handleURLParams();
+    this.initDefExpressions = {};
+    map.allLayers.forEach(layer => {
+      if (supportedTypes.includes(layer.type)) {
+        const fl = layer as FilterLayer;
+        this.initDefExpressions[fl.id] = fl.definitionExpression;
+      }
+    });
   }
 
   generateOutput(layerId: string): void {
