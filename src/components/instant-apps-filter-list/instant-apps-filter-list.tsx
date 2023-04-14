@@ -1,5 +1,5 @@
 import { CalciteCheckboxCustomEvent, CalciteInputDatePickerCustomEvent } from '@esri/calcite-components';
-import { Component, Element, Event, EventEmitter, Host, h, State, Prop, VNode, Watch } from '@stencil/core';
+import { Component, Element, Event, EventEmitter, Host, h, State, Prop, VNode } from '@stencil/core';
 
 import FilterList_T9n from '../../assets/t9n/instant-apps-filter-list/resources.json';
 
@@ -112,24 +112,14 @@ export class InstantAppsFilterList {
     this.disabled = this.layerExpressions?.length ? undefined : true;
   }
 
-  componentWillRender(): void {
-    this.disabled = this.layerExpressions?.length > 0 ? undefined : true;
+  componentShouldUpdate(newValue: unknown, _oldValue: unknown, name: string) {
+    if (name === 'view' && newValue != null) {
+      this.handleWhenView();
+    }
   }
 
-  @Watch('view')
-  async watchPropView(): Promise<void> {
-    if (this.view == null) return;
-    const map = this.view.map as __esri.WebMap | __esri.WebScene;
-    await map.loadAll();
-    this.initExpressions();
-    this.handleURLParams();
-    this.initDefExpressions = {};
-    map.allLayers.forEach(layer => {
-      if (supportedTypes.includes(layer.type)) {
-        const fl = layer as FilterLayer;
-        this.initDefExpressions[fl.id] = fl.definitionExpression;
-      }
-    });
+  componentWillRender(): void {
+    this.disabled = this.layerExpressions?.length > 0 ? undefined : true;
   }
 
   async initializeModules(): Promise<void> {
@@ -802,6 +792,21 @@ export class InstantAppsFilterList {
         : this.initDefExpressions[id];
     const fl = this.view.map.findLayerById(id) as FilterLayer;
     fl.definitionExpression = combinedExpressions;
+  }
+
+  async handleWhenView(): Promise<void> {
+    if (this.view == null) return;
+    const map = this.view.map as __esri.WebMap | __esri.WebScene;
+    await map.loadAll();
+    this.initExpressions();
+    this.handleURLParams();
+    this.initDefExpressions = {};
+    map.allLayers.forEach(layer => {
+      if (supportedTypes.includes(layer.type)) {
+        const fl = layer as FilterLayer;
+        this.initDefExpressions[fl.id] = fl.definitionExpression;
+      }
+    });
   }
 
   generateOutput(layerId: string): void {
