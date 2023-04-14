@@ -17,9 +17,17 @@ export namespace Components {
          */
         "extraContent"?: HTMLElement;
         /**
+          * Custom label for `extraContent` checkbox.
+         */
+        "extraContentLabel"?: string;
+        /**
           * Export header name, updated in input.
          */
         "headerTitle"?: string;
+        /**
+          * When `true`, include `extraContent` HTML element in PDF.
+         */
+        "includeExtraContent"?: boolean;
         /**
           * When `true`, include legend in export.
          */
@@ -519,9 +527,17 @@ declare namespace LocalJSX {
          */
         "extraContent"?: HTMLElement;
         /**
+          * Custom label for `extraContent` checkbox.
+         */
+        "extraContentLabel"?: string;
+        /**
           * Export header name, updated in input.
          */
         "headerTitle"?: string;
+        /**
+          * When `true`, include `extraContent` HTML element in PDF.
+         */
+        "includeExtraContent"?: boolean;
         /**
           * When `true`, include legend in export.
          */

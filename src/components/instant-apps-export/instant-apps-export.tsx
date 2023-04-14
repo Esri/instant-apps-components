@@ -39,9 +39,19 @@ export class InstantAppsExport {
   @Element() hostElement: HTMLElement;
 
   /**
+   * Output to use to set up export.
+   */
+  @Prop({ mutable: true }) output?: ExportOutput;
+
+  /**
    * Extra content that will be added below the view.
    */
   @Prop() extraContent?: HTMLElement;
+
+  /**
+   * Custom label for `extraContent` checkbox.
+   */
+  @Prop() extraContentLabel?: string;
 
   /**
    * Export header name, updated in input.
@@ -49,9 +59,9 @@ export class InstantAppsExport {
   @Prop({ mutable: true }) headerTitle?: string = '';
 
   /**
-   * When `true`, include popup in export.
+   * When `true`, include `extraContent` HTML element in PDF.
    */
-  @Prop({ mutable: true }) includePopup?: boolean = false;
+  @Prop({ mutable: true }) includeExtraContent?: boolean = true;
 
   /**
    * When `true`, include legend in export.
@@ -62,6 +72,11 @@ export class InstantAppsExport {
    * When `true`, include map in export.
    */
   @Prop({ mutable: true }) includeMap?: boolean = true;
+
+  /**
+   * When `true`, include popup in export.
+   */
+  @Prop({ mutable: true }) includePopup?: boolean = false;
 
   /**
    * Renders tool as a popover with a trigger button, or inline to place in a custom container.
@@ -89,11 +104,6 @@ export class InstantAppsExport {
   @Prop() showHeaderTitle?: boolean = true;
 
   /**
-   * Show popup checkbox.
-   */
-  @Prop() showIncludePopup?: boolean = true;
-
-  /**
    * Show include legend checkbox.
    */
   @Prop() showIncludeLegend?: boolean = true;
@@ -104,9 +114,9 @@ export class InstantAppsExport {
   @Prop() showIncludeMap?: boolean = false;
 
   /**
-   * Output to use to set up export.
+   * Show popup checkbox.
    */
-  @Prop({ mutable: true }) output?: ExportOutput;
+  @Prop() showIncludePopup?: boolean = true;
 
   /**
    * MapView or SceneView to reference when filtering.
@@ -188,6 +198,7 @@ export class InstantAppsExport {
 
   renderPanel(): VNode {
     const headerTitle = this.showHeaderTitle ? this.renderTitle() : null;
+    const includeExtraContent = this.extraContent != null ? this.renderCheckbox('includeExtraContent', this.extraContentLabel) : null;
     const includeMap = this.showIncludeMap ? this.renderSwitch('includeMap') : null;
     const options = this.includeMap ? this.renderMapOptions() : null;
     const print = this.renderPrint();
@@ -195,6 +206,7 @@ export class InstantAppsExport {
     return (
       <div class={panelClass}>
         {headerTitle}
+        {includeExtraContent}
         {includeMap}
         {options}
         <calcite-button width="full" onClick={this.exportOnClick.bind(this)} loading={this.exportIsLoading}>
@@ -214,6 +226,17 @@ export class InstantAppsExport {
     );
   }
 
+  renderCheckbox(value: string, label?: string): VNode {
+    const checked = this[value];
+    const title = label != null ? label : this.messages?.[value];
+    return (
+      <calcite-label layout="inline-space-between">
+        {title}
+        <calcite-checkbox checked={checked} value={value} onCalciteCheckboxChange={this.optionOnChange.bind(this)}></calcite-checkbox>
+      </calcite-label>
+    );
+  }
+
   renderSwitch(value: string): VNode {
     const checked = this[value];
     return (
@@ -224,9 +247,9 @@ export class InstantAppsExport {
     );
   }
 
-  renderMapOptions(): (VNode | null)[] {
-    const includeLegend = this.showIncludeLegend ? this.renderSwitch('includeLegend') : null;
-    const includePopup = this.showIncludePopup ? this.renderSwitch('includePopup') : null;
+  renderMapOptions(): VNode {
+    const includeLegend = this.showIncludeLegend ? this.renderCheckbox('includeLegend') : null;
+    const includePopup = this.showIncludePopup ? this.renderCheckbox('includePopup') : null;
     return (
       <div>
         {includeLegend}
@@ -237,11 +260,12 @@ export class InstantAppsExport {
 
   renderPrint(): VNode {
     const printMap = this.includeMap ? this.renderPrintMap() : null;
+    const extraContent = this.includeExtraContent ? this.renderExtraContent() : null;
     return (
       <div ref={(el: HTMLDivElement) => (this.printContainerEl = el)}>
         <div class={CSS.print.base} ref={(el: HTMLDivElement) => (this.printEl = el)}>
           <div>{printMap}</div>
-          <div class={CSS.print.extraContainer} ref={(el: HTMLDivElement) => (this.extraContainerEl = el)}></div>
+          {extraContent}
         </div>
       </div>
     );
@@ -273,6 +297,10 @@ export class InstantAppsExport {
         <div ref={(el: HTMLDivElement) => (this.popupContentEl = el)} class={CSS.print.popupContent}></div>
       </div>
     );
+  }
+
+  renderExtraContent(): VNode {
+    return <div class={CSS.print.extraContainer} ref={(el: HTMLDivElement) => (this.extraContainerEl = el)}></div>;
   }
 
   optionOnChange(e: CalciteCheckboxCustomEvent<Event>): void {
