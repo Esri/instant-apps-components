@@ -1,9 +1,5 @@
 export type ScoreboardItems = ScoreboardItem[];
 
-export interface ScoreboardData {
-  items: ScoreboardItems;
-}
-
 export interface ScoreboardItem {
   layer?: {
     url: string;

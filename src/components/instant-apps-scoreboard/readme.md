@@ -9,7 +9,7 @@ Calculates and displays a series of statistics based on a layer(s) and field att
 
 | Property   | Attribute  | Description                                                                                     | Type                                                       | Default               |
 | ---------- | ---------- | ----------------------------------------------------------------------------------------------- | ---------------------------------------------------------- | --------------------- |
-| `data`     | --         | Data on layers, field attribute info, operations, for each scoreboard item                      | `ScoreboardData`                                           | `undefined`           |
+| `items`    | --         | Data on layers, field attribute info, operations, for each scoreboard item                      | `ScoreboardItem[]`                                         | `undefined`           |
 | `mode`     | `mode`     | Mode of scoreboard i.e. 'floating' or 'pinned'.                                                 | `Scoreboard.Floating \| Scoreboard.Pinned`                 | `Scoreboard.Floating` |
 | `position` | `position` | Position of scoreboard i.e. 'bottom', 'left', or 'right'.                                       | `Scoreboard.Bottom \| Scoreboard.Left \| Scoreboard.Right` | `Scoreboard.Bottom`   |
 | `view`     | --         | MapView or SceneView to reference extent, viewpoint, and layers in map to perform calculations. | `MapView \| SceneView`                                     | `undefined`           |
@@ -17,9 +17,9 @@ Calculates and displays a series of statistics based on a layer(s) and field att
 
 ## Events
 
-| Event                   | Description                                                 | Type                          |
-| ----------------------- | ----------------------------------------------------------- | ----------------------------- |
-| `scoreboardDataUpdated` | Emits when scoreboard data has been calculated and updated. | `CustomEvent<ScoreboardData>` |
+| Event                    | Description                                                         | Type                            |
+| ------------------------ | ------------------------------------------------------------------- | ------------------------------- |
+| `scoreboardItemsUpdated` | Emits when scoreboard item values have been calculated and updated. | `CustomEvent<ScoreboardItem[]>` |
 
 
 ## CSS Custom Properties

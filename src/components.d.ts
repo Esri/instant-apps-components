@@ -9,7 +9,7 @@ import { ActiveTool, ExportOutput, ExtentSelector, IMeasureConfiguration, Instan
 import { FilterMode } from "./components/instant-apps-interactive-legend/instant-apps-interactive-legend-classic/interfaces/interfaces";
 import { InstantAppsPopovers } from "./components/instant-apps-popovers/instant-apps-popovers";
 import { LogicalPlacement } from "@esri/calcite-components/dist/types/utils/floating-ui";
-import { ScoreboardData, ScoreboardMode, ScoreboardPosition } from "./components/instant-apps-scoreboard/types/interfaces";
+import { ScoreboardItem, ScoreboardMode, ScoreboardPosition } from "./components/instant-apps-scoreboard/types/interfaces";
 export namespace Components {
     interface InstantAppsExport {
         /**
@@ -301,7 +301,7 @@ export namespace Components {
         /**
           * Data on layers, field attribute info, operations, for each scoreboard item
          */
-        "data": ScoreboardData;
+        "items": ScoreboardItem[];
         /**
           * Mode of scoreboard i.e. 'floating' or 'pinned'.
          */
@@ -828,15 +828,15 @@ declare namespace LocalJSX {
         /**
           * Data on layers, field attribute info, operations, for each scoreboard item
          */
-        "data"?: ScoreboardData;
+        "items"?: ScoreboardItem[];
         /**
           * Mode of scoreboard i.e. 'floating' or 'pinned'.
          */
         "mode"?: ScoreboardMode;
         /**
-          * Emits when scoreboard data has been calculated and updated.
+          * Emits when scoreboard item values have been calculated and updated.
          */
-        "onScoreboardDataUpdated"?: (event: InstantAppsScoreboardCustomEvent<ScoreboardData>) => void;
+        "onScoreboardItemsUpdated"?: (event: InstantAppsScoreboardCustomEvent<ScoreboardItem[]>) => void;
         /**
           * Position of scoreboard i.e. 'bottom', 'left', or 'right'.
          */

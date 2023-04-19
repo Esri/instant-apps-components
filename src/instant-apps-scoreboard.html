@@ -210,73 +210,72 @@
         Collection,
       ) => {
         // Init dummy data
-        let data = {
-          items: [
-            {
-              layer: {
-                id: '16a9b6628df-layer-1',
-                url: 'https://services7.arcgis.com/wdgKFvvZvYZ3Biji/arcgis/rest/services/Baltimore_bldgs_slr/SceneServer',
-              },
-              field: 'SLR_table_SLR6COUNT',
-              label: 'SLR 6 - Count',
-              operation: 'count',
+        let data = [
+          {
+            layer: {
+              id: '16a9b6628df-layer-1',
+              url: 'https://services7.arcgis.com/wdgKFvvZvYZ3Biji/arcgis/rest/services/Baltimore_bldgs_slr/SceneServer',
             },
-            {
-              layer: {
-                id: '16a9b6628df-layer-1',
-                url: 'https://services7.arcgis.com/wdgKFvvZvYZ3Biji/arcgis/rest/services/Baltimore_bldgs_slr/SceneServer',
-              },
-              field: 'SLR_table_SLR6COUNT',
-              label: 'SLR 6 - Average',
-              operation: 'avg',
+            field: 'SLR_table_SLR6COUNT',
+            label: 'SLR 6 - Count',
+            operation: 'count',
+          },
+          {
+            layer: {
+              id: '16a9b6628df-layer-1',
+              url: 'https://services7.arcgis.com/wdgKFvvZvYZ3Biji/arcgis/rest/services/Baltimore_bldgs_slr/SceneServer',
             },
-            {
-              layer: {
-                id: '16a9b6628df-layer-1',
-                url: 'https://services7.arcgis.com/wdgKFvvZvYZ3Biji/arcgis/rest/services/Baltimore_bldgs_slr/SceneServer',
-              },
-              field: 'SLR_table_SLR6COUNT',
-              label: 'SLR 6 - Sum',
-              operation: 'sum',
+            field: 'SLR_table_SLR6COUNT',
+            label: 'SLR 6 - Average',
+            operation: 'avg',
+          },
+          {
+            layer: {
+              id: '16a9b6628df-layer-1',
+              url: 'https://services7.arcgis.com/wdgKFvvZvYZ3Biji/arcgis/rest/services/Baltimore_bldgs_slr/SceneServer',
             },
-            {
-              layer: {
-                id: '16a9b6628df-layer-1',
-                url: 'https://services7.arcgis.com/wdgKFvvZvYZ3Biji/arcgis/rest/services/Baltimore_bldgs_slr/SceneServer',
-              },
-              field: 'SLR_table_SLR6COUNT',
-              label: 'SLR 6 - Min',
-              operation: 'min',
+            field: 'SLR_table_SLR6COUNT',
+            label: 'SLR 6 - Sum',
+            operation: 'sum',
+          },
+          {
+            layer: {
+              id: '16a9b6628df-layer-1',
+              url: 'https://services7.arcgis.com/wdgKFvvZvYZ3Biji/arcgis/rest/services/Baltimore_bldgs_slr/SceneServer',
             },
-            {
-              layer: {
-                id: '16a9b6628df-layer-1',
-                url: 'https://services7.arcgis.com/wdgKFvvZvYZ3Biji/arcgis/rest/services/Baltimore_bldgs_slr/SceneServer',
-              },
-              field: 'SLR_table_SLR6COUNT',
-              label: 'SLR 6 - Count',
-              operation: 'max',
+            field: 'SLR_table_SLR6COUNT',
+            label: 'SLR 6 - Min',
+            operation: 'min',
+          },
+          {
+            layer: {
+              id: '16a9b6628df-layer-1',
+              url: 'https://services7.arcgis.com/wdgKFvvZvYZ3Biji/arcgis/rest/services/Baltimore_bldgs_slr/SceneServer',
             },
-            {
-              layer: {
-                id: '1650e5e4ded-layer-2',
-                url: 'https://services7.arcgis.com/wdgKFvvZvYZ3Biji/arcgis/rest/services/Baltimore_impact_slr/SceneServer',
-              },
-              field: 'Number_affected',
-              label: 'Num affected - Sum',
-              operation: 'sum',
+            field: 'SLR_table_SLR6COUNT',
+            label: 'SLR 6 - Count',
+            operation: 'max',
+          },
+          {
+            layer: {
+              id: '1650e5e4ded-layer-2',
+              url: 'https://services7.arcgis.com/wdgKFvvZvYZ3Biji/arcgis/rest/services/Baltimore_impact_slr/SceneServer',
             },
-            {
-              layer: {
-                id: '1650e5e4ded-layer-2',
-                url: 'https://services7.arcgis.com/wdgKFvvZvYZ3Biji/arcgis/rest/services/Baltimore_impact_slr/SceneServer',
-              },
-              field: 'Level_',
-              label: 'Max value of levels',
-              operation: 'max',
+            field: 'Number_affected',
+            label: 'Num affected - Sum',
+            operation: 'sum',
+          },
+          {
+            layer: {
+              id: '1650e5e4ded-layer-2',
+              url: 'https://services7.arcgis.com/wdgKFvvZvYZ3Biji/arcgis/rest/services/Baltimore_impact_slr/SceneServer',
             },
-          ],
-        };
+            field: 'Level_',
+            label: 'Max value of levels',
+            operation: 'max',
+          },
+        ];
+
         const themes = [
           {
             label: 'Default',
@@ -343,7 +342,7 @@
         scoreboard.position = 'bottom';
         view.ui.add(scoreboard, 'manual');
 
-        scoreboard.addEventListener('scoreboardDataUpdated', e => console.log('SCOREBOARD DATA UPDATED: ', e.detail));
+        scoreboard.addEventListener('scoreboardItemsUpdated', e => console.log('SCOREBOARD DATA UPDATED: ', e.detail));
 
         // Init theme selector
         const themeColorSelect = document.getElementById('themeColorSelect');
@@ -454,8 +453,8 @@
           });
           const confirmCreate = document.getElementById('confirmCreate');
           confirmCreate.addEventListener('click', () => {
-            const dataCopy = { ...data };
-            dataCopy.items = [...dataCopy.items, dataToCreate];
+            const dataCopy = [...data];
+            dataCopy = [...dataCopy, dataToCreate];
             data = dataCopy;
             scoreboard.data = data;
             createCalciteValueListItem();
@@ -476,15 +475,15 @@
 
           // Edit
           done.addEventListener('click', () => {
-            const dataCollection = new Collection([...data.items]);
+            const dataCollection = new Collection([...data]);
 
             const obj = findItem(dataCollection, currentId);
             obj.label = labelInput.value;
             obj.operation = editOperationInput.value;
-            const items = dataCollection.toArray();
+            const updatedData = dataCollection.toArray();
             const valueListItem = document.getElementById(`${currentId}-value-list-item`);
             valueListItem.label = labelInput.value;
-            data = { items };
+            data = [...updatedData];
             scoreboard.data = data;
             modal.open = false;
             currentId = null;
@@ -494,7 +493,7 @@
           const createCalciteValueListItem = () => {
             const attrData = document.getElementById('attrData');
             attrData.innerHTML = '';
-            data.items.forEach((item, index) => {
+            data.forEach((item, index) => {
               const valueListItem = document.createElement('calcite-value-list-item');
               const editAction = document.createElement('calcite-action');
 
@@ -508,7 +507,7 @@
 
               editAction.addEventListener('click', e => {
                 currentId = id;
-                const dataCollection = new Collection([...data.items]);
+                const dataCollection = new Collection([...data]);
                 const obj = findItem(dataCollection, id);
                 const { field, label, operation } = obj;
                 fieldInput.value = field;
@@ -532,12 +531,12 @@
           // Re-order
           attrData.addEventListener('calciteListOrderChange', e => {
             const values = e.detail;
-            const items_tmp = new Collection([...data.items]);
+            const items_tmp = new Collection([...data]);
             const items = values.map((value, index) => {
               const item = findItem(items_tmp, value);
               return item;
             });
-            data = { items };
+            data = [...items];
             scoreboard.data = data;
             createCalciteValueListItem();
           });
@@ -545,10 +544,10 @@
           // Delete
           attrData.addEventListener('calciteListItemRemove', e => {
             const value = e.target.value;
-            const items = new Collection([...data.items]);
+            const items = new Collection([...data]);
             const itemToRemove = findItem(items, value);
             items.remove(itemToRemove);
-            data = { items: items.toArray() };
+            data = [...items.toArray()];
             scoreboard.data = data;
             createCalciteValueListItem();
           });
