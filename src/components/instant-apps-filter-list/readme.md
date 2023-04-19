@@ -39,6 +39,7 @@ interface Expression {
   max?: number | string;
   range?: { min: string | number | undefined; max: string | number | undefined };
   step?: number;
+  numDisplayOption?: "slider" | "drop-down";
 }
 ```
 
@@ -92,7 +93,6 @@ const layerExpressions = [
 
 <!-- Auto Generated Below -->
 
-
 ## Properties
 
 | Property               | Attribute         | Description                                                            | Type                           | Default     |
@@ -108,14 +108,12 @@ const layerExpressions = [
 | `urlParams`            | --                | URL params set by using filters.                                       | `URLSearchParams \| undefined` | `undefined` |
 | `view`                 | --                | MapView or SceneView to reference when filtering.                      | `MapView \| SceneView`         | `undefined` |
 
-
 ## Events
 
 | Event             | Description                            | Type                |
 | ----------------- | -------------------------------------- | ------------------- |
 | `filterListReset` | Emits when the reset button is pushed. | `CustomEvent<void>` |
 | `filterUpdate`    | Emits when the filter is updated.      | `CustomEvent<void>` |
-
 
 ## Slots
 
@@ -124,10 +122,10 @@ const layerExpressions = [
 | `"filter-header-actions-end"` | A slot for adding actions or content to the end side of the header. |
 | `"filter-header-content"`     | A slot for adding custom content to the header.                     |
 
-
-----------------------------------------------
+---
 
 ## License
+
 COPYRIGHT © 2023 Esri
 
 All rights reserved under the copyright laws of the United States and applicable international laws, treaties, and conventions.
@@ -139,4 +137,3 @@ See use restrictions at http://www.esri.com/legal/pdfs/mla_e204_e300/english
 For additional information, contact: Environmental Systems Research Institute, Inc. Attn: Contracts and Legal Services Department 380 New York Street Redlands, California, USA 92373 USA
 
 email: contracts@esri.com
-

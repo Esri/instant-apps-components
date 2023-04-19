@@ -152,6 +152,7 @@ export interface Expression {
   max?: number | string;
   range?: { min: string | number | undefined; max: string | number | undefined };
   step?: number;
+  numDisplayOption?: 'slider' | 'drop-down';
 }
 
 export interface LayerExpression {
