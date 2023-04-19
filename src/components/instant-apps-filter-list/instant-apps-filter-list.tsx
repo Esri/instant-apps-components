@@ -205,7 +205,8 @@ export class InstantAppsFilterList {
           onCalciteComboboxChange={this.handleComboSelect.bind(this, expression, layerId)}
           label={expression.name}
           placeholder={expression.placeholder}
-          selection-mode="multi"
+          overlayPositioning="fixed"
+          selectionMode="multi"
           scale="s"
           max-items="6"
         >
@@ -337,6 +338,9 @@ export class InstantAppsFilterList {
     if (type === 'string' || type == 'coded-value') {
       return this.renderCombobox(layerId, expression);
     } else if (type === 'number' || type == 'range') {
+      if (expression?.numDisplayOption === 'drop-down') {
+        return this.renderCombobox(layerId, expression);
+      }
       return this.renderNumberSlider(layerId, expression);
     } else if (type === 'date') {
       return this.renderDatePicker(layerId, expression);
@@ -448,15 +452,21 @@ export class InstantAppsFilterList {
   async updateNumberExpression(id: string, expression: Expression): Promise<boolean> {
     if ((!expression?.min && expression?.min !== 0) || (!expression?.max && expression?.max !== 0)) {
       const { field } = expression;
-      const graphic = await this.calculateMinMaxStatistics(id, field);
-      const attributes = graphic?.[0]?.attributes;
-      expression.min = attributes[`min${field}`];
-      expression.max = attributes[`max${field}`];
-      if (expression?.range && Object.keys(expression.range).length) {
-        const { min, max } = expression.range;
-        expression.definitionExpression = `${expression.field} BETWEEN ${min} AND ${max}`;
+      if (expression?.numDisplayOption === 'drop-down') {
+        const fields = (await this.getFeatureAttributes(id, field)) as number[];
+        fields.sort((a, b) => a - b);
+        expression.fields = fields;
+      } else {
+        const graphic = await this.calculateMinMaxStatistics(id, field);
+        const attributes = graphic?.[0]?.attributes;
+        expression.min = attributes[`min${field}`];
+        expression.max = attributes[`max${field}`];
+        if (expression?.range && Object.keys(expression.range).length) {
+          const { min, max } = expression.range;
+          expression.definitionExpression = `${expression.field} BETWEEN ${min} AND ${max}`;
 
-        return true;
+          return true;
+        }
       }
     }
     return false;
@@ -526,7 +536,7 @@ export class InstantAppsFilterList {
     return false;
   }
 
-  async getFeatureAttributes(layerId: string, field: string | undefined): Promise<string[]> {
+  async getFeatureAttributes(layerId: string, field: string | undefined): Promise<string[] | number[]> {
     const layer = this.view.map.allLayers.find(({ id }) => id === layerId) as FilterQueryLayer;
     if (layer && supportedTypes.includes(layer.type)) {
       const query = layer.createQuery();
