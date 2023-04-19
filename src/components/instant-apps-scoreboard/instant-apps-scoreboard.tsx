@@ -10,7 +10,6 @@ import { getLocaleComponentStrings } from '../../utils/locale';
 // Types
 import {
   Scoreboard,
-  ScoreboardData,
   ScoreboardItem,
   ScoreboardState,
   ScoreboardPosition,
@@ -77,7 +76,7 @@ export class InstantAppsScoreboard {
   /**
    * Data on layers, field attribute info, operations, for each scoreboard item
    */
-  @Prop() data: ScoreboardData;
+  @Prop() items: ScoreboardItem[];
 
   /**
    * Position of scoreboard i.e. 'bottom', 'left', or 'right'.
@@ -103,33 +102,32 @@ export class InstantAppsScoreboard {
   // Events
 
   /**
-   * Emits when scoreboard data has been calculated and updated.
+   * Emits when scoreboard item values have been calculated and updated.
    */
   @Event({
-    eventName: 'scoreboardDataUpdated',
+    eventName: 'scoreboardItemsUpdated',
     composed: true,
     cancelable: true,
     bubbles: true,
   })
-  scoreboardDataUpdated: EventEmitter<ScoreboardData>;
+  scoreboardItemsUpdated: EventEmitter<ScoreboardItem[]>;
 
-  scoreboardDataUpdatedHandler(): void {
-    this.scoreboardDataUpdated.emit(this.data);
+  scoreboardItemsUpdatedHandler(): void {
+    this.scoreboardItemsUpdated.emit(this.items);
   }
 
   // Watchers
-  @Watch('data')
+  @Watch('items')
   protected generateUIDs(): void {
     // Generates a series of UIDs (unique identifiers) to ensure each item is unique to properly handle comparisons
     this.itemIndex = 0;
-    const { items } = this.data;
-    items.forEach(this.generateUID());
+    this.items.forEach(this.generateUID());
   }
 
-  @Watch('data')
+  @Watch('items')
   protected storeLayers(): void {
     this.state = Scoreboard.Calculating;
-    const layerIds = this.data.items.map(item => item?.layer?.id);
+    const layerIds = this.items.map(item => item?.layer?.id);
     const isNotTable = (layer: __esri.Layer) => !(layer as any).isTable;
     const isAcceptableLayer = (layer: __esri.Layer) => layer.type === 'feature' || layer.type === 'scene';
     const notAddedYet = (layer: __esri.Layer) => layerIds.indexOf(layer.id) > -1;
@@ -158,24 +156,25 @@ export class InstantAppsScoreboard {
   }
 
   @Watch('layerViews')
-  protected async calculateScoreboardData(): Promise<void> {
+  protected async calculteScoreboardItemValues(): Promise<void> {
     if ((this.layers && this.layers.length === 0) || (this.layerViews && this.layerViews.length === 0)) return;
 
     this.state = Scoreboard.Calculating;
 
-    const data_temp = { items: [...this.data.items] };
+    const items_temp = [...this.items];
 
     const queryFeaturePromises: Promise<__esri.FeatureSet>[] = [];
-    this.queryStatDefinitions(data_temp, queryFeaturePromises);
+    this.queryStatDefinitions(items_temp, queryFeaturePromises);
 
     const queryFeaturesRes = await Promise.all(queryFeaturePromises);
-    this.handleQueryFeaturesResponses(queryFeaturesRes, data_temp);
+    this.handleQueryFeaturesResponses(queryFeaturesRes, items_temp);
 
-    this.data.items = [...data_temp.items];
+    this.items.length = 0;
+    items_temp.forEach(item => this.items.push(item));
 
     this.state = Scoreboard.Complete;
 
-    this.scoreboardDataUpdatedHandler();
+    this.scoreboardItemsUpdatedHandler();
 
     if (!this.initialCalculate) {
       this.initStationaryWatcher();
@@ -192,7 +191,7 @@ export class InstantAppsScoreboard {
       this.state = Scoreboard.Disabled;
       return Promise.reject();
     } finally {
-      if (!this.view || !this.data) {
+      if (!this.view || !this.items) {
         this.state = Scoreboard.Disabled;
         return Promise.reject();
       } else {
@@ -311,7 +310,7 @@ export class InstantAppsScoreboard {
     const progress = isLoading || isCalculating ? this.renderProgress() : null;
     const positionClass = this.getPositionClass;
     const styleClass = this.getStyleClass;
-    return <Host class={`${positionClass} ${styleClass}`}>{isDisabled ? null : [progress, this.data?.items?.length > 0 ? this.renderBase() : null]}</Host>;
+    return <Host class={`${positionClass} ${styleClass}`}>{isDisabled ? null : [progress, this.items?.length > 0 ? this.renderBase() : null]}</Host>;
   }
 
   renderBase(): HTMLDivElement {
@@ -339,7 +338,7 @@ export class InstantAppsScoreboard {
   }
 
   renderPreviousNextButtons(): HTMLCalciteActionElement[] {
-    const isBelowOrAtLimit = this.data?.items?.length <= ITEM_LIMIT;
+    const isBelowOrAtLimit = this.items?.length <= ITEM_LIMIT;
     const isBeginning = this.itemIndex === 0;
     const isEnd = this.isEnd;
     const isBottom = this.position === Scoreboard.Bottom;
@@ -382,8 +381,8 @@ export class InstantAppsScoreboard {
 
   renderItems(): HTMLUListElement {
     const { items } = CSS;
-    const dataToDisplay = this.getItemsToDisplay;
-    const scoreboardItems = dataToDisplay.map(item => this.renderItem(item));
+    const itemToDisplay = this.getItemsToDisplay;
+    const scoreboardItems = itemToDisplay.map(item => this.renderItem(item));
     return <ul class={items}>{scoreboardItems}</ul>;
   }
 
@@ -404,7 +403,7 @@ export class InstantAppsScoreboard {
     const isCalculating = this.state === Scoreboard.Calculating;
     const isDisabled = this.state === Scoreboard.Disabled;
     const showPlaceholder = !displayValue && isCalculating && !this.initialCalculate;
-    const valueToDisplay = displayValue ? displayValue : this.messages?.noData;
+    const valueToDisplay = displayValue ? displayValue : this.messages?.NA;
 
     const content = showPlaceholder ? this.renderValuePlaceholder() : !isDisabled ? valueToDisplay : '';
     return <span class={CSS.value}>{content}</span>;
@@ -440,13 +439,13 @@ export class InstantAppsScoreboard {
   }
 
   protected get getItemsToDisplay(): ScoreboardItem[] {
-    return this.data.items.slice(this.itemIndex, ITEM_LIMIT + this.itemIndex);
+    return this.items.slice(this.itemIndex, ITEM_LIMIT + this.itemIndex);
   }
 
   get isEnd(): boolean {
-    const lastItems = this.data.items.slice(this.data.items.length - ITEM_LIMIT);
+    const lastItems = this.items.slice(this.items.length - ITEM_LIMIT);
     const uidsOfLast = lastItems.map(item => item['uid']);
-    const uidsOfCurrent = this.data.items.slice(this.itemIndex, this.itemIndex + ITEM_LIMIT).map(item => item['uid']);
+    const uidsOfCurrent = this.items.slice(this.itemIndex, this.itemIndex + ITEM_LIMIT).map(item => item['uid']);
     return uidsOfLast.every((val, index) => val === uidsOfCurrent[index]);
   }
 
@@ -460,7 +459,7 @@ export class InstantAppsScoreboard {
   }
 
   // Query statistic definitions (FeatreLayerView/SceneLayerView.queryFeatures())
-  protected queryStatDefinitions(data: ScoreboardData, queryFeaturePromises: Promise<__esri.FeatureSet>[]): void {
+  protected queryStatDefinitions(items: ScoreboardItem[], queryFeaturePromises: Promise<__esri.FeatureSet>[]): void {
     const getStatsDefinition: (item: ScoreboardItem) => __esri.StatisticDefinition = (item: ScoreboardItem): __esri.StatisticDefinition => {
       const { field, operation } = item;
       const onStatisticField = field;
@@ -492,10 +491,10 @@ export class InstantAppsScoreboard {
       };
     };
 
-    data.items.forEach(queryFeaturesForItem_LayerView());
+    items.forEach(queryFeaturesForItem_LayerView());
   }
 
-  protected handleQueryFeaturesResponses(queryFeaturesRes: __esri.FeatureSet[], data: ScoreboardData): void {
+  protected handleQueryFeaturesResponses(queryFeaturesRes: __esri.FeatureSet[], items: ScoreboardItem[]): void {
     const getValue: (stat: __esri.FeatureSet) => number = (stat: __esri.FeatureSet): number => {
       const features = stat.features;
       const feature = features[0];
@@ -517,8 +516,8 @@ export class InstantAppsScoreboard {
         const isNotNull = value !== null;
         const formattedNumber = isNotNull ? this.intl.formatNumber(value, numberFormatOptions) : null;
         const displayValue = isNotNull ? `${formattedNumber}` : '';
-        data.items[statIndex].displayValue = displayValue;
-        data.items[statIndex].value = value;
+        items[statIndex].displayValue = displayValue;
+        items[statIndex].value = value;
       };
     };
 
@@ -531,7 +530,7 @@ export class InstantAppsScoreboard {
     const isNotInteractingWatcher = () => {
       return this.reactiveUtils?.when(
         () => !this.view?.interacting,
-        () => this.calculateScoreboardData(),
+        () => this.calculteScoreboardItemValues(),
         whenOnceConfig,
       );
     };

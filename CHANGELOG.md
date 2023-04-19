@@ -11,6 +11,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Add drop-down display option for number and range filter types
 
+### instant-apps-scoreboard
+
+- BREAKING CHANGE: Renamed `data` property to `items`; and, updated it's interface to `ScoreboardItem[]`.
+
 ## v1.0.0-beta.63
 
 ### instant-apps-filter-list
