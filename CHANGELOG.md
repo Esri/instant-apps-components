@@ -13,7 +13,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### instant-apps-scoreboard
 
-- BREAKING CHANGE: Renamed `data` property `items` and updated it's interface to `ScoreboardItem[]`.
+- BREAKING CHANGE: Renamed `data` property to `items`; and, updated it's interface to `ScoreboardItem[]`.
 
 ## v1.0.0-beta.63
 
