@@ -206,7 +206,7 @@ export class InstantAppsFilterList {
           label={expression.name}
           placeholder={expression.placeholder}
           overlayPositioning="fixed"
-          selectionMode="multi"
+          selectionMode="multiple"
           scale="s"
           max-items="6"
         >
