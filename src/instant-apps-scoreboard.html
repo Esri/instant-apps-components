@@ -453,7 +453,7 @@
           });
           const confirmCreate = document.getElementById('confirmCreate');
           confirmCreate.addEventListener('click', () => {
-            const dataCopy = [...data];
+            let dataCopy = [...data];
             dataCopy = [...dataCopy, dataToCreate];
             data = dataCopy;
             scoreboard.data = data;
