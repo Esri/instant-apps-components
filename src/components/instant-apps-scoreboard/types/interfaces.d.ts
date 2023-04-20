@@ -10,6 +10,7 @@ export interface ScoreboardItem {
   displayValue?: string;
   value?: number;
   operation?: string;
+  visible?: boolean;
 }
 
 export const enum Scoreboard {

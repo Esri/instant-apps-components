@@ -338,7 +338,7 @@ export class InstantAppsScoreboard {
   }
 
   renderPreviousNextButtons(): HTMLCalciteActionElement[] {
-    const isBelowOrAtLimit = this.items?.length <= ITEM_LIMIT;
+    const isBelowOrAtLimit = this.items.filter(item => item.visible)?.length <= ITEM_LIMIT;
     const isBeginning = this.itemIndex === 0;
     const isEnd = this.isEnd;
     const isBottom = this.position === Scoreboard.Bottom;
@@ -402,7 +402,7 @@ export class InstantAppsScoreboard {
     const { displayValue } = scoreboardItem;
     const isCalculating = this.state === Scoreboard.Calculating;
     const isDisabled = this.state === Scoreboard.Disabled;
-    const showPlaceholder = !displayValue && isCalculating && !this.initialCalculate;
+    const showPlaceholder = displayValue === undefined && isCalculating;
     const valueToDisplay = displayValue ? displayValue : this.messages?.NA;
 
     const content = showPlaceholder ? this.renderValuePlaceholder() : !isDisabled ? valueToDisplay : '';
@@ -439,7 +439,7 @@ export class InstantAppsScoreboard {
   }
 
   protected get getItemsToDisplay(): ScoreboardItem[] {
-    return this.items.slice(this.itemIndex, ITEM_LIMIT + this.itemIndex);
+    return this.items.filter(item => item.visible).slice(this.itemIndex, ITEM_LIMIT + this.itemIndex);
   }
 
   get isEnd(): boolean {
