@@ -538,7 +538,6 @@
               currentId = id;
               const dataCollection = new Collection([...items]);
               const obj = findItem(dataCollection, id);
-              const { field, label, operation } = obj;
               obj.visible = !obj.visible
               visibleAction.setAttribute('icon', obj.visible ? 'view-visible' : 'view-hide');
               scoreboard.items = dataCollection.toArray();
