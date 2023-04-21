@@ -12,6 +12,12 @@ import { LogicalPlacement } from "@esri/calcite-components/dist/types/utils/floa
 import { ScoreboardItem, ScoreboardMode, ScoreboardPosition } from "./components/instant-apps-scoreboard/types/interfaces";
 export namespace Components {
     interface InstantAppsControlPanel {
+        "components": {
+    content: any;
+    isExpand?: boolean;
+    expandIconClass?: string;
+  }[];
+        "view": __esri.MapView | __esri.SceneView;
     }
     interface InstantAppsExport {
         /**
@@ -531,6 +537,12 @@ declare global {
 }
 declare namespace LocalJSX {
     interface InstantAppsControlPanel {
+        "components"?: {
+    content: any;
+    isExpand?: boolean;
+    expandIconClass?: string;
+  }[];
+        "view"?: __esri.MapView | __esri.SceneView;
     }
     interface InstantAppsExport {
         /**
