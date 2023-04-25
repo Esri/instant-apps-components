@@ -13,6 +13,10 @@ import { ScoreboardItem, ScoreboardMode, ScoreboardPosition } from "./components
 export namespace Components {
     interface InstantAppsExport {
         /**
+          * Passes the initial function to run when the Export button is clicked.
+         */
+        "beforeExport": () => Promise<void>;
+        /**
           * Extra content that will be added below the view.
          */
         "extraContent"?: HTMLElement;
@@ -522,6 +526,10 @@ declare global {
 }
 declare namespace LocalJSX {
     interface InstantAppsExport {
+        /**
+          * Passes the initial function to run when the Export button is clicked.
+         */
+        "beforeExport"?: () => Promise<void>;
         /**
           * Extra content that will be added below the view.
          */
