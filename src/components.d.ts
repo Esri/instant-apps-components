@@ -17,6 +17,10 @@ export namespace Components {
     }
     interface InstantAppsExport {
         /**
+          * Passes the initial function to run when the Export button is clicked.
+         */
+        "beforeExport": () => Promise<void>;
+        /**
           * Extra content that will be added below the view.
          */
         "extraContent"?: HTMLElement;
@@ -537,6 +541,10 @@ declare namespace LocalJSX {
         "view"?: __esri.MapView | __esri.SceneView;
     }
     interface InstantAppsExport {
+        /**
+          * Passes the initial function to run when the Export button is clicked.
+         */
+        "beforeExport"?: () => Promise<void>;
         /**
           * Extra content that will be added below the view.
          */
