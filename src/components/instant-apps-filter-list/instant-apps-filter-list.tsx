@@ -21,6 +21,7 @@ const CSS = {
   numberInputContainer: 'instant-apps-filter-list__number-input-container',
   dateInputContainer: 'instant-apps-filter-list__date-picker-input-container',
   operatorDesc: 'instant-apps-filter-list__operator-description',
+  zoomTo: 'instant-apps-filter-list__zoom-to',
 };
 
 /**
@@ -105,6 +106,8 @@ export class InstantAppsFilterList {
   locale: string;
   panelEl: HTMLCalcitePanelElement;
   reactiveUtils: __esri.reactiveUtils;
+  zoomToBtn: HTMLCalciteActionElement;
+  zoomToGraphics: __esri.Graphic[];
 
   async componentWillLoad(): Promise<void> {
     this.baseClass = getMode(this.hostElement) === 'dark' ? baseClassDark : baseClassLight;
@@ -136,12 +139,14 @@ export class InstantAppsFilterList {
   render(): VNode {
     const filterConfig = this.initFilterConfig();
     const footer = this.closeBtn ? this.renderFullFooter() : this.renderFooter();
+    const zoomTo = this.renderZoomTo();
     return (
       <Host>
         <calcite-panel class={this.baseClass} ref={el => (this.panelEl = el as HTMLCalcitePanelElement)}>
           <slot slot="header-content" name="filter-header-content"></slot>
           <slot slot="header-actions-end" name="filter-header-actions-end"></slot>
           <div key="filter-container" class={CSS.filterContainer}>
+            {zoomTo}
             {filterConfig}
             {footer}
           </div>
@@ -320,6 +325,21 @@ export class InstantAppsFilterList {
         <calcite-button appearance="solid" width="half" kind="brand" onClick={this.closeBtnOnClick?.bind(this)}>
           {closeText}
         </calcite-button>
+      </div>
+    );
+  }
+
+  renderZoomTo(): VNode {
+    return (
+      <div class={CSS.zoomTo}>
+        <calcite-action
+          ref={(el: HTMLCalciteActionElement) => (this.zoomToBtn = el)}
+          scale="s"
+          icon="magnifying-glass-plus"
+          text={this.messages?.zoomTo}
+          textEnabled
+          onClick={this.handleZoomTo.bind(this)}
+        ></calcite-action>
       </div>
     );
   }
@@ -820,6 +840,49 @@ export class InstantAppsFilterList {
         this.initDefExpressions[fl.id] = fl.definitionExpression;
       }
     });
+  }
+
+  async handleZoomTo(): Promise<void> {
+    this.zoomToBtn.loading = true;
+    this.zoomToGraphics = [];
+    let loadingTime = 0;
+    let startGoTo = false;
+    const zoomToInterval = setInterval(() => {
+      if (loadingTime >= 1000 && startGoTo) {
+        this.view.goTo(this.zoomToGraphics);
+        this.zoomToBtn.loading = false;
+        clearInterval(zoomToInterval);
+      }
+      loadingTime += 500;
+    }, 500);
+    await this.getZoomToGraphics();
+    startGoTo = true;
+  }
+
+  async getZoomToGraphics(): Promise<void> {
+    for (let i = 0; i < this.view.map.allLayers.length; i++) {
+      const layer = this.view.map.allLayers.getItemAt(i) as FilterQueryLayer;
+      if (supportedTypes.includes(layer?.type)) {
+        const query = layer.createQuery();
+        if (layer?.capabilities?.query?.['supportsCacheHint']) {
+          query.cacheHint = true;
+        }
+        query.where = layer.definitionExpression;
+        query.returnGeometry = true;
+        query.returnDistinctValues = true;
+        query.maxRecordCountFactor = 3;
+        query.returnExceededLimitFeatures = true;
+        query.outFields = [];
+        if (this.extentSelector && this.extentSelectorConfig) {
+          const geo = this.getExtent(this.extentSelector, this.extentSelectorConfig);
+          if (geo != null) query.geometry = geo;
+          query.spatialRelationship = 'intersects';
+        }
+        const results = await layer.queryFeatures(query);
+        this.zoomToGraphics.push(...results.features);
+      }
+    }
+    return Promise.resolve();
   }
 
   generateOutput(layerId: string): void {

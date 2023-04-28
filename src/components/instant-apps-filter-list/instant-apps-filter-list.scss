@@ -100,6 +100,16 @@
     margin: 0;
     --calcite-font-size--1: 12px;
   }
+
+  &__zoom-to {
+    display: flex;
+    justify-content: flex-end;
+    margin: 12px;
+
+    calcite-action {
+      width: min-content;
+    }
+  }
 }
 
 .instant-apps-filter-list.calcite-mode-dark {
