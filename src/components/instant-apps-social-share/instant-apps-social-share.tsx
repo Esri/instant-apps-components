@@ -231,9 +231,11 @@ export class InstantAppsSocialShare {
   disconnectedCallback() {
     document.documentElement.removeEventListener('click', this.autoCloseCallback.bind(this));
     if (this.mode === 'popover') {
-      this.popoverRef.removeEventListener('click', this.stopPropagationCallback.bind(this));
-      this.popoverRef.removeEventListener('calcitePopoverClose', this.resetPopoverCopyState.bind(this));
-      this.popoverRef.removeEventListener('keydown', this.handlePopoverRefKeyDown.bind(this));
+      if (this.popoverRef != null) {
+        this.popoverRef.removeEventListener('click', this.stopPropagationCallback.bind(this));
+        this.popoverRef.removeEventListener('calcitePopoverClose', this.resetPopoverCopyState.bind(this));
+        this.popoverRef.removeEventListener('keydown', this.handlePopoverRefKeyDown.bind(this));
+      }
     } else {
       this.embedWidthRef?.removeEventListener('change', this.updateDimensions.bind(this));
       this.embedHeightRef?.removeEventListener('change', this.updateDimensions.bind(this));
