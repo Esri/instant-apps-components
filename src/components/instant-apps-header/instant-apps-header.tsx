@@ -117,6 +117,10 @@ export class InstantAppsHeader {
     reflect: true,
   })
   infoIsOpen: boolean = false;
+  /**
+   * Hover text for info button tooltip
+   */
+  @Prop() infoTitleText: string;
 
   /**
    * HTML code for custom headers.
@@ -185,9 +189,7 @@ export class InstantAppsHeader {
               {logo}
               {title}
               {this.infoButton ? (
-                <button id="infoButton" onClick={this.toggleInfo.bind(this)}>
-                  <calcite-icon icon="information-f" scale="s" />
-                </button>
+                <calcite-action icon="information-f" id="infoButton" title={this?.infoTitleText} label={this?.infoTitleText} onClick={this.toggleInfo.bind(this)}></calcite-action>
               ) : null}
             </span>
             <slot name="actions-end" />
