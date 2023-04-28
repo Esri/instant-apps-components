@@ -189,7 +189,18 @@ export class InstantAppsHeader {
               {logo}
               {title}
               {this.infoButton ? (
-                <calcite-action icon="information-f" id="infoButton" title={this?.infoTitleText} label={this?.infoTitleText} onClick={this.toggleInfo.bind(this)}></calcite-action>
+                <calcite-button
+                  style={{ '--calcite-ui-text-1': this.textColor }}
+                  id="infoButton"
+                  alignment="start"
+                  appearance="transparent"
+                  kind="neutral"
+                  icon-start="information-f"
+                  scale="s"
+                  label={this.infoTitleText}
+                  title={this.infoTitleText}
+                  onClick={this.toggleInfo.bind(this)}
+                ></calcite-button>
               ) : null}
             </span>
             <slot name="actions-end" />
