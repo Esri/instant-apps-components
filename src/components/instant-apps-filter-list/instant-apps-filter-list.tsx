@@ -106,7 +106,6 @@ export class InstantAppsFilterList {
   locale: string;
   panelEl: HTMLCalcitePanelElement;
   reactiveUtils: __esri.reactiveUtils;
-  zoomToBtn: HTMLCalciteActionElement;
   zoomToGraphics: __esri.Graphic[];
 
   async componentWillLoad(): Promise<void> {
@@ -139,14 +138,12 @@ export class InstantAppsFilterList {
   render(): VNode {
     const filterConfig = this.initFilterConfig();
     const footer = this.closeBtn ? this.renderFullFooter() : this.renderFooter();
-    const zoomTo = this.renderZoomTo();
     return (
       <Host>
         <calcite-panel class={this.baseClass} ref={el => (this.panelEl = el as HTMLCalcitePanelElement)}>
           <slot slot="header-content" name="filter-header-content"></slot>
           <slot slot="header-actions-end" name="filter-header-actions-end"></slot>
           <div key="filter-container" class={CSS.filterContainer}>
-            {zoomTo}
             {filterConfig}
             {footer}
           </div>
@@ -186,8 +183,9 @@ export class InstantAppsFilterList {
 
   renderFilterBlocks(layerExpression: LayerExpression): VNode {
     const filter = this.renderFilter(layerExpression);
-    const { operator } = layerExpression;
+    const { id, operator } = layerExpression;
     const operatorTranslation = operator?.trim() === 'OR' ? 'orOperator' : 'andOperator';
+    const zoomTo = this.renderZoomTo(id);
     return (
       <calcite-block
         key={layerExpression.id}
@@ -196,6 +194,7 @@ export class InstantAppsFilterList {
         open={this.openFilters ? true : undefined}
         collapsible
       >
+        {zoomTo}
         {filter}
       </calcite-block>
     );
@@ -232,10 +231,12 @@ export class InstantAppsFilterList {
   initFilterConfig(): VNode[] | undefined {
     if (this.layerExpressions?.length > 0) {
       if (this.layerExpressions.length === 1) {
-        const { operator } = this.layerExpressions[0];
+        const { id, operator } = this.layerExpressions[0];
         const operatorTranslation = operator?.trim() === 'OR' ? 'orOperator' : 'andOperator';
+        const zoomTo = this.renderZoomTo(id);
         return (
           <calcite-block class={CSS.operatorDesc} heading={this.messages?.[operatorTranslation]} open>
+            {zoomTo}
             {this.renderFilter(this.layerExpressions[0])}
           </calcite-block>
         );
@@ -329,17 +330,12 @@ export class InstantAppsFilterList {
     );
   }
 
-  renderZoomTo(): VNode {
+  renderZoomTo(id: string): VNode {
     return (
       <div class={CSS.zoomTo}>
-        <calcite-action
-          ref={(el: HTMLCalciteActionElement) => (this.zoomToBtn = el)}
-          scale="s"
-          icon="magnifying-glass-plus"
-          text={this.messages?.zoomTo}
-          textEnabled
-          onClick={this.handleZoomTo.bind(this)}
-        ></calcite-action>
+        <calcite-button id={`zoom-to-${id}`} appearance="transparent" kind="neutral" scale="s" iconStart="magnifying-glass-plus" onClick={this.handleZoomTo.bind(this, id)}>
+          {this.messages?.zoomTo}
+        </calcite-button>
       </div>
     );
   }
@@ -842,45 +838,50 @@ export class InstantAppsFilterList {
     });
   }
 
-  async handleZoomTo(): Promise<void> {
-    this.zoomToBtn.loading = true;
+  async handleZoomTo(id: string): Promise<void> {
+    const zoomToBtn = this.panelEl.querySelector(`#zoom-to-${id}`) as HTMLCalciteButtonElement;
+    if (zoomToBtn != null) {
+      zoomToBtn.loading = true;
+    }
     this.zoomToGraphics = [];
     let loadingTime = 0;
     let startGoTo = false;
     const zoomToInterval = setInterval(() => {
       if (loadingTime >= 1000 && startGoTo) {
         this.view.goTo(this.zoomToGraphics);
-        this.zoomToBtn.loading = false;
+        if (zoomToBtn != null) {
+          zoomToBtn.loading = false;
+        }
         clearInterval(zoomToInterval);
       }
       loadingTime += 500;
     }, 500);
-    await this.getZoomToGraphics();
+    await this.getZoomToGraphics(id);
     startGoTo = true;
   }
 
-  async getZoomToGraphics(): Promise<void> {
-    for (let i = 0; i < this.view.map.allLayers.length; i++) {
-      const layer = this.view.map.allLayers.getItemAt(i) as FilterQueryLayer;
-      if (supportedTypes.includes(layer?.type)) {
-        const query = layer.createQuery();
-        if (layer?.capabilities?.query?.['supportsCacheHint']) {
-          query.cacheHint = true;
-        }
-        query.where = layer.definitionExpression;
-        query.returnGeometry = true;
-        query.returnDistinctValues = true;
-        query.maxRecordCountFactor = 3;
-        query.returnExceededLimitFeatures = true;
-        query.outFields = [];
-        if (this.extentSelector && this.extentSelectorConfig) {
-          const geo = this.getExtent(this.extentSelector, this.extentSelectorConfig);
-          if (geo != null) query.geometry = geo;
-          query.spatialRelationship = 'intersects';
-        }
+  async getZoomToGraphics(id: string): Promise<void> {
+    const layer = this.view.map.findLayerById(id) as FilterQueryLayer;
+    if (supportedTypes.includes(layer?.type)) {
+      const query = layer.createQuery();
+      if (layer?.capabilities?.query?.['supportsCacheHint']) {
+        query.cacheHint = true;
+      }
+      query.where = layer.definitionExpression ?? '1=1';
+      query.returnGeometry = true;
+      query.returnDistinctValues = true;
+      query.maxRecordCountFactor = 3;
+      query.returnExceededLimitFeatures = true;
+      query.outFields = [];
+      if (this.extentSelector && this.extentSelectorConfig) {
+        const geo = this.getExtent(this.extentSelector, this.extentSelectorConfig);
+        if (geo != null) query.geometry = geo;
+        query.spatialRelationship = 'intersects';
+      }
+      try {
         const results = await layer.queryFeatures(query);
         this.zoomToGraphics.push(...results.features);
-      }
+      } catch {}
     }
     return Promise.resolve();
   }
