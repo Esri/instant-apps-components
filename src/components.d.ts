@@ -157,6 +157,10 @@ export namespace Components {
          */
         "infoIsOpen": boolean;
         /**
+          * Hover text for info button tooltip
+         */
+        "infoTitleText": string;
+        /**
           * Image URL for logo. Displays at the start of the header.
          */
         "logoImage": string;
@@ -693,6 +697,10 @@ declare namespace LocalJSX {
           * Keeps track of the info 'open' state
          */
         "infoIsOpen"?: boolean;
+        /**
+          * Hover text for info button tooltip
+         */
+        "infoTitleText"?: string;
         /**
           * Image URL for logo. Displays at the start of the header.
          */
