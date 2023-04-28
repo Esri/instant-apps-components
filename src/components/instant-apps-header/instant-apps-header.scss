@@ -28,7 +28,7 @@
   --instant-apps-header-logo-width--logo-scale--s: 35px;
 
   /**
- * @prop  --instant-apps-header-logo-height--logo-scale--s: Logo height when logo scale is set to 's'. Default value: 35px. 
+ * @prop  --instant-apps-header-logo-height--logo-scale--s: Logo height when logo scale is set to 's'. Default value: 35px.
  */
   --instant-apps-header-logo-height--logo-scale--s: 35px;
 
@@ -105,14 +105,7 @@
       }
 
       #infoButton {
-        display: flex;
-        align-items: center;
-        background-color: transparent;
-        border: none;
-        cursor: pointer;
-        calcite-icon {
-          color: var(--calcite-ui-text-1);
-        }
+        margin-inline-start: 10px;
       }
     }
   }
