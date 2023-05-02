@@ -29,7 +29,7 @@ $hoverDark: #262626;
   --instant-apps-social-share-width-horizontal--m: 380px;
   --instant-apps-social-share-width-horizontal--l: 420px;
 
-  --instant-apps-social-share-background-color: transparent;
+  --instant-apps-social-share-background-color: var(--calcite-ui-foreground-1);
   --instant-apps-social-share-popover-button-background-color: transparent;
   --instant-apps-social-share-popover-button-icon-color: var(--calcite-ui-icon-color);
   --instant-apps-social-share-embed-border: 1px solid $border;
@@ -42,16 +42,17 @@ $hoverDark: #262626;
       }
     }
 
+    &__dialog,
+    &__dialog-embed {
+      background-color: var(--instant-apps-social-share-background-color);
+      border: var(--instant-apps-social-share-embed-border);
+    }
+
     &__dialog {
       box-sizing: border-box;
       height: auto;
       padding: 10px 0;
       border-radius: 5px;
-    }
-
-    &__dialog-embed {
-      border: var(--instant-apps-social-share-embed-border);
-      background-color: var(--instant-apps-social-share-background-color);
     }
 
     &__options {
