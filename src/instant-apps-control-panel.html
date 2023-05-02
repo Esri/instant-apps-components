@@ -64,12 +64,6 @@
           view,
         });
 
-        // const legendExpand = new Expand({
-        //   content: legend,
-        //   view,
-        //   mode: 'floating',
-        // });
-
         const controlPanel = document.createElement('instant-apps-control-panel');
         controlPanel.view = view;
 
@@ -79,13 +73,6 @@
         const socialShare = document.createElement('instant-apps-social-share');
         socialShare.classList.add('calcite-mode-light');
         socialShare.mode = 'inline';
-
-        // const socialShareExpand = new Expand({
-        //   expandIconClass: 'esri-icon-share2',
-        //   content: socialShare,
-        //   mode: 'floating',
-        //   view,
-        // });
 
         controlPanel.components = [
           {

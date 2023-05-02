@@ -233,6 +233,7 @@ export interface IMeasureConfiguration {
 
 // Control Panel
 export interface ControlPanelComponent {
-  icon: string;
-  container?: HTMLElement | Widget;
+  content: any;
+  isExpand?: boolean;
+  expandIconClass?: string;
 }

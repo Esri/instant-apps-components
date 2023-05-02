@@ -5,18 +5,14 @@
  * It contains typing information for all components that exist in this project.
  */
 import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
-import { ActiveTool, ExportOutput, ExtentSelector, IMeasureConfiguration, InstantAppsPopoverMessageOverrides, LayerExpression, PopoverPlacement } from "./interfaces/interfaces";
+import { ActiveTool, ControlPanelComponent, ExportOutput, ExtentSelector, IMeasureConfiguration, InstantAppsPopoverMessageOverrides, LayerExpression, PopoverPlacement } from "./interfaces/interfaces";
 import { FilterMode } from "./components/instant-apps-interactive-legend/instant-apps-interactive-legend-classic/interfaces/interfaces";
 import { InstantAppsPopovers } from "./components/instant-apps-popovers/instant-apps-popovers";
 import { LogicalPlacement } from "@esri/calcite-components/dist/types/utils/floating-ui";
 import { ScoreboardItem, ScoreboardMode, ScoreboardPosition } from "./components/instant-apps-scoreboard/types/interfaces";
 export namespace Components {
     interface InstantAppsControlPanel {
-        "components": {
-    content: any;
-    isExpand?: boolean;
-    expandIconClass?: string;
-  }[];
+        "components": ControlPanelComponent[];
         "view": __esri.MapView | __esri.SceneView;
     }
     interface InstantAppsExport {
@@ -537,11 +533,7 @@ declare global {
 }
 declare namespace LocalJSX {
     interface InstantAppsControlPanel {
-        "components"?: {
-    content: any;
-    isExpand?: boolean;
-    expandIconClass?: string;
-  }[];
+        "components"?: ControlPanelComponent[];
         "view"?: __esri.MapView | __esri.SceneView;
     }
     interface InstantAppsExport {
