@@ -1,9 +1,51 @@
 # instant-apps-control-panel
 
+## Usage
 
+#### Type
+
+```
+interface ControlPanelComponent {
+    content: any;
+    isExpand?: boolean;
+    expandIconClass?: string;
+}
+```
+
+#### Example
+
+```
+const controlPanel = document.createElement('instant-apps-control-panel');
+controlPanel.view = view;
+
+const home = new Home({ view });
+const zoom = new Zoom({ view });
+
+const socialShare = document.createElement('instant-apps-social-share');
+socialShare.mode = 'inline';
+
+controlPanel.components = [
+    {
+        content: home,
+    },
+    {
+        content: zoom,
+    },
+    {
+        content: legend,
+        isExpand: true
+    },
+    {
+        content: socialShare,
+        isExpand: true,
+        expandIconClass: 'esri-icon-share2'
+    },
+];
+
+view.ui.add(controlPanel, 'top-left');
+```
 
 <!-- Auto Generated Below -->
-
 
 ## Properties
 
@@ -12,10 +54,10 @@
 | `components` | --        |             | `ControlPanelComponent[]` | `[]`        |
 | `view`       | --        |             | `MapView \| SceneView`    | `undefined` |
 
-
-----------------------------------------------
+---
 
 ## License
+
 COPYRIGHT © 2023 Esri
 
 All rights reserved under the copyright laws of the United States and applicable international laws, treaties, and conventions.
@@ -27,4 +69,3 @@ See use restrictions at http://www.esri.com/legal/pdfs/mla_e204_e300/english
 For additional information, contact: Environmental Systems Research Institute, Inc. Attn: Contracts and Legal Services Department 380 New York Street Redlands, California, USA 92373 USA
 
 email: contracts@esri.com
-
