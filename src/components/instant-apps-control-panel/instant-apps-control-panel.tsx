@@ -32,6 +32,10 @@ export class InstantAppsControlPanel {
     this._handleComponents();
   }
 
+  componentWillUpdate() {
+    this._handleComponents();
+  }
+
   render() {
     return (
       <Host>
