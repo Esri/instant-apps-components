@@ -29,6 +29,9 @@ export class InstantAppsControlPanel {
   async componentWillLoad() {
     const [Expand] = await loadModules(['esri/widgets/Expand']);
     this.Expand = Expand;
+  }
+
+  componentWillUpdate() {
     this._handleComponents();
   }
 
