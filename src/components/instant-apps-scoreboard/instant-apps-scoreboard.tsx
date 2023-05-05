@@ -57,7 +57,6 @@ const CSS = {
 })
 export class InstantAppsScoreboard {
   // Variables
-  initialCalculate: boolean = false; // Flag to check for initial calculation
   reactiveUtils: __esri.reactiveUtils;
   Collection: typeof import('esri/core/Collection');
   handles: __esri.Handles | null;
@@ -158,7 +157,7 @@ export class InstantAppsScoreboard {
   }
 
   @Watch('layerViews')
-  protected async calculteScoreboardItemValues(): Promise<void> {
+  protected async calculateScoreboardItemValues(): Promise<void> {
     if ((this.layers && this.layers.length === 0) || (this.layerViews && this.layerViews.length === 0)) return;
 
     this.state = Scoreboard.Calculating;
@@ -178,10 +177,7 @@ export class InstantAppsScoreboard {
 
     this.scoreboardItemsUpdatedHandler();
 
-    if (!this.initialCalculate) {
-      this.initStationaryWatcher();
-      this.initialCalculate = true;
-    }
+    this.initStationaryWatcher();
   }
 
   // Lifecycle methods
@@ -532,7 +528,7 @@ export class InstantAppsScoreboard {
     const isNotInteractingWatcher = () => {
       return this.reactiveUtils?.when(
         () => !this.view?.interacting,
-        () => this.calculteScoreboardItemValues(),
+        () => this.calculateScoreboardItemValues(),
         whenOnceConfig,
       );
     };
@@ -542,7 +538,9 @@ export class InstantAppsScoreboard {
         () => isNotInteractingWatcher(),
       );
     };
-    this.handles?.add(stationaryWatcher());
+    const stationaryWatcherKey = 'stationary-watcher-key';
+    if (this.handles?.has(stationaryWatcherKey)) this.handles.remove(stationaryWatcherKey);
+    this.handles?.add(stationaryWatcher(), stationaryWatcherKey);
   }
 
   protected watchLayerVisibility(): void {
@@ -554,7 +552,7 @@ export class InstantAppsScoreboard {
       const activateScoreboardItemCalculation = async () => {
         const layerView = await this.view.whenLayerView(layer);
         await this.reactiveUtils.whenOnce(() => layerView?.updating === false);
-        this.calculteScoreboardItemValues();
+        this.calculateScoreboardItemValues();
       };
 
       const watcher = this.reactiveUtils.watch(
