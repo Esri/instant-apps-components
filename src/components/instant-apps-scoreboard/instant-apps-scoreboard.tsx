@@ -547,7 +547,9 @@ export class InstantAppsScoreboard {
 
   protected watchLayerVisibility(): void {
     if (!this.layers) return;
-    this.handles?.removeAll();
+    const visibilityWatcherKey = 'visbilityWatcherKey';
+    this.handles?.remove(visibilityWatcherKey);
+    const visibilityWatchers: __esri.WatchHandle[] = [];
     const watchVisbilityForLayer = (layer: __esri.FeatureLayer | __esri.SceneLayer) => {
       const activateScoreboardItemCalculation = async () => {
         const layerView = await this.view.whenLayerView(layer);
@@ -560,8 +562,9 @@ export class InstantAppsScoreboard {
         async () => activateScoreboardItemCalculation(),
       );
 
-      this.handles?.add(watcher);
+      visibilityWatchers.push(watcher);
     };
     this.layers.forEach(watchVisbilityForLayer);
+    this.handles?.add([...visibilityWatchers], visibilityWatcherKey);
   }
 }
