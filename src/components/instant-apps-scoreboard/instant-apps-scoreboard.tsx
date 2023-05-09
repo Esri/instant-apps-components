@@ -57,7 +57,6 @@ const CSS = {
 })
 export class InstantAppsScoreboard {
   // Variables
-  initialCalculate: boolean = false; // Flag to check for initial calculation
   reactiveUtils: __esri.reactiveUtils;
   Collection: typeof import('esri/core/Collection');
   handles: __esri.Handles | null;
@@ -125,14 +124,16 @@ export class InstantAppsScoreboard {
   }
 
   @Watch('items')
-  protected storeLayers(): void {
+  protected async storeLayers(): Promise<void> {
     this.state = Scoreboard.Calculating;
+    await (this.view.map as __esri.WebMap | __esri.WebScene).loadAll();
     const layerIds = this.items.map(item => item?.layer?.id);
     const isNotTable = (layer: __esri.Layer) => !(layer as any).isTable;
     const isAcceptableLayer = (layer: __esri.Layer) => layer.type === 'feature' || layer.type === 'scene';
     const notAddedYet = (layer: __esri.Layer) => layerIds.indexOf(layer.id) > -1;
     const validateLayer = (layer: __esri.Layer) => isNotTable(layer) && isAcceptableLayer(layer) && notAddedYet(layer);
     this.layers = this.view.map.allLayers.filter(layer => validateLayer(layer)) as __esri.Collection<__esri.FeatureLayer | __esri.SceneLayer>;
+    this.watchLayerVisibility();
   }
 
   @Watch('layers')
@@ -156,7 +157,7 @@ export class InstantAppsScoreboard {
   }
 
   @Watch('layerViews')
-  protected async calculteScoreboardItemValues(): Promise<void> {
+  protected async calculateScoreboardItemValues(): Promise<void> {
     if ((this.layers && this.layers.length === 0) || (this.layerViews && this.layerViews.length === 0)) return;
 
     this.state = Scoreboard.Calculating;
@@ -176,10 +177,7 @@ export class InstantAppsScoreboard {
 
     this.scoreboardItemsUpdatedHandler();
 
-    if (!this.initialCalculate) {
-      this.initStationaryWatcher();
-      this.initialCalculate = true;
-    }
+    this.initStationaryWatcher();
   }
 
   // Lifecycle methods
@@ -404,8 +402,9 @@ export class InstantAppsScoreboard {
     const isDisabled = this.state === Scoreboard.Disabled;
     const showPlaceholder = displayValue === undefined && isCalculating;
     const valueToDisplay = displayValue ? displayValue : this.messages?.NA;
-
-    const content = showPlaceholder ? this.renderValuePlaceholder() : !isDisabled ? valueToDisplay : '';
+    const layer = this.layers?.find(layer => scoreboardItem?.layer?.id === layer.id);
+    const isNotVisible = !layer?.visible;
+    const content = showPlaceholder ? this.renderValuePlaceholder() : !isDisabled ? isNotVisible ? <calcite-icon icon="view-hide" scale="l" title={this.messages?.layerVisibilityOff} /> : valueToDisplay : '';
     return <span class={CSS.value}>{content}</span>;
   }
 
@@ -530,7 +529,7 @@ export class InstantAppsScoreboard {
     const isNotInteractingWatcher = () => {
       return this.reactiveUtils?.when(
         () => !this.view?.interacting,
-        () => this.calculteScoreboardItemValues(),
+        () => this.calculateScoreboardItemValues(),
         whenOnceConfig,
       );
     };
@@ -540,6 +539,31 @@ export class InstantAppsScoreboard {
         () => isNotInteractingWatcher(),
       );
     };
-    this.handles?.add(stationaryWatcher());
+    const stationaryWatcherKey = 'stationary-watcher-key';
+    if (this.handles?.has(stationaryWatcherKey)) this.handles.remove(stationaryWatcherKey);
+    this.handles?.add(stationaryWatcher(), stationaryWatcherKey);
+  }
+
+  protected watchLayerVisibility(): void {
+    if (!this.layers) return;
+    const visibilityWatcherKey = 'visbilityWatcherKey';
+    this.handles?.remove(visibilityWatcherKey);
+    const visibilityWatchers: __esri.WatchHandle[] = [];
+    const watchVisbilityForLayer = (layer: __esri.FeatureLayer | __esri.SceneLayer) => {
+      const activateScoreboardItemCalculation = async () => {
+        const layerView = await this.view.whenLayerView(layer);
+        await this.reactiveUtils.whenOnce(() => layerView?.updating === false);
+        this.calculateScoreboardItemValues();
+      };
+
+      const watcher = this.reactiveUtils.watch(
+        () => layer?.visible,
+        async () => activateScoreboardItemCalculation(),
+      );
+
+      visibilityWatchers.push(watcher);
+    };
+    this.layers.forEach(watchVisbilityForLayer);
+    this.handles?.add([...visibilityWatchers], visibilityWatcherKey);
   }
 }

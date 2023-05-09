@@ -2,5 +2,6 @@
     "loading": "Loading",
     "NA": "N/A",
     "previous": "Previous",
-    "next": "Next"
+    "next": "Next",
+    "layerVisibilityOff": "Layer visibility is off"
 }
