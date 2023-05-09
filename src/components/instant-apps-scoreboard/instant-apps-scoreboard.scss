@@ -73,6 +73,7 @@ $boxShadow: 0px 3px 15px rgba(0, 0, 0, 0.2);
       &-label {
         font-size: 1rem;
         font-weight: 400;
+        text-align: center;
       }
 
       &-value {
@@ -142,11 +143,13 @@ $boxShadow: 0px 3px 15px rgba(0, 0, 0, 0.2);
   .instant-apps-scoreboard {
     display: flex;
     align-items: center;
-    width: 100%;
+    width: 10vw;
+    overflow-y: auto;
 
     &__items-container {
       flex-direction: column;
       height: 100%;
+      box-sizing: border-box;
       calcite-action {
         height: unset;
         width: 100%;
@@ -155,11 +158,11 @@ $boxShadow: 0px 3px 15px rgba(0, 0, 0, 0.2);
 
     &__items {
       flex-direction: column;
+      padding: 10px;
     }
     &__item {
-      width: 10vw;
-      margin-top: 2vh;
-      margin-bottom: 2vh;
+      padding-top: 0.5vh;
+      padding-bottom: 0.5vh;
     }
   }
 }
@@ -181,7 +184,6 @@ $boxShadow: 0px 3px 15px rgba(0, 0, 0, 0.2);
   height: 100%;
   .instant-apps-scoreboard {
     height: 100%;
-
     &__items-container {
       justify-content: space-between;
     }

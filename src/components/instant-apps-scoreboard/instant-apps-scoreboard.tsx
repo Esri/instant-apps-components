@@ -402,8 +402,9 @@ export class InstantAppsScoreboard {
     const isDisabled = this.state === Scoreboard.Disabled;
     const showPlaceholder = displayValue === undefined && isCalculating;
     const valueToDisplay = displayValue ? displayValue : this.messages?.NA;
-
-    const content = showPlaceholder ? this.renderValuePlaceholder() : !isDisabled ? valueToDisplay : '';
+    const layer = this.layers?.find(layer => scoreboardItem?.layer?.id === layer.id);
+    const isNotVisible = !layer?.visible;
+    const content = showPlaceholder ? this.renderValuePlaceholder() : !isDisabled ? isNotVisible ? <calcite-icon icon="view-hide" scale="l" title={this.messages?.layerVisibilityOff} /> : valueToDisplay : '';
     return <span class={CSS.value}>{content}</span>;
   }
 
