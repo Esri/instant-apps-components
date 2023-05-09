@@ -13,6 +13,7 @@
 | `fontFamily`            | `font-family`             | Font family to use for text                                                         | `string`            | `'var(--calcite-sans-family);'` |
 | `infoButton`            | `info-button`             | Display info button at the end of the title.                                        | `boolean`           | `false`                         |
 | `infoIsOpen`            | `info-is-open`            | Keeps track of the info 'open' state                                                | `boolean`           | `false`                         |
+| `infoTitleText`         | `info-title-text`         | Hover text for info button tooltip                                                  | `string`            | `undefined`                     |
 | `logoImage`             | `logo-image`              | Image URL for logo. Displays at the start of the header.                            | `string`            | `undefined`                     |
 | `logoImageAltText`      | `logo-image-alt-text`     | Alternate text for header logo.                                                     | `string`            | `undefined`                     |
 | `logoLink`              | `logo-link`               | Logo URL to link out to another page.                                               | `string`            | `undefined`                     |

@@ -168,11 +168,9 @@ $boxShadow: 0px 3px 15px rgba(0, 0, 0, 0.2);
 }
 
 :host(.instant-apps-scoreboard__position--side.instant-apps-scoreboard__mode--floating) {
-    top: 50%;
-    left: 15px;
-    transform: translateY(-50%);
-    max-height: 95%;
-    overflow-y: auto;
+  top: 15px;
+  left: 15px;
+  max-height: calc(100% - 30px);
   .instant-apps-scoreboard {
     min-width: 10vw;
     min-height: 35vh;

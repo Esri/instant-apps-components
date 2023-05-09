@@ -44,6 +44,11 @@ export class InstantAppsExport {
   @Prop({ mutable: true }) output?: ExportOutput;
 
   /**
+   * Passes the initial function to run when the Export button is clicked.
+   */
+  @Prop() beforeExport: () => Promise<void> = () => Promise.resolve();
+
+  /**
    * Extra content that will be added below the view.
    */
   @Prop() extraContent?: HTMLElement;
@@ -134,6 +139,7 @@ export class InstantAppsExport {
 
   exportHandleImgLoaded: () => void;
   extraContainerEl: HTMLDivElement;
+  legend: __esri.Legend;
   legendContainerEl: HTMLDivElement;
   popoverEl: HTMLCalcitePopoverElement;
   popupContainerEl: HTMLDivElement;
@@ -155,26 +161,13 @@ export class InstantAppsExport {
     this.printContainerEl.prepend(this.printEl);
   }
 
-  async componentDidUpdate(): Promise<void> {
-    if (this.includeMap && this.view != null && this.showIncludeLegend && this.includeLegend && !this.legendContainerEl?.innerHTML) {
-      this.legendContainerEl.innerHTML = '';
-      const [Legend] = await loadModules(['esri/widgets/Legend']);
-      new Legend({
-        container: this.legendContainerEl,
-        view: this.view,
-        style: {
-          type: 'card',
-          layout: 'side-by-side',
-        },
-      });
-    }
-  }
-
   render() {
     const mode = this.mode === 'popover' ? this.renderPopover() : this.renderPanel();
     return (
       <Host>
-        <div class={this.baseClass}>{mode}</div>
+        <div class={this.baseClass} onMouseOver={this.handleLegendCreation.bind(this)} onFocusin={this.handleLegendCreation.bind(this)}>
+          {mode}
+        </div>
       </Host>
     );
   }
@@ -312,7 +305,8 @@ export class InstantAppsExport {
     this.headerTitle = e.target.value;
   }
 
-  exportOnClick(): void {
+  async exportOnClick(): Promise<void> {
+    await this.beforeExport();
     this.handleViewExportOnClick();
     this.updateExportOutput();
   }
@@ -467,6 +461,29 @@ export class InstantAppsExport {
         this.viewSectionEl.classList.add(CSS.print.viewPopup);
       }
       this.viewSectionEl.classList.add(hasLegend || hasPopup ? CSS.print.sectionGrid : CSS.print.sectionFullView);
+    }
+  }
+
+  handleLegendCreation(): void {
+    if (this.includeMap && this.view != null && this.showIncludeLegend) {
+      const map = this.view.map as __esri.WebMap | __esri.WebScene;
+      const legendMap = this.legend?.view.map as __esri.WebMap | __esri.WebScene;
+      const checkId = map?.portalItem.id === legendMap?.portalItem.id;
+      if (!checkId) {
+        this.view.when(async (view: __esri.MapView | __esri.SceneView) => {
+          this.legend?.destroy();
+          this.legendContainerEl.innerHTML = '';
+          const [Legend] = await loadModules(['esri/widgets/Legend']);
+          this.legend = new Legend({
+            container: this.legendContainerEl,
+            view,
+            style: {
+              type: 'card',
+              layout: 'side-by-side',
+            },
+          });
+        });
+      }
     }
   }
 

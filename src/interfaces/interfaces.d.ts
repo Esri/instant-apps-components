@@ -1,3 +1,5 @@
+import Widget from 'esri/widgets/Widget';
+
 export interface GenericObject {
   [key: string]: unknown;
 }
@@ -227,4 +229,11 @@ export interface IMeasureConfiguration {
   areaUnit?: __esri.AreaUnit;
   linearUnit?: __esri.LengthUnit;
   coordinateFormat?: string;
+}
+
+// Control Panel
+export interface ControlPanelComponent {
+  content: any;
+  isExpand?: boolean;
+  expandIconClass?: string;
 }

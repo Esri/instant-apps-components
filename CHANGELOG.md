@@ -5,6 +5,50 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## v1.0.0-beta.73
+
+Fix build.
+
+## v1.0.0-beta.72
+
+### instant-apps-scoreboard
+
+- Fix: Watch handle remove fix.
+
+## v1.0.0-beta.71
+
+### instant-apps-scoreboard
+
+- Fix: Re-calculate when layer visibility is toggled.
+
+## v1.0.0-beta.70
+
+### instant-apps-control-panel
+
+- Fix: Re-update UI when components are set.
+
+## v1.0.0-beta.69
+
+### instant-apps-control-panel
+
+- Component to group components together.
+
+## v1.0.0-beta.68
+
+## v1.0.0-beta.67
+
+### instant-apps-filter-list
+
+- Add zoom to button that gets all the current features and zooms in or out to show them all
+
+## v1.0.0-beta.66
+
+### instant-apps-export
+
+- Fix: Put print container behind main container
+- Fix: Legend creation
+- Add `beforeExport()` prop to run function before window.print() is called
+
 ## v1.0.0-beta.65
 
 ### instant-apps-scoreboard

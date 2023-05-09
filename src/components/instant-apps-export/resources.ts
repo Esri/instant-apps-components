@@ -22,6 +22,9 @@ export const printStyling = `
 
   .instant-apps-export-print {
     height: 100%;
+    width: 100%;
+    position: absolute;
+    z-index: -999;
     color: #323232 !important;
   }
 
@@ -145,6 +148,10 @@ export const printStyling = `
   .instant-apps-export-print .esri-legend--card {
     border: none;
     gap: 6pt 12pt;
+  }
+
+  .instant-apps-export-print .esri-legend--card:not(:first-child) {
+    display: none;
   }
 
   .instant-apps-export-print__extra-container {

@@ -5,13 +5,21 @@
  * It contains typing information for all components that exist in this project.
  */
 import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
-import { ActiveTool, ExportOutput, ExtentSelector, IMeasureConfiguration, InstantAppsPopoverMessageOverrides, LayerExpression, PopoverPlacement } from "./interfaces/interfaces";
+import { ActiveTool, ControlPanelComponent, ExportOutput, ExtentSelector, IMeasureConfiguration, InstantAppsPopoverMessageOverrides, LayerExpression, PopoverPlacement } from "./interfaces/interfaces";
 import { FilterMode } from "./components/instant-apps-interactive-legend/instant-apps-interactive-legend-classic/interfaces/interfaces";
 import { InstantAppsPopovers } from "./components/instant-apps-popovers/instant-apps-popovers";
 import { LogicalPlacement } from "@esri/calcite-components/dist/types/utils/floating-ui";
 import { ScoreboardItem, ScoreboardMode, ScoreboardPosition } from "./components/instant-apps-scoreboard/types/interfaces";
 export namespace Components {
+    interface InstantAppsControlPanel {
+        "components": ControlPanelComponent[];
+        "view": __esri.MapView | __esri.SceneView;
+    }
     interface InstantAppsExport {
+        /**
+          * Passes the initial function to run when the Export button is clicked.
+         */
+        "beforeExport": () => Promise<void>;
         /**
           * Extra content that will be added below the view.
          */
@@ -148,6 +156,10 @@ export namespace Components {
           * Keeps track of the info 'open' state
          */
         "infoIsOpen": boolean;
+        /**
+          * Hover text for info button tooltip
+         */
+        "infoTitleText": string;
         /**
           * Image URL for logo. Displays at the start of the header.
          */
@@ -405,6 +417,12 @@ export interface InstantAppsScoreboardCustomEvent<T> extends CustomEvent<T> {
     target: HTMLInstantAppsScoreboardElement;
 }
 declare global {
+    interface HTMLInstantAppsControlPanelElement extends Components.InstantAppsControlPanel, HTMLStencilElement {
+    }
+    var HTMLInstantAppsControlPanelElement: {
+        prototype: HTMLInstantAppsControlPanelElement;
+        new (): HTMLInstantAppsControlPanelElement;
+    };
     interface HTMLInstantAppsExportElement extends Components.InstantAppsExport, HTMLStencilElement {
     }
     var HTMLInstantAppsExportElement: {
@@ -502,6 +520,7 @@ declare global {
         new (): HTMLInstantAppsSocialShareElement;
     };
     interface HTMLElementTagNameMap {
+        "instant-apps-control-panel": HTMLInstantAppsControlPanelElement;
         "instant-apps-export": HTMLInstantAppsExportElement;
         "instant-apps-filter-list": HTMLInstantAppsFilterListElement;
         "instant-apps-header": HTMLInstantAppsHeaderElement;
@@ -521,7 +540,15 @@ declare global {
     }
 }
 declare namespace LocalJSX {
+    interface InstantAppsControlPanel {
+        "components"?: ControlPanelComponent[];
+        "view"?: __esri.MapView | __esri.SceneView;
+    }
     interface InstantAppsExport {
+        /**
+          * Passes the initial function to run when the Export button is clicked.
+         */
+        "beforeExport"?: () => Promise<void>;
         /**
           * Extra content that will be added below the view.
          */
@@ -670,6 +697,10 @@ declare namespace LocalJSX {
           * Keeps track of the info 'open' state
          */
         "infoIsOpen"?: boolean;
+        /**
+          * Hover text for info button tooltip
+         */
+        "infoTitleText"?: string;
         /**
           * Image URL for logo. Displays at the start of the header.
          */
@@ -911,6 +942,7 @@ declare namespace LocalJSX {
         "view"?: __esri.MapView | __esri.SceneView;
     }
     interface IntrinsicElements {
+        "instant-apps-control-panel": InstantAppsControlPanel;
         "instant-apps-export": InstantAppsExport;
         "instant-apps-filter-list": InstantAppsFilterList;
         "instant-apps-header": InstantAppsHeader;
@@ -933,6 +965,7 @@ export { LocalJSX as JSX };
 declare module "@stencil/core" {
     export namespace JSX {
         interface IntrinsicElements {
+            "instant-apps-control-panel": LocalJSX.InstantAppsControlPanel & JSXBase.HTMLAttributes<HTMLInstantAppsControlPanelElement>;
             "instant-apps-export": LocalJSX.InstantAppsExport & JSXBase.HTMLAttributes<HTMLInstantAppsExportElement>;
             "instant-apps-filter-list": LocalJSX.InstantAppsFilterList & JSXBase.HTMLAttributes<HTMLInstantAppsFilterListElement>;
             "instant-apps-header": LocalJSX.InstantAppsHeader & JSXBase.HTMLAttributes<HTMLInstantAppsHeaderElement>;
