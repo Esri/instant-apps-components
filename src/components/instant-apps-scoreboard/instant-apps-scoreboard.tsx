@@ -211,6 +211,7 @@ export class InstantAppsScoreboard {
       this.generateUIDs();
       await this.loadMapResources();
       this.storeLayers();
+      this.initViewUpdateWatcher();
     } catch {
       this.state = Scoreboard.Disabled;
       console.error(`${BASE}: FAILED TO LOAD MAP RESOURCES`);
@@ -305,7 +306,7 @@ export class InstantAppsScoreboard {
     const isLoading = state === Scoreboard.Loading;
     const isCalculating = state === Scoreboard.Calculating;
     const isDisabled = state === Scoreboard.Disabled;
-    const progress = isLoading || isCalculating ? this.renderProgress() : null;
+    const progress = isLoading || isCalculating || this.view?.updating ? this.renderProgress() : null;
     const positionClass = this.getPositionClass;
     const styleClass = this.getStyleClass;
     return <Host class={`${positionClass} ${styleClass}`}>{isDisabled ? null : [progress, this.items?.length > 0 ? this.renderBase() : null]}</Host>;
@@ -404,7 +405,17 @@ export class InstantAppsScoreboard {
     const valueToDisplay = displayValue ? displayValue : this.messages?.NA;
     const layer = this.layers?.find(layer => scoreboardItem?.layer?.id === layer.id);
     const isNotVisible = !layer?.visible;
-    const content = showPlaceholder ? this.renderValuePlaceholder() : !isDisabled ? isNotVisible ? <calcite-icon icon="view-hide" scale="l" title={this.messages?.layerVisibilityOff} /> : valueToDisplay : '';
+    const content = showPlaceholder ? (
+      this.renderValuePlaceholder()
+    ) : !isDisabled ? (
+      isNotVisible ? (
+        <calcite-icon icon="view-hide" scale="l" title={this.messages?.layerVisibilityOff} />
+      ) : (
+        valueToDisplay
+      )
+    ) : (
+      ''
+    );
     return <span class={CSS.value}>{content}</span>;
   }
 
@@ -542,6 +553,20 @@ export class InstantAppsScoreboard {
     const stationaryWatcherKey = 'stationary-watcher-key';
     if (this.handles?.has(stationaryWatcherKey)) this.handles.remove(stationaryWatcherKey);
     this.handles?.add(stationaryWatcher(), stationaryWatcherKey);
+  }
+
+  protected initViewUpdateWatcher(): __esri.WatchHandle {
+    return this.reactiveUtils.watch(
+      () => this.view?.updating,
+      () => {
+        this.reactiveUtils.when(
+          () => !this.view?.updating,
+          () => this.calculateScoreboardItemValues(),
+          { once: true, initial: true },
+        );
+      },
+      { initial: true },
+    );
   }
 
   protected watchLayerVisibility(): void {
