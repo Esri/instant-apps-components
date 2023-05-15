@@ -64,6 +64,7 @@ export class InstantAppsControlPanel {
       if (component.isExpand) {
         content = this._getExpand(component);
         if (component.expandIconClass) content.expandIconClass = component.expandIconClass;
+        if (component.expandTooltip) content.expandTooltip = component.expandTooltip;
       }
 
       // Check if dom node exists, if not create dom node
