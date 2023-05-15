@@ -237,4 +237,5 @@ export interface ControlPanelComponent {
   isExpand?: boolean;
   expandIconClass?: string;
   expandTooltip?: string;
+  collapseTooltip?: string;
 }

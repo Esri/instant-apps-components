@@ -9,7 +9,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### instant-apps-control-panel
 
-- Added support for 'expandTooltip' for component's nested in esri/widgets/Expand
+- Added support for 'expandTooltip' for components nested in esri/widgets/Expand
+- Added support for 'collapseTooltip' for components nested in esri/widgets/Expand
 
 ## v1.0.0-beta.76
 
