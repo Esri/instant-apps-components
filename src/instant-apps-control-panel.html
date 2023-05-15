@@ -81,8 +81,8 @@
           {
             content: zoom,
           },
-          { content: legend, isExpand: true },
-          { content: socialShare, isExpand: true, expandIconClass: 'esri-icon-share2' },
+          { content: legend, isExpand: true, expandTooltip: 'Open legend', collapseTooltip: 'Close legend' },
+          { content: socialShare, isExpand: true, expandIconClass: 'esri-icon-share2', expandTooltip: 'Open social share', collapseTooltip: 'Close social share' },
         ];
 
         view.ui.add(controlPanel, 'top-left');
