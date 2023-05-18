@@ -3,7 +3,17 @@ import { Component, Element, Event, EventEmitter, Host, h, State, Prop, VNode } 
 
 import FilterList_T9n from '../../assets/t9n/instant-apps-filter-list/resources.json';
 
-import { Expression, ExtentSelector, FilterLayer, FilterParam, FilterQueryLayer, GenericObject, GenericStringObject, LayerExpression } from '../../interfaces/interfaces';
+import {
+  Expression,
+  ExtentSelector,
+  FilterLayer,
+  FilterParam,
+  FilterQueryLayer,
+  FilterQueryLayerView,
+  GenericObject,
+  GenericStringObject,
+  LayerExpression,
+} from '../../interfaces/interfaces';
 import { loadModules } from '../../utils/loadModules';
 import { getLocaleComponentStrings } from '../../utils/locale';
 import { getMode } from '../../utils/mode';
@@ -861,9 +871,10 @@ export class InstantAppsFilterList {
   }
 
   async getZoomToGraphics(id: string): Promise<void> {
-    const layer = this.view.map.findLayerById(id) as FilterQueryLayer;
+    const lv = this.view.allLayerViews.find(({ layer }) => layer.id === id) as FilterQueryLayerView;
+    const layer = lv.layer as FilterQueryLayer;
     if (supportedTypes.includes(layer?.type)) {
-      const query = layer.createQuery();
+      let query = layer.createQuery();
       if (layer?.capabilities?.query?.['supportsCacheHint']) {
         query.cacheHint = true;
       }
@@ -877,6 +888,15 @@ export class InstantAppsFilterList {
         const geo = this.getExtent(this.extentSelector, this.extentSelectorConfig);
         if (geo != null) query.geometry = geo;
         query.spatialRelationship = 'intersects';
+      }
+      const filter = lv.featureEffect.filter != null ? lv.featureEffect.filter : lv.filter;
+      if (filter != null) {
+        query.distance = filter.distance;
+        query.geometry = filter.geometry;
+        query.spatialRelationship = filter.spatialRelationship as __esri.Query['spatialRelationship'];
+        query.units = filter.units;
+        query.where = filter.where;
+        query.timeExtent = filter.timeExtent;
       }
       try {
         const results = await layer.queryFeatures(query);
