@@ -11,5 +11,6 @@
   "resetDatePicker": "Reset date picker",
   "resetFilter": "Reset Filter",
   "selectFilter": "Select filter",
-  "zoomTo": "Zoom to"
+  "zoomTo": "Zoom to",
+  "zoomToExtent": "Zoom to extent"
 }
