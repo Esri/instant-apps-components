@@ -96,8 +96,8 @@ export class InstantAppsInteractiveLegendClassic {
   handles: __esri.Handles | null;
   intl: __esri.intl;
 
-  @State()
-  reRender = false;
+  // @State()
+  // reRender = false;
 
   @State()
   isLoading = true;
@@ -139,12 +139,12 @@ export class InstantAppsInteractiveLegendClassic {
 
   @Listen('showAllSelected', { target: 'window' })
   showAllSelectedEmitted() {
-    this.reRender = !this.reRender;
+    // this.reRender = !this.reRender;
   }
 
   async componentWillLoad() {
     const observer = new MutationObserver(() => {
-      this.reRender = !this.reRender;
+      // this.reRender = !this.reRender;
     });
     observer.observe(document.body, {
       attributes: true,
@@ -206,24 +206,15 @@ export class InstantAppsInteractiveLegendClassic {
     }
 
     const hasChildren = !!activeLayerInfo.children.length;
-    const key = `${KEY}${(activeLayerInfo.layer as any).uid}-version-${activeLayerInfo.version}`;
-
-    // const labelNode = activeLayerInfo.title ? Heading({ level: this.headingLevel, class: (CSS.header, CSS.label) }, activeLayerInfo.title) : null;
 
     if (hasChildren) {
       const layers = activeLayerInfo.children.map(childActiveLayerInfo => this.renderLegendForLayer(childActiveLayerInfo, true)).toArray();
       const expanded = this.getLayerExpanded(activeLayerInfo);
 
       return (
-        <div key={`${key}-group`} class={`${CSS.service} ${CSS.groupLayer}`}>
-          <instant-apps-interactive-legend-caption
-            key={`${key}-child-caption`}
-            legendvm={this.legendvm}
-            feature-count={this.featureCount}
-            activeLayerInfo={activeLayerInfo}
-            messages={this.messages}
-          />
-          <div key={`${key}-child-layers`} id={`${activeLayerInfo?.layer?.id}-legend-layer`} class={expanded ? 'show' : 'hide'}>
+        <div class={`${CSS.service} ${CSS.groupLayer}`}>
+          <instant-apps-interactive-legend-caption legendvm={this.legendvm} feature-count={this.featureCount} activeLayerInfo={activeLayerInfo} messages={this.messages} />
+          <div id={`${activeLayerInfo?.layer?.id}-legend-layer`} class={expanded ? 'show' : 'hide'}>
             {layers}
           </div>
         </div>
@@ -250,16 +241,15 @@ export class InstantAppsInteractiveLegendClassic {
 
       const expanded = this.getLayerExpanded(activeLayerInfo);
       return (
-        <div key={`${key}-layer`} class={`${CSS.service}${layerClasses}`} tabIndex={0}>
+        <div class={`${CSS.service}${layerClasses}`} tabIndex={0}>
           <instant-apps-interactive-legend-caption
-            key={`${key}-caption`}
             legendvm={this.legendvm}
             feature-count={this.featureCount}
             activeLayerInfo={activeLayerInfo}
             messages={this.messages}
             isChild={!!isChild}
           />
-          <div key={`${activeLayerInfo?.layer?.id}-legend-layer`} id={`${activeLayerInfo?.layer?.id}-legend-layer`} class={`${CSS.layer}${expanded === false ? ' hide' : ' show'}`}>
+          <div id={`${activeLayerInfo?.layer?.id}-legend-layer`} class={`${CSS.layer}${expanded === false ? ' hide' : ' show'}`}>
             {filteredElements}
           </div>
         </div>
@@ -353,11 +343,7 @@ export class InstantAppsInteractiveLegendClassic {
 
     return (
       <div class={`${tableClass}${tableClasses}${nonInteractiveClass}${nestedUniqueSymbolClass}`}>
-        <div
-          key="caption"
-          id={`${activeLayerInfo?.layer?.id}-legend-element-caption`}
-          class={`${isRelationshipRamp || (!title && !this.zoomTo && singleSymbol) ? 'hide' : 'show'}`}
-        >
+        <div id={`${activeLayerInfo?.layer?.id}-legend-element-caption`} class={`${isRelationshipRamp || (!title && !this.zoomTo && singleSymbol) ? 'hide' : 'show'}`}>
           {caption}
         </div>
         <div key="content" id={`${activeLayerInfo?.layer?.id}-legend-element-content-${legendElementIndex}`} class={`${expanded === false ? 'hide' : 'show'}`}>
@@ -404,13 +390,7 @@ export class InstantAppsInteractiveLegendClassic {
       const isStartLabel = index === 0;
       const isMidLabel = index === 2;
 
-      return isStartLabel ? (
-        <div key={index} class={label ? (colorRampAbovePreview ? CSS.univariateAboveAndBelowLabel : CSS.rampLabel) : ''}>
-          {label}
-        </div>
-      ) : isMidLabel ? (
-        <div />
-      ) : null;
+      return isStartLabel ? <div>{label}</div> : isMidLabel ? <div /> : null;
     });
     const endIndex = labels.length - 1;
     const midIndex = Math.floor(labels.length / 2);
@@ -418,11 +398,7 @@ export class InstantAppsInteractiveLegendClassic {
       const isEndLabel = index === endIndex;
       const isMidLabel = index === midIndex;
 
-      return isMidLabel || isEndLabel ? (
-        <div key={index} class={label ? (colorRampAbovePreview ? CSS.univariateAboveAndBelowLabel : CSS.rampLabel) : ''}>
-          {label}
-        </div>
-      ) : null;
+      return isMidLabel || isEndLabel ? <div class={label ? (colorRampAbovePreview ? CSS.univariateAboveAndBelowLabel : CSS.rampLabel) : ''}>{label}</div> : null;
     });
 
     const sizeRampPreviewStyles = { display: 'table-cell', verticalAlign: 'middle' };
@@ -488,11 +464,7 @@ export class InstantAppsInteractiveLegendClassic {
     });
     const endIndex = (sizeRampElement as any).infos.length - 1;
     const labels = (sizeRampElement as any).infos.map((stop, index) =>
-      index === 0 || index === endIndex ? (
-        <div key={index} class={stop.label ? (colorRampElement ? CSS.univariateAboveAndBelowLabel : CSS.rampLabel) : ''}>
-          {stop.label}
-        </div>
-      ) : null,
+      index === 0 || index === endIndex ? <div class={stop.label ? (colorRampElement ? CSS.univariateAboveAndBelowLabel : CSS.rampLabel) : ''}>{stop.label}</div> : null,
     );
     const sizeRampPreviewStyles = { display: 'table-cell', verticalAlign: 'middle' };
     const colorRampPreviewStyles = { marginTop: `${colorRampTopMargin}px` };
@@ -782,12 +754,16 @@ export class InstantAppsInteractiveLegendClassic {
         () => this.legendvm?.activeLayerInfos,
         'change',
         async activeLayerInfo => {
-          this.reRender = !this.reRender;
+          const data = await generateData(this.legendvm, this.reactiveUtils);
+          store.set('data', data);
           this.handles?.add(
             this.reactiveUtils.on(
               () => activeLayerInfo.children,
               'change',
-              () => (this.reRender = !this.reRender),
+              async () => {
+                const data = await generateData(this.legendvm, this.reactiveUtils);
+                store.set('data', data);
+              },
             ),
           );
         },
@@ -816,7 +792,6 @@ export class InstantAppsInteractiveLegendClassic {
       const acl = this.legendvm?.activeLayerInfos?.find(acl => acl?.layer?.id === fLayer?.id);
       const dataForLayer = await createInteractiveLegendDataForLayer(this.legendvm, acl, this.reactiveUtils);
       store.set('data', { ...data, [fLayer?.id]: dataForLayer });
-      this.reRender = !this.reRender;
     }
   }
 }

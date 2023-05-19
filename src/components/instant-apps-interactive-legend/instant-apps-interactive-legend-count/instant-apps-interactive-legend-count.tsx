@@ -1,7 +1,7 @@
-import { Component, h, Prop, State } from '@stencil/core';
+import { Component, h, Prop } from '@stencil/core';
 import { ICategory } from '../instant-apps-interactive-legend-classic/interfaces/interfaces';
 import { loadModules } from 'esri-loader';
-import { interactiveLegendState } from '../support/store';
+import { interactiveLegendState, store } from '../support/store';
 import { handleFeatureCount } from '../support/helpers';
 
 const CSS = {
@@ -43,12 +43,12 @@ export class InstantAppsInteractiveLegendCount {
   @Prop()
   selected: boolean;
 
-  @State()
-  reRender = false;
+  // @State()
+  // reRender = false;
 
   async componentWillLoad() {
     const observer = new MutationObserver(() => {
-      this.reRender = !this.reRender;
+      // this.reRender = !this.reRender;
     });
     observer.observe(document.body, {
       attributes: true,
@@ -65,8 +65,7 @@ export class InstantAppsInteractiveLegendCount {
           async () => {
             const data = await handleFeatureCount(this.legendvm, interactiveLegendState.data);
             const layerData = data[this.layerId];
-            interactiveLegendState.data[layerData] = layerData;
-            this.reRender = !this.reRender;
+            store.set('data', { ...interactiveLegendState.data, [this.layerId]: layerData });
           },
           { initial: true },
         );
