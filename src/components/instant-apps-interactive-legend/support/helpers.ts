@@ -59,19 +59,8 @@ export function validateInteractivity(activeLayerInfo: __esri.ActiveLayerInfo, l
 
   const isDotDensity = authoringInfoType === 'dot-density';
 
-  const isNestedUniqueSymbols = activeLayerInfo?.legendElements?.[0]?.infos?.every?.(info => info?.type === 'symbol-table');
-
   const isValidated =
-    isFeatureLayer &&
-    !hasClustering &&
-    !opacityRamp &&
-    !heatmapRamp &&
-    !singleSymbolColor &&
-    !singleSymbolSize &&
-    !isUnclassifiedSizeRamp &&
-    !isBinning &&
-    !isDotDensity &&
-    !isNestedUniqueSymbols
+    isFeatureLayer && !hasClustering && !opacityRamp && !heatmapRamp && !singleSymbolColor && !singleSymbolSize && !isUnclassifiedSizeRamp && !isBinning && !isDotDensity
       ? classBreakInfos
         ? moreThanOneClassBreak || validate
         : oneClassBreak || validate
@@ -145,12 +134,24 @@ export async function createInteractiveLegendDataForLayer(
     const field = fLayer.renderer?.get('field') as string;
 
     legendElement?.infos?.forEach(legendElementInfo => {
-      const category = {
-        count: null,
-        selected: false,
-        legendElementInfo,
-      };
-      categories.set(legendElementInfo.label ?? fLayerView?.layer?.id, category);
+      const isNestedUniqueSymbol = legendElementInfo.type === 'symbol-table';
+      if (isNestedUniqueSymbol) {
+        legendElementInfo.infos.forEach(nestedUniqueSymbolInfo => {
+          const category = {
+            count: null,
+            selected: false,
+            legendElementInfo: nestedUniqueSymbolInfo,
+          };
+          categories.set(nestedUniqueSymbolInfo.label ?? fLayerView?.layer?.id, category);
+        });
+      } else {
+        const category = {
+          count: null,
+          selected: false,
+          legendElementInfo,
+        };
+        categories.set(legendElementInfo.label ?? fLayerView?.layer?.id, category);
+      }
     });
 
     // Generated expression to apply to layer filters
@@ -364,8 +365,17 @@ export async function handleFeatureCount(legendViewModel: __esri.LegendViewModel
     const counts: Promise<{ [categoryId: string]: number | null } | null | undefined>[] = [];
 
     legendElement?.infos?.forEach((info, infoIndex) => {
-      counts.push(getInfoCount(legendViewModel.view.extent, fLayerView, field, info, infoIndex, legendElement));
-      countPromises[activeLayerInfo.layer.id] = counts;
+      const isNestedUniqueSymbol = info.type === 'symbol-table';
+
+      if (isNestedUniqueSymbol) {
+        info.infos.forEach((nestedUniqueSymbolInfo, nestedUniqueSymbolInfoIndex) => {
+          counts.push(getInfoCount(legendViewModel.view.extent, fLayerView, field, nestedUniqueSymbolInfo, nestedUniqueSymbolInfoIndex, info));
+          countPromises[activeLayerInfo.layer.id] = counts;
+        });
+      } else {
+        counts.push(getInfoCount(legendViewModel.view.extent, fLayerView, field, info, infoIndex, legendElement));
+        countPromises[activeLayerInfo.layer.id] = counts;
+      }
     });
 
     activeLayerInfo.children.forEach(async aclChild => {
