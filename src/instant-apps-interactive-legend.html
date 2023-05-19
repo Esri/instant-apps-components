@@ -36,12 +36,10 @@
     <div id="viewDiv"></div>
 
     <script>
-      require(['esri/WebMap', 'esri/widgets/Expand', 'esri/views/MapView', 'esri/core/reactiveUtils', 'esri/config'], (WebMap, Expand, MapView, reactiveUtils, esriConfig) => {
-        esriConfig.portalUrl = 'http://holistic.mapsdevext.arcgis.com';
-
+      require(['esri/WebMap', 'esri/widgets/Expand', 'esri/views/MapView', 'esri/core/reactiveUtils'], (WebMap, Expand, MapView, reactiveUtils) => {
         const map = new WebMap({
           portalItem: {
-            id: '247719af3be348369e6ee25828849b4a',
+            id: 'ddf28dc057b8400dbfa148ef403f7c57',
           },
         });
 
@@ -51,8 +49,6 @@
         });
 
         const legend = document.createElement('instant-apps-interactive-legend');
-        legend.zoomTo = true;
-        legend.featureCount = true;
         legend.view = view;
 
         const legendExpand = new Expand({

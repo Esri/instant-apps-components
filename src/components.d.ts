@@ -213,6 +213,7 @@ export namespace Components {
     }
     interface InstantAppsInteractiveLegendCaption {
         "activeLayerInfo": __esri.ActiveLayerInfo;
+        "expanded": boolean;
         "featureCount": boolean;
         "isChild": boolean;
         "legendvm": __esri.LegendViewModel;
@@ -250,6 +251,27 @@ export namespace Components {
         "expanded": boolean;
         "isInteractive": boolean;
         "layer": __esri.FeatureLayer;
+        "legendElementIndex": number;
+        "legendvm": __esri.LegendViewModel;
+        "messages": any;
+        "titleText": string;
+        "zoomTo": boolean;
+    }
+    interface InstantAppsInteractiveLegendLayerElement {
+        "activeLayerInfo": __esri.ActiveLayerInfo;
+        "featureCount": boolean;
+        "isChild": boolean;
+        "legendvm": __esri.LegendViewModel;
+        "messages": any;
+    }
+    interface InstantAppsInteractiveLegendLegendElement {
+        "activeLayerInfo": __esri.ActiveLayerInfo;
+        "isChild": boolean;
+        "isColorRamp": boolean;
+        "isInteractive": boolean;
+        "isRelationshipRamp": boolean;
+        "isSizeRamp": boolean;
+        "legendElement": __esri.LegendElement;
         "legendElementIndex": number;
         "legendvm": __esri.LegendViewModel;
         "messages": any;
@@ -404,6 +426,10 @@ export interface InstantAppsHeaderCustomEvent<T> extends CustomEvent<T> {
     detail: T;
     target: HTMLInstantAppsHeaderElement;
 }
+export interface InstantAppsInteractiveLegendCaptionCustomEvent<T> extends CustomEvent<T> {
+    detail: T;
+    target: HTMLInstantAppsInteractiveLegendCaptionElement;
+}
 export interface InstantAppsInteractiveLegendLayerCaptionCustomEvent<T> extends CustomEvent<T> {
     detail: T;
     target: HTMLInstantAppsInteractiveLegendLayerCaptionElement;
@@ -471,6 +497,18 @@ declare global {
         prototype: HTMLInstantAppsInteractiveLegendLayerCaptionElement;
         new (): HTMLInstantAppsInteractiveLegendLayerCaptionElement;
     };
+    interface HTMLInstantAppsInteractiveLegendLayerElementElement extends Components.InstantAppsInteractiveLegendLayerElement, HTMLStencilElement {
+    }
+    var HTMLInstantAppsInteractiveLegendLayerElementElement: {
+        prototype: HTMLInstantAppsInteractiveLegendLayerElementElement;
+        new (): HTMLInstantAppsInteractiveLegendLayerElementElement;
+    };
+    interface HTMLInstantAppsInteractiveLegendLegendElementElement extends Components.InstantAppsInteractiveLegendLegendElement, HTMLStencilElement {
+    }
+    var HTMLInstantAppsInteractiveLegendLegendElementElement: {
+        prototype: HTMLInstantAppsInteractiveLegendLegendElementElement;
+        new (): HTMLInstantAppsInteractiveLegendLegendElementElement;
+    };
     interface HTMLInstantAppsInteractiveLegendRelationshipElement extends Components.InstantAppsInteractiveLegendRelationship, HTMLStencilElement {
     }
     var HTMLInstantAppsInteractiveLegendRelationshipElement: {
@@ -529,6 +567,8 @@ declare global {
         "instant-apps-interactive-legend-classic": HTMLInstantAppsInteractiveLegendClassicElement;
         "instant-apps-interactive-legend-count": HTMLInstantAppsInteractiveLegendCountElement;
         "instant-apps-interactive-legend-layer-caption": HTMLInstantAppsInteractiveLegendLayerCaptionElement;
+        "instant-apps-interactive-legend-layer-element": HTMLInstantAppsInteractiveLegendLayerElementElement;
+        "instant-apps-interactive-legend-legend-element": HTMLInstantAppsInteractiveLegendLegendElementElement;
         "instant-apps-interactive-legend-relationship": HTMLInstantAppsInteractiveLegendRelationshipElement;
         "instant-apps-keyboard-shortcuts": HTMLInstantAppsKeyboardShortcutsElement;
         "instant-apps-measurement": HTMLInstantAppsMeasurementElement;
@@ -758,10 +798,12 @@ declare namespace LocalJSX {
     }
     interface InstantAppsInteractiveLegendCaption {
         "activeLayerInfo"?: __esri.ActiveLayerInfo;
+        "expanded"?: boolean;
         "featureCount"?: boolean;
         "isChild"?: boolean;
         "legendvm"?: __esri.LegendViewModel;
         "messages"?: any;
+        "onLegendCaptionExpandUpdated"?: (event: InstantAppsInteractiveLegendCaptionCustomEvent<boolean>) => void;
     }
     interface InstantAppsInteractiveLegendClassic {
         /**
@@ -798,7 +840,29 @@ declare namespace LocalJSX {
         "legendElementIndex"?: number;
         "legendvm"?: __esri.LegendViewModel;
         "messages"?: any;
+        "onLegendLayerExpandUpdated"?: (event: InstantAppsInteractiveLegendLayerCaptionCustomEvent<boolean>) => void;
         "onShowAllSelected"?: (event: InstantAppsInteractiveLegendLayerCaptionCustomEvent<boolean>) => void;
+        "titleText"?: string;
+        "zoomTo"?: boolean;
+    }
+    interface InstantAppsInteractiveLegendLayerElement {
+        "activeLayerInfo"?: __esri.ActiveLayerInfo;
+        "featureCount"?: boolean;
+        "isChild"?: boolean;
+        "legendvm"?: __esri.LegendViewModel;
+        "messages"?: any;
+    }
+    interface InstantAppsInteractiveLegendLegendElement {
+        "activeLayerInfo"?: __esri.ActiveLayerInfo;
+        "isChild"?: boolean;
+        "isColorRamp"?: boolean;
+        "isInteractive"?: boolean;
+        "isRelationshipRamp"?: boolean;
+        "isSizeRamp"?: boolean;
+        "legendElement"?: __esri.LegendElement;
+        "legendElementIndex"?: number;
+        "legendvm"?: __esri.LegendViewModel;
+        "messages"?: any;
         "titleText"?: string;
         "zoomTo"?: boolean;
     }
@@ -951,6 +1015,8 @@ declare namespace LocalJSX {
         "instant-apps-interactive-legend-classic": InstantAppsInteractiveLegendClassic;
         "instant-apps-interactive-legend-count": InstantAppsInteractiveLegendCount;
         "instant-apps-interactive-legend-layer-caption": InstantAppsInteractiveLegendLayerCaption;
+        "instant-apps-interactive-legend-layer-element": InstantAppsInteractiveLegendLayerElement;
+        "instant-apps-interactive-legend-legend-element": InstantAppsInteractiveLegendLegendElement;
         "instant-apps-interactive-legend-relationship": InstantAppsInteractiveLegendRelationship;
         "instant-apps-keyboard-shortcuts": InstantAppsKeyboardShortcuts;
         "instant-apps-measurement": InstantAppsMeasurement;
@@ -974,6 +1040,8 @@ declare module "@stencil/core" {
             "instant-apps-interactive-legend-classic": LocalJSX.InstantAppsInteractiveLegendClassic & JSXBase.HTMLAttributes<HTMLInstantAppsInteractiveLegendClassicElement>;
             "instant-apps-interactive-legend-count": LocalJSX.InstantAppsInteractiveLegendCount & JSXBase.HTMLAttributes<HTMLInstantAppsInteractiveLegendCountElement>;
             "instant-apps-interactive-legend-layer-caption": LocalJSX.InstantAppsInteractiveLegendLayerCaption & JSXBase.HTMLAttributes<HTMLInstantAppsInteractiveLegendLayerCaptionElement>;
+            "instant-apps-interactive-legend-layer-element": LocalJSX.InstantAppsInteractiveLegendLayerElement & JSXBase.HTMLAttributes<HTMLInstantAppsInteractiveLegendLayerElementElement>;
+            "instant-apps-interactive-legend-legend-element": LocalJSX.InstantAppsInteractiveLegendLegendElement & JSXBase.HTMLAttributes<HTMLInstantAppsInteractiveLegendLegendElementElement>;
             "instant-apps-interactive-legend-relationship": LocalJSX.InstantAppsInteractiveLegendRelationship & JSXBase.HTMLAttributes<HTMLInstantAppsInteractiveLegendRelationshipElement>;
             "instant-apps-keyboard-shortcuts": LocalJSX.InstantAppsKeyboardShortcuts & JSXBase.HTMLAttributes<HTMLInstantAppsKeyboardShortcutsElement>;
             "instant-apps-measurement": LocalJSX.InstantAppsMeasurement & JSXBase.HTMLAttributes<HTMLInstantAppsMeasurementElement>;

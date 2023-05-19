@@ -22,10 +22,6 @@ export interface IIntLegendLayerData {
   totalCount: number | null;
   fLayerView: __esri.FeatureLayerView;
   legendElement: __esri.LegendElement;
-  expanded: {
-    layer: boolean;
-    legendElements: boolean[];
-  };
 }
 
 export interface IInteractiveLegendData {

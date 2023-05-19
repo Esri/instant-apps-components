@@ -167,10 +167,6 @@ export async function createInteractiveLegendDataForLayer(
       totalCount: null,
       fLayerView,
       legendElement,
-      expanded: {
-        layer: true,
-        legendElements: activeLayerInfo.legendElements.map(() => true),
-      },
     });
   } catch {
     return Promise.resolve(null);

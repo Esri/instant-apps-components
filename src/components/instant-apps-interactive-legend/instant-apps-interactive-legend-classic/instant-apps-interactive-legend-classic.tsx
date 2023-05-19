@@ -80,7 +80,6 @@ const CSS = {
   infoSelected: 'instant-apps-interactive-legend-element-info--selected',
 };
 
-const KEY = 'esri-legend__';
 const GRADIENT_WIDTH = 24;
 const univariateRampContainerStyles = { display: 'flex', alignItems: 'flex-start' };
 const univariateColorRampContainerStyles = { marginLeft: '3px' };
@@ -209,14 +208,11 @@ export class InstantAppsInteractiveLegendClassic {
 
     if (hasChildren) {
       const layers = activeLayerInfo.children.map(childActiveLayerInfo => this.renderLegendForLayer(childActiveLayerInfo, true)).toArray();
-      const expanded = this.getLayerExpanded(activeLayerInfo);
 
       return (
         <div class={`${CSS.service} ${CSS.groupLayer}`}>
           <instant-apps-interactive-legend-caption legendvm={this.legendvm} feature-count={this.featureCount} activeLayerInfo={activeLayerInfo} messages={this.messages} />
-          <div id={`${activeLayerInfo?.layer?.id}-legend-layer`} class={expanded ? 'show' : 'hide'}>
-            {layers}
-          </div>
+          <div id={`${activeLayerInfo?.layer?.id}-legend-layer`}>{layers}</div>
         </div>
       );
     }
@@ -237,22 +233,18 @@ export class InstantAppsInteractiveLegendClassic {
         return null;
       }
 
-      const layerClasses = !!activeLayerInfo.parent ? ` ${CSS.groupLayerChild}` : '';
-
-      const expanded = this.getLayerExpanded(activeLayerInfo);
       return (
-        <div class={`${CSS.service}${layerClasses}`} tabIndex={0}>
-          <instant-apps-interactive-legend-caption
-            legendvm={this.legendvm}
-            feature-count={this.featureCount}
-            activeLayerInfo={activeLayerInfo}
-            messages={this.messages}
-            isChild={!!isChild}
-          />
-          <div id={`${activeLayerInfo?.layer?.id}-legend-layer`} class={`${CSS.layer}${expanded === false ? ' hide' : ' show'}`}>
+        <instant-apps-interactive-legend-layer-element
+          legendvm={this.legendvm}
+          featureCount={this.featureCount}
+          activeLayerInfo={activeLayerInfo}
+          messages={this.messages}
+          isChild={isChild}
+        >
+          <div slot="content" id={`${activeLayerInfo?.layer?.id}-legend-layer`} class={CSS.layer}>
             {filteredElements}
           </div>
-        </div>
+        </instant-apps-interactive-legend-layer-element>
       );
     }
   }
@@ -315,41 +307,23 @@ export class InstantAppsInteractiveLegendClassic {
       }
     }
 
-    const tableClass = isChild ? CSS.layerChildTable : CSS.layerTable;
-
-    const expanded = this.getLegendElementsExpanded(activeLayerInfo, isRelationshipRamp ? 0 : legendElementIndex);
-
-    const caption = (
-      <instant-apps-interactive-legend-layer-caption
-        legendvm={this.legendvm}
-        activeLayerInfo={activeLayerInfo}
-        layer={layer as __esri.FeatureLayer}
-        titleText={title as string}
-        legendElementIndex={legendElementIndex}
-        zoomTo={this.zoomTo}
-        isInteractive={isInteractive}
-        expanded={expanded}
-        messages={this.messages}
-      />
-    );
-
-    const tableClasses = (isSizeRamp || !isChild) && !isColorRamp ? ` ${CSS.layerTableSizeRamp}` : '';
-    const nonInteractiveClass = !isInteractive ? ' instant-apps-interactive-legend__non-interactive' : '';
-    const nestedUniqueSymbolClass = activeLayerInfo?.legendElements?.[0]?.infos?.every?.(info => info?.type === 'symbol-table')
-      ? ' instant-apps-interactive-legend__nested-unique-symbol'
-      : '';
-
-    const singleSymbol = legendElement?.infos?.length === 1 && !((activeLayerInfo?.layer as __esri.FeatureLayer)?.renderer as any)?.field;
-
     return (
-      <div class={`${tableClass}${tableClasses}${nonInteractiveClass}${nestedUniqueSymbolClass}`}>
-        <div id={`${activeLayerInfo?.layer?.id}-legend-element-caption`} class={`${isRelationshipRamp || (!title && !this.zoomTo && singleSymbol) ? 'hide' : 'show'}`}>
-          {caption}
-        </div>
-        <div key="content" id={`${activeLayerInfo?.layer?.id}-legend-element-content-${legendElementIndex}`} class={`${expanded === false ? 'hide' : 'show'}`}>
-          {content}
-        </div>
-      </div>
+      <instant-apps-interactive-legend-legend-element
+        activeLayerInfo={activeLayerInfo}
+        isSizeRamp={isSizeRamp}
+        isChild={isChild}
+        isColorRamp={isColorRamp}
+        isRelationshipRamp={isRelationshipRamp}
+        isInteractive={isInteractive}
+        zoomTo={this.zoomTo}
+        legendElement={legendElement}
+        titleText={title as any}
+        legendvm={this.legendvm}
+        legendElementIndex={legendElementIndex}
+        messages={this.messages}
+      >
+        <div slot="content">{content}</div>
+      </instant-apps-interactive-legend-legend-element>
     );
   }
 

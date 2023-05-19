@@ -1,7 +1,5 @@
-import { Component, h, Prop, Element, forceUpdate } from '@stencil/core';
+import { Component, h, Prop, Element, Event, EventEmitter } from '@stencil/core';
 import { validateInteractivity } from '../support/helpers';
-
-import { interactiveLegendState } from '../support/store';
 
 const CSS = {
   label: 'esri-legend__service-label',
@@ -34,10 +32,23 @@ export class InstantAppsInteractiveLegendCaption {
   @Prop()
   isChild = false;
 
+  @Prop({
+    mutable: true,
+  })
+  expanded: boolean = true;
+
+  @Event({
+    eventName: 'legendCaptionExpandUpdated',
+    composed: true,
+    cancelable: true,
+    bubbles: true,
+  })
+  legendCaptionExpandUpdatedEvent: EventEmitter<boolean>;
+
   render() {
     const isInteractive = validateInteractivity(this.activeLayerInfo);
 
-    const expanded = interactiveLegendState?.data[this.activeLayerInfo?.layer?.id]?.expanded?.layer;
+    const { expanded } = this;
 
     const expandCollapseText = expanded ? this.messages?.collapse : this.messages?.expand;
 
@@ -49,7 +60,7 @@ export class InstantAppsInteractiveLegendCaption {
           <span class={CSS.headerActionContainer}>
             <h3 class={`${CSS.header} ${CSS.label}${isChild}`}>{this.activeLayerInfo?.title}</h3>
             <calcite-action
-              onClick={this.toggleExpanded(this.activeLayerInfo)}
+              onClick={this.toggleExpanded()}
               icon={expanded ? 'chevron-down' : 'chevron-right'}
               appearance="transparent"
               text={expandCollapseText}
@@ -64,18 +75,10 @@ export class InstantAppsInteractiveLegendCaption {
     );
   }
 
-  toggleExpanded(activeLayerInfo: __esri.ActiveLayerInfo): () => void {
+  toggleExpanded(): () => void {
     return () => {
-      const expanded = !interactiveLegendState.data[activeLayerInfo?.layer.id].expanded.layer;
-      interactiveLegendState.data[activeLayerInfo?.layer?.id].expanded.layer = expanded;
-      const id = `${activeLayerInfo?.layer?.id}-legend-layer`;
-      const node = document.getElementById(id);
-      if (node?.classList.contains('show')) {
-        node?.classList.replace('show', 'hide');
-      } else {
-        node?.classList.replace('hide', 'show');
-      }
-      forceUpdate(this.el);
+      this.expanded = !this.expanded;
+      this.legendCaptionExpandUpdatedEvent.emit(this.expanded);
     };
   }
 }

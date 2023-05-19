@@ -1,7 +1,7 @@
-import { Component, h, Prop, EventEmitter, Event, forceUpdate, Element } from '@stencil/core';
+import { Component, h, Prop, EventEmitter, Event, Element } from '@stencil/core';
 
 import { showAll, zoomTo } from '../support/helpers';
-import { interactiveLegendState } from '../support/store';
+import { interactiveLegendState, store } from '../support/store';
 const CSS = {
   layerCaption: 'esri-legend__layer-caption',
   layerCaptionBtnContainer: 'instant-apps-interactive-legend__layer-caption-btn-container',
@@ -34,8 +34,10 @@ export class InstantAppsInteractiveLegendLayerCaption {
   @Prop()
   isInteractive: boolean;
 
-  @Prop()
-  expanded: boolean;
+  @Prop({
+    mutable: true,
+  })
+  expanded: boolean = true;
 
   @Prop()
   messages;
@@ -47,6 +49,14 @@ export class InstantAppsInteractiveLegendLayerCaption {
     bubbles: true,
   })
   showAllSelectedEvent: EventEmitter<boolean>;
+
+  @Event({
+    eventName: 'legendLayerExpandUpdated',
+    composed: true,
+    cancelable: true,
+    bubbles: true,
+  })
+  legendLayerExpandUpdatedEvent: EventEmitter<boolean>;
 
   @Element()
   el;
@@ -60,6 +70,9 @@ export class InstantAppsInteractiveLegendLayerCaption {
           onClick={() => {
             const layerData = showAll(interactiveLegendState.data?.[this.layer?.id]);
             interactiveLegendState.data[this.layer.id] = layerData;
+
+            store.set('data', { ...interactiveLegendState.data, [this.layer.id]: layerData });
+
             this.showAllSelectedEvent.emit();
           }}
           icon-start="list-check-all"
@@ -86,11 +99,11 @@ export class InstantAppsInteractiveLegendLayerCaption {
     const isNestedUniqueSymbols = this.activeLayerInfo?.legendElements?.[0]?.infos?.every?.(info => info?.type === 'symbol-table');
     const isRelationship = this.activeLayerInfo?.legendElements[1]?.type === 'relationship-ramp';
 
-    const expanded = interactiveLegendState?.data?.[this.activeLayerInfo?.layer?.id]?.expanded?.legendElements[this?.legendElementIndex];
+    const { expanded } = this;
 
     const noText = !this.titleText ? ' instant-apps-interactive-legend__layer-caption-btn-container--no-text' : '';
 
-    return !isNestedUniqueSymbols ? (
+    return isNestedUniqueSymbols && !this.titleText ? null : (
       <div class={CSS.layerCaption}>
         {this.isInteractive || isRelationship ? (
           <div key="layer-caption-btn-container" class={`${CSS.layerCaptionBtnContainer}${noText}`}>
@@ -117,51 +130,20 @@ export class InstantAppsInteractiveLegendLayerCaption {
           </span>
         ) : null}
         <calcite-action
-          onClick={this.toggleExpanded(this.activeLayerInfo, this.legendElementIndex)}
+          onClick={this.toggleExpanded()}
           icon={expanded === false ? 'chevron-right' : 'chevron-down'}
           appearance="transparent"
           text={expanded === false ? this.messages?.expand : this.messages?.collapse}
           label={expanded === false ? this.messages?.expand : this.messages?.collapse}
         ></calcite-action>
       </div>
-    ) : this.titleText ? (
-      <div class={CSS.layerCaption}>{this.titleText}</div>
-    ) : null;
+    );
   }
 
-  toggleExpanded(activeLayerInfo: __esri.ActiveLayerInfo, legendElementIndex: number): () => void {
+  toggleExpanded(): () => void {
     return () => {
-      const expanded = !interactiveLegendState.data[activeLayerInfo?.layer.id].expanded.legendElements[legendElementIndex];
-      interactiveLegendState.data[activeLayerInfo?.layer?.id].expanded.legendElements[legendElementIndex] = expanded;
-
-      const fLayer = activeLayerInfo.layer as __esri.FeatureLayer;
-
-      if (fLayer?.renderer?.authoringInfo?.type === 'relationship') {
-        const id = `${activeLayerInfo?.layer?.id}-legend-element-content-0`;
-        const id2 = `${activeLayerInfo?.layer?.id}-legend-element-content-1`;
-        const node = document.getElementById(id);
-        const node2 = document.getElementById(id2);
-        if (node?.classList.contains('show')) {
-          node?.classList.replace('show', 'hide');
-        } else {
-          node?.classList.replace('hide', 'show');
-        }
-        if (node2?.classList.contains('show')) {
-          node2?.classList.replace('show', 'hide');
-        } else {
-          node2?.classList.replace('hide', 'show');
-        }
-      } else {
-        const id = `${activeLayerInfo?.layer?.id}-legend-element-content-${legendElementIndex}`;
-        const node = document.getElementById(id);
-        if (node?.classList.contains('show')) {
-          node?.classList.replace('show', 'hide');
-        } else {
-          node?.classList.replace('hide', 'show');
-        }
-      }
-
-      forceUpdate(this.el);
+      this.expanded = !this.expanded;
+      this.legendLayerExpandUpdatedEvent.emit(this.expanded);
     };
   }
 }
