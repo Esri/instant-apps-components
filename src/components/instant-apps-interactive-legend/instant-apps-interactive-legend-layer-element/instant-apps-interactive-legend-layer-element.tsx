@@ -32,8 +32,8 @@ export class InstantAppsInteractiveLegendLayerElement {
   @State()
   expanded = true;
 
-  @Listen('layerCaptionExpandUpdated', { target: 'window' })
-  layerCaptionExpandUpdatedEmitted() {
+  @Listen('layerCaptionElementExpandUpdated', { target: 'window' })
+  layerCaptionElementExpandUpdatedEmitted() {
     this.expanded = this.layerCaption.expanded;
   }
 
@@ -42,7 +42,7 @@ export class InstantAppsInteractiveLegendLayerElement {
 
     return (
       <div class={`${CSS.service}${layerClasses}`} tabIndex={0}>
-        <instant-apps-interactive-legend-layer-caption
+        <instant-apps-interactive-legend-layer-element-caption
           ref={node => (this.layerCaption = node)}
           legendvm={this.legendvm}
           feature-count={this.featureCount}

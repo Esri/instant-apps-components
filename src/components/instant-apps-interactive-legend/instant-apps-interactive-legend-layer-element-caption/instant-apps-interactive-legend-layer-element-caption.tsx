@@ -9,11 +9,11 @@ const CSS = {
 };
 
 @Component({
-  tag: 'instant-apps-interactive-legend-layer-caption',
-  styleUrl: 'instant-apps-interactive-legend-layer-caption.scss',
+  tag: 'instant-apps-interactive-legend-layer-element-caption',
+  styleUrl: 'instant-apps-interactive-legend-layer-element-caption.scss',
   scoped: true,
 })
-export class InstantAppsInteractiveLegendLayerCaption {
+export class InstantAppsInteractiveLegendLayerElementCaption {
   @Prop()
   legendvm: __esri.LegendViewModel;
 
@@ -38,12 +38,12 @@ export class InstantAppsInteractiveLegendLayerCaption {
   expanded: boolean = true;
 
   @Event({
-    eventName: 'layerCaptionExpandUpdated',
+    eventName: 'layerCaptionElementExpandUpdated',
     composed: true,
     cancelable: true,
     bubbles: true,
   })
-  layerCaptionExpandUpdatedEvent: EventEmitter<boolean>;
+  layerCaptionElementExpandUpdatedEvent: EventEmitter<boolean>;
 
   render() {
     const isInteractive = validateInteractivity(this.activeLayerInfo);
@@ -78,7 +78,7 @@ export class InstantAppsInteractiveLegendLayerCaption {
   toggleExpanded(): () => void {
     return () => {
       this.expanded = !this.expanded;
-      this.layerCaptionExpandUpdatedEvent.emit(this.expanded);
+      this.layerCaptionElementExpandUpdatedEvent.emit(this.expanded);
     };
   }
 }

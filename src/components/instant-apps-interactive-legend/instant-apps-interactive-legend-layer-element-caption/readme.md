@@ -1,7 +1,5 @@
 # instant-apps-interactive-legend-layer-caption
 
-
-
 <!-- Auto Generated Below -->
 
 
@@ -19,12 +17,16 @@
 
 ## Events
 
-| Event                       | Description | Type                   |
-| --------------------------- | ----------- | ---------------------- |
-| `layerCaptionExpandUpdated` |             | `CustomEvent<boolean>` |
+| Event                              | Description | Type                   |
+| ---------------------------------- | ----------- | ---------------------- |
+| `layerCaptionElementExpandUpdated` |             | `CustomEvent<boolean>` |
 
 
 ## Dependencies
+
+### Used by
+
+ - [instant-apps-interactive-legend-layer-element](../instant-apps-interactive-legend-layer-element)
 
 ### Depends on
 
@@ -33,8 +35,9 @@
 ### Graph
 ```mermaid
 graph TD;
-  instant-apps-interactive-legend-layer-caption --> instant-apps-interactive-legend-count
-  style instant-apps-interactive-legend-layer-caption fill:#f9f,stroke:#333,stroke-width:4px
+  instant-apps-interactive-legend-layer-element-caption --> instant-apps-interactive-legend-count
+  instant-apps-interactive-legend-layer-element --> instant-apps-interactive-legend-layer-element-caption
+  style instant-apps-interactive-legend-layer-element-caption fill:#f9f,stroke:#333,stroke-width:4px
 ```
 
 ----------------------------------------------

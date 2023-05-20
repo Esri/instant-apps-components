@@ -36,10 +36,12 @@
     <div id="viewDiv"></div>
 
     <script>
-      require(['esri/WebMap', 'esri/widgets/Expand', 'esri/views/MapView', 'esri/core/reactiveUtils'], (WebMap, Expand, MapView, reactiveUtils) => {
+      require(['esri/WebMap', 'esri/widgets/Expand', 'esri/views/MapView', 'esri/core/reactiveUtils', 'esri/config'], (WebMap, Expand, MapView, reactiveUtils, esriConfig) => {
+        esriConfig.portalUrl = 'http://holistic.mapsdevext.arcgis.com';
+
         const map = new WebMap({
           portalItem: {
-            id: 'ddf28dc057b8400dbfa148ef403f7c57',
+            id: 'e75a42650ca346a1bcf1ec5218545dc6',
           },
         });
 
