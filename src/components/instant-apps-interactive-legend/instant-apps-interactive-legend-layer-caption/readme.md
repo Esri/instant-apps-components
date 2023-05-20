@@ -7,36 +7,33 @@
 
 ## Properties
 
-| Property             | Attribute              | Description | Type              | Default     |
-| -------------------- | ---------------------- | ----------- | ----------------- | ----------- |
-| `activeLayerInfo`    | --                     |             | `ActiveLayerInfo` | `undefined` |
-| `expanded`           | `expanded`             |             | `boolean`         | `undefined` |
-| `isInteractive`      | `is-interactive`       |             | `boolean`         | `undefined` |
-| `layer`              | --                     |             | `FeatureLayer`    | `undefined` |
-| `legendElementIndex` | `legend-element-index` |             | `number`          | `undefined` |
-| `legendvm`           | --                     |             | `LegendViewModel` | `undefined` |
-| `messages`           | `messages`             |             | `any`             | `undefined` |
-| `titleText`          | `title-text`           |             | `string`          | `undefined` |
-| `zoomTo`             | `zoom-to`              |             | `boolean`         | `undefined` |
+| Property          | Attribute       | Description | Type              | Default     |
+| ----------------- | --------------- | ----------- | ----------------- | ----------- |
+| `activeLayerInfo` | --              |             | `ActiveLayerInfo` | `undefined` |
+| `expanded`        | `expanded`      |             | `boolean`         | `true`      |
+| `featureCount`    | `feature-count` |             | `boolean`         | `undefined` |
+| `isChild`         | `is-child`      |             | `boolean`         | `false`     |
+| `legendvm`        | --              |             | `LegendViewModel` | `undefined` |
+| `messages`        | `messages`      |             | `any`             | `undefined` |
 
 
 ## Events
 
-| Event             | Description | Type                   |
-| ----------------- | ----------- | ---------------------- |
-| `showAllSelected` |             | `CustomEvent<boolean>` |
+| Event                       | Description | Type                   |
+| --------------------------- | ----------- | ---------------------- |
+| `layerCaptionExpandUpdated` |             | `CustomEvent<boolean>` |
 
 
 ## Dependencies
 
-### Used by
+### Depends on
 
- - [instant-apps-interactive-legend-classic](../instant-apps-interactive-legend-classic)
+- [instant-apps-interactive-legend-count](../instant-apps-interactive-legend-count)
 
 ### Graph
 ```mermaid
 graph TD;
-  instant-apps-interactive-legend-classic --> instant-apps-interactive-legend-layer-caption
+  instant-apps-interactive-legend-layer-caption --> instant-apps-interactive-legend-count
   style instant-apps-interactive-legend-layer-caption fill:#f9f,stroke:#333,stroke-width:4px
 ```
 

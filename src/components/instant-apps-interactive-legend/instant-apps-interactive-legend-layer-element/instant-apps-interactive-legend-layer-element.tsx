@@ -12,7 +12,7 @@ const CSS = {
   scoped: true,
 })
 export class InstantAppsInteractiveLegendLayerElement {
-  legendCaption;
+  layerCaption;
 
   @Prop()
   legendvm: __esri.LegendViewModel;
@@ -32,9 +32,9 @@ export class InstantAppsInteractiveLegendLayerElement {
   @State()
   expanded = true;
 
-  @Listen('legendCaptionExpandUpdated', { target: 'window' })
-  legendCaptionExpandUpdatedEmitted() {
-    this.expanded = this.legendCaption.expanded;
+  @Listen('layerCaptionExpandUpdated', { target: 'window' })
+  layerCaptionExpandUpdatedEmitted() {
+    this.expanded = this.layerCaption.expanded;
   }
 
   render() {
@@ -42,8 +42,8 @@ export class InstantAppsInteractiveLegendLayerElement {
 
     return (
       <div class={`${CSS.service}${layerClasses}`} tabIndex={0}>
-        <instant-apps-interactive-legend-caption
-          ref={node => (this.legendCaption = node)}
+        <instant-apps-interactive-legend-layer-caption
+          ref={node => (this.layerCaption = node)}
           legendvm={this.legendvm}
           feature-count={this.featureCount}
           activeLayerInfo={this.activeLayerInfo}

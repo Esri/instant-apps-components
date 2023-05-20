@@ -21,14 +21,14 @@
 
 ### Used by
 
- - [instant-apps-interactive-legend-caption](../instant-apps-interactive-legend-caption)
  - [instant-apps-interactive-legend-classic](../instant-apps-interactive-legend-classic)
+ - [instant-apps-interactive-legend-layer-caption](../instant-apps-interactive-legend-layer-caption)
 
 ### Graph
 ```mermaid
 graph TD;
-  instant-apps-interactive-legend-caption --> instant-apps-interactive-legend-count
   instant-apps-interactive-legend-classic --> instant-apps-interactive-legend-count
+  instant-apps-interactive-legend-layer-caption --> instant-apps-interactive-legend-count
   style instant-apps-interactive-legend-count fill:#f9f,stroke:#333,stroke-width:4px
 ```
 

@@ -1,4 +1,4 @@
-# instant-apps-interactive-legend-caption
+# instant-apps-interactive-legend-layer-element
 
 
 
@@ -11,7 +11,7 @@
 | ----------------- | --------------- | ----------- | ----------------- | ----------- |
 | `activeLayerInfo` | --              |             | `ActiveLayerInfo` | `undefined` |
 | `featureCount`    | `feature-count` |             | `boolean`         | `undefined` |
-| `isChild`         | `is-child`      |             | `boolean`         | `false`     |
+| `isChild`         | `is-child`      |             | `boolean`         | `undefined` |
 | `legendvm`        | --              |             | `LegendViewModel` | `undefined` |
 | `messages`        | `messages`      |             | `any`             | `undefined` |
 
@@ -22,16 +22,11 @@
 
  - [instant-apps-interactive-legend-classic](../instant-apps-interactive-legend-classic)
 
-### Depends on
-
-- [instant-apps-interactive-legend-count](../instant-apps-interactive-legend-count)
-
 ### Graph
 ```mermaid
 graph TD;
-  instant-apps-interactive-legend-caption --> instant-apps-interactive-legend-count
-  instant-apps-interactive-legend-classic --> instant-apps-interactive-legend-caption
-  style instant-apps-interactive-legend-caption fill:#f9f,stroke:#333,stroke-width:4px
+  instant-apps-interactive-legend-classic --> instant-apps-interactive-legend-layer-element
+  style instant-apps-interactive-legend-layer-element fill:#f9f,stroke:#333,stroke-width:4px
 ```
 
 ----------------------------------------------

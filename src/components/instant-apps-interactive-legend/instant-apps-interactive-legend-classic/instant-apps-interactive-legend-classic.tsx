@@ -211,7 +211,7 @@ export class InstantAppsInteractiveLegendClassic {
 
       return (
         <div class={`${CSS.service} ${CSS.groupLayer}`}>
-          <instant-apps-interactive-legend-caption legendvm={this.legendvm} feature-count={this.featureCount} activeLayerInfo={activeLayerInfo} messages={this.messages} />
+          <instant-apps-interactive-layer-caption legendvm={this.legendvm} feature-count={this.featureCount} activeLayerInfo={activeLayerInfo} messages={this.messages} />
           <div id={`${activeLayerInfo?.layer?.id}-legend-layer`}>{layers}</div>
         </div>
       );

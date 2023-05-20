@@ -72,7 +72,7 @@ export class InstantAppsInteractiveLegendLegendElement {
           id={`${this.activeLayerInfo?.layer?.id}-legend-element-caption`}
           class={`${this.isRelationshipRamp || (!this.titleText && !this.zoomTo && singleSymbol) ? 'hide' : 'show'}`}
         >
-          <instant-apps-interactive-legend-layer-caption
+          <instant-apps-interactive-legend-legend-element-caption
             ref={node => (this.legendLayerCaption = node)}
             legendvm={this.legendvm}
             activeLayerInfo={this.activeLayerInfo}
