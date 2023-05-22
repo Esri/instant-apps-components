@@ -16,16 +16,12 @@ const CSS = {
     base: 'instant-apps-export-print',
     extraContainer: 'instant-apps-export-print__extra-container',
     legendContainer: 'instant-apps-export-print__legend-container',
+    compassContainer: 'instant-apps-export-print__compass-container',
     popupContainer: 'instant-apps-export-print__popup-container',
     popupContent: 'instant-apps-export-print__popup-content',
     popupTitle: 'instant-apps-export-print__popup-title',
-    sectionFullView: 'instant-apps-export-print__view-section--full-view',
-    sectionGrid: 'instant-apps-export-print__view-section--grid',
     view: 'instant-apps-export-print__view',
     viewContainer: 'instant-apps-export-print__view-container',
-    viewLegend: 'instant-apps-export-print__view-legend',
-    viewPopup: 'instant-apps-export-print__view-popup',
-    viewPopupLegend: 'instant-apps-export-print__view-popup-legend',
     viewSection: 'instant-apps-export-print__view-section',
   },
 };
@@ -47,6 +43,11 @@ export class InstantAppsExport {
    * Passes the initial function to run when the Export button is clicked.
    */
   @Prop() beforeExport: () => Promise<void> = () => Promise.resolve();
+
+  /**
+   * Update popover button icon.
+   */
+  @Prop() popoverIcon?: string = 'print';
 
   /**
    * Extra content that will be added below the view.
@@ -138,7 +139,11 @@ export class InstantAppsExport {
   @Event() exportOutputUpdated: EventEmitter<void>;
 
   exportHandleImgLoaded: () => void;
+  compass: __esri.Compass;
+  compassContainerEl: HTMLDivElement;
   extraContainerEl: HTMLDivElement;
+  feature: __esri.Feature;
+  handles: __esri.Handles | null;
   legend: __esri.Legend;
   legendContainerEl: HTMLDivElement;
   popoverEl: HTMLCalcitePopoverElement;
@@ -148,24 +153,37 @@ export class InstantAppsExport {
   printContainerEl: HTMLDivElement;
   printEl: HTMLDivElement;
   printStyleEl: HTMLStyleElement | undefined;
-  viewEl: HTMLImageElement;
   viewContainerEl: HTMLDivElement;
-  viewSectionEl: HTMLDivElement;
+  viewEl: HTMLImageElement;
 
   componentWillLoad(): void {
     this.baseClass = getMode(this.hostElement) === 'dark' ? CSS.baseDark : CSS.baseLight;
     this.getMessages();
+    this.initializeModules();
   }
 
   componentDidLoad(): void {
     this.printContainerEl.prepend(this.printEl);
   }
 
+  disconnectedCallback(): void {
+    this.handles?.removeAll();
+    this.handles?.destroy();
+    this.handles = null;
+  }
+
+  async initializeModules() {
+    const [Handles] = await loadModules(['esri/core/Handles']);
+    this.handles = new Handles();
+
+    return Promise.resolve();
+  }
+
   render() {
     const mode = this.mode === 'popover' ? this.renderPopover() : this.renderPanel();
     return (
       <Host>
-        <div class={this.baseClass} onMouseOver={this.handleLegendCreation.bind(this)} onFocusin={this.handleLegendCreation.bind(this)}>
+        <div class={this.baseClass} onMouseOver={this.handleWidgetCreation.bind(this)} onFocusin={this.handleWidgetCreation.bind(this)}>
           {mode}
         </div>
       </Host>
@@ -185,7 +203,7 @@ export class InstantAppsExport {
       >
         {panel}
       </calcite-popover>,
-      <calcite-action id="export-popover-btn" alignment="center" icon="print" scale={this.scale} text={this.messages?.toggleExport}></calcite-action>,
+      <calcite-action id="export-popover-btn" alignment="center" icon={this.popoverIcon} scale={this.scale} text={this.messages?.toggleExport}></calcite-action>,
     ];
   }
 
@@ -254,33 +272,37 @@ export class InstantAppsExport {
   renderPrint(): VNode {
     const printMap = this.includeMap ? this.renderPrintMap() : null;
     const extraContent = this.includeExtraContent ? this.renderExtraContent() : null;
+    const legend = this.showIncludeLegend ? this.renderLegend() : null;
+    const popup = this.showIncludePopup ? this.renderPopup() : null;
     return (
       <div ref={(el: HTMLDivElement) => (this.printContainerEl = el)}>
         <div class={CSS.print.base} ref={(el: HTMLDivElement) => (this.printEl = el)}>
-          <div>{printMap}</div>
+          {printMap}
           {extraContent}
+          {popup}
+          {legend}
         </div>
       </div>
     );
   }
 
   renderPrintMap(): VNode {
-    const legend = this.showIncludeLegend ? this.renderLegend() : null;
-    const popup = this.showIncludePopup ? this.renderPopup() : null;
+    const compass = this.renderCompass();
     return (
-      <div class={CSS.print.viewSection} ref={(el: HTMLDivElement) => (this.viewSectionEl = el)}>
-        <div class={CSS.print.viewContainer} ref={(el: HTMLDivElement) => (this.viewContainerEl = el)}>
-          <instant-apps-header titleText={this.headerTitle}></instant-apps-header>
-          <img class={CSS.print.view} ref={(el: HTMLImageElement) => (this.viewEl = el)} src="" />
-        </div>
-        {popup}
-        {legend}
+      <div class={CSS.print.viewContainer} ref={(el: HTMLDivElement) => (this.viewContainerEl = el)}>
+        <instant-apps-header titleText={this.headerTitle}></instant-apps-header>
+        <img class={CSS.print.view} ref={(el: HTMLImageElement) => (this.viewEl = el)} src="" />
+        {compass}
       </div>
     );
   }
 
   renderLegend(): VNode {
     return <div class={CSS.print.legendContainer} ref={(el: HTMLDivElement) => (this.legendContainerEl = el)}></div>;
+  }
+
+  renderCompass(): VNode {
+    return <div class={CSS.print.compassContainer} ref={(el: HTMLDivElement) => (this.compassContainerEl = el)}></div>;
   }
 
   renderPopup(): VNode {
@@ -299,6 +321,13 @@ export class InstantAppsExport {
   optionOnChange(e: CalciteCheckboxCustomEvent<Event>): void {
     const { checked, value } = e.target;
     this[value] = checked;
+    if (value === 'includePopup' && checked) {
+      if (checked) {
+        this.watchPopup();
+      } else {
+        this.handles?.remove('includePopup');
+      }
+    }
   }
 
   updateHeaderTitle(e: CalciteInputCustomEvent<Event>): void {
@@ -319,7 +348,7 @@ export class InstantAppsExport {
       if (this.includeMap) {
         this.viewEl?.addEventListener('load', this.exportHandleImgLoaded);
         this.handleExtraContent();
-        this.addPopupToPrint();
+        this.updatePopupToPrint();
         await this.viewScreenshot();
       } else {
         this.exportHandleImgLoaded();
@@ -372,23 +401,16 @@ export class InstantAppsExport {
     }
   }
 
-  addPopupToPrint(): void {
+  async updatePopupToPrint(): Promise<void> {
     if (this.view != null) {
       if (this.popupContainerEl != null) {
         this.popupContainerEl.style.display = this.includePopup && this.view.popup.visible ? 'block' : 'none';
       }
       if (this.view.popup.visible && this.view.popup.selectedFeature != null) {
-        if (this.popupContentEl != null) {
-          const feature = this.view.container.querySelector('.esri-feature.esri-widget') as HTMLElement;
-          if (feature != null) {
-            const padding = 16;
-            this.popupContentEl.innerHTML = feature.innerHTML ?? '';
-            this.popupContainerEl.style.minWidth = `${feature.offsetWidth + padding}px`;
-          }
-        }
         const heading = document.createElement(`h${this.view.popup.headingLevel ?? 2}`);
         heading.innerHTML = this.view.popup.title ?? '';
         heading.className = 'esri-widget__heading esri-popup__header-title';
+        this.popupTitleEl.style.display = this.view.popup.title ? 'block' : 'none';
         if (this.popupTitleEl != null) {
           this.popupTitleEl.innerHTML = '';
           this.popupTitleEl.prepend(heading);
@@ -417,11 +439,7 @@ export class InstantAppsExport {
   setupViewPrintElements(): void {
     if (this.view != null) {
       document.body.prepend(this.printEl);
-      if (this.viewSectionEl != null) {
-        this.viewSectionEl.className = CSS.print.viewSection;
-      }
       this.handleLegendSetup();
-      this.handleViewSectionDisplay();
       const title = document.title;
       if (this.showHeaderTitle && this.headerTitle) {
         document.title = this.headerTitle;
@@ -433,35 +451,14 @@ export class InstantAppsExport {
 
   handleLegendSetup(): void {
     if (this.view != null && this.includeMap) {
-      const hasLegend = this.showIncludeLegend && this.includeLegend;
-      if (hasLegend) {
-        this.legendContainerEl.style.display = 'block';
-        const gridGap = 8;
-        const totalMargin = '.50in';
-        const fullLegendHeight = this.legendContainerEl.offsetHeight + gridGap;
-        this.viewContainerEl.style.height = `calc(100vh - ${fullLegendHeight}px - ${totalMargin})`;
-        this.viewSectionEl.style.gridTemplateRows = `calc(100vh - ${fullLegendHeight}px - ${totalMargin}) auto`;
-      } else {
-        this.legendContainerEl.style.display = 'none';
-        this.viewContainerEl.style.height = '';
-        this.viewSectionEl.style.gridTemplateRows = '';
-      }
+      this.legendContainerEl.style.display = this.showIncludeLegend && this.includeLegend ? 'block' : 'none';
     }
   }
 
-  handleViewSectionDisplay(): void {
-    if (this.view != null && this.includeMap) {
-      const hasLegend = this.showIncludeLegend && this.includeLegend;
-      const hasPopup = this.includePopup && this.view.popup.selectedFeature && this.view.popup.visible;
-      if (hasLegend && hasPopup) {
-        this.viewSectionEl.classList.add(CSS.print.viewPopupLegend);
-      } else if (hasLegend) {
-        this.viewSectionEl.classList.add(CSS.print.viewLegend);
-      } else if (hasPopup) {
-        this.viewSectionEl.classList.add(CSS.print.viewPopup);
-      }
-      this.viewSectionEl.classList.add(hasLegend || hasPopup ? CSS.print.sectionGrid : CSS.print.sectionFullView);
-    }
+  handleWidgetCreation(): void {
+    this.handleLegendCreation();
+    this.handleCompassCreation();
+    this.handleFeatureCreation();
   }
 
   handleLegendCreation(): void {
@@ -487,11 +484,74 @@ export class InstantAppsExport {
     }
   }
 
+  handleCompassCreation(): void {
+    if (this.includeMap && this.view != null) {
+      const map = this.view.map as __esri.WebMap | __esri.WebScene;
+      const compassMap = this.compass?.view.map as __esri.WebMap | __esri.WebScene;
+      const checkId = map?.portalItem.id === compassMap?.portalItem.id;
+      if (!checkId) {
+        this.view.when(async (view: __esri.MapView | __esri.SceneView) => {
+          this.compass?.destroy();
+          this.compassContainerEl.innerHTML = '';
+          const [Compass] = await loadModules(['esri/widgets/Compass']);
+          this.compass = new Compass({ container: this.compassContainerEl, view });
+        });
+      }
+    }
+  }
+
+  async handleFeatureCreation(): Promise<void> {
+    if (this.includeMap && this.view != null && this.feature == null) {
+      const [Feature] = await loadModules(['esri/widgets/Feature']);
+      this.feature = new Feature({
+        container: this.popupContentEl,
+        map: this.view.map,
+        view: this.view,
+        spatialReference: this.view.spatialReference,
+        visibleElements: {
+          title: false,
+        },
+      });
+    }
+  }
+
   async viewScreenshot(): Promise<void> {
     if (this.view != null && this.includeMap) {
       const pixelRatio = 2;
       const screenshot = await this.view.takeScreenshot({ width: this.view.width * pixelRatio, height: this.view.height * pixelRatio });
       if (this.viewEl != null) this.viewEl.src = screenshot.dataUrl;
+    }
+  }
+
+  watchPopup(): void {
+    if (this.view != null) {
+      this.checkPopupOpen();
+      this.handles?.add(
+        this.view.on('click', async event => {
+          const response = await this.view?.hitTest(event);
+          const results = response?.results.filter((result: __esri.GraphicHit) => {
+            const layer = result?.graphic?.layer as __esri.FeatureLayer;
+            return layer?.popupTemplate;
+          });
+          const result = results?.[0] as __esri.GraphicHit;
+          if (result != null) {
+            const fl = result.layer as __esri.FeatureLayer;
+            this.feature.graphic = result.graphic;
+            this.feature.graphic.popupTemplate = fl.popupTemplate;
+          }
+        }),
+        'includePopup',
+      );
+    }
+  }
+
+  checkPopupOpen(): void {
+    if (this.view != null) {
+      this.feature.graphic = this.view.popup.selectedFeature;
+      if (this.feature.graphic != null) {
+        const fl = this.view.popup.selectedFeature.layer as __esri.FeatureLayer;
+        this.feature.graphic.popupTemplate = fl.popupTemplate;
+      }
     }
   }
 
