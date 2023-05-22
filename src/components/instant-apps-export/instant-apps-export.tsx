@@ -321,7 +321,7 @@ export class InstantAppsExport {
   optionOnChange(e: CalciteCheckboxCustomEvent<Event>): void {
     const { checked, value } = e.target;
     this[value] = checked;
-    if (value === 'includePopup' && checked) {
+    if (value === 'includePopup') {
       if (checked) {
         this.watchPopup();
       } else {
