@@ -57,6 +57,10 @@ export namespace Components {
          */
         "output"?: ExportOutput;
         /**
+          * Update popover button icon.
+         */
+        "popoverIcon"?: string;
+        /**
           * Determines where the component will be positioned relative to the `referenceElement`.
          */
         "popoverPlacement"?: PopoverPlacement;
@@ -589,6 +593,10 @@ declare namespace LocalJSX {
           * Output to use to set up export.
          */
         "output"?: ExportOutput;
+        /**
+          * Update popover button icon.
+         */
+        "popoverIcon"?: string;
         /**
           * Determines where the component will be positioned relative to the `referenceElement`.
          */

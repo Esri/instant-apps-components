@@ -5,6 +5,18 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## v1.0.0-beta.79
+
+### instant-apps-export
+
+- Update to use portrait mode only
+- Add `popoverIcon` prop to allow user to change the popover button's icon
+- Add compass to view
+
+### instant-apps-filter-list
+
+- Fix: check for featureEffect
+
 ## v1.0.0-beta.78
 
 ### instant-apps-filter-list
