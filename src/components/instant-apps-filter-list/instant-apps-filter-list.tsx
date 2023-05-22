@@ -889,7 +889,7 @@ export class InstantAppsFilterList {
         if (geo != null) query.geometry = geo;
         query.spatialRelationship = 'intersects';
       }
-      const filter = lv.featureEffect.filter != null ? lv.featureEffect.filter : lv.filter;
+      const filter = lv.featureEffect?.filter != null ? lv.featureEffect.filter : lv.filter;
       if (filter != null) {
         query.distance = filter.distance;
         query.geometry = filter.geometry;
