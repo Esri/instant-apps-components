@@ -183,6 +183,28 @@ export async function createInteractiveLegendDataForLayer(
 
 function generateQueryExpressions(data: IIntLegendLayerData, info: any, infoIndex: number, parentLegendElementInfo?: any): void {
   const { field, legendElement, categories, fLayerView } = data;
+
+  const queryExpressions = data?.queryExpressions;
+
+  if (parentLegendElementInfo) {
+    const nestedCategories = Array.from(data.categories).map(entry => entry[1]);
+    nestedCategories.forEach(nestedCategory => {
+      const untouched = nestedCategory.nestedInfos?.every(nestedInfo => !nestedInfo.selected);
+
+      if (untouched) {
+        nestedCategory.nestedInfos?.forEach(nestedInfo => {
+          const expression = `${field} = '${nestedInfo.legendElementInfo.value}'`;
+
+          const expressionIndex = queryExpressions.indexOf(expression);
+
+          if (expressionIndex !== -1) {
+            queryExpressions.splice(expressionIndex, 1);
+          }
+        });
+      }
+    });
+  }
+
   const legendElementInfos = legendElement?.infos;
 
   const isPredominance = checkPredominance(fLayerView);
@@ -196,7 +218,7 @@ function generateQueryExpressions(data: IIntLegendLayerData, info: any, infoInde
   category.selected = !category?.selected;
 
   const hasOneValue = legendElementInfos && legendElementInfos.length === 1;
-  const queryExpressions = data?.queryExpressions;
+
   const expressionIndex = queryExpressions.indexOf(queryExpression as string);
 
   if (isPredominance) {
@@ -234,6 +256,26 @@ function generateQueryExpressions(data: IIntLegendLayerData, info: any, infoInde
     queryExpressions[0] = null;
   } else {
     queryExpressions.splice(expressionIndex, 1);
+  }
+
+  if (parentLegendElementInfo) {
+    const expressionList: string[] = [];
+    const nestedCategories = Array.from(data.categories).map(entry => entry[1]);
+    nestedCategories.forEach(nestedCategory => {
+      const untouched = nestedCategory.nestedInfos?.every(nestedInfo => !nestedInfo.selected);
+
+      if (untouched) {
+        nestedCategory.nestedInfos?.forEach(nestedInfo => {
+          expressionList.push(`${field} = '${nestedInfo.legendElementInfo.value}'`);
+        });
+      }
+    });
+
+    expressionList.forEach(expression => {
+      if (queryExpressions.indexOf(expression) === -1) {
+        queryExpressions.push(expression);
+      }
+    });
   }
 }
 
@@ -346,25 +388,74 @@ export function showAll(data: IIntLegendLayerData): IIntLegendLayerData {
 }
 
 export function showAllNestedUniqueSymbol(data: IIntLegendLayerData, nestedUniqueSymbolCategoryId: string): IIntLegendLayerData {
-  const category = data.categories.get(nestedUniqueSymbolCategoryId);
-  const expression = data?.fLayerView?.filter?.where;
-  const expressionArr = expression.split(' OR ');
+  // const category = data.categories.get(nestedUniqueSymbolCategoryId);
+  // const expression = data?.fLayerView?.filter?.where;
+  // const expressionArr = expression.split(' OR ');
 
-  category?.nestedInfos?.forEach(nestedInfo => {
+  // category?.nestedInfos?.forEach(nestedInfo => {
+  //   const expression = `${data.field} = '${nestedInfo.legendElementInfo.value}'`;
+  //   const expressionIndex = expressionArr.indexOf(expression);
+  //   if (expressionIndex !== -1) {
+  //     expressionArr.splice(expressionIndex, 1);
+  //   }
+  //   nestedInfo.selected = false;
+  // });
+  // const updatedExpression = expressionArr.join(' OR ');
+  // if (data?.fLayerView?.filter?.where) {
+  //   data.fLayerView.filter.where = updatedExpression;
+  // }
+  // if (data?.fLayerView?.featureEffect?.filter?.where) {
+  //   (data.fLayerView as any).featureEffect.filter.where = updatedExpression;
+  // }
+
+  console.log('DATA: ', data);
+  console.log('ID: ', nestedUniqueSymbolCategoryId);
+
+  const nestedUniqueInfoCategory = data.categories.get(nestedUniqueSymbolCategoryId);
+
+  console.log(nestedUniqueInfoCategory);
+
+  nestedUniqueInfoCategory?.nestedInfos?.forEach(nestedInfo => {
     const expression = `${data.field} = '${nestedInfo.legendElementInfo.value}'`;
-    const expressionIndex = expressionArr.indexOf(expression);
-    if (expressionIndex !== -1) {
-      expressionArr.splice(expressionIndex, 1);
+    const existingIndex = data.queryExpressions.indexOf(expression);
+    if (existingIndex !== -1) {
+      data.queryExpressions.splice(existingIndex, 1);
     }
     nestedInfo.selected = false;
   });
-  const updatedExpression = expressionArr.join(' OR ');
-  if (data?.fLayerView?.filter?.where) {
-    data.fLayerView.filter.where = updatedExpression;
+
+  const expressionList: string[] = [];
+  const nestedCategories = Array.from(data.categories).map(entry => entry[1]);
+  nestedCategories.forEach(nestedCategory => {
+    const untouched = nestedCategory.nestedInfos?.every(nestedInfo => !nestedInfo.selected);
+
+    if (untouched) {
+      nestedCategory.nestedInfos?.forEach(nestedInfo => {
+        expressionList.push(`${data.field} = '${nestedInfo.legendElementInfo.value}'`);
+      });
+    }
+  });
+
+  expressionList.forEach(expression => {
+    if (data.queryExpressions.indexOf(expression) === -1) {
+      data.queryExpressions.push(expression);
+    }
+  });
+
+  let where = data.queryExpressions.join(' OR ');
+
+  const allUntouched = nestedCategories.every(nestedCategory => nestedCategory.nestedInfos?.every(nestedInfo => !nestedInfo.selected));
+
+  if (allUntouched) {
+    if (data?.fLayerView?.filter?.where) data.fLayerView.filter.where = '';
+    if (data?.fLayerView?.featureEffect?.filter?.where) (data.fLayerView as any).featureEffect = null;
+    data.queryExpressions = [];
+  } else {
+    if (data?.fLayerView?.filter?.where) data.fLayerView.filter.where = where;
+    if (data?.fLayerView?.featureEffect?.filter?.where) (data.fLayerView as any).featureEffect.filter.where = where;
   }
-  if (data?.fLayerView?.featureEffect?.filter?.where) {
-    (data.fLayerView as any).featureEffect.filter.where = updatedExpression;
-  }
+
+  console.log(data.queryExpressions);
 
   return data;
 }

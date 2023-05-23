@@ -99,9 +99,8 @@ export class InstantAppsInteractiveLegendCount {
     if (!dataFromActiveLayerInfo) return;
     const { categories } = dataFromActiveLayerInfo;
     const category = categories.get(categoryId) as ICategory;
-    const { count } = category;
-
-    return count !== null ? this.intl.formatNumber(count as number) : '';
+    console.log(category?.count);
+    return !isNaN(category?.count as number) ? this.intl.formatNumber(category.count as number) : '';
   }
 
   getTotalFeatureCount() {
