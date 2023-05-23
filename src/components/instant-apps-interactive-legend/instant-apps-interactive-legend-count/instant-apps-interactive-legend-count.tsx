@@ -104,12 +104,14 @@ export class InstantAppsInteractiveLegendCount {
     const dataFromActiveLayerInfo = interactiveLegendState.data[layerId];
     if (!dataFromActiveLayerInfo) return;
     const { categories } = dataFromActiveLayerInfo;
-    // console.log('CATEGORIES: ', categories);
-    // console.log('LAYER ID: ', layerId);
-    // console.log('CATEGORY ID: ', categoryId);
-    // console.log('LEGEND ELEMENT: ', this.legendElement);
     const category = categories.get(categoryId) as ICategory;
-    return !isNaN(category?.count as number) ? this.intl.formatNumber(category.count as number) : '';
+
+    if (category?.nestedInfos) {
+      const nestedInfo = category?.nestedInfos[this.infoIndex];
+      return !isNaN(nestedInfo?.count as number) ? this.intl.formatNumber(nestedInfo.count as number) : '';
+    } else {
+      return !isNaN(category?.count as number) ? this.intl.formatNumber(category.count as number) : '';
+    }
   }
 
   getTotalFeatureCount() {
