@@ -97,7 +97,9 @@ export class InstantAppsInteractiveLegendLegendElementCaption {
         key="zoom-to-button"
         id="zoomTo"
         onClick={() => {
-          zoomTo(interactiveLegendState.data?.[this.layer?.id], this.legendvm.view as __esri.MapView);
+          const data = interactiveLegendState.data?.[this.layer?.id];
+          const nestedCategory = data.categories.get(this.legendElement.title);
+          zoomTo(interactiveLegendState.data?.[this.layer?.id], this.legendvm.view as __esri.MapView, nestedCategory);
         }}
         icon-start="magnifying-glass-plus"
         appearance="outline"

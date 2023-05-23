@@ -388,26 +388,6 @@ export function showAll(data: IIntLegendLayerData): IIntLegendLayerData {
 }
 
 export function showAllNestedUniqueSymbol(data: IIntLegendLayerData, nestedUniqueSymbolCategoryId: string): IIntLegendLayerData {
-  // const category = data.categories.get(nestedUniqueSymbolCategoryId);
-  // const expression = data?.fLayerView?.filter?.where;
-  // const expressionArr = expression.split(' OR ');
-
-  // category?.nestedInfos?.forEach(nestedInfo => {
-  //   const expression = `${data.field} = '${nestedInfo.legendElementInfo.value}'`;
-  //   const expressionIndex = expressionArr.indexOf(expression);
-  //   if (expressionIndex !== -1) {
-  //     expressionArr.splice(expressionIndex, 1);
-  //   }
-  //   nestedInfo.selected = false;
-  // });
-  // const updatedExpression = expressionArr.join(' OR ');
-  // if (data?.fLayerView?.filter?.where) {
-  //   data.fLayerView.filter.where = updatedExpression;
-  // }
-  // if (data?.fLayerView?.featureEffect?.filter?.where) {
-  //   (data.fLayerView as any).featureEffect.filter.where = updatedExpression;
-  // }
-
   const nestedUniqueInfoCategory = data.categories.get(nestedUniqueSymbolCategoryId);
 
   nestedUniqueInfoCategory?.nestedInfos?.forEach(nestedInfo => {
@@ -453,10 +433,25 @@ export function showAllNestedUniqueSymbol(data: IIntLegendLayerData, nestedUniqu
   return data;
 }
 
-export async function zoomTo(data: IIntLegendLayerData, view: __esri.MapView): Promise<void> {
-  const where = data.queryExpressions.join(' OR ');
+export async function zoomTo(data: IIntLegendLayerData, view: __esri.MapView, nestedCategory: any): Promise<void> {
   const query = data.fLayerView.createQuery();
-  query.where = where;
+
+  if (nestedCategory) {
+    const noneSelected = nestedCategory.nestedInfos.every((nestedInfo: ICategory) => !nestedInfo.selected);
+    if (noneSelected) {
+      const expression = nestedCategory.nestedInfos.map(nestedInfo => `${data.field} = '${nestedInfo.legendElementInfo.value}'`).join(' OR ');
+      query.where = expression;
+    } else {
+      const expression = nestedCategory.nestedInfos
+        .filter(nestedInfo => nestedInfo.selected)
+        .map(nestedInfo => `${data.field} = '${nestedInfo.legendElementInfo.value}'`)
+        .join(' OR ');
+      query.where = expression;
+    }
+  } else {
+    const where = data.queryExpressions.join(' OR ');
+    query.where = where;
+  }
 
   try {
     const geometry = await data?.fLayerView?.layer?.queryExtent(query);
