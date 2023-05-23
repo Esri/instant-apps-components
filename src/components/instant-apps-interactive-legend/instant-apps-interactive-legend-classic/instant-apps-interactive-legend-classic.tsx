@@ -249,7 +249,15 @@ export class InstantAppsInteractiveLegendClassic {
     }
   }
 
-  renderLegendForElement(legendElement: any, layer: __esri.Layer, effectList: any, activeLayerInfo: __esri.ActiveLayerInfo, legendElementIndex: number, isChild?: boolean) {
+  renderLegendForElement(
+    legendElement: any,
+    layer: __esri.Layer,
+    effectList: any,
+    activeLayerInfo: __esri.ActiveLayerInfo,
+    legendElementIndex: number,
+    isChild?: boolean,
+    parentLegendElementInfo?: any,
+  ) {
     const isColorRamp = legendElement.type === 'color-ramp',
       isOpacityRamp = legendElement.type === 'opacity-ramp',
       isSizeRamp = legendElement.type === 'size-ramp';
@@ -262,9 +270,20 @@ export class InstantAppsInteractiveLegendClassic {
     const isRelationshipRamp = legendElement?.type === 'relationship-ramp';
     if (legendElement.type === 'symbol-table' || isSizeRamp) {
       const rows = (legendElement.infos as any)
-        .map((info: any, infoIndex: number) =>
-          this.renderLegendForElementInfo(info, layer, effectList, isSizeRamp, legendElement, activeLayerInfo, legendElementIndex, infoIndex, isInteractive),
-        )
+        .map((info: any, infoIndex: number) => {
+          return this.renderLegendForElementInfo(
+            info,
+            layer,
+            effectList,
+            isSizeRamp,
+            legendElement,
+            activeLayerInfo,
+            legendElementIndex,
+            infoIndex,
+            isInteractive,
+            parentLegendElementInfo ? parentLegendElementInfo : null,
+          );
+        })
         .filter((row: any) => !!row);
 
       if (rows.length) {
@@ -535,10 +554,11 @@ export class InstantAppsInteractiveLegendClassic {
     legendElementIndex: number,
     infoIndex: number,
     isInteractive: boolean,
+    parentLegendElementInfo?: any,
   ) {
     // nested
     if (elementInfo.type) {
-      return this.renderLegendForElement(elementInfo, layer, effectList, activeLayerInfo, legendElementIndex, true);
+      return this.renderLegendForElement(elementInfo, layer, effectList, activeLayerInfo, legendElementIndex, true, elementInfo);
     }
 
     let content;
@@ -561,17 +581,24 @@ export class InstantAppsInteractiveLegendClassic {
 
     if (interactiveLegendState.data) {
       const data = getIntLegendLayerData(layer as __esri.FeatureLayer, interactiveLegendState.data);
-      const category = data?.categories?.get(elementInfo?.label ?? layer?.id);
+      // const category = data?.categories?.get(elementInfo?.label ?? layer?.id);
+      const parentLegendElementInfoData = data?.categories?.get(parentLegendElementInfo?.title) as any;
+      const category = parentLegendElementInfoData?.nestedInfos[infoIndex];
       // If no items are selected, then apply 'selected' style to all -- UX
-      const noneSelected = checkNoneSelected(data);
+      const noneSelected = checkNoneSelected(parentLegendElementInfoData ? parentLegendElementInfoData?.nestedInfos : data);
       selected = data?.categories?.size === 1 ? !category?.selected : noneSelected || category?.selected;
     }
+
     return isInteractive ? (
       // Regular LegendElementInfo
       <button
         onClick={async () => {
           const dataFromActiveLayerInfo = { ...interactiveLegendState.data?.[layer?.id] };
-          await handleFilter(dataFromActiveLayerInfo, elementInfo, infoIndex, this.filterMode);
+          if (parentLegendElementInfo) {
+            await handleFilter(dataFromActiveLayerInfo, elementInfo, infoIndex, this.filterMode, parentLegendElementInfo);
+          } else {
+            await handleFilter(dataFromActiveLayerInfo, elementInfo, infoIndex, this.filterMode);
+          }
           store.set('data', { ...interactiveLegendState.data, [layer?.id]: dataFromActiveLayerInfo });
         }}
         class={`${CSS.layerRow} ${CSS.interactiveLayerRow}${selected ? ` ${CSS.infoSelected}` : ''}`}

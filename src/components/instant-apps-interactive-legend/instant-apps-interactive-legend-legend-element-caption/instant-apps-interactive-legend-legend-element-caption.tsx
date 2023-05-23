@@ -1,6 +1,6 @@
 import { Component, h, Prop, EventEmitter, Event, Element } from '@stencil/core';
 
-import { showAll, zoomTo } from '../support/helpers';
+import { showAll, showAllNestedUniqueSymbol, zoomTo } from '../support/helpers';
 import { interactiveLegendState, store } from '../support/store';
 const CSS = {
   layerCaption: 'esri-legend__layer-caption',
@@ -33,6 +33,9 @@ export class InstantAppsInteractiveLegendLegendElementCaption {
 
   @Prop()
   isInteractive: boolean;
+
+  @Prop()
+  legendElement: __esri.LegendElement;
 
   @Prop({
     mutable: true,
@@ -68,10 +71,17 @@ export class InstantAppsInteractiveLegendLegendElementCaption {
           key="show-all-button"
           id="showAll"
           onClick={() => {
-            const layerData = showAll(interactiveLegendState.data?.[this.layer?.id]);
-            interactiveLegendState.data[this.layer.id] = layerData;
-
-            store.set('data', { ...interactiveLegendState.data, [this.layer.id]: layerData });
+            const data = interactiveLegendState.data?.[this.layer?.id];
+            const nestedCategory = data.categories.get(this.legendElement.title);
+            if (nestedCategory) {
+              const layerData = showAllNestedUniqueSymbol(data, this.legendElement.title as string);
+              interactiveLegendState.data[this.layer.id] = layerData;
+              store.set('data', { ...interactiveLegendState.data, [this.layer.id]: layerData });
+            } else {
+              const layerData = showAll(data);
+              interactiveLegendState.data[this.layer.id] = layerData;
+              store.set('data', { ...interactiveLegendState.data, [this.layer.id]: layerData });
+            }
 
             this.showAllSelectedEvent.emit();
           }}

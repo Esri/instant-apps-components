@@ -272,6 +272,7 @@ export namespace Components {
         "expanded": boolean;
         "isInteractive": boolean;
         "layer": __esri.FeatureLayer;
+        "legendElement": __esri.LegendElement;
         "legendElementIndex": number;
         "legendvm": __esri.LegendViewModel;
         "messages": any;
@@ -858,6 +859,7 @@ declare namespace LocalJSX {
         "expanded"?: boolean;
         "isInteractive"?: boolean;
         "layer"?: __esri.FeatureLayer;
+        "legendElement"?: __esri.LegendElement;
         "legendElementIndex"?: number;
         "legendvm"?: __esri.LegendViewModel;
         "messages"?: any;

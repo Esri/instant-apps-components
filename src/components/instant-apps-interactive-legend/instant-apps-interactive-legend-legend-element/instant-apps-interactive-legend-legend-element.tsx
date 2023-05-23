@@ -78,6 +78,7 @@ export class InstantAppsInteractiveLegendLegendElement {
             activeLayerInfo={this.activeLayerInfo}
             layer={this.activeLayerInfo.layer as __esri.FeatureLayer}
             titleText={this.titleText as string}
+            legendElement={this.legendElement}
             legendElementIndex={this.legendElementIndex}
             zoomTo={this.zoomTo}
             isInteractive={this.isInteractive}

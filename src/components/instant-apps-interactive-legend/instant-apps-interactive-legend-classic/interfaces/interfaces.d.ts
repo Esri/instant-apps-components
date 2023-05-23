@@ -10,6 +10,7 @@ export interface ICategory {
   count: number | null;
   selected: boolean;
   legendElementInfo: any;
+  nestedInfos?: any[];
 }
 
 export type ICategories = Map<string, ICategory>;

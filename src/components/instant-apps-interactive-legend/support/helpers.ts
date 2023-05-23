@@ -136,21 +136,29 @@ export async function createInteractiveLegendDataForLayer(
     legendElement?.infos?.forEach(legendElementInfo => {
       const isNestedUniqueSymbol = legendElementInfo.type === 'symbol-table';
       if (isNestedUniqueSymbol) {
+        const nestedInfos: any = [];
         legendElementInfo.infos.forEach(nestedUniqueSymbolInfo => {
           const category = {
             count: null,
             selected: false,
             legendElementInfo: nestedUniqueSymbolInfo,
           };
-          categories.set(nestedUniqueSymbolInfo.label ?? fLayerView?.layer?.id, category);
+          nestedInfos.push(category);
         });
+        const category = {
+          count: null,
+          selected: false,
+          legendElementInfo,
+          nestedInfos,
+        };
+        categories.set(legendElementInfo.title, category);
       } else {
         const category = {
           count: null,
           selected: false,
           legendElementInfo,
         };
-        categories.set(legendElementInfo.label ?? fLayerView?.layer?.id, category);
+        categories.set(legendElementInfo.label, category);
       }
     });
 
@@ -173,17 +181,20 @@ export async function createInteractiveLegendDataForLayer(
   }
 }
 
-function generateQueryExpressions(data: IIntLegendLayerData, info: any, infoIndex: number): void {
+function generateQueryExpressions(data: IIntLegendLayerData, info: any, infoIndex: number, parentLegendElementInfo?: any): void {
   const { field, legendElement, categories, fLayerView } = data;
   const legendElementInfos = legendElement?.infos;
 
   const isPredominance = checkPredominance(fLayerView);
 
-  const queryExpression = isPredominance
+  let queryExpression = isPredominance
     ? (handlePredominanceExpression(info, fLayerView) as string)
     : generateQueryExpression(info, field, infoIndex, legendElement, legendElementInfos, '');
-  const category = categories.get(info.label ?? fLayerView?.layer?.id) as ICategory;
+  const category = parentLegendElementInfo
+    ? (categories.get(parentLegendElementInfo.title)?.nestedInfos?.[infoIndex] as ICategory)
+    : (categories.get(info.label ?? fLayerView?.layer?.id) as ICategory);
   category.selected = !category?.selected;
+
   const hasOneValue = legendElementInfos && legendElementInfos.length === 1;
   const queryExpressions = data?.queryExpressions;
   const expressionIndex = queryExpressions.indexOf(queryExpression as string);
@@ -296,10 +307,10 @@ function generateQueryExpression(info: any, field: string, infoIndex: number, le
   }
 }
 
-export async function handleFilter(data: IIntLegendLayerData, info: any, infoIndex: number, filterMode: FilterMode): Promise<void> {
+export async function handleFilter(data: IIntLegendLayerData, info: any, infoIndex: number, filterMode: FilterMode, parentLegendElementInfo?: any): Promise<void> {
   const [FeatureFilter, FeatureEffect] = await loadModules(['esri/layers/support/FeatureFilter', 'esri/layers/support/FeatureEffect']);
   const { queryExpressions, fLayerView } = data;
-  generateQueryExpressions(data, info, infoIndex);
+  generateQueryExpressions(data, info, infoIndex, parentLegendElementInfo);
   const where = queryExpressions.join(' OR ');
   const timeExtent = fLayerView?.filter?.timeExtent ?? null;
 
@@ -327,9 +338,34 @@ export function showAll(data: IIntLegendLayerData): IIntLegendLayerData {
   data.queryExpressions = [];
   if (data?.fLayerView?.filter?.where) data.fLayerView.filter.where = '';
   if (data?.fLayerView?.featureEffect?.filter?.where) (data.fLayerView as any).featureEffect = null;
+
   data.categories.forEach(category => {
     category.selected = false;
   });
+  return data;
+}
+
+export function showAllNestedUniqueSymbol(data: IIntLegendLayerData, nestedUniqueSymbolCategoryId: string): IIntLegendLayerData {
+  const category = data.categories.get(nestedUniqueSymbolCategoryId);
+  const expression = data?.fLayerView?.filter?.where;
+  const expressionArr = expression.split(' OR ');
+
+  category?.nestedInfos?.forEach(nestedInfo => {
+    const expression = `${data.field} = '${nestedInfo.legendElementInfo.value}'`;
+    const expressionIndex = expressionArr.indexOf(expression);
+    if (expressionIndex !== -1) {
+      expressionArr.splice(expressionIndex, 1);
+    }
+    nestedInfo.selected = false;
+  });
+  const updatedExpression = expressionArr.join(' OR ');
+  if (data?.fLayerView?.filter?.where) {
+    data.fLayerView.filter.where = updatedExpression;
+  }
+  if (data?.fLayerView?.featureEffect?.filter?.where) {
+    (data.fLayerView as any).featureEffect.filter.where = updatedExpression;
+  }
+
   return data;
 }
 
@@ -462,7 +498,11 @@ export function getIntLegendLayerData(fLayer: __esri.FeatureLayer, data): IIntLe
 }
 
 export function checkNoneSelected(data: IIntLegendLayerData): boolean {
-  return data && Array.from(data.categories.entries()).every(entry => !entry[1].selected) && data.queryExpressions[0] !== '1=0';
+  if (Array.isArray(data)) {
+    return data.every(entry => !entry.selected);
+  } else {
+    return data && Array.from(data.categories.entries()).every(entry => !entry[1].selected) && data.queryExpressions[0] !== '1=0';
+  }
 }
 
 export function checkAllSelected(data: IIntLegendLayerData): boolean {
