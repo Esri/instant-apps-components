@@ -107,6 +107,7 @@ export class InstantAppsInteractiveLegendCount {
     const category = categories.get(categoryId) as ICategory;
 
     if (category?.nestedInfos) {
+      // nested
       const nestedInfo = category?.nestedInfos[this.infoIndex];
       return !isNaN(nestedInfo?.count as number) ? this.intl.formatNumber(nestedInfo.count as number) : '';
     } else {
@@ -120,10 +121,21 @@ export class InstantAppsInteractiveLegendCount {
     const dataFromActiveLayerInfo = interactiveLegendState.data[layerId];
     if (!dataFromActiveLayerInfo) return;
     const { categories } = dataFromActiveLayerInfo;
-    const total = Array.from(categories.entries())
-      .map((entry: any) => entry?.[1]?.count)
-      .reduce((acc: number, curr: number) => acc + curr);
-    return this.intl.formatNumber(total as number);
+
+    const categoriesArr = Array.from(categories).map((category: any) => category[1]);
+    const isNestedUniqueSymbol = categoriesArr.every((category: ICategory) => !!category?.nestedInfos);
+
+    if (isNestedUniqueSymbol) {
+      // nested
+      return categoriesArr
+        .map(category => category.nestedInfos.map(nestedInfo => nestedInfo.count).reduce((acc: number, curr: number) => acc + curr))
+        .reduce((acc: number, curr: number) => acc + curr);
+    } else {
+      const total = Array.from(categories.entries())
+        .map((entry: any) => entry?.[1]?.count)
+        .reduce((acc: number, curr: number) => acc + curr);
+      return this.intl.formatNumber(total as number);
+    }
   }
 
   private _getTheme(): string {
