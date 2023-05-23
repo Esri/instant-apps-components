@@ -232,7 +232,9 @@ export namespace Components {
     }
     interface InstantAppsInteractiveLegendCount {
         "categoryId": string;
+        "infoIndex": number;
         "layerId": string;
+        "legendElement": __esri.LegendElement;
         "legendvm": __esri.LegendViewModel;
         "messages": any;
         "selected": boolean;
@@ -818,7 +820,9 @@ declare namespace LocalJSX {
     }
     interface InstantAppsInteractiveLegendCount {
         "categoryId"?: string;
+        "infoIndex"?: number;
         "layerId"?: string;
+        "legendElement"?: __esri.LegendElement;
         "legendvm"?: __esri.LegendViewModel;
         "messages"?: any;
         "selected"?: boolean;

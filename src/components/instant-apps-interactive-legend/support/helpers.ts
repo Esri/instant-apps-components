@@ -408,12 +408,7 @@ export function showAllNestedUniqueSymbol(data: IIntLegendLayerData, nestedUniqu
   //   (data.fLayerView as any).featureEffect.filter.where = updatedExpression;
   // }
 
-  console.log('DATA: ', data);
-  console.log('ID: ', nestedUniqueSymbolCategoryId);
-
   const nestedUniqueInfoCategory = data.categories.get(nestedUniqueSymbolCategoryId);
-
-  console.log(nestedUniqueInfoCategory);
 
   nestedUniqueInfoCategory?.nestedInfos?.forEach(nestedInfo => {
     const expression = `${data.field} = '${nestedInfo.legendElementInfo.value}'`;
@@ -455,8 +450,6 @@ export function showAllNestedUniqueSymbol(data: IIntLegendLayerData, nestedUniqu
     if (data?.fLayerView?.featureEffect?.filter?.where) (data.fLayerView as any).featureEffect.filter.where = where;
   }
 
-  console.log(data.queryExpressions);
-
   return data;
 }
 
@@ -487,14 +480,17 @@ export async function handleFeatureCount(legendViewModel: __esri.LegendViewModel
     const field = fLayer.renderer?.get('field') as string;
     const counts: Promise<{ [categoryId: string]: number | null } | null | undefined>[] = [];
 
-    legendElement?.infos?.forEach((info, infoIndex) => {
-      const isNestedUniqueSymbol = info.type === 'symbol-table';
+    countPromises[activeLayerInfo.layer.id] = [];
 
+    legendElement?.infos?.forEach((info, infoIndex) => {
+      const isNestedUniqueSymbol = legendElement.infos?.every(info => info.type === 'symbol-table');
       if (isNestedUniqueSymbol) {
+        const nestedInfoCounts: any[] = [];
         info.infos.forEach((nestedUniqueSymbolInfo, nestedUniqueSymbolInfoIndex) => {
-          counts.push(getInfoCount(legendViewModel.view.extent, fLayerView, field, nestedUniqueSymbolInfo, nestedUniqueSymbolInfoIndex, info));
-          countPromises[activeLayerInfo.layer.id] = counts;
+          const infoCount = getInfoCount(legendViewModel.view.extent, fLayerView, field, info, infoIndex, legendElement, nestedUniqueSymbolInfo, nestedUniqueSymbolInfoIndex);
+          nestedInfoCounts.push(infoCount);
         });
+        countPromises[activeLayerInfo.layer.id].push(nestedInfoCounts);
       } else {
         counts.push(getInfoCount(legendViewModel.view.extent, fLayerView, field, info, infoIndex, legendElement));
         countPromises[activeLayerInfo.layer.id] = counts;
@@ -519,27 +515,54 @@ export async function handleFeatureCount(legendViewModel: __esri.LegendViewModel
     if (!countObj) countObj = dataCount[countPromise] = {};
 
     const countRes = await Promise.all(countPromises[countPromise]);
-    const layerCountObj = {};
 
-    countRes.forEach(countResItem => {
-      if (!countResItem) return;
-      const id = Object.keys(countResItem)[0];
-      layerCountObj[id] = countResItem[id];
-    });
+    if (countRes.every(countResItem => Array.isArray(countResItem))) {
+      const countArr2d = await Promise.all(
+        countRes.map(async countResItem => {
+          const promise = await Promise.all(countResItem);
+          const count = promise.map(promiseItem => Object.values(promiseItem)[0]);
+          return count;
+        }),
+      );
+      countObj[countPromise] = countArr2d;
 
-    if (countPromise) countObj[countPromise] = layerCountObj;
+      dataCount[countPromise] = {
+        ...countObj[countPromise],
+      };
+    } else {
+      const layerCountObj = {};
 
-    dataCount[countPromise] = {
-      ...countObj[countPromise],
-    };
+      countRes.forEach(countResItem => {
+        if (!countResItem) return;
+        const id = Object.keys(countResItem)[0];
+        layerCountObj[id] = countResItem[id];
+      });
+
+      if (countPromise) countObj[countPromise] = layerCountObj;
+
+      dataCount[countPromise] = {
+        ...countObj[countPromise],
+      };
+    }
   }
+
   activeLayerInfos.forEach(activeLayerInfo => {
     const dataFromActiveLayerInfo = data[activeLayerInfo.layer.id];
     const layerId = activeLayerInfo.layer.id;
 
-    dataFromActiveLayerInfo?.categories?.forEach((category, key) => {
-      const count = dataCount[layerId][key];
-      category.count = count;
+    (dataFromActiveLayerInfo?.categories as ICategories)?.forEach((category: ICategory, key: string) => {
+      const categoriesArr = Array.from(dataFromActiveLayerInfo?.categories);
+      const categoryIndex = categoriesArr.findIndex((categoryArrItem: any) => categoryArrItem[0] === key);
+
+      if (category?.nestedInfos) {
+        category?.nestedInfos.forEach((nestedInfo, nestedInfoIndex) => {
+          const count = dataCount[activeLayerInfo.layer.id][categoryIndex][nestedInfoIndex];
+          nestedInfo.count = count;
+        });
+      } else {
+        const count = dataCount[layerId][key];
+        category.count = count;
+      }
     });
 
     activeLayerInfo.children.forEach(aclChild => {
@@ -563,11 +586,16 @@ export async function getInfoCount(
   info: any,
   infoIndex: number,
   legendElement: __esri.LegendElement,
+  nestedUniqueSymbolInfo?: any,
+  nestedUniqueSymbolInfoIndex?: number,
 ): Promise<{ [categoryId: string]: number | null } | null | undefined> {
   if (!fLayerView) return;
   const query = fLayerView?.layer?.type === 'feature' ? fLayerView.createQuery() : null;
+
   const where = checkPredominance(fLayerView)
     ? handlePredominanceExpression(info, fLayerView)
+    : info.type
+    ? generateQueryExpression(nestedUniqueSymbolInfo, field, nestedUniqueSymbolInfoIndex as number, info, info.infos as any)
     : generateQueryExpression(info, field, infoIndex, legendElement, legendElement.infos as any);
 
   if (query && where) {

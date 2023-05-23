@@ -579,10 +579,11 @@ export class InstantAppsInteractiveLegendClassic {
 
     let selected;
 
+    const data = getIntLegendLayerData(layer as __esri.FeatureLayer, interactiveLegendState.data);
+    const parentLegendElementInfoData = data?.categories?.get(parentLegendElementInfo?.title) as any;
+
     if (interactiveLegendState.data) {
-      const data = getIntLegendLayerData(layer as __esri.FeatureLayer, interactiveLegendState.data);
       // const category = data?.categories?.get(elementInfo?.label ?? layer?.id);
-      const parentLegendElementInfoData = data?.categories?.get(parentLegendElementInfo?.title) as any;
       const category = parentLegendElementInfoData?.nestedInfos[infoIndex];
       // If no items are selected, then apply 'selected' style to all -- UX
       const noneSelected = checkNoneSelected(parentLegendElementInfoData ? parentLegendElementInfoData?.nestedInfos : data);
@@ -607,12 +608,14 @@ export class InstantAppsInteractiveLegendClassic {
         <div class={`${CSS.layerInfo}${imageryLayerInfoStretched}`}>{this.getTitle(this.messages, elementInfo.label, false) || ''}</div>
         {this.featureCount ? (
           <instant-apps-interactive-legend-count
-            categoryId={elementInfo.label ?? layer?.id}
+            categoryId={parentLegendElementInfoData ? legendElement.title : elementInfo.label ?? layer?.id}
             layerId={activeLayerInfo.layer.id}
             legendvm={this.legendvm}
             messages={this.messages}
             selected={selected}
-          ></instant-apps-interactive-legend-count>
+            legendElement={legendElement}
+            infoIndex={infoIndex}
+          />
         ) : null}
       </button>
     ) : (

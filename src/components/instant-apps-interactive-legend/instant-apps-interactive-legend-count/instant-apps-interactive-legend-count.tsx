@@ -38,10 +38,16 @@ export class InstantAppsInteractiveLegendCount {
   categoryId: string; //LegendElementInfo.label
 
   @Prop()
+  infoIndex: number;
+
+  @Prop()
   messages;
 
   @Prop()
   selected: boolean;
+
+  @Prop()
+  legendElement: __esri.LegendElement;
 
   // @State()
   // reRender = false;
@@ -98,8 +104,11 @@ export class InstantAppsInteractiveLegendCount {
     const dataFromActiveLayerInfo = interactiveLegendState.data[layerId];
     if (!dataFromActiveLayerInfo) return;
     const { categories } = dataFromActiveLayerInfo;
+    // console.log('CATEGORIES: ', categories);
+    // console.log('LAYER ID: ', layerId);
+    // console.log('CATEGORY ID: ', categoryId);
+    // console.log('LEGEND ELEMENT: ', this.legendElement);
     const category = categories.get(categoryId) as ICategory;
-    console.log(category?.count);
     return !isNaN(category?.count as number) ? this.intl.formatNumber(category.count as number) : '';
   }
 
