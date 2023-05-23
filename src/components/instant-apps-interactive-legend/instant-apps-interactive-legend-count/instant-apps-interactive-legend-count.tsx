@@ -125,17 +125,19 @@ export class InstantAppsInteractiveLegendCount {
     const categoriesArr = Array.from(categories).map((category: any) => category[1]);
     const isNestedUniqueSymbol = categoriesArr.every((category: ICategory) => !!category?.nestedInfos);
 
+    let total: number;
+
     if (isNestedUniqueSymbol) {
       // nested
-      return categoriesArr
+      total = categoriesArr
         .map(category => category.nestedInfos.map(nestedInfo => nestedInfo.count).reduce((acc: number, curr: number) => acc + curr))
         .reduce((acc: number, curr: number) => acc + curr);
     } else {
-      const total = Array.from(categories.entries())
+      total = Array.from(categories.entries())
         .map((entry: any) => entry?.[1]?.count)
         .reduce((acc: number, curr: number) => acc + curr);
-      return this.intl.formatNumber(total as number);
     }
+    return this.intl.formatNumber(total as number);
   }
 
   private _getTheme(): string {
