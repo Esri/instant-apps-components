@@ -1,10 +1,20 @@
 import { Component, h, Prop, EventEmitter, Event, Element } from '@stencil/core';
 
-import { showAll, showAllNestedUniqueSymbol, zoomTo } from '../support/helpers';
+import {
+  checkNestedUniqueSymbolLegendElement,
+  checkRelationshipRamp,
+  getIntLegendLayerData,
+  getParentLegendElementInfoData,
+  showAll,
+  showAllNestedUniqueSymbol,
+  zoomTo,
+} from '../support/helpers';
 import { interactiveLegendState, store } from '../support/store';
 const CSS = {
   layerCaption: 'esri-legend__layer-caption',
   layerCaptionBtnContainer: 'instant-apps-interactive-legend__layer-caption-btn-container',
+  layerCaptionBtnContainerNoText: 'instant-apps-interactive-legend__layer-caption-btn-container--no-text',
+  layerCaptionText: 'instant-apps-interactive-legend__legend-layer-caption-text',
 };
 
 @Component({
@@ -70,21 +80,7 @@ export class InstantAppsInteractiveLegendLegendElementCaption {
         <calcite-button
           key="show-all-button"
           id="showAll"
-          onClick={() => {
-            const data = interactiveLegendState.data?.[this.layer?.id];
-            const nestedCategory = data.categories.get(this.legendElement.title);
-            if (nestedCategory) {
-              const layerData = showAllNestedUniqueSymbol(data, this.legendElement.title as string);
-              interactiveLegendState.data[this.layer.id] = layerData;
-              store.set('data', { ...interactiveLegendState.data, [this.layer.id]: layerData });
-            } else {
-              const layerData = showAll(data);
-              interactiveLegendState.data[this.layer.id] = layerData;
-              store.set('data', { ...interactiveLegendState.data, [this.layer.id]: layerData });
-            }
-
-            this.showAllSelectedEvent.emit();
-          }}
+          onClick={this.handleShowAll()}
           icon-start="list-check-all"
           appearance="outline"
           round={true}
@@ -96,11 +92,7 @@ export class InstantAppsInteractiveLegendLegendElementCaption {
       <calcite-button
         key="zoom-to-button"
         id="zoomTo"
-        onClick={() => {
-          const data = interactiveLegendState.data?.[this.layer?.id];
-          const nestedCategory = data.categories.get(this.legendElement.title);
-          zoomTo(interactiveLegendState.data?.[this.layer?.id], this.legendvm.view as __esri.MapView, nestedCategory);
-        }}
+        onClick={this.handleZoomTo()}
         icon-start="magnifying-glass-plus"
         appearance="outline"
         round={true}
@@ -108,12 +100,13 @@ export class InstantAppsInteractiveLegendLegendElementCaption {
       />
     );
 
-    const isNestedUniqueSymbols = this.activeLayerInfo?.legendElements?.[0]?.infos?.every?.(info => info?.type === 'symbol-table');
-    const isRelationship = this.activeLayerInfo?.legendElements[1]?.type === 'relationship-ramp';
+    const isNestedUniqueSymbols = checkNestedUniqueSymbolLegendElement(this.activeLayerInfo);
+
+    const isRelationship = checkRelationshipRamp(this.activeLayerInfo);
 
     const { expanded } = this;
 
-    const noText = !this.titleText ? ' instant-apps-interactive-legend__layer-caption-btn-container--no-text' : '';
+    const noText = !this.titleText ? ` ${CSS.layerCaptionBtnContainerNoText}` : '';
 
     return isNestedUniqueSymbols && !this.titleText ? null : (
       <div class={CSS.layerCaption}>
@@ -134,10 +127,7 @@ export class InstantAppsInteractiveLegendLegendElementCaption {
           </div>
         ) : null}
         {this.titleText ? (
-          <span
-            key={`legend-layer-caption-text-${this.activeLayerInfo?.layer?.id}-${this.legendElementIndex}`}
-            class={`instant-apps-interactive-legend__legend-layer-caption-text`}
-          >
+          <span key={`legend-layer-caption-text-${this.activeLayerInfo?.layer?.id}-${this.legendElementIndex}`} class={CSS.layerCaptionText}>
             {this.titleText}
           </span>
         ) : null}
@@ -156,6 +146,42 @@ export class InstantAppsInteractiveLegendLegendElementCaption {
     return () => {
       this.expanded = !this.expanded;
       this.legendLayerExpandUpdatedEvent.emit(this.expanded);
+    };
+  }
+
+  handleZoomTo(): () => void {
+    return () => {
+      const data = getIntLegendLayerData(this.layer, interactiveLegendState.data);
+      const nestedCategory = getParentLegendElementInfoData(data, this.legendElement);
+      zoomTo(data, this.legendvm.view as __esri.MapView, nestedCategory);
+    };
+  }
+
+  handleShowAll(): () => void {
+    return () => {
+      const handleNestedCategory = () => {
+        const layerData = showAllNestedUniqueSymbol(data, this.legendElement.title as string);
+        interactiveLegendState.data[this.layer.id] = layerData;
+        store.set('data', { ...interactiveLegendState.data, [this.layer.id]: layerData });
+      };
+
+      const handleCategory = () => {
+        const layerData = showAll(data);
+        interactiveLegendState.data[this.layer.id] = layerData;
+        store.set('data', { ...interactiveLegendState.data, [this.layer.id]: layerData });
+      };
+
+      const data = interactiveLegendState.data?.[this.layer?.id];
+
+      const nestedCategory = getParentLegendElementInfoData(data, this.legendElement);
+
+      if (nestedCategory) {
+        handleNestedCategory();
+        return;
+      }
+      handleCategory();
+
+      this.showAllSelectedEvent.emit();
     };
   }
 }

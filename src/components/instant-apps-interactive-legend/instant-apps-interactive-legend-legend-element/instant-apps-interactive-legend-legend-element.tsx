@@ -1,9 +1,12 @@
 import { Component, Listen, Prop, State, h } from '@stencil/core';
+import { checkNestedUniqueSymbolLegendElement } from '../support/helpers';
 
 const CSS = {
   layerTableSizeRamp: '',
   layerChildTable: '',
   layerTable: '',
+  nestedUniqueSymbol: 'instant-apps-interactive-legend__nested-unique-symbol',
+  nonInteractive: 'instant-apps-interactive-legend__non-interactive',
 };
 
 @Component({
@@ -62,10 +65,8 @@ export class InstantAppsInteractiveLegendLegendElement {
     const tableClass = this.isChild ? CSS.layerChildTable : CSS.layerTable;
     const singleSymbol = this.legendElement?.infos?.length === 1 && !((this.activeLayerInfo?.layer as __esri.FeatureLayer)?.renderer as any)?.field;
     const tableClasses = (this.isSizeRamp || !this.isChild) && !this.isColorRamp ? ` ${CSS.layerTableSizeRamp}` : '';
-    const nonInteractiveClass = !this.isInteractive ? ' instant-apps-interactive-legend__non-interactive' : '';
-    const nestedUniqueSymbolClass = this.activeLayerInfo?.legendElements?.[0]?.infos?.every?.(info => info?.type === 'symbol-table')
-      ? ' instant-apps-interactive-legend__nested-unique-symbol'
-      : '';
+    const nonInteractiveClass = !this.isInteractive ? ` ${CSS.nonInteractive}` : '';
+    const nestedUniqueSymbolClass = checkNestedUniqueSymbolLegendElement(this.activeLayerInfo) ? ` ${CSS.nestedUniqueSymbol}` : '';
     return (
       <div class={`${tableClass}${tableClasses}${nonInteractiveClass}${nestedUniqueSymbolClass}`}>
         <div

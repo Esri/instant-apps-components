@@ -2,7 +2,14 @@ import { Component, Element, forceUpdate, h, Prop } from '@stencil/core';
 import { ICategory } from '../instant-apps-interactive-legend-classic/interfaces/interfaces';
 import { loadModules } from 'esri-loader';
 import { interactiveLegendState, store } from '../support/store';
-import { handleFeatureCount } from '../support/helpers';
+import {
+  calculateTotalCount,
+  calculateTotalFeatureCountForNestedSymbols,
+  checkNestedUniqueSymbol,
+  getCategoriesArray,
+  getNestedInfoData,
+  handleFeatureCount,
+} from '../support/helpers';
 
 const CSS = {
   countText: ' instant-apps-interactive-legend__info-count-text',
@@ -106,13 +113,16 @@ export class InstantAppsInteractiveLegendCount {
     const { categories } = dataFromActiveLayerInfo;
     const category = categories.get(categoryId) as ICategory;
 
+    let categoryData: ICategory;
+
     if (category?.nestedInfos) {
       // nested
-      const nestedInfo = category?.nestedInfos[this.infoIndex];
-      return !isNaN(nestedInfo?.count as number) ? this.intl.formatNumber(nestedInfo.count as number) : '';
+      categoryData = getNestedInfoData(category, this.infoIndex);
     } else {
-      return !isNaN(category?.count as number) ? this.intl.formatNumber(category.count as number) : '';
+      categoryData = category;
     }
+
+    return !isNaN(categoryData?.count as number) ? this.intl.formatNumber(categoryData.count as number) : '';
   }
 
   getTotalFeatureCount() {
@@ -122,20 +132,16 @@ export class InstantAppsInteractiveLegendCount {
     if (!dataFromActiveLayerInfo) return;
     const { categories } = dataFromActiveLayerInfo;
 
-    const categoriesArr = Array.from(categories).map((category: any) => category[1]);
-    const isNestedUniqueSymbol = categoriesArr.every((category: ICategory) => !!category?.nestedInfos);
+    const categoriesArr = getCategoriesArray(categories);
+    const isNestedUniqueSymbol = checkNestedUniqueSymbol(categories);
 
     let total: number;
 
     if (isNestedUniqueSymbol) {
       // nested
-      total = categoriesArr
-        .map(category => category.nestedInfos.map(nestedInfo => nestedInfo.count).reduce((acc: number, curr: number) => acc + curr))
-        .reduce((acc: number, curr: number) => acc + curr);
+      total = calculateTotalFeatureCountForNestedSymbols(categoriesArr);
     } else {
-      total = Array.from(categories.entries())
-        .map((entry: any) => entry?.[1]?.count)
-        .reduce((acc: number, curr: number) => acc + curr);
+      total = calculateTotalCount(categoriesArr);
     }
     return this.intl.formatNumber(total as number);
   }

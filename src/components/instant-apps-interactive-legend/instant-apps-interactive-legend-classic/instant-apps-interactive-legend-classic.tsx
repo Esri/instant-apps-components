@@ -1,4 +1,4 @@
-import { Component, h, Prop, Element, State, Listen, forceUpdate } from '@stencil/core';
+import { Component, h, Prop, Element, State, forceUpdate } from '@stencil/core';
 import { interactiveLegendState, store } from '../support/store';
 
 import {
@@ -19,11 +19,13 @@ import {
   getIntLegendLayerData,
   checkNoneSelected,
   createInteractiveLegendDataForLayer,
+  getParentLegendElementInfoData,
+  getCategoryData,
 } from '../support/helpers';
 
 import { loadModules } from 'esri-loader';
 
-import { FilterMode } from './interfaces/interfaces';
+import { FilterMode, IIntLegendLayerData } from './interfaces/interfaces';
 import {
   ColorRampElement,
   ColorRampStop,
@@ -587,12 +589,13 @@ export class InstantAppsInteractiveLegendClassic {
     let selected;
 
     const data = getIntLegendLayerData(layer as __esri.FeatureLayer, interactiveLegendState.data);
-    const parentLegendElementInfoData = data?.categories?.get(parentLegendElementInfo?.title) as any;
+    const parentLegendElementInfoData = getParentLegendElementInfoData(data, parentLegendElementInfo);
 
     if (interactiveLegendState.data) {
-      const category = parentLegendElementInfoData ? parentLegendElementInfoData?.nestedInfos[infoIndex] : data?.categories?.get(elementInfo?.label ?? layer?.id);
+      const category = getCategoryData(data, layer, elementInfo, parentLegendElementInfoData, infoIndex);
       // If no items are selected, then apply 'selected' style to all -- UX
-      const noneSelected = checkNoneSelected(parentLegendElementInfoData ? parentLegendElementInfoData?.nestedInfos : data);
+      const intLegendData = (parentLegendElementInfoData ? parentLegendElementInfoData?.nestedInfos : data) as IIntLegendLayerData;
+      const noneSelected = checkNoneSelected(intLegendData);
       selected = data?.categories?.size === 1 ? !category?.selected : noneSelected || category?.selected;
     }
 
