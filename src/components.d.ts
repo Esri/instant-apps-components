@@ -231,9 +231,9 @@ export namespace Components {
         "zoomTo": boolean;
     }
     interface InstantAppsInteractiveLegendCount {
+        "activeLayerInfo": __esri.ActiveLayerInfo;
         "categoryId": string;
         "infoIndex": number;
-        "layerId": string;
         "legendElement": __esri.LegendElement;
         "legendvm": __esri.LegendViewModel;
         "messages": any;
@@ -819,9 +819,9 @@ declare namespace LocalJSX {
         "zoomTo"?: boolean;
     }
     interface InstantAppsInteractiveLegendCount {
+        "activeLayerInfo"?: __esri.ActiveLayerInfo;
         "categoryId"?: string;
         "infoIndex"?: number;
-        "layerId"?: string;
         "legendElement"?: __esri.LegendElement;
         "legendvm"?: __esri.LegendViewModel;
         "messages"?: any;

@@ -6,7 +6,9 @@ import {
   calculateTotalCount,
   calculateTotalFeatureCountForNestedSymbols,
   checkNestedUniqueSymbol,
+  checkRelationshipRamp,
   getCategoriesArray,
+  getIntLegendLayerData,
   getNestedInfoData,
   getTheme,
   handleFeatureCount,
@@ -38,7 +40,7 @@ export class InstantAppsInteractiveLegendCount {
   legendvm: __esri.LegendViewModel;
 
   @Prop()
-  layerId: string;
+  activeLayerInfo: __esri.ActiveLayerInfo;
 
   @Prop()
   categoryId: string; //LegendElementInfo.label
@@ -73,8 +75,9 @@ export class InstantAppsInteractiveLegendCount {
           () => this.legendvm?.view?.updating,
           async () => {
             const data = await handleFeatureCount(this.legendvm, interactiveLegendState.data);
-            const layerData = data[this.layerId];
-            updateStore(interactiveLegendState.data, { intLegendLayerData: layerData, layerId: this.layerId });
+            const layerId = this.activeLayerInfo.layer.id;
+            const layerData = data[layerId];
+            updateStore(interactiveLegendState.data, { intLegendLayerData: layerData, layerId: layerId });
           },
           { initial: true },
         );
@@ -84,6 +87,7 @@ export class InstantAppsInteractiveLegendCount {
   }
 
   render() {
+    console.log(this.legendElement);
     return (
       <div key="int-legend-count">
         {this.showTotal ? (
@@ -100,7 +104,8 @@ export class InstantAppsInteractiveLegendCount {
   }
 
   getCount(): string | undefined {
-    const { layerId, categoryId } = this;
+    const { categoryId } = this;
+    const layerId = this.activeLayerInfo.layer.id;
     const isSingleElement = interactiveLegendState.data[layerId]?.categories?.size;
     if ((!interactiveLegendState.data || !layerId || !categoryId) && !isSingleElement) return '';
 
@@ -122,7 +127,7 @@ export class InstantAppsInteractiveLegendCount {
   }
 
   getTotalFeatureCount() {
-    const { layerId } = this;
+    const layerId = this.activeLayerInfo.layer.id;
     if (!interactiveLegendState.data || !layerId) return '';
     const dataFromActiveLayerInfo = interactiveLegendState.data[layerId];
     if (!dataFromActiveLayerInfo) return;
@@ -137,7 +142,13 @@ export class InstantAppsInteractiveLegendCount {
       // nested
       total = calculateTotalFeatureCountForNestedSymbols(categoriesArr);
     } else {
-      total = calculateTotalCount(categoriesArr);
+      if (checkRelationshipRamp(this.activeLayerInfo)) {
+        const layerData = getIntLegendLayerData(this.activeLayerInfo.layer as __esri.FeatureLayer, interactiveLegendState.data);
+        const categoriesArr = getCategoriesArray(layerData.categories)[1];
+        total = categoriesArr.count as number;
+      } else {
+        total = calculateTotalCount(categoriesArr);
+      }
     }
     return this.intl.formatNumber(total as number);
   }

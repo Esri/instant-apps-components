@@ -605,7 +605,7 @@ export class InstantAppsInteractiveLegendClassic {
           <instant-apps-interactive-legend-count
             class={getTheme(this.el)}
             categoryId={parentLegendElementInfoData ? legendElement.title : elementInfo.label ?? layer?.id}
-            layerId={activeLayerInfo.layer.id}
+            activeLayerInfo={activeLayerInfo}
             legendvm={this.legendvm}
             messages={this.messages}
             selected={selected}

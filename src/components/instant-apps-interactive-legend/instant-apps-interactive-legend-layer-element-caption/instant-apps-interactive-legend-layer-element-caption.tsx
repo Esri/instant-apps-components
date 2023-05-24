@@ -68,7 +68,7 @@ export class InstantAppsInteractiveLegendLayerElementCaption {
             />
           </span>
           {this.featureCount && isInteractive ? (
-            <instant-apps-interactive-legend-count layer-id={this.activeLayerInfo?.layer?.id} show-total={true} messages={this.messages} legendvm={this.legendvm} />
+            <instant-apps-interactive-legend-count activeLayerInfo={this.activeLayerInfo} show-total={true} messages={this.messages} legendvm={this.legendvm} />
           ) : null}
         </span>
       </header>
