@@ -58,10 +58,10 @@ export class InstantAppsMeasurement {
       <Host>
         <calcite-panel class={CSS.content}>
           <calcite-action-bar expand-disabled={true} layout="horizontal">
-            <calcite-action text={messages?.line} icon="measure" data-value="distance" onClick={this._handleToolClick.bind(this)}></calcite-action>
-            <calcite-action text={messages?.area} icon="measure-area" data-value="area" onClick={this._handleToolClick.bind(this)}></calcite-action>
-            <calcite-action text={messages?.point} icon="pin-plus" data-value="point" onClick={this._handleToolClick.bind(this)}></calcite-action>
-            <calcite-action text={messages?.clear} icon="trash" data-value="clear" onClick={this._handleToolClick.bind(this)}></calcite-action>
+            <calcite-action text={messages?.line} text-enabled="false" icon="measure" data-value="distance" onClick={this._handleToolClick.bind(this)}></calcite-action>
+            <calcite-action text={messages?.area} text-enabled="false" icon="measure-area" data-value="area" onClick={this._handleToolClick.bind(this)}></calcite-action>
+            <calcite-action text={messages?.point} text-enabled="false" icon="pin-plus" data-value="point" onClick={this._handleToolClick.bind(this)}></calcite-action>
+            <calcite-action text={messages?.clear} text-enabled="false" icon="trash" data-value="clear" onClick={this._handleToolClick.bind(this)}></calcite-action>
           </calcite-action-bar>
           <instant-apps-measurement-tool
             ref={el => {
