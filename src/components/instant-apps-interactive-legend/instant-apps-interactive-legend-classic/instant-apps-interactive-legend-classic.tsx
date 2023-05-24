@@ -390,7 +390,7 @@ export class InstantAppsInteractiveLegendClassic {
       const isStartLabel = index === 0;
       const isMidLabel = index === 2;
 
-      return isStartLabel ? <div>{label}</div> : isMidLabel ? <div /> : null;
+      return isStartLabel ? <div class={label ? (colorRampAbovePreview ? CSS.univariateAboveAndBelowLabel : CSS.rampLabel) : ''}>{label}</div> : isMidLabel ? <div /> : null;
     });
     const endIndex = labels.length - 1;
     const midIndex = Math.floor(labels.length / 2);
@@ -590,8 +590,7 @@ export class InstantAppsInteractiveLegendClassic {
     const parentLegendElementInfoData = data?.categories?.get(parentLegendElementInfo?.title) as any;
 
     if (interactiveLegendState.data) {
-      // const category = data?.categories?.get(elementInfo?.label ?? layer?.id);
-      const category = parentLegendElementInfoData?.nestedInfos[infoIndex];
+      const category = parentLegendElementInfoData ? parentLegendElementInfoData?.nestedInfos[infoIndex] : data?.categories?.get(elementInfo?.label ?? layer?.id);
       // If no items are selected, then apply 'selected' style to all -- UX
       const noneSelected = checkNoneSelected(parentLegendElementInfoData ? parentLegendElementInfoData?.nestedInfos : data);
       selected = data?.categories?.size === 1 ? !category?.selected : noneSelected || category?.selected;

@@ -1,9 +1,9 @@
 import { Component, Listen, Prop, State, h } from '@stencil/core';
 
 const CSS = {
-  service: '',
-  groupLayerChild: '',
-  layer: '',
+  service: 'esri-legend__service',
+  groupLayerChild: 'esri-legend__group-layer-child',
+  layer: 'esri-legend__layer',
 };
 
 @Component({
