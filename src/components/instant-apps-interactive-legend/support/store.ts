@@ -3,9 +3,10 @@ import { IInteractiveLegendData } from '../instant-apps-interactive-legend-class
 
 interface InteractiveLegendState {
   data: IInteractiveLegendData;
+  relationshipRampExpandStates: { [layerId: string]: boolean };
 }
 
-const InteractiveLegendStore = createStore<InteractiveLegendState>({ data: {} as IInteractiveLegendData });
+const InteractiveLegendStore = createStore<InteractiveLegendState>({ data: {} as IInteractiveLegendData, relationshipRampExpandStates: {} });
 
 export const interactiveLegendState = InteractiveLegendStore.state;
 export const onInteractiveLegendChange = InteractiveLegendStore.onChange;

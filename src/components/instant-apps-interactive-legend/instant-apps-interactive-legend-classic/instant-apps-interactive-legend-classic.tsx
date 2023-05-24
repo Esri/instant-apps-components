@@ -705,14 +705,6 @@ export class InstantAppsInteractiveLegendClassic {
     return !isRamp;
   }
 
-  getLayerExpanded(activeLayerInfo: __esri.ActiveLayerInfo): boolean {
-    return interactiveLegendState.data?.[activeLayerInfo?.layer?.id]?.expanded?.layer;
-  }
-
-  getLegendElementsExpanded(activeLayerInfo: __esri.ActiveLayerInfo, legendElementIndex: number): boolean {
-    return interactiveLegendState.data?.[activeLayerInfo?.layer?.id]?.expanded?.legendElements?.[legendElementIndex];
-  }
-
   setupWatchersAndListeners(): void {
     // Refreshes interactive legend data on active layer info update
 

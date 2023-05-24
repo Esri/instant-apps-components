@@ -10,7 +10,7 @@ import {
   updateStore,
   zoomTo,
 } from '../support/helpers';
-import { interactiveLegendState } from '../support/store';
+import { interactiveLegendState, store } from '../support/store';
 const CSS = {
   layerCaption: 'esri-legend__layer-caption',
   layerCaptionBtnContainer: 'instant-apps-interactive-legend__layer-caption-btn-container',
@@ -146,7 +146,12 @@ export class InstantAppsInteractiveLegendLegendElementCaption {
   toggleExpanded(): () => void {
     return () => {
       this.expanded = !this.expanded;
-      this.legendLayerExpandUpdatedEvent.emit(this.expanded);
+      this.legendLayerExpandUpdatedEvent.emit();
+
+      const relationshipRampElements = this.activeLayerInfo?.legendElements?.filter(legendElement => legendElement.type === 'relationship-ramp');
+      if (relationshipRampElements.length > 0) {
+        store.set('relationshipRampExpandStates', { ...interactiveLegendState.relationshipRampExpandStates, [this.activeLayerInfo.layer.id]: this.expanded });
+      }
     };
   }
 

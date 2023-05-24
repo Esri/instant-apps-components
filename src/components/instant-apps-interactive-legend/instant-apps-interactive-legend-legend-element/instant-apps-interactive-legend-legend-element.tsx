@@ -1,5 +1,6 @@
 import { Component, Listen, Prop, State, h } from '@stencil/core';
 import { checkNestedUniqueSymbolLegendElement } from '../support/helpers';
+import { store } from '../support/store';
 
 const CSS = {
   layerTableSizeRamp: 'esri-legend__layer-table--size-ramp',
@@ -67,6 +68,15 @@ export class InstantAppsInteractiveLegendLegendElement {
     const tableClasses = (this.isSizeRamp || !this.isChild) && !this.isColorRamp ? ` ${CSS.layerTableSizeRamp}` : '';
     const nonInteractiveClass = !this.isInteractive ? ` ${CSS.nonInteractive}` : '';
     const nestedUniqueSymbolClass = checkNestedUniqueSymbolLegendElement(this.activeLayerInfo) ? ` ${CSS.nestedUniqueSymbol}` : '';
+
+    let expanded = this.expanded;
+
+    if (this.isRelationshipRamp) {
+      const relationshipRampExpandStates = store.get('relationshipRampExpandStates');
+      const expandState = relationshipRampExpandStates[this.activeLayerInfo.layer.id];
+      expanded = expandState;
+    }
+
     return (
       <div class={`${tableClass}${tableClasses}${nonInteractiveClass}${nestedUniqueSymbolClass}`}>
         <div
@@ -86,7 +96,7 @@ export class InstantAppsInteractiveLegendLegendElement {
             messages={this.messages}
           />
         </div>
-        <div key="content" id={`${this.activeLayerInfo?.layer?.id}-legend-element-content-${this.legendElementIndex}`} class={`${this.expanded === false ? 'hide' : 'show'}`}>
+        <div key="content" id={`${this.activeLayerInfo?.layer?.id}-legend-element-content-${this.legendElementIndex}`} class={`${expanded === false ? 'hide' : 'show'}`}>
           <slot name="content" />
         </div>
       </div>
