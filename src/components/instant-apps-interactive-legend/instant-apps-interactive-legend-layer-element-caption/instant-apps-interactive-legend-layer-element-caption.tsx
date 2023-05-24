@@ -1,17 +1,11 @@
 import { Component, h, Prop, Element, Event, EventEmitter } from '@stencil/core';
-import { validateInteractivity } from '../support/helpers';
+import { getTheme, validateInteractivity } from '../support/helpers';
 
 const CSS = {
   label: 'esri-legend__service-label',
   header: 'esri-widget__heading',
   interacitveLegendHeader: 'instant-apps-interactive-legend__header',
   headerActionContainer: 'instant-apps-interactive-legend__header-action-container',
-  calcite: {
-    theme: {
-      light: 'calcite-mode-light',
-      dark: 'calcite-mode-dark',
-    },
-  },
 };
 
 @Component({
@@ -20,6 +14,9 @@ const CSS = {
   scoped: true,
 })
 export class InstantAppsInteractiveLegendLayerElementCaption {
+  @Element()
+  el: HTMLInstantAppsInteractiveLegendLayerElementCaptionElement;
+
   @Prop()
   legendvm: __esri.LegendViewModel;
 
@@ -31,9 +28,6 @@ export class InstantAppsInteractiveLegendLayerElementCaption {
 
   @Prop()
   messages;
-
-  @Element()
-  el;
 
   @Prop()
   isChild = false;
@@ -61,7 +55,7 @@ export class InstantAppsInteractiveLegendLayerElementCaption {
     const isChild = this.isChild ? ' instant-apps-interactive-legend__heading-text--group-item' : '';
 
     return (
-      <header key={`${this.activeLayerInfo?.layer?.id}-header`} class={`${CSS.interacitveLegendHeader} ${this._getTheme()}`}>
+      <header key={`${this.activeLayerInfo?.layer?.id}-header`} class={`${CSS.interacitveLegendHeader} ${getTheme(this.el)}`}>
         <span>
           <span class={CSS.headerActionContainer}>
             <h3 class={`${CSS.header} ${CSS.label}${isChild}`}>{this.activeLayerInfo?.title}</h3>
@@ -86,11 +80,5 @@ export class InstantAppsInteractiveLegendLayerElementCaption {
       this.expanded = !this.expanded;
       this.layerCaptionElementExpandUpdatedEvent.emit(this.expanded);
     };
-  }
-
-  private _getTheme(): string {
-    const { light, dark } = CSS.calcite.theme;
-    const isDarkTheme = this.el.classList.contains(dark);
-    return isDarkTheme ? dark : light;
   }
 }

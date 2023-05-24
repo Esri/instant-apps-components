@@ -21,6 +21,7 @@ import {
   createInteractiveLegendDataForLayer,
   getParentLegendElementInfoData,
   getCategoryData,
+  getTheme,
 } from '../support/helpers';
 
 import { loadModules } from 'esri-loader';
@@ -80,12 +81,6 @@ const CSS = {
   layerCaptionBtnContainer: 'instant-apps-interactive-legend__layer-caption-btn-container',
   interactiveLayerRow: 'instant-apps-interactive-legend__layer-row--interactive',
   infoSelected: 'instant-apps-interactive-legend-element-info--selected',
-  calcite: {
-    theme: {
-      light: 'calcite-mode-light',
-      dark: 'calcite-mode-dark',
-    },
-  },
 };
 
 const GRADIENT_WIDTH = 24;
@@ -103,20 +98,14 @@ export class InstantAppsInteractiveLegendClassic {
   handles: __esri.Handles | null;
   intl: __esri.intl;
 
-  @State()
-  isLoading = true;
-
-  @State()
-  intLegendId: string;
+  @Element()
+  el: HTMLInstantAppsInteractiveLegendClassicElement;
 
   /**
    * Legend View model from the 4.x ArcGIS API for JavaScript
    */
   @Prop()
   legendvm: __esri.LegendViewModel;
-
-  @Element()
-  el: HTMLElement;
 
   /**
    * Displays 'Zoom To' button - updates the extent of the view based on the selected legend infos.
@@ -140,6 +129,12 @@ export class InstantAppsInteractiveLegendClassic {
 
   @Prop()
   messages;
+
+  @State()
+  isLoading = true;
+
+  @State()
+  intLegendId: string;
 
   async componentWillLoad() {
     const observer = new MutationObserver(() => {
@@ -182,21 +177,19 @@ export class InstantAppsInteractiveLegendClassic {
   }
 
   render() {
-    const activeLayerInfos = this.legendvm?.activeLayerInfos;
-    const filteredLayers =
-      activeLayerInfos &&
-      activeLayerInfos
-        .toArray()
-        .map(activeLayerInfo => this.renderLegendForLayer(activeLayerInfo))
-        .filter(layer => !!layer);
-
+    const filteredLayers = this.renderFilteredLayers();
     return this.isLoading ? (
       <calcite-loader key="interactive-legend-loader" scale="m" label={this.messages?.loading} text={this.messages?.loading}></calcite-loader>
     ) : (
-      <div key="interactive-legend-classic-container" class={this._getTheme()}>
-        {filteredLayers && filteredLayers.length ? filteredLayers : <div class={CSS.message}>{this.messages?.noLegend}</div>}
+      <div key="interactive-legend-classic-container" class={getTheme(this.el)}>
+        {filteredLayers?.length > 0 ? filteredLayers : <div class={CSS.message}>{this.messages?.noLegend}</div>}
       </div>
     );
+  }
+
+  renderFilteredLayers() {
+    const activeLayerInfos = this.legendvm?.activeLayerInfos?.toArray();
+    return activeLayerInfos.map(activeLayerInfo => this.renderLegendForLayer(activeLayerInfo)).filter(layer => !!layer);
   }
 
   renderLegendForLayer(activeLayerInfo: __esri.ActiveLayerInfo, isChild?: boolean) {
@@ -212,7 +205,7 @@ export class InstantAppsInteractiveLegendClassic {
       return (
         <div class={`${CSS.service} ${CSS.groupLayer}`}>
           <instant-apps-interactive-layer-element-caption
-            class={this._getTheme()}
+            class={getTheme(this.el)}
             legendvm={this.legendvm}
             feature-count={this.featureCount}
             activeLayerInfo={activeLayerInfo}
@@ -241,7 +234,7 @@ export class InstantAppsInteractiveLegendClassic {
 
       return (
         <instant-apps-interactive-legend-layer-element
-          class={this._getTheme()}
+          class={getTheme(this.el)}
           legendvm={this.legendvm}
           featureCount={this.featureCount}
           activeLayerInfo={activeLayerInfo}
@@ -301,7 +294,7 @@ export class InstantAppsInteractiveLegendClassic {
     } else if (legendElement.type === 'relationship-ramp') {
       content = (
         <instant-apps-interactive-legend-relationship
-          class={this._getTheme()}
+          class={getTheme(this.el)}
           key="relationship-ramp"
           filterMode={this.filterMode}
           activeLayerInfo={activeLayerInfo}
@@ -336,7 +329,7 @@ export class InstantAppsInteractiveLegendClassic {
 
     return (
       <instant-apps-interactive-legend-legend-element
-        class={this._getTheme()}
+        class={getTheme(this.el)}
         activeLayerInfo={activeLayerInfo}
         isSizeRamp={isSizeRamp}
         isChild={isChild}
@@ -602,22 +595,14 @@ export class InstantAppsInteractiveLegendClassic {
     return isInteractive ? (
       // Regular LegendElementInfo
       <button
-        onClick={async () => {
-          const dataFromActiveLayerInfo = { ...interactiveLegendState.data?.[layer?.id] };
-          if (parentLegendElementInfo) {
-            await handleFilter(dataFromActiveLayerInfo, elementInfo, infoIndex, this.filterMode, parentLegendElementInfo);
-          } else {
-            await handleFilter(dataFromActiveLayerInfo, elementInfo, infoIndex, this.filterMode);
-          }
-          store.set('data', { ...interactiveLegendState.data, [layer?.id]: dataFromActiveLayerInfo });
-        }}
+        onClick={this.applyFilter(elementInfo, layer, infoIndex, parentLegendElementInfo)}
         class={`${CSS.layerRow} ${CSS.interactiveLayerRow}${selected ? ` ${CSS.infoSelected}` : ''}`}
       >
         <div class={`${CSS.symbolContainer}${imageryLayerInfoStretched}${sizeRamp}`}>{content}</div>
         <div class={`${CSS.layerInfo}${imageryLayerInfoStretched}`}>{this.getTitle(this.messages, elementInfo.label, false) || ''}</div>
         {this.featureCount ? (
           <instant-apps-interactive-legend-count
-            class={this._getTheme()}
+            class={getTheme(this.el)}
             categoryId={parentLegendElementInfoData ? legendElement.title : elementInfo.label ?? layer?.id}
             layerId={activeLayerInfo.layer.id}
             legendvm={this.legendvm}
@@ -660,7 +645,7 @@ export class InstantAppsInteractiveLegendClassic {
   }
 
   getTitle(
-    messages: any, // LegendMessages,
+    messages: any,
     titleInfo: any, // RendererTitle | DotDensityTitle | RampTitle | StretchMultibandTitle | ClusterTitle | string,
     isRamp: boolean,
   ): string | number | undefined {
@@ -809,9 +794,15 @@ export class InstantAppsInteractiveLegendClassic {
     }
   }
 
-  private _getTheme(): string {
-    const { light, dark } = CSS.calcite.theme;
-    const isDarkTheme = this.el.classList.contains(dark);
-    return isDarkTheme ? dark : light;
+  applyFilter(elementInfo: any, layer: __esri.Layer, infoIndex: number, parentLegendElementInfo: any): () => Promise<void> {
+    return async () => {
+      const dataFromActiveLayerInfo = { ...interactiveLegendState.data?.[layer?.id] };
+      if (parentLegendElementInfo) {
+        await handleFilter(dataFromActiveLayerInfo, elementInfo, infoIndex, this.filterMode, parentLegendElementInfo);
+      } else {
+        await handleFilter(dataFromActiveLayerInfo, elementInfo, infoIndex, this.filterMode);
+      }
+      store.set('data', { ...interactiveLegendState.data, [layer?.id]: dataFromActiveLayerInfo });
+    };
   }
 }

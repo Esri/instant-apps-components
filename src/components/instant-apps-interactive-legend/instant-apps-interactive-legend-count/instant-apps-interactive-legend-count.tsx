@@ -8,18 +8,13 @@ import {
   checkNestedUniqueSymbol,
   getCategoriesArray,
   getNestedInfoData,
+  getTheme,
   handleFeatureCount,
 } from '../support/helpers';
 
 const CSS = {
   countText: ' instant-apps-interactive-legend__info-count-text',
   countTextSelected: ' instant-apps-interactive-legend__info-count-text--selected',
-  calcite: {
-    theme: {
-      light: 'calcite-mode-light',
-      dark: 'calcite-mode-dark',
-    },
-  },
 };
 
 @Component({
@@ -33,7 +28,7 @@ export class InstantAppsInteractiveLegendCount {
   handles: __esri.Handles;
 
   @Element()
-  el;
+  el: HTMLInstantAppsInteractiveLegendCountElement;
 
   @Prop()
   showTotal: boolean = false;
@@ -95,7 +90,7 @@ export class InstantAppsInteractiveLegendCount {
             {this.messages?.totalFeatureCount}: {this.getTotalFeatureCount()}
           </span>
         ) : (
-          <span key="element-info-count" class={`${CSS.countText} ${this._getTheme()}${this.selected ? CSS.countTextSelected : ''}`}>
+          <span key="element-info-count" class={`${CSS.countText} ${getTheme(this.el)}${this.selected ? CSS.countTextSelected : ''}`}>
             {this.getCount()}
           </span>
         )}
@@ -144,11 +139,5 @@ export class InstantAppsInteractiveLegendCount {
       total = calculateTotalCount(categoriesArr);
     }
     return this.intl.formatNumber(total as number);
-  }
-
-  private _getTheme(): string {
-    const { light, dark } = CSS.calcite.theme;
-    const isDarkTheme = document.body.classList.contains(dark);
-    return isDarkTheme ? dark : light;
   }
 }

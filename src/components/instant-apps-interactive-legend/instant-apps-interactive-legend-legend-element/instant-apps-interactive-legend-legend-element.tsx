@@ -2,9 +2,9 @@ import { Component, Listen, Prop, State, h } from '@stencil/core';
 import { checkNestedUniqueSymbolLegendElement } from '../support/helpers';
 
 const CSS = {
-  layerTableSizeRamp: '',
-  layerChildTable: '',
-  layerTable: '',
+  layerTableSizeRamp: 'esri-legend__layer-table--size-ramp',
+  layerChildTable: 'esri-legend__layer-child-table',
+  layerTable: 'esri-legend__layer-table',
   nestedUniqueSymbol: 'instant-apps-interactive-legend__nested-unique-symbol',
   nonInteractive: 'instant-apps-interactive-legend__non-interactive',
 };

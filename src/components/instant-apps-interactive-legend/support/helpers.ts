@@ -755,3 +755,12 @@ export function checkNestedUniqueSymbolLegendElement(activeLayerInfo: __esri.Act
 export function getParentLegendElementInfoData(data: IIntLegendLayerData, parentLegendElementInfo: any): ICategory | undefined {
   return data.categories.get(parentLegendElementInfo?.title);
 }
+
+// theme
+export function getTheme(el: HTMLElement): string {
+  const calciteMode = `calcite-mode-`;
+  const light = `${calciteMode}light`;
+  const dark = `${calciteMode}dark`;
+  const isDarkTheme = el.classList.contains(dark);
+  return isDarkTheme ? dark : light;
+}

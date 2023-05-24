@@ -23,6 +23,9 @@ const CSS = {
   scoped: true,
 })
 export class InstantAppsInteractiveLegendLegendElementCaption {
+  @Element()
+  el: HTMLInstantAppsInteractiveLegendLegendElementCaptionElement;
+
   @Prop()
   legendvm: __esri.LegendViewModel;
 
@@ -70,9 +73,6 @@ export class InstantAppsInteractiveLegendLegendElementCaption {
     bubbles: true,
   })
   legendLayerExpandUpdatedEvent: EventEmitter<boolean>;
-
-  @Element()
-  el;
 
   render() {
     const showAllButton =
