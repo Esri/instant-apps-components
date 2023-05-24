@@ -1,7 +1,7 @@
 import { Component, Element, forceUpdate, h, Prop } from '@stencil/core';
 import { ICategory } from '../instant-apps-interactive-legend-classic/interfaces/interfaces';
 import { loadModules } from 'esri-loader';
-import { interactiveLegendState, store } from '../support/store';
+import { interactiveLegendState } from '../support/store';
 import {
   calculateTotalCount,
   calculateTotalFeatureCountForNestedSymbols,
@@ -10,6 +10,7 @@ import {
   getNestedInfoData,
   getTheme,
   handleFeatureCount,
+  updateStore,
 } from '../support/helpers';
 
 const CSS = {
@@ -73,7 +74,7 @@ export class InstantAppsInteractiveLegendCount {
           async () => {
             const data = await handleFeatureCount(this.legendvm, interactiveLegendState.data);
             const layerData = data[this.layerId];
-            store.set('data', { ...interactiveLegendState.data, [this.layerId]: layerData });
+            updateStore(interactiveLegendState.data, { intLegendLayerData: layerData, layerId: this.layerId });
           },
           { initial: true },
         );

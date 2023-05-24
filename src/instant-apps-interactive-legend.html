@@ -98,9 +98,7 @@
         const select = document.getElementById('theme');
         const themeCallback = e => {
           const intLegend = document.getElementById('intLegend');
-          const jsapiStyles = document.getElementById('jsapiStyles');
           const value = e.target.value;
-          jsapiStyles.href = `https://js.arcgis.com/next/esri/themes/${value}/main.css`;
 
           intLegend.classList.remove('calcite-mode-light');
           intLegend.classList.remove('calcite-mode-dark');

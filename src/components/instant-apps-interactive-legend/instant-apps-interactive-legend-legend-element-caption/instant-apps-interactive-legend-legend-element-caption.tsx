@@ -7,9 +7,10 @@ import {
   getParentLegendElementInfoData,
   showAll,
   showAllNestedUniqueSymbol,
+  updateStore,
   zoomTo,
 } from '../support/helpers';
-import { interactiveLegendState, store } from '../support/store';
+import { interactiveLegendState } from '../support/store';
 const CSS = {
   layerCaption: 'esri-legend__layer-caption',
   layerCaptionBtnContainer: 'instant-apps-interactive-legend__layer-caption-btn-container',
@@ -161,14 +162,12 @@ export class InstantAppsInteractiveLegendLegendElementCaption {
     return () => {
       const handleNestedCategory = () => {
         const layerData = showAllNestedUniqueSymbol(data, this.legendElement.title as string);
-        interactiveLegendState.data[this.layer.id] = layerData;
-        store.set('data', { ...interactiveLegendState.data, [this.layer.id]: layerData });
+        updateStore(interactiveLegendState.data, { intLegendLayerData: layerData, layerId: this.layer.id });
       };
 
       const handleCategory = () => {
         const layerData = showAll(data);
-        interactiveLegendState.data[this.layer.id] = layerData;
-        store.set('data', { ...interactiveLegendState.data, [this.layer.id]: layerData });
+        updateStore(interactiveLegendState.data, { intLegendLayerData: layerData, layerId: this.layer.id });
       };
 
       const data = interactiveLegendState.data?.[this.layer?.id];

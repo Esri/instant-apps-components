@@ -1,6 +1,7 @@
 import { loadModules } from 'esri-loader';
 import { IInteractiveLegendData, ICategories, IIntLegendLayerData, ICategory, FilterMode } from '../instant-apps-interactive-legend-classic/interfaces/interfaces';
 import { getMergedEffect } from './effects';
+import { interactiveLegendState, store } from '../support/store';
 
 // data handling
 function activeLayerInfoCallback(
@@ -763,4 +764,12 @@ export function getTheme(el: HTMLElement): string {
   const dark = `${calciteMode}dark`;
   const isDarkTheme = el.classList.contains(dark);
   return isDarkTheme ? dark : light;
+}
+
+// store
+export function updateStore(data: IInteractiveLegendData, layerData?: { intLegendLayerData: IIntLegendLayerData; layerId: string }): void {
+  const layerId = layerData?.layerId;
+  const layerDataToSet = layerData?.intLegendLayerData;
+  const updatedData = layerId ? { ...interactiveLegendState.data, [layerId]: layerDataToSet } : data;
+  store.set('data', updatedData);
 }

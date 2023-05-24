@@ -22,6 +22,7 @@ import {
   getParentLegendElementInfoData,
   getCategoryData,
   getTheme,
+  updateStore,
 } from '../support/helpers';
 
 import { loadModules } from 'esri-loader';
@@ -754,14 +755,15 @@ export class InstantAppsInteractiveLegendClassic {
         'change',
         async activeLayerInfo => {
           const data = await generateData(this.legendvm, this.reactiveUtils);
-          store.set('data', data);
+          updateStore(data);
+
           this.handles?.add(
             this.reactiveUtils.on(
               () => activeLayerInfo.children,
               'change',
               async () => {
                 const data = await generateData(this.legendvm, this.reactiveUtils);
-                store.set('data', data);
+                updateStore(data);
               },
             ),
           );
@@ -773,12 +775,12 @@ export class InstantAppsInteractiveLegendClassic {
   async generateData(): Promise<void> {
     if (this.featureCount) {
       const data = await generateData(this.legendvm, this.reactiveUtils);
-      store.set('data', data);
+      updateStore(data);
       const dataWithFeatureCount = await handleFeatureCount(this.legendvm, interactiveLegendState.data);
-      store.set('data', dataWithFeatureCount);
+      updateStore(dataWithFeatureCount);
     } else {
       const data = await generateData(this.legendvm, this.reactiveUtils);
-      store.set('data', data);
+      updateStore(data);
     }
     forceUpdate(this.el);
     return Promise.resolve();
@@ -789,20 +791,21 @@ export class InstantAppsInteractiveLegendClassic {
     const dataForLayer = data?.[fLayer?.id];
     if (!dataForLayer) {
       const acl = this.legendvm?.activeLayerInfos?.find(acl => acl?.layer?.id === fLayer?.id);
-      const dataForLayer = await createInteractiveLegendDataForLayer(this.legendvm, acl, this.reactiveUtils);
-      store.set('data', { ...data, [fLayer?.id]: dataForLayer });
+      const dataForLayer = (await createInteractiveLegendDataForLayer(this.legendvm, acl, this.reactiveUtils)) as IIntLegendLayerData;
+      updateStore(data, { intLegendLayerData: dataForLayer, layerId: fLayer?.id });
     }
   }
 
   applyFilter(elementInfo: any, layer: __esri.Layer, infoIndex: number, parentLegendElementInfo: any): () => Promise<void> {
     return async () => {
-      const dataFromActiveLayerInfo = { ...interactiveLegendState.data?.[layer?.id] };
+      const dataFromActiveLayerInfo = { ...interactiveLegendState.data?.[layer?.id] } as IIntLegendLayerData;
       if (parentLegendElementInfo) {
         await handleFilter(dataFromActiveLayerInfo, elementInfo, infoIndex, this.filterMode, parentLegendElementInfo);
       } else {
         await handleFilter(dataFromActiveLayerInfo, elementInfo, infoIndex, this.filterMode);
       }
-      store.set('data', { ...interactiveLegendState.data, [layer?.id]: dataFromActiveLayerInfo });
+
+      updateStore(interactiveLegendState.data, { intLegendLayerData: dataFromActiveLayerInfo, layerId: layer?.id });
     };
   }
 }
