@@ -1,4 +1,4 @@
-import { Component, h, Element, Prop, State, Watch } from '@stencil/core';
+import { Component, h, Element, Prop, State, Watch, forceUpdate } from '@stencil/core';
 
 import { loadModules } from '../../utils/loadModules';
 
@@ -74,14 +74,11 @@ export class InstantAppsInteractiveLegend {
 
   @State() messages;
 
-  // @State()
-  // reRender = false;
-
   async componentWillLoad() {
     const observer = new MutationObserver(() => {
-      // this.reRender = !this.reRender;
+      forceUpdate(this.el);
     });
-    observer.observe(document.body, {
+    observer.observe(this.el, {
       attributes: true,
     });
     await this.initializeModules();
@@ -169,7 +166,7 @@ export class InstantAppsInteractiveLegend {
 
   private _getTheme(): string {
     const { light, dark } = CSS.calcite.theme;
-    const isDarkTheme = document.body.classList.contains(dark);
+    const isDarkTheme = this.el.classList.contains(dark);
     return isDarkTheme ? dark : light;
   }
 

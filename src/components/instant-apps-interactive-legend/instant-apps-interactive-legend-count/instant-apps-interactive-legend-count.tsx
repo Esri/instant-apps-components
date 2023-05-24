@@ -1,4 +1,4 @@
-import { Component, h, Prop } from '@stencil/core';
+import { Component, Element, forceUpdate, h, Prop } from '@stencil/core';
 import { ICategory } from '../instant-apps-interactive-legend-classic/interfaces/interfaces';
 import { loadModules } from 'esri-loader';
 import { interactiveLegendState, store } from '../support/store';
@@ -25,6 +25,9 @@ export class InstantAppsInteractiveLegendCount {
   reactiveUtils: __esri.reactiveUtils;
   handles: __esri.Handles;
 
+  @Element()
+  el;
+
   @Prop()
   showTotal: boolean = false;
 
@@ -49,14 +52,11 @@ export class InstantAppsInteractiveLegendCount {
   @Prop()
   legendElement: __esri.LegendElement;
 
-  // @State()
-  // reRender = false;
-
   async componentWillLoad() {
     const observer = new MutationObserver(() => {
-      // this.reRender = !this.reRender;
+      forceUpdate(this.el);
     });
-    observer.observe(document.body, {
+    observer.observe(this.el, {
       attributes: true,
     });
     const [intl, reactiveUtils, Handles] = await loadModules(['esri/intl', 'esri/core/reactiveUtils', 'esri/core/Handles']);

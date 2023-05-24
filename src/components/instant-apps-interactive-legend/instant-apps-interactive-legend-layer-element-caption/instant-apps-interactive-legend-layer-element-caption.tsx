@@ -6,6 +6,12 @@ const CSS = {
   header: 'esri-widget__heading',
   interacitveLegendHeader: 'instant-apps-interactive-legend__header',
   headerActionContainer: 'instant-apps-interactive-legend__header-action-container',
+  calcite: {
+    theme: {
+      light: 'calcite-mode-light',
+      dark: 'calcite-mode-dark',
+    },
+  },
 };
 
 @Component({
@@ -55,7 +61,7 @@ export class InstantAppsInteractiveLegendLayerElementCaption {
     const isChild = this.isChild ? ' instant-apps-interactive-legend__heading-text--group-item' : '';
 
     return (
-      <header key={`${this.activeLayerInfo?.layer?.id}-header`} class={CSS.interacitveLegendHeader}>
+      <header key={`${this.activeLayerInfo?.layer?.id}-header`} class={`${CSS.interacitveLegendHeader} ${this._getTheme()}`}>
         <span>
           <span class={CSS.headerActionContainer}>
             <h3 class={`${CSS.header} ${CSS.label}${isChild}`}>{this.activeLayerInfo?.title}</h3>
@@ -80,5 +86,11 @@ export class InstantAppsInteractiveLegendLayerElementCaption {
       this.expanded = !this.expanded;
       this.layerCaptionElementExpandUpdatedEvent.emit(this.expanded);
     };
+  }
+
+  private _getTheme(): string {
+    const { light, dark } = CSS.calcite.theme;
+    const isDarkTheme = this.el.classList.contains(dark);
+    return isDarkTheme ? dark : light;
   }
 }

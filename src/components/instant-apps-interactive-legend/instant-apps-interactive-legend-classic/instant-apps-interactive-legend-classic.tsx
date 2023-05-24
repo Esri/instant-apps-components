@@ -78,6 +78,12 @@ const CSS = {
   layerCaptionBtnContainer: 'instant-apps-interactive-legend__layer-caption-btn-container',
   interactiveLayerRow: 'instant-apps-interactive-legend__layer-row--interactive',
   infoSelected: 'instant-apps-interactive-legend-element-info--selected',
+  calcite: {
+    theme: {
+      light: 'calcite-mode-light',
+      dark: 'calcite-mode-dark',
+    },
+  },
 };
 
 const GRADIENT_WIDTH = 24;
@@ -94,9 +100,6 @@ export class InstantAppsInteractiveLegendClassic {
   reactiveUtils: __esri.reactiveUtils;
   handles: __esri.Handles | null;
   intl: __esri.intl;
-
-  // @State()
-  // reRender = false;
 
   @State()
   isLoading = true;
@@ -136,16 +139,11 @@ export class InstantAppsInteractiveLegendClassic {
   @Prop()
   messages;
 
-  @Listen('showAllSelected', { target: 'window' })
-  showAllSelectedEmitted() {
-    // this.reRender = !this.reRender;
-  }
-
   async componentWillLoad() {
     const observer = new MutationObserver(() => {
-      // this.reRender = !this.reRender;
+      forceUpdate(this.el);
     });
-    observer.observe(document.body, {
+    observer.observe(this.el, {
       attributes: true,
     });
     const [intl, reactiveUtils, Handles] = await loadModules(['esri/intl', 'esri/core/reactiveUtils', 'esri/core/Handles']);
@@ -193,7 +191,7 @@ export class InstantAppsInteractiveLegendClassic {
     return this.isLoading ? (
       <calcite-loader key="interactive-legend-loader" scale="m" label={this.messages?.loading} text={this.messages?.loading}></calcite-loader>
     ) : (
-      <div key="interactive-legend-classic-container" class={this.el.classList.contains('calcite-mode-dark') ? 'calcite-mode-dark' : 'calcite-mode-light'}>
+      <div key="interactive-legend-classic-container" class={this._getTheme()}>
         {filteredLayers && filteredLayers.length ? filteredLayers : <div class={CSS.message}>{this.messages?.noLegend}</div>}
       </div>
     );
@@ -211,7 +209,13 @@ export class InstantAppsInteractiveLegendClassic {
 
       return (
         <div class={`${CSS.service} ${CSS.groupLayer}`}>
-          <instant-apps-interactive-layer-caption legendvm={this.legendvm} feature-count={this.featureCount} activeLayerInfo={activeLayerInfo} messages={this.messages} />
+          <instant-apps-interactive-layer-element-caption
+            class={this._getTheme()}
+            legendvm={this.legendvm}
+            feature-count={this.featureCount}
+            activeLayerInfo={activeLayerInfo}
+            messages={this.messages}
+          />
           <div id={`${activeLayerInfo?.layer?.id}-legend-layer`}>{layers}</div>
         </div>
       );
@@ -235,6 +239,7 @@ export class InstantAppsInteractiveLegendClassic {
 
       return (
         <instant-apps-interactive-legend-layer-element
+          class={this._getTheme()}
           legendvm={this.legendvm}
           featureCount={this.featureCount}
           activeLayerInfo={activeLayerInfo}
@@ -294,6 +299,7 @@ export class InstantAppsInteractiveLegendClassic {
     } else if (legendElement.type === 'relationship-ramp') {
       content = (
         <instant-apps-interactive-legend-relationship
+          class={this._getTheme()}
           key="relationship-ramp"
           filterMode={this.filterMode}
           activeLayerInfo={activeLayerInfo}
@@ -328,6 +334,7 @@ export class InstantAppsInteractiveLegendClassic {
 
     return (
       <instant-apps-interactive-legend-legend-element
+        class={this._getTheme()}
         activeLayerInfo={activeLayerInfo}
         isSizeRamp={isSizeRamp}
         isChild={isChild}
@@ -608,6 +615,7 @@ export class InstantAppsInteractiveLegendClassic {
         <div class={`${CSS.layerInfo}${imageryLayerInfoStretched}`}>{this.getTitle(this.messages, elementInfo.label, false) || ''}</div>
         {this.featureCount ? (
           <instant-apps-interactive-legend-count
+            class={this._getTheme()}
             categoryId={parentLegendElementInfoData ? legendElement.title : elementInfo.label ?? layer?.id}
             layerId={activeLayerInfo.layer.id}
             legendvm={this.legendvm}
@@ -797,5 +805,11 @@ export class InstantAppsInteractiveLegendClassic {
       const dataForLayer = await createInteractiveLegendDataForLayer(this.legendvm, acl, this.reactiveUtils);
       store.set('data', { ...data, [fLayer?.id]: dataForLayer });
     }
+  }
+
+  private _getTheme(): string {
+    const { light, dark } = CSS.calcite.theme;
+    const isDarkTheme = this.el.classList.contains(dark);
+    return isDarkTheme ? dark : light;
   }
 }

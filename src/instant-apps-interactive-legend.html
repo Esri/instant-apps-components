@@ -13,7 +13,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=5.0" />
     <title>ArcGIS Instant Apps Components</title>
 
-    <link rel="stylesheet" href="https://js.arcgis.com/next/esri/themes/light/main.css" />
+    <link id="jsapiStyles" rel="stylesheet" href="https://js.arcgis.com/next/esri/themes/light/main.css" />
     <script src="https://js.arcgis.com/next/init.js"></script>
     <script type="module" src="https://js.arcgis.com/calcite-components/1.0.7/calcite.esm.js"></script>
     <link rel="stylesheet" type="text/css" href="https://js.arcgis.com/calcite-components/1.0.7/calcite.css" />
@@ -33,7 +33,20 @@
   </head>
 
   <body>
-    <div id="viewDiv"></div>
+    <calcite-shell>
+      <calcite-shell-panel slot="panel-start">
+        <calcite-panel>
+          <calcite-label>
+            Theme
+            <calcite-select id="theme">
+              <calcite-option value="light">Light</calcite-option>
+              <calcite-option value="dark">Dark</calcite-option>
+            </calcite-select>
+          </calcite-label>
+        </calcite-panel>
+      </calcite-shell-panel>
+      <div id="viewDiv"></div>
+    </calcite-shell>
 
     <script>
       require(['esri/WebMap', 'esri/widgets/Expand', 'esri/views/MapView', 'esri/core/reactiveUtils', 'esri/config'], (WebMap, Expand, MapView, reactiveUtils, esriConfig) => {
@@ -51,6 +64,8 @@
         });
 
         const legend = document.createElement('instant-apps-interactive-legend');
+        legend.id = 'intLegend';
+        legend.classList.add('calcite-mode-light');
         legend.view = view;
         legend.zoomTo = true;
         legend.featureCount = true;
@@ -64,6 +79,20 @@
           expanded: true,
         });
         view.ui.add(legendExpand, 'top-right');
+      });
+
+      const select = document.getElementById('theme');
+      select.addEventListener('calciteSelectChange', e => {
+        const intLegend = document.getElementById('intLegend');
+        const jsapiStyles = document.getElementById('jsapiStyles');
+        const value = e.target.value;
+        jsapiStyles.href = `https://js.arcgis.com/next/esri/themes/${value}/main.css`;
+        // document.body.classList.remove('calcite-mode-light');
+        // document.body.classList.remove('calcite-mode-dark');
+        intLegend.classList.remove('calcite-mode-light');
+        intLegend.classList.remove('calcite-mode-dark');
+        intLegend.classList.add(`calcite-mode-${value}`);
+        // document.body.classList.add(`calcite-mode-${value}`);
       });
     </script>
   </body>
