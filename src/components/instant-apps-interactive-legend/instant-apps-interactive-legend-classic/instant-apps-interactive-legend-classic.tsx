@@ -202,52 +202,45 @@ export class InstantAppsInteractiveLegendClassic {
 
     if (hasChildren) {
       const layers = activeLayerInfo.children.map(childActiveLayerInfo => this.renderLegendForLayer(childActiveLayerInfo, true)).toArray();
-
       return (
-        <div class={`${CSS.service} ${CSS.groupLayer}`}>
-          <instant-apps-interactive-layer-element-caption
-            class={getTheme(this.el)}
-            legendvm={this.legendvm}
-            feature-count={this.featureCount}
-            activeLayerInfo={activeLayerInfo}
-            messages={this.messages}
-          />
-          <div id={`${activeLayerInfo?.layer?.id}-legend-layer`}>{layers}</div>
-        </div>
-      );
-    }
-    {
-      const legendElements = activeLayerInfo.legendElements;
-
-      if (legendElements && !legendElements.length) {
-        return null;
-      }
-
-      const filteredElements = legendElements
-        .map((legendElement, legendElementIndex) =>
-          this.renderLegendForElement(legendElement, activeLayerInfo.layer as any, (activeLayerInfo as any).effectList, activeLayerInfo, legendElementIndex),
-        )
-        .filter(element => !!element);
-
-      if (!filteredElements.length) {
-        return null;
-      }
-
-      return (
-        <instant-apps-interactive-legend-layer-element
-          class={getTheme(this.el)}
-          legendvm={this.legendvm}
-          featureCount={this.featureCount}
-          activeLayerInfo={activeLayerInfo}
-          messages={this.messages}
-          isChild={isChild}
-        >
-          <div slot="content" id={`${activeLayerInfo?.layer?.id}-legend-layer`} class={CSS.layer}>
-            {filteredElements}
+        <instant-apps-interactive-legend-group-legend-element legendvm={this.legendvm} featureCount={this.featureCount} activeLayerInfo={activeLayerInfo}>
+          <div id={`${activeLayerInfo?.layer?.id}-legend-layer`} slot="content">
+            {layers}
           </div>
-        </instant-apps-interactive-legend-layer-element>
+        </instant-apps-interactive-legend-group-legend-element>
       );
     }
+
+    const legendElements = activeLayerInfo.legendElements;
+
+    if (legendElements && !legendElements.length) {
+      return null;
+    }
+
+    const filteredElements = legendElements
+      .map((legendElement, legendElementIndex) =>
+        this.renderLegendForElement(legendElement, activeLayerInfo.layer as any, (activeLayerInfo as any).effectList, activeLayerInfo, legendElementIndex),
+      )
+      .filter(element => !!element);
+
+    if (!filteredElements.length) {
+      return null;
+    }
+
+    return (
+      <instant-apps-interactive-legend-layer-element
+        class={getTheme(this.el)}
+        legendvm={this.legendvm}
+        featureCount={this.featureCount}
+        activeLayerInfo={activeLayerInfo}
+        messages={this.messages}
+        isChild={isChild}
+      >
+        <div slot="content" id={`${activeLayerInfo?.layer?.id}-legend-layer`} class={CSS.layer}>
+          {filteredElements}
+        </div>
+      </instant-apps-interactive-legend-layer-element>
+    );
   }
 
   renderLegendForElement(

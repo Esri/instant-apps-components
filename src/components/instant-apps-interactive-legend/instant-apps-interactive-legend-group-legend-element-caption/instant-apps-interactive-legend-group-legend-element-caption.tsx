@@ -9,8 +9,8 @@ const CSS = {
 };
 
 @Component({
-  tag: 'instant-apps-interactive-legend-layer-element-caption',
-  styleUrl: 'instant-apps-interactive-legend-layer-element-caption.scss',
+  tag: 'instant-apps-interactive-legend-group-legend-element-caption',
+  styleUrl: 'instant-apps-interactive-legend-group-legend-element-caption.scss',
   scoped: true,
 })
 export class InstantAppsInteractiveLegendLayerElementCaption {
@@ -38,12 +38,12 @@ export class InstantAppsInteractiveLegendLayerElementCaption {
   expanded: boolean = true;
 
   @Event({
-    eventName: 'layerCaptionElementExpandUpdated',
+    eventName: 'groupLayerCaptionElementExpandUpdated',
     composed: true,
     cancelable: true,
     bubbles: true,
   })
-  layerCaptionElementExpandUpdatedEvent: EventEmitter<boolean>;
+  groupLayerCaptionElementExpandUpdatedEvent: EventEmitter<boolean>;
 
   render() {
     const isInteractive = validateInteractivity(this.activeLayerInfo);
@@ -78,7 +78,7 @@ export class InstantAppsInteractiveLegendLayerElementCaption {
   toggleExpanded(): () => void {
     return () => {
       this.expanded = !this.expanded;
-      this.layerCaptionElementExpandUpdatedEvent.emit(this.expanded);
+      this.groupLayerCaptionElementExpandUpdatedEvent.emit(this.expanded);
     };
   }
 }
