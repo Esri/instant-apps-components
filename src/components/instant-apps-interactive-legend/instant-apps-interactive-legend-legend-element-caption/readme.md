@@ -7,17 +7,18 @@
 
 ## Properties
 
-| Property             | Attribute              | Description | Type              | Default     |
-| -------------------- | ---------------------- | ----------- | ----------------- | ----------- |
-| `activeLayerInfo`    | --                     |             | `ActiveLayerInfo` | `undefined` |
-| `expanded`           | `expanded`             |             | `boolean`         | `true`      |
-| `isInteractive`      | `is-interactive`       |             | `boolean`         | `undefined` |
-| `layer`              | --                     |             | `FeatureLayer`    | `undefined` |
-| `legendElementIndex` | `legend-element-index` |             | `number`          | `undefined` |
-| `legendvm`           | --                     |             | `LegendViewModel` | `undefined` |
-| `messages`           | `messages`             |             | `any`             | `undefined` |
-| `titleText`          | `title-text`           |             | `string`          | `undefined` |
-| `zoomTo`             | `zoom-to`              |             | `boolean`         | `undefined` |
+| Property             | Attribute              | Description | Type                                                                                                                               | Default     |
+| -------------------- | ---------------------- | ----------- | ---------------------------------------------------------------------------------------------------------------------------------- | ----------- |
+| `activeLayerInfo`    | --                     |             | `ActiveLayerInfo`                                                                                                                  | `undefined` |
+| `expanded`           | `expanded`             |             | `boolean`                                                                                                                          | `true`      |
+| `isInteractive`      | `is-interactive`       |             | `boolean`                                                                                                                          | `undefined` |
+| `layer`              | --                     |             | `FeatureLayer`                                                                                                                     | `undefined` |
+| `legendElement`      | --                     |             | `ColorRampElement \| HeatmapRampElement \| OpacityRampElement \| RelationshipRampElement \| SizeRampElement \| SymbolTableElement` | `undefined` |
+| `legendElementIndex` | `legend-element-index` |             | `number`                                                                                                                           | `undefined` |
+| `legendvm`           | --                     |             | `LegendViewModel`                                                                                                                  | `undefined` |
+| `messages`           | `messages`             |             | `any`                                                                                                                              | `undefined` |
+| `titleText`          | `title-text`           |             | `string`                                                                                                                           | `undefined` |
+| `zoomTo`             | `zoom-to`              |             | `boolean`                                                                                                                          | `undefined` |
 
 
 ## Events

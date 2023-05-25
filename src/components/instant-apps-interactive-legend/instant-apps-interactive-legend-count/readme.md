@@ -7,14 +7,16 @@
 
 ## Properties
 
-| Property     | Attribute     | Description | Type              | Default     |
-| ------------ | ------------- | ----------- | ----------------- | ----------- |
-| `categoryId` | `category-id` |             | `string`          | `undefined` |
-| `layerId`    | `layer-id`    |             | `string`          | `undefined` |
-| `legendvm`   | --            |             | `LegendViewModel` | `undefined` |
-| `messages`   | `messages`    |             | `any`             | `undefined` |
-| `selected`   | `selected`    |             | `boolean`         | `undefined` |
-| `showTotal`  | `show-total`  |             | `boolean`         | `false`     |
+| Property          | Attribute     | Description | Type                                                                                                                               | Default     |
+| ----------------- | ------------- | ----------- | ---------------------------------------------------------------------------------------------------------------------------------- | ----------- |
+| `activeLayerInfo` | --            |             | `ActiveLayerInfo`                                                                                                                  | `undefined` |
+| `categoryId`      | `category-id` |             | `string`                                                                                                                           | `undefined` |
+| `infoIndex`       | `info-index`  |             | `number`                                                                                                                           | `undefined` |
+| `legendElement`   | --            |             | `ColorRampElement \| HeatmapRampElement \| OpacityRampElement \| RelationshipRampElement \| SizeRampElement \| SymbolTableElement` | `undefined` |
+| `legendvm`        | --            |             | `LegendViewModel`                                                                                                                  | `undefined` |
+| `messages`        | `messages`    |             | `any`                                                                                                                              | `undefined` |
+| `selected`        | `selected`    |             | `boolean`                                                                                                                          | `undefined` |
+| `showTotal`       | `show-total`  |             | `boolean`                                                                                                                          | `false`     |
 
 
 ## Dependencies
