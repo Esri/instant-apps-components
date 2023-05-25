@@ -23,11 +23,13 @@
 ```mermaid
 graph TD;
   instant-apps-interactive-legend --> instant-apps-interactive-legend-classic
-  instant-apps-interactive-legend-classic --> instant-apps-interactive-legend-caption
+  instant-apps-interactive-legend-classic --> instant-apps-interactive-legend-layer-element
   instant-apps-interactive-legend-classic --> instant-apps-interactive-legend-relationship
-  instant-apps-interactive-legend-classic --> instant-apps-interactive-legend-layer-caption
+  instant-apps-interactive-legend-classic --> instant-apps-interactive-legend-legend-element
   instant-apps-interactive-legend-classic --> instant-apps-interactive-legend-count
-  instant-apps-interactive-legend-caption --> instant-apps-interactive-legend-count
+  instant-apps-interactive-legend-layer-element --> instant-apps-interactive-legend-layer-element-caption
+  instant-apps-interactive-legend-layer-element-caption --> instant-apps-interactive-legend-count
+  instant-apps-interactive-legend-legend-element --> instant-apps-interactive-legend-legend-element-caption
   style instant-apps-interactive-legend fill:#f9f,stroke:#333,stroke-width:4px
 ```
 

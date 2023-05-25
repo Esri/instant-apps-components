@@ -13,7 +13,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=5.0" />
     <title>ArcGIS Instant Apps Components</title>
 
-    <link rel="stylesheet" href="https://js.arcgis.com/next/esri/themes/light/main.css" />
+    <link id="jsapiStyles" rel="stylesheet" href="https://js.arcgis.com/next/esri/themes/light/main.css" />
     <script src="https://js.arcgis.com/next/init.js"></script>
     <script type="module" src="https://js.arcgis.com/calcite-components/1.0.7/calcite.esm.js"></script>
     <link rel="stylesheet" type="text/css" href="https://js.arcgis.com/calcite-components/1.0.7/calcite.css" />
@@ -29,38 +29,89 @@
         margin: 0;
         padding: 0;
       }
+
+      #testSettings {
+        padding: 20px;
+      }
     </style>
   </head>
 
   <body>
-    <div id="viewDiv"></div>
+    <calcite-shell>
+      <calcite-shell-panel slot="panel-start">
+        <calcite-panel>
+          <div id="testSettings">
+            <calcite-label>
+              Theme
+              <calcite-select id="theme">
+                <calcite-option value="light">Light</calcite-option>
+                <calcite-option value="dark">Dark</calcite-option>
+              </calcite-select>
+            </calcite-label>
+          </div>
+        </calcite-panel>
+      </calcite-shell-panel>
+      <calcite-shell-panel id="intLegendPanel" slot="panel-end"></calcite-shell-panel>
+      <div id="viewDiv"></div>
+    </calcite-shell>
 
     <script>
-      require(['esri/WebMap', 'esri/widgets/Expand', 'esri/views/MapView', 'esri/core/reactiveUtils'], (WebMap, Expand, MapView, reactiveUtils) => {
-        const map = new WebMap({
-          portalItem: {
-            id: 'ddf28dc057b8400dbfa148ef403f7c57',
-          },
-        });
+      require(['esri/WebMap', 'esri/widgets/Home', 'esri/views/MapView', 'esri/core/reactiveUtils', 'esri/config'], (WebMap, Home, MapView, reactiveUtils, esriConfig) => {
+        esriConfig.portalUrl = 'http://holistic.mapsdevext.arcgis.com';
 
-        const view = new MapView({
-          map,
-          container: 'viewDiv',
-        });
+        const createView = () => {
+          const map = new WebMap({
+            portalItem: {
+              id: '7ffcd04acc9741c79da36edfb9a4339c',
+            },
+          });
 
-        const legend = document.createElement('instant-apps-interactive-legend');
-        legend.view = view;
+          return new MapView({
+            map,
+            container: 'viewDiv',
+          });
+        };
 
-        const legendExpand = new Expand({
-          view,
-          mode: 'floating',
-          expandIcon: 'legend',
-          group: 'top-right',
-          content: legend,
-          expanded: true,
-        });
-        view.ui.add(legendExpand, 'top-right');
+        const createIntLegend = () => {
+          const legend = document.createElement('instant-apps-interactive-legend');
+          legend.id = 'intLegend';
+          legend.classList.add('calcite-mode-light');
+          legend.view = view;
+          legend.zoomTo = true;
+          legend.featureCount = true;
+
+          const intLegendPanel = document.getElementById('intLegendPanel');
+          intLegendPanel.appendChild(legend);
+        };
+
+        const addWidgets = () => {
+          const home = new Home({ view });
+          view.ui.add(home, 'top-left');
+        };
+
+        const view = createView();
+        createIntLegend();
+        addWidgets();
       });
+
+      const setupThemeEventListener = () => {
+        const select = document.getElementById('theme');
+        const themeCallback = e => {
+          const intLegend = document.getElementById('intLegend');
+          const value = e.target.value;
+
+          intLegend.classList.remove('calcite-mode-light');
+          intLegend.classList.remove('calcite-mode-dark');
+          intLegend.classList.add(`calcite-mode-${value}`);
+        };
+        select.addEventListener('calciteSelectChange', themeCallback);
+      };
+
+      const setupEventListeners = () => {
+        setupThemeEventListener();
+      };
+
+      setupEventListeners();
     </script>
   </body>
 </html>

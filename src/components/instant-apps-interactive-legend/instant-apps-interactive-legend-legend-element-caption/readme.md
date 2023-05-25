@@ -1,4 +1,4 @@
-# instant-apps-interactive-legend-layer-caption
+# instant-apps-interactive-legend-legend-element-caption
 
 
 
@@ -10,7 +10,7 @@
 | Property             | Attribute              | Description | Type              | Default     |
 | -------------------- | ---------------------- | ----------- | ----------------- | ----------- |
 | `activeLayerInfo`    | --                     |             | `ActiveLayerInfo` | `undefined` |
-| `expanded`           | `expanded`             |             | `boolean`         | `undefined` |
+| `expanded`           | `expanded`             |             | `boolean`         | `true`      |
 | `isInteractive`      | `is-interactive`       |             | `boolean`         | `undefined` |
 | `layer`              | --                     |             | `FeatureLayer`    | `undefined` |
 | `legendElementIndex` | `legend-element-index` |             | `number`          | `undefined` |
@@ -22,22 +22,23 @@
 
 ## Events
 
-| Event             | Description | Type                   |
-| ----------------- | ----------- | ---------------------- |
-| `showAllSelected` |             | `CustomEvent<boolean>` |
+| Event                      | Description | Type                   |
+| -------------------------- | ----------- | ---------------------- |
+| `legendLayerExpandUpdated` |             | `CustomEvent<boolean>` |
+| `showAllSelected`          |             | `CustomEvent<boolean>` |
 
 
 ## Dependencies
 
 ### Used by
 
- - [instant-apps-interactive-legend-classic](../instant-apps-interactive-legend-classic)
+ - [instant-apps-interactive-legend-legend-element](../instant-apps-interactive-legend-legend-element)
 
 ### Graph
 ```mermaid
 graph TD;
-  instant-apps-interactive-legend-classic --> instant-apps-interactive-legend-layer-caption
-  style instant-apps-interactive-legend-layer-caption fill:#f9f,stroke:#333,stroke-width:4px
+  instant-apps-interactive-legend-legend-element --> instant-apps-interactive-legend-legend-element-caption
+  style instant-apps-interactive-legend-legend-element-caption fill:#f9f,stroke:#333,stroke-width:4px
 ```
 
 ----------------------------------------------
