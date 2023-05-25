@@ -1,4 +1,5 @@
-import { Component, Listen, Prop, State, h } from '@stencil/core';
+import { Component, Element, Listen, Prop, State, forceUpdate, h } from '@stencil/core';
+import { getTheme } from '../support/helpers';
 
 const CSS = {
   service: 'esri-legend__service',
@@ -13,6 +14,9 @@ const CSS = {
 })
 export class InstantAppsInteractiveLegendLayerElement {
   layerCaption;
+
+  @Element()
+  el: HTMLInstantAppsInteractiveLegendLayerElementElement;
 
   @Prop()
   legendvm: __esri.LegendViewModel;
@@ -37,6 +41,15 @@ export class InstantAppsInteractiveLegendLayerElement {
     this.expanded = this.layerCaption.expanded;
   }
 
+  componentWillLoad() {
+    const observer = new MutationObserver(() => {
+      forceUpdate(this.el);
+    });
+    observer.observe(this.el, {
+      attributes: true,
+    });
+  }
+
   render() {
     const layerClasses = !!this.activeLayerInfo.parent ? ` ${CSS.groupLayerChild}` : '';
 
@@ -49,6 +62,7 @@ export class InstantAppsInteractiveLegendLayerElement {
           activeLayerInfo={this.activeLayerInfo}
           messages={this.messages}
           isChild={!!this.isChild}
+          class={getTheme(this.el)}
         />
         <div id={`${this.activeLayerInfo?.layer?.id}-legend-layer`} class={`${CSS.layer}${this.expanded === false ? ' hide' : ' show'}`}>
           <slot name="content"></slot>

@@ -72,3 +72,17 @@
     margin: 0;
   }
 }
+
+:host(.calcite-mode-dark) {
+  .instant-apps-interactive-legend__header {
+    background-color: #242424;
+    color: var(--calcite-ui-text-1);
+  }
+}
+
+:host(.calcite-mode-light) {
+  .instant-apps-interactive-legend__header {
+    background-color: #ffffff;
+    color: var(--calcite-ui-text-1);
+  }
+}

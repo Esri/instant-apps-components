@@ -75,7 +75,7 @@ export async function createInteractiveLegendDataForLayer(
           selected: false,
           legendElementInfo,
         };
-        categories.set(legendElementInfo.label, category);
+        categories.set(legendElementInfo.label ?? fLayer.id, category);
       }
     });
 
@@ -272,7 +272,8 @@ function generateQueryExpressions(data: IIntLegendLayerData, info: any, infoInde
   const category = parentLegendElementInfo
     ? (categories.get(parentLegendElementInfo.title)?.nestedInfos?.[infoIndex] as ICategory)
     : (categories.get(info.label ?? fLayerView?.layer?.id) as ICategory);
-  category.selected = !category?.selected;
+
+  if (category) category.selected = !category?.selected;
 
   const hasOneValue = legendElementInfos && legendElementInfos.length === 1;
 
@@ -580,9 +581,9 @@ export async function zoomTo(data: IIntLegendLayerData, view: __esri.MapView, ne
 }
 
 // count
-
 export function calculateTotalCount(categoriesArr: ICategory[]): number {
-  return categoriesArr.map((entry: any) => entry?.[1]?.count).reduce((acc: number, curr: number) => acc + curr);
+  const totalCount = categoriesArr.map((category: any) => category?.count).reduce((acc: number, curr: number) => acc + curr);
+  return totalCount;
 }
 
 export function calculateTotalFeatureCountForNestedSymbols(categoriesArr: ICategory[]) {

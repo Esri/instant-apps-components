@@ -520,6 +520,7 @@ export class InstantAppsInteractiveLegendClassic {
         <div class={CSS.symbolContainer} style={{ ...symbolContainerStyles }}>
           <div
             ref={el => {
+              if (el?.firstChild) el?.firstChild?.remove();
               el?.appendChild(rampDiv as HTMLElement);
             }}
             class={CSS.rampContainer}

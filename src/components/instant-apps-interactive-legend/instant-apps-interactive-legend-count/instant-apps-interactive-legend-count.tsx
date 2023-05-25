@@ -87,7 +87,6 @@ export class InstantAppsInteractiveLegendCount {
   }
 
   render() {
-    console.log(this.legendElement);
     return (
       <div key="int-legend-count">
         {this.showTotal ? (
