@@ -589,7 +589,9 @@ export class InstantAppsInteractiveLegendClassic {
       selected = data?.categories?.size === 1 ? !category?.selected : noneSelected || category?.selected;
     }
 
-    return isInteractive ? (
+    const interactive = parentLegendElementInfoData && !elementInfo?.value ? false : isInteractive;
+
+    return interactive ? (
       // Regular LegendElementInfo
       <button
         onClick={this.applyFilter(elementInfo, layer, infoIndex, parentLegendElementInfo)}

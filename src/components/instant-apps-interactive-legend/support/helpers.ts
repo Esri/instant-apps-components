@@ -250,11 +250,11 @@ function generateQueryExpressions(data: IIntLegendLayerData, info: any, infoInde
 
       if (untouched) {
         nestedCategory.nestedInfos?.forEach(nestedInfo => {
-          const expression = `${field} = '${nestedInfo.legendElementInfo.value}'`;
+          const expression = field ? `${field} = '${nestedInfo.legendElementInfo.value}'` : null;
 
-          const expressionIndex = queryExpressions.indexOf(expression);
+          const expressionIndex = expression ? queryExpressions.indexOf(expression) : -1;
 
-          if (expressionIndex !== -1) {
+          if (expression && expressionIndex !== -1) {
             queryExpressions.splice(expressionIndex, 1);
           }
         });
@@ -324,7 +324,8 @@ function generateQueryExpressions(data: IIntLegendLayerData, info: any, infoInde
 
       if (untouched) {
         nestedCategory.nestedInfos?.forEach(nestedInfo => {
-          expressionList.push(`${field} = '${nestedInfo.legendElementInfo.value}'`);
+          const expression = field ? `${field} = '${nestedInfo.legendElementInfo.value}'` : null;
+          if (expression) expressionList.push(`${field} = '${nestedInfo.legendElementInfo.value}'`);
         });
       }
     });
