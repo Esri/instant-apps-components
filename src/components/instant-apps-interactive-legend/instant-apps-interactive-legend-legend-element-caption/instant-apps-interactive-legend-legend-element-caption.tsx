@@ -127,11 +127,7 @@ export class InstantAppsInteractiveLegendLegendElementCaption {
               : null}
           </div>
         ) : null}
-        {this.titleText ? (
-          <span key={`legend-layer-caption-text-${this.activeLayerInfo?.layer?.id}-${this.legendElementIndex}`} class={CSS.layerCaptionText}>
-            {this.titleText}
-          </span>
-        ) : null}
+        {this.titleText ? <span class={CSS.layerCaptionText}>{this.titleText}</span> : null}
         <calcite-action
           onClick={this.toggleExpanded()}
           icon={expanded === false ? 'chevron-right' : 'chevron-down'}

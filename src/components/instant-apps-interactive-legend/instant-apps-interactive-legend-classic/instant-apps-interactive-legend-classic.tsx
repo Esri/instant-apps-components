@@ -98,6 +98,7 @@ export class InstantAppsInteractiveLegendClassic {
   reactiveUtils: __esri.reactiveUtils;
   handles: __esri.Handles | null;
   intl: __esri.intl;
+  calculatingFeatureCount = false;
 
   @Element()
   el: HTMLInstantAppsInteractiveLegendClassicElement;
@@ -159,7 +160,8 @@ export class InstantAppsInteractiveLegendClassic {
           await (this.legendvm?.view?.map as __esri.WebMap).loadAll();
           await this.reactiveUtils.whenOnce(() => this.legendvm?.view?.updating === false);
           // Initial data setup
-          await this.generateData();
+          const data = await generateData(this.legendvm, this.reactiveUtils);
+          store.set('data', data);
           this.isLoading = false;
           this.setupWatchersAndListeners();
         } catch {
@@ -202,52 +204,45 @@ export class InstantAppsInteractiveLegendClassic {
 
     if (hasChildren) {
       const layers = activeLayerInfo.children.map(childActiveLayerInfo => this.renderLegendForLayer(childActiveLayerInfo, true)).toArray();
-
       return (
-        <div class={`${CSS.service} ${CSS.groupLayer}`}>
-          <instant-apps-interactive-layer-element-caption
-            class={getTheme(this.el)}
-            legendvm={this.legendvm}
-            feature-count={this.featureCount}
-            activeLayerInfo={activeLayerInfo}
-            messages={this.messages}
-          />
-          <div id={`${activeLayerInfo?.layer?.id}-legend-layer`}>{layers}</div>
-        </div>
-      );
-    }
-    {
-      const legendElements = activeLayerInfo.legendElements;
-
-      if (legendElements && !legendElements.length) {
-        return null;
-      }
-
-      const filteredElements = legendElements
-        .map((legendElement, legendElementIndex) =>
-          this.renderLegendForElement(legendElement, activeLayerInfo.layer as any, (activeLayerInfo as any).effectList, activeLayerInfo, legendElementIndex),
-        )
-        .filter(element => !!element);
-
-      if (!filteredElements.length) {
-        return null;
-      }
-
-      return (
-        <instant-apps-interactive-legend-layer-element
-          class={getTheme(this.el)}
-          legendvm={this.legendvm}
-          featureCount={this.featureCount}
-          activeLayerInfo={activeLayerInfo}
-          messages={this.messages}
-          isChild={isChild}
-        >
-          <div slot="content" id={`${activeLayerInfo?.layer?.id}-legend-layer`} class={CSS.layer}>
-            {filteredElements}
+        <instant-apps-interactive-legend-group-legend-element legendvm={this.legendvm} featureCount={this.featureCount} activeLayerInfo={activeLayerInfo}>
+          <div id={`${activeLayerInfo?.layer?.id}-legend-layer`} slot="content">
+            {layers}
           </div>
-        </instant-apps-interactive-legend-layer-element>
+        </instant-apps-interactive-legend-group-legend-element>
       );
     }
+
+    const legendElements = activeLayerInfo.legendElements;
+
+    if (legendElements && !legendElements.length) {
+      return null;
+    }
+
+    const filteredElements = legendElements
+      .map((legendElement, legendElementIndex) =>
+        this.renderLegendForElement(legendElement, activeLayerInfo.layer as any, (activeLayerInfo as any).effectList, activeLayerInfo, legendElementIndex),
+      )
+      .filter(element => !!element);
+
+    if (!filteredElements.length) {
+      return null;
+    }
+
+    return (
+      <instant-apps-interactive-legend-layer-element
+        class={getTheme(this.el)}
+        legendvm={this.legendvm}
+        featureCount={this.featureCount}
+        activeLayerInfo={activeLayerInfo}
+        messages={this.messages}
+        isChild={isChild}
+      >
+        <div slot="content" id={`${activeLayerInfo?.layer?.id}-legend-layer`} class={CSS.layer}>
+          {filteredElements}
+        </div>
+      </instant-apps-interactive-legend-layer-element>
+    );
   }
 
   renderLegendForElement(
@@ -594,7 +589,9 @@ export class InstantAppsInteractiveLegendClassic {
       selected = data?.categories?.size === 1 ? !category?.selected : noneSelected || category?.selected;
     }
 
-    return isInteractive ? (
+    const interactive = parentLegendElementInfoData && !elementInfo?.value ? false : isInteractive;
+
+    return interactive ? (
       // Regular LegendElementInfo
       <button
         onClick={this.applyFilter(elementInfo, layer, infoIndex, parentLegendElementInfo)}
@@ -737,10 +734,33 @@ export class InstantAppsInteractiveLegendClassic {
       }
     });
 
-    this.legendvm?.activeLayerInfos?.forEach(async activeLayerInfo => {
-      await this.generateData();
-      activeLayerInfo.children.forEach(async () => await this.generateData());
-    });
+    this.handles?.add(
+      this.reactiveUtils.when(
+        () => this.legendvm,
+        () => {
+          this.reactiveUtils.watch(
+            () => this.legendvm?.view?.updating,
+            () => {
+              if (this.calculatingFeatureCount) return;
+              if (this.legendvm?.view?.updating) {
+                this.calculatingFeatureCount = true;
+                this.reactiveUtils.when(
+                  () => !this.legendvm?.view?.updating,
+                  async () => {
+                    const data = await handleFeatureCount(this.legendvm, interactiveLegendState.data);
+                    updateStore(data);
+                    this.calculatingFeatureCount = false;
+                  },
+                  { once: true, initial: true },
+                );
+              }
+            },
+            { initial: true },
+          );
+        },
+        { initial: true, once: true },
+      ),
+    );
 
     this.handles?.add(
       this.reactiveUtils.on(
@@ -748,15 +768,14 @@ export class InstantAppsInteractiveLegendClassic {
         'change',
         async activeLayerInfo => {
           const data = await generateData(this.legendvm, this.reactiveUtils);
-          updateStore(data);
-
+          store.set('data', { ...data, ...interactiveLegendState.data });
           this.handles?.add(
             this.reactiveUtils.on(
               () => activeLayerInfo.children,
               'change',
               async () => {
                 const data = await generateData(this.legendvm, this.reactiveUtils);
-                updateStore(data);
+                store.set('data', { ...data, ...interactiveLegendState.data });
               },
             ),
           );
@@ -765,25 +784,11 @@ export class InstantAppsInteractiveLegendClassic {
     );
   }
 
-  async generateData(): Promise<void> {
-    if (this.featureCount) {
-      const data = await generateData(this.legendvm, this.reactiveUtils);
-      updateStore(data);
-      const dataWithFeatureCount = await handleFeatureCount(this.legendvm, interactiveLegendState.data);
-      updateStore(dataWithFeatureCount);
-    } else {
-      const data = await generateData(this.legendvm, this.reactiveUtils);
-      updateStore(data);
-    }
-    forceUpdate(this.el);
-    return Promise.resolve();
-  }
-
   async createDataForLayer(fLayer): Promise<void> {
     const data = store.get('data');
     const dataForLayer = data?.[fLayer?.id];
-    if (!dataForLayer) {
-      const acl = this.legendvm?.activeLayerInfos?.find(acl => acl?.layer?.id === fLayer?.id);
+    const acl = this.legendvm?.activeLayerInfos?.find(acl => acl?.layer?.id === fLayer?.id);
+    if (!dataForLayer && acl) {
       const dataForLayer = (await createInteractiveLegendDataForLayer(this.legendvm, acl, this.reactiveUtils)) as IIntLegendLayerData;
       updateStore(data, { intLegendLayerData: dataForLayer, layerId: fLayer?.id });
     }

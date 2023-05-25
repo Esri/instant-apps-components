@@ -11,8 +11,6 @@ import {
   getIntLegendLayerData,
   getNestedInfoData,
   getTheme,
-  handleFeatureCount,
-  updateStore,
 } from '../support/helpers';
 
 const CSS = {
@@ -27,8 +25,6 @@ const CSS = {
 })
 export class InstantAppsInteractiveLegendCount {
   intl: __esri.intl;
-  reactiveUtils: __esri.reactiveUtils;
-  handles: __esri.Handles;
 
   @Element()
   el: HTMLInstantAppsInteractiveLegendCountElement;
@@ -64,26 +60,8 @@ export class InstantAppsInteractiveLegendCount {
     observer.observe(this.el, {
       attributes: true,
     });
-    const [intl, reactiveUtils, Handles] = await loadModules(['esri/intl', 'esri/core/reactiveUtils', 'esri/core/Handles']);
+    const [intl] = await loadModules(['esri/intl', 'esri/core/reactiveUtils', 'esri/core/Handles']);
     this.intl = intl;
-    this.reactiveUtils = reactiveUtils;
-    this.handles = new Handles();
-    this.reactiveUtils.when(
-      () => this.legendvm,
-      () => {
-        this.reactiveUtils.watch(
-          () => this.legendvm?.view?.updating,
-          async () => {
-            const data = await handleFeatureCount(this.legendvm, interactiveLegendState.data);
-            const layerId = this.activeLayerInfo.layer.id;
-            const layerData = data[layerId];
-            updateStore(interactiveLegendState.data, { intLegendLayerData: layerData, layerId: layerId });
-          },
-          { initial: true },
-        );
-      },
-      { initial: true, once: true },
-    );
   }
 
   render() {

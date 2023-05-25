@@ -1,0 +1,12 @@
+:host {
+  display: block;
+
+  .esri-legend__service {
+    margin: 0;
+    padding: 0;
+  }
+
+  .hide {
+    display: none;
+  }
+}

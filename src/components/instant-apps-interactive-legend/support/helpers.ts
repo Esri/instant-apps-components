@@ -250,11 +250,11 @@ function generateQueryExpressions(data: IIntLegendLayerData, info: any, infoInde
 
       if (untouched) {
         nestedCategory.nestedInfos?.forEach(nestedInfo => {
-          const expression = `${field} = '${nestedInfo.legendElementInfo.value}'`;
+          const expression = field ? `${field} = '${nestedInfo.legendElementInfo.value}'` : null;
 
-          const expressionIndex = queryExpressions.indexOf(expression);
+          const expressionIndex = expression ? queryExpressions.indexOf(expression) : -1;
 
-          if (expressionIndex !== -1) {
+          if (expression && expressionIndex !== -1) {
             queryExpressions.splice(expressionIndex, 1);
           }
         });
@@ -324,7 +324,8 @@ function generateQueryExpressions(data: IIntLegendLayerData, info: any, infoInde
 
       if (untouched) {
         nestedCategory.nestedInfos?.forEach(nestedInfo => {
-          expressionList.push(`${field} = '${nestedInfo.legendElementInfo.value}'`);
+          const expression = field ? `${field} = '${nestedInfo.legendElementInfo.value}'` : null;
+          if (expression) expressionList.push(`${field} = '${nestedInfo.legendElementInfo.value}'`);
         });
       }
     });
@@ -681,7 +682,7 @@ export async function handleFeatureCount(legendViewModel: __esri.LegendViewModel
       const countArr2d = await Promise.all(
         countRes.map(async countResItem => {
           const promise = await Promise.all(countResItem);
-          const count = promise.map(promiseItem => Object.values(promiseItem)[0]);
+          const count = promise.map(promiseItem => promiseItem && Object.values(promiseItem)[0]);
           return count;
         }),
       );
@@ -717,12 +718,12 @@ export async function handleFeatureCount(legendViewModel: __esri.LegendViewModel
 
       if (category?.nestedInfos) {
         category?.nestedInfos.forEach((nestedInfo, nestedInfoIndex) => {
-          const count = dataCount[activeLayerInfo.layer.id][categoryIndex][nestedInfoIndex];
-          nestedInfo.count = count;
+          const count = dataCount?.[activeLayerInfo?.layer?.id]?.[categoryIndex]?.[nestedInfoIndex];
+          nestedInfo.count = !isNaN(count) ? count : null;
         });
       } else {
-        const count = dataCount[layerId][key];
-        category.count = count;
+        const count = dataCount?.[layerId]?.[key];
+        category.count = !isNaN(count) ? count : null;
       }
     });
 
@@ -755,7 +756,7 @@ export function checkNestedUniqueSymbolLegendElement(activeLayerInfo: __esri.Act
 }
 
 export function getParentLegendElementInfoData(data: IIntLegendLayerData, parentLegendElementInfo: any): ICategory | undefined {
-  return data.categories.get(parentLegendElementInfo?.title);
+  return data?.categories?.get(parentLegendElementInfo?.title);
 }
 
 // theme
