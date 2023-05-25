@@ -681,7 +681,7 @@ export async function handleFeatureCount(legendViewModel: __esri.LegendViewModel
       const countArr2d = await Promise.all(
         countRes.map(async countResItem => {
           const promise = await Promise.all(countResItem);
-          const count = promise.map(promiseItem => Object.values(promiseItem)[0]);
+          const count = promise.map(promiseItem => promiseItem && Object.values(promiseItem)[0]);
           return count;
         }),
       );
@@ -717,12 +717,12 @@ export async function handleFeatureCount(legendViewModel: __esri.LegendViewModel
 
       if (category?.nestedInfos) {
         category?.nestedInfos.forEach((nestedInfo, nestedInfoIndex) => {
-          const count = dataCount[activeLayerInfo.layer.id][categoryIndex][nestedInfoIndex];
-          nestedInfo.count = count;
+          const count = dataCount?.[activeLayerInfo?.layer?.id]?.[categoryIndex]?.[nestedInfoIndex];
+          nestedInfo.count = !isNaN(count) ? count : null;
         });
       } else {
-        const count = dataCount[layerId][key];
-        category.count = count;
+        const count = dataCount?.[layerId]?.[key];
+        category.count = !isNaN(count) ? count : null;
       }
     });
 
@@ -755,7 +755,7 @@ export function checkNestedUniqueSymbolLegendElement(activeLayerInfo: __esri.Act
 }
 
 export function getParentLegendElementInfoData(data: IIntLegendLayerData, parentLegendElementInfo: any): ICategory | undefined {
-  return data.categories.get(parentLegendElementInfo?.title);
+  return data?.categories?.get(parentLegendElementInfo?.title);
 }
 
 // theme

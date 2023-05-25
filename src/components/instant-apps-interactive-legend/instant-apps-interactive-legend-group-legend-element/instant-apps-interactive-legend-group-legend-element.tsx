@@ -4,6 +4,7 @@ import { getTheme } from '../support/helpers';
 const CSS = {
   service: 'esri-legend__service',
   groupLayer: 'esri-legend__group-layer',
+  groupContent: 'esri-legend__group-content',
 };
 
 @Component({
@@ -48,14 +49,13 @@ export class InstantAppsInteractiveLegendGroupLegendElement {
     return (
       <div class={`${CSS.service} ${CSS.groupLayer}`}>
         <instant-apps-interactive-legend-group-legend-element-caption
-          key={`group-${this.activeLayerInfo.layer.id}`}
           class={getTheme(this.el)}
           legendvm={this.legendvm}
           feature-count={this.featureCount}
           activeLayerInfo={this.activeLayerInfo}
           messages={this.messages}
         />
-        <div class={`${this.expanded === false ? 'hide' : 'show'}`}>
+        <div class={`${CSS.groupContent} ${this.expanded === false ? 'hide' : 'show'}`}>
           <slot name="content"></slot>
         </div>
       </div>
