@@ -36,7 +36,7 @@ export async function createInteractiveLegendDataForLayer(
 ): Promise<IIntLegendLayerData | null> {
   try {
     // Get first Legend Element from Active LayerInfo - only first legend element will be interactive
-    await reactiveUtils.whenOnce(() => activeLayerInfo?.ready);
+    await reactiveUtils.whenOnce(() => legendViewModel?.state === 'ready');
     const legendElement = activeLayerInfo.legendElements[0] as __esri.LegendElement;
 
     // Each active layer info will have it's own property in object - we'll use the layer ID to categorize each layer
