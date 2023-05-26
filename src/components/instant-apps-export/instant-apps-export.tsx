@@ -209,7 +209,7 @@ export class InstantAppsExport {
 
   renderPanel(): VNode {
     const headerTitle = this.showHeaderTitle ? this.renderTitle() : null;
-    const includeExtraContent = this.extraContent != null ? this.renderCheckbox('includeExtraContent', this.extraContentLabel) : null;
+    const includeExtraContent = this.extraContent != null ? this.renderSwitch('includeExtraContent', this.extraContentLabel) : null;
     const includeMap = this.showIncludeMap ? this.renderSwitch('includeMap') : null;
     const options = this.includeMap ? this.renderMapOptions() : null;
     const print = this.renderPrint();
@@ -237,30 +237,20 @@ export class InstantAppsExport {
     );
   }
 
-  renderCheckbox(value: string, label?: string): VNode {
+  renderSwitch(value: string, label?: string): VNode {
     const checked = this[value];
     const title = label != null ? label : this.messages?.[value];
     return (
       <calcite-label layout="inline-space-between">
         {title}
-        <calcite-checkbox checked={checked} value={value} onCalciteCheckboxChange={this.optionOnChange.bind(this)}></calcite-checkbox>
-      </calcite-label>
-    );
-  }
-
-  renderSwitch(value: string): VNode {
-    const checked = this[value];
-    return (
-      <calcite-label layout="inline-space-between">
-        {this.messages?.[value]}
         <calcite-switch checked={checked} value={value} onCalciteSwitchChange={this.optionOnChange.bind(this)}></calcite-switch>
       </calcite-label>
     );
   }
 
   renderMapOptions(): VNode {
-    const includeLegend = this.showIncludeLegend ? this.renderCheckbox('includeLegend') : null;
-    const includePopup = this.showIncludePopup ? this.renderCheckbox('includePopup') : null;
+    const includeLegend = this.showIncludeLegend ? this.renderSwitch('includeLegend') : null;
+    const includePopup = this.showIncludePopup ? this.renderSwitch('includePopup') : null;
     return (
       <div>
         {includeLegend}
