@@ -1,10 +1,11 @@
-import { Component, h, Element, Prop, State, Watch } from '@stencil/core';
+import { Component, h, Element, Prop, State, Watch, forceUpdate } from '@stencil/core';
 
 import { loadModules } from '../../utils/loadModules';
 
 import { FilterMode } from './instant-apps-interactive-legend-classic/interfaces/interfaces';
 
 import { getLocaleComponentStrings } from '../../utils/locale';
+import { getTheme } from './support/helpers';
 
 const CSS = {
   esri: {
@@ -13,12 +14,6 @@ const CSS = {
     widgetPanel: 'esri-widget--panel',
     component: 'esri-component',
     iconLayerList: 'esri-icon-layer-list',
-  },
-  calcite: {
-    theme: {
-      light: 'calcite-mode-light',
-      dark: 'calcite-mode-dark',
-    },
   },
 };
 
@@ -29,10 +24,9 @@ const CSS = {
 })
 export class InstantAppsInteractiveLegend {
   ref: HTMLInstantAppsInteractiveLegendClassicElement;
-  legendMessages;
 
   @Element()
-  el: HTMLElement;
+  el: HTMLInstantAppsInteractiveLegendElement;
 
   @State()
   handles: __esri.Handles;
@@ -72,16 +66,14 @@ export class InstantAppsInteractiveLegend {
     type: 'filter',
   };
 
-  @State() messages;
-
   @State()
-  reRender = false;
+  messages;
 
   async componentWillLoad() {
     const observer = new MutationObserver(() => {
-      this.reRender = !this.reRender;
+      forceUpdate(this.el);
     });
-    observer.observe(document.body, {
+    observer.observe(this.el, {
       attributes: true,
     });
     await this.initializeModules();
@@ -130,14 +122,13 @@ export class InstantAppsInteractiveLegend {
   }
 
   render() {
-    const theme = this._getTheme();
     const { base, component, widget, widgetPanel } = CSS.esri;
     return (
       <div key="interactive-legend" class={this.widget?.classes(base, component, widget, widgetPanel)}>
         <instant-apps-interactive-legend-classic
           key="interactive-legend-classic"
           ref={(el: HTMLInstantAppsInteractiveLegendClassicElement) => (this.ref = el)}
-          class={theme}
+          class={getTheme(this.el)}
           legendvm={this.legendvm}
           zoom-to={this.zoomTo}
           filterMode={this.filterMode}
@@ -165,12 +156,6 @@ export class InstantAppsInteractiveLegend {
     this.handles.add(childrenChangeHandle, `children_${(activeLayerInfo?.layer as any)?.uid}`);
 
     activeLayerInfo.children.forEach(childActiveLayerInfo => this._renderOnActiveLayerInfoChange(childActiveLayerInfo, reactiveUtils));
-  }
-
-  private _getTheme(): string {
-    const { light, dark } = CSS.calcite.theme;
-    const isDarkTheme = document.body.classList.contains(dark);
-    return isDarkTheme ? dark : light;
   }
 
   async getMessages(): Promise<any> {

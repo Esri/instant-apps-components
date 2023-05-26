@@ -49,6 +49,8 @@
         });
 
         const legend = document.createElement('instant-apps-interactive-legend');
+        legend.featureCount = true;
+        legend.zoomTo = true;
         legend.view = view;
 
         const legendExpand = new Expand({

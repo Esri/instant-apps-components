@@ -1,0 +1,20 @@
+:host {
+  display: block;
+
+  .esri-legend__service {
+    padding: 0;
+  }
+
+  .esri-legend__layer-body,
+  .esri-legend__layer,
+  .esri-legend__layer-table,
+  .esri-legend__group-layer-child,
+  .esri-legend__layer-child-table {
+    margin: 0;
+    overflow: hidden;
+  }
+
+  .hide {
+    display: none;
+  }
+}

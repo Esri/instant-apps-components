@@ -1,0 +1,12 @@
+:host {
+  display: block;
+
+  .esri-legend__layer-table,
+  .instant-apps-interactive-legend__nested-unique-symbol {
+    margin: 0;
+  }
+
+  .hide {
+    display: none;
+  }
+}

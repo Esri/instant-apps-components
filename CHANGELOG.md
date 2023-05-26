@@ -5,11 +5,43 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## v1.0.0-beta.80
+## v1.0.0-beta.84
 
 ### instant-apps-export
 
 - Update from checkbox to switch
+
+## v1.0.0-beta.83
+
+### instant-apps-interactive-legend
+
+- Fix load state
+
+## v1.0.0-beta.82
+
+### instant-apps-interactive-legend
+
+- Fix group layers
+- Feature count logic update
+- Prevent interactivity for 'Other' in nested unique category legend types
+
+## v1.0.0-beta.81
+
+## v1.0.0-beta.80
+
+### instant-apps-interactive-legend
+
+- Add support for nested unique categories
+  - Count
+  - Zoom to
+  - Selected/non-selected state
+  - Show all
+- Remove use of reRender state property to update UI (rely on store update)
+- Refactor store update to helper functions
+- UI flicker fix (remove usage of keys where it isn't needed/causes issues).
+- Refactor, clean up, and organize business logic into helper functions
+- Refactor legend elements and captions to sub components
+- Handle expanded states within sub components, remove usage of tracking state in store
 
 ## v1.0.0-beta.79
 
