@@ -354,6 +354,10 @@ export namespace Components {
     }
     interface InstantAppsScoreboard {
         /**
+          * Number of scoreboard items that can be viewed at a time. Minimum: 2, Maximum : 6.
+         */
+        "itemLimit": number;
+        /**
           * Data on layers, field attribute info, operations, for each scoreboard item
          */
         "items": ScoreboardItem[];
@@ -981,6 +985,10 @@ declare namespace LocalJSX {
         "instantAppsPopovers"?: Map<string, HTMLInstantAppsPopoverElement>;
     }
     interface InstantAppsScoreboard {
+        /**
+          * Number of scoreboard items that can be viewed at a time. Minimum: 2, Maximum : 6.
+         */
+        "itemLimit"?: number;
         /**
           * Data on layers, field attribute info, operations, for each scoreboard item
          */
