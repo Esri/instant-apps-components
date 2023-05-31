@@ -142,6 +142,7 @@ $boxShadow: 0px 3px 15px rgba(0, 0, 0, 0.2);
 :host(.instant-apps-scoreboard__position--side) {
   .instant-apps-scoreboard {
     display: flex;
+    justify-content: center;
     align-items: center;
     width: 10vw;
     overflow-y: auto;
@@ -206,4 +207,17 @@ $boxShadow: 0px 3px 15px rgba(0, 0, 0, 0.2);
 :host(.instant-apps-scoreboard__position--right.instant-apps-scoreboard__mode--pinned) {
   left: unset;
   right: 0;
+}
+
+@media only screen and (min-width: 992px) {
+  // Upper range of Medium breakpoint in ArcGIS JS API
+  :host(.instant-apps-scoreboard__position--bottom.instant-apps-scoreboard__mode--pinned) {
+    .instant-apps-scoreboard {
+      &__item {
+        justify-content: center;
+        min-width: unset;
+        flex-grow: 1;
+      }
+    }
+  }
 }

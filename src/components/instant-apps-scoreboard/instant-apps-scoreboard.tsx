@@ -24,12 +24,14 @@ import {
 
 // T9n
 import Scoreboard_t9n from '../../assets/t9n/instant-apps-scoreboard/resources.json';
+import { widthBreakpoints } from '../../utils/breakpoints';
 
 // Constants
-const ITEM_LIMIT = 6;
 const BASE = 'instant-apps-scoreboard';
+const ITEM_LIMIT_FALLBACK = 6;
 const KEY_PREFIX = `${BASE}--`;
 const __BASE__ = `${BASE}__`;
+const MOBILE_BREAKPOINT = widthBreakpoints.medium[1];
 const CSS = {
   BASE,
   itemsContainer: `${__BASE__}items-container`,
@@ -87,6 +89,11 @@ export class InstantAppsScoreboard {
    */
   @Prop() mode: ScoreboardMode = Scoreboard.Floating;
 
+  /**
+   * Number of scoreboard items that can be viewed at a time. Minimum: 2, Maximum : 6.
+   */
+  @Prop() itemLimit: number = 6;
+
   // Internal state
   @State() state: ScoreboardState = Scoreboard.Loading;
 
@@ -97,6 +104,8 @@ export class InstantAppsScoreboard {
   @State() layers: __esri.Collection<__esri.FeatureLayer | __esri.SceneLayer> | null;
 
   @State() layerViews: __esri.Collection<__esri.FeatureLayerView | __esri.SceneLayerView> | null;
+
+  @State() isMobile = false;
 
   // Events
 
@@ -182,6 +191,11 @@ export class InstantAppsScoreboard {
 
   // Lifecycle methods
   async componentWillLoad(): Promise<void> {
+    const resizeObesrver = new ResizeObserver(() => {
+      this.itemIndex = 0;
+      this.isMobile = !!this.checkMobile;
+    });
+    resizeObesrver.observe(this.el?.parentElement as HTMLElement);
     try {
       this.state = Scoreboard.Loading;
       await this.initMessages();
@@ -337,10 +351,11 @@ export class InstantAppsScoreboard {
   }
 
   renderPreviousNextButtons(): HTMLCalciteActionElement[] {
-    const isBelowOrAtLimit = this.items.filter(item => item.visible)?.length <= ITEM_LIMIT;
+    const itemLimit = this.getItemLimit();
+    const isBelowOrAtLimit = this.items.filter(item => item.visible)?.length <= itemLimit;
     const isBeginning = this.itemIndex === 0;
     const isEnd = this.isEnd;
-    const isBottom = this.position === Scoreboard.Bottom;
+    const isBottom = this.isMobile ? true : this.position === Scoreboard.Bottom;
     const iconPosition = isBottom ? ScoreboardAlignment.Start : ScoreboardAlignment.Center;
     const previous = isBottom ? ScoreboardIcons.Left : ScoreboardIcons.Up;
     const next = isBottom ? ScoreboardIcons.Right : ScoreboardIcons.Down;
@@ -349,7 +364,7 @@ export class InstantAppsScoreboard {
     const nextIcon = isEnd || isBelowOrAtLimit ? ScoreboardIcons.Blank : iconType.next;
     const isDisabled = { previous: isBeginning || isBelowOrAtLimit, next: isEnd || isBelowOrAtLimit };
     const appearance = ScoreboardAppearance.Transparent;
-    const scale = ScoreboardScale.Large;
+    const scale = this.isMobile ? ScoreboardScale.Small : ScoreboardScale.Large;
     const t9n = {
       previous: this.messages?.previous,
       next: this.messages?.next,
@@ -440,22 +455,29 @@ export class InstantAppsScoreboard {
   protected get getPositionClass(): string {
     const { bottom, left, right, side } = CSS.position;
     const leftRight = `${this.position === Scoreboard.Left ? left : right} ${side}`;
-    return this.position === Scoreboard.Bottom ? bottom : leftRight;
+    return this.isMobile || this.position === Scoreboard.Bottom ? bottom : leftRight;
   }
 
   protected get getStyleClass(): string {
     const { floating, pinned } = CSS.mode;
-    return this.mode === Scoreboard.Floating ? floating : pinned;
+    return this.isMobile ? pinned : this.mode === Scoreboard.Floating ? floating : pinned;
+  }
+
+  get checkMobile(): boolean {
+    const hostElParentWidth = this.el?.parentElement?.offsetWidth as number;
+    return !isNaN(hostElParentWidth) && hostElParentWidth > 0 ? hostElParentWidth < MOBILE_BREAKPOINT : false;
   }
 
   protected get getItemsToDisplay(): ScoreboardItem[] {
-    return this.items.filter(item => item.visible).slice(this.itemIndex, ITEM_LIMIT + this.itemIndex);
+    const itemLimit = this.getItemLimit();
+    return this.items.filter(item => item.visible).slice(this.itemIndex, itemLimit + this.itemIndex);
   }
 
   get isEnd(): boolean {
-    const lastItems = this.items.slice(this.items.length - ITEM_LIMIT);
+    const itemLimit = this.getItemLimit();
+    const lastItems = this.items.slice(this.items.length - itemLimit);
     const uidsOfLast = lastItems.map(item => item['uid']);
-    const uidsOfCurrent = this.items.slice(this.itemIndex, this.itemIndex + ITEM_LIMIT).map(item => item['uid']);
+    const uidsOfCurrent = this.items.slice(this.itemIndex, this.itemIndex + itemLimit).map(item => item['uid']);
     return uidsOfLast.every((val, index) => val === uidsOfCurrent[index]);
   }
 
@@ -590,5 +612,9 @@ export class InstantAppsScoreboard {
     };
     this.layers.forEach(watchVisbilityForLayer);
     this.handles?.add([...visibilityWatchers], visibilityWatcherKey);
+  }
+
+  protected getItemLimit(): number {
+    return this.itemLimit < 2 || this.itemLimit > 6 ? ITEM_LIMIT_FALLBACK : this.itemLimit;
   }
 }
