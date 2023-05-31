@@ -7,12 +7,13 @@ Calculates and displays a series of statistics based on a layer(s) and field att
 
 ## Properties
 
-| Property   | Attribute  | Description                                                                                     | Type                                                       | Default               |
-| ---------- | ---------- | ----------------------------------------------------------------------------------------------- | ---------------------------------------------------------- | --------------------- |
-| `items`    | --         | Data on layers, field attribute info, operations, for each scoreboard item                      | `ScoreboardItem[]`                                         | `undefined`           |
-| `mode`     | `mode`     | Mode of scoreboard i.e. 'floating' or 'pinned'.                                                 | `Scoreboard.Floating \| Scoreboard.Pinned`                 | `Scoreboard.Floating` |
-| `position` | `position` | Position of scoreboard i.e. 'bottom', 'left', or 'right'.                                       | `Scoreboard.Bottom \| Scoreboard.Left \| Scoreboard.Right` | `Scoreboard.Bottom`   |
-| `view`     | --         | MapView or SceneView to reference extent, viewpoint, and layers in map to perform calculations. | `MapView \| SceneView`                                     | `undefined`           |
+| Property    | Attribute    | Description                                                                                     | Type                                                       | Default               |
+| ----------- | ------------ | ----------------------------------------------------------------------------------------------- | ---------------------------------------------------------- | --------------------- |
+| `itemLimit` | `item-limit` | Number of scoreboard items that can be viewed at a time. Minimum: 2, Maximum : 6.               | `number`                                                   | `6`                   |
+| `items`     | --           | Data on layers, field attribute info, operations, for each scoreboard item                      | `ScoreboardItem[]`                                         | `undefined`           |
+| `mode`      | `mode`       | Mode of scoreboard i.e. 'floating' or 'pinned'.                                                 | `Scoreboard.Floating \| Scoreboard.Pinned`                 | `Scoreboard.Floating` |
+| `position`  | `position`   | Position of scoreboard i.e. 'bottom', 'left', or 'right'.                                       | `Scoreboard.Bottom \| Scoreboard.Left \| Scoreboard.Right` | `Scoreboard.Bottom`   |
+| `view`      | --           | MapView or SceneView to reference extent, viewpoint, and layers in map to perform calculations. | `MapView \| SceneView`                                     | `undefined`           |
 
 
 ## Events
