@@ -25,10 +25,11 @@ Calculates and displays a series of statistics based on a layer(s) and field att
 
 ## CSS Custom Properties
 
-| Name                                         | Description                     |
-| -------------------------------------------- | ------------------------------- |
-| `--instant-apps-scoreboard-background-color` | Background color of scoreboard. |
-| `--instant-apps-scoreboard-text-color`       | Text color of scoreboard.       |
+| Name                                               | Description                                                                   |
+| -------------------------------------------------- | ----------------------------------------------------------------------------- |
+| `--instant-apps-scoreboard-background-color`       | Background color of scoreboard.                                               |
+| `--instant-apps-scoreboard-mobile-position-bottom` | Scoreboard's bottom position (px) of absolutely positioned element on mobile. |
+| `--instant-apps-scoreboard-text-color`             | Text color of scoreboard.                                                     |
 
 
 ----------------------------------------------

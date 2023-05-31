@@ -14,9 +14,11 @@ $boxShadow: 0px 3px 15px rgba(0, 0, 0, 0.2);
   /**
  * @prop --instant-apps-scoreboard-background-color: Background color of scoreboard.
  * @prop --instant-apps-scoreboard-text-color: Text color of scoreboard.
+  * @prop --instant-apps-scoreboard-mobile-position-bottom: Scoreboard's bottom position (px) of absolutely positioned element on mobile.
  */
   --instant-apps-scoreboard-background-color: var(--calcite-ui-foreground-1);
   --instant-apps-scoreboard-text-color: var(--calcite-ui-text-1);
+  --instant-apps-scoreboard-mobile-position-bottom: 0;
   background-color: var(--instant-apps-scoreboard-background-color);
   color: var(--instant-apps-scoreboard-text-color);
   .instant-apps-scoreboard {
@@ -212,6 +214,7 @@ $boxShadow: 0px 3px 15px rgba(0, 0, 0, 0.2);
 @media only screen and (min-width: 992px) {
   // Upper range of Medium breakpoint in ArcGIS JS API
   :host(.instant-apps-scoreboard__position--bottom.instant-apps-scoreboard__mode--pinned) {
+    bottom: var(--instant-apps-scoreboard-mobile-position-bottom);
     .instant-apps-scoreboard {
       &__item {
         justify-content: center;
