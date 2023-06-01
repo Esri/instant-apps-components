@@ -153,6 +153,10 @@ export namespace Components {
          */
         "fontFamily": string;
         /**
+          * Change alignment of header.
+         */
+        "headerAlignment": 'left' | 'center' | 'right';
+        /**
           * Display info button at the end of the title.
          */
         "infoButton": boolean;
@@ -776,6 +780,10 @@ declare namespace LocalJSX {
           * Font family to use for text
          */
         "fontFamily"?: string;
+        /**
+          * Change alignment of header.
+         */
+        "headerAlignment"?: 'left' | 'center' | 'right';
         /**
           * Display info button at the end of the title.
          */

@@ -20,6 +20,10 @@ const CSS = {
   logoScale: 'instant-apps-header__logo-scale--',
   logoHeight: 'instant-apps-header__logo-height--',
   standardHeight: 'instant-apps-header__standard-height',
+  alignment: {
+    center: 'instant-apps-header__header-content--center',
+    right: 'instant-apps-header__header-content--right',
+  },
 };
 
 /**
@@ -130,6 +134,14 @@ export class InstantAppsHeader {
   })
   customHeaderHtml: string;
 
+  /**
+   * Change alignment of header.
+   */
+  @Prop({
+    mutable: true,
+  })
+  headerAlignment: 'left' | 'center' | 'right' = 'left';
+
   @Watch('customHeaderHtml')
   sanitizeCustomHeaderHtml() {
     this.customHeaderHtml = this._sanitizer.sanitize(this.customHeaderHtml);
@@ -176,6 +188,8 @@ export class InstantAppsHeader {
     const hasEmptyLogo = this.logoImage === 'undefined' || this.logoImage?.split('?')?.[0] === 'undefined' || this.logoImage?.split('?')?.[0] === '' || !this.logoImage;
     const logo = this.renderLogo(hasEmptyLogo);
     const title = this.renderTitle();
+    const headerContentClass =
+      this.headerAlignment === 'right' || this.headerAlignment === 'center' ? CSS.headerContent.concat(' ', CSS.alignment[this.headerAlignment]) : CSS.headerContent;
     return (
       <Host>
         {this.customHeaderHtml ? (
@@ -185,7 +199,7 @@ export class InstantAppsHeader {
             class={`${CSS.base}${this.dir === 'rtl' ? ` ${CSS.flipRtl}` : ''}${this.logoImage && !hasEmptyLogo ? ` ${CSS.logoHeight}${this.logoScale}` : ` ${CSS.standardHeight}`}`}
             style={{ backgroundColor: this.backgroundColor, fontFamily: this.fontFamily }}
           >
-            <span class={CSS.headerContent}>
+            <span class={headerContentClass}>
               {logo}
               {title}
               {this.infoButton ? (
