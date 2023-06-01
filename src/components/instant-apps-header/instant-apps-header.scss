@@ -80,7 +80,7 @@
     .instant-apps-header__header-content {
       display: flex;
       align-items: center;
-      max-width: 100%;
+      width: 100%;
 
       a {
         display: flex;
@@ -107,6 +107,14 @@
       #infoButton {
         margin-inline-start: 10px;
       }
+    }
+
+    .instant-apps-header__header-content--center {
+      justify-content: center;
+    }
+
+    .instant-apps-header__header-content--right {
+      justify-content: end;
     }
   }
 

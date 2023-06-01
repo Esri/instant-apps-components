@@ -400,8 +400,8 @@ export class InstantAppsExport {
         const heading = document.createElement(`h${this.view.popup.headingLevel ?? 2}`);
         heading.innerHTML = this.view.popup.title ?? '';
         heading.className = 'esri-widget__heading esri-popup__header-title';
-        this.popupTitleEl.style.display = this.view.popup.title ? 'block' : 'none';
         if (this.popupTitleEl != null) {
+          this.popupTitleEl.style.display = this.view.popup.title ? 'block' : 'none';
           this.popupTitleEl.innerHTML = '';
           this.popupTitleEl.prepend(heading);
         }
@@ -440,8 +440,8 @@ export class InstantAppsExport {
   }
 
   handleLegendSetup(): void {
-    if (this.view != null && this.includeMap) {
-      this.legendContainerEl.style.display = this.showIncludeLegend && this.includeLegend ? 'block' : 'none';
+    if (this.showIncludeLegend && this.view != null && this.includeMap) {
+      this.legendContainerEl.style.display = this.includeLegend ? 'block' : 'none';
     }
   }
 
