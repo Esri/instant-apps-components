@@ -97,6 +97,7 @@ export class InstantAppsFilterList {
    */
   @Prop() view: __esri.MapView | __esri.SceneView;
 
+  @State() filterLayerExpressions: LayerExpression[];
   @State() messages: typeof FilterList_T9n;
   @State() baseClass = baseClassLight;
   @State() disabled: boolean | undefined = true;
@@ -122,18 +123,22 @@ export class InstantAppsFilterList {
     this.baseClass = getMode(this.hostElement) === 'dark' ? baseClassDark : baseClassLight;
     await this.initializeModules();
     this.getMessages();
-    this.disabled = this.layerExpressions?.length ? undefined : true;
-    this.reactiveUtils.whenOnce(() => this.view).then(() => this.handleWhenView());
+    this.filterLayerExpressions = this.layerExpressions;
+    this.disabled = this.filterLayerExpressions?.length ? undefined : true;
+    this.reactiveUtils.whenOnce(() => this.view).then(() => this.handleLayerExpressionsUpdate());
   }
 
   componentShouldUpdate(newValue: unknown, _oldValue: unknown, name: string) {
     if (name === 'view' && newValue != null) {
-      this.handleWhenView();
+      this.handleLayerExpressionsUpdate();
+    } else if (name === 'layerExpressions') {
+      this.filterLayerExpressions = this.layerExpressions;
+      this.handleLayerExpressionsUpdate();
     }
   }
 
   componentWillRender(): void {
-    this.disabled = this.layerExpressions?.length > 0 ? undefined : true;
+    this.disabled = this.filterLayerExpressions?.length > 0 ? undefined : true;
   }
 
   async initializeModules(): Promise<void> {
@@ -186,7 +191,7 @@ export class InstantAppsFilterList {
   }
 
   renderLayerBlock(): VNode[] {
-    return this.layerExpressions.map(layerExpression => {
+    return this.filterLayerExpressions.map(layerExpression => {
       return this.renderFilterBlocks(layerExpression);
     });
   }
@@ -239,18 +244,18 @@ export class InstantAppsFilterList {
   }
 
   initFilterConfig(): VNode[] | undefined {
-    if (this.layerExpressions?.length > 0) {
-      if (this.layerExpressions.length === 1) {
-        const { id, operator } = this.layerExpressions[0];
+    if (this.filterLayerExpressions?.length > 0) {
+      if (this.filterLayerExpressions.length === 1) {
+        const { id, operator } = this.filterLayerExpressions[0];
         const operatorTranslation = operator?.trim() === 'OR' ? 'orOperator' : 'andOperator';
         const zoomTo = this.renderZoomTo(id);
         return (
           <calcite-block class={CSS.operatorDesc} heading={this.messages?.[operatorTranslation]} open>
             {zoomTo}
-            {this.renderFilter(this.layerExpressions[0])}
+            {this.renderFilter(this.filterLayerExpressions[0])}
           </calcite-block>
         );
-      } else if (this.layerExpressions.length > 1) {
+      } else if (this.filterLayerExpressions.length > 1) {
         return this.renderLayerBlock();
       }
     }
@@ -375,8 +380,8 @@ export class InstantAppsFilterList {
   }
 
   async initExpressions(): Promise<void> {
-    if (this.layerExpressions == null) return;
-    const tmpLE = this.layerExpressions;
+    if (this.filterLayerExpressions == null) return;
+    const tmpLE = this.filterLayerExpressions;
     for (let i = 0; i < tmpLE?.length; i++) {
       const { id } = tmpLE[i];
       const expressions = tmpLE[i].expressions;
@@ -388,7 +393,7 @@ export class InstantAppsFilterList {
       }
     }
 
-    this.layerExpressions = [...tmpLE];
+    this.filterLayerExpressions = [...tmpLE];
   }
 
   async getMessages(): Promise<void> {
@@ -397,7 +402,7 @@ export class InstantAppsFilterList {
   }
 
   handleResetFilter(): void {
-    this.layerExpressions?.forEach(layerExpression => {
+    this.filterLayerExpressions?.forEach(layerExpression => {
       layerExpression.expressions?.forEach(expression => {
         const { type } = expression;
         if (type === 'string' || type === 'coded-value') {
@@ -747,7 +752,7 @@ export class InstantAppsFilterList {
 
       filters?.forEach(filter => {
         const tmpFilter = JSON.parse(filter) as FilterParam;
-        this.layerExpressions?.forEach(layerExpression => {
+        this.filterLayerExpressions?.forEach(layerExpression => {
           if (tmpFilter?.layerId === layerExpression.id) {
             layerExpression.expressions?.forEach(expression => {
               if (expression.id?.toString() === tmpFilter?.expressionId?.toString()) {
@@ -803,7 +808,7 @@ export class InstantAppsFilterList {
     if ('URLSearchParams' in window) {
       const params = new URLSearchParams(window.location.search);
       const expressions: string[] = [];
-      this.layerExpressions?.forEach(layerExpr => {
+      this.filterLayerExpressions?.forEach(layerExpr => {
         layerExpr?.expressions?.forEach(expression => {
           if (expression.active) {
             const paramExpression = this.createURLParamExpression(layerExpr.id, expression);
@@ -833,7 +838,7 @@ export class InstantAppsFilterList {
     fl.definitionExpression = combinedExpressions;
   }
 
-  async handleWhenView(): Promise<void> {
+  async handleLayerExpressionsUpdate(): Promise<void> {
     if (this.view == null) return;
     const map = this.view.map as __esri.WebMap | __esri.WebScene;
     await map.loadAll();
@@ -909,7 +914,7 @@ export class InstantAppsFilterList {
   generateOutput(layerId: string): void {
     if (this.view == null) return;
     const defExpressions: string[] = [];
-    const layerExpression = this.layerExpressions.find(({ id }) => id === layerId);
+    const layerExpression = this.filterLayerExpressions.find(({ id }) => id === layerId);
     if (layerExpression) {
       for (const expression of layerExpression.expressions) {
         const { active, definitionExpression } = expression;
