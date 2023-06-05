@@ -33,14 +33,6 @@
     width: var(--instant-apps-export-popover-width);
   }
 
-  &__compass-container.esri-widget {
-    background: #fff;
-    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
-    .esri-compass__icon.esri-icon-compass {
-      color: #6e6e6e;
-    }
-  }
-
   calcite-action {
     width: var(--instant-apps-export-action-width);
     --calcite-ui-text-3: var(--instant-apps-export-action-icon-color);
@@ -49,5 +41,13 @@
 
   .instant-apps-export-print {
     display: none;
+  }
+}
+
+.instant-apps-export__compass-container.esri-widget {
+  background: #fff;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+  .esri-compass__icon.esri-icon-compass {
+    color: #6e6e6e;
   }
 }
