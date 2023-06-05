@@ -130,7 +130,7 @@ export class InstantAppsFilterList {
 
   componentShouldUpdate(newValue: unknown, _oldValue: unknown, name: string) {
     if (name === 'view' && newValue != null) {
-      this.handleLayerExpressionsUpdate();
+      this.handleWhenView();
     } else if (name === 'layerExpressions') {
       this.filterLayerExpressions = this.layerExpressions;
       this.handleLayerExpressionsUpdate();
@@ -838,10 +838,16 @@ export class InstantAppsFilterList {
     fl.definitionExpression = combinedExpressions;
   }
 
-  async handleLayerExpressionsUpdate(): Promise<void> {
+  async handleWhenView(): Promise<void> {
     if (this.view == null) return;
     const map = this.view.map as __esri.WebMap | __esri.WebScene;
     await map.loadAll();
+    this.handleLayerExpressionsUpdate();
+  }
+
+  async handleLayerExpressionsUpdate(): Promise<void> {
+    if (this.view == null) return;
+    const map = this.view.map as __esri.WebMap | __esri.WebScene;
     this.initExpressions();
     this.handleURLParams();
     this.initDefExpressions = {};
