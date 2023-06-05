@@ -18,6 +18,11 @@
   --instant-apps-header-min-height: 50px;
 
   /**
+ * @prop --instant-apps-header-title-text-link-decoration: Text decoration for hyperlinks for `titleTextLink`. Default value is 'underline'.
+ */
+  --instant-apps-header-title-text-link-decoration: underline;
+
+  /**
  * @prop --instant-apps-header-height--logo-scale--s: Header height when logo scale is set to 's'. Default value is 55px.
  */
   --instant-apps-header-height--logo-scale--s: 55px;
@@ -85,6 +90,7 @@
       a {
         display: flex;
         align-items: center;
+        text-decoration: var(--instant-apps-header-title-text-link-decoration);
         img {
           padding-right: 0;
         }

@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## v1.0.0-beta.87
 
+### instant-apps-header
+
+- Apply `textColor` to links for `titleTextLink`.
+- Add CSS variable `--instant-apps-header-title-text-link-decoration` to control text-decoration for `titleTextLink`.
+
 ### instant-apps-filter-list
 
 - Fix for when layerExpressions is updated.
