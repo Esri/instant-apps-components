@@ -26,10 +26,6 @@
 
 ## Dependencies
 
-### Used by
-
- - [instant-apps-interactive-legend-group-legend-element](../instant-apps-interactive-legend-group-legend-element)
-
 ### Depends on
 
 - [instant-apps-interactive-legend-count](../instant-apps-interactive-legend-count)
@@ -38,7 +34,6 @@
 ```mermaid
 graph TD;
   instant-apps-interactive-legend-group-legend-element-caption --> instant-apps-interactive-legend-count
-  instant-apps-interactive-legend-group-legend-element --> instant-apps-interactive-legend-group-legend-element-caption
   style instant-apps-interactive-legend-group-legend-element-caption fill:#f9f,stroke:#333,stroke-width:4px
 ```
 

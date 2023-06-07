@@ -5,6 +5,16 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## v1.0.0-beta.89
+
+### instant-apps-interactive-legend
+
+- Update font size and justification of text in legend
+- Re-position UI elements in captions
+- Imrpove group layer experience
+  - Add support for nested group layers
+  - Add indentation to group layer legend elements/nested group layer legend elements to easily visualize the groupings
+
 ## v1.0.0-beta.88
 
 - Update package versions

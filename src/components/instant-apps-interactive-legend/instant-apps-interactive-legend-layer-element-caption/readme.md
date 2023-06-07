@@ -26,6 +26,7 @@
 
 ### Used by
 
+ - [instant-apps-interactive-legend-group-legend-element](../instant-apps-interactive-legend-group-legend-element)
  - [instant-apps-interactive-legend-layer-element](../instant-apps-interactive-legend-layer-element)
 
 ### Depends on
@@ -36,6 +37,7 @@
 ```mermaid
 graph TD;
   instant-apps-interactive-legend-layer-element-caption --> instant-apps-interactive-legend-count
+  instant-apps-interactive-legend-group-legend-element --> instant-apps-interactive-legend-layer-element-caption
   instant-apps-interactive-legend-layer-element --> instant-apps-interactive-legend-layer-element-caption
   style instant-apps-interactive-legend-layer-element-caption fill:#f9f,stroke:#333,stroke-width:4px
 ```
