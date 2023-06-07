@@ -251,6 +251,7 @@ export namespace Components {
     interface InstantAppsInteractiveLegendGroupLegendElement {
         "activeLayerInfo": __esri.ActiveLayerInfo;
         "featureCount": boolean;
+        "isChild": boolean;
         "legendvm": __esri.LegendViewModel;
         "messages": any;
     }
@@ -883,6 +884,7 @@ declare namespace LocalJSX {
     interface InstantAppsInteractiveLegendGroupLegendElement {
         "activeLayerInfo"?: __esri.ActiveLayerInfo;
         "featureCount"?: boolean;
+        "isChild"?: boolean;
         "legendvm"?: __esri.LegendViewModel;
         "messages"?: any;
     }

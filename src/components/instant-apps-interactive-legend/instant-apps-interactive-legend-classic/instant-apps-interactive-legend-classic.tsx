@@ -205,7 +205,13 @@ export class InstantAppsInteractiveLegendClassic {
     if (hasChildren) {
       const layers = activeLayerInfo.children.map(childActiveLayerInfo => this.renderLegendForLayer(childActiveLayerInfo, true)).toArray();
       return (
-        <instant-apps-interactive-legend-group-legend-element class={getTheme(this.el)} legendvm={this.legendvm} featureCount={this.featureCount} activeLayerInfo={activeLayerInfo}>
+        <instant-apps-interactive-legend-group-legend-element
+          class={getTheme(this.el)}
+          legendvm={this.legendvm}
+          featureCount={this.featureCount}
+          activeLayerInfo={activeLayerInfo}
+          isChild={isChild}
+        >
           <div
             style={{
               paddingLeft: '20px',

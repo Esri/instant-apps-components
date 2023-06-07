@@ -13,6 +13,8 @@ const CSS = {
   scoped: true,
 })
 export class InstantAppsInteractiveLegendGroupLegendElement {
+  layerCaption: HTMLInstantAppsInteractiveLegendLayerElementCaptionElement | undefined;
+
   @Element()
   el: HTMLInstantAppsInteractiveLegendGroupLegendElementElement;
 
@@ -28,12 +30,15 @@ export class InstantAppsInteractiveLegendGroupLegendElement {
   @Prop()
   messages;
 
+  @Prop()
+  isChild = false;
+
   @State()
   expanded = true;
 
-  @Listen('groupLayerCaptionElementExpandUpdated')
-  handleGroupLayerCaptionElementExpandUpdated() {
-    this.expanded = !this.expanded;
+  @Listen('layerCaptionElementExpandUpdated', { target: 'window' })
+  layerCaptionElementExpandUpdatedEmitted() {
+    this.expanded = !!this.layerCaption?.expanded;
   }
 
   async componentWillLoad() {
@@ -48,12 +53,14 @@ export class InstantAppsInteractiveLegendGroupLegendElement {
   render() {
     return (
       <div class={`${CSS.service} ${CSS.groupLayer}`}>
-        <instant-apps-interactive-legend-group-legend-element-caption
+        <instant-apps-interactive-legend-layer-element-caption
+          ref={node => (this.layerCaption = node)}
           class={getTheme(this.el)}
           legendvm={this.legendvm}
           feature-count={this.featureCount}
           activeLayerInfo={this.activeLayerInfo}
           messages={this.messages}
+          isChild={this.isChild}
         />
         <div class={`${CSS.groupContent} ${this.expanded === false ? 'hide' : 'show'}`}>
           <slot name="content"></slot>
