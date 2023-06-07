@@ -32,11 +32,16 @@
     </style>
   </head>
 
-  <body>
-    <div id="viewDiv"></div>
+  <body class="calcite-mode-light">
+    <calcite-shell>
+      <calcite-shell-panel slot="panel-start">
+        <calcite-panel id="sidePanel"></calcite-panel>
+      </calcite-shell-panel>
+      <div id="viewDiv"></div>
+    </calcite-shell>
 
     <script>
-      require(['esri/WebMap', 'esri/widgets/Expand', 'esri/views/MapView', 'esri/core/reactiveUtils'], (WebMap, Expand, MapView, reactiveUtils) => {
+      require(['esri/WebMap', 'esri/widgets/Expand', 'esri/views/MapView', 'esri/core/reactiveUtils', 'esri/config'], (WebMap, Expand, MapView, reactiveUtils, esriConfig) => {
         const map = new WebMap({
           portalItem: {
             id: 'ddf28dc057b8400dbfa148ef403f7c57',
@@ -49,19 +54,14 @@
         });
 
         const legend = document.createElement('instant-apps-interactive-legend');
+        legend.classList.add('calcite-mode-light');
         legend.featureCount = true;
         legend.zoomTo = true;
         legend.view = view;
 
-        const legendExpand = new Expand({
-          view,
-          mode: 'floating',
-          expandIcon: 'legend',
-          group: 'top-right',
-          content: legend,
-          expanded: true,
-        });
-        view.ui.add(legendExpand, 'top-right');
+        const sidePanel = document.getElementById('sidePanel');
+
+        sidePanel.appendChild(legend);
       });
     </script>
   </body>

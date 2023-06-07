@@ -55,17 +55,23 @@ export class InstantAppsInteractiveLegendLayerElementCaption {
     const isChild = this.isChild ? ' instant-apps-interactive-legend__heading-text--group-item' : '';
 
     return (
-      <header class={`${CSS.interacitveLegendHeader} ${getTheme(this.el)}`}>
+      <header
+        class={`${CSS.interacitveLegendHeader} ${getTheme(this.el)}`}
+        style={{
+          borderLeft: '1px solid var(--calcite-ui-border-3)',
+        }}
+      >
         <span>
           <span class={CSS.headerActionContainer}>
-            <h3 class={`${CSS.header} ${CSS.label}${isChild}`}>{this.activeLayerInfo?.title}</h3>
             <calcite-action
               onClick={this.toggleExpanded()}
-              icon={expanded ? 'chevron-down' : 'chevron-right'}
+              icon={expanded ? 'chevron-down' : 'chevron-up'}
               appearance="transparent"
               text={expandCollapseText}
               label={expandCollapseText}
+              scale="s"
             />
+            <h3 class={`${CSS.header} ${CSS.label}${isChild}`}>{this.activeLayerInfo?.title}</h3>
           </span>
           {this.featureCount && isInteractive ? (
             <instant-apps-interactive-legend-count activeLayerInfo={this.activeLayerInfo} show-total={true} messages={this.messages} legendvm={this.legendvm} />
