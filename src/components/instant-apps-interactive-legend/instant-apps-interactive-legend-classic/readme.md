@@ -36,10 +36,9 @@ graph TD;
   instant-apps-interactive-legend-classic --> instant-apps-interactive-legend-relationship
   instant-apps-interactive-legend-classic --> instant-apps-interactive-legend-legend-element
   instant-apps-interactive-legend-classic --> instant-apps-interactive-legend-count
-  instant-apps-interactive-legend-group-legend-element --> instant-apps-interactive-legend-group-legend-element-caption
-  instant-apps-interactive-legend-group-legend-element-caption --> instant-apps-interactive-legend-count
-  instant-apps-interactive-legend-layer-element --> instant-apps-interactive-legend-layer-element-caption
+  instant-apps-interactive-legend-group-legend-element --> instant-apps-interactive-legend-layer-element-caption
   instant-apps-interactive-legend-layer-element-caption --> instant-apps-interactive-legend-count
+  instant-apps-interactive-legend-layer-element --> instant-apps-interactive-legend-layer-element-caption
   instant-apps-interactive-legend-legend-element --> instant-apps-interactive-legend-legend-element-caption
   instant-apps-interactive-legend --> instant-apps-interactive-legend-classic
   style instant-apps-interactive-legend-classic fill:#f9f,stroke:#333,stroke-width:4px

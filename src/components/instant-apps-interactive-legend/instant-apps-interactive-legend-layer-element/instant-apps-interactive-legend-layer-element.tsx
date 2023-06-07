@@ -54,7 +54,13 @@ export class InstantAppsInteractiveLegendLayerElement {
     const layerClasses = !!this.activeLayerInfo.parent ? ` ${CSS.groupLayerChild}` : '';
 
     return (
-      <div class={`${CSS.service}${layerClasses}`} tabIndex={0}>
+      <div
+        style={{
+          borderLeft: '1px solid var(--calcite-ui-border-3)',
+        }}
+        class={`${CSS.service}${layerClasses}`}
+        tabIndex={0}
+      >
         <instant-apps-interactive-legend-layer-element-caption
           ref={node => (this.layerCaption = node)}
           legendvm={this.legendvm}

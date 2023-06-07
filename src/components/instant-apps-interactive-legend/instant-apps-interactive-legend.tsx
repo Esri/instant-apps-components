@@ -155,7 +155,10 @@ export class InstantAppsInteractiveLegend {
     );
     this.handles.add(childrenChangeHandle, `children_${(activeLayerInfo?.layer as any)?.uid}`);
 
-    activeLayerInfo.children.forEach(childActiveLayerInfo => this._renderOnActiveLayerInfoChange(childActiveLayerInfo, reactiveUtils));
+    activeLayerInfo.children.forEach(childActiveLayerInfo => {
+      this._renderOnActiveLayerInfoChange(childActiveLayerInfo, reactiveUtils);
+      if (childActiveLayerInfo?.children?.length > 0) childActiveLayerInfo?.children?.forEach(innerChild => this._renderOnActiveLayerInfoChange(innerChild, reactiveUtils));
+    });
   }
 
   async getMessages(): Promise<any> {

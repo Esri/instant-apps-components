@@ -1,4 +1,4 @@
-import { Component, h, Prop, Element, State, forceUpdate } from '@stencil/core';
+import { Component, h, Prop, Element, State, forceUpdate, Watch } from '@stencil/core';
 import { interactiveLegendState, store } from '../support/store';
 
 import {
@@ -23,6 +23,7 @@ import {
   getCategoryData,
   getTheme,
   updateStore,
+  handleFilterChange,
 } from '../support/helpers';
 
 import { loadModules } from 'esri-loader';
@@ -129,6 +130,11 @@ export class InstantAppsInteractiveLegendClassic {
     type: 'filter',
   };
 
+  @Watch('filterMode')
+  handleFilterModeChange() {
+    handleFilterChange(this.filterMode, this.legendvm.view);
+  }
+
   @Prop()
   messages;
 
@@ -205,8 +211,21 @@ export class InstantAppsInteractiveLegendClassic {
     if (hasChildren) {
       const layers = activeLayerInfo.children.map(childActiveLayerInfo => this.renderLegendForLayer(childActiveLayerInfo, true)).toArray();
       return (
-        <instant-apps-interactive-legend-group-legend-element legendvm={this.legendvm} featureCount={this.featureCount} activeLayerInfo={activeLayerInfo}>
-          <div id={`${activeLayerInfo?.layer?.id}-legend-layer`} slot="content">
+        <instant-apps-interactive-legend-group-legend-element
+          class={getTheme(this.el)}
+          legendvm={this.legendvm}
+          featureCount={this.featureCount}
+          activeLayerInfo={activeLayerInfo}
+          isChild={isChild}
+        >
+          <div
+            style={{
+              paddingLeft: '20px',
+              borderLeft: '1px solid var(--calcite-ui-border-3)',
+            }}
+            id={`${activeLayerInfo?.layer?.id}-legend-layer`}
+            slot="content"
+          >
             {layers}
           </div>
         </instant-apps-interactive-legend-group-legend-element>

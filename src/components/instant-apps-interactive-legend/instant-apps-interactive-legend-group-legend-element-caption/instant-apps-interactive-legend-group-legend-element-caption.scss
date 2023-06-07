@@ -1,7 +1,7 @@
 :host {
   display: block;
-  --instant-apps-interactive-legend-heading-font-size: 1.25rem;
-  --instant-apps-interactive-legend-heading-font-weight: 800;
+  --instant-apps-interactive-legend-heading-font-size: 1rem;
+  --instant-apps-interactive-legend-heading-font-weight: normal;
   --instant-apps-interactive-legend-secondary-color: var(--calcite-ui-text-1);
   --instant-apps-interactive-legend-ui-padding: 15px 10px;
 
@@ -39,8 +39,8 @@
       overflow: hidden;
       text-overflow: ellipsis;
       display: -webkit-box;
-      -webkit-line-clamp: 2; /* number of lines to show */
-      line-clamp: 2;
+      -webkit-line-clamp: 1; /* number of lines to show */
+      line-clamp: 1;
       -webkit-box-orient: vertical;
       line-height: normal;
       color: var(--instant-apps-interactive-legend-secondary-color);
@@ -60,7 +60,6 @@
     .instant-apps-interactive-legend__header-action-container {
       display: flex;
       align-items: center;
-      justify-content: space-between;
     }
   }
 

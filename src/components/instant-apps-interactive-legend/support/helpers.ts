@@ -18,12 +18,17 @@ function activeLayerInfoCallback(
         intLegendDataPromises.push(intLegendDataPromise as Promise<IIntLegendLayerData>);
       }
 
-      // Take ACLs children into account
-      activeLayerInfo.children.forEach(child => {
-        const intLegendDataPromise = createInteractiveLegendDataForLayer(legendViewModel, child, reactiveUtils).then(res => res);
+      const handleAclChild = aclChild => {
+        const intLegendDataPromise = createInteractiveLegendDataForLayer(legendViewModel, aclChild, reactiveUtils).then(res => res);
         if (intLegendDataPromise) {
           intLegendDataPromises.push(intLegendDataPromise as Promise<IIntLegendLayerData>);
         }
+      };
+
+      // Take ACLs children into account
+      activeLayerInfo.children.forEach(child => {
+        handleAclChild(child);
+        if (child?.children?.length > 0) child.children.forEach(innerAclChild => handleAclChild(innerAclChild));
       });
     }
   };
@@ -659,7 +664,7 @@ export async function handleFeatureCount(legendViewModel: __esri.LegendViewModel
       }
     });
 
-    activeLayerInfo.children.forEach(async aclChild => {
+    const handleACLChild = (aclChild: __esri.ActiveLayerInfo) => {
       const childCounts: Promise<{ [categoryId: string]: number | null } | null | undefined>[] = [];
       const legendElement = aclChild.legendElements[0] as __esri.LegendElement;
       const fLayer = aclChild.layer as __esri.FeatureLayer;
@@ -669,6 +674,11 @@ export async function handleFeatureCount(legendViewModel: __esri.LegendViewModel
       legendElement?.infos?.forEach((info, infoIndex) => childCounts.push(getInfoCount(legendViewModel.view.extent, fLayerView, field, info, infoIndex, legendElement)));
 
       countPromises[aclChild.layer.id] = childCounts;
+    };
+
+    activeLayerInfo.children.forEach(async aclChild => {
+      handleACLChild(aclChild);
+      if (aclChild?.children?.length > 0) aclChild.children.forEach(innerACLChild => handleACLChild(innerACLChild));
     });
   });
   for (const countPromise in countPromises) {
@@ -727,7 +737,7 @@ export async function handleFeatureCount(legendViewModel: __esri.LegendViewModel
       }
     });
 
-    activeLayerInfo.children.forEach(aclChild => {
+    const handleAclChild = (aclChild: __esri.ActiveLayerInfo) => {
       const childLayerId = aclChild.layer.id;
       const dataFromActiveLayerInfo = data[childLayerId];
 
@@ -735,6 +745,11 @@ export async function handleFeatureCount(legendViewModel: __esri.LegendViewModel
         const count = dataCount?.[childLayerId]?.[key];
         category.count = count;
       });
+    };
+
+    activeLayerInfo.children.forEach(aclChild => {
+      handleAclChild(aclChild);
+      if (aclChild?.children?.length > 0) aclChild.children.forEach(innerAclChild => handleAclChild(innerAclChild));
     });
   });
 
@@ -774,4 +789,50 @@ export function updateStore(data: IInteractiveLegendData, layerData?: { intLegen
   const layerDataToSet = layerData?.intLegendLayerData;
   const updatedData = layerId ? { ...interactiveLegendState.data, [layerId]: layerDataToSet } : data;
   store.set('data', updatedData);
+}
+
+// handleFilterChange - Configuration experience
+export function handleFilterChange(filterMode: FilterMode, view: __esri.MapView | __esri.SceneView): void {
+  const { type } = filterMode;
+  if (type === 'filter') {
+    updateExistingFilterToFeatureFilter(view);
+  } else if (type === 'effect') {
+    updateExistingFilterToFeatureEffect(filterMode, view);
+  }
+}
+
+function updateExistingFilterToFeatureFilter(view: __esri.MapView | __esri.SceneView): void {
+  view?.allLayerViews
+    ?.filter((layerView: __esri.LayerView) => layerView?.layer?.type === 'feature')
+    ?.forEach((fLayerView: __esri.FeatureLayerView) => {
+      const existingFilter = getExistingFilter(fLayerView);
+      fLayerView.filter = existingFilter;
+      fLayerView.set('featureEffect', null);
+    });
+}
+
+function updateExistingFilterToFeatureEffect(filterMode: FilterMode, view: __esri.MapView | __esri.SceneView): void {
+  view?.allLayerViews
+    ?.filter((layerView: __esri.LayerView) => layerView?.layer?.type === 'feature')
+    .forEach(async (fLayerView: __esri.FeatureLayerView) => {
+      if (filterMode?.effect && fLayerView) {
+        const [FeatureEffect] = await loadModules(['esri/layers/support/FeatureEffect']);
+        const { includedEffect, excludedEffect } = filterMode.effect;
+        const mergedExcludedEffect = await getMergedEffect(excludedEffect, fLayerView as __esri.FeatureLayerView, 'excludedEffect');
+        const mergedIncludedEffect = await getMergedEffect(includedEffect, fLayerView as __esri.FeatureLayerView, 'includedEffect');
+
+        const existingFilter = getExistingFilter(fLayerView);
+
+        fLayerView.featureEffect = new FeatureEffect({
+          filter: existingFilter,
+          includedEffect: mergedIncludedEffect,
+          excludedEffect: mergedExcludedEffect,
+        }) as __esri.FeatureEffect;
+        fLayerView.set('filter', null);
+      }
+    });
+}
+
+function getExistingFilter(fLayerView: __esri.FeatureLayerView): __esri.FeatureFilter {
+  return fLayerView?.filter || fLayerView?.featureEffect?.filter;
 }
