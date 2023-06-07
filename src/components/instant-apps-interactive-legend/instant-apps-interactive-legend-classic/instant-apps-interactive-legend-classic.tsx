@@ -1,4 +1,4 @@
-import { Component, h, Prop, Element, State, forceUpdate } from '@stencil/core';
+import { Component, h, Prop, Element, State, forceUpdate, Watch } from '@stencil/core';
 import { interactiveLegendState, store } from '../support/store';
 
 import {
@@ -23,6 +23,7 @@ import {
   getCategoryData,
   getTheme,
   updateStore,
+  handleFilterChange,
 } from '../support/helpers';
 
 import { loadModules } from 'esri-loader';
@@ -128,6 +129,11 @@ export class InstantAppsInteractiveLegendClassic {
   filterMode: FilterMode = {
     type: 'filter',
   };
+
+  @Watch('filterMode')
+  handleFilterModeChange() {
+    handleFilterChange(this.filterMode, this.legendvm.view);
+  }
 
   @Prop()
   messages;

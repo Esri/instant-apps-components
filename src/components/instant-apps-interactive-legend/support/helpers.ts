@@ -790,3 +790,49 @@ export function updateStore(data: IInteractiveLegendData, layerData?: { intLegen
   const updatedData = layerId ? { ...interactiveLegendState.data, [layerId]: layerDataToSet } : data;
   store.set('data', updatedData);
 }
+
+// handleFilterChange - Configuration experience
+export function handleFilterChange(filterMode: FilterMode, view: __esri.MapView | __esri.SceneView): void {
+  const { type } = filterMode;
+  if (type === 'filter') {
+    updateExistingFilterToFeatureFilter(view);
+  } else if (type === 'effect') {
+    updateExistingFilterToFeatureEffect(filterMode, view);
+  }
+}
+
+function updateExistingFilterToFeatureFilter(view: __esri.MapView | __esri.SceneView): void {
+  view?.allLayerViews
+    ?.filter((layerView: __esri.LayerView) => layerView?.layer?.type === 'feature')
+    ?.forEach((fLayerView: __esri.FeatureLayerView) => {
+      const existingFilter = getExistingFilter(fLayerView);
+      fLayerView.filter = existingFilter;
+      fLayerView.set('featureEffect', null);
+    });
+}
+
+function updateExistingFilterToFeatureEffect(filterMode: FilterMode, view: __esri.MapView | __esri.SceneView): void {
+  view?.allLayerViews
+    ?.filter((layerView: __esri.LayerView) => layerView?.layer?.type === 'feature')
+    .forEach(async (fLayerView: __esri.FeatureLayerView) => {
+      if (filterMode?.effect && fLayerView) {
+        const [FeatureEffect] = await loadModules(['esri/layers/support/FeatureEffect']);
+        const { includedEffect, excludedEffect } = filterMode.effect;
+        const mergedExcludedEffect = await getMergedEffect(excludedEffect, fLayerView as __esri.FeatureLayerView, 'excludedEffect');
+        const mergedIncludedEffect = await getMergedEffect(includedEffect, fLayerView as __esri.FeatureLayerView, 'includedEffect');
+
+        const existingFilter = getExistingFilter(fLayerView);
+
+        fLayerView.featureEffect = new FeatureEffect({
+          filter: existingFilter,
+          includedEffect: mergedIncludedEffect,
+          excludedEffect: mergedExcludedEffect,
+        }) as __esri.FeatureEffect;
+        fLayerView.set('filter', null);
+      }
+    });
+}
+
+function getExistingFilter(fLayerView: __esri.FeatureLayerView): __esri.FeatureFilter {
+  return fLayerView?.filter || fLayerView?.featureEffect?.filter;
+}

@@ -11,9 +11,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Update font size and justification of text in legend
 - Re-position UI elements in captions
-- Imrpove group layer experience
+- Improve group layer experience
   - Add support for nested group layers
   - Add indentation to group layer legend elements/nested group layer legend elements to easily visualize the groupings
+- Re-apply correct filter when filter mode has changed
 
 ## v1.0.0-beta.88
 

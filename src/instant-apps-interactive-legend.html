@@ -29,17 +29,33 @@
         margin: 0;
         padding: 0;
       }
+
+      calcite-panel {
+        padding: 10px;
+      }
     </style>
   </head>
 
   <body class="calcite-mode-light">
     <calcite-shell>
       <calcite-shell-panel slot="panel-start">
-        <calcite-panel id="sidePanel"></calcite-panel>
+        <calcite-panel>
+          <calcite-label layout="inline">
+            Use preset layer effects
+            <calcite-switch id="filterMode" />
+          </calcite-label>
+          <calcite-label>
+            Layer effects
+            <calcite-select id="layerEffects">
+              <calcite-option value="strong-drop-shadow">Strong drop shadow</calcite-option>
+              <calcite-option value="bloom">Bloom</calcite-option>
+            </calcite-select>
+          </calcite-label>
+        </calcite-panel>
       </calcite-shell-panel>
       <div id="viewDiv"></div>
     </calcite-shell>
-
+    <div id="viewDiv"></div>
     <script>
       require(['esri/WebMap', 'esri/widgets/Expand', 'esri/views/MapView', 'esri/core/reactiveUtils'], (WebMap, Expand, MapView, reactiveUtils) => {
         const map = new WebMap({
@@ -58,10 +74,49 @@
         legend.featureCount = true;
         legend.zoomTo = true;
         legend.view = view;
+        view.ui.add(legend, 'top-right');
 
-        const sidePanel = document.getElementById('sidePanel');
+        let effect = {
+          includedEffect: 'drop-shadow(4px, 4px, 4px, #000000)',
+          excludedEffect: '',
+        };
 
-        sidePanel.appendChild(legend);
+        const filterModeSwitch = document.getElementById('filterMode');
+        filterModeSwitch.addEventListener('calciteSwitchChange', e => {
+          const value = e.target.checked;
+          if (!value) {
+            legend.filterMode = {
+              type: 'filter',
+            };
+          } else {
+            legend.filterMode = {
+              type: 'effect',
+              effect,
+            };
+          }
+        });
+
+        const layerEffectsDropdown = document.getElementById('layerEffects');
+        layerEffectsDropdown.addEventListener('calciteSelectChange', e => {
+          const value = e.target.value;
+          if (value === 'bloom') {
+            effect = {
+              includedEffect: 'bloom(1.3, 0.75px, 0.3)',
+              excludedEffect: 'blur(3px) opacity(65%)',
+            };
+          } else if (value === 'strong-drop-shadow') {
+            effect = {
+              includedEffect: 'drop-shadow(4px, 4px, 4px, #000000)',
+              excludedEffect: '',
+            };
+          }
+          if (legend.filterMode.type === 'effect') {
+            legend.filterMode = {
+              type: 'effect',
+              effect,
+            };
+          }
+        });
       });
     </script>
   </body>
