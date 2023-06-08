@@ -39,16 +39,16 @@
       overflow: hidden;
       text-overflow: ellipsis;
       display: -webkit-box;
-      -webkit-line-clamp: 1; /* number of lines to show */
-      line-clamp: 1;
+      -webkit-line-clamp: 2; /* number of lines to show */
+      line-clamp: 2;
       -webkit-box-orient: vertical;
       line-height: normal;
       color: var(--instant-apps-interactive-legend-secondary-color);
     }
 
     .instant-apps-interactive-legend__heading-text--group-item {
-      -webkit-line-clamp: 1; /* number of lines to show */
-      line-clamp: 1;
+      -webkit-line-clamp: 2; /* number of lines to show */
+      line-clamp: 2;
     }
 
     span {

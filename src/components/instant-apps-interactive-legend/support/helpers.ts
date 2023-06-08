@@ -18,8 +18,8 @@ function activeLayerInfoCallback(
         intLegendDataPromises.push(intLegendDataPromise as Promise<IIntLegendLayerData>);
       }
 
-      const handleAclChild = aclChild => {
-        const intLegendDataPromise = createInteractiveLegendDataForLayer(legendViewModel, aclChild, reactiveUtils).then(res => res);
+      const handleALIChild = (aliChild: __esri.ActiveLayerInfo) => {
+        const intLegendDataPromise = createInteractiveLegendDataForLayer(legendViewModel, aliChild, reactiveUtils).then(res => res);
         if (intLegendDataPromise) {
           intLegendDataPromises.push(intLegendDataPromise as Promise<IIntLegendLayerData>);
         }
@@ -27,8 +27,17 @@ function activeLayerInfoCallback(
 
       // Take ACLs children into account
       activeLayerInfo.children.forEach(child => {
-        handleAclChild(child);
-        if (child?.children?.length > 0) child.children.forEach(innerAclChild => handleAclChild(innerAclChild));
+        handleALIChild(child);
+        if (child?.children?.length > 0) {
+          child.children.forEach(innerALIChild => {
+            handleALIChild(innerALIChild);
+            if (innerALIChild?.children?.length > 0) {
+              innerALIChild.children.forEach(innerInnerALIChild => {
+                handleALIChild(innerInnerALIChild);
+              });
+            }
+          });
+        }
       });
     }
   };
@@ -664,21 +673,30 @@ export async function handleFeatureCount(legendViewModel: __esri.LegendViewModel
       }
     });
 
-    const handleACLChild = (aclChild: __esri.ActiveLayerInfo) => {
+    const handleALIChild = (aliChild: __esri.ActiveLayerInfo) => {
       const childCounts: Promise<{ [categoryId: string]: number | null } | null | undefined>[] = [];
-      const legendElement = aclChild.legendElements[0] as __esri.LegendElement;
-      const fLayer = aclChild.layer as __esri.FeatureLayer;
-      const fLayerView = data[aclChild?.layer?.id]?.fLayerView;
+      const legendElement = aliChild.legendElements[0] as __esri.LegendElement;
+      const fLayer = aliChild.layer as __esri.FeatureLayer;
+      const fLayerView = data[aliChild?.layer?.id]?.fLayerView;
       const field = fLayer.renderer?.get('field') as string;
 
       legendElement?.infos?.forEach((info, infoIndex) => childCounts.push(getInfoCount(legendViewModel.view.extent, fLayerView, field, info, infoIndex, legendElement)));
 
-      countPromises[aclChild.layer.id] = childCounts;
+      countPromises[aliChild.layer.id] = childCounts;
     };
 
-    activeLayerInfo.children.forEach(async aclChild => {
-      handleACLChild(aclChild);
-      if (aclChild?.children?.length > 0) aclChild.children.forEach(innerACLChild => handleACLChild(innerACLChild));
+    activeLayerInfo.children.forEach(async aliChild => {
+      handleALIChild(aliChild);
+      if (aliChild?.children?.length > 0) {
+        aliChild.children.forEach(innerALIChild => {
+          handleALIChild(innerALIChild);
+          if (innerALIChild?.children?.length > 0) {
+            innerALIChild.children.forEach(innerInnerALIChild => {
+              handleALIChild(innerInnerALIChild);
+            });
+          }
+        });
+      }
     });
   });
   for (const countPromise in countPromises) {
@@ -737,8 +755,8 @@ export async function handleFeatureCount(legendViewModel: __esri.LegendViewModel
       }
     });
 
-    const handleAclChild = (aclChild: __esri.ActiveLayerInfo) => {
-      const childLayerId = aclChild.layer.id;
+    const handleALIChild = (aliChild: __esri.ActiveLayerInfo) => {
+      const childLayerId = aliChild.layer.id;
       const dataFromActiveLayerInfo = data[childLayerId];
 
       dataFromActiveLayerInfo?.categories?.forEach((category, key) => {
@@ -747,9 +765,18 @@ export async function handleFeatureCount(legendViewModel: __esri.LegendViewModel
       });
     };
 
-    activeLayerInfo.children.forEach(aclChild => {
-      handleAclChild(aclChild);
-      if (aclChild?.children?.length > 0) aclChild.children.forEach(innerAclChild => handleAclChild(innerAclChild));
+    activeLayerInfo.children.forEach(aliChild => {
+      handleALIChild(aliChild);
+      if (aliChild?.children?.length > 0) {
+        aliChild.children.forEach(innerALIChild => {
+          handleALIChild(innerALIChild);
+          if (innerALIChild?.children?.length > 0) {
+            innerALIChild.children.forEach(innerInnerALIChild => {
+              handleALIChild(innerInnerALIChild);
+            });
+          }
+        });
+      }
     });
   });
 
