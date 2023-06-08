@@ -52,7 +52,12 @@ export class InstantAppsInteractiveLegendGroupLegendElement {
 
   render() {
     return (
-      <div class={`${CSS.service} ${CSS.groupLayer}`}>
+      <div
+        style={{
+          borderLeft: '1px solid var(--calcite-ui-border-3)',
+        }}
+        class={`${CSS.service} ${CSS.groupLayer}`}
+      >
         <instant-apps-interactive-legend-layer-element-caption
           ref={node => (this.layerCaption = node)}
           class={getTheme(this.el)}

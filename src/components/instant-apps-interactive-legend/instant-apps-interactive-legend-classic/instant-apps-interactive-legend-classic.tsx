@@ -221,7 +221,6 @@ export class InstantAppsInteractiveLegendClassic {
           <div
             style={{
               paddingLeft: '20px',
-              borderLeft: '1px solid var(--calcite-ui-border-3)',
             }}
             id={`${activeLayerInfo?.layer?.id}-legend-layer`}
             slot="content"
