@@ -26,13 +26,9 @@ export const printStyling = `
     position: absolute;
     z-index: -999;
     color: #323232 !important;
-    display: grid;
-    gap: 8px;
-    grid-template-areas:
-      "view view view"
-      "content content content"
-      "legend legend popup";
-    grid-template-rows: 70% 1fr 1fr;
+    display: flex;
+    flex-flow: row wrap;
+    gap: 16px 36px;
   }
 
   .instant-apps-export-print, .instant-apps-export-print * {
@@ -45,8 +41,7 @@ export const printStyling = `
 
   .instant-apps-export-print__view-container {
     position: relative;
-    grid-area: view;
-    height: 100%;
+    height: 60%;
     width: 100%;
     display: flex;
     flex-direction: column;
@@ -62,11 +57,12 @@ export const printStyling = `
 
   .instant-apps-export-print__popup-container {
     height: min-content;
-    grid-area: popup;
+    max-width: 350px;
     display: none;
     color: #323232;
     background: #fff;
     border: 1pt solid #323232;
+    break-inside: avoid;
   }
 
   .instant-apps-export-print__popup-title {
@@ -75,7 +71,7 @@ export const printStyling = `
 
   .instant-apps-export-print__popup-content {
     background: #fff;
-    padding: 2pt;
+    padding-top: 8pt;
   }
 
   .instant-apps-export-print__popup-content .esri-feature-media__chart {
@@ -84,9 +80,8 @@ export const printStyling = `
 
   .instant-apps-export-print__legend-container {
     height: min-content;
-    max-width: 8in;
+    max-width: 300px;
     background: #fff;
-    grid-area: legend;
   }
 
   .esri-legend--card, .esri-legend--card__service-content {
@@ -137,10 +132,6 @@ export const printStyling = `
     display: none;
   }
 
-  .instant-apps-export-print__extra-container {
-    grid-area: content;
-  }
-
   .instant-apps-export-print .esri-legend--card__service-caption-container {
     height: unset;
     padding: 0;
@@ -169,4 +160,8 @@ export const printStyling = `
 
   .instant-apps-export-print__popup-container .esri-feature-media__chart.esri-feature-media__chart--rendered * {
     width: 100%!important;
+  }
+
+  .instant-apps-export-print__popup-content .esri-popup__content {
+    margin: 0;
   }`;

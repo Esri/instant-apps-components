@@ -1,4 +1,4 @@
-import { Component, Element, Event, EventEmitter, getMode, h, Host, Prop, State, VNode } from '@stencil/core';
+import { Component, Element, Event, EventEmitter, h, Host, Prop, State, VNode } from '@stencil/core';
 import { CalciteCheckboxCustomEvent, CalciteInputCustomEvent } from '@esri/calcite-components';
 
 import Export_T9n from '../../assets/t9n/instant-apps-export/resources.json';
@@ -6,6 +6,7 @@ import { ExportOutput, PopoverPlacement } from '../../interfaces/interfaces';
 import { getLocaleComponentStrings } from '../../utils/locale';
 import { printStyling } from './resources';
 import { loadModules } from '../../utils/loadModules';
+import { getMode } from '../../utils/mode';
 
 const CSS = {
   baseDark: 'instant-apps-export calcite-mode-dark',
@@ -142,7 +143,6 @@ export class InstantAppsExport {
   compass: __esri.Compass;
   compassContainerEl: HTMLDivElement;
   extraContainerEl: HTMLDivElement;
-  feature: __esri.Feature;
   handles: __esri.Handles | null;
   legend: __esri.Legend;
   legendContainerEl: HTMLDivElement;
@@ -261,7 +261,7 @@ export class InstantAppsExport {
 
   renderPrint(): VNode {
     const printMap = this.includeMap ? this.renderPrintMap() : null;
-    const extraContent = this.includeExtraContent ? this.renderExtraContent() : null;
+    const extraContent = this.renderExtraContent();
     const legend = this.showIncludeLegend ? this.renderLegend() : null;
     const popup = this.showIncludePopup ? this.renderPopup() : null;
     return (
@@ -269,8 +269,8 @@ export class InstantAppsExport {
         <div class={CSS.print.base} ref={(el: HTMLDivElement) => (this.printEl = el)}>
           {printMap}
           {extraContent}
-          {popup}
           {legend}
+          {popup}
         </div>
       </div>
     );
@@ -311,13 +311,6 @@ export class InstantAppsExport {
   optionOnChange(e: CalciteCheckboxCustomEvent<Event>): void {
     const { checked, value } = e.target;
     this[value] = checked;
-    if (value === 'includePopup') {
-      if (checked) {
-        this.watchPopup();
-      } else {
-        this.handles?.remove('includePopup');
-      }
-    }
   }
 
   updateHeaderTitle(e: CalciteInputCustomEvent<Event>): void {
@@ -337,7 +330,6 @@ export class InstantAppsExport {
       this.handleExtraContent();
       if (this.includeMap) {
         this.viewEl?.addEventListener('load', this.exportHandleImgLoaded);
-        this.handleExtraContent();
         this.updatePopupToPrint();
         await this.viewScreenshot();
       } else {
@@ -370,7 +362,7 @@ export class InstantAppsExport {
   handleExtraContent(): void {
     if (this.extraContainerEl != null) {
       this.extraContainerEl.innerHTML = '';
-      if (this.extraContent != null) {
+      if (this.extraContent != null && this.includeExtraContent) {
         this.extraContainerEl.style.display = 'block';
         this.extraContainerEl.append(this.extraContent.cloneNode(true));
       } else {
@@ -395,6 +387,7 @@ export class InstantAppsExport {
     if (this.view != null) {
       if (this.popupContainerEl != null) {
         this.popupContainerEl.style.display = this.includePopup && this.view.popup.visible ? 'block' : 'none';
+        this.checkPopupOpen();
       }
       if (this.view.popup.visible && this.view.popup.selectedFeature != null) {
         const heading = document.createElement(`h${this.view.popup.headingLevel ?? 2}`);
@@ -448,7 +441,6 @@ export class InstantAppsExport {
   handleWidgetCreation(): void {
     this.handleLegendCreation();
     this.handleCompassCreation();
-    this.handleFeatureCreation();
   }
 
   handleLegendCreation(): void {
@@ -490,21 +482,6 @@ export class InstantAppsExport {
     }
   }
 
-  async handleFeatureCreation(): Promise<void> {
-    if (this.includeMap && this.view != null && this.feature == null) {
-      const [Feature] = await loadModules(['esri/widgets/Feature']);
-      this.feature = new Feature({
-        container: this.popupContentEl,
-        map: this.view.map,
-        view: this.view,
-        spatialReference: this.view.spatialReference,
-        visibleElements: {
-          title: false,
-        },
-      });
-    }
-  }
-
   async viewScreenshot(): Promise<void> {
     if (this.view != null && this.includeMap) {
       const pixelRatio = 2;
@@ -513,34 +490,32 @@ export class InstantAppsExport {
     }
   }
 
-  watchPopup(): void {
-    if (this.view != null) {
-      this.checkPopupOpen();
-      this.handles?.add(
-        this.view.on('click', async event => {
-          const response = await this.view?.hitTest(event);
-          const results = response?.results.filter((result: __esri.GraphicHit) => {
-            const layer = result?.graphic?.layer as __esri.FeatureLayer;
-            return layer?.popupTemplate;
-          });
-          const result = results?.[0] as __esri.GraphicHit;
-          if (result != null) {
-            const fl = result.layer as __esri.FeatureLayer;
-            this.feature.graphic = result.graphic;
-            this.feature.graphic.popupTemplate = fl.popupTemplate;
-          }
-        }),
-        'includePopup',
-      );
-    }
-  }
-
   checkPopupOpen(): void {
     if (this.view != null) {
-      this.feature.graphic = this.view.popup.selectedFeature;
-      if (this.feature.graphic != null) {
-        const fl = this.view.popup.selectedFeature.layer as __esri.FeatureLayer;
-        this.feature.graphic.popupTemplate = fl.popupTemplate;
+      const popupContainer = this.view.popup.container as HTMLElement;
+      const popup = popupContainer?.querySelector('.esri-popup__content');
+      if (popup != null) {
+        const popupCanvas = popup.querySelectorAll('canvas');
+        this.popupContentEl.innerHTML = '';
+        this.popupContentEl.append(popup.cloneNode(true));
+        const popContCanvas = this.popupContentEl.querySelectorAll('canvas');
+        popupCanvas.forEach((canvas, key) => {
+          const image = canvas.toDataURL();
+          const img = document.createElement('img');
+          img.src = image;
+          const style = canvas.getAttribute('style');
+          if (style) {
+            img.setAttribute('style', style);
+          }
+          const popCanvas = popContCanvas[key];
+          if (popCanvas != null) {
+            popCanvas.replaceWith(img);
+            if (document.querySelector("link[href*='esri/themes/dark/main.css']") && img.parentElement?.parentElement != null) {
+              img.parentElement.style.background = '#242424';
+              img.parentElement.parentElement.style.background = '#242424';
+            }
+          }
+        });
       }
     }
   }
