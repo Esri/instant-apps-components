@@ -11,6 +11,7 @@ import { Component, Host, State, Prop, Event, EventEmitter, Element, h } from '@
 import Measurement_T9n from '../../assets/t9n/instant-apps-measurement/resources.json';
 
 import { getLocaleComponentStrings } from '../../utils/locale';
+import { ActiveTool } from '../../interfaces/interfaces';
 
 const CSS = {
   content: 'instant-apps-measurement__content',
@@ -24,6 +25,7 @@ export class InstantAppsMeasurement {
   // HOST ELEMENT
   @Element() el: HTMLInstantAppsMeasurementElement;
   measureToolRef: any;
+  a;
 
   @State() messages: typeof Measurement_T9n;
   /**
@@ -33,7 +35,7 @@ export class InstantAppsMeasurement {
   @Prop() areaUnit?: __esri.AreaUnit;
   @Prop() linearUnit?: __esri.LengthUnit;
   @Prop() coordinateFormat?: string;
-
+  @Prop() activeToolType: ActiveTool;
   /**
    * Emits when there is an active measure tool
    * to allow app devs to disable other tools/popups when
@@ -53,22 +55,22 @@ export class InstantAppsMeasurement {
   }
 
   render() {
-    const { messages, view, coordinateFormat, areaUnit, linearUnit } = this;
+    const { messages, view, coordinateFormat, areaUnit, linearUnit, activeToolType } = this;
     return (
       <Host>
         <calcite-panel class={CSS.content}>
-          <calcite-action-bar expand-disabled={true} layout="horizontal">
+          <calcite-action-pad expand-disabled={true} layout="horizontal">
             <calcite-action text={messages?.line} text-enabled="false" icon="measure" data-value="distance" onClick={this._handleToolClick.bind(this)}></calcite-action>
             <calcite-action text={messages?.area} text-enabled="false" icon="measure-area" data-value="area" onClick={this._handleToolClick.bind(this)}></calcite-action>
             <calcite-action text={messages?.point} text-enabled="false" icon="pin-plus" data-value="point" onClick={this._handleToolClick.bind(this)}></calcite-action>
             <calcite-action text={messages?.clear} text-enabled="false" icon="trash" data-value="clear" onClick={this._handleToolClick.bind(this)}></calcite-action>
-          </calcite-action-bar>
+          </calcite-action-pad>
           <instant-apps-measurement-tool
             ref={el => {
               this.measureTool = el;
             }}
             view={view}
-            measureConfiguration={{ coordinateFormat, areaUnit, linearUnit }}
+            measureConfiguration={{ coordinateFormat, areaUnit, linearUnit, activeToolType }}
           ></instant-apps-measurement-tool>
         </calcite-panel>
       </Host>
@@ -78,6 +80,7 @@ export class InstantAppsMeasurement {
     if (!this?.measureTool) return;
     const tool = e?.target?.dataset['value'];
     this.measureTool.activeTool = tool;
+
     this.measureActive.emit(tool === undefined || tool === 'clear' ? false : true);
   }
 }

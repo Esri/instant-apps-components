@@ -317,6 +317,7 @@ export namespace Components {
         "view": __esri.MapView | __esri.SceneView;
     }
     interface InstantAppsMeasurement {
+        "activeToolType": ActiveTool;
         "areaUnit"?: __esri.AreaUnit;
         "coordinateFormat"?: string;
         "linearUnit"?: __esri.LengthUnit;
@@ -954,6 +955,7 @@ declare namespace LocalJSX {
         "view"?: __esri.MapView | __esri.SceneView;
     }
     interface InstantAppsMeasurement {
+        "activeToolType"?: ActiveTool;
         "areaUnit"?: __esri.AreaUnit;
         "coordinateFormat"?: string;
         "linearUnit"?: __esri.LengthUnit;

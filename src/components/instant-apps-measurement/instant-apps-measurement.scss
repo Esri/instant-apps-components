@@ -1,10 +1,12 @@
 :host {
   display: flex;
-
-    calcite-action-bar{
-      background:var(--calcite-ui-foreground-1);
-  }
+    .sc-instant-apps-measurement{
+    background:var(--calcite-ui-foreground-1);
+    }
     calcite-panel{
       width:100%;
+      min-width: 300px;
     }
-}
+
+  }
+
