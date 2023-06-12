@@ -64,6 +64,7 @@
       measure.view = view;
       measure.areaUnit = 'hectares';
       measure.linearUnit = 'nautical-miles';
+      // Optionally specify an active tool
       measure.activeToolType = "point";
       // disable popups when measure tools are active
       measure.addEventListener('measureActive', e => {
