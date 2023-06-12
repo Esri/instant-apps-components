@@ -25,7 +25,6 @@ export class InstantAppsMeasurement {
   // HOST ELEMENT
   @Element() el: HTMLInstantAppsMeasurementElement;
   measureToolRef: any;
-  a;
 
   @State() messages: typeof Measurement_T9n;
   /**
