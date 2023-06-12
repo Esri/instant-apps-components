@@ -77,10 +77,12 @@ export class InstantAppsMeasurementTool {
   _activeToolHandler(value: string) {
     const viewType = this.view.type;
     if (!this._measureWidget) return;
+
     this._measureWidget.clear();
     this._coordinateElement?.classList.add(CSS.hide);
     if (value === 'distance') {
-      this._measureWidget.activeTool = viewType === '2d' ? 'distance' : 'direct-line';
+      const toolName = viewType === '2d' ? 'distance' : 'direct-line';
+      this._measureWidget.activeTool = toolName;
     } else if (value === 'area') {
       this._measureWidget.activeTool = 'area';
     } else if (value === 'point') {
@@ -120,7 +122,10 @@ export class InstantAppsMeasurementTool {
       </Host>
     );
   }
-
+  disconnectedCallback(): void {
+    this._measureWidget?.destroy();
+    this._coordinateWidget?.destroy();
+  }
   //--------------------------------------------------------------------------
   //
   //  Functions (protected)
@@ -160,19 +165,27 @@ export class InstantAppsMeasurementTool {
    * @protected
    */
   protected _initMeasurementWidget(): void {
-    if (this.view && this._measureElement) {
+    if (this.view && this._measureElement && !this._measureWidget) {
       this._measureWidget = new this.Measurement({ view: this.view, container: this._measureElement, ...this.measureConfiguration });
+      if (this?.measureConfiguration?.activeToolType !== undefined && this?.measureConfiguration?.activeToolType !== 'point') {
+        this.activeTool = this.measureConfiguration.activeToolType;
+      }
     }
   }
+
   protected _initCoordinateWidget(): void {
-    if (this?.view && this._coordinateElement) {
+    if (this?.view && this._coordinateElement && !this._coordinateWidget) {
       this._coordinateWidget = new this.CoordinateConversion({ view: this.view, storageEnabled: false, container: this._coordinateElement });
+
       if (this?.measureConfiguration?.coordinateFormat !== null && this?.measureConfiguration?.coordinateFormat !== undefined) {
         const format = this._coordinateWidget.formats.find(f => {
           return f.name === this.measureConfiguration.coordinateFormat;
         });
         this._coordinateWidget?.conversions?.splice(0, 0, new this.Conversion({ format }));
       }
+    }
+    if (this?.measureConfiguration?.activeToolType === 'point') {
+      this.activeTool = this.measureConfiguration.activeToolType;
     }
   }
 }

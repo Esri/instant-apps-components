@@ -230,6 +230,7 @@ export interface IMeasureConfiguration {
   areaUnit?: __esri.AreaUnit;
   linearUnit?: __esri.LengthUnit;
   coordinateFormat?: string;
+  activeToolType?: ActiveTool;
 }
 
 // Control Panel
