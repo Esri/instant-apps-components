@@ -446,6 +446,10 @@ export namespace Components {
     }
     interface InstantAppsSplash {
         /**
+          * When `true`, disables the component's close button.
+         */
+        "closeButtonDisabled": boolean;
+        /**
           * Content of splash screen.
          */
         "content": string;
@@ -1116,6 +1120,10 @@ declare namespace LocalJSX {
         "view"?: __esri.MapView | __esri.SceneView;
     }
     interface InstantAppsSplash {
+        /**
+          * When `true`, disables the component's close button.
+         */
+        "closeButtonDisabled"?: boolean;
         /**
           * Content of splash screen.
          */

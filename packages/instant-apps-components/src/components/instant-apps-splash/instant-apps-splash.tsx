@@ -52,6 +52,12 @@ export class InstantAppsSplash {
   })
   open = true;
 
+  /**
+   * When `true`, disables the component's close button.
+   */
+  @Prop()
+  closeButtonDisabled = false;
+
   @State()
   messages: typeof Splash_T9n;
 
@@ -71,7 +77,7 @@ export class InstantAppsSplash {
 
   render(): HTMLCalciteModalElement {
     return (
-      <calcite-modal onCalciteModalClose={this.close.bind(this)} open={this.open}>
+      <calcite-modal onCalciteModalClose={this.close.bind(this)} open={this.open} closeButtonDisabled={this.closeButtonDisabled}>
         {this.renderHeader()}
         {this.renderContent()}
         {this.renderDontShowThisAgainCheckbox()}
