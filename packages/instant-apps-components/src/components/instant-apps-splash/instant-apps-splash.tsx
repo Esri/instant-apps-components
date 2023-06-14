@@ -56,7 +56,7 @@ export class InstantAppsSplash {
   messages: typeof Splash_T9n;
 
   @Watch('content')
-  sanitizeCustomHeaderHtml(): void {
+  sanitizeContent(): void {
     this.content = this._sanitizer.sanitize(this.content);
   }
 
@@ -66,7 +66,7 @@ export class InstantAppsSplash {
 
   componentWillLoad(): void {
     this.el.open = this.open && !getLocalStorageItem(this.localStorageKey);
-    if (this.content && this._sanitizer) this.sanitizeCustomHeaderHtml();
+    if (this.content && this._sanitizer) this.sanitizeContent();
   }
 
   render(): HTMLCalciteModalElement {
