@@ -444,6 +444,28 @@ export namespace Components {
          */
         "view": __esri.MapView | __esri.SceneView;
     }
+    interface InstantAppsSplash {
+        /**
+          * Content of splash screen.
+         */
+        "content": string;
+        /**
+          * Local storage key used to determine whether or not user has opted into "Don't show this again" checkbox.
+         */
+        "localStorageKey": string;
+        /**
+          * Controls the 'open' state of the modal element.
+         */
+        "open": boolean;
+        /**
+          * Primary button text.
+         */
+        "primaryButtonText": string;
+        /**
+          * Title of splash screen.
+         */
+        "titleText": string;
+    }
 }
 export interface InstantAppsExportCustomEvent<T> extends CustomEvent<T> {
     detail: T;
@@ -604,6 +626,12 @@ declare global {
         prototype: HTMLInstantAppsSocialShareElement;
         new (): HTMLInstantAppsSocialShareElement;
     };
+    interface HTMLInstantAppsSplashElement extends Components.InstantAppsSplash, HTMLStencilElement {
+    }
+    var HTMLInstantAppsSplashElement: {
+        prototype: HTMLInstantAppsSplashElement;
+        new (): HTMLInstantAppsSplashElement;
+    };
     interface HTMLElementTagNameMap {
         "instant-apps-control-panel": HTMLInstantAppsControlPanelElement;
         "instant-apps-export": HTMLInstantAppsExportElement;
@@ -626,6 +654,7 @@ declare global {
         "instant-apps-popovers": HTMLInstantAppsPopoversElement;
         "instant-apps-scoreboard": HTMLInstantAppsScoreboardElement;
         "instant-apps-social-share": HTMLInstantAppsSocialShareElement;
+        "instant-apps-splash": HTMLInstantAppsSplashElement;
     }
 }
 declare namespace LocalJSX {
@@ -1086,6 +1115,28 @@ declare namespace LocalJSX {
          */
         "view"?: __esri.MapView | __esri.SceneView;
     }
+    interface InstantAppsSplash {
+        /**
+          * Content of splash screen.
+         */
+        "content"?: string;
+        /**
+          * Local storage key used to determine whether or not user has opted into "Don't show this again" checkbox.
+         */
+        "localStorageKey"?: string;
+        /**
+          * Controls the 'open' state of the modal element.
+         */
+        "open"?: boolean;
+        /**
+          * Primary button text.
+         */
+        "primaryButtonText"?: string;
+        /**
+          * Title of splash screen.
+         */
+        "titleText"?: string;
+    }
     interface IntrinsicElements {
         "instant-apps-control-panel": InstantAppsControlPanel;
         "instant-apps-export": InstantAppsExport;
@@ -1108,6 +1159,7 @@ declare namespace LocalJSX {
         "instant-apps-popovers": InstantAppsPopovers;
         "instant-apps-scoreboard": InstantAppsScoreboard;
         "instant-apps-social-share": InstantAppsSocialShare;
+        "instant-apps-splash": InstantAppsSplash;
     }
 }
 export { LocalJSX as JSX };
@@ -1135,6 +1187,7 @@ declare module "@stencil/core" {
             "instant-apps-popovers": LocalJSX.InstantAppsPopovers & JSXBase.HTMLAttributes<HTMLInstantAppsPopoversElement>;
             "instant-apps-scoreboard": LocalJSX.InstantAppsScoreboard & JSXBase.HTMLAttributes<HTMLInstantAppsScoreboardElement>;
             "instant-apps-social-share": LocalJSX.InstantAppsSocialShare & JSXBase.HTMLAttributes<HTMLInstantAppsSocialShareElement>;
+            "instant-apps-splash": LocalJSX.InstantAppsSplash & JSXBase.HTMLAttributes<HTMLInstantAppsSplashElement>;
         }
     }
 }
