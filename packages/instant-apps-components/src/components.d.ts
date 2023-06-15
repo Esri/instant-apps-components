@@ -1131,7 +1131,7 @@ declare namespace LocalJSX {
         /**
           * Local storage key used to determine whether or not user has opted into "Don't show this again" checkbox.
          */
-        "localStorageKey"?: string;
+        "localStorageKey": string;
         /**
           * Controls the 'open' state of the modal element.
          */

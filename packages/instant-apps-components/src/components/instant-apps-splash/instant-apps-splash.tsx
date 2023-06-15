@@ -24,7 +24,7 @@ export class InstantAppsSplash {
    * Local storage key used to determine whether or not user has opted into "Don't show this again" checkbox.
    */
   @Prop()
-  localStorageKey: string = 'instant-apps-splash';
+  localStorageKey!: string;
 
   /**
    * Title of splash screen.
@@ -71,7 +71,14 @@ export class InstantAppsSplash {
   }
 
   componentWillLoad(): void {
-    this.el.open = this.open && !getLocalStorageItem(this.localStorageKey);
+    let open: boolean;
+    const { localStorageKey } = this;
+    if (localStorageKey) {
+      open = this.open && !getLocalStorageItem(this.localStorageKey);
+    } else {
+      open = this.open;
+    }
+    this.el.open = open;
     if (this.content && this._sanitizer) this.sanitizeContent();
   }
 
@@ -80,7 +87,7 @@ export class InstantAppsSplash {
       <calcite-modal onCalciteModalClose={this.close.bind(this)} open={this.open} closeButtonDisabled={this.closeButtonDisabled}>
         {this.renderHeader()}
         {this.renderContent()}
-        {this.renderDontShowThisAgainCheckbox()}
+        {this.localStorageKey ? this.renderDontShowThisAgainCheckbox() : null}
         {this.renderPrimaryButton()}
       </calcite-modal>
     );
@@ -97,8 +104,8 @@ export class InstantAppsSplash {
   }
 
   renderDontShowThisAgainCheckbox(): HTMLDivElement {
-    const { messages } = this;
-    const checked = getLocalStorageItem(this.localStorageKey) ? true : null;
+    const { localStorageKey, messages } = this;
+    const checked = getLocalStorageItem(localStorageKey) ? true : null;
     return (
       <div class={CSS.back} slot="back">
         <calcite-label layout="inline">
@@ -128,12 +135,14 @@ export class InstantAppsSplash {
   }
 
   protected handleDontShowThisAgain(event: CustomEvent): void {
+    const { localStorageKey } = this;
+    if (!localStorageKey) return;
     const checkboxNode = event.target as HTMLCalciteCheckboxElement;
     const { checked } = checkboxNode;
     if (checked) {
-      setLocalStorageItem(this.localStorageKey);
+      setLocalStorageItem(localStorageKey);
     } else {
-      removeItemFromLocalStorage(this.localStorageKey);
+      removeItemFromLocalStorage(localStorageKey);
     }
   }
 }
