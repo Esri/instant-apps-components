@@ -410,7 +410,11 @@ export class InstantAppsFilterList {
         } else if (type === 'date') {
           this.resetDatePicker(expression);
         } else if (type === 'number' || type === 'range') {
-          this.resetNumberRange(expression);
+          if (expression?.numDisplayOption === 'drop-down') {
+            this.resetCombobox(expression);
+          } else {
+            this.resetNumberRange(expression);
+          }
         } else {
           this.resetCheckbox(expression);
         }
