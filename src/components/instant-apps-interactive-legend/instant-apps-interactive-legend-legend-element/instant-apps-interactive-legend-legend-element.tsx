@@ -69,7 +69,7 @@ export class InstantAppsInteractiveLegendLegendElement {
     const nonInteractiveClass = !this.isInteractive ? ` ${CSS.nonInteractive}` : '';
     const nestedUniqueSymbolClass = checkNestedUniqueSymbolLegendElement(this.activeLayerInfo) ? ` ${CSS.nestedUniqueSymbol}` : '';
 
-    let expanded = this.expanded;
+    let expanded = singleSymbol && !this.expanded && !this.zoomTo ? true : this.expanded;
 
     if (this.isRelationshipRamp) {
       const relationshipRampExpandStates = store.get('relationshipRampExpandStates');
