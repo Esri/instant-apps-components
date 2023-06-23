@@ -146,7 +146,6 @@ export class InstantAppsExport {
    */
   @Event() exportOutputUpdated: EventEmitter<void>;
 
-  exportHandleImgLoaded: () => void;
   compass: __esri.Compass;
   compassContainerEl: HTMLDivElement;
   extraContainerEl: HTMLDivElement;
@@ -342,16 +341,14 @@ export class InstantAppsExport {
 
   async handleViewExportOnClick(): Promise<void> {
     if (this.view != null) {
-      this.exportHandleImgLoaded = this.handleImgLoaded.bind(this);
       this.addPrintStyling();
       this.handleExtraContent();
       if (this.includeMap) {
-        // this.viewEl?.addEventListener('load', this.exportHandleImgLoaded);
-        this.exportHandleImgLoaded();
+        this.handleImgLoaded();
         this.updatePopupToPrint();
         await this.viewScreenshot();
       } else {
-        this.exportHandleImgLoaded();
+        this.handleImgLoaded();
       }
     } else {
       if (this.popoverEl != null) {
@@ -391,13 +388,12 @@ export class InstantAppsExport {
 
   resetPrintContent(): void {
     if (this.view != null) {
-      // this.printContainerEl?.prepend(this.printEl);
-      // this.printStyleEl?.remove();
-      // this.printStyleEl = undefined;
+      this.printContainerEl?.prepend(this.printEl);
+      this.printStyleEl?.remove();
+      this.printStyleEl = undefined;
       if (this.popoverEl != null) {
         this.popoverEl.open = false;
       }
-      this.viewEl?.removeEventListener('load', this.exportHandleImgLoaded);
     }
   }
 
