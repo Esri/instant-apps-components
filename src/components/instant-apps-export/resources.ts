@@ -28,7 +28,8 @@ export const printStyling = `
     color: #323232 !important;
     display: flex;
     flex-flow: row wrap;
-    gap: 16px 36px;
+    align-content: flex-start;
+    gap: 36px;
   }
 
   .instant-apps-export-print, .instant-apps-export-print * {
@@ -40,8 +41,15 @@ export const printStyling = `
   }
 
   .instant-apps-export-print__view-container {
-    position: relative;
     height: 60%;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+  }
+
+  .instant-apps-export-print__view-wrapper {
+    position: relative;
+    height: 100%;
     width: 100%;
     display: flex;
     flex-direction: column;
@@ -51,8 +59,7 @@ export const printStyling = `
   .instant-apps-export-print__view {
     height: 100%;
     width: 100%;
-    object-fit: cover;
-    overflow: hidden;
+    background-position: center;
   }
 
   .instant-apps-export-print__popup-container {
@@ -88,7 +95,7 @@ export const printStyling = `
     flex-flow: row wrap;
   }
 
-  .instant-apps-export-print .esri-widget > * {
+  .instant-apps-export-print .esri-widget > *:not(.instant-apps-export-print__scale-bar-container > *) {
     background: #fff;
     color: #323232;
   }
@@ -152,6 +159,32 @@ export const printStyling = `
 
   instant-apps-export-print__compass-container .esri-compass__icon.esri-icon-compass {
     color: #6e6e6e;
+  }
+
+  .instant-apps-export-print__scale-bar-container {
+    position: absolute;
+    bottom: 15px;
+    left: 15px;
+  }
+
+  .instant-apps-export-print__scale-bar-container .esri-scale-bar__line {
+    background-color: rgba(255, 255, 255, 0.66);
+  }
+
+  .instant-apps-export-print__scale-bar-container .esri-scale-bar__line--top {
+    border-bottom: 2px solid #323232;
+  }
+
+  .instant-apps-export-print__scale-bar-container .esri-scale-bar__label {
+    color: #323232;
+  }
+
+  .instant-apps-export-print__scale-bar-container .esri-scale-bar__line--top:before,
+  .instant-apps-export-print__scale-bar-container .esri-scale-bar__line--top:after,
+  .instant-apps-export-print__scale-bar-container .esri-scale-bar__line--bottom:before,
+  .instant-apps-export-print__scale-bar-container .esri-scale-bar__line--bottom:after {
+    background-color: #323232;
+    border-right: 2px solid #323232;
   }
 
   .instant-apps-export-print__popup-container .esri-feature-media__item-navigation {

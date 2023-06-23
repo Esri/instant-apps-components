@@ -89,6 +89,10 @@ export namespace Components {
          */
         "showIncludePopup"?: boolean;
         /**
+          * Show scale bar widget in map.
+         */
+        "showScaleBar"?: boolean;
+        /**
           * MapView or SceneView to reference when filtering.
          */
         "view": __esri.MapView | __esri.SceneView | undefined;
@@ -710,6 +714,10 @@ declare namespace LocalJSX {
           * Show popup checkbox.
          */
         "showIncludePopup"?: boolean;
+        /**
+          * Show scale bar widget in map.
+         */
+        "showScaleBar"?: boolean;
         /**
           * MapView or SceneView to reference when filtering.
          */
