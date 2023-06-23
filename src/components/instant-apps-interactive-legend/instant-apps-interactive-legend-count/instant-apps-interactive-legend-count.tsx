@@ -120,7 +120,7 @@ export class InstantAppsInteractiveLegendCount {
       total = calculateTotalFeatureCountForNestedSymbols(categoriesArr);
     } else {
       if (checkRelationshipRamp(this.activeLayerInfo)) {
-        const layerData = getIntLegendLayerData(this.activeLayerInfo.layer as __esri.FeatureLayer, interactiveLegendState.data);
+        const layerData = getIntLegendLayerData(this.activeLayerInfo.layer as __esri.FeatureLayer);
         const categoriesArr = getCategoriesArray(layerData.categories)[1];
         total = categoriesArr.count as number;
       } else {

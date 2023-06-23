@@ -51,6 +51,7 @@ export async function createInteractiveLegendDataForLayer(
   try {
     // Get first Legend Element from Active LayerInfo - only first legend element will be interactive
     await reactiveUtils.whenOnce(() => legendViewModel?.state === 'ready');
+    await reactiveUtils.whenOnce(() => activeLayerInfo?.legendElements?.length);
     const legendElement = activeLayerInfo.legendElements[0] as __esri.LegendElement;
 
     // Each active layer info will have it's own property in object - we'll use the layer ID to categorize each layer
@@ -145,8 +146,8 @@ export function getCategoryData(
   return parentLegendElementInfoData ? parentLegendElementInfoData?.nestedInfos?.[infoIndex] : data?.categories?.get(elementInfo?.label ?? layer?.id);
 }
 
-export function getIntLegendLayerData(fLayer: __esri.FeatureLayer, data): IIntLegendLayerData {
-  return data?.[fLayer?.id];
+export function getIntLegendLayerData(fLayer: __esri.FeatureLayer): IIntLegendLayerData {
+  return interactiveLegendState?.data?.[fLayer?.id];
 }
 
 // filtering
@@ -811,11 +812,12 @@ export function getTheme(el: HTMLElement): string {
 }
 
 // store
-export function updateStore(data: IInteractiveLegendData, layerData?: { intLegendLayerData: IIntLegendLayerData; layerId: string }): void {
-  const layerId = layerData?.layerId;
-  const layerDataToSet = layerData?.intLegendLayerData;
-  const updatedData = layerId ? { ...interactiveLegendState.data, [layerId]: layerDataToSet } : data;
-  store.set('data', updatedData);
+export function updateStore(layerData: { intLegendLayerData: IIntLegendLayerData; layerId: string }): void {
+  if (layerData.layerId && layerData.intLegendLayerData) {
+    const layerId = layerData.layerId;
+    const layerDataToSet = layerData.intLegendLayerData;
+    store.set('data', { ...interactiveLegendState.data, [layerId]: layerDataToSet });
+  }
 }
 
 // handleFilterChange - Configuration experience
