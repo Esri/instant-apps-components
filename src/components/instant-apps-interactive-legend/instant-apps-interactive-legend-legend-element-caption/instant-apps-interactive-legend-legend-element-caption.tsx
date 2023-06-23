@@ -158,7 +158,7 @@ export class InstantAppsInteractiveLegendLegendElementCaption {
 
   handleZoomTo(): () => void {
     return () => {
-      const data = getIntLegendLayerData(this.layer, interactiveLegendState.data);
+      const data = getIntLegendLayerData(this.layer);
       const nestedCategory = getParentLegendElementInfoData(data, this.legendElement);
       zoomTo(data, this.legendvm.view as __esri.MapView, nestedCategory);
     };
@@ -168,12 +168,12 @@ export class InstantAppsInteractiveLegendLegendElementCaption {
     return () => {
       const handleNestedCategory = () => {
         const layerData = showAllNestedUniqueSymbol(data, this.legendElement.title as string);
-        updateStore(interactiveLegendState.data, { intLegendLayerData: layerData, layerId: this.layer.id });
+        updateStore({ intLegendLayerData: layerData, layerId: this.layer.id });
       };
 
       const handleCategory = () => {
         const layerData = showAll(data);
-        updateStore(interactiveLegendState.data, { intLegendLayerData: layerData, layerId: this.layer.id });
+        updateStore({ intLegendLayerData: layerData, layerId: this.layer.id });
       };
 
       const data = interactiveLegendState.data?.[this.layer?.id];

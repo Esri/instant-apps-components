@@ -596,7 +596,7 @@ export class InstantAppsInteractiveLegendClassic {
 
     let selected;
 
-    const data = getIntLegendLayerData(layer as __esri.FeatureLayer, interactiveLegendState.data);
+    const data = getIntLegendLayerData(layer as __esri.FeatureLayer);
     const parentLegendElementInfoData = getParentLegendElementInfoData(data, parentLegendElementInfo);
 
     if (interactiveLegendState.data) {
@@ -766,7 +766,7 @@ export class InstantAppsInteractiveLegendClassic {
                   () => !this.legendvm?.view?.updating,
                   async () => {
                     const data = await handleFeatureCount(this.legendvm, interactiveLegendState.data);
-                    updateStore(data);
+                    store.set("data", data);
                     this.calculatingFeatureCount = false;
                   },
                   { once: true, initial: true },
@@ -808,7 +808,11 @@ export class InstantAppsInteractiveLegendClassic {
     const acl = this.legendvm?.activeLayerInfos?.find(acl => acl?.layer?.id === fLayer?.id);
     if (!dataForLayer && acl) {
       const dataForLayer = (await createInteractiveLegendDataForLayer(this.legendvm, acl, this.reactiveUtils)) as IIntLegendLayerData;
-      updateStore(data, { intLegendLayerData: dataForLayer, layerId: fLayer?.id });
+      updateStore({ intLegendLayerData: dataForLayer, layerId: fLayer?.id });
+      if (this.featureCount) {
+        const data = await handleFeatureCount(this.legendvm, interactiveLegendState.data);
+        store.set("data", data);
+      }
     }
   }
 
@@ -821,7 +825,7 @@ export class InstantAppsInteractiveLegendClassic {
         await handleFilter(dataFromActiveLayerInfo, elementInfo, infoIndex, this.filterMode);
       }
 
-      updateStore(interactiveLegendState.data, { intLegendLayerData: dataFromActiveLayerInfo, layerId: layer?.id });
+      updateStore({ intLegendLayerData: dataFromActiveLayerInfo, layerId: layer?.id });
     };
   }
 }
