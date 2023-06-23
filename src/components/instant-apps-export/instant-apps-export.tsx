@@ -523,14 +523,17 @@ export class InstantAppsExport {
         width: this.view.width,
         height: this.view.height,
       });
+      const maxIMGWidth = 800;
+      const maxIMGHeight = 494;
       if (this.viewEl != null && this.viewWrapperEl != null) {
-        if (this.view.width < 800) {
+        if (this.view.width < maxIMGWidth) {
           this.viewWrapperEl.style.width = `${this.view.width}px`;
           this.viewWrapperEl.style.maxWidth = '';
         } else {
           this.viewWrapperEl.style.maxWidth = `${this.view.width}px`;
           this.viewWrapperEl.style.width = '';
         }
+        this.viewWrapperEl.style.height = this.view.height < maxIMGHeight ? `${this.view.height}px` : '';
         this.viewEl.style.backgroundImage = `url("${screenshot.dataUrl}")`;
       }
     }

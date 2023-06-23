@@ -60,6 +60,7 @@ export const printStyling = `
     height: 100%;
     width: 100%;
     background-position: center;
+    background-repeat: no-repeat;
   }
 
   .instant-apps-export-print__popup-container {
@@ -165,6 +166,10 @@ export const printStyling = `
     position: absolute;
     bottom: 15px;
     left: 15px;
+  }
+
+  .instant-apps-export-print__scale-bar-container .esri-scale-bar__bar-container:nth-child(1n+3) {
+    display: none;
   }
 
   .instant-apps-export-print__scale-bar-container .esri-scale-bar__line {
