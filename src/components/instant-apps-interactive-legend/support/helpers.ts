@@ -147,8 +147,7 @@ export function getCategoryData(
 }
 
 export function getIntLegendLayerData(fLayer: __esri.FeatureLayer): IIntLegendLayerData {
-  const data = interactiveLegendState?.data?.[fLayer?.id];
-  return data;
+  return interactiveLegendState?.data?.[fLayer?.id];
 }
 
 // filtering
@@ -814,9 +813,11 @@ export function getTheme(el: HTMLElement): string {
 
 // store
 export function updateStore(layerData: { intLegendLayerData: IIntLegendLayerData; layerId: string }): void {
-  const layerId = layerData?.layerId as string;
-  const layerDataToSet = layerData?.intLegendLayerData;
-  store.set('data', { ...interactiveLegendState.data, [layerId]: layerDataToSet });
+  if (layerData.layerId && layerData.intLegendLayerData) {
+    const layerId = layerData.layerId;
+    const layerDataToSet = layerData.intLegendLayerData;
+    store.set('data', { ...interactiveLegendState.data, [layerId]: layerDataToSet });
+  }
 }
 
 // handleFilterChange - Configuration experience
