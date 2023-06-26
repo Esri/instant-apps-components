@@ -766,7 +766,7 @@ export class InstantAppsInteractiveLegendClassic {
                   () => !this.legendvm?.view?.updating,
                   async () => {
                     const data = await handleFeatureCount(this.legendvm, interactiveLegendState.data);
-                    store.set("data", data);
+                    store.set("data", {...interactiveLegendState.data, ...data});
                     this.calculatingFeatureCount = false;
                   },
                   { once: true, initial: true },
@@ -811,7 +811,7 @@ export class InstantAppsInteractiveLegendClassic {
       updateStore({ intLegendLayerData: dataForLayer, layerId: fLayer?.id });
       if (this.featureCount) {
         const data = await handleFeatureCount(this.legendvm, interactiveLegendState.data);
-        store.set("data", data);
+        store.set("data", {...interactiveLegendState.data, ...data});
       }
     }
   }

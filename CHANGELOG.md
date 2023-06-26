@@ -5,11 +5,17 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## v1.0.0-beta.97
+
+### instant-apps-interactive-legend
+
+- Fix: Update to "Re-calculate layer data when layer is off by default" fix.
+
 ## v1.0.0-beta.96
 
 ### instant-apps-interactive-legend
 
-- Fix: Use `activeLayerInfo.ready` instead of `activeLayerInfo.legendElements.length`.
+- Fix: Use `activeLayerInfo.ready` instead of `activeLayerInfo.legendElements.length.
 
 ## v1.0.0-beta.95
 
