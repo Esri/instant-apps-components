@@ -276,8 +276,8 @@ export class InstantAppsExport {
       <div ref={(el: HTMLDivElement) => (this.printContainerEl = el)}>
         <div class={CSS.print.base} ref={(el: HTMLDivElement) => (this.printEl = el)}>
           {printMap}
-          {extraContent}
           {legend}
+          {extraContent}
           {popup}
         </div>
       </div>
