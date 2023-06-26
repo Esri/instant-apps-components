@@ -11,6 +11,6 @@
   "resetDatePicker": "Скинути елемент вибору дати",
   "resetFilter": "Скинути фільтр",
   "selectFilter": "Вибрати фільтр",
-  "zoomTo": "ґ_Zoom to_______________Ї",
-  "zoomToExtent": "ґ_Zoom to extent_______________Ї"
+  "zoomTo": "Масштабувати до",
+  "zoomToExtent": "Масштабувати до екстенту"
 }

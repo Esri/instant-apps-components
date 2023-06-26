@@ -11,6 +11,6 @@
   "resetDatePicker": "Сброс выбора даты",
   "resetFilter": "Сбросить фильтр",
   "selectFilter": "Выбрать фильтр",
-  "zoomTo": "Ж_Zoom to_______________Я",
-  "zoomToExtent": "Ж_Zoom to extent_______________Я"
+  "zoomTo": "Приблизить к",
+  "zoomToExtent": "Приблизить к экстенту"
 }

@@ -11,6 +11,6 @@
   "resetDatePicker": "重設日期選取器",
   "resetFilter": "重設篩選器",
   "selectFilter": "選擇篩選器",
-  "zoomTo": "試_Zoom to_______________驗",
-  "zoomToExtent": "試_Zoom to extent_______________驗"
+  "zoomTo": "縮放至",
+  "zoomToExtent": "縮放至範圍"
 }

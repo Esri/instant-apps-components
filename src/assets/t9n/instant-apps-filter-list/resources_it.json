@@ -11,6 +11,6 @@
   "resetDatePicker": "Reimposta selettore data",
   "resetFilter": "Ripristina Filtro",
   "selectFilter": "Seleziona filtro",
-  "zoomTo": "é_Zoom to_______________È",
-  "zoomToExtent": "é_Zoom to extent_______________È"
+  "zoomTo": "Zoom a",
+  "zoomToExtent": "Zoom all'estensione"
 }

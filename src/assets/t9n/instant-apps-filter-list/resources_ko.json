@@ -11,6 +11,6 @@
   "resetDatePicker": "날짜 선택기 재설정",
   "resetFilter": "필터 재설정",
   "selectFilter": "필터 선택",
-  "zoomTo": "한_Zoom to_______________빠",
-  "zoomToExtent": "한_Zoom to extent_______________빠"
+  "zoomTo": "확대/축소",
+  "zoomToExtent": "범위로 확대"
 }

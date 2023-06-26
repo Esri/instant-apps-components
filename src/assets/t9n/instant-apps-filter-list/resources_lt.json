@@ -11,6 +11,6 @@
   "resetDatePicker": "Iš naujo nustatyti datos parinkiklį",
   "resetFilter": "Iš naujo nustatyti filtrą",
   "selectFilter": "Pasirinkti filtrą",
-  "zoomTo": "Į_Zoom to_______________š",
-  "zoomToExtent": "Į_Zoom to extent_______________š"
+  "zoomTo": "Parodyti visą",
+  "zoomToExtent": "Artinti prie aprėpties"
 }

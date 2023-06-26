@@ -11,6 +11,6 @@
   "resetDatePicker": "إعادة تعيين منتقي التاريخ",
   "resetFilter": "إعادة تعيين عامل التصفية",
   "selectFilter": "تحديد عامل تصفية",
-  "zoomTo": "بيت_Zoom to_______________لاحقة",
-  "zoomToExtent": "بيت_Zoom to extent_______________لاحقة"
+  "zoomTo": "تكبير/تصغير إلى",
+  "zoomToExtent": "تكبير/تصغير إلى النطاق"
 }

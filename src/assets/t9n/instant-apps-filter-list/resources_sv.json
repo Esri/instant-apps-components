@@ -11,6 +11,6 @@
   "resetDatePicker": "Återställ datumväljare",
   "resetFilter": "Återställ filter",
   "selectFilter": "Välj filter",
-  "zoomTo": "Å_Zoom to_______________ö",
-  "zoomToExtent": "Å_Zoom to extent_______________ö"
+  "zoomTo": "Zooma till",
+  "zoomToExtent": "Zooma till utbredning"
 }
