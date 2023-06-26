@@ -167,7 +167,7 @@ export class InstantAppsInteractiveLegendClassic {
           await this.reactiveUtils.whenOnce(() => this.legendvm?.view?.updating === false);
           // Initial data setup
           const data = await generateData(this.legendvm, this.reactiveUtils);
-          store.set('data', data);
+          store.set('data', { ...interactiveLegendState.data, ...data  });
           this.isLoading = false;
           this.setupWatchersAndListeners();
         } catch {
@@ -786,14 +786,16 @@ export class InstantAppsInteractiveLegendClassic {
         'change',
         async activeLayerInfo => {
           const data = await generateData(this.legendvm, this.reactiveUtils);
-          store.set('data', { ...data, ...interactiveLegendState.data });
+          store.set('data', { ...interactiveLegendState.data, ...data  });
+          forceUpdate(this.el);
           this.handles?.add(
             this.reactiveUtils.on(
               () => activeLayerInfo.children,
               'change',
               async () => {
                 const data = await generateData(this.legendvm, this.reactiveUtils);
-                store.set('data', { ...data, ...interactiveLegendState.data });
+                store.set('data', { ...interactiveLegendState.data, ...data  });
+                forceUpdate(this.el);
               },
             ),
           );
