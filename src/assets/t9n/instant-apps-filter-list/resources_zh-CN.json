@@ -11,6 +11,6 @@
   "resetDatePicker": "重置日期选取器",
   "resetFilter": "重置过滤器",
   "selectFilter": "选择过滤器",
-  "zoomTo": "试_Zoom to_______________验",
-  "zoomToExtent": "试_Zoom to extent_______________验"
+  "zoomTo": "缩放至",
+  "zoomToExtent": "缩放至范围"
 }

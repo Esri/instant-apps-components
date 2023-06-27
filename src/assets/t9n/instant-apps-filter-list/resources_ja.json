@@ -11,6 +11,6 @@
   "resetDatePicker": "日付の選択のリセット",
   "resetFilter": "フィルターのリセット",
   "selectFilter": "フィルターの選択",
-  "zoomTo": "須_Zoom to_______________鷗",
-  "zoomToExtent": "須_Zoom to extent_______________鷗"
+  "zoomTo": "ズーム",
+  "zoomToExtent": "範囲にズーム"
 }

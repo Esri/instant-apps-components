@@ -11,6 +11,6 @@
   "resetDatePicker": "Poništi birač datuma",
   "resetFilter": "Poništite filter",
   "selectFilter": "Izaberite filter",
-  "zoomTo": "Č_Zoom to_______________ž",
-  "zoomToExtent": "Č_Zoom to extent_______________ž"
+  "zoomTo": "Zumiraj na",
+  "zoomToExtent": "Zumiraj do obuhvata"
 }

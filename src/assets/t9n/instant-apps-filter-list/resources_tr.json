@@ -11,6 +11,6 @@
   "resetDatePicker": "Tarih seçiciyi sıfırla",
   "resetFilter": "Filtreyi sıfırla",
   "selectFilter": "Filtre seç",
-  "zoomTo": "ı_Zoom to_______________İ",
-  "zoomToExtent": "ı_Zoom to extent_______________İ"
+  "zoomTo": "Yakınlaştır",
+  "zoomToExtent": "Yayılıma yakınlaştır"
 }

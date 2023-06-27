@@ -11,6 +11,6 @@
   "resetDatePicker": "Dátumválasztó visszaállítása",
   "resetFilter": "Szűrő alaphelyzetbe állítása",
   "selectFilter": "Szűrő kiválasztása",
-  "zoomTo": "í_Zoom to_______________ő",
-  "zoomToExtent": "í_Zoom to extent_______________ő"
+  "zoomTo": "Nagyítás erre",
+  "zoomToExtent": "Nagyítás/kicsinyítés a kiterjedésre"
 }

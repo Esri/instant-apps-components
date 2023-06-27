@@ -11,6 +11,6 @@
   "resetDatePicker": "Απαλοιφή ημερομηνίας",
   "resetFilter": "Επαναφορά φίλτρου",
   "selectFilter": "Επιλογή φίλτρου",
-  "zoomTo": "Đ_Zoom to_______________ớ",
-  "zoomToExtent": "Đ_Zoom to extent_______________ớ"
+  "zoomTo": "Εστίαση",
+  "zoomToExtent": "Εστίαση στα όρια περιοχής μελέτης"
 }

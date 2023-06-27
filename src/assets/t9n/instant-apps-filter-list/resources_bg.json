@@ -11,6 +11,6 @@
   "resetDatePicker": "Нулиране на инструмента за избор на дата",
   "resetFilter": "Нулиране на филтър",
   "selectFilter": "Избор на филтър",
-  "zoomTo": "й_Zoom to_______________й",
-  "zoomToExtent": "й_Zoom to extent_______________й"
+  "zoomTo": "Приближаване",
+  "zoomToExtent": "Приближаване към обхват"
 }
