@@ -11,9 +11,16 @@ jobs:
     if: github.event.pull_request.merged == true
     runs-on: ubuntu-latest
     steps:
+      - id: check
+        uses: EndBug/version-check@v2
+        with:
+          file-url: https://unpkg.com/@esri/instant-apps-components@latest/package.json
+          static-checking: localIsNew
       - uses: mshick/add-pr-comment@v2
         with:
           message: |
-            **Hello**
-            🌏
-            !
+            **instant-apps-components** status
+            NPM Package Version: ${{ steps.check.outputs.version }}
+            Repo Package Version: ${{ steps.check.outputs.newVersion }}
+            If you would like to follow this PR up with a publish, please proceed to here: 
+              https://github.com/rslibed/instant-apps-stencil/actions/new
