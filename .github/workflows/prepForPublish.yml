@@ -12,6 +12,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: '16'
       - id: check
         uses: EndBug/version-check@v2
         with:
@@ -24,6 +27,6 @@ jobs:
             ## instant-apps-components status
             - NPM Package Version: ${{ steps.check.outputs.version }}
             - Repo Package Version: ${{ steps.check.outputs.newVersion }}
-            If you would like to follow this PR up with a publish, please proceed to the [instant-apps-stencil repo](https://github.com/rslibed/instant-apps-stencil/actions/new)
-            and manually run the publish 
-              
+            
+            If you would like to follow this PR up with a publish, please proceed to the [instant-apps-stencil repo](https://github.com/rslibed/instant-apps-stencil/actions/new) and manually run the publish 
+      
