@@ -21,8 +21,9 @@ jobs:
       - uses: mshick/add-pr-comment@v2
         with:
           message: |
-            **instant-apps-components** status
-            NPM Package Version: ${{ steps.check.outputs.version }}
-            Repo Package Version: ${{ steps.check.outputs.newVersion }}
-            If you would like to follow this PR up with a publish, please proceed to here: 
-              https://github.com/rslibed/instant-apps-stencil/actions/new
+            ## instant-apps-components status
+            - NPM Package Version: ${{ steps.check.outputs.version }}
+            - Repo Package Version: ${{ steps.check.outputs.newVersion }}
+            If you would like to follow this PR up with a publish, please proceed to the [instant-apps-stencil repo](https://github.com/rslibed/instant-apps-stencil/actions/new)
+            and manually run the publish 
+              
