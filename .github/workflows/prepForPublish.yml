@@ -15,18 +15,20 @@ jobs:
       - uses: actions/setup-node@v3
         with:
           node-version: '16'
-      - id: check
-        uses: EndBug/version-check@v2
-        with:
-          diff-search: true
-          file-url: https://unpkg.com/@esri/instant-apps-components@latest/package.json
-          static-checking: localIsNew
+     # get the latest version of the package from npm
+      - name: Get latest version
+        id: get_npm_version
+        run: echo ::set-output name=version::$(npm view @esri/instant-apps-components version)
+     # get the version number from the local package.json file
+      - name: Get local version
+        id: get_local_version
+        run: echo ::set-output name=localVersion::$(node -p "require('./package.json').version")
       - uses: mshick/add-pr-comment@v2
         with:
           message: |
             ## instant-apps-components status
-            - NPM Package Version: ${{ steps.check.outputs.version }}
-            - Repo Package Version: ${{ steps.check.outputs.newVersion }}
+            - NPM Version: ${{ steps.get_npm_version.outputs.version }} [link](https://www.npmjs.com/package/@esri/instant-apps-components/v/${{ steps.get_npm_version.outputs.version }})
+            - Repo Version: ${{ steps.get_local_version.outputs.localVersion }} [link](https://github.com/Esri/instant-apps-components/blob/master/package.json#L4)
             
             If you would like to follow this PR up with a publish, please proceed to the [instant-apps-stencil repo](https://github.com/rslibed/instant-apps-stencil/actions/new) and manually run the publish 
       
