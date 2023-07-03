@@ -1,0 +1,41 @@
+name: Offer Publish
+
+# only trigger on pull request closed events
+on:
+  pull_request:
+    types: [ closed ]
+
+jobs:
+  merge_job:
+    # this job will only run if the PR has been merged
+    if: github.event.pull_request.merged == true
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: '16'
+     # get the latest version of the package from npm
+      - name: Get latest version
+        id: get_npm_version
+        run: echo ::set-output name=version::$(npm view @esri/instant-apps-components version)
+     # get the version number from the local package.json file
+      - name: Get local version
+        id: get_local_version
+        run: echo ::set-output name=localVersion::$(node -p "require('./package.json').version")
+     # get url to the PR
+      - name: Get PR URL
+        id: get_pr_url
+        run: echo ::set-output name=prUrl::$(jq -r .pull_request.url $GITHUB_EVENT_PATH)
+      - uses: mshick/add-pr-comment@v2
+        with:
+          message: |
+            # instant-apps-components
+
+            The following PR has been closed and merged. - [link to PR](${{ steps.get_pr_url.outputs.prUrl }})
+
+            - NPM Version: ${{ steps.get_npm_version.outputs.version }} [link](https://www.npmjs.com/package/@esri/instant-apps-components/v/${{ steps.get_npm_version.outputs.version }})
+            - Repo Version: ${{ steps.get_local_version.outputs.localVersion }} [link](https://github.com/Esri/instant-apps-components/blob/master/package.json#L4)
+            
+            ### To Publish instant-apps-components to NPM
+            If you would like to follow this PR up with a publish, please proceed to the [instant-apps-stencil repo](https://github.com/rslibed/instant-apps-stencil/actions/new) and manually run the publish 
