@@ -38,6 +38,10 @@ jobs:
               -[link](https://www.npmjs.com/package/@esri/instant-apps-components/v/${{ steps.get_npm_version.outputs.version }})
             - Repo Version: **${{ steps.get_local_version.outputs.localVersion }}** 
               -[link](https://github.com/Esri/instant-apps-components/blob/master/packages/instant-apps-components/package.json#L4)
+
+
+            **If you want to publish, your Repo version should be updated and differ from the current version on NPM**
             
-            ### To Publish instant-apps-components to NPM
-            If you would like to follow this PR up with a publish, please proceed to the [actions tab](https://github.com/Esri/instant-apps-components/actions) and manually run the publish.
+
+            ### To publish instant-apps-components to NPM
+            If you would like to follow this PR up with a publish, please proceed to the [actions tab](https://github.com/Esri/instant-apps-components/actions/workflows/publish.yml) and manually run the publish.
