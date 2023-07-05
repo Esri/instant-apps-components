@@ -22,7 +22,7 @@ jobs:
      # get the version number from the local package.json file
       - name: Get local version
         id: get_local_version
-        run: echo "localVersion=$(node -p 'require(\"./packages/instant-apps-components/package.json\").version')" >> $GITHUB_OUTPUT
+        run: echo "localVersion=$(node -p 'require("./packages/instant-apps-components/package.json").version')" >> $GITHUB_OUTPUT
      # get url to the PR
       - name: Get PR URL
         id: get_pr_url
