@@ -13,7 +13,6 @@
     "publish:latest": "lerna publish from-package --yes",
     "version:next": "lerna version --conventional-prerelease --preid next --no-git-tag-version --no-push --yes && npm run util:sync-linked-package-versions",
     "version:latest": "lerna version --conventional-commits --create-release github --no-git-tag-version --no-push --yes && npm run util:sync-linked-package-versions",
-    "prepare": "husky install",
     "preversion": "npm run util:is-in-sync-with-origin && npm run util:is-working-tree-clean",
     "test": "turbo run test",
     "util:is-in-sync-with-origin": "[ \"$(git rev-parse --abbrev-ref HEAD)\" = \"master\" ] && [ \"$(git rev-parse master)\" = \"$(git rev-parse origin/master)\" ]",
