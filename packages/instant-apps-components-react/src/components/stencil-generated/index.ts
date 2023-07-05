@@ -29,3 +29,4 @@ export const InstantAppsPopover = /*@__PURE__*/createReactComponent<JSX.InstantA
 export const InstantAppsPopovers = /*@__PURE__*/createReactComponent<JSX.InstantAppsPopovers, HTMLInstantAppsPopoversElement>('instant-apps-popovers');
 export const InstantAppsScoreboard = /*@__PURE__*/createReactComponent<JSX.InstantAppsScoreboard, HTMLInstantAppsScoreboardElement>('instant-apps-scoreboard');
 export const InstantAppsSocialShare = /*@__PURE__*/createReactComponent<JSX.InstantAppsSocialShare, HTMLInstantAppsSocialShareElement>('instant-apps-social-share');
+export const InstantAppsSplash = /*@__PURE__*/createReactComponent<JSX.InstantAppsSplash, HTMLInstantAppsSplashElement>('instant-apps-splash');

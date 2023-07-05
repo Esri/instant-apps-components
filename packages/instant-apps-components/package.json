@@ -38,7 +38,8 @@
     "@stencil/react-output-target": "^0.5.0",
     "@stencil/store": "^2.0.3",
     "esri-loader": "^3.7.0",
-    "maquette": "^3.5.3"
+    "maquette": "^3.5.3",
+    "templates-common-library": "0.0.228-esm"
   },
   "devDependencies": {
     "@babel/core": "7.16.5",
