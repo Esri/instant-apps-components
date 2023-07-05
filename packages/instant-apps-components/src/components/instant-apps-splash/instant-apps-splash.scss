@@ -1,0 +1,12 @@
+:host {
+  display: block;
+
+  .instant-apps-splash__back-content {
+    display: flex;
+    align-items: center;
+
+    calcite-label {
+      --calcite-label-margin-bottom: 0;
+    }
+  }
+}

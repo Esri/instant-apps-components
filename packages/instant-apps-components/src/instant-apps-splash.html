@@ -20,40 +20,18 @@
     <script type="module" src="/build/instant-apps-components.esm.js"></script>
     <script nomodule src="/build/instant-apps-components.js"></script>
 
-    <style>
-      html,
-      body {
-        width: 100%;
-        height: 100%;
-        margin: 1em;
-        padding: 1em;
-      }
-
-      .demos {
-        display: flex;
-        flex-direction: column;
-      }
-
-      calcite-link {
-        margin: 0.5em 0;
-      }
-    </style>
+    <style></style>
   </head>
 
   <body>
-    <h3>Instant App Component Demo Apps</h3>
-    <div class="demos">
-      <calcite-link href="./instant-apps-control-panel.html">Control Panel</calcite-link>
-      <calcite-link href="./instant-apps-export.html">Export to PDF</calcite-link>
-      <calcite-link href="./instant-apps-filter-list.html">Filter List</calcite-link>
-      <calcite-link href="./instant-apps-header.html">Header</calcite-link>
-      <calcite-link href="./instant-apps-interactive-legend.html">Interactive Legend</calcite-link>
-      <calcite-link href="./instant-apps-keyboard-shortcuts.html">Keyboard Shortcuts</calcite-link>
-      <calcite-link href="./instant-apps-measurement.html">Measurement</calcite-link>
-      <calcite-link href="./instant-apps-popovers.html">Popover</calcite-link>
-      <calcite-link href="./instant-apps-scoreboard.html">Scoreboard</calcite-link>
-      <calcite-link href="./instant-apps-social-share.html">Social Share</calcite-link>
-      <calcite-link href="./instant-apps-splash.html">Splash</calcite-link>
-    </div>
+    <instant-apps-splash title-text="Title" content="<p>Content</p>" primary-button-text="Enter" close-button-disabled="true"></instant-apps-splash>
+    <calcite-button>Open</calcite-button>
+    <script>
+      const button = document.querySelector('calcite-button');
+      const splash = document.querySelector('instant-apps-splash');
+      button.addEventListener('click', () => {
+        splash.open = true;
+      });
+    </script>
   </body>
 </html>
