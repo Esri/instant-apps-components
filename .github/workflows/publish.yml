@@ -17,12 +17,10 @@ jobs:
         run: npm install
       - name: Get latest version
         id: get_npm_version
-        # run: echo ::set-output name=version::$(npm view @esri/instant-apps-components version)
         run: echo "version=$(npm view @esri/instant-apps-components version)" >> $GITHUB_OUTPUT
       - name: Get local version
         id: get_local_version
-        # run: echo ::set-output name=localVersion::$(node -p "require('./packages/instant-apps-components/package.json').version")
-        run: echo "localVersion=$(node -p require('./packages/instant-apps-components/package.json').version)" >> $GITHUB_OUTPUT
+        run: echo "localVersion=$(node -p 'require(\"./packages/instant-apps-components/package.json\").version')" >> $GITHUB_OUTPUT
       - name: Check if versions are the same
         run: |
           if [ "${{ steps.get_npm_version.outputs.version }}" = "${{ steps.get_local_version.outputs.localVersion }}" ]; then
@@ -40,8 +38,7 @@ jobs:
           NODE_AUTH_TOKEN: ${{ secrets.AUTOMATED_NPM_PUBLISH }}
       - name: Get latest version
         id: get_new_npm_version
-        # run: echo ::set-output name=newVersion::$(npm view @esri/instant-apps-components version)
-        run: echo "{newVersion}={$(npm view @esri/instant-apps-components version)}" >> $GITHUB_OUTPUT
+        run: echo "newVersion=$(npm view @esri/instant-apps-components version)" >> $GITHUB_OUTPUT
       - name: Update @esri/instant-apps-components in instant-apps-components-react package.json
         run: |
           cd packages/instant-apps-components-react
