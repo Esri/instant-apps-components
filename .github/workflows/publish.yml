@@ -18,11 +18,11 @@ jobs:
       - name: Get latest version
         id: get_npm_version
         # run: echo ::set-output name=version::$(npm view @esri/instant-apps-components version)
-        run: echo "{version}={$(npm view @esri/instant-apps-components version)}" >> $GITHUB_OUTPUT
+        run: echo "version=$(npm view @esri/instant-apps-components version)" >> $GITHUB_OUTPUT
       - name: Get local version
         id: get_local_version
         # run: echo ::set-output name=localVersion::$(node -p "require('./packages/instant-apps-components/package.json').version")
-        run: echo "{localVersion}={$(node -p "require('./packages/instant-apps-components/package.json').version")}" >> $GITHUB_OUTPUT
+        run: echo "localVersion=$(node -p \"require('./packages/instant-apps-components/package.json').version\")" >> $GITHUB_OUTPUT
       - name: Check if versions are the same
         run: |
           if [ "${{ steps.get_npm_version.outputs.version }}" = "${{ steps.get_local_version.outputs.localVersion }}" ]; then
