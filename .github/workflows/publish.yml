@@ -36,13 +36,10 @@ jobs:
           npm publish
         env:
           NODE_AUTH_TOKEN: ${{ secrets.AUTOMATED_NPM_PUBLISH }}
-      - name: Get latest version
-        id: get_new_npm_version
-        run: echo "newVersion=$(npm view @esri/instant-apps-components version)" >> $GITHUB_OUTPUT
       - name: Update @esri/instant-apps-components in instant-apps-components-react package.json
         run: |
           cd packages/instant-apps-components-react
-          npm version ${{ steps.get_new_npm_version.outputs.newVersion }}
+          npm version ${{ steps.get_local_version.outputs.localVersion }}
           npm update @esri/instant-apps-components
           cat package.json
       - name: iac react publish steps
