@@ -1,4 +1,4 @@
-name: Offer Publish
+name: Offer Publish after PR Closed
 
 # only trigger on pull request closed events
 on:
@@ -22,7 +22,7 @@ jobs:
      # get the version number from the local package.json file
       - name: Get local version
         id: get_local_version
-        run: echo ::set-output name=localVersion::$(node -p "require('./package.json').version")
+        run: echo ::set-output name=localVersion::$(node -p "require('./packages/instant-apps-components/package.json').version")
      # get url to the PR
       - name: Get PR URL
         id: get_pr_url
@@ -34,8 +34,10 @@ jobs:
 
             The following PR has been closed and merged. - [link to PR](${{ steps.get_pr_url.outputs.prUrl }})
 
-            - NPM Version: ${{ steps.get_npm_version.outputs.version }} [link](https://www.npmjs.com/package/@esri/instant-apps-components/v/${{ steps.get_npm_version.outputs.version }})
-            - Repo Version: ${{ steps.get_local_version.outputs.localVersion }} [link](https://github.com/Esri/instant-apps-components/blob/master/package.json#L4)
+            - NPM Version: **${{ steps.get_npm_version.outputs.version }}** 
+              -[link](https://www.npmjs.com/package/@esri/instant-apps-components/v/${{ steps.get_npm_version.outputs.version }})
+            - Repo Version: **${{ steps.get_local_version.outputs.localVersion }}** 
+              -[link](https://github.com/Esri/instant-apps-components/blob/master/packages/instant-apps-components/package.json#L4)
             
             ### To Publish instant-apps-components to NPM
-            If you would like to follow this PR up with a publish, please proceed to the [instant-apps-stencil repo](https://github.com/rslibed/instant-apps-stencil/actions/new) and manually run the publish 
+            If you would like to follow this PR up with a publish, please proceed to the [actions tab](https://github.com/Esri/instant-apps-components/actions) and manually run the publish.
