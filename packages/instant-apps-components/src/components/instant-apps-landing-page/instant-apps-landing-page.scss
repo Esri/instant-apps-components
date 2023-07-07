@@ -1,0 +1,150 @@
+:host {
+  --instant-apps-landing-page-background-color: var(--calcite-ui-brand);
+  --instant-apps-landing-page-title-text-color: var(--calcite-ui-text-inverse);
+  --instant-apps-landing-page-entry-button-color: var(--calcite-ui-brand);
+
+  .instant-apps-landing-page {
+    box-sizing: border-box;
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 9000;
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    height: 100%;
+    padding: 2.5%;
+    transition: top 0.5s ease-in-out;
+
+    background-color: var(--instant-apps-landing-page-background-color);
+    color: var(--instant-apps-landing-page-title-text-color);
+
+    &__subtitle-text {
+      font-weight: var(--calcite-font-weight-medium);
+      font-size: var(--calcite-font-size-1);
+    }
+
+    &__icon-image {
+      margin-bottom: 5px;
+    }
+
+    &__title-text {
+      color: var(--instant-apps-landing-page-title-text-color);
+      font-size: var(--calcite-font-size-4);
+      margin: 0;
+    }
+
+    &__description-text {
+      font-size: var(--calcite-font-size--1);
+      width: 30%;
+    }
+
+    &__title-text,
+    &__subtitle-text {
+      text-shadow: 0px 4px 3px rgba(0, 0, 0, 0.4), 0px 8px 13px rgba(0, 0, 0, 0.1), 0px 18px 23px rgba(0, 0, 0, 0.1);
+    }
+
+    &__button-container {
+      display: flex;
+
+      .instant-apps-landing-page__entry-button {
+        margin-right: 10px;
+      }
+    }
+
+    &__entry-button {
+      --calcite-ui-brand: var(--instant-apps-landing-page-entry-button-color);
+      --calcite-ui-brand-hover: var(--instant-apps-landing-page-entry-button-color);
+      --calcite-ui-brand-press: var(--instant-apps-landing-page-entry-button-color);
+    }
+  }
+
+  .instant-apps-landing-page__remove-transition {
+    transition: none;
+  }
+
+  .instant-apps-landing-page--closed {
+    top: -100%;
+  }
+
+  .instant-apps-landing-page__alignment--center-top {
+    justify-content: flex-start;
+    align-items: center;
+
+    .instant-apps-landing-page__description-text {
+      text-align: center;
+    }
+  }
+
+  .instant-apps-landing-page__alignment--center-middle {
+    justify-content: center;
+    align-items: center;
+
+    .instant-apps-landing-page__description-text {
+      text-align: center;
+    }
+  }
+
+  .instant-apps-landing-page__alignment--center-bottom {
+    justify-content: flex-end;
+    align-items: center;
+
+    .instant-apps-landing-page__description-text {
+      text-align: center;
+    }
+  }
+
+  .instant-apps-landing-page__alignment--left-top {
+    justify-content: flex-start;
+    align-items: flex-start;
+
+    .instant-apps-landing-page__description-text {
+      text-align: left;
+    }
+  }
+
+  .instant-apps-landing-page__alignment--left-middle {
+    justify-content: center;
+    align-items: flex-start;
+
+    .instant-apps-landing-page__description-text {
+      text-align: left;
+    }
+  }
+
+  .instant-apps-landing-page__alignment--left-bottom {
+    justify-content: flex-end;
+    align-items: flex-start;
+
+    .instant-apps-landing-page__description-text {
+      text-align: left;
+    }
+  }
+
+  .instant-apps-landing-page__alignment--right-top {
+    justify-content: flex-start;
+    align-items: flex-end;
+
+    .instant-apps-landing-page__description-text {
+      text-align: right;
+    }
+  }
+
+  .instant-apps-landing-page__alignment--right-middle {
+    justify-content: center;
+    align-items: flex-end;
+
+    .instant-apps-landing-page__description-text {
+      text-align: right;
+    }
+  }
+
+  .instant-apps-landing-page__alignment--right-bottom {
+    justify-content: flex-end;
+    align-items: flex-end;
+
+    .instant-apps-landing-page__description-text {
+      text-align: right;
+    }
+  }
+}

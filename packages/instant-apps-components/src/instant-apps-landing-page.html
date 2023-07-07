@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ArcGIS Instant Apps: Landing Page</title>
+    <link rel="stylesheet" href="https://js.arcgis.com/next/esri/themes/light/main.css" />
+    <script src="https://js.arcgis.com/4.27/"></script>
+    <script type="module" src="https://js.arcgis.com/calcite-components/1.4.2/calcite.esm.js"></script>
+    <link rel="stylesheet" type="text/css" href="https://js.arcgis.com/calcite-components/1.4.2/calcite.css" />
+    <script type="module" src="/build/instant-apps-components.esm.js"></script>
+    <script nomodule src="/build/instant-apps-components.js"></script>
+    <style>
+      html,
+      body,
+      #viewDiv {
+        width: 100%;
+        height: 100%;
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        overflow: hidden;
+      }
+
+      instant-apps-landing-page {
+        --instant-apps-landing-page-background-color: #559e10;
+        --instant-apps-landing-page-entry-button-color: #559e10;
+      }
+
+      #secondary {
+        display: inline-block;
+        height: 100%;
+        --calcite-ui-brand: #447f0c;
+        --calcite-ui-brand-hover: #447f0c;
+        --calcite-ui-brand-press: #447f0c;
+      }
+    </style>
+  </head>
+  <body class="calcite-mode-light">
+    <instant-apps-landing-page
+      title-text="ArcGIS Instant Apps"
+      subtitle-text="Quickly create web apps that make it easy to interact with your maps and data"
+      description-text="Lorem ipsum dolor sit amet consectetur adipisicing elit. Architecto blanditiis nesciunt voluptates dignissimos dolorem, aperiam necessitatibus. Deserunt velit eum labore."
+      entry-button-text="Get started"
+      icon-image="https://www.esri.com/content/dam/esrisites/en-us/arcgis/products/arcgis-instant-apps/assets/instant-apps-banner-fg.png"
+    >
+      <a
+        href="https://www.esri.com/en-us/arcgis/products/arcgis-instant-apps/overview"
+        slot="secondary-action"
+        target="_blank"
+      >
+        <calcite-button id="secondary">More info</calcite-button>
+      </a>
+    </instant-apps-landing-page>
+    <calcite-shell class="calcite-mode-light">
+      <instant-apps-header
+        id="instant-apps-header"
+        slot="header"
+        title-text="Instant Apps: Header (Shared Theme)"
+        text-color="#fff"
+        background-color="#447f0c"
+        logo-image="https://www.esri.com/content/dam/esrisites/en-us/common/icons/product-logos/arcgis-instant-apps-64.svg"
+        logo-image-alt-text="ArcGIS Instant Apps logo"
+        logo-link="https://www.esri.com/en-us/arcgis/products/arcgis-instant-apps/overview"
+        info-button="true"
+        info-title-text="Open information"
+        info-is-open="true"
+      >
+        <instant-apps-social-share
+          slot="actions-end"
+          share-button-color="inverse"
+          popover-button-icon-scale="s"
+        ></instant-apps-social-share>
+      </instant-apps-header>
+      <calcite-shell-panel slot="panel-start">
+        <calcite-action-bar slot="action-bar">
+          <calcite-action-group slot="bottom-actions">
+            <calcite-action id="back" icon="content-minimal" text="Landing page"></calcite-action>
+          </calcite-action-group>
+        </calcite-action-bar>
+        <calcite-panel>
+          <div id="legend"></div>
+        </calcite-panel>
+      </calcite-shell-panel>
+      <div id="viewDiv"></div>
+    </calcite-shell>
+    <script>
+      require(["esri/WebMap", "esri/views/MapView", "esri/widgets/Legend", "esri/core/reactiveUtils", "esri/config"], (
+        WebMap,
+        MapView,
+        Legend,
+        reactiveUtils,
+        esriConfig
+      ) => {
+        esriConfig.portalUrl = "https://nw-brews.mapsdevext.arcgis.com";
+
+        const map = new WebMap({
+          portalItem: {
+            id: "8891ee1d2e0e428bb96c58b8ecf8c408"
+          }
+        });
+
+        const view = new MapView({
+          map,
+          container: "viewDiv"
+        });
+
+        const legend = new Legend({
+          view,
+          container: "legend"
+        });
+      });
+    </script>
+    <script>
+      const backButton = document.getElementById("back");
+      const landingPage = document.querySelector("instant-apps-landing-page");
+      backButton.addEventListener("click", () => {
+        landingPage.open = true;
+      });
+    </script>
+  </body>
+</html>
