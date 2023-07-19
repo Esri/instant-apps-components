@@ -2,18 +2,46 @@
 
 Calculates and displays a series of statistics based on a layer(s) and field attributes.
 
+## Interfaces and Enums
+
+```
+    interface ScoreboardItem {
+        layer: {
+            url: string;
+            id: string;
+        };
+        field: string;
+        label: string;
+        displayValue?: string; // Calculated internally
+        value?: number; // Calculated internally
+        operation: string;
+        visible?: boolean;
+    }
+```
+
+```
+    enum Scoreboard {
+        Bottom = 'bottom',
+        Left = 'left',
+        Right = 'right',
+        Floating = 'floating',
+        Pinned = 'pinned',
+    }
+```
+
 <!-- Auto Generated Below -->
 
 
 ## Properties
 
-| Property    | Attribute    | Description                                                                                     | Type                                                       | Default               |
-| ----------- | ------------ | ----------------------------------------------------------------------------------------------- | ---------------------------------------------------------- | --------------------- |
-| `itemLimit` | `item-limit` | Number of scoreboard items that can be viewed at a time. Minimum: 2, Maximum : 6.               | `number`                                                   | `6`                   |
-| `items`     | --           | Data on layers, field attribute info, operations, for each scoreboard item                      | `ScoreboardItem[]`                                         | `undefined`           |
-| `mode`      | `mode`       | Mode of scoreboard i.e. 'floating' or 'pinned'.                                                 | `Scoreboard.Floating \| Scoreboard.Pinned`                 | `Scoreboard.Floating` |
-| `position`  | `position`   | Position of scoreboard i.e. 'bottom', 'left', or 'right'.                                       | `Scoreboard.Bottom \| Scoreboard.Left \| Scoreboard.Right` | `Scoreboard.Bottom`   |
-| `view`      | --           | MapView or SceneView to reference extent, viewpoint, and layers in map to perform calculations. | `MapView \| SceneView`                                     | `undefined`           |
+| Property          | Attribute           | Description                                                                                                  | Type                                                       | Default               |
+| ----------------- | ------------------- | ------------------------------------------------------------------------------------------------------------ | ---------------------------------------------------------- | --------------------- |
+| `autoDockEnabled` | `auto-dock-enabled` | Controls the behavior to auto dock the scoreboard to the bottom in smaller parent containers/mobile devices. | `boolean`                                                  | `true`                |
+| `itemLimit`       | `item-limit`        | Number of scoreboard items that can be viewed at a time. Minimum: 2, Maximum : 6.                            | `number`                                                   | `6`                   |
+| `items`           | --                  | Data on layers, field attribute info, operations, for each scoreboard item                                   | `ScoreboardItem[]`                                         | `undefined`           |
+| `mode`            | `mode`              | Mode of scoreboard i.e. 'floating' or 'pinned'.                                                              | `Scoreboard.Floating \| Scoreboard.Pinned`                 | `Scoreboard.Floating` |
+| `position`        | `position`          | Position of scoreboard i.e. 'bottom', 'left', or 'right'.                                                    | `Scoreboard.Bottom \| Scoreboard.Left \| Scoreboard.Right` | `Scoreboard.Bottom`   |
+| `view`            | --                  | MapView or SceneView to reference extent, viewpoint, and layers in map to perform calculations.              | `MapView \| SceneView`                                     | `undefined`           |
 
 
 ## Events
