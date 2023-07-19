@@ -1,15 +1,15 @@
 export type ScoreboardItems = ScoreboardItem[];
 
 export interface ScoreboardItem {
-  layer?: {
+  layer: {
     url: string;
     id: string;
   };
-  field?: string;
+  field: string;
   label: string;
   displayValue?: string;
   value?: number;
-  operation?: string;
+  operation: string;
   visible?: boolean;
 }
 

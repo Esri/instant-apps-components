@@ -94,6 +94,12 @@ export class InstantAppsScoreboard {
    */
   @Prop() itemLimit: number = 6;
 
+  /**
+   * Controls the behavior to auto dock the scoreboard to the bottom in smaller parent containers/mobile devices.
+   */
+  @Prop()
+  autoDockEnabled = true;
+
   // Internal state
   @State() state: ScoreboardState = Scoreboard.Loading;
 
@@ -193,7 +199,8 @@ export class InstantAppsScoreboard {
   async componentWillLoad(): Promise<void> {
     const resizeObesrver = new ResizeObserver(() => {
       this.itemIndex = 0;
-      this.isMobile = !!this.checkMobile;
+
+      if (this.autoDockEnabled) this.isMobile = !!this.checkMobile;
     });
     resizeObesrver.observe(this.el?.parentElement as HTMLElement);
     try {
