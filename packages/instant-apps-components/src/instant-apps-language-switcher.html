@@ -8,194 +8,171 @@
 
 <!DOCTYPE html>
 <html dir="ltr" lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=5.0" />
-    <title>ArcGIS Instant Apps Components</title>
 
-    <link rel="stylesheet" href="https://js.arcgis.com/4.27/esri/themes/light/main.css" />
-    <script src="https://js.arcgis.com/4.27/"></script>
-    <script type="module" src="https://js.arcgis.com/calcite-components/1.4.2/calcite.esm.js"></script>
-    <link rel="stylesheet" type="text/css" href="https://js.arcgis.com/calcite-components/1.4.2/calcite.css" />
-    <script type="module" src="/build/instant-apps-components.esm.js"></script>
-    <script nomodule src="/build/instant-apps-components.js"></script>
-  </head>
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=5.0" />
+  <title>ArcGIS Instant Apps Components</title>
 
-  <body>
-    <instant-apps-language-switcher id="langSwitcher"></instant-apps-language-switcher>
-    <calcite-button id="openLangSwitcher">Open language switcher</calcite-button>
-    <script>
-      const langSwitcher = document.getElementById('langSwitcher');
-      const appSettings = {
-        introductionContent: {
-          type: 'textEditor',
-          label: 'Edit introduction panel',
-          value: '',
-          uiLocation: {
-            section: {
-              id: 'about',
-              label: 'About',
-            },
-            subsection: {
-              id: 'appComprehension',
-              label: 'App details',
-            },
-          },
-        },
-        introductionTitle: {
-          type: 'string',
-          label: 'Title for introduction',
-          value: '',
-          uiLocation: {
-            section: {
-              id: 'about',
-              label: 'About',
-            },
-            subsection: {
-              id: 'appComprehension',
-              label: 'App details',
-            },
-          },
-        },
-        resultsPanelPreText: {
-          type: 'textEditor',
-          label: 'Text above results',
-          value: '',
-          uiLocation: {
-            section: {
-              id: 'nearby',
-              label: 'Nearby',
-            },
-            subsection: {
-              id: 'resultsText',
-              label: 'Text',
-            },
-          },
-        },
-        resultsPanelPostText: {
-          type: 'textEditor',
-          label: 'Text below results',
-          value: '',
-          uiLocation: {
-            section: {
-              id: 'nearby',
-              label: 'Nearby',
-            },
-            subsection: {
-              id: 'resultsText',
-              label: 'Text',
-            },
-          },
-        },
-        noResultsMessage: {
-          type: 'textEditor',
-          label: 'Text for no results',
-          value: '<p>Keine Features gefunden, die den Suchkriterien entsprechen</p>',
-          uiLocation: {
-            section: {
-              id: 'nearby',
-              label: 'Nearby',
-            },
-            subsection: {
-              id: 'resultsText',
-              label: 'Text',
-            },
-          },
-        },
-        splashButtonText: {
-          type: 'string',
-          label: 'Introduction panel button text',
-          value: 'Close',
-          uiLocation: {
-            section: {
-              id: 'about',
-              label: 'About',
-            },
-            subsection: {
-              id: 'appComprehension',
-              label: 'App details',
-            },
-          },
-        },
-        title: {
-          type: 'string',
-          label: 'App title',
-          value: '',
-          uiLocation: {
-            section: {
-              id: 'about',
-              label: 'About',
-            },
-            subsection: {
-              id: 'appComprehension',
-              label: 'App details',
-            },
-          },
-        },
-        titleLink: {
-          type: 'string',
-          label: 'URL link to the title',
-          value: '',
-          uiLocation: {
-            section: {
-              id: 'about',
-              label: 'About',
-            },
-            subsection: {
-              id: 'appComprehension',
-              label: 'App details',
-            },
-          },
-        },
-        translatedLanguageLabels: {
-          'ar': {
-            introductionContent: 'تحرير لوحة المقدمة',
-            introductionTitle: 'عنوان للمقدمة',
-            resultsPanelPreText: 'النص فوق النتائج',
-            resultsPanelPostText: 'الص أسفل النتائج',
-            noResultsMessage: 'نص لعدم ظهور نتائج',
-            splashButtonText: 'نص زر لوحة المقددمة',
-            title: 'عنوان التطبيق',
-            titleLink: 'رابط URL للعنوان',
-          },
-          'es': {
-            introductionContent: 'Editar panel de introducción',
-            introductionTitle: 'Título para la introducción',
-            resultsPanelPreText: 'Texto encima de los resultados',
-            resultsPanelPostText: 'Texto debajo de los resultados',
-            noResultsMessage: 'Texto si no hay resultados',
-            splashButtonText: 'Texto del botón del panel de introducción',
-            title: 'Título de la aplicación',
-            titleLink: 'Vínculo URL al título',
-          },
-          'vi': {
-            introductionContent: 'Chỉnh sửa bảng giới thiệu',
-            introductionTitle: 'Tiêu đề cho phần giới thiệu',
-            resultsPanelPreText: 'Văn bản trên kết quả',
-            resultsPanelPostText: 'Văn bản dưới kết quả',
-            noResultsMessage: 'Văn bản cho không có kết quả',
-            splashButtonText: 'Văn bản nút của bảng giới thiệu',
-            title: 'Tên ứng dụng',
-            titleLink: 'Liên kết URL cho tiêu đề',
-          },
-          'zh-CN': {
-            introductionContent: '编辑简介面板',
-            introductionTitle: '简介标题',
-            resultsPanelPreText: '结果上方的文本',
-            resultsPanelPostText: '结果下方的文本',
-            noResultsMessage: '没有结果时显示的文本',
-            splashButtonText: '简介面板按钮文本',
-            title: '应用程序标题',
-            titleLink: '标题 URL 链接',
-          },
-        },
-      };
+  <link rel="stylesheet" href="https://js.arcgis.com/4.27/esri/themes/light/main.css" />
+  <script src="https://js.arcgis.com/4.27/"></script>
+  <script type="module" src="https://js.arcgis.com/calcite-components/1.4.2/calcite.esm.js"></script>
+  <link rel="stylesheet" type="text/css" href="https://js.arcgis.com/calcite-components/1.4.2/calcite.css" />
+  <script type="module" src="/build/instant-apps-components.esm.js"></script>
+  <script nomodule src="/build/instant-apps-components.js"></script>
+</head>
 
-      langSwitcher.appSettings = appSettings;
-      langSwitcher.translatedLanguages = ['ar', 'es', 'vi', 'zh-CN'];
+<body>
+  <instant-apps-language-switcher id="langSwitcher"></instant-apps-language-switcher>
+  <calcite-button id="openLangSwitcher">Open language switcher</calcite-button>
+  <script>
+    const langSwitcher = document.getElementById('langSwitcher');
 
-      const openButton = document.getElementById('openLangSwitcher');
-      openButton.addEventListener('click', () => (langSwitcher.open = true));
-    </script>
-  </body>
+    const appSettings = {
+      "customHeaderHTML": {
+        "type": "textEditor",
+        "label": "Custom header HTML",
+        "value": "<p>Test header</p>",
+        "uiLocation": {
+          "section": {
+            "id": "about",
+            "label": "About"
+          },
+          "subsection": {
+            "id": "appComprehension",
+            "label": "App details"
+          }
+        },
+        "tip": "Include a more customized look for the app title. Rich text editor accessibility instructions can be accessed through ALT+0 (Mac users: Option+0)."
+      },
+      "customURLParamName": {
+        "type": "string",
+        "label": "URL parameter name",
+        "value": "name",
+        "uiLocation": {
+          "section": {
+            "id": "interactivity",
+            "label": "Interactivity"
+          },
+          "subsection": {
+            "id": "customURLParams",
+            "label": "URL parameter"
+          }
+        },
+        "tip": "Set up your app to support a custom URL parameter that users can append to your app URL. For example, if your map contains a feature layer with parcel information, you could find parcels using a URL parameter. For example, if your custom parameter name is parcel users would append the custom search to the app URl like this: index.html?parcel=3045"
+      },
+      "splashButtonText": {
+        "type": "string",
+        "label": "Introduction panel button text",
+        "value": "Okay",
+        "uiLocation": {
+          "section": {
+            "id": "about",
+            "label": "About"
+          },
+          "subsection": {
+            "id": "appComprehension",
+            "label": "App details"
+          }
+        }
+      },
+      "splashContent": {
+        "type": "textEditor",
+        "label": "Introduction panel content",
+        "value": "Splash content",
+        "uiLocation": {
+          "section": {
+            "id": "about",
+            "label": "About"
+          },
+          "subsection": {
+            "id": "appComprehension",
+            "label": "App details"
+          }
+        },
+        "tip": "Add text, links, and small graphics here (rich text editor). Rich text editor accessibility instructions can be accessed through ALT+0 (Mac users: Option+0)."
+      },
+      "splashTitle": {
+        "type": "string",
+        "label": "Introduction panel title",
+        "value": "Splash title",
+        "uiLocation": {
+          "section": {
+            "id": "about",
+            "label": "About"
+          },
+          "subsection": {
+            "id": "appComprehension",
+            "label": "App details"
+          }
+        }
+      },
+      "title": {
+        "type": "string",
+        "label": "App title",
+        "value": "Language switcher ",
+        "uiLocation": {
+          "section": {
+            "id": "about",
+            "label": "About"
+          },
+          "subsection": {
+            "id": "appComprehension",
+            "label": "App details"
+          }
+        },
+        "tip": "Include title text to introduce the map's main topic"
+      },
+      "translatedLanguageLabels": {
+        "de": {
+          "customHeaderHTML": "Benutzerdefinierte Kopfzeile bearbeiten",
+          "customURLParamName": "URL-Parametername",
+          "splashButtonText": "Text für Einführungsfenster-Schaltfläche",
+          "splashContent": "Inhalt des Einführungsfensters",
+          "splashTitle": "Titel des Einführungsfensters",
+          "title": "App-Titel"
+        },
+        "en": {
+          "customHeaderHTML": "Edit custom header",
+          "customURLParamName": "URL parameter name",
+          "splashButtonText": "Introduction panel button text",
+          "splashContent": "Introduction panel content",
+          "splashTitle": "Introduction panel title",
+          "title": "App title"
+        },
+        "bs": {
+          "customHeaderHTML": "Uredi prilagođeno zaglavlje",
+          "customURLParamName": "Naziv parametra URL-a",
+          "splashButtonText": "Tekst gumba za uvodnu ploču",
+          "splashContent": "Sadržaj uvodne ploče",
+          "splashTitle": "Naziv uvodne ploče",
+          "title": "Naslov appa"
+        },
+        "fi": {
+          "customHeaderHTML": "Muokkaa mukautettua ylätunnistetta",
+          "customURLParamName": "URL-osoitteen parametrin nimi",
+          "splashButtonText": "Johdanto-ruudun painiketeksti",
+          "splashContent": "Johdanto-ruudun sisältö",
+          "splashTitle": "Johdanto-ruudun otsikko",
+          "title": "Sovelluksen otsikko"
+        },
+        "el": {
+          "customHeaderHTML": "Επεξεργασία εξατομικευμένης κεφαλίδας",
+          "customURLParamName": "Όνομα παραμέτρου διεύθυνσης URL",
+          "splashButtonText": "Κείμενο κουμπιού πλαισίου εισαγωγής",
+          "splashContent": "Περιεχόμενο πλαισίου εισαγωγής",
+          "splashTitle": "Τίτλος πλαισίου εισαγωγής",
+          "title": "Τίτλος εφαρμογής"
+        }
+      }
+    }
+
+    langSwitcher.appSettings = appSettings;
+    langSwitcher.translatedLanguages = Object.keys(appSettings.translatedLanguageLabels);
+
+    const openButton = document.getElementById('openLangSwitcher');
+    openButton.addEventListener('click', () => (langSwitcher.open = true));
+  </script>
+</body>
+
 </html>
