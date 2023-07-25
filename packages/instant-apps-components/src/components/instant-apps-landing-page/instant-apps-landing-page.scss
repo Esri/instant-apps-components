@@ -1,12 +1,18 @@
 :host {
   /**
  * @prop --instant-apps-landing-page-background-color: Brand color of landing page that affects the background (if a backgound image is not set) and entry button colors
- * @prop --instant-apps-landing-page-text-color: Text color of landing page. 
- * @prop --instant-apps-landing-page-entry-button-color: Width of component when scale is set to `l`
+ * @prop  --instant-apps-landing-page-text-color: Text color of landing page. 
+ * @prop --instant-apps-landing-page-entry-button-color: Brand color of the entry button.
+ * @prop --instant-apps-landing-page-title-text-font-size: Font size of title text.
+ * @prop --instant-apps-landing-page-subtitle-text-font-size: Font size of subtitle text.
+ * @prop --instant-apps-landing-page-description-text-font-size: Font size of description text.
  */
   --instant-apps-landing-page-background-color: var(--calcite-ui-brand);
   --instant-apps-landing-page-text-color: var(--calcite-ui-text-inverse);
   --instant-apps-landing-page-entry-button-color: var(--calcite-ui-brand);
+  --instant-apps-landing-page-title-text-font-size: var(--calcite-font-size-6);
+  --instant-apps-landing-page-subtitle-text-font-size: var(--calcite-font-size-3);
+  --instant-apps-landing-page-description-text-font-size: var(--calcite-font-size-0);
 
   .instant-apps-landing-page {
     box-sizing: border-box;
@@ -24,31 +30,31 @@
     background-color: var(--instant-apps-landing-page-background-color);
     color: var(--instant-apps-landing-page-text-color);
 
-    &__subtitle-text {
-      font-weight: var(--calcite-font-weight-medium);
-      font-size: var(--calcite-font-size-1);
-      text-align: center;
-    }
-
-    &__icon-image {
-      margin-bottom: 5px;
-      max-width: 100%;
-    }
-
     &__title-text {
       color: var(--instant-apps-landing-page-text-color);
-      font-size: var(--calcite-font-size-4);
+      font-size: var(--instant-apps-landing-page-title-text-font-size);
       margin: 0;
     }
 
+    &__subtitle-text {
+      font-weight: var(--calcite-font-weight-medium);
+      font-size: var(--instant-apps-landing-page-subtitle-text-font-size);
+      text-align: center;
+    }
+
     &__description-text {
-      font-size: var(--calcite-font-size--1);
+      font-size: var(--instant-apps-landing-page-description-text-font-size);
       width: 50%;
     }
 
     &__title-text,
     &__subtitle-text {
       text-shadow: 0px 4px 3px rgba(0, 0, 0, 0.4), 0px 8px 13px rgba(0, 0, 0, 0.1), 0px 18px 23px rgba(0, 0, 0, 0.1);
+    }
+
+    &__icon-image {
+      margin-bottom: 5px;
+      max-width: 100%;
     }
 
     &__button-container {

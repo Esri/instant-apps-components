@@ -13,6 +13,7 @@
 | `backgroundImageSrc`     | `background-image-src` | Displays a background image via URL                                                                                                                                                                                                        | `string`                                   | `undefined`            |
 | `descriptionText`        | `description-text`     | Description text.                                                                                                                                                                                                                          | `string`                                   | `undefined`            |
 | `disableTransition`      | `disable-transition`   | Controls whether to enable/disable the transition animation the occurs when dismissing the landing page.                                                                                                                                   | `boolean`                                  | `false`                |
+| `entryButtonScale`       | `entry-button-scale`   | Scale of the entry button.                                                                                                                                                                                                                 | `"l" \| "m" \| "s"`                        | `'l'`                  |
 | `entryButtonText`        | `entry-button-text`    | Button text which closes/dismisses the landing page.                                                                                                                                                                                       | `string`                                   | `undefined`            |
 | `iconImage`              | `icon-image`           | Image/graphic that is positioned near the text content.                                                                                                                                                                                    | `string`                                   | `undefined`            |
 | `iconImageAltText`       | `icon-image-alt-text`  | Alternate text for `iconImage`.                                                                                                                                                                                                            | `string`                                   | `undefined`            |
@@ -23,11 +24,14 @@
 
 ## CSS Custom Properties
 
-| Name                                             | Description                                                                                                       |
-| ------------------------------------------------ | ----------------------------------------------------------------------------------------------------------------- |
-| `--instant-apps-landing-page-background-color`   | Brand color of landing page that affects the background (if a backgound image is not set) and entry button colors |
-| `--instant-apps-landing-page-entry-button-color` | Width of component when scale is set to `l`                                                                       |
-| `--instant-apps-landing-page-text-color`         | Text color of landing page.                                                                                       |
+| Name                                                     | Description                                                                                                       |
+| -------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------- |
+| `--instant-apps-landing-page-background-color`           | Brand color of landing page that affects the background (if a backgound image is not set) and entry button colors |
+| `--instant-apps-landing-page-description-text-font-size` | Font size of description text.                                                                                    |
+| `--instant-apps-landing-page-entry-button-color`         | Brand color of entry button.                                                                                      |
+| `--instant-apps-landing-page-subtitle-text-font-size`    | Font size of subtitle text.                                                                                       |
+| `--instant-apps-landing-page-text-color`                 | Text color of landing page.                                                                                       |
+| `--instant-apps-landing-page-title-text-font-size`       | Font size of title text.                                                                                          |
 
 
 ----------------------------------------------
