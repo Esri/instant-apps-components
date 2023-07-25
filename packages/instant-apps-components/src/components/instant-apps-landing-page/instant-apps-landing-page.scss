@@ -1,6 +1,11 @@
 :host {
+  /**
+ * @prop --instant-apps-landing-page-background-color: Brand color of landing page that affects the background (if a backgound image is not set) and entry button colors
+ * @prop --instant-apps-landing-page-text-color: Text color of landing page. 
+ * @prop --instant-apps-landing-page-entry-button-color: Width of component when scale is set to `l`
+ */
   --instant-apps-landing-page-background-color: var(--calcite-ui-brand);
-  --instant-apps-landing-page-title-text-color: var(--calcite-ui-text-inverse);
+  --instant-apps-landing-page-text-color: var(--calcite-ui-text-inverse);
   --instant-apps-landing-page-entry-button-color: var(--calcite-ui-brand);
 
   .instant-apps-landing-page {
@@ -17,26 +22,28 @@
     transition: top 0.5s ease-in-out;
 
     background-color: var(--instant-apps-landing-page-background-color);
-    color: var(--instant-apps-landing-page-title-text-color);
+    color: var(--instant-apps-landing-page-text-color);
 
     &__subtitle-text {
       font-weight: var(--calcite-font-weight-medium);
       font-size: var(--calcite-font-size-1);
+      text-align: center;
     }
 
     &__icon-image {
       margin-bottom: 5px;
+      max-width: 100%;
     }
 
     &__title-text {
-      color: var(--instant-apps-landing-page-title-text-color);
+      color: var(--instant-apps-landing-page-text-color);
       font-size: var(--calcite-font-size-4);
       margin: 0;
     }
 
     &__description-text {
       font-size: var(--calcite-font-size--1);
-      width: 30%;
+      width: 50%;
     }
 
     &__title-text,
@@ -71,6 +78,12 @@
     justify-content: flex-start;
     align-items: center;
 
+    .instant-apps-landing-page__content-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
     .instant-apps-landing-page__description-text {
       text-align: center;
     }
@@ -80,6 +93,12 @@
     justify-content: center;
     align-items: center;
 
+    .instant-apps-landing-page__content-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
     .instant-apps-landing-page__description-text {
       text-align: center;
     }
@@ -88,6 +107,12 @@
   .instant-apps-landing-page__alignment--center-bottom {
     justify-content: flex-end;
     align-items: center;
+
+    .instant-apps-landing-page__content-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
 
     .instant-apps-landing-page__description-text {
       text-align: center;
@@ -125,6 +150,12 @@
     justify-content: flex-start;
     align-items: flex-end;
 
+    .instant-apps-landing-page__content-container {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+    }
+
     .instant-apps-landing-page__description-text {
       text-align: right;
     }
@@ -133,6 +164,12 @@
   .instant-apps-landing-page__alignment--right-middle {
     justify-content: center;
     align-items: flex-end;
+
+    .instant-apps-landing-page__content-container {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+    }
 
     .instant-apps-landing-page__description-text {
       text-align: right;
@@ -143,8 +180,67 @@
     justify-content: flex-end;
     align-items: flex-end;
 
+    .instant-apps-landing-page__content-container {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+    }
+
     .instant-apps-landing-page__description-text {
       text-align: right;
+    }
+  }
+}
+
+@media only screen and (max-width: 768px) {
+  :host {
+    .instant-apps-landing-page {
+      &__icon-image {
+        max-width: 70%;
+        margin-bottom: 20px;
+      }
+
+      &__description-text {
+        width: 80%;
+      }
+
+      &__title-text {
+        font-size: var(--calcite-font-size-3);
+      }
+
+      &__subtitle-text {
+        font-size: var(--calcite-font-size-0);
+      }
+
+      &__content-container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        margin-top: auto;
+      }
+
+      &__button-container {
+        display: flex;
+        flex-direction: column;
+        width: 100%;
+        margin-top: auto;
+
+        .instant-apps-landing-page__entry-button {
+          width: 100%;
+          margin-right: unset;
+          margin-bottom: 10px;
+        }
+      }
+    }
+  }
+}
+
+@media only screen and (max-width: 896px) and (orientation: landscape) {
+  :host {
+    .instant-apps-landing-page {
+      &__icon-image {
+        max-width: 25%;
+      }
     }
   }
 }

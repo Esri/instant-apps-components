@@ -318,16 +318,45 @@ export namespace Components {
         "view": __esri.MapView | __esri.SceneView;
     }
     interface InstantAppsLandingPage {
+        /**
+          * Controls the positioning of the text and image content. This accepts an array containing two values. Possible values for HorizontalAlignment: 'left', 'right', 'center'. Possible values for VeritcalAlignment: 'top', 'middle', 'bottom'.
+         */
         "alignment": [HorizontalAlignment, VerticalAlignment];
+        /**
+          * Displays a background image via URL
+         */
         "backgroundImageSrc": string;
-        "backgroundType": "color" | "image";
+        /**
+          * Description text.
+         */
         "descriptionText": string;
+        /**
+          * Controls whether to enable/disable the transition animation the occurs when dismissing the landing page.
+         */
         "disableTransition": boolean;
+        /**
+          * Button text which closes/dismisses the landing page.
+         */
         "entryButtonText": string;
+        /**
+          * Image/graphic that is positioned near the text content.
+         */
         "iconImage": string;
+        /**
+          * Alternate text for `iconImage`.
+         */
         "iconImageAltText": string;
+        /**
+          * Controls the open/close state of the landing page.
+         */
         "open": boolean;
+        /**
+          * Subtitle text.
+         */
         "subtitleText": string;
+        /**
+          * Title text.
+         */
         "titleText": string;
     }
     interface InstantAppsMeasurement {
@@ -1013,17 +1042,46 @@ declare namespace LocalJSX {
         "view"?: __esri.MapView | __esri.SceneView;
     }
     interface InstantAppsLandingPage {
+        /**
+          * Controls the positioning of the text and image content. This accepts an array containing two values. Possible values for HorizontalAlignment: 'left', 'right', 'center'. Possible values for VeritcalAlignment: 'top', 'middle', 'bottom'.
+         */
         "alignment"?: [HorizontalAlignment, VerticalAlignment];
+        /**
+          * Displays a background image via URL
+         */
         "backgroundImageSrc"?: string;
-        "backgroundType"?: "color" | "image";
+        /**
+          * Description text.
+         */
         "descriptionText"?: string;
+        /**
+          * Controls whether to enable/disable the transition animation the occurs when dismissing the landing page.
+         */
         "disableTransition"?: boolean;
+        /**
+          * Button text which closes/dismisses the landing page.
+         */
         "entryButtonText"?: string;
+        /**
+          * Image/graphic that is positioned near the text content.
+         */
         "iconImage"?: string;
+        /**
+          * Alternate text for `iconImage`.
+         */
         "iconImageAltText"?: string;
+        /**
+          * Controls the open/close state of the landing page.
+         */
         "open"?: boolean;
+        /**
+          * Subtitle text.
+         */
         "subtitleText"?: string;
-        "titleText"?: string;
+        /**
+          * Title text.
+         */
+        "titleText": string;
     }
     interface InstantAppsMeasurement {
         "activeToolType"?: ActiveTool;

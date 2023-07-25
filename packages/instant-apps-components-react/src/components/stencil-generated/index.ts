@@ -23,6 +23,7 @@ export const InstantAppsInteractiveLegendLegendElement = /*@__PURE__*/createReac
 export const InstantAppsInteractiveLegendLegendElementCaption = /*@__PURE__*/createReactComponent<JSX.InstantAppsInteractiveLegendLegendElementCaption, HTMLInstantAppsInteractiveLegendLegendElementCaptionElement>('instant-apps-interactive-legend-legend-element-caption');
 export const InstantAppsInteractiveLegendRelationship = /*@__PURE__*/createReactComponent<JSX.InstantAppsInteractiveLegendRelationship, HTMLInstantAppsInteractiveLegendRelationshipElement>('instant-apps-interactive-legend-relationship');
 export const InstantAppsKeyboardShortcuts = /*@__PURE__*/createReactComponent<JSX.InstantAppsKeyboardShortcuts, HTMLInstantAppsKeyboardShortcutsElement>('instant-apps-keyboard-shortcuts');
+export const InstantAppsLandingPage = /*@__PURE__*/createReactComponent<JSX.InstantAppsLandingPage, HTMLInstantAppsLandingPageElement>('instant-apps-landing-page');
 export const InstantAppsMeasurement = /*@__PURE__*/createReactComponent<JSX.InstantAppsMeasurement, HTMLInstantAppsMeasurementElement>('instant-apps-measurement');
 export const InstantAppsMeasurementTool = /*@__PURE__*/createReactComponent<JSX.InstantAppsMeasurementTool, HTMLInstantAppsMeasurementToolElement>('instant-apps-measurement-tool');
 export const InstantAppsPopover = /*@__PURE__*/createReactComponent<JSX.InstantAppsPopover, HTMLInstantAppsPopoverElement>('instant-apps-popover');
