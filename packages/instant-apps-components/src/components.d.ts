@@ -335,6 +335,10 @@ export namespace Components {
          */
         "disableTransition": boolean;
         /**
+          * Scale of the entry button.
+         */
+        "entryButtonScale": 's' | 'm' | 'l';
+        /**
           * Button text which closes/dismisses the landing page.
          */
         "entryButtonText": string;
@@ -1058,6 +1062,10 @@ declare namespace LocalJSX {
           * Controls whether to enable/disable the transition animation the occurs when dismissing the landing page.
          */
         "disableTransition"?: boolean;
+        /**
+          * Scale of the entry button.
+         */
+        "entryButtonScale"?: 's' | 'm' | 'l';
         /**
           * Button text which closes/dismisses the landing page.
          */

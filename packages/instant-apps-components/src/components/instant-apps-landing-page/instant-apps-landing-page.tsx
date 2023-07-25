@@ -86,6 +86,12 @@ export class InstantAppsLandingPage {
   })
   open = true;
 
+  /**
+   * Scale of the entry button.
+   */
+  @Prop()
+  entryButtonScale: 's' | 'm' | 'l' = 'l';
+
   render() {
     return <Host>{this.renderLandingPageContent()}</Host>;
   }
@@ -139,7 +145,7 @@ export class InstantAppsLandingPage {
 
   renderEntryButton(): HTMLCalciteButtonElement {
     return (
-      <calcite-button class={CSS.entryButton} onClick={() => (this.open = false)} scale="l" appearance="outline-fill">
+      <calcite-button class={CSS.entryButton} onClick={() => (this.open = false)} scale={this.entryButtonScale} appearance="outline-fill">
         {this.entryButtonText}
       </calcite-button>
     );
