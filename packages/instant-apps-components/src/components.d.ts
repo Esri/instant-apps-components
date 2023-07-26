@@ -351,6 +351,10 @@ export namespace Components {
          */
         "iconImageAltText": string;
         /**
+          * Scale of icon image/graphic.
+         */
+        "iconImageScale": 's' | 'm' | 'l';
+        /**
           * Controls the open/close state of the landing page.
          */
         "open": boolean;
@@ -1078,6 +1082,10 @@ declare namespace LocalJSX {
           * Alternate text for `iconImage`.
          */
         "iconImageAltText"?: string;
+        /**
+          * Scale of icon image/graphic.
+         */
+        "iconImageScale"?: 's' | 'm' | 'l';
         /**
           * Controls the open/close state of the landing page.
          */
