@@ -13,6 +13,11 @@ const CSS = {
   entryButton: 'instant-apps-landing-page__entry-button',
   contentContainer: 'instant-apps-landing-page__content-container',
   buttonContainer: 'instant-apps-landing-page__button-container',
+  iconImageScale: {
+    s: ' instant-apps-landing-page__icon-image-scale--s',
+    m: ' instant-apps-landing-page__icon-image-scale--m',
+    l: ' instant-apps-landing-page__icon-image-scale--l',
+  },
 };
 
 @Component({
@@ -53,6 +58,12 @@ export class InstantAppsLandingPage {
    */
   @Prop()
   iconImage: string;
+
+  /**
+   * Scale of icon image/graphic.
+   */
+  @Prop()
+  iconImageScale: 's' | 'm' | 'l' = 'm';
 
   /**
    * Alternate text for `iconImage`.
@@ -128,7 +139,7 @@ export class InstantAppsLandingPage {
   }
 
   renderIconImage(): HTMLImageElement | null {
-    return this.iconImage ? <img class={CSS.iconImage} src={this.iconImage} alt={this.iconImageAltText} /> : null;
+    return this.iconImage ? <img class={`${CSS.iconImage}${this.getIconImageScale()}`} src={this.iconImage} alt={this.iconImageAltText} /> : null;
   }
 
   renderTitleText(): HTMLHeadingElement {
@@ -154,5 +165,11 @@ export class InstantAppsLandingPage {
   getAlignmentClass(): string {
     const [x, y] = this.alignment;
     return ` ${CSS.alignment}${x}-${y}`;
+  }
+
+  getIconImageScale(): string {
+    const { iconImageScale } = this;
+    const { s, m, l } = CSS.iconImageScale;
+    return iconImageScale === 'l' ? l : iconImageScale === 's' ? s : m;
   }
 }

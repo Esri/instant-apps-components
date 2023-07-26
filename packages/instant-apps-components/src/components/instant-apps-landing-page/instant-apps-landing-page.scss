@@ -6,6 +6,9 @@
  * @prop --instant-apps-landing-page-title-text-font-size: Font size of title text.
  * @prop --instant-apps-landing-page-subtitle-text-font-size: Font size of subtitle text.
  * @prop --instant-apps-landing-page-description-text-font-size: Font size of description text.
+ * @prop --instant-apps-landing-page-icon-image-scale--s: Icon image width when scale is set to 's'. Default value is 100px.
+ * @prop --instant-apps-landing-page-icon-image-scale--m: Icon image width when scale is set to 'm'. Default value is 250px.
+ * @prop --instant-apps-landing-page-icon-image-scale--l: Icon image width when scale is set to 'l'. Default value is 500px.
  */
   --instant-apps-landing-page-background-color: var(--calcite-ui-brand);
   --instant-apps-landing-page-text-color: var(--calcite-ui-text-inverse);
@@ -13,6 +16,9 @@
   --instant-apps-landing-page-title-text-font-size: var(--calcite-font-size-6);
   --instant-apps-landing-page-subtitle-text-font-size: var(--calcite-font-size-3);
   --instant-apps-landing-page-description-text-font-size: var(--calcite-font-size-0);
+  --instant-apps-landing-page-icon-image-scale--s: 100px;
+  --instant-apps-landing-page-icon-image-scale--m: 250px;
+  --instant-apps-landing-page-icon-image-scale--l: 500px;
 
   .instant-apps-landing-page {
     box-sizing: border-box;
@@ -54,7 +60,19 @@
 
     &__icon-image {
       margin-bottom: 5px;
-      max-width: 100%;
+      max-width: 50%;
+    }
+
+    &__icon-image-scale--s {
+      width: 100px;
+    }
+
+    &__icon-image-scale--m {
+      width: 250px;
+    }
+
+    &__icon-image-scale--l {
+      width: 500px;
     }
 
     &__button-container {
