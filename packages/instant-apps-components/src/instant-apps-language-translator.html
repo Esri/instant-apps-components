@@ -8,171 +8,221 @@
 
 <!DOCTYPE html>
 <html dir="ltr" lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=5.0" />
+    <title>ArcGIS Instant Apps Components</title>
 
-<head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=5.0" />
-  <title>ArcGIS Instant Apps Components</title>
-
-  <link rel="stylesheet" href="https://js.arcgis.com/4.27/esri/themes/light/main.css" />
-  <script src="https://js.arcgis.com/4.27/"></script>
-  <script type="module" src="https://js.arcgis.com/calcite-components/1.4.2/calcite.esm.js"></script>
-  <link rel="stylesheet" type="text/css" href="https://js.arcgis.com/calcite-components/1.4.2/calcite.css" />
-  <script type="module" src="/build/instant-apps-components.esm.js"></script>
-  <script nomodule src="/build/instant-apps-components.js"></script>
-</head>
-
-<body>
-  <instant-apps-language-translator id="langTranslator"></instant-apps-language-translator>
-  <calcite-button id="openLangTranslator">Open language translator</calcite-button>
-  <script>
-    const langTranslator = document.getElementById('langTranslator');
-
-    const appSettings = {
-      "customHeaderHTML": {
-        "type": "textEditor",
-        "label": "Custom header HTML",
-        "value": "<p>Test header</p>",
-        "uiLocation": {
-          "section": {
-            "id": "about",
-            "label": "About"
-          },
-          "subsection": {
-            "id": "appComprehension",
-            "label": "App details"
-          }
-        },
-        "tip": "Include a more customized look for the app title. Rich text editor accessibility instructions can be accessed through ALT+0 (Mac users: Option+0)."
-      },
-      "customURLParamName": {
-        "type": "string",
-        "label": "URL parameter name",
-        "value": "name",
-        "uiLocation": {
-          "section": {
-            "id": "interactivity",
-            "label": "Interactivity"
-          },
-          "subsection": {
-            "id": "customURLParams",
-            "label": "URL parameter"
-          }
-        },
-        "tip": "Set up your app to support a custom URL parameter that users can append to your app URL. For example, if your map contains a feature layer with parcel information, you could find parcels using a URL parameter. For example, if your custom parameter name is parcel users would append the custom search to the app URl like this: index.html?parcel=3045"
-      },
-      "splashButtonText": {
-        "type": "string",
-        "label": "Introduction panel button text",
-        "value": "Okay",
-        "uiLocation": {
-          "section": {
-            "id": "about",
-            "label": "About"
-          },
-          "subsection": {
-            "id": "appComprehension",
-            "label": "App details"
-          }
-        }
-      },
-      "splashContent": {
-        "type": "textEditor",
-        "label": "Introduction panel content",
-        "value": "Splash content",
-        "uiLocation": {
-          "section": {
-            "id": "about",
-            "label": "About"
-          },
-          "subsection": {
-            "id": "appComprehension",
-            "label": "App details"
-          }
-        },
-        "tip": "Add text, links, and small graphics here (rich text editor). Rich text editor accessibility instructions can be accessed through ALT+0 (Mac users: Option+0)."
-      },
-      "splashTitle": {
-        "type": "string",
-        "label": "Introduction panel title",
-        "value": "Splash title",
-        "uiLocation": {
-          "section": {
-            "id": "about",
-            "label": "About"
-          },
-          "subsection": {
-            "id": "appComprehension",
-            "label": "App details"
-          }
-        }
-      },
-      "title": {
-        "type": "string",
-        "label": "App title",
-        "value": "Language translator ",
-        "uiLocation": {
-          "section": {
-            "id": "about",
-            "label": "About"
-          },
-          "subsection": {
-            "id": "appComprehension",
-            "label": "App details"
-          }
-        },
-        "tip": "Include title text to introduce the map's main topic"
-      },
-      "translatedLanguageLabels": {
-        "de": {
-          "customHeaderHTML": "Benutzerdefinierte Kopfzeile bearbeiten",
-          "customURLParamName": "URL-Parametername",
-          "splashButtonText": "Text für Einführungsfenster-Schaltfläche",
-          "splashContent": "Inhalt des Einführungsfensters",
-          "splashTitle": "Titel des Einführungsfensters",
-          "title": "App-Titel"
-        },
-        "en": {
-          "customHeaderHTML": "Edit custom header",
-          "customURLParamName": "URL parameter name",
-          "splashButtonText": "Introduction panel button text",
-          "splashContent": "Introduction panel content",
-          "splashTitle": "Introduction panel title",
-          "title": "App title"
-        },
-        "bs": {
-          "customHeaderHTML": "Uredi prilagođeno zaglavlje",
-          "customURLParamName": "Naziv parametra URL-a",
-          "splashButtonText": "Tekst gumba za uvodnu ploču",
-          "splashContent": "Sadržaj uvodne ploče",
-          "splashTitle": "Naziv uvodne ploče",
-          "title": "Naslov appa"
-        },
-        "fi": {
-          "customHeaderHTML": "Muokkaa mukautettua ylätunnistetta",
-          "customURLParamName": "URL-osoitteen parametrin nimi",
-          "splashButtonText": "Johdanto-ruudun painiketeksti",
-          "splashContent": "Johdanto-ruudun sisältö",
-          "splashTitle": "Johdanto-ruudun otsikko",
-          "title": "Sovelluksen otsikko"
-        },
-        "el": {
-          "customHeaderHTML": "Επεξεργασία εξατομικευμένης κεφαλίδας",
-          "customURLParamName": "Όνομα παραμέτρου διεύθυνσης URL",
-          "splashButtonText": "Κείμενο κουμπιού πλαισίου εισαγωγής",
-          "splashContent": "Περιεχόμενο πλαισίου εισαγωγής",
-          "splashTitle": "Τίτλος πλαισίου εισαγωγής",
-          "title": "Τίτλος εφαρμογής"
-        }
+    <link rel="stylesheet" href="https://js.arcgis.com/4.27/esri/themes/light/main.css" />
+    <script src="https://js.arcgis.com/4.27/"></script>
+    <script type="module" src="https://js.arcgis.com/calcite-components/1.4.2/calcite.esm.js"></script>
+    <link rel="stylesheet" type="text/css" href="https://js.arcgis.com/calcite-components/1.4.2/calcite.css" />
+    <script type="module" src="/build/instant-apps-components.esm.js"></script>
+    <script nomodule src="/build/instant-apps-components.js"></script>
+    <style>
+      html,
+      body,
+      #viewDiv {
+        box-sizing: border-box;
+        width: 100%;
+        height: 100%;
+        margin: 0;
+        padding: 0;
       }
-    }
 
-    langTranslator.appSettings = appSettings;
-    langTranslator.translatedLanguages = Object.keys(appSettings.translatedLanguageLabels);
+      #settings {
+        padding: 10px;
+      }
+    </style>
+  </head>
 
-    const openButton = document.getElementById('openLangTranslator');
-    openButton.addEventListener('click', () => (langTranslator.open = true));
-  </script>
-</body>
+  <body>
+    <calcite-shell>
+      <instant-apps-header slot="header" title-text="Instant Apps Components: Language translator/switcher"></instant-apps-header>
+      <calcite-shell-panel slot="panel-start">
+        <calcite-panel>
+          <div id="settings">
+            <calcite-label>
+              Language translator
+              <calcite-button id="openLangTranslator">Open language translator</calcite-button>
+            </calcite-label>
+          </div>
+        </calcite-panel>
+      </calcite-shell-panel>
+      <div id="viewDiv"></div>
+    </calcite-shell>
+    <instant-apps-language-translator id="langTranslator"></instant-apps-language-translator>
+    <script>
+      require(['esri/views/MapView', 'esri/WebMap', 'esri/widgets/Expand'], (MapView, WebMap, Expand) => {
+        const map = new WebMap({
+          portalItem: {
+            id: '879812b9bb7640f5bff640593d06ecf2',
+          },
+        });
+        const view = new MapView({
+          map,
+          container: 'viewDiv',
+        });
 
+        const langTranslator = document.getElementById('langTranslator');
+
+        const appSettings = {
+          customHeaderHTML: {
+            type: 'textEditor',
+            label: 'Custom header HTML',
+            value: '<p>Test header</p>',
+            uiLocation: {
+              section: {
+                id: 'about',
+                label: 'About',
+              },
+              subsection: {
+                id: 'appComprehension',
+                label: 'App details',
+              },
+            },
+            tip: 'Include a more customized look for the app title. Rich text editor accessibility instructions can be accessed through ALT+0 (Mac users: Option+0).',
+          },
+          customURLParamName: {
+            type: 'string',
+            label: 'URL parameter name',
+            value: 'name',
+            uiLocation: {
+              section: {
+                id: 'interactivity',
+                label: 'Interactivity',
+              },
+              subsection: {
+                id: 'customURLParams',
+                label: 'URL parameter',
+              },
+            },
+            tip: 'Set up your app to support a custom URL parameter that users can append to your app URL. For example, if your map contains a feature layer with parcel information, you could find parcels using a URL parameter. For example, if your custom parameter name is parcel users would append the custom search to the app URl like this: index.html?parcel=3045',
+          },
+          splashButtonText: {
+            type: 'string',
+            label: 'Introduction panel button text',
+            value: 'Okay',
+            uiLocation: {
+              section: {
+                id: 'about',
+                label: 'About',
+              },
+              subsection: {
+                id: 'appComprehension',
+                label: 'App details',
+              },
+            },
+          },
+          splashContent: {
+            type: 'textEditor',
+            label: 'Introduction panel content',
+            value: 'Splash content',
+            uiLocation: {
+              section: {
+                id: 'about',
+                label: 'About',
+              },
+              subsection: {
+                id: 'appComprehension',
+                label: 'App details',
+              },
+            },
+            tip: 'Add text, links, and small graphics here (rich text editor). Rich text editor accessibility instructions can be accessed through ALT+0 (Mac users: Option+0).',
+          },
+          splashTitle: {
+            type: 'string',
+            label: 'Introduction panel title',
+            value: 'Splash title',
+            uiLocation: {
+              section: {
+                id: 'about',
+                label: 'About',
+              },
+              subsection: {
+                id: 'appComprehension',
+                label: 'App details',
+              },
+            },
+          },
+          title: {
+            type: 'string',
+            label: 'App title',
+            value: 'Language translator ',
+            uiLocation: {
+              section: {
+                id: 'about',
+                label: 'About',
+              },
+              subsection: {
+                id: 'appComprehension',
+                label: 'App details',
+              },
+            },
+            tip: "Include title text to introduce the map's main topic",
+          },
+          translatedLanguageLabels: {
+            de: {
+              customHeaderHTML: 'Benutzerdefinierte Kopfzeile bearbeiten',
+              customURLParamName: 'URL-Parametername',
+              splashButtonText: 'Text für Einführungsfenster-Schaltfläche',
+              splashContent: 'Inhalt des Einführungsfensters',
+              splashTitle: 'Titel des Einführungsfensters',
+              title: 'App-Titel',
+            },
+            en: {
+              customHeaderHTML: 'Edit custom header',
+              customURLParamName: 'URL parameter name',
+              splashButtonText: 'Introduction panel button text',
+              splashContent: 'Introduction panel content',
+              splashTitle: 'Introduction panel title',
+              title: 'App title',
+            },
+            bs: {
+              customHeaderHTML: 'Uredi prilagođeno zaglavlje',
+              customURLParamName: 'Naziv parametra URL-a',
+              splashButtonText: 'Tekst gumba za uvodnu ploču',
+              splashContent: 'Sadržaj uvodne ploče',
+              splashTitle: 'Naziv uvodne ploče',
+              title: 'Naslov appa',
+            },
+            fi: {
+              customHeaderHTML: 'Muokkaa mukautettua ylätunnistetta',
+              customURLParamName: 'URL-osoitteen parametrin nimi',
+              splashButtonText: 'Johdanto-ruudun painiketeksti',
+              splashContent: 'Johdanto-ruudun sisältö',
+              splashTitle: 'Johdanto-ruudun otsikko',
+              title: 'Sovelluksen otsikko',
+            },
+            el: {
+              customHeaderHTML: 'Επεξεργασία εξατομικευμένης κεφαλίδας',
+              customURLParamName: 'Όνομα παραμέτρου διεύθυνσης URL',
+              splashButtonText: 'Κείμενο κουμπιού πλαισίου εισαγωγής',
+              splashContent: 'Περιεχόμενο πλαισίου εισαγωγής',
+              splashTitle: 'Τίτλος πλαισίου εισαγωγής',
+              title: 'Τίτλος εφαρμογής',
+            },
+          },
+        };
+
+        const translatedLanguages = Object.keys(appSettings.translatedLanguageLabels);
+        langTranslator.appSettings = appSettings;
+        langTranslator.translatedLanguages = translatedLanguages;
+
+        const openButton = document.getElementById('openLangTranslator');
+        openButton.addEventListener('click', () => (langTranslator.open = true));
+
+        const content = document.createElement('instant-apps-language-switcher');
+        content.translatedLanguages = translatedLanguages;
+
+        const expand = new Expand({
+          view,
+          content,
+          expandIcon: 'globe',
+        });
+
+        view.ui.add(expand, 'top-right');
+      });
+    </script>
+  </body>
 </html>
