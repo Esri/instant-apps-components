@@ -1,7 +1,7 @@
 import { createStore } from "@stencil/store";
 import { LocaleSettingItem, LocaleUIData } from "./interfaces";
 
-interface LanguageSwitcherState {
+interface LanguageTranslatorState {
   uiData: LocaleUIData | null;
   currentLanguage: string | null;
   lastSave: string | null;
@@ -9,7 +9,7 @@ interface LanguageSwitcherState {
   currentLocaleSettingItem: LocaleSettingItem | null;
 }
 
-const LanguageSwitcherStore = createStore<LanguageSwitcherState>({
+const LanguageTranslatorStore = createStore<LanguageTranslatorState>({
   uiData: null,
   currentLanguage: null,
   lastSave: null,
@@ -17,6 +17,6 @@ const LanguageSwitcherStore = createStore<LanguageSwitcherState>({
   currentLocaleSettingItem: null
 });
 
-export const languageSwitcherState = LanguageSwitcherStore.state;
-export const onLanguageSwitcherChange = LanguageSwitcherStore.onChange;
-export const store = LanguageSwitcherStore;
+export const languageTranslatorState = LanguageTranslatorStore.state;
+export const onLanguageTranslatorChange = LanguageTranslatorStore.onChange;
+export const store = LanguageTranslatorStore;

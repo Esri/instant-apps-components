@@ -23,10 +23,10 @@
 </head>
 
 <body>
-  <instant-apps-language-switcher id="langSwitcher"></instant-apps-language-switcher>
-  <calcite-button id="openLangSwitcher">Open language switcher</calcite-button>
+  <instant-apps-language-translator id="langTranslator"></instant-apps-language-translator>
+  <calcite-button id="openLangTranslator">Open language translator</calcite-button>
   <script>
-    const langSwitcher = document.getElementById('langSwitcher');
+    const langTranslator = document.getElementById('langTranslator');
 
     const appSettings = {
       "customHeaderHTML": {
@@ -110,7 +110,7 @@
       "title": {
         "type": "string",
         "label": "App title",
-        "value": "Language switcher ",
+        "value": "Language translator ",
         "uiLocation": {
           "section": {
             "id": "about",
@@ -167,11 +167,11 @@
       }
     }
 
-    langSwitcher.appSettings = appSettings;
-    langSwitcher.translatedLanguages = Object.keys(appSettings.translatedLanguageLabels);
+    langTranslator.appSettings = appSettings;
+    langTranslator.translatedLanguages = Object.keys(appSettings.translatedLanguageLabels);
 
-    const openButton = document.getElementById('openLangSwitcher');
-    openButton.addEventListener('click', () => (langSwitcher.open = true));
+    const openButton = document.getElementById('openLangTranslator');
+    openButton.addEventListener('click', () => (langTranslator.open = true));
   </script>
 </body>
 

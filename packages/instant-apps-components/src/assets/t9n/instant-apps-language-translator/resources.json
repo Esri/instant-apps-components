@@ -3,8 +3,8 @@
   "collapseAll": "Collapse all",
   "expandAll": "Expand all",
   "goToSetting": "Go to setting",
-  "header": "Language switcher",
-  "headerTip": "Language switcher tip",
+  "header": "Language translator",
+  "headerTip": "Language translator tip",
   "languages": {
     "ar": "Arabic",
     "bg": "Bulgarian",

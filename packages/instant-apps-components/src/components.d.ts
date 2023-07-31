@@ -316,14 +316,14 @@ export namespace Components {
          */
         "view": __esri.MapView | __esri.SceneView;
     }
-    interface InstantAppsLanguageSwitcher {
+    interface InstantAppsLanguageTranslator {
         "appSettings": any;
         "open": boolean;
         "portalItem": __esri.PortalItem;
         "portalItemResourceId": string;
         "translatedLanguages": string[];
     }
-    interface InstantAppsLanguageSwitcherItem {
+    interface InstantAppsLanguageTranslatorItem {
         "fieldName": string;
         "translatedLanguageLabel": string;
     }
@@ -579,17 +579,17 @@ declare global {
         prototype: HTMLInstantAppsKeyboardShortcutsElement;
         new (): HTMLInstantAppsKeyboardShortcutsElement;
     };
-    interface HTMLInstantAppsLanguageSwitcherElement extends Components.InstantAppsLanguageSwitcher, HTMLStencilElement {
+    interface HTMLInstantAppsLanguageTranslatorElement extends Components.InstantAppsLanguageTranslator, HTMLStencilElement {
     }
-    var HTMLInstantAppsLanguageSwitcherElement: {
-        prototype: HTMLInstantAppsLanguageSwitcherElement;
-        new (): HTMLInstantAppsLanguageSwitcherElement;
+    var HTMLInstantAppsLanguageTranslatorElement: {
+        prototype: HTMLInstantAppsLanguageTranslatorElement;
+        new (): HTMLInstantAppsLanguageTranslatorElement;
     };
-    interface HTMLInstantAppsLanguageSwitcherItemElement extends Components.InstantAppsLanguageSwitcherItem, HTMLStencilElement {
+    interface HTMLInstantAppsLanguageTranslatorItemElement extends Components.InstantAppsLanguageTranslatorItem, HTMLStencilElement {
     }
-    var HTMLInstantAppsLanguageSwitcherItemElement: {
-        prototype: HTMLInstantAppsLanguageSwitcherItemElement;
-        new (): HTMLInstantAppsLanguageSwitcherItemElement;
+    var HTMLInstantAppsLanguageTranslatorItemElement: {
+        prototype: HTMLInstantAppsLanguageTranslatorItemElement;
+        new (): HTMLInstantAppsLanguageTranslatorItemElement;
     };
     interface HTMLInstantAppsMeasurementElement extends Components.InstantAppsMeasurement, HTMLStencilElement {
     }
@@ -643,8 +643,8 @@ declare global {
         "instant-apps-interactive-legend-legend-element-caption": HTMLInstantAppsInteractiveLegendLegendElementCaptionElement;
         "instant-apps-interactive-legend-relationship": HTMLInstantAppsInteractiveLegendRelationshipElement;
         "instant-apps-keyboard-shortcuts": HTMLInstantAppsKeyboardShortcutsElement;
-        "instant-apps-language-switcher": HTMLInstantAppsLanguageSwitcherElement;
-        "instant-apps-language-switcher-item": HTMLInstantAppsLanguageSwitcherItemElement;
+        "instant-apps-language-translator": HTMLInstantAppsLanguageTranslatorElement;
+        "instant-apps-language-translator-item": HTMLInstantAppsLanguageTranslatorItemElement;
         "instant-apps-measurement": HTMLInstantAppsMeasurementElement;
         "instant-apps-measurement-tool": HTMLInstantAppsMeasurementToolElement;
         "instant-apps-popover": HTMLInstantAppsPopoverElement;
@@ -979,14 +979,14 @@ declare namespace LocalJSX {
          */
         "view"?: __esri.MapView | __esri.SceneView;
     }
-    interface InstantAppsLanguageSwitcher {
+    interface InstantAppsLanguageTranslator {
         "appSettings"?: any;
         "open"?: boolean;
         "portalItem": __esri.PortalItem;
         "portalItemResourceId": string;
         "translatedLanguages"?: string[];
     }
-    interface InstantAppsLanguageSwitcherItem {
+    interface InstantAppsLanguageTranslatorItem {
         "fieldName"?: string;
         "translatedLanguageLabel"?: string;
     }
@@ -1138,8 +1138,8 @@ declare namespace LocalJSX {
         "instant-apps-interactive-legend-legend-element-caption": InstantAppsInteractiveLegendLegendElementCaption;
         "instant-apps-interactive-legend-relationship": InstantAppsInteractiveLegendRelationship;
         "instant-apps-keyboard-shortcuts": InstantAppsKeyboardShortcuts;
-        "instant-apps-language-switcher": InstantAppsLanguageSwitcher;
-        "instant-apps-language-switcher-item": InstantAppsLanguageSwitcherItem;
+        "instant-apps-language-translator": InstantAppsLanguageTranslator;
+        "instant-apps-language-translator-item": InstantAppsLanguageTranslatorItem;
         "instant-apps-measurement": InstantAppsMeasurement;
         "instant-apps-measurement-tool": InstantAppsMeasurementTool;
         "instant-apps-popover": InstantAppsPopover;
@@ -1167,8 +1167,8 @@ declare module "@stencil/core" {
             "instant-apps-interactive-legend-legend-element-caption": LocalJSX.InstantAppsInteractiveLegendLegendElementCaption & JSXBase.HTMLAttributes<HTMLInstantAppsInteractiveLegendLegendElementCaptionElement>;
             "instant-apps-interactive-legend-relationship": LocalJSX.InstantAppsInteractiveLegendRelationship & JSXBase.HTMLAttributes<HTMLInstantAppsInteractiveLegendRelationshipElement>;
             "instant-apps-keyboard-shortcuts": LocalJSX.InstantAppsKeyboardShortcuts & JSXBase.HTMLAttributes<HTMLInstantAppsKeyboardShortcutsElement>;
-            "instant-apps-language-switcher": LocalJSX.InstantAppsLanguageSwitcher & JSXBase.HTMLAttributes<HTMLInstantAppsLanguageSwitcherElement>;
-            "instant-apps-language-switcher-item": LocalJSX.InstantAppsLanguageSwitcherItem & JSXBase.HTMLAttributes<HTMLInstantAppsLanguageSwitcherItemElement>;
+            "instant-apps-language-translator": LocalJSX.InstantAppsLanguageTranslator & JSXBase.HTMLAttributes<HTMLInstantAppsLanguageTranslatorElement>;
+            "instant-apps-language-translator-item": LocalJSX.InstantAppsLanguageTranslatorItem & JSXBase.HTMLAttributes<HTMLInstantAppsLanguageTranslatorItemElement>;
             "instant-apps-measurement": LocalJSX.InstantAppsMeasurement & JSXBase.HTMLAttributes<HTMLInstantAppsMeasurementElement>;
             "instant-apps-measurement-tool": LocalJSX.InstantAppsMeasurementTool & JSXBase.HTMLAttributes<HTMLInstantAppsMeasurementToolElement>;
             "instant-apps-popover": LocalJSX.InstantAppsPopover & JSXBase.HTMLAttributes<HTMLInstantAppsPopoverElement>;

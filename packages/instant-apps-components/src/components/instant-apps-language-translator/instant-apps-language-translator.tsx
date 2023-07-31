@@ -2,12 +2,12 @@ import { Component, Host, Prop, h } from '@stencil/core';
 
 import { Element, HostElement, State } from '@stencil/core/internal';
 
-import LanguageSwitcher_t9n from '../../assets/t9n/instant-apps-language-switcher/resources.json';
+import LanguageTranslator_t9n from '../../assets/t9n/instant-apps-language-translator/resources.json';
 import { generateUIData, getMessages, getUIDataKeys } from './support/utils';
-import { languageSwitcherState, store } from './support/store';
+import { languageTranslatorState, store } from './support/store';
 import { LocaleSettingItem, LocaleUIData } from './support/interfaces';
 
-const BASE = 'instant-apps-language-switcher';
+const BASE = 'instant-apps-language-translator';
 
 const CSS = {
   BASE,
@@ -24,13 +24,13 @@ const CSS = {
 };
 
 @Component({
-  tag: 'instant-apps-language-switcher',
-  styleUrl: 'instant-apps-language-switcher.scss',
+  tag: 'instant-apps-language-translator',
+  styleUrl: 'instant-apps-language-translator.scss',
   shadow: true,
 })
-export class InstantAppsLanguageSwitcher {
+export class InstantAppsLanguageTranslator {
   @Element()
-  el: HTMLInstantAppsLanguageSwitcherElement;
+  el: HTMLInstantAppsLanguageTranslatorElement;
 
   @Prop()
   portalItem!: __esri.PortalItem;
@@ -53,7 +53,7 @@ export class InstantAppsLanguageSwitcher {
   saving = false;
 
   @State()
-  messages: typeof LanguageSwitcher_t9n;
+  messages: typeof LanguageTranslator_t9n;
 
   async componentWillLoad() {
     this.messages = await getMessages(this.el);
@@ -119,7 +119,7 @@ export class InstantAppsLanguageSwitcher {
   }
 
   renderContent(): HTMLDivElement {
-    const locales = languageSwitcherState?.uiData?.locales as string[];
+    const locales = languageTranslatorState?.uiData?.locales as string[];
     return (
       <div slot="content">
         {this.renderTopBar()}
@@ -180,11 +180,11 @@ export class InstantAppsLanguageSwitcher {
   }
 
   renderTranslatedLangOptions(): HTMLCalciteOptionElement[] {
-    return (languageSwitcherState.uiData?.locales as string[])?.map(locale => <calcite-option value={locale}>{this.messages?.languages?.[locale]}</calcite-option>);
+    return (languageTranslatorState.uiData?.locales as string[])?.map(locale => <calcite-option value={locale}>{this.messages?.languages?.[locale]}</calcite-option>);
   }
 
   renderUIData(): HTMLDivElement | undefined {
-    if (!languageSwitcherState?.uiData) return;
+    if (!languageTranslatorState?.uiData) return;
     const uiDataKeys = getUIDataKeys();
     return <div>{uiDataKeys?.map((key, keyIndex) => this.renderUIDataItem(key, keyIndex, uiDataKeys.length))}</div>;
   }
@@ -200,8 +200,8 @@ export class InstantAppsLanguageSwitcher {
   }
 
   renderUIDataItem(key: string, keyIndex: number, uiDataKeysLen: number): HTMLDivElement {
-    const translatedLabel = this.appSettings.translatedLanguageLabels[languageSwitcherState.currentLanguage as string][key];
-    return <instant-apps-language-switcher-item class={`${keyIndex === uiDataKeysLen - 1 ? CSS.lastItem : ''}`} fieldName={key} translatedLanguageLabel={translatedLabel} />;
+    const translatedLabel = this.appSettings.translatedLanguageLabels[languageTranslatorState.currentLanguage as string][key];
+    return <instant-apps-language-translator-item class={`${keyIndex === uiDataKeysLen - 1 ? CSS.lastItem : ''}`} fieldName={key} translatedLanguageLabel={translatedLabel} />;
   }
 
   renderPrimaryButton(): HTMLCalciteButtonElement {
@@ -213,14 +213,14 @@ export class InstantAppsLanguageSwitcher {
   }
 
   expandAll(): void {
-    const uiData = { ...languageSwitcherState.uiData };
+    const uiData = { ...languageTranslatorState.uiData };
     const uiDataKeys = getUIDataKeys();
     uiDataKeys.forEach(key => ((uiData[key] as LocaleSettingItem).expanded = true));
     store.set('uiData', { ...uiData } as LocaleUIData);
   }
 
   collapseAll(): void {
-    const uiData = { ...languageSwitcherState.uiData };
+    const uiData = { ...languageTranslatorState.uiData };
     const uiDataKeys = getUIDataKeys();
     uiDataKeys.forEach(key => ((uiData[key] as LocaleSettingItem).expanded = false));
     store.set('uiData', { ...uiData } as LocaleUIData);

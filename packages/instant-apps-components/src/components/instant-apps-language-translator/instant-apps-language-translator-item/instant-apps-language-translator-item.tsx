@@ -1,9 +1,9 @@
 import { Component, Host, Prop, h } from '@stencil/core';
 import { LocaleSettingItem, LocaleUIData } from '../support/interfaces';
-import { languageSwitcherState, store } from '../support/store';
+import { languageTranslatorState, store } from '../support/store';
 import { getUIDataKeys } from '../support/utils';
 
-const BASE = 'instant-apps-language-switcher-item';
+const BASE = 'instant-apps-language-translator-item';
 
 const CSS = {
   section: `${BASE}__section`,
@@ -18,11 +18,11 @@ const CSS = {
 };
 
 @Component({
-  tag: 'instant-apps-language-switcher-item',
-  styleUrl: 'instant-apps-language-switcher-item.scss',
+  tag: 'instant-apps-language-translator-item',
+  styleUrl: 'instant-apps-language-translator-item.scss',
   shadow: true,
 })
-export class InstantAppsLanguageSwitcherItem {
+export class InstantAppsLanguageTranslatorItem {
   @Prop()
   fieldName: string;
 
@@ -103,21 +103,21 @@ export class InstantAppsLanguageSwitcherItem {
   }
 
   getUIDataItem(): LocaleSettingItem | undefined {
-    if (!languageSwitcherState.uiData) return;
-    return languageSwitcherState.uiData[this.fieldName] as LocaleSettingItem;
+    if (!languageTranslatorState.uiData) return;
+    return languageTranslatorState.uiData[this.fieldName] as LocaleSettingItem;
   }
 
   handleExpand(uiDataItem: LocaleSettingItem): void {
     uiDataItem.expanded = !uiDataItem.expanded;
     const uiData = {
-      ...languageSwitcherState.uiData,
+      ...languageTranslatorState.uiData,
       [this.fieldName]: uiDataItem as LocaleSettingItem,
     } as LocaleUIData;
     store.set('uiData', uiData);
   }
 
   handleSelection(node: FocusEvent): void {
-    const uiData = { ...languageSwitcherState.uiData } as LocaleUIData;
+    const uiData = { ...languageTranslatorState.uiData } as LocaleUIData;
     const uiDataKeys = getUIDataKeys();
     uiDataKeys.forEach(key => ((uiData[key] as LocaleSettingItem).selected = false));
     uiDataKeys.forEach(key => {
