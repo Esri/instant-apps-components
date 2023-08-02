@@ -1,0 +1,190 @@
+<!-- /*
+ *   Copyright (c) 2023 Esri
+ *   All rights reserved under the copyright laws of the United States and applicable international laws, treaties, and conventions.
+ *   This material is licensed for use under the Esri Master License Agreement (MLA), and is bound by the terms of that agreement.
+ *   You may redistribute and use this code without modification, provided you adhere to the terms of the MLA and include this copyright notice.
+ *   See use restrictions at http://www.esri.com/legal/pdfs/mla_e204_e300/english
+ */ -->
+
+<!DOCTYPE html>
+<html dir="ltr" lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=5.0" />
+    <title>Instant Apps Components: Scoreboard</title>
+
+    <link rel="stylesheet" href="https://js.arcgis.com/4.27/esri/themes/light/main.css" />
+    <script src="https://js.arcgis.com/4.27/"></script>
+    <script type="module" src="https://js.arcgis.com/calcite-components/1.4.2/calcite.esm.js"></script>
+    <link rel="stylesheet" type="text/css" href="https://js.arcgis.com/calcite-components/1.4.2/calcite.css" />
+    <script type="module" src="/build/instant-apps-components.esm.js"></script>
+    <script nomodule src="/build/instant-apps-components.js"></script>
+
+    <style>
+      html,
+      body {
+        box-sizing: border-box;
+        width: 100%;
+        height: 100%;
+        margin: 0;
+        padding: 0;
+      }
+
+      body {
+        display: flex;
+        flex-direction: column;
+      }
+
+      #appContainer {
+        display: flex;
+        width: 100%;
+        flex-grow: 1;
+      }
+
+      #viewDiv,
+      #scoreboardContainer {
+        width: 50%;
+      }
+
+      #scoreboardContainer {
+        display: flex;
+      }
+
+      #scoreboardContainer div {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 100%;
+      }
+    </style>
+  </head>
+
+  <body>
+    <instant-apps-header
+      id="instant-apps-header"
+      slot="header"
+      title-text="Instant Apps: Scoreboard"
+      text-color="#fff"
+      background-color="#151515"
+      logo-image="https://www.esri.com/content/dam/esrisites/en-us/common/icons/product-logos/arcgis-instant-apps-64.svg"
+      logo-image-alt-text="ArcGIS Instant Apps logo"
+      logo-link="https://www.esri.com/en-us/arcgis/products/arcgis-instant-apps/overview"
+      info-button="true"
+      info-title-text="Open information"
+      info-is-open="true"
+    >
+      <instant-apps-social-share slot="actions-end" share-button-color="neutral" popover-button-icon-scale="s"></instant-apps-social-share>
+    </instant-apps-header>
+    <div id="appContainer">
+      <div id="scoreboardContainer">
+        <instant-apps-scoreboard position="left" mode="pinned" auto-dock-enabled="false"></instant-apps-scoreboard>
+        <div>Content</div>
+      </div>
+      <div id="viewDiv"></div>
+    </div>
+
+    <script>
+      require(['esri/WebScene', 'esri/views/SceneView', 'esri/core/reactiveUtils', 'esri/config', 'esri/core/Collection'], (
+        WebScene,
+        SceneView,
+        reactiveUtils,
+        esriConfig,
+        Collection,
+      ) => {
+        // Init dummy data
+        let items = [
+          {
+            layer: {
+              id: '16a9b6628df-layer-1',
+              url: 'https://services7.arcgis.com/wdgKFvvZvYZ3Biji/arcgis/rest/services/Baltimore_bldgs_slr/SceneServer',
+            },
+            field: 'SLR_table_SLR6COUNT',
+            label: 'SLR 6 - Count',
+            operation: 'count',
+            visible: true,
+          },
+          {
+            layer: {
+              id: '16a9b6628df-layer-1',
+              url: 'https://services7.arcgis.com/wdgKFvvZvYZ3Biji/arcgis/rest/services/Baltimore_bldgs_slr/SceneServer',
+            },
+            field: 'SLR_table_SLR6COUNT',
+            label: 'SLR 6 - Average',
+            operation: 'avg',
+            visible: true,
+          },
+          {
+            layer: {
+              id: '16a9b6628df-layer-1',
+              url: 'https://services7.arcgis.com/wdgKFvvZvYZ3Biji/arcgis/rest/services/Baltimore_bldgs_slr/SceneServer',
+            },
+            field: 'SLR_table_SLR6COUNT',
+            label: 'SLR 6 - Sum',
+            operation: 'sum',
+            visible: true,
+          },
+          {
+            layer: {
+              id: '16a9b6628df-layer-1',
+              url: 'https://services7.arcgis.com/wdgKFvvZvYZ3Biji/arcgis/rest/services/Baltimore_bldgs_slr/SceneServer',
+            },
+            field: 'SLR_table_SLR6COUNT',
+            label: 'SLR 6 - Min',
+            operation: 'min',
+            visible: true,
+          },
+          {
+            layer: {
+              id: '16a9b6628df-layer-1',
+              url: 'https://services7.arcgis.com/wdgKFvvZvYZ3Biji/arcgis/rest/services/Baltimore_bldgs_slr/SceneServer',
+            },
+            field: 'SLR_table_SLR6COUNT',
+            label: 'SLR 6 - Count',
+            operation: 'max',
+            visible: true,
+          },
+          {
+            layer: {
+              id: '1650e5e4ded-layer-2',
+              url: 'https://services7.arcgis.com/wdgKFvvZvYZ3Biji/arcgis/rest/services/Baltimore_impact_slr/SceneServer',
+            },
+            field: 'Number_affected',
+            label: 'Num affected - Sum',
+            operation: 'sum',
+            visible: true,
+          },
+          {
+            layer: {
+              id: '1650e5e4ded-layer-2',
+              url: 'https://services7.arcgis.com/wdgKFvvZvYZ3Biji/arcgis/rest/services/Baltimore_impact_slr/SceneServer',
+            },
+            field: 'Level_',
+            label: 'Max value of levels',
+            operation: 'max',
+            visible: true,
+          },
+        ];
+
+        // Set up web scene/view
+        esriConfig.portalUrl = 'https://webapps.maps.arcgis.com';
+        const map = new WebScene({
+          portalItem: {
+            id: 'b41545006f9c4cadb4ded6812b9853c1',
+          },
+        });
+
+        const view = new SceneView({
+          map: map,
+          container: 'viewDiv',
+          ui: {
+            components: [],
+          },
+        });
+
+        const scoreboard = document.querySelector('instant-apps-scoreboard');
+        scoreboard.view = view;
+        scoreboard.items = items;
+      });
+    </script>
+  </body>
+</html>

@@ -1,0 +1,178 @@
+/*
+ *   Copyright (c) 2023 Esri
+ *   All rights reserved under the copyright laws of the United States and applicable international laws, treaties, and conventions.
+ *   This material is licensed for use under the Esri Master License Agreement (MLA), and is bound by the terms of that agreement.
+ *   You may redistribute and use this code without modification, provided you adhere to the terms of the MLA and include this copyright notice.
+ *   See use restrictions at http://www.esri.com/legal/pdfs/mla_e204_e300/english
+ */
+
+:host {
+  /**
+ * @prop --instant-apps-header-height: Height for header. Default: auto;
+ */
+  --instant-apps-header-height: auto;
+
+  /**
+ * @prop --instant-apps-header-min-height: Minimum height for header. Default: 50px;
+ */
+  --instant-apps-header-min-height: 50px;
+
+  /**
+ * @prop --instant-apps-header-title-text-link-decoration: Text decoration for hyperlinks for `titleTextLink`. Default value is 'underline'.
+ */
+  --instant-apps-header-title-text-link-decoration: underline;
+
+  /**
+ * @prop --instant-apps-header-height--logo-scale--s: Header height when logo scale is set to 's'. Default value is 55px.
+ */
+  --instant-apps-header-height--logo-scale--s: 55px;
+
+  /**
+ * @prop --instant-apps-header-logo-width--logo-scale--s: Logo width when logo scale is set to 's'. Default value: 35px.
+ */
+  --instant-apps-header-logo-width--logo-scale--s: 35px;
+
+  /**
+ * @prop  --instant-apps-header-logo-height--logo-scale--s: Logo height when logo scale is set to 's'. Default value: 35px.
+ */
+  --instant-apps-header-logo-height--logo-scale--s: 35px;
+
+  /**
+ * @prop --instant-apps-header-height--logo-scale--m:  Header height when logo scale is set to 'm'. Default value is 70px.
+ */
+  --instant-apps-header-height--logo-scale--m: 70px;
+
+  /**
+ * @prop --instant-apps-header-logo-width--logo-scale--m: Logo width when logo scale is set to 'm'. Default value: 50px.
+ */
+  --instant-apps-header-logo-width--logo-scale--m: 50px;
+
+  /**
+ * @prop  --instant-apps-header-logo-height--logo-scale--m: Logo height when logo scale is set to 'm'. Default value: 50px.
+ */
+  --instant-apps-header-logo-height--logo-scale--m: 50px;
+
+  /**
+ * @prop  --instant-apps-header-height--logo-scale--l:  Header height when logo scale is set to 'l'. Default value is 80px.
+ */
+  --instant-apps-header-height--logo-scale--l: 80px;
+
+  /**
+ * @prop  --instant-apps-header-logo-width--logo-scale--l: Logo width when logo scale is set to 'l'. Default value: 60px.
+ */
+  --instant-apps-header-logo-width--logo-scale--l: 60px;
+
+  /**
+ * @prop --instant-apps-header-logo-height--logo-scale--l: Logo height when logo scale is set to 'l'. Default value: 60px.
+ */
+  --instant-apps-header-logo-height--logo-scale--l: 60px;
+
+  width: 100%;
+  .instant-apps-header--standard {
+    box-sizing: border-box;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    height: var(--instant-apps-header-height);
+    background-color: var(--calcite-ui-foreground-1);
+    color: var(--calcite-ui-text-1);
+    padding-top: 5px;
+    padding-bottom: 5px;
+    font-family: var(--calcite-sans-family);
+    min-height: var(--instant-apps-header-min-height);
+
+    .instant-apps-header__header-content {
+      display: flex;
+      align-items: center;
+      width: 100%;
+      min-width:0;
+
+      a {
+        display: flex;
+        align-items: center;
+        text-decoration: var(--instant-apps-header-title-text-link-decoration);
+        img {
+          padding-right: 0;
+        }
+      }
+
+      img {
+        margin: 10px;
+      }
+
+      h1 {
+        margin: 0;
+        font-size: 1.25rem;
+        color: var(--calcite-ui-text-1);
+        font-weight: 430;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+
+      #infoButton {
+        margin-inline-start: 10px;
+      }
+    }
+
+    .instant-apps-header__header-content--center {
+      justify-content: center;
+    }
+
+    .instant-apps-header__header-content--right {
+      justify-content: end;
+    }
+  }
+
+  .instant-apps-header__standard-height {
+    padding: 5px 10px;
+  }
+
+  .instant-apps-header__logo-height--s {
+    height: var(--instant-apps-header-height--logo-scale--s);
+    .instant-apps-header__header-content {
+      h1 {
+        font-size: 1.125rem;
+      }
+    }
+  }
+  .instant-apps-header__logo-scale--s {
+    width: var(--instant-apps-header-logo-width--logo-scale--s);
+    height: var(--instant-apps-header-logo-height--logo-scale--s);
+  }
+
+  .instant-apps-header__logo-height--m {
+    height: var(--instant-apps-header-height--logo-scale--m);
+  }
+  .instant-apps-header__logo-scale--m {
+    width: var(--instant-apps-header-logo-width--logo-scale--m);
+    height: var(--instant-apps-header-logo-height--logo-scale--m);
+  }
+
+  .instant-apps-header__logo-height--l {
+    height: var(--instant-apps-header-height--logo-scale--l);
+    .instant-apps-header__header-content {
+      h1 {
+        font-size: 1.375rem;
+      }
+    }
+  }
+  .instant-apps-header__logo-scale--l {
+    width: var(--instant-apps-header-logo-width--logo-scale--l);
+    height: var(--instant-apps-header-logo-height--logo-scale--l);
+  }
+
+  .instant-apps-header__logo-height--s,
+  .instant-apps-header__logo-height--m,
+  .instant-apps-header__logo-height--l {
+    padding-right: 10px;
+  }
+
+  .instant-apps-header--rtl.instant-apps-header__logo-height--s,
+  .instant-apps-header--rtl.instant-apps-header__logo-height--m,
+  .instant-apps-header--rtl.instant-apps-header__logo-height--l {
+    padding-right: 0;
+    padding-left: 10px;
+  }
+}

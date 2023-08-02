@@ -1,0 +1,37 @@
+<!-- /*
+ *   Copyright (c) 2023 Esri
+ *   All rights reserved under the copyright laws of the United States and applicable international laws, treaties, and conventions.
+ *   This material is licensed for use under the Esri Master License Agreement (MLA), and is bound by the terms of that agreement.
+ *   You may redistribute and use this code without modification, provided you adhere to the terms of the MLA and include this copyright notice.
+ *   See use restrictions at http://www.esri.com/legal/pdfs/mla_e204_e300/english
+ */ -->
+
+<!DOCTYPE html>
+<html dir="ltr" lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=5.0" />
+    <title>ArcGIS Instant Apps Components</title>
+
+    <link rel="stylesheet" href="https://js.arcgis.com/4.27/esri/themes/light/main.css" />
+    <script src="https://js.arcgis.com/4.27/"></script>
+    <script type="module" src="https://js.arcgis.com/calcite-components/1.4.2/calcite.esm.js"></script>
+    <link rel="stylesheet" type="text/css" href="https://js.arcgis.com/calcite-components/1.4.2/calcite.css" />
+    <script type="module" src="/build/instant-apps-components.esm.js"></script>
+    <script nomodule src="/build/instant-apps-components.js"></script>
+
+    <style></style>
+  </head>
+
+  <body>
+    <instant-apps-splash title-text="Title" content="<p>Content</p>" primary-button-text="Enter" close-button-disabled="true"></instant-apps-splash>
+    <calcite-button>Open</calcite-button>
+    <script>
+      const button = document.querySelector('calcite-button');
+      const splash = document.querySelector('instant-apps-splash');
+      button.addEventListener('click', () => {
+        splash.open = true;
+      });
+    </script>
+  </body>
+</html>
