@@ -53,10 +53,12 @@
     </calcite-shell>
     <instant-apps-language-translator id="langTranslator"></instant-apps-language-translator>
     <script>
-      require(['esri/views/MapView', 'esri/WebMap', 'esri/widgets/Expand'], (MapView, WebMap, Expand) => {
+      require(['esri/views/MapView', 'esri/WebMap', 'esri/widgets/Expand', 'esri/portal/PortalItem', 'esri/config'], (MapView, WebMap, Expand, PortalItem, esriConfig) => {
+        esriConfig.portalUrl = 'https://holistic.mapsdevext.arcgis.com';
+
         const map = new WebMap({
           portalItem: {
-            id: '879812b9bb7640f5bff640593d06ecf2',
+            id: 'aa5e8c8a7cc74273ad86733b224370ed',
           },
         });
         const view = new MapView({
@@ -65,10 +67,11 @@
         });
 
         const langTranslatorConfigData = {
+          // Series of setting data - type, label, value, uiLocation, and tip
           customHeaderHTML: {
             type: 'textEditor',
             label: 'Custom header HTML',
-            value: '<p>Test header</p>',
+            value: 'Custom header HTML value',
             uiLocation: {
               section: {
                 id: 'about',
@@ -84,7 +87,7 @@
           customURLParamName: {
             type: 'string',
             label: 'URL parameter name',
-            value: 'name',
+            value: 'URL parameter name value',
             uiLocation: {
               section: {
                 id: 'interactivity',
@@ -100,7 +103,7 @@
           splashButtonText: {
             type: 'string',
             label: 'Introduction panel button text',
-            value: 'Okay',
+            value: 'Introduction panel button value',
             uiLocation: {
               section: {
                 id: 'about',
@@ -114,8 +117,8 @@
           },
           splashContent: {
             type: 'textEditor',
-            label: 'Introduction panel content',
-            value: 'Splash content',
+            label: 'Introduction panel content value',
+            value: 'Test value',
             uiLocation: {
               section: {
                 id: 'about',
@@ -131,7 +134,7 @@
           splashTitle: {
             type: 'string',
             label: 'Introduction panel title',
-            value: 'Splash title',
+            value: 'Introduction panel title value',
             uiLocation: {
               section: {
                 id: 'about',
@@ -146,7 +149,7 @@
           title: {
             type: 'string',
             label: 'App title',
-            value: 'Language switcher ',
+            value: 'App title value',
             uiLocation: {
               section: {
                 id: 'about',
@@ -159,14 +162,23 @@
             },
             tip: "Include title text to introduce the map's main topic",
           },
+          // Only for runtime - to be used when switching between languages for translation workflow - configuration
           translatedLanguageLabels: {
-            da: {
-              customHeaderHTML: 'Redigér brugerdefineret overskrift',
-              customURLParamName: 'URL-parameternavn',
-              splashButtonText: 'Knaptekst til introduktionspanel',
-              splashContent: 'Indhold i introduktionspanel',
-              splashTitle: 'Titel på introduktionspanel',
-              title: 'App-titel',
+            ar: {
+              customHeaderHTML: 'تحرير الرأس المخصص',
+              customURLParamName: 'اسم معلمة عنوان URL',
+              splashButtonText: 'نص زر لوحة المقددمة',
+              splashContent: 'محتوى لوحة المقدمة',
+              splashTitle: 'عنوان لوحة المقدمة',
+              title: 'عنوان التطبيق',
+            },
+            ca: {
+              customHeaderHTML: "Edita l'encapçalament personalitzat",
+              customURLParamName: "Nom del paràmetre d'URL",
+              splashButtonText: "Text del botó del panell d'introducció",
+              splashContent: "Contingut del panell d'introducció",
+              splashTitle: "Títol del panell d'introducció",
+              title: "Títol de l'aplicació",
             },
             fr: {
               customHeaderHTML: 'Mettre à jour l’en-tête personnalisé',
@@ -176,41 +188,52 @@
               splashTitle: 'Titre du volet de présentation',
               title: 'Titre de l’application',
             },
-            hu: {
-              customHeaderHTML: 'Egyéni fejléc szerkesztése',
-              customURLParamName: 'URL-paraméter neve',
-              splashButtonText: 'Bevezetés panel gombjának szövege',
-              splashContent: 'Bevezetés panel tartalma',
-              splashTitle: 'Bevezetés panel címe',
-              title: 'Alkalmazás címe',
+            th: {
+              customHeaderHTML: 'แก้ไขส่วนหัวแบบกำหนดเอง',
+              customURLParamName: 'ชื่อพารามิเตอร์ URL',
+              splashButtonText: 'ข้อความปุ่มพาเนลแนะนำ',
+              splashContent: 'เนื้อหาของพาเนลแนะนำ',
+              splashTitle: 'หัวข้อพาเนลแนะนำ',
+              title: 'ชื่อแอพ',
             },
-            et: {
-              customHeaderHTML: 'Muuda kohandatud päist',
-              customURLParamName: 'URL-i parameetri nimi',
-              splashButtonText: 'Tutvustuspaneeli nupu tekst',
-              splashContent: 'Tutvustuspaneeli sisu',
-              splashTitle: 'Tutvustuspaneeli pealkiri',
-              title: 'Rakenduse pealkiri',
+            uk: {
+              customHeaderHTML: 'Редагувати настроюваний верхній колонтитул',
+              customURLParamName: "Ім'я параметра URL",
+              splashButtonText: 'Текст кнопки панелі вступу',
+              splashContent: 'Вміст панелі вступу',
+              splashTitle: 'Заголовок панелі вступу',
+              title: 'Заголовок додатку',
             },
           },
         };
+        const langSwitcherConfigData = {
+          locales: ['ar', 'ca', 'fr', 'th', 'uk'],
+          icon: 'language',
+          portalItemResourceId: 't9n/ec629fbdaa01491e8fc16a443d526443.json',
+        };
+
+        const templateAppItem = new PortalItem({
+          id: 'ec629fbdaa01491e8fc16a443d526443',
+        });
+
         const langTranslator = document.getElementById('langTranslator');
-        langTranslator.appSettings = appSettings;
-        langTranslator.translatedLanguages = locales;
+        langTranslator.portalItem = templateAppItem;
+        langTranslator.appSettings = langTranslatorConfigData;
+        langTranslator.translatedLanguages = langSwitcherConfigData.locales;
+
         const openButton = document.getElementById('openLangTranslator');
         openButton.addEventListener('click', () => (langTranslator.open = true));
 
-        const langSwitcherConfigData = {
-          locales: ['da', 'fr', 'hu', 'et', 'ca'],
-          icon: 'globe',
-          portalItemResourceId: '',
-        };
         const content = document.createElement('instant-apps-language-switcher');
+        content.portalItem = templateAppItem;
         content.translatedLanguages = langSwitcherConfigData.locales;
         content.icon = langSwitcherConfigData.icon;
         content.portalItemResourceId = langSwitcherConfigData.portalItemResourceId;
 
-        content.addEventListener('selectedLanguageUpdated', e => console.log('SELECTED LANGUAGE: ', e.detail));
+        content.addEventListener('selectedLanguageUpdated', e => {
+          const data = e.detail;
+          console.log('T9N UI DATA: ', data);
+        });
 
         const expand = new Expand({
           view,

@@ -3,7 +3,7 @@ import { Component, Host, Prop, h } from '@stencil/core';
 import { Element, HostElement, State } from '@stencil/core/internal';
 
 import LanguageTranslator_t9n from '../../assets/t9n/instant-apps-language-translator/resources.json';
-import { generateUIData, getMessages, getUIDataKeys } from './support/utils';
+import { generateUIData, getMessages, getPortalItemResource, getUIDataKeys } from './support/utils';
 import { languageTranslatorState, store } from './support/store';
 import { LocaleSettingItem, LocaleUIData } from './support/interfaces';
 
@@ -32,18 +32,27 @@ export class InstantAppsLanguageTranslator {
   @Element()
   el: HTMLInstantAppsLanguageTranslatorElement;
 
+  /**
+   * Instant App portal item - used to fetch it's associated portal item resource. The portal item resource will contain the user defined translated strings.
+   */
   @Prop()
   portalItem!: __esri.PortalItem;
 
-  @Prop()
-  portalItemResourceId!: string;
-
+  /**
+   * Data object containing a series of key-value pairs used to render the components UI.
+   */
   @Prop()
   appSettings;
 
+  /**
+   * Specified languages that the user-defined strings will be translated in.
+   */
   @Prop()
   translatedLanguages: string[];
 
+  /**
+   * Controls the open/close state of the modal.
+   */
   @Prop({
     mutable: true,
   })
@@ -56,9 +65,24 @@ export class InstantAppsLanguageTranslator {
   messages: typeof LanguageTranslator_t9n;
 
   async componentWillLoad() {
-    this.messages = await getMessages(this.el);
-    store.set('currentLanguage', this.translatedLanguages[0]);
-    store.set('uiData', generateUIData(this.appSettings, this.translatedLanguages));
+    this.initialize();
+  }
+
+  async initialize(): Promise<void> {
+    const { el, appSettings, translatedLanguages } = this;
+    const messages = await getMessages(el);
+    const initialLanguage = translatedLanguages[0];
+    const uiData = generateUIData(appSettings, translatedLanguages);
+    const portalItemResource = await getPortalItemResource(this.portalItem);
+
+    this.messages = messages;
+    store.set('currentLanguage', initialLanguage);
+    store.set('uiData', uiData);
+    store.set('portalItemResource', portalItemResource as __esri.PortalItemResource);
+    try {
+      const t9nData = await portalItemResource?.fetch();
+      store.set('portalItemResourceT9n', t9nData);
+    } catch {}
   }
 
   render(): HostElement {

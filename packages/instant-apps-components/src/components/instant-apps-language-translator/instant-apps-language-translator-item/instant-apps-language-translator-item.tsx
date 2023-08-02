@@ -17,6 +17,7 @@ const CSS = {
   uiLocationItem: `${BASE}__ui-location-item`,
   infoIcon: `${BASE}__info-icon`,
   infoButton: `${BASE}__info-button`,
+  tip: `${BASE}__tip`,
 };
 
 @Component({
@@ -43,7 +44,7 @@ export class InstantAppsLanguageTranslatorItem {
         <calcite-popover reference-element={`${this.fieldName}goTo`} auto-close="true" placement="trailing">
           <span class={CSS.uiLocationPopoverContent}>
             <span class={CSS.uiLocationItems}>{this.getUILocation(uiDataItem)}</span>
-            <span>{tip}</span>
+            {tip ? <span class={CSS.tip}>{tip}</span> : null}
           </span>
         </calcite-popover>
       </Host>
@@ -75,6 +76,10 @@ export class InstantAppsLanguageTranslatorItem {
   renderTranslatedLanguageSection(): HTMLDivElement {
     const uiDataItem = this.getUIDataItem() as LocaleSettingItem;
     const isSelected = uiDataItem?.selected;
+    const locale = store.get('currentLanguage') as string;
+    const data = store.get('portalItemResourceT9n');
+    console.log(data);
+    const value = data?.[locale]?.[this.fieldName];
     return (
       <div class={`${CSS.section}${isSelected ? ` ${CSS.selected}` : ''}`}>
         <div class={CSS.topRow}>
@@ -85,7 +90,7 @@ export class InstantAppsLanguageTranslatorItem {
           </div>
         </div>
         {uiDataItem?.expanded ? (
-          <calcite-input data-field-name={this.fieldName} onFocus={this.handleSelection}>
+          <calcite-input data-field-name={this.fieldName} onFocus={this.handleSelection} value={value}>
             <calcite-button
               onclick={e => {
                 const input = e.target.parentNode;

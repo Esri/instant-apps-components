@@ -317,15 +317,31 @@ export namespace Components {
         "view": __esri.MapView | __esri.SceneView;
     }
     interface InstantAppsLanguageSwitcher {
+        /**
+          * Icon to display.
+         */
         "icon": string;
-        "portalItemResourceId": string;
-        "translatedLanguages": string[];
+        /**
+          * Instant App portal item - used to fetch it's associated portal item resource. The portal item resource will contain the user defined translated strings.
+         */
+        "portalItem": __esri.PortalItem;
     }
     interface InstantAppsLanguageTranslator {
+        /**
+          * Data object containing a series of key-value pairs used to render the components UI.
+         */
         "appSettings": any;
+        /**
+          * Controls the open/close state of the modal.
+         */
         "open": boolean;
+        /**
+          * Instant App portal item - used to fetch it's associated portal item resource. The portal item resource will contain the user defined translated strings.
+         */
         "portalItem": __esri.PortalItem;
-        "portalItemResourceId": string;
+        /**
+          * Specified languages that the user-defined strings will be translated in.
+         */
         "translatedLanguages": string[];
     }
     interface InstantAppsLanguageTranslatorItem {
@@ -996,16 +1012,32 @@ declare namespace LocalJSX {
         "view"?: __esri.MapView | __esri.SceneView;
     }
     interface InstantAppsLanguageSwitcher {
+        /**
+          * Icon to display.
+         */
         "icon"?: string;
         "onSelectedLanguageUpdated"?: (event: InstantAppsLanguageSwitcherCustomEvent<string>) => void;
-        "portalItemResourceId"?: string;
-        "translatedLanguages"?: string[];
+        /**
+          * Instant App portal item - used to fetch it's associated portal item resource. The portal item resource will contain the user defined translated strings.
+         */
+        "portalItem": __esri.PortalItem;
     }
     interface InstantAppsLanguageTranslator {
+        /**
+          * Data object containing a series of key-value pairs used to render the components UI.
+         */
         "appSettings"?: any;
+        /**
+          * Controls the open/close state of the modal.
+         */
         "open"?: boolean;
+        /**
+          * Instant App portal item - used to fetch it's associated portal item resource. The portal item resource will contain the user defined translated strings.
+         */
         "portalItem": __esri.PortalItem;
-        "portalItemResourceId": string;
+        /**
+          * Specified languages that the user-defined strings will be translated in.
+         */
         "translatedLanguages"?: string[];
     }
     interface InstantAppsLanguageTranslatorItem {

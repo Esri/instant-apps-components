@@ -1,5 +1,5 @@
-import { createStore } from "@stencil/store";
-import { LocaleSettingItem, LocaleUIData } from "./interfaces";
+import { createStore } from '@stencil/store';
+import { LocaleSettingItem, LocaleUIData } from './interfaces';
 
 interface LanguageTranslatorState {
   uiData: LocaleUIData | null;
@@ -7,6 +7,8 @@ interface LanguageTranslatorState {
   lastSave: string | null;
   saving: boolean;
   currentLocaleSettingItem: LocaleSettingItem | null;
+  portalItemResource: __esri.PortalItemResource | null;
+  portalItemResourceT9n: any;
 }
 
 const LanguageTranslatorStore = createStore<LanguageTranslatorState>({
@@ -14,7 +16,9 @@ const LanguageTranslatorStore = createStore<LanguageTranslatorState>({
   currentLanguage: null,
   lastSave: null,
   saving: false,
-  currentLocaleSettingItem: null
+  currentLocaleSettingItem: null,
+  portalItemResource: null,
+  portalItemResourceT9n: null,
 });
 
 export const languageTranslatorState = LanguageTranslatorStore.state;

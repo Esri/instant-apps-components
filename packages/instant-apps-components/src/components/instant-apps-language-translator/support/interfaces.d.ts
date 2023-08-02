@@ -21,3 +21,7 @@ interface LocaleData {
   label: string;
   value: string;
 }
+
+export interface PortalItemResourceT9nData {
+  [locale: string]: { [fieldName: string]: string } | string;
+}
