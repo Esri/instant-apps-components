@@ -15,6 +15,8 @@ const CSS = {
   uiLocationPopoverContent: `${BASE}__ui-location-popover-content`,
   uiLocationItems: `${BASE}__ui-location-items`,
   uiLocationItem: `${BASE}__ui-location-item`,
+  infoIcon: `${BASE}__info-icon`,
+  infoButton: `${BASE}__info-button`,
 };
 
 @Component({
@@ -31,6 +33,7 @@ export class InstantAppsLanguageTranslatorItem {
 
   render() {
     const uiDataItem = this.getUIDataItem() as LocaleSettingItem;
+    const tip = this.getTip(uiDataItem);
     return (
       <Host>
         <div class={BASE}>
@@ -40,7 +43,7 @@ export class InstantAppsLanguageTranslatorItem {
         <calcite-popover reference-element={`${this.fieldName}goTo`} auto-close="true" placement="trailing">
           <span class={CSS.uiLocationPopoverContent}>
             <span class={CSS.uiLocationItems}>{this.getUILocation(uiDataItem)}</span>
-            <calcite-link>Go to setting</calcite-link>
+            <span>{tip}</span>
           </span>
         </calcite-popover>
       </Host>
@@ -60,7 +63,9 @@ export class InstantAppsLanguageTranslatorItem {
             <calcite-icon icon="list-button" scale="s" />
             <span class={CSS.label}>{label}</span>
           </div>
-          <calcite-button id={`${this.fieldName}goTo`} icon-start="magnifying-glass-plus" appearance="outline" round={true} scale="s" />
+          <button id={`${this.fieldName}goTo`} class={CSS.infoButton}>
+            <calcite-icon class={CSS.infoIcon} icon="information" scale="m" />
+          </button>
         </div>
         {uiDataItem?.expanded ? <calcite-input data-field-name={this.fieldName} value={value} onFocus={this.handleSelection} /> : null}
       </div>
@@ -138,5 +143,10 @@ export class InstantAppsLanguageTranslatorItem {
         {breadCrumbLabelIndex !== breadCrumbLabels.length - 1 ? <calcite-icon icon="chevron-right" scale="s" /> : null}
       </span>
     ));
+  }
+
+  getTip(uiDataItem: LocaleSettingItem): string {
+    const { tip } = uiDataItem;
+    return tip;
   }
 }

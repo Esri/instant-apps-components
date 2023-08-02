@@ -64,9 +64,7 @@
           container: 'viewDiv',
         });
 
-        const langTranslator = document.getElementById('langTranslator');
-
-        const appSettings = {
+        const langTranslatorConfigData = {
           customHeaderHTML: {
             type: 'textEditor',
             label: 'Custom header HTML',
@@ -148,7 +146,7 @@
           title: {
             type: 'string',
             label: 'App title',
-            value: 'Language translator ',
+            value: 'Language switcher ',
             uiLocation: {
               section: {
                 id: 'about',
@@ -162,62 +160,62 @@
             tip: "Include title text to introduce the map's main topic",
           },
           translatedLanguageLabels: {
-            de: {
-              customHeaderHTML: 'Benutzerdefinierte Kopfzeile bearbeiten',
-              customURLParamName: 'URL-Parametername',
-              splashButtonText: 'Text für Einführungsfenster-Schaltfläche',
-              splashContent: 'Inhalt des Einführungsfensters',
-              splashTitle: 'Titel des Einführungsfensters',
-              title: 'App-Titel',
+            da: {
+              customHeaderHTML: 'Redigér brugerdefineret overskrift',
+              customURLParamName: 'URL-parameternavn',
+              splashButtonText: 'Knaptekst til introduktionspanel',
+              splashContent: 'Indhold i introduktionspanel',
+              splashTitle: 'Titel på introduktionspanel',
+              title: 'App-titel',
             },
-            en: {
-              customHeaderHTML: 'Edit custom header',
-              customURLParamName: 'URL parameter name',
-              splashButtonText: 'Introduction panel button text',
-              splashContent: 'Introduction panel content',
-              splashTitle: 'Introduction panel title',
-              title: 'App title',
+            fr: {
+              customHeaderHTML: 'Mettre à jour l’en-tête personnalisé',
+              customURLParamName: 'Nom du paramètre d’URL',
+              splashButtonText: 'Texte du bouton du volet de présentation',
+              splashContent: 'Contenu du volet de présentation',
+              splashTitle: 'Titre du volet de présentation',
+              title: 'Titre de l’application',
             },
-            bs: {
-              customHeaderHTML: 'Uredi prilagođeno zaglavlje',
-              customURLParamName: 'Naziv parametra URL-a',
-              splashButtonText: 'Tekst gumba za uvodnu ploču',
-              splashContent: 'Sadržaj uvodne ploče',
-              splashTitle: 'Naziv uvodne ploče',
-              title: 'Naslov appa',
+            hu: {
+              customHeaderHTML: 'Egyéni fejléc szerkesztése',
+              customURLParamName: 'URL-paraméter neve',
+              splashButtonText: 'Bevezetés panel gombjának szövege',
+              splashContent: 'Bevezetés panel tartalma',
+              splashTitle: 'Bevezetés panel címe',
+              title: 'Alkalmazás címe',
             },
-            fi: {
-              customHeaderHTML: 'Muokkaa mukautettua ylätunnistetta',
-              customURLParamName: 'URL-osoitteen parametrin nimi',
-              splashButtonText: 'Johdanto-ruudun painiketeksti',
-              splashContent: 'Johdanto-ruudun sisältö',
-              splashTitle: 'Johdanto-ruudun otsikko',
-              title: 'Sovelluksen otsikko',
-            },
-            el: {
-              customHeaderHTML: 'Επεξεργασία εξατομικευμένης κεφαλίδας',
-              customURLParamName: 'Όνομα παραμέτρου διεύθυνσης URL',
-              splashButtonText: 'Κείμενο κουμπιού πλαισίου εισαγωγής',
-              splashContent: 'Περιεχόμενο πλαισίου εισαγωγής',
-              splashTitle: 'Τίτλος πλαισίου εισαγωγής',
-              title: 'Τίτλος εφαρμογής',
+            et: {
+              customHeaderHTML: 'Muuda kohandatud päist',
+              customURLParamName: 'URL-i parameetri nimi',
+              splashButtonText: 'Tutvustuspaneeli nupu tekst',
+              splashContent: 'Tutvustuspaneeli sisu',
+              splashTitle: 'Tutvustuspaneeli pealkiri',
+              title: 'Rakenduse pealkiri',
             },
           },
         };
-
-        const translatedLanguages = Object.keys(appSettings.translatedLanguageLabels);
+        const langTranslator = document.getElementById('langTranslator');
         langTranslator.appSettings = appSettings;
-        langTranslator.translatedLanguages = translatedLanguages;
-
+        langTranslator.translatedLanguages = locales;
         const openButton = document.getElementById('openLangTranslator');
         openButton.addEventListener('click', () => (langTranslator.open = true));
 
+        const langSwitcherConfigData = {
+          locales: ['da', 'fr', 'hu', 'et', 'ca'],
+          icon: 'globe',
+          portalItemResourceId: '',
+        };
         const content = document.createElement('instant-apps-language-switcher');
-        content.translatedLanguages = translatedLanguages;
+        content.translatedLanguages = langSwitcherConfigData.locales;
+        content.icon = langSwitcherConfigData.icon;
+        content.portalItemResourceId = langSwitcherConfigData.portalItemResourceId;
+
+        content.addEventListener('selectedLanguageUpdated', e => console.log('SELECTED LANGUAGE: ', e.detail));
 
         const expand = new Expand({
           view,
           content,
+          expanded: true,
           expandIcon: 'globe',
         });
 

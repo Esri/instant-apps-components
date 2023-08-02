@@ -485,6 +485,10 @@ export interface InstantAppsInteractiveLegendLegendElementCaptionCustomEvent<T> 
     detail: T;
     target: HTMLInstantAppsInteractiveLegendLegendElementCaptionElement;
 }
+export interface InstantAppsLanguageSwitcherCustomEvent<T> extends CustomEvent<T> {
+    detail: T;
+    target: HTMLInstantAppsLanguageSwitcherElement;
+}
 export interface InstantAppsMeasurementCustomEvent<T> extends CustomEvent<T> {
     detail: T;
     target: HTMLInstantAppsMeasurementElement;
@@ -993,6 +997,7 @@ declare namespace LocalJSX {
     }
     interface InstantAppsLanguageSwitcher {
         "icon"?: string;
+        "onSelectedLanguageUpdated"?: (event: InstantAppsLanguageSwitcherCustomEvent<string>) => void;
         "portalItemResourceId"?: string;
         "translatedLanguages"?: string[];
     }

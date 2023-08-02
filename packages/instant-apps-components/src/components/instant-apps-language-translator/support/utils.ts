@@ -34,6 +34,7 @@ export function generateUIData(appSettings, locales: string[]): LocaleUIData {
       expanded: true,
       selected: false,
       uiLocation,
+      tip: appSetting?.tip,
     };
   });
 

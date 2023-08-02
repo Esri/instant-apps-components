@@ -49,6 +49,7 @@
   .instant-apps-language-translator-item__ui-location-popover-content {
     display: inline-block;
     padding: 10px;
+    max-width: 350px;
   }
 
   .instant-apps-language-translator-item__ui-location-items {
@@ -60,6 +61,16 @@
     align-items: center;
     font-weight: var(--calcite-font-weight-medium);
     font-size: 14px;
+  }
+
+  .instant-apps-language-translator-item__info-icon {
+    color: var(--calcite-ui-brand);
+  }
+
+  .instant-apps-language-translator-item__info-button {
+    border: 0;
+    background-color: transparent;
+    cursor: pointer;
   }
 }
 

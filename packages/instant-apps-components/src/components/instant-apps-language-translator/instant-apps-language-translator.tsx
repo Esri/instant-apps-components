@@ -180,7 +180,15 @@ export class InstantAppsLanguageTranslator {
   }
 
   renderTranslatedLangOptions(): HTMLCalciteOptionElement[] {
-    return (languageTranslatorState.uiData?.locales as string[])?.map(locale => <calcite-option value={locale}>{this.messages?.languages?.[locale]}</calcite-option>);
+    return (languageTranslatorState.uiData?.locales as string[])?.map(locale => {
+      const { messages } = this;
+      const translatedLanguageNames = messages?.translatedLanguageNames;
+      const enLanguageNames = messages?.languages;
+      const translatedLanguageName = translatedLanguageNames?.[locale];
+      const enLanguageName = enLanguageNames?.[locale];
+      const text = `${translatedLanguageName} - ${enLanguageName}`;
+      return <calcite-option value={locale}>{text}</calcite-option>;
+    });
   }
 
   renderUIData(): HTMLDivElement | undefined {

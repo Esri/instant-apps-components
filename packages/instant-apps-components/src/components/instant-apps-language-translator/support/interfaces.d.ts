@@ -9,6 +9,7 @@ interface LocaleSettingItem {
   expanded: boolean;
   selected: boolean;
   uiLocation: any;
+  tip: string;
 }
 
 export interface SettingLocaleData {
