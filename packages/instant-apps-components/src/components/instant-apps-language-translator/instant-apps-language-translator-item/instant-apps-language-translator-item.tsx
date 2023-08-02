@@ -78,7 +78,6 @@ export class InstantAppsLanguageTranslatorItem {
     const isSelected = uiDataItem?.selected;
     const locale = store.get('currentLanguage') as string;
     const data = store.get('portalItemResourceT9n');
-    console.log(data);
     const value = data?.[locale]?.[this.fieldName];
     return (
       <div class={`${CSS.section}${isSelected ? ` ${CSS.selected}` : ''}`}>
