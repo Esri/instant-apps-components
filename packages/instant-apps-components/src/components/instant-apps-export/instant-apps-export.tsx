@@ -18,12 +18,14 @@ const CSS = {
     extraContainer: 'instant-apps-export-print__extra-container',
     legendContainer: 'instant-apps-export-print__legend-container',
     compassContainer: 'instant-apps-export-print__compass-container',
+    scaleBarContainer: 'instant-apps-export-print__scale-bar-container',
     popupContainer: 'instant-apps-export-print__popup-container',
     popupContent: 'instant-apps-export-print__popup-content',
     popupTitle: 'instant-apps-export-print__popup-title',
     view: 'instant-apps-export-print__view',
     viewContainer: 'instant-apps-export-print__view-container',
     viewSection: 'instant-apps-export-print__view-section',
+    viewWrapper: 'instant-apps-export-print__view-wrapper',
   },
 };
 
@@ -126,6 +128,11 @@ export class InstantAppsExport {
   @Prop() showIncludePopup?: boolean = true;
 
   /**
+   * Show scale bar widget in map.
+   */
+  @Prop() showScaleBar?: boolean = true;
+
+  /**
    * MapView or SceneView to reference when filtering.
    */
   @Prop() view: __esri.MapView | __esri.SceneView | undefined;
@@ -139,7 +146,6 @@ export class InstantAppsExport {
    */
   @Event() exportOutputUpdated: EventEmitter<void>;
 
-  exportHandleImgLoaded: () => void;
   compass: __esri.Compass;
   compassContainerEl: HTMLDivElement;
   extraContainerEl: HTMLDivElement;
@@ -153,8 +159,10 @@ export class InstantAppsExport {
   printContainerEl: HTMLDivElement;
   printEl: HTMLDivElement;
   printStyleEl: HTMLStyleElement | undefined;
-  viewContainerEl: HTMLDivElement;
-  viewEl: HTMLImageElement;
+  scaleBar: __esri.ScaleBar;
+  scaleBarContainerEl: HTMLDivElement;
+  viewWrapperEl: HTMLDivElement;
+  viewEl: HTMLDivElement;
 
   componentWillLoad(): void {
     this.baseClass = getMode(this.hostElement) === 'dark' ? CSS.baseDark : CSS.baseLight;
@@ -268,8 +276,8 @@ export class InstantAppsExport {
       <div ref={(el: HTMLDivElement) => (this.printContainerEl = el)}>
         <div class={CSS.print.base} ref={(el: HTMLDivElement) => (this.printEl = el)}>
           {printMap}
-          {extraContent}
           {legend}
+          {extraContent}
           {popup}
         </div>
       </div>
@@ -278,11 +286,15 @@ export class InstantAppsExport {
 
   renderPrintMap(): VNode {
     const compass = this.renderCompass();
+    const scaleBar = this.renderScaleBar();
     return (
-      <div class={CSS.print.viewContainer} ref={(el: HTMLDivElement) => (this.viewContainerEl = el)}>
-        <instant-apps-header titleText={this.headerTitle}></instant-apps-header>
-        <img class={CSS.print.view} ref={(el: HTMLImageElement) => (this.viewEl = el)} src="" />
-        {compass}
+      <div class={CSS.print.viewContainer}>
+        <div class={CSS.print.viewWrapper} ref={(el: HTMLDivElement) => (this.viewWrapperEl = el)}>
+          <instant-apps-header titleText={this.headerTitle}></instant-apps-header>
+          <div class={CSS.print.view} ref={(el: HTMLImageElement) => (this.viewEl = el)}></div>
+          {compass}
+          {scaleBar}
+        </div>
       </div>
     );
   }
@@ -293,6 +305,10 @@ export class InstantAppsExport {
 
   renderCompass(): VNode {
     return <div class={CSS.print.compassContainer} ref={(el: HTMLDivElement) => (this.compassContainerEl = el)}></div>;
+  }
+
+  renderScaleBar(): VNode {
+    return <div class={CSS.print.scaleBarContainer} ref={(el: HTMLDivElement) => (this.scaleBarContainerEl = el)}></div>;
   }
 
   renderPopup(): VNode {
@@ -325,15 +341,14 @@ export class InstantAppsExport {
 
   async handleViewExportOnClick(): Promise<void> {
     if (this.view != null) {
-      this.exportHandleImgLoaded = this.handleImgLoaded.bind(this);
       this.addPrintStyling();
       this.handleExtraContent();
       if (this.includeMap) {
-        this.viewEl?.addEventListener('load', this.exportHandleImgLoaded);
+        this.handleImgLoaded();
         this.updatePopupToPrint();
         await this.viewScreenshot();
       } else {
-        this.exportHandleImgLoaded();
+        this.handleImgLoaded();
       }
     } else {
       if (this.popoverEl != null) {
@@ -379,7 +394,6 @@ export class InstantAppsExport {
       if (this.popoverEl != null) {
         this.popoverEl.open = false;
       }
-      this.viewEl?.removeEventListener('load', this.exportHandleImgLoaded);
     }
   }
 
@@ -441,6 +455,7 @@ export class InstantAppsExport {
   handleWidgetCreation(): void {
     this.handleLegendCreation();
     this.handleCompassCreation();
+    this.handleScaleBarCreation();
   }
 
   handleLegendCreation(): void {
@@ -482,11 +497,41 @@ export class InstantAppsExport {
     }
   }
 
+  handleScaleBarCreation(): void {
+    if (this.showScaleBar && this.includeMap && this.view != null) {
+      const map = this.view.map as __esri.WebMap | __esri.WebScene;
+      const scaleBarMap = this.scaleBar?.view.map as __esri.WebMap | __esri.WebScene;
+      const checkId = map?.portalItem.id === scaleBarMap?.portalItem.id;
+      if (!checkId) {
+        this.view.when(async (view: __esri.MapView | __esri.SceneView) => {
+          this.scaleBar?.destroy();
+          this.scaleBarContainerEl.innerHTML = '';
+          const [ScaleBar] = await loadModules(['esri/widgets/ScaleBar']);
+          this.scaleBar = new ScaleBar({ container: this.scaleBarContainerEl, unit: 'dual', view });
+        });
+      }
+    }
+  }
+
   async viewScreenshot(): Promise<void> {
     if (this.view != null && this.includeMap) {
-      const pixelRatio = 2;
-      const screenshot = await this.view.takeScreenshot({ width: this.view.width * pixelRatio, height: this.view.height * pixelRatio });
-      if (this.viewEl != null) this.viewEl.src = screenshot.dataUrl;
+      const screenshot = await this.view.takeScreenshot({
+        width: this.view.width,
+        height: this.view.height,
+      });
+      const maxIMGWidth = 800;
+      const maxIMGHeight = 494;
+      if (this.viewEl != null && this.viewWrapperEl != null) {
+        if (this.view.width < maxIMGWidth) {
+          this.viewWrapperEl.style.width = `${this.view.width}px`;
+          this.viewWrapperEl.style.maxWidth = '';
+        } else {
+          this.viewWrapperEl.style.maxWidth = `${this.view.width}px`;
+          this.viewWrapperEl.style.width = '';
+        }
+        this.viewWrapperEl.style.height = this.view.height < maxIMGHeight ? `${this.view.height}px` : '';
+        this.viewEl.style.backgroundImage = `url("${screenshot.dataUrl}")`;
+      }
     }
   }
 

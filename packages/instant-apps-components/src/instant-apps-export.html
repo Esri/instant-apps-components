@@ -13,7 +13,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=5.0" />
     <title>ArcGIS Instant Apps Components</title>
 
-    <link rel="stylesheet" href="https://js.arcgis.com/next/esri/themes/dark/main.css" />
+    <link rel="stylesheet" href="https://js.arcgis.com/next/esri/themes/light/main.css" />
     <script src="https://js.arcgis.com/4.27/"></script>
     <script type="module" src="https://js.arcgis.com/calcite-components/1.4.2/calcite.esm.js"></script>
     <link rel="stylesheet" type="text/css" href="https://js.arcgis.com/calcite-components/1.4.2/calcite.css" />
@@ -80,12 +80,12 @@
       </div>
     </calcite-shell>
     <script>
-      require(['esri/WebMap', 'esri/views/MapView', 'esri/config'], (WebMap, MapView, esriConfig) => {
+      require(['esri/WebMap', 'esri/views/MapView', 'esri/config', 'esri/widgets/ScaleBar'], (WebMap, MapView, esriConfig, ScaleBar) => {
         esriConfig.portalUrl = 'https://nw-brews.mapsdevext.arcgis.com';
 
         const map = new WebMap({
           portalItem: {
-            id: '8891ee1d2e0e428bb96c58b8ecf8c408',
+            id: 'c0c59986e2e74d98be80ed493f91de10',
           },
         });
 
@@ -102,6 +102,9 @@
           zoom,
           center,
         });
+
+        const sb = new ScaleBar({ view, unit: 'dual' });
+        view.ui.add(sb, 'bottom-left');
 
         view.when(async () => {
           const note = document.getElementById('slide-note');
