@@ -100,6 +100,14 @@ export class InstantAppsScoreboard {
   @Prop()
   autoDockEnabled = true;
 
+  /**
+   * Optional geometry in which the statistics will be calculated. To re-calculate the scoreboard's statistics based on the current view extent, set this property to `null`.
+   */
+  @Prop({
+    mutable: true
+  })
+  geometry: __esri.Geometry | null = null;
+
   // Internal state
   @State() state: ScoreboardState = Scoreboard.Loading;
 
@@ -169,6 +177,11 @@ export class InstantAppsScoreboard {
       await Promise.all(layerViewUpdatePromises);
       this.layerViews = new this.Collection([...layerViews]);
     }
+  }
+
+  @Watch('geometry')
+  protected calculateScoreboardItemValuesFromGeometry() {
+    this.calculateScoreboardItemValues();
   }
 
   @Watch('layerViews')
@@ -510,9 +523,9 @@ export class InstantAppsScoreboard {
     const getStatDefinitionQuery = (layerView: __esri.FeatureLayerView | __esri.SceneLayerView, statDefinition: __esri.StatisticDefinition) => {
       const query = layerView.createQuery();
       const outStatistics = [statDefinition];
-      const geometry = this.view.extent;
+      const geometry = this.geometry ? this.geometry : this.view.extent;
       query.outStatistics = outStatistics;
-      query.geometry = geometry;
+      query.geometry = geometry as __esri.Extent;
       return query;
     };
 
