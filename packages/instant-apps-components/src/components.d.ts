@@ -419,6 +419,10 @@ export namespace Components {
          */
         "autoDockEnabled": boolean;
         /**
+          * Optional geometry in which the statistics will be calculated. To re-calculate the scoreboard's statistics based on the current view extent, set this property to `null`.
+         */
+        "geometry": __esri.Geometry | null;
+        /**
           * Number of scoreboard items that can be viewed at a time. Minimum: 2, Maximum : 6.
          */
         "itemLimit": number;
@@ -1154,6 +1158,10 @@ declare namespace LocalJSX {
           * Controls the behavior to auto dock the scoreboard to the bottom in smaller parent containers/mobile devices.
          */
         "autoDockEnabled"?: boolean;
+        /**
+          * Optional geometry in which the statistics will be calculated. To re-calculate the scoreboard's statistics based on the current view extent, set this property to `null`.
+         */
+        "geometry"?: __esri.Geometry | null;
         /**
           * Number of scoreboard items that can be viewed at a time. Minimum: 2, Maximum : 6.
          */
