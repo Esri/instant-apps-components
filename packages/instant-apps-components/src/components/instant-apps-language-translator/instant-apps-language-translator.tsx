@@ -113,10 +113,11 @@ export class InstantAppsLanguageTranslator {
   }
 
   renderHeader(): HTMLElement {
+    const saving = store.get('saving');
     return (
       <header class={CSS.header} slot="header">
         {this.renderHeaderText()}
-        {this.saving ? this.renderSavingIndicator() : null}
+        {saving ? this.renderSavingIndicator() : null}
       </header>
     );
   }

@@ -1,7 +1,8 @@
-import { Component, Host, Prop, h } from '@stencil/core';
+import { Component, Prop, h } from '@stencil/core';
 import { LocaleSettingItem, LocaleUIData } from '../support/interfaces';
 import { languageTranslatorState, store } from '../support/store';
 import { getUIDataKeys } from '../support/utils';
+import { debounceCalciteInput } from '../../../utils/debounce';
 
 const BASE = 'instant-apps-language-translator-item';
 
@@ -26,6 +27,8 @@ const CSS = {
   shadow: true,
 })
 export class InstantAppsLanguageTranslatorItem {
+  debounceId: NodeJS.Timeout | null = null;
+
   @Prop()
   fieldName: string;
 
@@ -35,20 +38,18 @@ export class InstantAppsLanguageTranslatorItem {
   render() {
     const uiDataItem = this.getUIDataItem() as LocaleSettingItem;
     const tip = this.getTip(uiDataItem);
-    return (
-      <Host>
-        <div class={BASE}>
-          {this.renderUserLocaleSection(uiDataItem)}
-          {this.renderTranslatedLanguageSection()}
-        </div>
-        <calcite-popover reference-element={`${this.fieldName}goTo`} auto-close="true" placement="trailing">
-          <span class={CSS.uiLocationPopoverContent}>
-            <span class={CSS.uiLocationItems}>{this.getUILocation(uiDataItem)}</span>
-            {tip ? <span class={CSS.tip}>{tip}</span> : null}
-          </span>
-        </calcite-popover>
-      </Host>
-    );
+    return [
+      <div class={BASE}>
+        {this.renderUserLocaleSection(uiDataItem)}
+        {this.renderTranslatedLanguageSection()}
+      </div>,
+      <calcite-popover reference-element={`${this.fieldName}goTo`} auto-close="true" placement="trailing">
+        <span class={CSS.uiLocationPopoverContent}>
+          <span class={CSS.uiLocationItems}>{this.getUILocation(uiDataItem)}</span>
+          {tip ? <span class={CSS.tip}>{tip}</span> : null}
+        </span>
+      </calcite-popover>,
+    ];
   }
 
   renderUserLocaleSection(uiDataItem: LocaleSettingItem): HTMLDivElement {
@@ -65,7 +66,7 @@ export class InstantAppsLanguageTranslatorItem {
             <span class={CSS.label}>{label}</span>
           </div>
           <button id={`${this.fieldName}goTo`} class={CSS.infoButton}>
-            <calcite-icon class={CSS.infoIcon} icon="information" scale="m" />
+            <calcite-icon class={CSS.infoIcon} icon="information" scale="s" />
           </button>
         </div>
         {uiDataItem?.expanded ? <calcite-input data-field-name={this.fieldName} value={value} onFocus={this.handleSelection} /> : null}
@@ -89,7 +90,7 @@ export class InstantAppsLanguageTranslatorItem {
           </div>
         </div>
         {uiDataItem?.expanded ? (
-          <calcite-input data-field-name={this.fieldName} onFocus={this.handleSelection} value={value}>
+          <calcite-input data-field-name={this.fieldName} onFocus={this.handleSelection} onCalciteInputInput={debounceCalciteInput(this.handleChange)} value={value}>
             <calcite-button
               onclick={e => {
                 const input = e.target.parentNode;
@@ -130,11 +131,16 @@ export class InstantAppsLanguageTranslatorItem {
     const uiDataKeys = getUIDataKeys();
     uiDataKeys.forEach(key => ((uiData[key] as LocaleSettingItem).selected = false));
     uiDataKeys.forEach(key => {
-      if (key === (node?.target as HTMLCalciteInputElement)?.getAttribute('data-field-name')) {
+      const fieldName = (node?.target as HTMLCalciteInputElement)?.getAttribute('data-field-name');
+      if (key === fieldName) {
         (uiData[key] as LocaleSettingItem).selected = true;
       }
     });
     store.set('uiData', uiData);
+  }
+
+  handleChange(value: any): void {
+    console.log('VALUE: ', value);
   }
 
   getUILocation(uiDataItem: LocaleSettingItem): HTMLElement[] {
