@@ -1,8 +1,8 @@
-import { Component, Prop, h } from '@stencil/core';
+import { Component, Host, Prop, h } from '@stencil/core';
 import { LocaleSettingItem, LocaleUIData } from '../support/interfaces';
 import { languageTranslatorState, store } from '../support/store';
 import { getT9nData, getUIDataKeys, writeToPortalItemResource } from '../support/utils';
-import { debounceCalciteInput } from '../../../utils/debounce';
+import { debounceCalciteInput } from '../support/debounce';
 
 const BASE = 'instant-apps-language-translator-item';
 
@@ -28,7 +28,6 @@ const CSS = {
 })
 export class InstantAppsLanguageTranslatorItem {
   translatedLangInput;
-  debounceId: NodeJS.Timeout | null = null;
 
   @Prop()
   fieldName: string;
@@ -37,30 +36,27 @@ export class InstantAppsLanguageTranslatorItem {
   translatedLanguageLabel: string;
 
   componentDidLoad() {
-    this.translatedLangInput.addEventListener('calciteInputInput', (e: CustomEvent) => {
-      const currentLanguage = store.get('currentLanguage') as string;
-      const node = e.target as HTMLCalciteInputElement;
-      const dataToWrite = { [this.fieldName]: node.value };
-      const updatedData = getT9nData(currentLanguage, dataToWrite);
-      store.set('portalItemResourceT9n', updatedData);
-    });
+    // this.translatedLangInput.addEventListener('calciteInputInput', (e: CustomEvent) => {
+    // });
   }
 
   render() {
     const uiDataItem = this.getUIDataItem() as LocaleSettingItem;
     const tip = this.getTip(uiDataItem);
-    return [
-      <div class={BASE}>
-        {this.renderUserLocaleSection(uiDataItem)}
-        {this.renderTranslatedLanguageSection()}
-      </div>,
-      <calcite-popover reference-element={`${this.fieldName}goTo`} auto-close="true" placement="trailing">
-        <span class={CSS.uiLocationPopoverContent}>
-          <span class={CSS.uiLocationItems}>{this.getUILocation(uiDataItem)}</span>
-          {tip ? <span class={CSS.tip}>{tip}</span> : null}
-        </span>
-      </calcite-popover>,
-    ];
+    return (
+      <Host>
+        <div class={BASE}>
+          {this.renderUserLocaleSection(uiDataItem)}
+          {this.renderTranslatedLanguageSection()}
+        </div>
+        <calcite-popover reference-element={`${this.fieldName}goTo`} auto-close="true" placement="trailing">
+          <span class={CSS.uiLocationPopoverContent}>
+            <span class={CSS.uiLocationItems}>{this.getUILocation(uiDataItem)}</span>
+            {tip ? <span class={CSS.tip}>{tip}</span> : null}
+          </span>
+        </calcite-popover>
+      </Host>
+    );
   }
 
   renderUserLocaleSection(uiDataItem: LocaleSettingItem): HTMLDivElement {
@@ -80,7 +76,7 @@ export class InstantAppsLanguageTranslatorItem {
             <calcite-icon class={CSS.infoIcon} icon="information" scale="s" />
           </button>
         </div>
-        {uiDataItem?.expanded ? <calcite-input data-field-name={this.fieldName} value={value} onFocus={this.handleSelection} /> : null}
+        {uiDataItem?.expanded ? <calcite-input data-field-name={this.fieldName} value={value} /> : null}
       </div>
     );
   }
@@ -105,7 +101,7 @@ export class InstantAppsLanguageTranslatorItem {
             ref={node => (this.translatedLangInput = node)}
             data-field-name={this.fieldName}
             onFocus={this.handleSelection}
-            onCalciteInputInput={debounceCalciteInput(this.handleChange.bind(this))}
+            onCalciteInputInput={debounceCalciteInput(this.handleTranslatedLanguageInput, this.initialCallbackFunction)}
             value={value}
           >
             <calcite-button
@@ -156,7 +152,7 @@ export class InstantAppsLanguageTranslatorItem {
     store.set('uiData', uiData);
   }
 
-  async handleChange() {
+  async handleTranslatedLanguageInput(): Promise<void> {
     store.set('saving', true);
     try {
       const resource = store.get('portalItemResource') as __esri.PortalItemResource;
@@ -168,6 +164,18 @@ export class InstantAppsLanguageTranslatorItem {
       store.set('saving', false);
     }
   }
+
+  initialCallbackFunction(e: CustomEvent) {
+    const composedPath = e.composedPath();
+    const node = composedPath[0] as HTMLCalciteInputElement;
+    const currentLanguage = store.get('currentLanguage') as string;
+    const fieldName = node.getAttribute('data-field-name') as string;
+    const dataToWrite = { [fieldName]: node.value };
+    const updatedData = getT9nData(currentLanguage, dataToWrite);
+    store.set('portalItemResourceT9n', updatedData);
+  }
+
+  handleUserLocaleInput(): void {}
 
   getUILocation(uiDataItem: LocaleSettingItem): HTMLElement[] {
     const { uiLocation, userLocaleData } = uiDataItem;

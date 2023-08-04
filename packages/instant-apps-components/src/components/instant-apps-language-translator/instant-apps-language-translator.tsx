@@ -212,7 +212,11 @@ export class InstantAppsLanguageTranslator {
       const translatedLanguageName = translatedLanguageNames?.[locale];
       const enLanguageName = enLanguageNames?.[locale];
       const text = `${translatedLanguageName} - ${enLanguageName}`;
-      return <calcite-option value={locale}>{text}</calcite-option>;
+      return (
+        <calcite-option key={`translated-lang-option-${locale}`} value={locale}>
+          {text}
+        </calcite-option>
+      );
     });
   }
 
@@ -234,7 +238,14 @@ export class InstantAppsLanguageTranslator {
 
   renderUIDataItem(key: string, keyIndex: number, uiDataKeysLen: number): HTMLDivElement {
     const translatedLabel = this.appSettings.translatedLanguageLabels[languageTranslatorState.currentLanguage as string][key];
-    return <instant-apps-language-translator-item class={`${keyIndex === uiDataKeysLen - 1 ? CSS.lastItem : ''}`} fieldName={key} translatedLanguageLabel={translatedLabel} />;
+    return (
+      <instant-apps-language-translator-item
+        key={`${key}-${keyIndex}`}
+        class={`${keyIndex === uiDataKeysLen - 1 ? CSS.lastItem : ''}`}
+        fieldName={key}
+        translatedLanguageLabel={translatedLabel}
+      />
+    );
   }
 
   renderPrimaryButton(): HTMLCalciteButtonElement {
