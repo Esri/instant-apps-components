@@ -158,8 +158,12 @@ export const printStyling = `
     box-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
   }
 
-  instant-apps-export-print__compass-container .esri-compass__icon.esri-icon-compass {
-    color: #6e6e6e;
+  .instant-apps-export-print__compass-container .esri-compass__icon.esri-icon-compass {
+    color: #000;
+  }
+
+  .instant-apps-export-print__compass-container.esri-compass.esri-widget--button {
+    background: #fff;
   }
 
   .instant-apps-export-print__scale-bar-container {
