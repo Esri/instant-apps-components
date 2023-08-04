@@ -211,7 +211,7 @@ export class InstantAppsExport {
       >
         {panel}
       </calcite-popover>,
-      <calcite-action id="export-popover-btn" alignment="center" icon={this.popoverIcon} scale={this.scale} text={this.messages?.toggleExport}></calcite-action>,
+      <calcite-action id="export-popover-btn" alignment="center" icon={this.popoverIcon} scale={this.scale} title={this.messages?.exportBtn} text={this.messages?.exportBtn}></calcite-action>,
     ];
   }
 
