@@ -27,6 +27,7 @@ const CSS = {
   shadow: true,
 })
 export class InstantAppsLanguageTranslatorItem {
+  translatedLangInput;
   debounceId: NodeJS.Timeout | null = null;
 
   @Prop()
@@ -34,6 +35,16 @@ export class InstantAppsLanguageTranslatorItem {
 
   @Prop()
   translatedLanguageLabel: string;
+
+  componentDidLoad() {
+    this.translatedLangInput.addEventListener('calciteInputInput', (e: CustomEvent) => {
+      const currentLanguage = store.get('currentLanguage') as string;
+      const node = e.target as HTMLCalciteInputElement;
+      const dataToWrite = { [this.fieldName]: node.value };
+      const updatedData = getT9nData(currentLanguage, dataToWrite);
+      store.set('portalItemResourceT9n', updatedData);
+    });
+  }
 
   render() {
     const uiDataItem = this.getUIDataItem() as LocaleSettingItem;
@@ -80,7 +91,6 @@ export class InstantAppsLanguageTranslatorItem {
     const locale = store.get('currentLanguage') as string;
     const data = store.get('portalItemResourceT9n');
     const value = data?.[locale]?.[this.fieldName];
-    console.log(data);
     return (
       <div class={`${CSS.section}${isSelected ? ` ${CSS.selected}` : ''}`}>
         <div class={CSS.topRow}>
@@ -92,9 +102,10 @@ export class InstantAppsLanguageTranslatorItem {
         </div>
         {uiDataItem?.expanded ? (
           <calcite-input
+            ref={node => (this.translatedLangInput = node)}
             data-field-name={this.fieldName}
             onFocus={this.handleSelection}
-            onCalciteInputInput={debounceCalciteInput(this.handleChange.bind(this), 1000)}
+            onCalciteInputInput={debounceCalciteInput(this.handleChange.bind(this))}
             value={value}
           >
             <calcite-button
@@ -145,17 +156,12 @@ export class InstantAppsLanguageTranslatorItem {
     store.set('uiData', uiData);
   }
 
-  async handleChange(data) {
+  async handleChange() {
     store.set('saving', true);
     try {
       const resource = store.get('portalItemResource') as __esri.PortalItemResource;
-
-      const currentLanguage = store.get('currentLanguage') as string;
-      const dataToWrite = { [this.fieldName]: data.value };
-      const updatedData = getT9nData(currentLanguage, dataToWrite);
-      store.set('portalItemResourceT9n', updatedData);
-
-      await writeToPortalItemResource(resource, updatedData);
+      const data = store.get('portalItemResourceT9n');
+      await writeToPortalItemResource(resource, data);
       store.set('saving', false);
     } catch (err) {
       console.error('Error writing to portal item resource: ', err);
