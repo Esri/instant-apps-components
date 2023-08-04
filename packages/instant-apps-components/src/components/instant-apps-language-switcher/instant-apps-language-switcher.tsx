@@ -1,9 +1,10 @@
-import { Component, Event, EventEmitter, Prop, State, h } from '@stencil/core';
+import { Component, Event, EventEmitter, Method, Prop, State, h } from '@stencil/core';
 
 import LanguageTranslator_t9n from '../../assets/t9n/instant-apps-language-translator/resources.json';
 import { getMessages } from '../instant-apps-language-translator/support/utils';
 import { Element } from '@stencil/core';
 import { getPortalItemResourceT9nData } from '../../utils/languageSwitcher';
+import { loadModules } from 'esri-loader';
 
 @Component({
   tag: 'instant-apps-language-switcher',
@@ -41,7 +42,12 @@ export class InstantAppsLanguageSwitcher {
   t9nData: any = null;
 
   @Event()
-  selectedLanguageUpdated: EventEmitter<string>;
+  selectedLanguageUpdated: EventEmitter<{
+    locale: string;
+    data: {
+      [key: string]: string;
+    };
+  }>;
 
   async componentWillLoad() {
     this.messages = await getMessages(document.createElement('instant-apps-language-translator'));
@@ -98,7 +104,10 @@ export class InstantAppsLanguageSwitcher {
   calciteDropdownItemSelectCallback(translatedLanguage: string): () => void {
     return () => {
       this.selectedLanguage = translatedLanguage;
-      this.selectedLanguageUpdated.emit(this.t9nData[translatedLanguage]);
+      this.selectedLanguageUpdated.emit({
+        locale: this.selectedLanguage,
+        data: this.t9nData[translatedLanguage],
+      });
     };
   }
 
@@ -120,6 +129,21 @@ export class InstantAppsLanguageSwitcher {
       return Promise.resolve(t9nResourceItem);
     } catch {
       return Promise.reject(null);
+    }
+  }
+
+  @Method()
+  async refresh(): Promise<void> {
+    try {
+      const t9nResourceItem = await this.getPortalItemResourceT9n();
+      const [request] = await loadModules(['esri/request']);
+      const reqRes = await request(t9nResourceItem.url, {
+        responseType: 'json',
+        cacheBust: true,
+      });
+      this.t9nData = reqRes.data;
+    } catch (err) {
+      console.error('this not working: ', err);
     }
   }
 }

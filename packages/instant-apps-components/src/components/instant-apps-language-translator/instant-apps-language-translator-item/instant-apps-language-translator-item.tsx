@@ -1,4 +1,4 @@
-import { Component, Host, Prop, h } from '@stencil/core';
+import { Component, Element, Event, EventEmitter, Host, Prop, h } from '@stencil/core';
 import { LocaleSettingItem, LocaleUIData } from '../support/interfaces';
 import { languageTranslatorState, store } from '../support/store';
 import { getT9nData, getUIDataKeys, writeToPortalItemResource } from '../support/utils';
@@ -29,16 +29,17 @@ const CSS = {
 export class InstantAppsLanguageTranslatorItem {
   translatedLangInput;
 
+  @Element()
+  el: HTMLInstantAppsLanguageTranslatorElement;
+
   @Prop()
   fieldName: string;
 
   @Prop()
   translatedLanguageLabel: string;
 
-  componentDidLoad() {
-    // this.translatedLangInput.addEventListener('calciteInputInput', (e: CustomEvent) => {
-    // });
-  }
+  @Event()
+  translatorItemDataUpdated: EventEmitter<void>;
 
   render() {
     const uiDataItem = this.getUIDataItem() as LocaleSettingItem;
@@ -103,7 +104,7 @@ export class InstantAppsLanguageTranslatorItem {
             ref={node => (this.translatedLangInput = node)}
             data-field-name={this.fieldName}
             onFocus={this.handleSelection}
-            onCalciteInputInput={debounceCalciteInput(this.handleTranslatedLanguageInput, this.updateT9nStore)}
+            onCalciteInputInput={debounceCalciteInput(this.handleTranslatedLanguageInput.bind(this), this.updateT9nStore.bind(this))}
             value={value}
           >
             <calcite-button
@@ -164,6 +165,7 @@ export class InstantAppsLanguageTranslatorItem {
       const data = store.get('portalItemResourceT9n');
       await writeToPortalItemResource(resource, data);
       store.set('saving', false);
+      this.translatorItemDataUpdated.emit();
     } catch (err) {
       console.error('Error writing to portal item resource: ', err);
       store.set('saving', false);

@@ -7,7 +7,7 @@
  */ -->
 
 <!DOCTYPE html>
-<html dir="ltr" lang="en">
+<html dir="ltr">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=5.0" />
@@ -235,11 +235,15 @@
           console.log('T9N UI DATA: ', data);
         });
 
+        // setInterval(() => content.refresh(), 3000);
+
+        langTranslator.addEventListener('translatorDataUpdated', () => content.refresh());
+
         const expand = new Expand({
           view,
           content,
           expanded: true,
-          expandIcon: 'globe',
+          expandIcon: langSwitcherConfigData.icon,
         });
 
         view.ui.add(expand, 'top-right');

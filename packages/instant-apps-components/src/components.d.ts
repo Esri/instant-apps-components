@@ -325,6 +325,7 @@ export namespace Components {
           * Instant App portal item - used to fetch it's associated portal item resource. The portal item resource will contain the user defined translated strings.
          */
         "portalItem": __esri.PortalItem;
+        "refresh": () => Promise<void>;
     }
     interface InstantAppsLanguageTranslator {
         /**
@@ -504,6 +505,14 @@ export interface InstantAppsInteractiveLegendLegendElementCaptionCustomEvent<T> 
 export interface InstantAppsLanguageSwitcherCustomEvent<T> extends CustomEvent<T> {
     detail: T;
     target: HTMLInstantAppsLanguageSwitcherElement;
+}
+export interface InstantAppsLanguageTranslatorCustomEvent<T> extends CustomEvent<T> {
+    detail: T;
+    target: HTMLInstantAppsLanguageTranslatorElement;
+}
+export interface InstantAppsLanguageTranslatorItemCustomEvent<T> extends CustomEvent<T> {
+    detail: T;
+    target: HTMLInstantAppsLanguageTranslatorItemElement;
 }
 export interface InstantAppsMeasurementCustomEvent<T> extends CustomEvent<T> {
     detail: T;
@@ -1016,7 +1025,12 @@ declare namespace LocalJSX {
           * Icon to display.
          */
         "icon"?: string;
-        "onSelectedLanguageUpdated"?: (event: InstantAppsLanguageSwitcherCustomEvent<string>) => void;
+        "onSelectedLanguageUpdated"?: (event: InstantAppsLanguageSwitcherCustomEvent<{
+    locale: string;
+    data: {
+      [key: string]: string;
+    };
+  }>) => void;
         /**
           * Instant App portal item - used to fetch it's associated portal item resource. The portal item resource will contain the user defined translated strings.
          */
@@ -1027,6 +1041,7 @@ declare namespace LocalJSX {
           * Data object containing a series of key-value pairs used to render the components UI.
          */
         "appSettings"?: any;
+        "onTranslatorDataUpdated"?: (event: InstantAppsLanguageTranslatorCustomEvent<string>) => void;
         /**
           * Controls the open/close state of the modal.
          */
@@ -1042,6 +1057,7 @@ declare namespace LocalJSX {
     }
     interface InstantAppsLanguageTranslatorItem {
         "fieldName"?: string;
+        "onTranslatorItemDataUpdated"?: (event: InstantAppsLanguageTranslatorItemCustomEvent<void>) => void;
         "translatedLanguageLabel"?: string;
     }
     interface InstantAppsMeasurement {

@@ -1,6 +1,6 @@
-import { Component, Host, Prop, h } from '@stencil/core';
+import { Component, Host, Prop, h, Event } from '@stencil/core';
 
-import { Element, HostElement, State } from '@stencil/core/internal';
+import { Element, EventEmitter, HostElement, Listen, State } from '@stencil/core/internal';
 
 import LanguageTranslator_t9n from '../../assets/t9n/instant-apps-language-translator/resources.json';
 import { generateUIData, getMessages, getPortalItemResource, getUIDataKeys } from './support/utils';
@@ -64,6 +64,14 @@ export class InstantAppsLanguageTranslator {
 
   @State()
   messages: typeof LanguageTranslator_t9n;
+
+  @Listen('translatorItemDataUpdated', { target: 'window' })
+  handleT9nItemUpdate() {
+    this.translatorDataUpdated.emit();
+  }
+
+  @Event()
+  translatorDataUpdated: EventEmitter<string>;
 
   async componentDidLoad() {
     this.initialize();
