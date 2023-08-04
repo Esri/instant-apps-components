@@ -1,5 +1,6 @@
 export function debounceCalciteInput(func: Function, delay: number = 2000): (e: CustomEvent) => void {
   let timer: NodeJS.Timeout;
+
   return function (e: CustomEvent) {
     clearTimeout(timer);
     const node = e.target as HTMLCalciteInputElement;

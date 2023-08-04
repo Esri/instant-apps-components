@@ -1,7 +1,7 @@
 import { Component, Prop, h } from '@stencil/core';
 import { LocaleSettingItem, LocaleUIData } from '../support/interfaces';
 import { languageTranslatorState, store } from '../support/store';
-import { getUIDataKeys } from '../support/utils';
+import { getT9nData, getUIDataKeys, writeToPortalItemResource } from '../support/utils';
 import { debounceCalciteInput } from '../../../utils/debounce';
 
 const BASE = 'instant-apps-language-translator-item';
@@ -80,6 +80,7 @@ export class InstantAppsLanguageTranslatorItem {
     const locale = store.get('currentLanguage') as string;
     const data = store.get('portalItemResourceT9n');
     const value = data?.[locale]?.[this.fieldName];
+    console.log(data);
     return (
       <div class={`${CSS.section}${isSelected ? ` ${CSS.selected}` : ''}`}>
         <div class={CSS.topRow}>
@@ -90,7 +91,12 @@ export class InstantAppsLanguageTranslatorItem {
           </div>
         </div>
         {uiDataItem?.expanded ? (
-          <calcite-input data-field-name={this.fieldName} onFocus={this.handleSelection} onCalciteInputInput={debounceCalciteInput(this.handleChange)} value={value}>
+          <calcite-input
+            data-field-name={this.fieldName}
+            onFocus={this.handleSelection}
+            onCalciteInputInput={debounceCalciteInput(this.handleChange.bind(this), 1000)}
+            value={value}
+          >
             <calcite-button
               onclick={e => {
                 const input = e.target.parentNode;
@@ -139,8 +145,22 @@ export class InstantAppsLanguageTranslatorItem {
     store.set('uiData', uiData);
   }
 
-  handleChange(value: any): void {
-    console.log('VALUE: ', value);
+  async handleChange(data) {
+    store.set('saving', true);
+    try {
+      const resource = store.get('portalItemResource') as __esri.PortalItemResource;
+
+      const currentLanguage = store.get('currentLanguage') as string;
+      const dataToWrite = { [this.fieldName]: data.value };
+      const updatedData = getT9nData(currentLanguage, dataToWrite);
+      store.set('portalItemResourceT9n', updatedData);
+
+      await writeToPortalItemResource(resource, updatedData);
+      store.set('saving', false);
+    } catch (err) {
+      console.error('Error writing to portal item resource: ', err);
+      store.set('saving', false);
+    }
   }
 
   getUILocation(uiDataItem: LocaleSettingItem): HTMLElement[] {
