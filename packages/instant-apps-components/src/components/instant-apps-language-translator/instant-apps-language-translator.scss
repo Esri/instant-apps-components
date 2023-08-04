@@ -23,6 +23,13 @@
       color: var(--calcite-ui-brand);
     }
 
+    &__writing-icon {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin-right: 5px;
+    }
+
     &__close-button {
       width: 175px;
     }

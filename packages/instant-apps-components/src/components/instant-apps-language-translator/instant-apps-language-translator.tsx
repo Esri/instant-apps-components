@@ -21,6 +21,7 @@ const CSS = {
   collapseSearchContainer: `${BASE}__collapse-search-container`,
   userLangText: `${BASE}__user-lang-text`,
   lastItem: `${BASE}--last-item`,
+  writingIcon: `${BASE}__writing-icon`,
 };
 
 @Component({
@@ -114,10 +115,12 @@ export class InstantAppsLanguageTranslator {
 
   renderHeader(): HTMLElement {
     const saving = store.get('saving');
+    const processing = store.get('processing');
+    const handlingData = saving || processing;
     return (
       <header class={CSS.header} slot="header">
         {this.renderHeaderText()}
-        {saving ? this.renderSavingIndicator() : null}
+        {handlingData ? this.renderFeedbackIndicator() : null}
       </header>
     );
   }
@@ -133,12 +136,14 @@ export class InstantAppsLanguageTranslator {
     );
   }
 
-  renderSavingIndicator(): HTMLDivElement {
-    const saving_t9n = this.messages?.saving;
+  renderFeedbackIndicator(): HTMLDivElement {
+    const processing = store.get('processing');
+    const saving = store.get('saving');
+    const t9n = processing ? this.messages?.writing : this.messages?.saving;
     return (
       <div class={CSS.savingIndicator}>
-        <calcite-loader label={saving_t9n} inline={true} />
-        <span>{saving_t9n}</span>
+        {processing ? <span class={CSS.writingIcon}>{<calcite-icon icon="pencil" scale="s" />}</span> : saving ? <calcite-loader label={t9n} inline={true} /> : null}
+        <span>{t9n}</span>
       </div>
     );
   }
@@ -175,9 +180,9 @@ export class InstantAppsLanguageTranslator {
   renderCollapseSearchContainer(): HTMLDivElement {
     return (
       <div class={CSS.collapseSearchContainer}>
-        <calcite-button onClick={this.expandAll} appearance="transparent" icon-start="list-merge">
+        {/* <calcite-button onClick={this.expandAll} appearance="transparent" icon-start="list-merge">
           {this.messages?.expandAll}
-        </calcite-button>
+        </calcite-button> */}
         <calcite-button onClick={this.collapseAll} appearance="transparent" icon-start="list-merge">
           {this.messages?.collapseAll}
         </calcite-button>

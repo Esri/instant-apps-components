@@ -76,7 +76,9 @@ export class InstantAppsLanguageTranslatorItem {
             <calcite-icon class={CSS.infoIcon} icon="information" scale="s" />
           </button>
         </div>
-        {uiDataItem?.expanded ? <calcite-input data-field-name={this.fieldName} value={value} /> : null}
+        {uiDataItem?.expanded ? (
+          <calcite-input data-field-name={this.fieldName} value={value} onCalciteInputInput={debounceCalciteInput(this.handleUserLocaleInput, this.updateAppSettingStore)} />
+        ) : null}
       </div>
     );
   }
@@ -101,11 +103,12 @@ export class InstantAppsLanguageTranslatorItem {
             ref={node => (this.translatedLangInput = node)}
             data-field-name={this.fieldName}
             onFocus={this.handleSelection}
-            onCalciteInputInput={debounceCalciteInput(this.handleTranslatedLanguageInput, this.initialCallbackFunction)}
+            onCalciteInputInput={debounceCalciteInput(this.handleTranslatedLanguageInput, this.updateT9nStore)}
             value={value}
           >
             <calcite-button
               onclick={e => {
+                this.translatedLangInput.selectText();
                 const input = e.target.parentNode;
                 const value = input.value;
                 navigator.clipboard.writeText(value);
@@ -152,7 +155,9 @@ export class InstantAppsLanguageTranslatorItem {
     store.set('uiData', uiData);
   }
 
+  // Write data to portal item resource
   async handleTranslatedLanguageInput(): Promise<void> {
+    store.set('processing', false);
     store.set('saving', true);
     try {
       const resource = store.get('portalItemResource') as __esri.PortalItemResource;
@@ -165,17 +170,25 @@ export class InstantAppsLanguageTranslatorItem {
     }
   }
 
-  initialCallbackFunction(e: CustomEvent): void {
+  updateT9nStore(e: CustomEvent): void {
+    store.set('processing', true);
+    const currentLanguage = store.get('currentLanguage') as string;
     const composedPath = e.composedPath();
     const node = composedPath[0] as HTMLCalciteInputElement;
-    const currentLanguage = store.get('currentLanguage') as string;
     const fieldName = node.getAttribute('data-field-name') as string;
     const dataToWrite = { [fieldName]: node.value };
     const updatedData = getT9nData(currentLanguage, dataToWrite);
     store.set('portalItemResourceT9n', updatedData);
   }
 
-  handleUserLocaleInput(): void {}
+  // Write data to template app item draft
+  async handleUserLocaleInput(e: CustomEvent): Promise<void> {
+    console.log('Called only after user has finished typing.');
+  }
+
+  updateAppSettingStore(e: CustomEvent): void {
+    console.log('Called immediately...');
+  }
 
   getUILocation(uiDataItem: LocaleSettingItem): HTMLElement[] {
     const { uiLocation, userLocaleData } = uiDataItem;

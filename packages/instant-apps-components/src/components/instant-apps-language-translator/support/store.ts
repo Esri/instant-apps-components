@@ -8,6 +8,7 @@ interface LanguageTranslatorState {
   currentLanguage: string | null;
   lastSave: string | null;
   saving: boolean;
+  processing: boolean;
   currentLocaleSettingItem: LocaleSettingItem | null;
   portalItemResource: __esri.PortalItemResource | null;
   portalItemResourceT9n: any;
@@ -18,6 +19,7 @@ const LanguageTranslatorStore = createStore<LanguageTranslatorState>({
   uiData: null,
   currentLanguage: null,
   lastSave: null,
+  processing: false,
   saving: false,
   currentLocaleSettingItem: null,
   portalItemResource: null,
