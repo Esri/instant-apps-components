@@ -165,7 +165,7 @@ export class InstantAppsLanguageTranslatorItem {
     }
   }
 
-  initialCallbackFunction(e: CustomEvent) {
+  initialCallbackFunction(e: CustomEvent): void {
     const composedPath = e.composedPath();
     const node = composedPath[0] as HTMLCalciteInputElement;
     const currentLanguage = store.get('currentLanguage') as string;

@@ -64,14 +64,14 @@ export class InstantAppsLanguageTranslator {
   @State()
   messages: typeof LanguageTranslator_t9n;
 
-  async componentWillLoad() {
+  async componentDidLoad() {
     this.initialize();
   }
 
   async initialize(): Promise<void> {
     const { el, appSettings, translatedLanguages } = this;
     const messages = await getMessages(el);
-    const initialLanguage = translatedLanguages[0];
+    const initialLanguage = translatedLanguages?.[0];
     const uiData = generateUIData(appSettings, translatedLanguages);
     const portalItemResource = await getPortalItemResource(this.portalItem);
 
