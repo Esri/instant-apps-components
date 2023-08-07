@@ -50,7 +50,7 @@ export class InstantAppsExport {
   /**
    * Update popover button icon.
    */
-  @Prop() popoverIcon?: string = 'print';
+  @Prop() popoverIcon?: string = 'export';
 
   /**
    * Extra content that will be added below the view.
