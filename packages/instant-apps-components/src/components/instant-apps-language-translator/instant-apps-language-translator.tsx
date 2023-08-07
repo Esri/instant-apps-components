@@ -65,6 +65,9 @@ export class InstantAppsLanguageTranslator {
   @State()
   messages: typeof LanguageTranslator_t9n;
 
+  @State()
+  isCollapse = true;
+
   @Listen('translatorItemDataUpdated', { target: 'window' })
   handleT9nItemUpdate() {
     this.translatorDataUpdated.emit();
@@ -123,12 +126,11 @@ export class InstantAppsLanguageTranslator {
 
   renderHeader(): HTMLElement {
     const saving = store.get('saving');
-    const processing = store.get('processing');
-    const handlingData = saving || processing;
+
     return (
       <header class={CSS.header} slot="header">
         {this.renderHeaderText()}
-        {handlingData ? this.renderFeedbackIndicator() : null}
+        {saving ? this.renderFeedbackIndicator() : null}
       </header>
     );
   }
@@ -145,12 +147,11 @@ export class InstantAppsLanguageTranslator {
   }
 
   renderFeedbackIndicator(): HTMLDivElement {
-    const processing = store.get('processing');
     const saving = store.get('saving');
-    const t9n = processing ? this.messages?.writing : this.messages?.saving;
+    const t9n = this.messages?.saving;
     return (
       <div class={CSS.savingIndicator}>
-        {processing ? <span class={CSS.writingIcon}>{<calcite-icon icon="pencil" scale="s" />}</span> : saving ? <calcite-loader label={t9n} inline={true} /> : null}
+        {saving ? <calcite-loader label={t9n} inline={true} /> : null}
         <span>{t9n}</span>
       </div>
     );
@@ -188,11 +189,8 @@ export class InstantAppsLanguageTranslator {
   renderCollapseSearchContainer(): HTMLDivElement {
     return (
       <div class={CSS.collapseSearchContainer}>
-        {/* <calcite-button onClick={this.expandAll} appearance="transparent" icon-start="list-merge">
-          {this.messages?.expandAll}
-        </calcite-button> */}
-        <calcite-button onClick={this.collapseAll} appearance="transparent" icon-start="list-merge">
-          {this.messages?.collapseAll}
+        <calcite-button onClick={this.handleExpandCollapseAll.bind(this)} appearance="transparent" icon-start="list-merge">
+          {this.isCollapse ? this.messages?.collapseAll : this.messages?.expandAll}
         </calcite-button>
         <calcite-input type="search" placeholder={this.messages?.searchPlaceholder} icon="search" />
       </div>
@@ -269,17 +267,11 @@ export class InstantAppsLanguageTranslator {
     );
   }
 
-  expandAll(): void {
+  handleExpandCollapseAll(): void {
+    this.isCollapse = !this.isCollapse;
     const uiData = { ...languageTranslatorState.uiData };
     const uiDataKeys = getUIDataKeys();
-    uiDataKeys.forEach(key => ((uiData[key] as LocaleSettingItem).expanded = true));
-    store.set('uiData', { ...uiData } as LocaleUIData);
-  }
-
-  collapseAll(): void {
-    const uiData = { ...languageTranslatorState.uiData };
-    const uiDataKeys = getUIDataKeys();
-    uiDataKeys.forEach(key => ((uiData[key] as LocaleSettingItem).expanded = false));
+    uiDataKeys.forEach(key => ((uiData[key] as LocaleSettingItem).expanded = this.isCollapse));
     store.set('uiData', { ...uiData } as LocaleUIData);
   }
 }

@@ -53,7 +53,14 @@
     </calcite-shell>
     <instant-apps-language-translator tabindex="-1" id="langTranslator"></instant-apps-language-translator>
     <script>
-      require(['esri/views/MapView', 'esri/WebMap', 'esri/widgets/Expand', 'esri/portal/PortalItem', 'esri/config'], (MapView, WebMap, Expand, PortalItem, esriConfig) => {
+      require(['esri/views/MapView', 'esri/WebMap', 'esri/widgets/Expand', 'esri/widgets/Legend', 'esri/portal/PortalItem', 'esri/config'], (
+        MapView,
+        WebMap,
+        Expand,
+        Legend,
+        PortalItem,
+        esriConfig,
+      ) => {
         esriConfig.portalUrl = 'https://holistic.mapsdevext.arcgis.com';
 
         const map = new WebMap({
@@ -247,6 +254,18 @@
         });
 
         view.ui.add(expand, 'top-right');
+
+        const legend = new Legend({
+          view,
+        });
+
+        const legendExpand = new Expand({
+          view,
+          content: legend,
+          expanded: true,
+        });
+
+        view.ui.add(legendExpand, 'bottom-left');
       });
     </script>
   </body>

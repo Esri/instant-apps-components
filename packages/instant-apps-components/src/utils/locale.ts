@@ -1,7 +1,7 @@
 // https://medium.com/stencil-tricks/implementing-internationalisation-i18n-with-stencil-5e6559554117
 import { languageMap } from './languageUtil';
 
-function getComponentClosestLanguage(element: HTMLElement): string | undefined {
+export function getComponentClosestLanguage(element: HTMLElement): string | undefined {
   const closestElement = (element.closest('[lang]') as HTMLElement) ?? element.shadowRoot?.ownerDocument?.documentElement;
   // language set by the calling application or browser. defaults to english.
   const lang = (closestElement?.lang || navigator?.language || 'en').toLowerCase() as string;

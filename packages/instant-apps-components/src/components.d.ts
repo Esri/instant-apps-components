@@ -1027,7 +1027,7 @@ declare namespace LocalJSX {
         "icon"?: string;
         "onSelectedLanguageUpdated"?: (event: InstantAppsLanguageSwitcherCustomEvent<{
     locale: string;
-    data: {
+    data?: {
       [key: string]: string;
     };
   }>) => void;

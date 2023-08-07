@@ -5,6 +5,7 @@ import { getMessages } from '../instant-apps-language-translator/support/utils';
 import { Element } from '@stencil/core';
 import { getPortalItemResourceT9nData } from '../../utils/languageSwitcher';
 import { loadModules } from 'esri-loader';
+import { getComponentClosestLanguage } from '../../utils/locale';
 
 @Component({
   tag: 'instant-apps-language-switcher',
@@ -13,6 +14,8 @@ import { loadModules } from 'esri-loader';
 })
 export class InstantAppsLanguageSwitcher {
   portalItemResourceT9n: __esri.PortalItemResource;
+  userLocale: string;
+  intl: __esri.intl;
 
   @Element()
   el: HTMLInstantAppsLanguageSwitcherElement;
@@ -44,15 +47,22 @@ export class InstantAppsLanguageSwitcher {
   @Event()
   selectedLanguageUpdated: EventEmitter<{
     locale: string;
-    data: {
+    data?: {
       [key: string]: string;
     };
   }>;
 
   async componentWillLoad() {
+    const [intl] = await loadModules(['esri/intl']);
+    this.intl = intl;
     this.messages = await getMessages(document.createElement('instant-apps-language-translator'));
     this.portalItemResourceT9n = await this.getPortalItemResourceT9n();
     const t9nData = await getPortalItemResourceT9nData(this.portalItemResourceT9n);
+    const lang = getComponentClosestLanguage(document.body) as string;
+    if (lang) {
+      this.userLocale = lang;
+      this.selectedLanguage = lang;
+    }
     if (t9nData) {
       this.t9nData = t9nData;
       this.locales = Object.keys(t9nData);
@@ -62,23 +72,25 @@ export class InstantAppsLanguageSwitcher {
   render() {
     const trigger = this.renderTrigger();
     const dropdown = this.renderDropdownItems();
+    const { userLocale } = this;
     return (
       <calcite-dropdown width="m">
         {trigger}
+        <calcite-dropdown-item
+          key={`default-${userLocale}`}
+          value={userLocale}
+          onCalciteDropdownItemSelect={this.calciteDropdownItemSelectCallback(userLocale)}
+          selected={this.selectedLanguage === this.userLocale}
+        >
+          {this.getSelectedLanguageText(userLocale)}
+        </calcite-dropdown-item>
         {dropdown}
       </calcite-dropdown>
     );
   }
 
   renderTrigger(): HTMLCalciteActionElement {
-    return (
-      <calcite-action
-        slot="trigger"
-        icon={this.icon}
-        text={!this.selectedLanguage ? this.messages?.selectLanguage : this.getSelectedLanguageText(this.selectedLanguage)}
-        text-enabled={true}
-      />
-    );
+    return <calcite-action slot="trigger" icon={this.icon} text={this.getSelectedLanguageText(this.selectedLanguage as string)} text-enabled={true} />;
   }
 
   renderDropdownItems(): HTMLCalciteDropdownItemElement[] {
@@ -104,10 +116,15 @@ export class InstantAppsLanguageSwitcher {
   calciteDropdownItemSelectCallback(translatedLanguage: string): () => void {
     return () => {
       this.selectedLanguage = translatedLanguage;
-      this.selectedLanguageUpdated.emit({
+      const eventData = {
         locale: this.selectedLanguage,
-        data: this.t9nData[translatedLanguage],
-      });
+      };
+
+      if (this.selectedLanguage !== this.userLocale) {
+        eventData['data'] = this.t9nData[translatedLanguage];
+      }
+      this.intl.setLocale(this.selectedLanguage);
+      this.selectedLanguageUpdated.emit(eventData);
     };
   }
 

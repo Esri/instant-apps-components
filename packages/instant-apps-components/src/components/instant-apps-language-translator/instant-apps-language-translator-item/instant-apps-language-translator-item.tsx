@@ -27,7 +27,8 @@ const CSS = {
   shadow: true,
 })
 export class InstantAppsLanguageTranslatorItem {
-  translatedLangInput;
+  translatedLangInput: HTMLCalciteInputElement;
+  userLocaleInput: HTMLCalciteInputElement;
 
   @Element()
   el: HTMLInstantAppsLanguageTranslatorElement;
@@ -78,7 +79,25 @@ export class InstantAppsLanguageTranslatorItem {
           </button>
         </div>
         {uiDataItem?.expanded ? (
-          <calcite-input data-field-name={this.fieldName} value={value} onCalciteInputInput={debounceCalciteInput(this.handleUserLocaleInput, this.updateAppSettingStore)} />
+          <calcite-input
+            ref={node => (this.userLocaleInput = node)}
+            data-field-name={this.fieldName}
+            value={value}
+            onFocus={this.handleSelection}
+            onCalciteInputInput={debounceCalciteInput(this.handleUserLocaleInput, this.updateAppSettingStore)}
+          >
+            <calcite-button
+              onclick={e => {
+                this.userLocaleInput.selectText();
+                const input = e.target.parentNode;
+                const value = input.value;
+                navigator.clipboard.writeText(value);
+              }}
+              slot="action"
+              icon-start="copy-to-clipboard"
+              appearance="outline-fill"
+            />
+          </calcite-input>
         ) : null}
       </div>
     );
@@ -104,7 +123,7 @@ export class InstantAppsLanguageTranslatorItem {
             ref={node => (this.translatedLangInput = node)}
             data-field-name={this.fieldName}
             onFocus={this.handleSelection}
-            onCalciteInputInput={debounceCalciteInput(this.handleTranslatedLanguageInput.bind(this), this.updateT9nStore.bind(this))}
+            onCalciteInputChange={this.handleCalciteInputChange.bind(this)}
             value={value}
           >
             <calcite-button
@@ -115,13 +134,18 @@ export class InstantAppsLanguageTranslatorItem {
                 navigator.clipboard.writeText(value);
               }}
               slot="action"
-              icon-start="duplicate"
+              icon-start="copy-to-clipboard"
               appearance="outline-fill"
             />
           </calcite-input>
         ) : null}
       </div>
     );
+  }
+
+  handleCalciteInputChange(e: CustomEvent) {
+    this.updateT9nStore(e);
+    this.handleTranslatedLanguageInput();
   }
 
   renderExpandCollapseButton(): HTMLCalciteActionElement {
@@ -158,13 +182,12 @@ export class InstantAppsLanguageTranslatorItem {
 
   // Write data to portal item resource
   async handleTranslatedLanguageInput(): Promise<void> {
-    store.set('processing', false);
     store.set('saving', true);
     try {
       const resource = store.get('portalItemResource') as __esri.PortalItemResource;
       const data = store.get('portalItemResourceT9n');
       await writeToPortalItemResource(resource, data);
-      store.set('saving', false);
+      setTimeout(() => store.set('saving', false), 1500);
       this.translatorItemDataUpdated.emit();
     } catch (err) {
       console.error('Error writing to portal item resource: ', err);
@@ -173,7 +196,6 @@ export class InstantAppsLanguageTranslatorItem {
   }
 
   updateT9nStore(e: CustomEvent): void {
-    store.set('processing', true);
     const currentLanguage = store.get('currentLanguage') as string;
     const composedPath = e.composedPath();
     const node = composedPath[0] as HTMLCalciteInputElement;
