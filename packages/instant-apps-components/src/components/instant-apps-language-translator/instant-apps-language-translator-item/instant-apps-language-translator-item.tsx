@@ -1,8 +1,11 @@
-import { Component, Element, Event, EventEmitter, Host, Prop, h } from '@stencil/core';
+import { Component, Element, Event, EventEmitter, Host, Prop, State, h } from '@stencil/core';
 import { LocaleSettingItem, LocaleUIData } from '../support/interfaces';
 import { languageTranslatorState, store } from '../support/store';
 import { getT9nData, getUIDataKeys, writeToPortalItemResource } from '../support/utils';
-import { debounceCalciteInput } from '../support/debounce';
+
+// import { debounceCalciteInput } from '../support/debounce';
+
+// declare const ClassicEditor;
 
 const BASE = 'instant-apps-language-translator-item';
 
@@ -24,11 +27,13 @@ const CSS = {
 @Component({
   tag: 'instant-apps-language-translator-item',
   styleUrl: 'instant-apps-language-translator-item.scss',
-  shadow: true,
+  scoped: true,
 })
 export class InstantAppsLanguageTranslatorItem {
   translatedLangInput: HTMLCalciteInputElement;
   userLocaleInput: HTMLCalciteInputElement;
+  editor;
+  editor2;
 
   @Element()
   el: HTMLInstantAppsLanguageTranslatorElement;
@@ -41,6 +46,19 @@ export class InstantAppsLanguageTranslatorItem {
 
   @Event()
   translatorItemDataUpdated: EventEmitter<void>;
+
+  @Prop()
+  type: string;
+
+  @State()
+  editorIsCreated = false;
+
+  @State()
+  editor2IsCreated = false;
+
+  async componentDidLoad() {
+    // this.handleEditors();
+  }
 
   render() {
     const uiDataItem = this.getUIDataItem() as LocaleSettingItem;
@@ -79,25 +97,30 @@ export class InstantAppsLanguageTranslatorItem {
           </button>
         </div>
         {uiDataItem?.expanded ? (
-          <calcite-input
-            ref={node => (this.userLocaleInput = node)}
-            data-field-name={this.fieldName}
-            value={value}
-            onFocus={this.handleSelection}
-            onCalciteInputInput={debounceCalciteInput(this.handleUserLocaleInput, this.updateAppSettingStore)}
-          >
-            <calcite-button
-              onclick={e => {
-                this.userLocaleInput.selectText();
-                const input = e.target.parentNode;
-                const value = input.value;
-                navigator.clipboard.writeText(value);
-              }}
-              slot="action"
-              icon-start="copy-to-clipboard"
-              appearance="outline-fill"
-            />
-          </calcite-input>
+          this.type === 'string' ? (
+            <calcite-input
+              ref={node => (this.userLocaleInput = node)}
+              data-field-name={this.fieldName}
+              value={value}
+              onFocus={this.handleSelection}
+              // onCalciteInputInput={debounceCalciteInput(this.handleUserLocaleInput, this.updateAppSettingStore)}
+            >
+              <calcite-button
+                onclick={e => {
+                  this.userLocaleInput.selectText();
+                  const input = e.target.parentNode;
+                  const value = input.value;
+                  navigator.clipboard.writeText(value);
+                }}
+                slot="action"
+                icon-start="copy-to-clipboard"
+                appearance="outline-fill"
+              />
+            </calcite-input>
+          ) : (
+            // <div ref={node => (this.editor = node)}></div>
+            <instant-apps-ckeditor-wrapper></instant-apps-ckeditor-wrapper>
+          )
         ) : null}
       </div>
     );
@@ -119,25 +142,30 @@ export class InstantAppsLanguageTranslatorItem {
           </div>
         </div>
         {uiDataItem?.expanded ? (
-          <calcite-input
-            ref={node => (this.translatedLangInput = node)}
-            data-field-name={this.fieldName}
-            onFocus={this.handleSelection}
-            onCalciteInputChange={this.handleCalciteInputChange.bind(this)}
-            value={value}
-          >
-            <calcite-button
-              onclick={e => {
-                this.translatedLangInput.selectText();
-                const input = e.target.parentNode;
-                const value = input.value;
-                navigator.clipboard.writeText(value);
-              }}
-              slot="action"
-              icon-start="copy-to-clipboard"
-              appearance="outline-fill"
-            />
-          </calcite-input>
+          this.type === 'string' ? (
+            <calcite-input
+              ref={node => (this.translatedLangInput = node)}
+              data-field-name={this.fieldName}
+              onFocus={this.handleSelection}
+              onCalciteInputChange={this.handleCalciteInputChange.bind(this)}
+              value={value}
+            >
+              <calcite-button
+                onclick={e => {
+                  this.translatedLangInput.selectText();
+                  const input = e.target.parentNode;
+                  const value = input.value;
+                  navigator.clipboard.writeText(value);
+                }}
+                slot="action"
+                icon-start="copy-to-clipboard"
+                appearance="outline-fill"
+              />
+            </calcite-input>
+          ) : (
+            // <div ref={node => (this.editor2 = node as HTMLDivElement)}></div>
+            <instant-apps-ckeditor-wrapper></instant-apps-ckeditor-wrapper>
+          )
         ) : null}
       </div>
     );
@@ -205,14 +233,14 @@ export class InstantAppsLanguageTranslatorItem {
     store.set('portalItemResourceT9n', updatedData);
   }
 
-  // Write data to template app item draft
-  async handleUserLocaleInput(e: CustomEvent): Promise<void> {
-    console.log('Called only after user has finished typing.');
-  }
+  // // Write data to template app item draft
+  // async handleUserLocaleInput(e: CustomEvent): Promise<void> {
+  //   console.log('Called only after user has finished typing.');
+  // }
 
-  updateAppSettingStore(e: CustomEvent): void {
-    console.log('Called immediately...');
-  }
+  // updateAppSettingStore(e: CustomEvent): void {
+  //   console.log('Called immediately...');
+  // }
 
   getUILocation(uiDataItem: LocaleSettingItem): HTMLElement[] {
     const { uiLocation, userLocaleData } = uiDataItem;
@@ -230,4 +258,67 @@ export class InstantAppsLanguageTranslatorItem {
     const { tip } = uiDataItem;
     return tip;
   }
+
+  // handleEditors() {
+  //   const config = { toolbar: [], options: [] };
+  //   if (this.editor && !this.editorIsCreated) {
+  //     this.createUserLocaleEditor(config);
+  //   }
+  //   store.onChange('portalItemResourceT9n', () => {
+  //     if (!store.get('portalItemResourceT9n')) return;
+  //     if (this.editor2 && !this.editor2IsCreated) {
+  //       this.createTranslatedLangEditor(config);
+  //     }
+  //   });
+  // }
+
+  // createUserLocaleEditor(config) {
+  //   ClassicEditor.create(this.editor, config).then(editor => {
+  //     const uiDataItem = this.getUIDataItem() as LocaleSettingItem;
+  //     const value = uiDataItem?.userLocaleData?.value;
+  //     editor.setData(value);
+
+  //     editor.ui.focusTracker.on('change:isFocused', (evt, name, isFocused) => {
+  //       if (!isFocused) {
+  //         console.log('Write data');
+  //       }
+  //     });
+
+  //     store.onChange('currentLanguage', () => {
+  //       if (editor) {
+  //         const uiDataItem = this.getUIDataItem() as LocaleSettingItem;
+  //         const value = uiDataItem?.userLocaleData?.value;
+  //         editor.setData(value);
+  //       }
+  //     });
+  //   });
+  // }
+
+  // createTranslatedLangEditor(config) {
+  //   ClassicEditor.create(this.editor2, config).then(editor => {
+  //     this.editor2IsCreated = true;
+  //     const currentLanguage = store.get('currentLanguage') as string;
+  //     const t9nData = store.get('portalItemResourceT9n');
+  //     const value = t9nData[currentLanguage][this.fieldName];
+  //     editor.setData(value);
+  //     editor.ui.focusTracker.on('change:isFocused', (evt, name, isFocused) => {
+  //       if (!isFocused) {
+  //         const dataToWrite = { [this.fieldName]: editor.getData() };
+  //         const currentLanguage = store.get('currentLanguage') as string;
+  //         const updatedData = getT9nData(currentLanguage, dataToWrite);
+  //         if (JSON.stringify(updatedData) === JSON.stringify(store.get('portalItemResourceT9n'))) return;
+  //         store.set('portalItemResourceT9n', updatedData);
+  //         this.handleTranslatedLanguageInput();
+  //       }
+  //     });
+
+  //     store.onChange('currentLanguage', (currentLanguage: string) => {
+  //       if (this.editor2) {
+  //         const t9nData = store.get('portalItemResourceT9n');
+  //         const value = t9nData[currentLanguage][this.fieldName];
+  //         editor.setData(value);
+  //       }
+  //     });
+  //   });
+  // }
 }

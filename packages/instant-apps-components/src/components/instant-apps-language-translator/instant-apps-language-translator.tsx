@@ -27,7 +27,7 @@ const CSS = {
 @Component({
   tag: 'instant-apps-language-translator',
   styleUrl: 'instant-apps-language-translator.scss',
-  shadow: true,
+  scoped: true,
 })
 export class InstantAppsLanguageTranslator {
   @Element()
@@ -78,6 +78,16 @@ export class InstantAppsLanguageTranslator {
 
   async componentDidLoad() {
     this.initialize();
+    // const style = document.createElement('style');
+    // style.innerHTML = `
+    // .ck.ck-reset.ck-editor.ck-rounded-corners {
+    //   margin-top: 10px !important;
+    //   margin-left: 55px !important;
+    // }
+    // .ck-editor__editable {
+    //   height: 140px !important;
+    // }`;
+    // document.head.prepend(style);
   }
 
   async initialize(): Promise<void> {
@@ -255,6 +265,7 @@ export class InstantAppsLanguageTranslator {
         class={`${keyIndex === uiDataKeysLen - 1 ? CSS.lastItem : ''}`}
         fieldName={key}
         translatedLanguageLabel={translatedLabel}
+        type={this.appSettings[key].type}
       />
     );
   }

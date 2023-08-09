@@ -11,6 +11,8 @@ import { InstantAppsPopovers } from "./components/instant-apps-popovers/instant-
 import { LogicalPlacement } from "@esri/calcite-components/dist/types/utils/floating-ui";
 import { ScoreboardItem, ScoreboardMode, ScoreboardPosition } from "./components/instant-apps-scoreboard/types/interfaces";
 export namespace Components {
+    interface InstantAppsCkeditorWrapper {
+    }
     interface InstantAppsControlPanel {
         "components": ControlPanelComponent[];
         "view": __esri.MapView | __esri.SceneView;
@@ -348,6 +350,7 @@ export namespace Components {
     interface InstantAppsLanguageTranslatorItem {
         "fieldName": string;
         "translatedLanguageLabel": string;
+        "type": string;
     }
     interface InstantAppsMeasurement {
         "activeToolType": ActiveTool;
@@ -523,6 +526,12 @@ export interface InstantAppsScoreboardCustomEvent<T> extends CustomEvent<T> {
     target: HTMLInstantAppsScoreboardElement;
 }
 declare global {
+    interface HTMLInstantAppsCkeditorWrapperElement extends Components.InstantAppsCkeditorWrapper, HTMLStencilElement {
+    }
+    var HTMLInstantAppsCkeditorWrapperElement: {
+        prototype: HTMLInstantAppsCkeditorWrapperElement;
+        new (): HTMLInstantAppsCkeditorWrapperElement;
+    };
     interface HTMLInstantAppsControlPanelElement extends Components.InstantAppsControlPanel, HTMLStencilElement {
     }
     var HTMLInstantAppsControlPanelElement: {
@@ -668,6 +677,7 @@ declare global {
         new (): HTMLInstantAppsSocialShareElement;
     };
     interface HTMLElementTagNameMap {
+        "instant-apps-ckeditor-wrapper": HTMLInstantAppsCkeditorWrapperElement;
         "instant-apps-control-panel": HTMLInstantAppsControlPanelElement;
         "instant-apps-export": HTMLInstantAppsExportElement;
         "instant-apps-filter-list": HTMLInstantAppsFilterListElement;
@@ -695,6 +705,8 @@ declare global {
     }
 }
 declare namespace LocalJSX {
+    interface InstantAppsCkeditorWrapper {
+    }
     interface InstantAppsControlPanel {
         "components"?: ControlPanelComponent[];
         "view"?: __esri.MapView | __esri.SceneView;
@@ -1059,6 +1071,7 @@ declare namespace LocalJSX {
         "fieldName"?: string;
         "onTranslatorItemDataUpdated"?: (event: InstantAppsLanguageTranslatorItemCustomEvent<void>) => void;
         "translatedLanguageLabel"?: string;
+        "type"?: string;
     }
     interface InstantAppsMeasurement {
         "activeToolType"?: ActiveTool;
@@ -1193,6 +1206,7 @@ declare namespace LocalJSX {
         "view"?: __esri.MapView | __esri.SceneView;
     }
     interface IntrinsicElements {
+        "instant-apps-ckeditor-wrapper": InstantAppsCkeditorWrapper;
         "instant-apps-control-panel": InstantAppsControlPanel;
         "instant-apps-export": InstantAppsExport;
         "instant-apps-filter-list": InstantAppsFilterList;
@@ -1223,6 +1237,7 @@ export { LocalJSX as JSX };
 declare module "@stencil/core" {
     export namespace JSX {
         interface IntrinsicElements {
+            "instant-apps-ckeditor-wrapper": LocalJSX.InstantAppsCkeditorWrapper & JSXBase.HTMLAttributes<HTMLInstantAppsCkeditorWrapperElement>;
             "instant-apps-control-panel": LocalJSX.InstantAppsControlPanel & JSXBase.HTMLAttributes<HTMLInstantAppsControlPanelElement>;
             "instant-apps-export": LocalJSX.InstantAppsExport & JSXBase.HTMLAttributes<HTMLInstantAppsExportElement>;
             "instant-apps-filter-list": LocalJSX.InstantAppsFilterList & JSXBase.HTMLAttributes<HTMLInstantAppsFilterListElement>;
