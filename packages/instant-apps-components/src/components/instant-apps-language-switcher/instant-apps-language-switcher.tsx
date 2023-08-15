@@ -154,13 +154,9 @@ export class InstantAppsLanguageSwitcher {
     try {
       const t9nResourceItem = await this.getPortalItemResourceT9n();
       const [request] = await loadModules(['esri/request']);
-      const reqRes = await request(t9nResourceItem.url, {
-        responseType: 'json',
-        cacheBust: true,
-      });
+      const reqConfig = { responseType: 'json', cacheBust: true };
+      const reqRes = await request(t9nResourceItem.url, reqConfig);
       this.t9nData = reqRes.data;
-    } catch (err) {
-      console.error('this not working: ', err);
-    }
+    } catch {}
   }
 }

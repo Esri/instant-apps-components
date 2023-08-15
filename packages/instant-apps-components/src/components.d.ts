@@ -12,6 +12,8 @@ import { LogicalPlacement } from "@esri/calcite-components/dist/types/utils/floa
 import { ScoreboardItem, ScoreboardMode, ScoreboardPosition } from "./components/instant-apps-scoreboard/types/interfaces";
 export namespace Components {
     interface InstantAppsCkeditorWrapper {
+        "editorInstance": any;
+        "value": string;
     }
     interface InstantAppsControlPanel {
         "components": ControlPanelComponent[];
@@ -481,6 +483,10 @@ export namespace Components {
         "view": __esri.MapView | __esri.SceneView;
     }
 }
+export interface InstantAppsCkeditorWrapperCustomEvent<T> extends CustomEvent<T> {
+    detail: T;
+    target: HTMLInstantAppsCkeditorWrapperElement;
+}
 export interface InstantAppsExportCustomEvent<T> extends CustomEvent<T> {
     detail: T;
     target: HTMLInstantAppsExportElement;
@@ -706,6 +712,10 @@ declare global {
 }
 declare namespace LocalJSX {
     interface InstantAppsCkeditorWrapper {
+        "editorInstance"?: any;
+        "onDataChanged"?: (event: InstantAppsCkeditorWrapperCustomEvent<string>) => void;
+        "onIsFocused"?: (event: InstantAppsCkeditorWrapperCustomEvent<{ fieldName: string; isFocused: boolean }>) => void;
+        "value"?: string;
     }
     interface InstantAppsControlPanel {
         "components"?: ControlPanelComponent[];
