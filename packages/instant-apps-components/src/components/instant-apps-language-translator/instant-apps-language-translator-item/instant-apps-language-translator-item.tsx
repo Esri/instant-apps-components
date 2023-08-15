@@ -89,8 +89,9 @@ export class InstantAppsLanguageTranslatorItem {
     const label = userLocaleData?.label;
     const value = userLocaleData?.value;
     const isSelected = uiDataItem?.selected;
+    const selected = isSelected ? ` ${CSS.selected}` : '';
     return (
-      <div class={`${CSS.section}${isSelected ? ` ${CSS.selected}` : ''}`}>
+      <div class={`${CSS.section}${selected}`}>
         {this.renderItemHeader(EInputType.User, label)}
         {uiDataItem?.expanded ? this.renderInput(value, EInputType.User) : null}
       </div>
@@ -117,7 +118,7 @@ export class InstantAppsLanguageTranslatorItem {
 
   renderUserLocaleInput(value: string): HTMLCalciteInputElement {
     return (
-      <calcite-input ref={node => (this.userLocaleInput = node)} data-field-name={this.fieldName} value={value} onFocus={this.handleSelection}>
+      <calcite-input ref={(node: HTMLCalciteInputElement) => (this.userLocaleInput = node)} data-field-name={this.fieldName} value={value} onFocus={this.handleSelection}>
         {this.renderCopyButton(EInputType.User)}
       </calcite-input>
     );
@@ -140,18 +141,8 @@ export class InstantAppsLanguageTranslatorItem {
   renderTextEditor(value: string, type: InputType): HTMLInstantAppsCkeditorWrapperElement {
     return (
       <instant-apps-ckeditor-wrapper
-        ref={(node: HTMLInstantAppsCkeditorWrapperElement) => {
-          if (type === EInputType.User) {
-            this.userEditorWrapper = node;
-          } else {
-            this.translatedEditorWrapper = node;
-          }
-        }}
-        onDataChanged={e => {
-          const dataToWrite = { [this.fieldName]: e.detail };
-          const updatedData = getT9nData(store.get('currentLanguage') as string, dataToWrite);
-          store.set('portalItemResourceT9n', updatedData);
-        }}
+        ref={this.setEditor.bind(this, type)}
+        onDataChanged={this.handleDataChange}
         onIsFocused={this.handleSelection}
         value={value}
         data-field-name={this.fieldName}
@@ -198,8 +189,6 @@ export class InstantAppsLanguageTranslatorItem {
   renderCopyButton(type: InputType) {
     return <calcite-button onclick={this.copySelection.bind(this, type)} slot="action" icon-start={EIcons.Copy} appearance="outline-fill" />;
   }
-
-  // End of render methods
 
   getUIDataItem(): LocaleSettingItem | undefined {
     if (!languageTranslatorState.uiData) return;
@@ -295,5 +284,19 @@ export class InstantAppsLanguageTranslatorItem {
     input.selectText();
     const value = input.value;
     navigator.clipboard.writeText(value);
+  }
+
+  setEditor(type: InputType, node: HTMLInstantAppsCkeditorWrapperElement) {
+    if (type === EInputType.User) {
+      this.userEditorWrapper = node;
+    } else {
+      this.translatedEditorWrapper = node;
+    }
+  }
+
+  handleDataChange(e: CustomEvent): void {
+    const dataToWrite = { [this.fieldName]: e.detail };
+    const updatedData = getT9nData(store.get('currentLanguage') as string, dataToWrite);
+    store.set('portalItemResourceT9n', updatedData);
   }
 }

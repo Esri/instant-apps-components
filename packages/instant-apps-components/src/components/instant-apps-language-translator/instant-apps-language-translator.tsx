@@ -44,7 +44,7 @@ export class InstantAppsLanguageTranslator {
    * Data object containing a series of key-value pairs used to render the components UI.
    */
   @Prop()
-  appSettings;
+  appSettings: any;
 
   /**
    * Specified languages that the user-defined strings will be translated in.
