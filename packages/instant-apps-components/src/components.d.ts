@@ -350,9 +350,18 @@ export namespace Components {
         "translatedLanguages": string[];
     }
     interface InstantAppsLanguageTranslatorItem {
+        /**
+          * Unique identifier tied to an associated setting in an app.
+         */
         "fieldName": string;
+        /**
+          * Label of item in currently selected language.
+         */
         "translatedLanguageLabel": string;
-        "type": string;
+        /**
+          * Determines whether to use a regular input or text editor
+         */
+        "type": 'string' | 'textEditor';
     }
     interface InstantAppsMeasurement {
         "activeToolType": ActiveTool;
@@ -1078,10 +1087,19 @@ declare namespace LocalJSX {
         "translatedLanguages"?: string[];
     }
     interface InstantAppsLanguageTranslatorItem {
+        /**
+          * Unique identifier tied to an associated setting in an app.
+         */
         "fieldName"?: string;
         "onTranslatorItemDataUpdated"?: (event: InstantAppsLanguageTranslatorItemCustomEvent<void>) => void;
+        /**
+          * Label of item in currently selected language.
+         */
         "translatedLanguageLabel"?: string;
-        "type"?: string;
+        /**
+          * Determines whether to use a regular input or text editor
+         */
+        "type"?: 'string' | 'textEditor';
     }
     interface InstantAppsMeasurement {
         "activeToolType"?: ActiveTool;

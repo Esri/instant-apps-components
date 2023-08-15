@@ -34,7 +34,7 @@ export class InstantAppsCkeditorWrapper {
   }
 
   render() {
-    return <div id="test" />;
+    return <div />;
   }
 
   async init(): Promise<void> {

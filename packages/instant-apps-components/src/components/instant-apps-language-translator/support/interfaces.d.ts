@@ -25,3 +25,5 @@ interface LocaleData {
 export interface PortalItemResourceT9nData {
   [locale: string]: { [fieldName: string]: string } | string;
 }
+
+export type InputType = 'user' | 'translated';

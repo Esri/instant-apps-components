@@ -78,16 +78,6 @@ export class InstantAppsLanguageTranslator {
 
   async componentDidLoad() {
     this.initialize();
-    // const style = document.createElement('style');
-    // style.innerHTML = `
-    // .ck.ck-reset.ck-editor.ck-rounded-corners {
-    //   margin-top: 10px !important;
-    //   margin-left: 55px !important;
-    // }
-    // .ck-editor__editable {
-    //   height: 140px !important;
-    // }`;
-    // document.head.prepend(style);
   }
 
   async initialize(): Promise<void> {
