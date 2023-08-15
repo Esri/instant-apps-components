@@ -1,4 +1,4 @@
-import { Component, Element, Event, EventEmitter, Prop, Watch, h } from '@stencil/core';
+import { Component, Element, Event, EventEmitter, Host, Prop, Watch, h } from '@stencil/core';
 import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 import { styles } from './support/constants';
 
@@ -16,7 +16,9 @@ export class InstantAppsCkeditorWrapper {
   @Event()
   dataChanged: EventEmitter<string>;
 
-  @Prop()
+  @Prop({
+    mutable: true,
+  })
   value: string;
 
   @Prop({
@@ -34,7 +36,11 @@ export class InstantAppsCkeditorWrapper {
   }
 
   render() {
-    return <div />;
+    return (
+      <Host>
+        <div />
+      </Host>
+    );
   }
 
   async init(): Promise<void> {

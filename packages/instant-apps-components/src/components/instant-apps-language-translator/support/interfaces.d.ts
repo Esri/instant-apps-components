@@ -26,4 +26,5 @@ export interface PortalItemResourceT9nData {
   [locale: string]: { [fieldName: string]: string } | string;
 }
 
-export type InputType = 'user' | 'translated';
+export type InputType = 'user' | 'translation';
+export type SettingType = 'string' | 'textEditor';

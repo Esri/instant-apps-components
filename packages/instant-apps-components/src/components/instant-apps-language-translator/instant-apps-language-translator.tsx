@@ -6,6 +6,7 @@ import LanguageTranslator_t9n from '../../assets/t9n/instant-apps-language-trans
 import { generateUIData, getMessages, getPortalItemResource, getUIDataKeys } from './support/utils';
 import { languageTranslatorState, store } from './support/store';
 import { LocaleSettingItem, LocaleUIData } from './support/interfaces';
+import { EIcons } from './support/enum';
 
 const BASE = 'instant-apps-language-translator';
 
@@ -108,7 +109,7 @@ export class InstantAppsLanguageTranslator {
 
   renderModal(): HTMLCalciteModalElement {
     return (
-      <calcite-modal open={this.open} scale="l" fullscreen={true} oncalciteModalClose={() => (this.open = false)}>
+      <calcite-modal open={this.open} scale="l" fullscreen={true} onCalciteModalClose={() => (this.open = false)}>
         {this.renderHeader()}
         {this.renderContent()}
         {this.renderPrimaryButton()}
@@ -140,7 +141,7 @@ export class InstantAppsLanguageTranslator {
       <div class={CSS.headerText}>
         <span>{`${this.messages?.header} | ${this.messages?.subHeader}`}</span>
         <calcite-button id="headerTip" appearance="transparent">
-          <calcite-icon icon="information" scale="s" />
+          <calcite-icon icon={EIcons.Popover} scale="s" />
         </calcite-button>
       </div>
     );
@@ -189,7 +190,7 @@ export class InstantAppsLanguageTranslator {
   renderCollapseSearchContainer(): HTMLDivElement {
     return (
       <div class={CSS.collapseSearchContainer}>
-        <calcite-button onClick={this.handleExpandCollapseAll.bind(this)} appearance="transparent" icon-start="list-merge">
+        <calcite-button onClick={this.handleExpandCollapseAll.bind(this)} appearance="transparent" icon-start={EIcons.ExpandCollapse}>
           {this.isCollapse ? this.messages?.collapseAll : this.messages?.expandAll}
         </calcite-button>
         <calcite-input type="search" placeholder={this.messages?.searchPlaceholder} icon="search" />
