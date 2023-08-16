@@ -364,6 +364,12 @@ export namespace Components {
          */
         "type": SettingType;
     }
+    interface InstantAppsLanguageTranslatorSearch {
+        /**
+          * Placeholder string for search input.
+         */
+        "t9nPlaceholder": string;
+    }
     interface InstantAppsMeasurement {
         "activeToolType": ActiveTool;
         "areaUnit"?: __esri.AreaUnit;
@@ -656,6 +662,12 @@ declare global {
         prototype: HTMLInstantAppsLanguageTranslatorItemElement;
         new (): HTMLInstantAppsLanguageTranslatorItemElement;
     };
+    interface HTMLInstantAppsLanguageTranslatorSearchElement extends Components.InstantAppsLanguageTranslatorSearch, HTMLStencilElement {
+    }
+    var HTMLInstantAppsLanguageTranslatorSearchElement: {
+        prototype: HTMLInstantAppsLanguageTranslatorSearchElement;
+        new (): HTMLInstantAppsLanguageTranslatorSearchElement;
+    };
     interface HTMLInstantAppsMeasurementElement extends Components.InstantAppsMeasurement, HTMLStencilElement {
     }
     var HTMLInstantAppsMeasurementElement: {
@@ -712,6 +724,7 @@ declare global {
         "instant-apps-language-switcher": HTMLInstantAppsLanguageSwitcherElement;
         "instant-apps-language-translator": HTMLInstantAppsLanguageTranslatorElement;
         "instant-apps-language-translator-item": HTMLInstantAppsLanguageTranslatorItemElement;
+        "instant-apps-language-translator-search": HTMLInstantAppsLanguageTranslatorSearchElement;
         "instant-apps-measurement": HTMLInstantAppsMeasurementElement;
         "instant-apps-measurement-tool": HTMLInstantAppsMeasurementToolElement;
         "instant-apps-popover": HTMLInstantAppsPopoverElement;
@@ -1102,6 +1115,12 @@ declare namespace LocalJSX {
          */
         "type"?: SettingType;
     }
+    interface InstantAppsLanguageTranslatorSearch {
+        /**
+          * Placeholder string for search input.
+         */
+        "t9nPlaceholder"?: string;
+    }
     interface InstantAppsMeasurement {
         "activeToolType"?: ActiveTool;
         "areaUnit"?: __esri.AreaUnit;
@@ -1254,6 +1273,7 @@ declare namespace LocalJSX {
         "instant-apps-language-switcher": InstantAppsLanguageSwitcher;
         "instant-apps-language-translator": InstantAppsLanguageTranslator;
         "instant-apps-language-translator-item": InstantAppsLanguageTranslatorItem;
+        "instant-apps-language-translator-search": InstantAppsLanguageTranslatorSearch;
         "instant-apps-measurement": InstantAppsMeasurement;
         "instant-apps-measurement-tool": InstantAppsMeasurementTool;
         "instant-apps-popover": InstantAppsPopover;
@@ -1285,6 +1305,7 @@ declare module "@stencil/core" {
             "instant-apps-language-switcher": LocalJSX.InstantAppsLanguageSwitcher & JSXBase.HTMLAttributes<HTMLInstantAppsLanguageSwitcherElement>;
             "instant-apps-language-translator": LocalJSX.InstantAppsLanguageTranslator & JSXBase.HTMLAttributes<HTMLInstantAppsLanguageTranslatorElement>;
             "instant-apps-language-translator-item": LocalJSX.InstantAppsLanguageTranslatorItem & JSXBase.HTMLAttributes<HTMLInstantAppsLanguageTranslatorItemElement>;
+            "instant-apps-language-translator-search": LocalJSX.InstantAppsLanguageTranslatorSearch & JSXBase.HTMLAttributes<HTMLInstantAppsLanguageTranslatorSearchElement>;
             "instant-apps-measurement": LocalJSX.InstantAppsMeasurement & JSXBase.HTMLAttributes<HTMLInstantAppsMeasurementElement>;
             "instant-apps-measurement-tool": LocalJSX.InstantAppsMeasurementTool & JSXBase.HTMLAttributes<HTMLInstantAppsMeasurementToolElement>;
             "instant-apps-popover": LocalJSX.InstantAppsPopover & JSXBase.HTMLAttributes<HTMLInstantAppsPopoverElement>;

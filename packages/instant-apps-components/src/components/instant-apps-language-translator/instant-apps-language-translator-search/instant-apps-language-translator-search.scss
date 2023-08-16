@@ -1,0 +1,45 @@
+:host {
+  display: block;
+  position: relative;
+
+  ul {
+    position: absolute;
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    z-index: 101;
+    max-height: 30vh;
+    overflow: auto;
+    border-left: none;
+    background-color: var(--calcite-ui-foreground-1);
+    border: 1px solid #c0c0c0;
+
+    li:first-child {
+      border: none;
+    }
+
+    li {
+      margin-top: 0;
+      padding: 0.8em 1em;
+      border-top: solid 1px rgba(110, 110, 110, 0.3);
+      display: flex;
+      flex-direction: column;
+      cursor: pointer;
+      word-break: break-word;
+    }
+
+    li:hover {
+      background-color: var(--calcite-ui-foreground-2);
+    }
+
+    button {
+      border: none;
+      width: 100%;
+      height: 100%;
+      text-align: left;
+      // border-bottom: 1px solid var(--calcite-ui-border-1);
+      cursor: pointer;
+      background-color: transparent;
+    }
+  }
+}

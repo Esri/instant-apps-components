@@ -193,7 +193,7 @@ export class InstantAppsLanguageTranslator {
         <calcite-button onClick={this.handleExpandCollapseAll.bind(this)} appearance="transparent" icon-start={EIcons.ExpandCollapse}>
           {this.isCollapse ? this.messages?.collapseAll : this.messages?.expandAll}
         </calcite-button>
-        <calcite-input type="search" placeholder={this.messages?.searchPlaceholder} icon="search" />
+        <instant-apps-language-translator-search t9nPlaceholder={this.messages?.searchPlaceholder}></instant-apps-language-translator-search>
       </div>
     );
   }

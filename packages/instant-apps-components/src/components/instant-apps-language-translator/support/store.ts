@@ -1,9 +1,7 @@
 import { createStore } from '@stencil/store';
 import { LocaleSettingItem, LocaleUIData } from './interfaces';
-import PromiseQueue from './PromiseQueue';
 
 interface LanguageTranslatorState {
-  queue: PromiseQueue;
   uiData: LocaleUIData | null;
   currentLanguage: string | null;
   lastSave: string | null;
@@ -14,7 +12,6 @@ interface LanguageTranslatorState {
 }
 
 const LanguageTranslatorStore = createStore<LanguageTranslatorState>({
-  queue: new PromiseQueue(),
   uiData: null,
   currentLanguage: null,
   lastSave: null,

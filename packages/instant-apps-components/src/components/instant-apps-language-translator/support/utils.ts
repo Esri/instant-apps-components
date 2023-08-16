@@ -12,13 +12,10 @@ export function generateUIData(appSettings, locales: string[]): LocaleUIData {
   };
 
   settingKeys.forEach(key => {
-    const translatedLocaleData = {};
-    locales.forEach((locale: string) => (translatedLocaleData[locale] = null));
     const appSetting = appSettings[key];
     const { type, label, value, uiLocation } = appSetting;
     uiData[key] = {
       userLocaleData: { type, label, value },
-      translatedLocaleData,
       expanded: true,
       selected: false,
       uiLocation,

@@ -124,6 +124,19 @@ export class InstantAppsLanguageSwitcher {
         eventData['data'] = this.t9nData[translatedLanguage];
       }
       this.intl.setLocale(this.selectedLanguage);
+
+      // Set url parameter 'locale' with value
+      const params = new URLSearchParams(window.location.search);
+      params.set('locale', this.selectedLanguage);
+      document.documentElement.setAttribute('lang', this.selectedLanguage);
+
+      if (this.selectedLanguage === 'ar' || this.selectedLanguage === 'he') {
+        document.documentElement.setAttribute('dir', 'rtl');
+      } else {
+        document.documentElement.setAttribute('dir', 'ltr');
+      }
+      window.history.replaceState({}, '', decodeURIComponent(`${window.location.pathname}?${params}`));
+
       this.selectedLanguageUpdated.emit(eventData);
     };
   }

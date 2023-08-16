@@ -5,7 +5,6 @@ export interface LocaleUIData {
 
 interface LocaleSettingItem {
   userLocaleData: LocaleData;
-  translatedLocaleData: SettingLocaleData;
   expanded: boolean;
   selected: boolean;
   uiLocation: any;
