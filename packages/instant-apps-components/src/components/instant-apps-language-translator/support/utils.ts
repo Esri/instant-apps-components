@@ -6,9 +6,12 @@ import { languageTranslatorState, store } from './store';
 import { loadModules } from 'esri-loader';
 
 export function generateUIData(appSettings, locales: string[]): LocaleUIData {
-  const settingKeys = Object.keys(appSettings);
+  const settingKeys = Object.keys(appSettings).filter(settingKey => settingKey !== 'translatedLanguageLabels');
   const uiData = {
     locales,
+    translatedLanguageLabels: {
+      ...appSettings.translatedLanguageLabels,
+    },
   };
 
   settingKeys.forEach(key => {
