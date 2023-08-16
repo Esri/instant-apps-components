@@ -1,0 +1,87 @@
+:host {
+  display: block;
+  .instant-apps-language-translator-item {
+    display: flex;
+  }
+
+  .instant-apps-language-translator-item__section {
+    padding: 10px;
+    border-bottom: 1px solid var(--calcite-ui-border-1);
+    background-color: var(--calcite-ui-foreground-2);
+    width: 49%;
+
+    .instant-apps-language-translator-item__top-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .instant-apps-language-translator-item__label-container {
+      display: flex;
+      align-items: center;
+    }
+
+    .instant-apps-language-translator-item__label {
+      display: inline-block;
+      margin-left: 10px;
+      font-size: 14px;
+      font-weight: var(--calcite-font-weight-medium);
+    }
+
+    calcite-input {
+      margin-top: 10px;
+      margin-left: 55px;
+    }
+  }
+
+  .instant-apps-language-translator-item__section--last-item {
+    border-bottom: none;
+  }
+
+  .instant-apps-language-translator-item__section--selected {
+    background-color: #f1faff;
+  }
+
+  .instant-apps-language-translator-item__section:first-child {
+    margin-right: 1%;
+  }
+
+  .instant-apps-language-translator-item__ui-location-popover-content {
+    display: inline-block;
+    padding: 10px;
+    max-width: 400px;
+  }
+
+  .instant-apps-language-translator-item__ui-location-items {
+    display: flex;
+  }
+
+  .instant-apps-language-translator-item__ui-location-item {
+    display: flex;
+    align-items: center;
+    font-weight: var(--calcite-font-weight-medium);
+    font-size: 14px;
+  }
+
+  .instant-apps-language-translator-item__tip {
+    display: inline-block;
+    font-size: 14px;
+    line-height: 22px;
+  }
+
+  .instant-apps-language-translator-item__info-icon {
+    color: var(--calcite-ui-brand);
+  }
+
+  .instant-apps-language-translator-item__info-button {
+    border: 0;
+    background-color: transparent;
+    cursor: pointer;
+  }
+}
+
+:host(.instant-apps-language-translator--last-item) {
+  .instant-apps-language-translator-item__section {
+    border-bottom: none;
+  }
+}

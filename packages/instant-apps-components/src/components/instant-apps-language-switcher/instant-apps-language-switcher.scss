@@ -1,0 +1,13 @@
+$minWidth: 200px;
+
+:host {
+  display: block;
+  background-color: var(--calcite-ui-foreground-1);
+  color: var(--calcite-ui-text-1);
+  min-width: $minWidth;
+
+  calcite-dropdown,
+  calcite-action {
+    width: 100%;
+  }
+}

@@ -1,0 +1,277 @@
+<!-- /*
+ *   Copyright (c) 2023 Esri
+ *   All rights reserved under the copyright laws of the United States and applicable international laws, treaties, and conventions.
+ *   This material is licensed for use under the Esri Master License Agreement (MLA), and is bound by the terms of that agreement.
+ *   You may redistribute and use this code without modification, provided you adhere to the terms of the MLA and include this copyright notice.
+ *   See use restrictions at http://www.esri.com/legal/pdfs/mla_e204_e300/english
+ */ -->
+
+<!DOCTYPE html>
+<html dir="ltr">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=5.0" />
+    <title>ArcGIS Instant Apps Components</title>
+
+    <link rel="stylesheet" href="https://js.arcgis.com/4.27/@arcgis/core/assets/esri/themes/light/main.css" />
+
+    <script type="module" src="https://jsdev.arcgis.com/calcite-components/1.5.0/calcite.esm.js"></script>
+    <link rel="stylesheet" type="text/css" href="https://jsdev.arcgis.com/calcite-components/1.5.0/calcite.css" />
+    <script type="module" src="/build/instant-apps-components.esm.js"></script>
+    <script nomodule src="/build/instant-apps-components.js"></script>
+    <style>
+      html,
+      body,
+      #viewDiv {
+        box-sizing: border-box;
+        width: 100%;
+        height: 100%;
+        margin: 0;
+        padding: 0;
+      }
+
+      #settings {
+        padding: 10px;
+      }
+    </style>
+  </head>
+
+  <body>
+    <calcite-shell>
+      <instant-apps-header slot="header" title-text="Instant Apps Components: Language translator/switcher"></instant-apps-header>
+      <calcite-shell-panel slot="panel-start">
+        <calcite-panel>
+          <div id="settings">
+            <calcite-label>
+              Language translator
+              <calcite-button id="openLangTranslator">Open language translator</calcite-button>
+            </calcite-label>
+          </div>
+        </calcite-panel>
+      </calcite-shell-panel>
+      <div id="viewDiv"></div>
+    </calcite-shell>
+    <instant-apps-language-translator tabindex="-1" id="langTranslator"></instant-apps-language-translator>
+    <script type="module">
+      import MapView from 'https://js.arcgis.com/4.27/@arcgis/core/views/MapView.js';
+      import WebMap from 'https://js.arcgis.com/4.27/@arcgis/core/WebMap.js';
+      import Expand from 'https://js.arcgis.com/4.27/@arcgis/core/widgets/Expand.js';
+      import Legend from 'https://js.arcgis.com/4.27/@arcgis/core/widgets/Legend.js';
+      import PortalItem from 'https://js.arcgis.com/4.27/@arcgis/core/portal/PortalItem.js';
+      import esriConfig from 'https://js.arcgis.com/4.27/@arcgis/core/config.js';
+
+      esriConfig.portalUrl = 'https://holistic.mapsdevext.arcgis.com';
+
+      const map = new WebMap({
+        portalItem: {
+          id: 'aa5e8c8a7cc74273ad86733b224370ed',
+        },
+      });
+      const view = new MapView({
+        map,
+        container: 'viewDiv',
+      });
+
+      const langTranslatorConfigData = {
+        // Series of setting data - type, label, value, uiLocation, and tip
+        customHeaderHTML: {
+          type: 'textEditor',
+          label: 'Custom header HTML',
+          value: '<p>Custom header HTML value</p>',
+          uiLocation: {
+            section: {
+              id: 'about',
+              label: 'About',
+            },
+            subsection: {
+              id: 'appComprehension',
+              label: 'App details',
+            },
+          },
+          tip: 'Include a more customized look for the app title. Rich text editor accessibility instructions can be accessed through ALT+0 (Mac users: Option+0).',
+        },
+        customURLParamName: {
+          type: 'string',
+          label: 'URL parameter name',
+          value: 'URL parameter name value',
+          uiLocation: {
+            section: {
+              id: 'interactivity',
+              label: 'Interactivity',
+            },
+            subsection: {
+              id: 'customURLParams',
+              label: 'URL parameter',
+            },
+          },
+          tip: 'Set up your app to support a custom URL parameter that users can append to your app URL. For example, if your map contains a feature layer with parcel information, you could find parcels using a URL parameter. For example, if your custom parameter name is parcel users would append the custom search to the app URl like this: index.html?parcel=3045',
+        },
+        splashButtonText: {
+          type: 'string',
+          label: 'Introduction panel button text',
+          value: 'Introduction panel button value',
+          uiLocation: {
+            section: {
+              id: 'about',
+              label: 'About',
+            },
+            subsection: {
+              id: 'appComprehension',
+              label: 'App details',
+            },
+          },
+        },
+        splashContent: {
+          type: 'textEditor',
+          label: 'Introduction panel content',
+          value: '<p>Test value</p>',
+          uiLocation: {
+            section: {
+              id: 'about',
+              label: 'About',
+            },
+            subsection: {
+              id: 'appComprehension',
+              label: 'App details',
+            },
+          },
+          tip: 'Add text, links, and small graphics here (rich text editor). Rich text editor accessibility instructions can be accessed through ALT+0 (Mac users: Option+0).',
+        },
+        splashTitle: {
+          type: 'string',
+          label: 'Introduction panel title',
+          value: 'Introduction panel title value',
+          uiLocation: {
+            section: {
+              id: 'about',
+              label: 'About',
+            },
+            subsection: {
+              id: 'appComprehension',
+              label: 'App details',
+            },
+          },
+        },
+        title: {
+          type: 'string',
+          label: 'App title',
+          value: 'App title value',
+          uiLocation: {
+            section: {
+              id: 'about',
+              label: 'About',
+            },
+            subsection: {
+              id: 'appComprehension',
+              label: 'App details',
+            },
+          },
+          tip: "Include title text to introduce the map's main topic",
+        },
+        // Only for runtime - to be used when switching between languages for translation workflow - configuration
+        translatedLanguageLabels: {
+          ar: {
+            customHeaderHTML: 'تحرير الرأس المخصص',
+            customURLParamName: 'اسم معلمة عنوان URL',
+            splashButtonText: 'نص زر لوحة المقددمة',
+            splashContent: 'محتوى لوحة المقدمة',
+            splashTitle: 'عنوان لوحة المقدمة',
+            title: 'عنوان التطبيق',
+          },
+          ca: {
+            customHeaderHTML: "Edita l'encapçalament personalitzat",
+            customURLParamName: "Nom del paràmetre d'URL",
+            splashButtonText: "Text del botó del panell d'introducció",
+            splashContent: "Contingut del panell d'introducció",
+            splashTitle: "Títol del panell d'introducció",
+            title: "Títol de l'aplicació",
+          },
+          fr: {
+            customHeaderHTML: 'Mettre à jour l’en-tête personnalisé',
+            customURLParamName: 'Nom du paramètre d’URL',
+            splashButtonText: 'Texte du bouton du volet de présentation',
+            splashContent: 'Contenu du volet de présentation',
+            splashTitle: 'Titre du volet de présentation',
+            title: 'Titre de l’application',
+          },
+          th: {
+            customHeaderHTML: 'แก้ไขส่วนหัวแบบกำหนดเอง',
+            customURLParamName: 'ชื่อพารามิเตอร์ URL',
+            splashButtonText: 'ข้อความปุ่มพาเนลแนะนำ',
+            splashContent: 'เนื้อหาของพาเนลแนะนำ',
+            splashTitle: 'หัวข้อพาเนลแนะนำ',
+            title: 'ชื่อแอพ',
+          },
+          uk: {
+            customHeaderHTML: 'Редагувати настроюваний верхній колонтитул',
+            customURLParamName: "Ім'я параметра URL",
+            splashButtonText: 'Текст кнопки панелі вступу',
+            splashContent: 'Вміст панелі вступу',
+            splashTitle: 'Заголовок панелі вступу',
+            title: 'Заголовок додатку',
+          },
+        },
+      };
+      const langSwitcherConfigData = {
+        locales: ['ar', 'ca', 'fr', 'th', 'uk'],
+        icon: 'language',
+        portalItemResourceId: 't9n/ec629fbdaa01491e8fc16a443d526443.json',
+      };
+
+      const templateAppItem = new PortalItem({
+        id: 'ec629fbdaa01491e8fc16a443d526443',
+      });
+
+      const langTranslator = document.getElementById('langTranslator');
+      langTranslator.portalItem = templateAppItem;
+      langTranslator.appSettings = langTranslatorConfigData;
+      langTranslator.translatedLanguages = langSwitcherConfigData.locales;
+
+      langTranslator.userLocaleInputOnChangeCallback = function (fieldName, value) {
+        console.log('FIELD NAME: ', fieldName);
+        console.log('VALUE: ', value);
+      };
+
+      const openButton = document.getElementById('openLangTranslator');
+      openButton.addEventListener('click', () => (langTranslator.open = true));
+
+      const content = document.createElement('instant-apps-language-switcher');
+      content.portalItem = templateAppItem;
+      content.translatedLanguages = langSwitcherConfigData.locales;
+      content.icon = langSwitcherConfigData.icon;
+      content.portalItemResourceId = langSwitcherConfigData.portalItemResourceId;
+
+      content.addEventListener('selectedLanguageUpdated', e => {
+        const data = e.detail;
+        console.log('T9N UI DATA: ', data);
+      });
+
+      // setInterval(() => content.refresh(), 3000);
+
+      langTranslator.addEventListener('translatorDataUpdated', () => {
+        content.refresh();
+      });
+
+      const expand = new Expand({
+        view,
+        content,
+        expanded: true,
+        expandIcon: langSwitcherConfigData.icon,
+      });
+
+      view.ui.add(expand, 'top-right');
+
+      const legend = new Legend({
+        view,
+      });
+
+      const legendExpand = new Expand({
+        view,
+        content: legend,
+        expanded: true,
+      });
+
+      view.ui.add(legendExpand, 'bottom-left');
+    </script>
+  </body>
+</html>
