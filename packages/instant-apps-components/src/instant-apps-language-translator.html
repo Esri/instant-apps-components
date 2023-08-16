@@ -227,6 +227,11 @@
       langTranslator.appSettings = langTranslatorConfigData;
       langTranslator.translatedLanguages = langSwitcherConfigData.locales;
 
+      langTranslator.userLocaleOnChangeCallback = function (fieldName, value) {
+        console.log('FIELD NAME: ', fieldName);
+        console.log('VALUE: ', value);
+      };
+
       const openButton = document.getElementById('openLangTranslator');
       openButton.addEventListener('click', () => (langTranslator.open = true));
 

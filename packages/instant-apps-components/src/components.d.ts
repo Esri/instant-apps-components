@@ -13,7 +13,13 @@ import { LogicalPlacement } from "@esri/calcite-components/dist/types/utils/floa
 import { ScoreboardItem, ScoreboardMode, ScoreboardPosition } from "./components/instant-apps-scoreboard/types/interfaces";
 export namespace Components {
     interface InstantAppsCkeditorWrapper {
+        /**
+          * Instance of text editor
+         */
         "editorInstance": any;
+        /**
+          * Current value of text editor instance.
+         */
         "value": string;
     }
     interface InstantAppsControlPanel {
@@ -349,6 +355,10 @@ export namespace Components {
           * Specified languages that the user-defined strings will be translated in.
          */
         "translatedLanguages": string[];
+        /**
+          * Function to be called when data in user locale inputs have changed. This function will have 2 arguments - fieldName and value. Field name is a unique identifier for a given setting/field. Value is the entered value within the input.
+         */
+        "userLocaleInputOnChangeCallback": (fieldName: string, value: string) => void;
     }
     interface InstantAppsLanguageTranslatorItem {
         /**
@@ -363,6 +373,10 @@ export namespace Components {
           * Determines whether to use a regular input or text editor
          */
         "type": SettingType;
+        /**
+          * Function to be called when data in user locale inputs have changed. This function will have 2 arguments - fieldName and value. Field name is a unique identifier for a given setting/field. Value is the entered value within the input.
+         */
+        "userLocaleInputOnChangeCallback": (fieldName: string, value: string) => void;
     }
     interface InstantAppsLanguageTranslatorSearch {
         /**
@@ -538,6 +552,10 @@ export interface InstantAppsLanguageTranslatorCustomEvent<T> extends CustomEvent
 export interface InstantAppsLanguageTranslatorItemCustomEvent<T> extends CustomEvent<T> {
     detail: T;
     target: HTMLInstantAppsLanguageTranslatorItemElement;
+}
+export interface InstantAppsLanguageTranslatorSearchCustomEvent<T> extends CustomEvent<T> {
+    detail: T;
+    target: HTMLInstantAppsLanguageTranslatorSearchElement;
 }
 export interface InstantAppsMeasurementCustomEvent<T> extends CustomEvent<T> {
     detail: T;
@@ -735,9 +753,15 @@ declare global {
 }
 declare namespace LocalJSX {
     interface InstantAppsCkeditorWrapper {
+        /**
+          * Instance of text editor
+         */
         "editorInstance"?: any;
         "onDataChanged"?: (event: InstantAppsCkeditorWrapperCustomEvent<string>) => void;
         "onIsFocused"?: (event: InstantAppsCkeditorWrapperCustomEvent<{ fieldName: string; isFocused: boolean }>) => void;
+        /**
+          * Current value of text editor instance.
+         */
         "value"?: string;
     }
     interface InstantAppsControlPanel {
@@ -1099,6 +1123,10 @@ declare namespace LocalJSX {
           * Specified languages that the user-defined strings will be translated in.
          */
         "translatedLanguages"?: string[];
+        /**
+          * Function to be called when data in user locale inputs have changed. This function will have 2 arguments - fieldName and value. Field name is a unique identifier for a given setting/field. Value is the entered value within the input.
+         */
+        "userLocaleInputOnChangeCallback"?: (fieldName: string, value: string) => void;
     }
     interface InstantAppsLanguageTranslatorItem {
         /**
@@ -1114,8 +1142,13 @@ declare namespace LocalJSX {
           * Determines whether to use a regular input or text editor
          */
         "type"?: SettingType;
+        /**
+          * Function to be called when data in user locale inputs have changed. This function will have 2 arguments - fieldName and value. Field name is a unique identifier for a given setting/field. Value is the entered value within the input.
+         */
+        "userLocaleInputOnChangeCallback"?: (fieldName: string, value: string) => void;
     }
     interface InstantAppsLanguageTranslatorSearch {
+        "onSuggestionSelected"?: (event: InstantAppsLanguageTranslatorSearchCustomEvent<string>) => void;
         /**
           * Placeholder string for search input.
          */

@@ -1,8 +1,9 @@
 import { Component, Element, Event, EventEmitter, Host, Prop, h } from '@stencil/core';
-import { LocaleSettingItem, LocaleUIData, InputType, SettingType } from '../support/interfaces';
-import { EInputType, ESettingType, EIcons } from '../support/enum';
-import { languageTranslatorState, store } from '../support/store';
+
 import { getT9nData, getUIDataKeys, writeToPortalItemResource } from '../support/utils';
+import { languageTranslatorState, store } from '../support/store';
+import { EInputType, ESettingType, EIcons } from '../support/enum';
+import { LocaleSettingItem, LocaleUIData, InputType, SettingType } from '../support/interfaces';
 
 const BASE = 'instant-apps-language-translator-item';
 
@@ -53,6 +54,12 @@ export class InstantAppsLanguageTranslatorItem {
    */
   @Prop()
   type: SettingType;
+
+  /**
+   * Function to be called when data in user locale inputs have changed. This function will have 2 arguments - fieldName and value. Field name is a unique identifier for a given setting/field. Value is the entered value within the input.
+   */
+  @Prop()
+  userLocaleInputOnChangeCallback: (fieldName: string, value: string) => void;
 
   @Event()
   translatorItemDataUpdated: EventEmitter<void>;
@@ -118,7 +125,13 @@ export class InstantAppsLanguageTranslatorItem {
 
   renderUserLocaleInput(value: string): HTMLCalciteInputElement {
     return (
-      <calcite-input ref={(node: HTMLCalciteInputElement) => (this.userLocaleInput = node)} data-field-name={this.fieldName} value={value} onFocus={this.handleSelection}>
+      <calcite-input
+        ref={(node: HTMLCalciteInputElement) => (this.userLocaleInput = node)}
+        data-field-name={this.fieldName}
+        value={value}
+        onFocus={this.handleSelection}
+        onCalciteInputChange={e => this.userLocaleInputOnChangeCallback(this.fieldName, e.target.value)}
+      >
         {this.renderCopyButton(EInputType.User)}
       </calcite-input>
     );
@@ -142,7 +155,13 @@ export class InstantAppsLanguageTranslatorItem {
     return (
       <instant-apps-ckeditor-wrapper
         ref={this.setEditor.bind(this, type)}
-        onDataChanged={this.handleDataChange}
+        onDataChanged={e => {
+          if (type === EInputType.User) {
+            this.userLocaleInputOnChangeCallback(this.fieldName, e.detail);
+          } else {
+            this.handleDataChange(e);
+          }
+        }}
         onIsFocused={this.handleSelection}
         value={value}
         data-field-name={this.fieldName}
@@ -177,7 +196,7 @@ export class InstantAppsLanguageTranslatorItem {
   renderPopover(uiDataItem: LocaleSettingItem): HTMLCalcitePopoverElement {
     const tip = this.getTip(uiDataItem);
     return (
-      <calcite-popover reference-element={`${this.fieldName}goTo`} auto-close="true" placement="trailing">
+      <calcite-popover reference-element={`${this.fieldName}goTo`} auto-close="true" placement="trailing" closable>
         <span class={CSS.uiLocationPopoverContent}>
           <span class={CSS.uiLocationItems}>{this.getUILocation(uiDataItem)}</span>
           {tip ? <span class={CSS.tip}>{tip}</span> : null}
@@ -238,7 +257,7 @@ export class InstantAppsLanguageTranslatorItem {
     const uiData = store.get('uiData');
     const localeSettingItem = uiData?.[this.fieldName] as LocaleSettingItem;
     const isExpanded = localeSettingItem?.expanded;
-    if (!isExpanded) {
+    if (!isExpanded && this.userEditorWrapper?.editorInstance && this.translatedEditorWrapper?.editorInstance) {
       const { userEditorWrapper, translatedEditorWrapper } = this;
       const userEditorData = userEditorWrapper.editorInstance.getData();
       userEditorWrapper.value = userEditorData;
@@ -294,9 +313,18 @@ export class InstantAppsLanguageTranslatorItem {
     }
   }
 
-  handleDataChange(e: CustomEvent): void {
-    const dataToWrite = { [this.fieldName]: e.detail };
-    const updatedData = getT9nData(store.get('currentLanguage') as string, dataToWrite);
-    store.set('portalItemResourceT9n', updatedData);
+  async handleDataChange(e: CustomEvent): Promise<void> {
+    store.set('saving', true);
+    try {
+      const dataToWrite = { [this.fieldName]: e.detail };
+      const updatedData = getT9nData(store.get('currentLanguage') as string, dataToWrite);
+      store.set('portalItemResourceT9n', updatedData);
+
+      const resource = store.get('portalItemResource') as __esri.PortalItemResource;
+      await writeToPortalItemResource(resource, updatedData);
+      setTimeout(() => store.set('saving', false), 1500);
+    } catch {
+      store.set('saving', false);
+    }
   }
 }

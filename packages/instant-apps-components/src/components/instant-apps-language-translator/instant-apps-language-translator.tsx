@@ -1,12 +1,14 @@
 import { Component, Host, Prop, h, Event } from '@stencil/core';
-
 import { Element, EventEmitter, HostElement, Listen, State } from '@stencil/core/internal';
 
-import LanguageTranslator_t9n from '../../assets/t9n/instant-apps-language-translator/resources.json';
 import { generateUIData, getMessages, getPortalItemResource, getUIDataKeys } from './support/utils';
+
 import { languageTranslatorState, store } from './support/store';
-import { LocaleSettingItem, LocaleUIData } from './support/interfaces';
+
 import { EIcons } from './support/enum';
+import { LocaleSettingItem, LocaleUIData } from './support/interfaces';
+
+import LanguageTranslator_t9n from '../../assets/t9n/instant-apps-language-translator/resources.json';
 
 const BASE = 'instant-apps-language-translator';
 
@@ -60,6 +62,12 @@ export class InstantAppsLanguageTranslator {
   })
   open = false;
 
+  /**
+   * Function to be called when data in user locale inputs have changed. This function will have 2 arguments - fieldName and value. Field name is a unique identifier for a given setting/field. Value is the entered value within the input.
+   */
+  @Prop()
+  userLocaleInputOnChangeCallback: (fieldName: string, value: string) => void;
+
   @State()
   saving = false;
 
@@ -70,7 +78,7 @@ export class InstantAppsLanguageTranslator {
   isCollapse = true;
 
   @Listen('translatorItemDataUpdated', { target: 'window' })
-  handleT9nItemUpdate() {
+  handleT9nItemUpdate(): void {
     this.translatorDataUpdated.emit();
   }
 
@@ -119,7 +127,7 @@ export class InstantAppsLanguageTranslator {
 
   renderPopoverTip(): HTMLCalcitePopoverElement {
     return (
-      <calcite-popover reference-element="headerTip" placement="trailing" auto-close={true}>
+      <calcite-popover reference-element="headerTip" placement="trailing" auto-close={true} closable>
         <div class={CSS.headerTip}>{this.messages?.headerTip}</div>
       </calcite-popover>
     );
@@ -193,7 +201,21 @@ export class InstantAppsLanguageTranslator {
         <calcite-button onClick={this.handleExpandCollapseAll.bind(this)} appearance="transparent" icon-start={EIcons.ExpandCollapse}>
           {this.isCollapse ? this.messages?.collapseAll : this.messages?.expandAll}
         </calcite-button>
-        <instant-apps-language-translator-search t9nPlaceholder={this.messages?.searchPlaceholder}></instant-apps-language-translator-search>
+        <instant-apps-language-translator-search
+          onSuggestionSelected={e => {
+            const uiData = { ...languageTranslatorState.uiData } as LocaleUIData;
+            const uiDataKeys = getUIDataKeys();
+            uiDataKeys.forEach(key => ((uiData[key] as LocaleSettingItem).selected = false));
+            uiDataKeys.forEach(key => {
+              const fieldName = e.detail;
+              if (key === fieldName) {
+                (uiData[key] as LocaleSettingItem).selected = true;
+              }
+            });
+            store.set('uiData', uiData);
+          }}
+          t9nPlaceholder={this.messages?.searchPlaceholder}
+        ></instant-apps-language-translator-search>
       </div>
     );
   }
@@ -257,6 +279,7 @@ export class InstantAppsLanguageTranslator {
         fieldName={key}
         translatedLanguageLabel={translatedLabel}
         type={this.appSettings[key].type}
+        userLocaleInputOnChangeCallback={this.userLocaleInputOnChangeCallback}
       />
     );
   }

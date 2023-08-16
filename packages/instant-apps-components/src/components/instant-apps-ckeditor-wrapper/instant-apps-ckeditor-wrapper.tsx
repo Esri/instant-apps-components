@@ -1,6 +1,7 @@
 import { Component, Element, Event, EventEmitter, Host, Prop, Watch, h } from '@stencil/core';
-import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 import { styles } from './support/constants';
+
+import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 
 @Component({
   tag: 'instant-apps-ckeditor-wrapper',
@@ -16,11 +17,17 @@ export class InstantAppsCkeditorWrapper {
   @Event()
   dataChanged: EventEmitter<string>;
 
+  /**
+   * Current value of text editor instance.
+   */
   @Prop({
     mutable: true,
   })
   value: string;
 
+  /**
+   * Instance of text editor
+   */
   @Prop({
     mutable: true,
   })
