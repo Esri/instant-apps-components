@@ -9,6 +9,8 @@ import { EIcons } from './support/enum';
 import { LocaleSettingItem, LocaleUIData } from './support/interfaces';
 
 import LanguageTranslator_t9n from '../../assets/t9n/instant-apps-language-translator/resources.json';
+import { loadModules } from 'esri-loader';
+import { getComponentClosestLanguage } from '../../utils/locale';
 
 const BASE = 'instant-apps-language-translator';
 
@@ -33,6 +35,8 @@ const CSS = {
   scoped: true,
 })
 export class InstantAppsLanguageTranslator {
+  intl: __esri.intl;
+
   @Element()
   el: HTMLInstantAppsLanguageTranslatorElement;
 
@@ -90,17 +94,45 @@ export class InstantAppsLanguageTranslator {
   }
 
   async initialize(): Promise<void> {
-    const { el, appSettings, translatedLanguages } = this;
-    const messages = await getMessages(el);
-    const initialLanguage = translatedLanguages?.[0];
-    const uiData = generateUIData(appSettings, translatedLanguages);
-    const portalItemResource = await getPortalItemResource(this.portalItem);
+    await this.initMessages();
+    this.initUIData();
+    this.initPortalItemResourceT9nData();
+    this.initSelectLanguage();
+    const [intl] = await loadModules(['esri/intl']);
+    this.intl = intl;
+  }
 
-    this.messages = messages;
-    store.set('currentLanguage', initialLanguage);
-    store.set('uiData', uiData);
-    store.set('portalItemResource', portalItemResource as __esri.PortalItemResource);
+  // Init t9n files
+  async initMessages(): Promise<void> {
     try {
+      const { el } = this;
+      const messages = await getMessages(el);
+      this.messages = messages;
+      return Promise.resolve();
+    } catch {
+      return Promise.reject();
+    }
+  }
+
+  initUIData(): void {
+    // Initialize store with UI Data (for translator-item rendering)
+    const { appSettings, translatedLanguages } = this;
+    const uiData = generateUIData(appSettings, translatedLanguages) as LocaleUIData;
+    store.set('uiData', uiData);
+  }
+
+  // Initialize selected language
+  initSelectLanguage(): void {
+    const { translatedLanguages } = this;
+    const initialLanguage = translatedLanguages?.[0];
+    store.set('currentLanguage', initialLanguage);
+  }
+
+  // Fetch portal item resource associated with portal item. Fetch and store t9n data
+  async initPortalItemResourceT9nData(): Promise<void> {
+    try {
+      const portalItemResource = await getPortalItemResource(this.portalItem);
+      store.set('portalItemResource', portalItemResource as __esri.PortalItemResource);
       const t9nData = await portalItemResource?.fetch();
       store.set('portalItemResourceT9n', t9nData);
     } catch {}
@@ -117,7 +149,7 @@ export class InstantAppsLanguageTranslator {
 
   renderModal(): HTMLCalciteModalElement {
     return (
-      <calcite-modal open={this.open} scale="l" fullscreen={true} onCalciteModalClose={() => (this.open = false)}>
+      <calcite-modal open={this.open} scale="l" fullscreen={true} onCalciteModalClose={this.close.bind(this)}>
         {this.renderHeader()}
         {this.renderContent()}
         {this.renderPrimaryButton()}
@@ -135,19 +167,19 @@ export class InstantAppsLanguageTranslator {
 
   renderHeader(): HTMLElement {
     const saving = store.get('saving');
-
     return (
       <header class={CSS.header} slot="header">
         {this.renderHeaderText()}
-        {saving ? this.renderFeedbackIndicator() : null}
+        {saving ? this.renderSavingIndicator() : null}
       </header>
     );
   }
 
   renderHeaderText(): HTMLDivElement {
+    const { messages } = this;
     return (
       <div class={CSS.headerText}>
-        <span>{`${this.messages?.header} | ${this.messages?.subHeader}`}</span>
+        <span>{`${messages?.header} | ${messages?.subHeader}`}</span>
         <calcite-button id="headerTip" appearance="transparent">
           <calcite-icon icon={EIcons.Popover} scale="s" />
         </calcite-button>
@@ -155,7 +187,7 @@ export class InstantAppsLanguageTranslator {
     );
   }
 
-  renderFeedbackIndicator(): HTMLDivElement {
+  renderSavingIndicator(): HTMLDivElement {
     const saving = store.get('saving');
     const t9n = this.messages?.saving;
     return (
@@ -186,55 +218,59 @@ export class InstantAppsLanguageTranslator {
   }
 
   renderLeadingTopBarSection(): HTMLDivElement {
-    const languages = this.messages?.languages;
     return (
       <div class={CSS.topBarSection}>
-        <div class={CSS.userLangText}>{languages?.en}</div>
+        {this.renderUserLocale()}
         {this.renderCollapseSearchContainer()}
       </div>
     );
   }
 
+  renderUserLocale(): HTMLDivElement {
+    const languages = this.messages?.languages;
+    const localeFlag = getComponentClosestLanguage(this.el) as string;
+    const langText = languages?.[localeFlag];
+    return <div class={CSS.userLangText}>{langText}</div>;
+  }
+
   renderCollapseSearchContainer(): HTMLDivElement {
     return (
       <div class={CSS.collapseSearchContainer}>
-        <calcite-button onClick={this.handleExpandCollapseAll.bind(this)} appearance="transparent" icon-start={EIcons.ExpandCollapse}>
-          {this.isCollapse ? this.messages?.collapseAll : this.messages?.expandAll}
-        </calcite-button>
-        <instant-apps-language-translator-search
-          onSuggestionSelected={e => {
-            const uiData = { ...languageTranslatorState.uiData } as LocaleUIData;
-            const uiDataKeys = getUIDataKeys();
-            uiDataKeys.forEach(key => ((uiData[key] as LocaleSettingItem).selected = false));
-            uiDataKeys.forEach(key => {
-              const fieldName = e.detail;
-              if (key === fieldName) {
-                (uiData[key] as LocaleSettingItem).selected = true;
-              }
-            });
-            store.set('uiData', uiData);
-          }}
-          t9nPlaceholder={this.messages?.searchPlaceholder}
-        ></instant-apps-language-translator-search>
+        {this.renderExpandCollapseButton()}
+        {this.renderSearch()}
       </div>
     );
   }
 
-  renderTrailingTopBarSection(): void {
+  renderExpandCollapseButton(): HTMLCalciteButtonElement {
+    const { isCollapse, messages } = this;
+    const text = isCollapse ? messages?.collapseAll : messages?.expandAll;
     return (
-      <div class={CSS.topBarSection}>
-        <calcite-label layout="inline">
-          {this.messages?.translatedLanguage}
-          <calcite-select
-            onCalciteSelectChange={e => {
-              const value = e.target.value;
-              store.set('currentLanguage', value);
-            }}
-          >
-            {this.renderTranslatedLangOptions()}
-          </calcite-select>
-        </calcite-label>
-      </div>
+      <calcite-button onClick={this.handleExpandCollapseAll.bind(this)} appearance="transparent" icon-start={EIcons.ExpandCollapse}>
+        {text}
+      </calcite-button>
+    );
+  }
+
+  renderSearch(): HTMLInstantAppsLanguageTranslatorSearchElement {
+    return (
+      <instant-apps-language-translator-search
+        onSuggestionSelected={this.onSuggestionSelect.bind(this)}
+        t9nPlaceholder={this.messages?.searchPlaceholder}
+      ></instant-apps-language-translator-search>
+    );
+  }
+
+  renderTrailingTopBarSection(): void {
+    return <div class={CSS.topBarSection}>{this.renderLanguageSelection()}</div>;
+  }
+
+  renderLanguageSelection(): HTMLCalciteLabelElement {
+    return (
+      <calcite-label layout="inline">
+        {this.messages?.translatedLanguage}
+        <calcite-select onCalciteSelectChange={this.handleLanguageSelection.bind(this)}>{this.renderTranslatedLangOptions()}</calcite-select>
+      </calcite-label>
     );
   }
 
@@ -272,10 +308,11 @@ export class InstantAppsLanguageTranslator {
 
   renderUIDataItem(key: string, keyIndex: number, uiDataKeysLen: number): HTMLDivElement {
     const translatedLabel = this.appSettings.translatedLanguageLabels[languageTranslatorState.currentLanguage as string][key];
+    const isLast = `${keyIndex === uiDataKeysLen - 1 ? CSS.lastItem : ''}`;
     return (
       <instant-apps-language-translator-item
         key={`${key}-${keyIndex}`}
-        class={`${keyIndex === uiDataKeysLen - 1 ? CSS.lastItem : ''}`}
+        class={isLast}
         fieldName={key}
         translatedLanguageLabel={translatedLabel}
         type={this.appSettings[key].type}
@@ -298,5 +335,31 @@ export class InstantAppsLanguageTranslator {
     const uiDataKeys = getUIDataKeys();
     uiDataKeys.forEach(key => ((uiData[key] as LocaleSettingItem).expanded = this.isCollapse));
     store.set('uiData', { ...uiData } as LocaleUIData);
+  }
+
+  onSuggestionSelect(e: CustomEvent): void {
+    const fieldName = e.detail;
+    const uiData = { ...languageTranslatorState.uiData } as LocaleUIData;
+    const uiDataKeys = getUIDataKeys();
+    const handleSelection = (key: string) => {
+      const setting = uiData[key] as LocaleSettingItem;
+      if (key === fieldName) {
+        setting.selected = true;
+        return;
+      }
+      setting.selected = false;
+    };
+    uiDataKeys.forEach(handleSelection);
+    store.set('uiData', uiData);
+  }
+
+  close(): void {
+    this.open = false;
+  }
+
+  handleLanguageSelection(e: CustomEvent): void {
+    const node = e.target as HTMLCalciteSelectElement;
+    const value = node.value;
+    store.set('currentLanguage', value);
   }
 }

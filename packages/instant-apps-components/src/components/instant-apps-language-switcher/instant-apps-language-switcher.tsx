@@ -116,25 +116,27 @@ export class InstantAppsLanguageSwitcher {
   calciteDropdownItemSelectCallback(translatedLanguage: string): () => void {
     return () => {
       this.selectedLanguage = translatedLanguage;
-      const eventData = {
-        locale: this.selectedLanguage,
-      };
 
-      if (this.selectedLanguage !== this.userLocale) {
-        eventData['data'] = this.t9nData[translatedLanguage];
-      }
-      this.intl.setLocale(this.selectedLanguage);
+      const { intl, selectedLanguage, t9nData, userLocale } = this;
+
+      const eventData = { locale: selectedLanguage };
+
+      if (selectedLanguage !== userLocale) eventData['data'] = t9nData[translatedLanguage];
 
       // Set url parameter 'locale' with value
       const params = new URLSearchParams(window.location.search);
       params.set('locale', this.selectedLanguage);
-      document.documentElement.setAttribute('lang', this.selectedLanguage);
 
-      if (this.selectedLanguage === 'ar' || this.selectedLanguage === 'he') {
+      intl.setLocale(selectedLanguage);
+
+      document.documentElement.setAttribute('lang', this.selectedLanguage);
+      const prefersRTL = this.intl.prefersRTL();
+      if (prefersRTL) {
         document.documentElement.setAttribute('dir', 'rtl');
       } else {
         document.documentElement.setAttribute('dir', 'ltr');
       }
+
       window.history.replaceState({}, '', decodeURIComponent(`${window.location.pathname}?${params}`));
 
       this.selectedLanguageUpdated.emit(eventData);
@@ -154,7 +156,8 @@ export class InstantAppsLanguageSwitcher {
     const { portalItem } = this;
     try {
       const fetchResourcesRes = await portalItem.fetchResources();
-      const t9nDataItems = fetchResourcesRes.resources.filter(resourceDataItem => resourceDataItem.resource.path.indexOf('t9n/') > -1);
+      const testPath = 't9n/';
+      const t9nDataItems = fetchResourcesRes.resources.filter(resourceDataItem => resourceDataItem.resource.path.indexOf(testPath) > -1);
       const t9nResourceItem = t9nDataItems[0].resource;
       return Promise.resolve(t9nResourceItem);
     } catch {
