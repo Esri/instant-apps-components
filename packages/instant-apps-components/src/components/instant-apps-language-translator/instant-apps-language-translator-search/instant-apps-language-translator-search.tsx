@@ -1,6 +1,6 @@
 import { Component, Event, EventEmitter, Host, Prop, State, h } from '@stencil/core';
 import { store } from '../support/store';
-import { LocaleSettingItem, LocaleUIData } from '../support/interfaces';
+import { LanguageTranslatorSearchResult, LocaleSettingItem, LocaleUIData } from '../support/interfaces';
 
 const BASE = 'instant-apps-language-translator-search';
 
@@ -23,10 +23,10 @@ export class InstantAppsLanguageTranslatorSearch {
    * Placeholder string for search input.
    */
   @Prop()
-  t9nPlaceholder: string = 'Search';
+  t9nPlaceholder: string;
 
   @State()
-  results: any = [];
+  results: LanguageTranslatorSearchResult[] = [];
 
   @Event()
   suggestionSelected: EventEmitter<string>;
@@ -34,26 +34,38 @@ export class InstantAppsLanguageTranslatorSearch {
   render() {
     return (
       <Host>
-        <calcite-input
-          ref={node => (this.searchInput = node)}
-          class={CSS.input}
-          onCalciteInputInput={this.handleSearch.bind(this)}
-          type="search"
-          placeholder={this.t9nPlaceholder}
-          icon="search"
-        />
-        {this.results.length > 0 ? (
-          <ul class={CSS.suggestionList}>
-            {this.results.map(result => {
-              return (
-                <li onClick={this.selectSuggestion.bind(this)} class={CSS.suggestionListItem} data-field-name={result.fieldName}>
-                  {result.userLocaleData.label}
-                </li>
-              );
-            })}
-          </ul>
-        ) : null}
+        {this.renderSearchInput()}
+        {this.renderSuggestions()}
       </Host>
+    );
+  }
+
+  renderSearchInput(): HTMLCalciteInputElement {
+    return (
+      <calcite-input
+        ref={(node: HTMLCalciteInputElement) => (this.searchInput = node)}
+        class={CSS.input}
+        onCalciteInputInput={this.handleSearch.bind(this)}
+        type="search"
+        placeholder={this.t9nPlaceholder}
+        icon="search"
+      />
+    );
+  }
+
+  renderSuggestions() {
+    return this.results.length > 0 ? this.renderSuggestionList() : null;
+  }
+
+  renderSuggestionList() {
+    return <ul class={CSS.suggestionList}>{this.results.map(result => this.renderSuggestionListItem(result))}</ul>;
+  }
+
+  renderSuggestionListItem(result: LanguageTranslatorSearchResult) {
+    return (
+      <li onClick={this.selectSuggestion.bind(this)} class={CSS.suggestionListItem} data-field-name={result.fieldName}>
+        {result.userLocaleData.label}
+      </li>
     );
   }
 
@@ -72,7 +84,8 @@ export class InstantAppsLanguageTranslatorSearch {
     const matchedResults = possibleResultKeys.filter(this.matchedResultsCallback(uiData, translatedData, userInput, currentLanguage));
     this.results = [
       ...matchedResults.map(matchedKey => {
-        return { fieldName: matchedKey, ...uiData[matchedKey] };
+        const result = { fieldName: matchedKey, ...uiData[matchedKey] } as LanguageTranslatorSearchResult;
+        return result;
       }),
     ];
   }
@@ -89,9 +102,9 @@ export class InstantAppsLanguageTranslatorSearch {
       const labelMatch = this.testUserInput(label, userInput);
       const valueMatch = this.testUserInput(value, userInput);
       const translatedLanguageLabelMatch = this.testUserInput(translatedLanguageLabel, userInput);
-      const translatedLangValueMatch = this.testUserInput(translatedLanguageValue, userInput);
+      const translatedLanguageValueMatch = this.testUserInput(translatedLanguageValue, userInput);
 
-      const isMatch = labelMatch || valueMatch || translatedLanguageLabelMatch || translatedLangValueMatch;
+      const isMatch = labelMatch || valueMatch || translatedLanguageLabelMatch || translatedLanguageValueMatch;
 
       return value && isMatch;
     };

@@ -16,12 +16,6 @@ export class InstantAppsCkeditorWrapper {
   @Element()
   el: HTMLElement;
 
-  @Event()
-  isFocused: EventEmitter<{ fieldName: string; isFocused: boolean }>;
-
-  @Event()
-  dataChanged: EventEmitter<string>;
-
   /**
    * Current value of text editor instance.
    */
@@ -42,6 +36,12 @@ export class InstantAppsCkeditorWrapper {
   updateValue(): void {
     if (this.value) this.editorInstance.setData(this.value);
   }
+
+  @Event()
+  isFocused: EventEmitter<{ fieldName: string; isFocused: boolean }>;
+
+  @Event()
+  dataChanged: EventEmitter<string>;
 
   async componentDidLoad() {
     this.init();
