@@ -44,8 +44,8 @@
     "uk": "Ukrainian",
     "vi": "Vietnamese",
     "zh-CN": "Simplified Chinese",
-    "zh-HK": "Traditional Chinese",
-    "zh-TW": "Traditional Chinese"
+    "zh-HK": "Traditional Chinese (Hong Kong)",
+    "zh-TW": "Traditional Chinese (Taiwan)"
   },
   "noLanguage": {
     "message": "Select at least one language to translate.",
