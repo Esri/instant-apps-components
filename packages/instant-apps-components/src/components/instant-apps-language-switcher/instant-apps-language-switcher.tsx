@@ -1,4 +1,4 @@
-import { Component, Event, EventEmitter, Listen, Method, Prop, State, h } from '@stencil/core';
+import { Component, Event, EventEmitter, Method, Prop, State, h } from '@stencil/core';
 
 import LanguageTranslator_t9n from '../../assets/t9n/instant-apps-language-translator/resources.json';
 import { getMessages } from '../instant-apps-language-translator/support/utils';
@@ -16,6 +16,7 @@ export class InstantAppsLanguageSwitcher {
   portalItemResourceT9n: __esri.PortalItemResource;
   userLocale: string;
   intl: __esri.intl;
+  defaultWebMapId: string;
 
   @Element()
   el: HTMLInstantAppsLanguageSwitcherElement;
@@ -75,6 +76,10 @@ export class InstantAppsLanguageSwitcher {
     if (t9nData) {
       this.t9nData = t9nData;
     }
+    if (this.view) {
+      const webmap = this.view.map as __esri.WebMap;
+      this.defaultWebMapId = webmap.portalItem.id;
+    }
   }
 
   render() {
@@ -122,7 +127,7 @@ export class InstantAppsLanguageSwitcher {
   }
 
   calciteDropdownItemSelectCallback(translatedLanguage: string): () => void {
-    return () => {
+    return async () => {
       this.selectedLanguage = translatedLanguage;
 
       const { intl, selectedLanguage, t9nData, userLocale } = this;
@@ -136,6 +141,24 @@ export class InstantAppsLanguageSwitcher {
       params.set('locale', this.selectedLanguage);
 
       intl.setLocale(selectedLanguage);
+
+      if (this.view) {
+        const [WebMap] = await loadModules(['esri/WebMap']);
+        const webmap = this.locales.filter(localeItem => localeItem.locale === selectedLanguage)?.[0]?.webmap;
+        if (webmap) {
+          this.view.map = new WebMap({
+            portalItem: {
+              id: webmap,
+            },
+          });
+        } else {
+          this.view.map = new WebMap({
+            portalItem: {
+              id: this.defaultWebMapId,
+            },
+          });
+        }
+      }
 
       document.documentElement.setAttribute('lang', this.selectedLanguage);
       const prefersRTL = this.intl.prefersRTL();

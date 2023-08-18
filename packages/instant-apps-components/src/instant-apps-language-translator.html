@@ -14,8 +14,8 @@
     <title>ArcGIS Instant Apps Components: Language Translator/Switcher</title>
     <link rel="stylesheet" href="https://js.arcgis.com/4.27/@arcgis/core/assets/esri/themes/light/main.css" />
     <script src="https://js.arcgis.com/4.27/"></script>
-    <script type="module" src="https://jsdev.arcgis.com/calcite-components/1.5.0/calcite.esm.js"></script>
-    <link rel="stylesheet" type="text/css" href="https://jsdev.arcgis.com/calcite-components/1.5.0/calcite.css" />
+    <script type="module" src="https://js.arcgis.com/calcite-components/1.5.0/calcite.esm.js"></script>
+    <link rel="stylesheet" type="text/css" href="https://js.arcgis.com/calcite-components/1.5.0/calcite.css" />
     <script type="module" src="/build/instant-apps-components.esm.js"></script>
     <script nomodule src="/build/instant-apps-components.js"></script>
     <style>
@@ -62,10 +62,10 @@
         esriConfig,
         intl,
       ) => {
-        esriConfig.portalUrl = 'https://holistic.mapsdevext.arcgis.com';
+        esriConfig.portalUrl = 'https://nw-brews.mapsdevext.arcgis.com';
 
-        const DEFAULT_WEBMAP_ID = 'aa5e8c8a7cc74273ad86733b224370ed';
-        // const DEFAULT_WEBMAP_ID2 = '259c3847301c4cd1a2cc1f5227839ff4';
+        // const DEFAULT_WEBMAP_ID = 'aa5e8c8a7cc74273ad86733b224370ed';
+        const DEFAULT_WEBMAP_ID = '259c3847301c4cd1a2cc1f5227839ff4';
 
         const map = new WebMap({
           portalItem: {
@@ -77,8 +77,12 @@
           container: 'viewDiv',
         });
 
+        // const templateAppItem = new PortalItem({
+        //   id: 'ec629fbdaa01491e8fc16a443d526443',
+        // });
+
         const templateAppItem = new PortalItem({
-          id: 'ec629fbdaa01491e8fc16a443d526443',
+          id: 'd9a92b0014364f79a6659a8904fae268',
         });
 
         function getLangSwitcherData() {
@@ -247,31 +251,31 @@
           };
         }
 
-        // function getLangSwitcherData2() {
-        //   return {
-        //     langTranslatorConfigData: {},
-        //     langSwitcherConfigData: {
-        //       locales: [
-        //         {
-        //           locale: 'ja',
-        //           webmap: '5077fc70de664cdaa6e81a6c0c1a300b',
-        //         },
-        //         {
-        //           locale: 'el',
-        //           webmap: '01e275c1f04442cdb1e36e3b6dc4dbc5',
-        //         },
-        //         {
-        //           locale: 'fr',
-        //           webmap: '97a918af3a5f46e780c95f1b696b70c3',
-        //         },
-        //       ],
-        //       icon: 'language',
-        //       portalItemResourceId: 't9n/ec629fbdaa01491e8fc16a443d526443.json',
-        //     },
-        //   };
-        // }
+        function getLangSwitcherData2() {
+          return {
+            langTranslatorConfigData: {},
+            langSwitcherConfigData: {
+              locales: [
+                {
+                  locale: 'ja',
+                  webmap: 'd58ef172169e4bd28a31e37ff8ca336b',
+                },
+                {
+                  locale: 'el',
+                  webmap: 'e8e79bb8cbb349d4881f93cd8e023bf3',
+                },
+                {
+                  locale: 'fr',
+                  webmap: '86ac3d14a77749c19f4e279f4507b045',
+                },
+              ],
+              icon: 'language',
+              portalItemResourceId: 't9n/ec629fbdaa01491e8fc16a443d526443.json',
+            },
+          };
+        }
 
-        const { langTranslatorConfigData, langSwitcherConfigData } = getLangSwitcherData();
+        const { langTranslatorConfigData, langSwitcherConfigData } = getLangSwitcherData2();
 
         function createLanguageTranslator(langSwitcher) {
           const langTranslator = document.getElementById('langTranslator');
@@ -307,23 +311,6 @@
           });
 
           view.ui.add(expand, 'top-left');
-
-          content.addEventListener('selectedLanguageUpdated', e => {
-            const data = e.detail;
-            if (data?.webmap) {
-              view.map = new WebMap({
-                portalItem: {
-                  id: data?.webmap,
-                },
-              });
-            } else {
-              view.map = new WebMap({
-                portalItem: {
-                  id: DEFAULT_WEBMAP_ID,
-                },
-              });
-            }
-          });
           return content;
         }
 
