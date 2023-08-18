@@ -1,6 +1,11 @@
+export interface LocaleItem {
+  locale: string;
+  webmap?: string;
+}
+
 export interface LocaleUIData {
-  locales: string[];
-  [fieldName: string]: LocaleSettingItem | string[];
+  locales: LocaleItem[];
+  [fieldName: string]: LocaleSettingItem | LocaleItem[];
 }
 
 interface LocaleSettingItem {

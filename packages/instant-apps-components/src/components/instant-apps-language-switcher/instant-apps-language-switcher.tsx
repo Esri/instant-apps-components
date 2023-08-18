@@ -1,4 +1,4 @@
-import { Component, Event, EventEmitter, Method, Prop, State, h } from '@stencil/core';
+import { Component, Event, EventEmitter, Listen, Method, Prop, State, h } from '@stencil/core';
 
 import LanguageTranslator_t9n from '../../assets/t9n/instant-apps-language-translator/resources.json';
 import { getMessages } from '../instant-apps-language-translator/support/utils';
@@ -32,8 +32,17 @@ export class InstantAppsLanguageSwitcher {
   @Prop()
   portalItem!: __esri.PortalItem;
 
-  @State()
-  locales: string[] = [];
+  /**
+   * Reference to map view to switch web maps if present in locales.
+   */
+  @Prop()
+  view?: __esri.MapView | __esri.SceneView;
+
+  /**
+   * Data used to populate language switcher dropdown.
+   */
+  @Prop()
+  locales: { locale: string; webmap?: string }[] = [];
 
   @State()
   messages: typeof LanguageTranslator_t9n;
@@ -65,7 +74,6 @@ export class InstantAppsLanguageSwitcher {
     }
     if (t9nData) {
       this.t9nData = t9nData;
-      this.locales = Object.keys(t9nData);
     }
   }
 
@@ -94,7 +102,7 @@ export class InstantAppsLanguageSwitcher {
   }
 
   renderDropdownItems(): HTMLCalciteDropdownItemElement[] {
-    return this.locales?.map(translatedLanguage => this.renderDropdownItem(translatedLanguage));
+    return this.locales?.map(localeItem => localeItem.locale)?.map(translatedLanguage => this.renderDropdownItem(translatedLanguage));
   }
 
   renderDropdownItem(translatedLanguage: string): HTMLCalciteDropdownItemElement {
@@ -119,7 +127,7 @@ export class InstantAppsLanguageSwitcher {
 
       const { intl, selectedLanguage, t9nData, userLocale } = this;
 
-      const eventData = { locale: selectedLanguage };
+      const eventData = this.locales.filter(locale => locale.locale === selectedLanguage)[0];
 
       if (selectedLanguage !== userLocale) eventData['data'] = t9nData[translatedLanguage];
 
@@ -143,7 +151,7 @@ export class InstantAppsLanguageSwitcher {
     };
   }
 
-  getSelectedLanguageText(translatedLanguage: string): string {
+  getSelectedLanguageText(translatedLanguage: any): string {
     const { messages } = this;
     const translatedLanguageNames = messages?.translatedLanguageNames;
     const enLanguageNames = messages?.languages;

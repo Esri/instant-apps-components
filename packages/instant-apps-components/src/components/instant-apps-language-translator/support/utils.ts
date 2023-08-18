@@ -1,11 +1,11 @@
 import LanguageTranslator_t9n from '../../../assets/t9n/instant-apps-language-translator/resources.json';
 import { getLocaleComponentStrings } from '../../../utils/locale';
-import { LocaleUIData } from './interfaces';
+import { LocaleItem, LocaleUIData } from './interfaces';
 import { languageTranslatorState, store } from './store';
 
 import { loadModules } from 'esri-loader';
 
-export function generateUIData(appSettings, locales: string[]): LocaleUIData | void {
+export function generateUIData(appSettings, locales: LocaleItem[]): LocaleUIData | void {
   if (!appSettings) return;
   const settingKeys = Object.keys(appSettings).filter(settingKey => settingKey !== 'translatedLanguageLabels');
   const uiData = {
@@ -29,7 +29,7 @@ export function generateUIData(appSettings, locales: string[]): LocaleUIData | v
 
   const noneSelected = settingKeys.every(key => !uiData[key].selected);
 
-  if (noneSelected) {
+  if (noneSelected && uiData[settingKeys[0]]) {
     uiData[settingKeys[0]].selected = true;
   }
 
@@ -97,4 +97,8 @@ export async function writeToPortalItemResource(portalItemResource: __esri.Porta
     console.error(`Error from 'instant-apps-language-translator': `, err);
     return Promise.reject();
   }
+}
+
+export function getLocales(localeItems: LocaleItem[]) {
+  return localeItems?.map(localeItem => localeItem.locale) ?? [];
 }

@@ -8,7 +8,7 @@ import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
 import { ActiveTool, ControlPanelComponent, ExportOutput, ExtentSelector, IMeasureConfiguration, InstantAppsPopoverMessageOverrides, LayerExpression, PopoverPlacement } from "./interfaces/interfaces";
 import { FilterMode } from "./components/instant-apps-interactive-legend/instant-apps-interactive-legend-classic/interfaces/interfaces";
 import { HorizontalAlignment, VerticalAlignment } from "./components/instant-apps-landing-page/support/interfaces";
-import { SettingType } from "./components/instant-apps-language-translator/support/interfaces";
+import { LocaleItem, SettingType } from "./components/instant-apps-language-translator/support/interfaces";
 import { InstantAppsPopovers } from "./components/instant-apps-popovers/instant-apps-popovers";
 import { LogicalPlacement } from "@esri/calcite-components/dist/types/utils/floating-ui";
 import { ScoreboardItem, ScoreboardMode, ScoreboardPosition } from "./components/instant-apps-scoreboard/types/interfaces";
@@ -388,10 +388,18 @@ export namespace Components {
          */
         "icon": string;
         /**
+          * Data used to populate language switcher dropdown.
+         */
+        "locales": { locale: string; webmap?: string }[];
+        /**
           * Instant App portal item - used to fetch it's associated portal item resource. The portal item resource will contain the user defined translated strings.
          */
         "portalItem": __esri.PortalItem;
         "refresh": () => Promise<void>;
+        /**
+          * Reference to map view to switch web maps if present in locales.
+         */
+        "view"?: __esri.MapView | __esri.SceneView;
     }
     interface InstantAppsLanguageTranslator {
         /**
@@ -409,7 +417,7 @@ export namespace Components {
         /**
           * Specified languages that the user-defined strings will be translated in.
          */
-        "translatedLanguages": string[];
+        "translatedLanguages": LocaleItem[];
         /**
           * Function to be called when data in user locale inputs have changed. This function will have 2 arguments - fieldName and value. Field name is a unique identifier for a given setting/field. Value is the entered value within the input.
          */
@@ -1251,6 +1259,10 @@ declare namespace LocalJSX {
           * Icon to display.
          */
         "icon"?: string;
+        /**
+          * Data used to populate language switcher dropdown.
+         */
+        "locales"?: { locale: string; webmap?: string }[];
         "onSelectedLanguageUpdated"?: (event: InstantAppsLanguageSwitcherCustomEvent<{
     locale: string;
     data?: {
@@ -1261,6 +1273,10 @@ declare namespace LocalJSX {
           * Instant App portal item - used to fetch it's associated portal item resource. The portal item resource will contain the user defined translated strings.
          */
         "portalItem": __esri.PortalItem;
+        /**
+          * Reference to map view to switch web maps if present in locales.
+         */
+        "view"?: __esri.MapView | __esri.SceneView;
     }
     interface InstantAppsLanguageTranslator {
         /**
@@ -1279,7 +1295,7 @@ declare namespace LocalJSX {
         /**
           * Specified languages that the user-defined strings will be translated in.
          */
-        "translatedLanguages"?: string[];
+        "translatedLanguages"?: LocaleItem[];
         /**
           * Function to be called when data in user locale inputs have changed. This function will have 2 arguments - fieldName and value. Field name is a unique identifier for a given setting/field. Value is the entered value within the input.
          */

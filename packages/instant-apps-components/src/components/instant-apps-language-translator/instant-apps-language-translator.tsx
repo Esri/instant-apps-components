@@ -1,12 +1,12 @@
 import { Component, Host, Prop, h, Event } from '@stencil/core';
 import { Element, EventEmitter, HostElement, Listen, State } from '@stencil/core/internal';
 
-import { generateUIData, getMessages, getPortalItemResource, getUIDataKeys } from './support/utils';
+import { generateUIData, getLocales, getMessages, getPortalItemResource, getUIDataKeys } from './support/utils';
 
 import { languageTranslatorState, store } from './support/store';
 
 import { EIcons } from './support/enum';
-import { LocaleSettingItem, LocaleUIData } from './support/interfaces';
+import { LocaleItem, LocaleSettingItem, LocaleUIData } from './support/interfaces';
 
 import LanguageTranslator_t9n from '../../assets/t9n/instant-apps-language-translator/resources.json';
 import { loadModules } from 'esri-loader';
@@ -56,7 +56,7 @@ export class InstantAppsLanguageTranslator {
    * Specified languages that the user-defined strings will be translated in.
    */
   @Prop()
-  translatedLanguages: string[];
+  translatedLanguages: LocaleItem[];
 
   /**
    * Controls the open/close state of the modal.
@@ -94,12 +94,12 @@ export class InstantAppsLanguageTranslator {
   }
 
   async initialize(): Promise<void> {
+    const [intl] = await loadModules(['esri/intl']);
+    this.intl = intl;
     await this.initMessages();
     this.initUIData();
     this.initPortalItemResourceT9nData();
     this.initSelectLanguage();
-    const [intl] = await loadModules(['esri/intl']);
-    this.intl = intl;
   }
 
   // Init t9n files
@@ -124,8 +124,8 @@ export class InstantAppsLanguageTranslator {
   // Initialize selected language
   initSelectLanguage(): void {
     const { translatedLanguages } = this;
-    const initialLanguage = translatedLanguages?.[0];
-    store.set('currentLanguage', initialLanguage);
+    const initialLanguage = translatedLanguages?.[0] ?? this.intl.getLocale();
+    store.set('currentLanguage', initialLanguage.locale);
   }
 
   // Fetch portal item resource associated with portal item. Fetch and store t9n data
@@ -199,11 +199,11 @@ export class InstantAppsLanguageTranslator {
   }
 
   renderContent(): HTMLDivElement {
-    const locales = languageTranslatorState?.uiData?.locales as string[];
+    const localeItems = getLocales(this.translatedLanguages);
     return (
       <div slot="content">
         {this.renderTopBar()}
-        {locales?.length > 0 ? this.renderUIData() : this.renderNotice()}
+        {localeItems?.length > 0 ? this.renderUIData() : this.renderNotice()}
       </div>
     );
   }
@@ -275,7 +275,9 @@ export class InstantAppsLanguageTranslator {
   }
 
   renderTranslatedLangOptions(): HTMLCalciteOptionElement[] {
-    return (languageTranslatorState.uiData?.locales as string[])?.map(locale => {
+    const locales = languageTranslatorState.uiData?.locales as LocaleItem[];
+    const localeFlags = getLocales(locales);
+    return localeFlags?.map(locale => {
       const { messages } = this;
       const translatedLanguageNames = messages?.translatedLanguageNames;
       const enLanguageNames = messages?.languages;

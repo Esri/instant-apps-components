@@ -9,6 +9,7 @@ const t9nAssetsObj = {
 
 export const config: Config = {
   namespace: 'instant-apps-components',
+  sourceMap: true,
   outputTargets: [
     {
       type: 'dist',
