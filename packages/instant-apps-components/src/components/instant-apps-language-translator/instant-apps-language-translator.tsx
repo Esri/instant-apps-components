@@ -295,6 +295,7 @@ export class InstantAppsLanguageTranslator {
   renderUIData(): HTMLDivElement | undefined {
     if (!languageTranslatorState?.uiData) return;
     const uiDataKeys = getUIDataKeys();
+
     return <div>{uiDataKeys?.map((key, keyIndex) => this.renderUIDataItem(key, keyIndex, uiDataKeys.length))}</div>;
   }
 

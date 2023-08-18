@@ -32,6 +32,35 @@
       #settings {
         padding: 10px;
       }
+
+      #stringPreview {
+        padding: 10px;
+      }
+
+      .setting-container-item {
+        display: flex;
+        flex-direction: column;
+        border-top: 1px solid lightgray;
+        padding: 10px 0;
+      }
+
+      .setting-container-item:first-child {
+        border-top: none;
+      }
+
+      .setting-container-item:last-child {
+        border-bottom: 1px solid lightgray;
+      }
+
+      .setting-label {
+        font-weight: 450;
+      }
+
+      .string-preview-header {
+        font-weight: 450;
+        text-decoration: underline;
+        font-size: 18px;
+      }
     </style>
   </head>
 
@@ -45,6 +74,10 @@
               Language translator
               <calcite-button id="openLangTranslator">Open language translator</calcite-button>
             </calcite-label>
+          </div>
+          <div id="stringPreview">
+            <span class="string-preview-header">Preview: </span>
+            <div id="settingContainer"></div>
           </div>
         </calcite-panel>
       </calcite-shell-panel>
@@ -62,9 +95,10 @@
         esriConfig,
         intl,
       ) => {
+        const DEFAULT_LOCALE = intl.getLocale();
+
         esriConfig.portalUrl = 'https://nw-brews.mapsdevext.arcgis.com';
 
-        // const DEFAULT_WEBMAP_ID = 'aa5e8c8a7cc74273ad86733b224370ed';
         const DEFAULT_WEBMAP_ID = '259c3847301c4cd1a2cc1f5227839ff4';
 
         const map = new WebMap({
@@ -77,22 +111,17 @@
           container: 'viewDiv',
         });
 
-        // const templateAppItem = new PortalItem({
-        //   id: 'ec629fbdaa01491e8fc16a443d526443',
-        // });
-
         const templateAppItem = new PortalItem({
-          id: 'd9a92b0014364f79a6659a8904fae268',
+          id: 'de9e286c9cd142798ff1c6a88ef21439',
         });
 
         function getLangSwitcherData() {
           return {
             langTranslatorConfigData: {
-              // Series of setting data - type, label, value, uiLocation, and tip
               customHeaderHTML: {
                 type: 'textEditor',
                 label: 'Custom header HTML',
-                value: '<p>Custom header HTML value</p>',
+                value: '<p>Really cool header</p>',
                 uiLocation: {
                   section: {
                     id: 'about',
@@ -108,7 +137,7 @@
               customURLParamName: {
                 type: 'string',
                 label: 'URL parameter name',
-                value: 'URL parameter name value',
+                value: 'district',
                 uiLocation: {
                   section: {
                     id: 'interactivity',
@@ -124,7 +153,7 @@
               splashButtonText: {
                 type: 'string',
                 label: 'Introduction panel button text',
-                value: 'Introduction panel button value',
+                value: 'Enter',
                 uiLocation: {
                   section: {
                     id: 'about',
@@ -139,7 +168,7 @@
               splashContent: {
                 type: 'textEditor',
                 label: 'Introduction panel content',
-                value: '<p>Test value</p>',
+                value: '<p>Pineapple</p><ul><li>Alpha</li><li>Beta</li><li>Gamma</li></ul>',
                 uiLocation: {
                   section: {
                     id: 'about',
@@ -155,7 +184,7 @@
               splashTitle: {
                 type: 'string',
                 label: 'Introduction panel title',
-                value: 'Introduction panel title value',
+                value: 'Welcome!',
                 uiLocation: {
                   section: {
                     id: 'about',
@@ -170,7 +199,7 @@
               title: {
                 type: 'string',
                 label: 'App title',
-                value: 'App title value',
+                value: 'Language switcher test',
                 uiLocation: {
                   section: {
                     id: 'about',
@@ -183,23 +212,22 @@
                 },
                 tip: "Include title text to introduce the map's main topic",
               },
-              // Only for runtime - to be used when switching between languages for translation workflow - configuration
               translatedLanguageLabels: {
-                ar: {
-                  customHeaderHTML: 'تحرير الرأس المخصص',
-                  customURLParamName: 'اسم معلمة عنوان URL',
-                  splashButtonText: 'نص زر لوحة المقددمة',
-                  splashContent: 'محتوى لوحة المقدمة',
-                  splashTitle: 'عنوان لوحة المقدمة',
-                  title: 'عنوان التطبيق',
+                ja: {
+                  customHeaderHTML: 'カスタム ヘッダーの編集',
+                  customURLParamName: 'URL パラメーター名',
+                  splashButtonText: '概要パネルのボタン テキスト',
+                  splashContent: '概要パネルのコンテンツ',
+                  splashTitle: '概要パネルのタイトル',
+                  title: 'アプリのタイトル',
                 },
-                ca: {
-                  customHeaderHTML: "Edita l'encapçalament personalitzat",
-                  customURLParamName: "Nom del paràmetre d'URL",
-                  splashButtonText: "Text del botó del panell d'introducció",
-                  splashContent: "Contingut del panell d'introducció",
-                  splashTitle: "Títol del panell d'introducció",
-                  title: "Títol de l'aplicació",
+                el: {
+                  customHeaderHTML: 'Επεξεργασία εξατομικευμένης κεφαλίδας',
+                  customURLParamName: 'Όνομα παραμέτρου διεύθυνσης URL',
+                  splashButtonText: 'Κείμενο κουμπιού πλαισίου εισαγωγής',
+                  splashContent: 'Περιεχόμενο πλαισίου εισαγωγής',
+                  splashTitle: 'Τίτλος πλαισίου εισαγωγής',
+                  title: 'Τίτλος εφαρμογής',
                 },
                 fr: {
                   customHeaderHTML: 'Mettre à jour l’en-tête personnalisé',
@@ -209,51 +237,8 @@
                   splashTitle: 'Titre du volet de présentation',
                   title: 'Titre de l’application',
                 },
-                th: {
-                  customHeaderHTML: 'แก้ไขส่วนหัวแบบกำหนดเอง',
-                  customURLParamName: 'ชื่อพารามิเตอร์ URL',
-                  splashButtonText: 'ข้อความปุ่มพาเนลแนะนำ',
-                  splashContent: 'เนื้อหาของพาเนลแนะนำ',
-                  splashTitle: 'หัวข้อพาเนลแนะนำ',
-                  title: 'ชื่อแอพ',
-                },
-                uk: {
-                  customHeaderHTML: 'Редагувати настроюваний верхній колонтитул',
-                  customURLParamName: "Ім'я параметра URL",
-                  splashButtonText: 'Текст кнопки панелі вступу',
-                  splashContent: 'Вміст панелі вступу',
-                  splashTitle: 'Заголовок панелі вступу',
-                  title: 'Заголовок додатку',
-                },
               },
             },
-            langSwitcherConfigData: {
-              locales: [
-                {
-                  locale: 'ar',
-                },
-                {
-                  locale: 'ca',
-                },
-                {
-                  locale: 'fr',
-                },
-                {
-                  locale: 'th',
-                },
-                {
-                  locale: 'uk',
-                },
-              ],
-              icon: 'language',
-              portalItemResourceId: 't9n/ec629fbdaa01491e8fc16a443d526443.json',
-            },
-          };
-        }
-
-        function getLangSwitcherData2() {
-          return {
-            langTranslatorConfigData: {},
             langSwitcherConfigData: {
               locales: [
                 {
@@ -269,13 +254,64 @@
                   webmap: '86ac3d14a77749c19f4e279f4507b045',
                 },
               ],
-              icon: 'language',
-              portalItemResourceId: 't9n/ec629fbdaa01491e8fc16a443d526443.json',
+              icon: 'language-translate',
+              portalItemResourceId: '',
             },
           };
         }
 
-        const { langTranslatorConfigData, langSwitcherConfigData } = getLangSwitcherData2();
+        const { langTranslatorConfigData, langSwitcherConfigData } = getLangSwitcherData();
+
+        const settingContainer = document.getElementById('settingContainer');
+
+        function applyStringPreview() {
+          settingContainer.innerHTML = '';
+          const settingKeys = Object.keys(langTranslatorConfigData).filter(settingKey => settingKey !== 'translatedLanguageLabels');
+
+          settingKeys.forEach(key => {
+            const container = document.createElement('div');
+            container.classList.add('setting-container-item');
+
+            const label = document.createElement('span');
+            label.classList.add('setting-label');
+            label.innerHTML = langTranslatorConfigData[key].label;
+
+            const value = document.createElement('span');
+            value.innerHTML = langTranslatorConfigData[key].value;
+
+            container.appendChild(label);
+            container.appendChild(value);
+
+            settingContainer.appendChild(container);
+          });
+        }
+
+        applyStringPreview();
+
+        function updateStringPreview(data) {
+          settingContainer.innerHTML = '';
+
+          const settingKeys = Object.keys(langTranslatorConfigData).filter(settingKey => settingKey !== 'translatedLanguageLabels');
+
+          const t9nData = data.data;
+
+          settingKeys.forEach(key => {
+            const container = document.createElement('div');
+            container.classList.add('setting-container-item');
+
+            const label = document.createElement('span');
+            label.classList.add('setting-label');
+            label.innerHTML = langTranslatorConfigData.translatedLanguageLabels[data.locale][key];
+
+            const value = document.createElement('span');
+            value.innerHTML = t9nData[key];
+
+            container.appendChild(label);
+            container.appendChild(value);
+
+            settingContainer.appendChild(container);
+          });
+        }
 
         function createLanguageTranslator(langSwitcher) {
           const langTranslator = document.getElementById('langTranslator');
@@ -311,8 +347,17 @@
           });
 
           view.ui.add(expand, 'top-left');
+
           return content;
         }
+
+        document.body.addEventListener('selectedLanguageUpdated', e => {
+          if (e.detail?.locale && e.detail?.locale !== DEFAULT_LOCALE) {
+            updateStringPreview(e.detail);
+          } else {
+            applyStringPreview();
+          }
+        });
 
         const langSwitcher = createLanguageSwitcher();
         createLanguageTranslator(langSwitcher);

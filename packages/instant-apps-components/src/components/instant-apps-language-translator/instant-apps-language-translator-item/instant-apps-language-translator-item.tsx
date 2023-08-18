@@ -163,7 +163,7 @@ export class InstantAppsLanguageTranslatorItem {
           }
         }}
         onIsFocused={this.handleSelection}
-        value={value}
+        value={value ?? ''}
         data-field-name={this.fieldName}
       />
     );

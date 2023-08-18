@@ -47,6 +47,10 @@ export class InstantAppsCkeditorWrapper {
     this.init();
   }
 
+  componentDidUpdate() {
+    this.editorInstance.setData(this.value);
+  }
+
   render() {
     return (
       <Host>
@@ -73,7 +77,10 @@ export class InstantAppsCkeditorWrapper {
     const editor = await this.createEditor();
     if (editor) {
       this.editorInstance = editor;
-      if (this.value) editor.setData(this.value);
+
+      if (this.value || this.value === '') {
+        editor.setData(this.value);
+      }
       editor.editing.view.document.on('change:isFocused', this.getEditorFocusedCallback(editor));
     }
   }
