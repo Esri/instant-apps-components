@@ -13,6 +13,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=5.0" />
     <title>ArcGIS Instant Apps Components: Language Translator/Switcher</title>
     <link rel="stylesheet" href="https://js.arcgis.com/4.27/@arcgis/core/assets/esri/themes/light/main.css" />
+    <script src="https://js.arcgis.com/4.27/"></script>
     <script type="module" src="https://jsdev.arcgis.com/calcite-components/1.5.0/calcite.esm.js"></script>
     <link rel="stylesheet" type="text/css" href="https://jsdev.arcgis.com/calcite-components/1.5.0/calcite.css" />
     <script type="module" src="/build/instant-apps-components.esm.js"></script>
@@ -51,295 +52,312 @@
     </calcite-shell>
     <instant-apps-language-translator tabindex="-1" id="langTranslator"></instant-apps-language-translator>
     <script type="module">
-      import MapView from 'https://js.arcgis.com/4.27/@arcgis/core/views/MapView.js';
-      import WebMap from 'https://js.arcgis.com/4.27/@arcgis/core/WebMap.js';
-      import Expand from 'https://js.arcgis.com/4.27/@arcgis/core/widgets/Expand.js';
-      import Search from 'https://js.arcgis.com/4.27/@arcgis/core/widgets/Search.js';
-      import PortalItem from 'https://js.arcgis.com/4.27/@arcgis/core/portal/PortalItem.js';
-      import esriConfig from 'https://js.arcgis.com/4.27/@arcgis/core/config.js';
+      require(['esri/views/MapView', 'esri/WebMap', 'esri/widgets/Expand', 'esri/widgets/Search', 'esri/widgets/LayerList', 'esri/portal/PortalItem', 'esri/config', 'esri/intl'], (
+        MapView,
+        WebMap,
+        Expand,
+        Search,
+        LayerList,
+        PortalItem,
+        esriConfig,
+        intl,
+      ) => {
+        esriConfig.portalUrl = 'https://holistic.mapsdevext.arcgis.com';
 
-      esriConfig.portalUrl = 'https://holistic.mapsdevext.arcgis.com';
+        const DEFAULT_WEBMAP_ID = 'aa5e8c8a7cc74273ad86733b224370ed';
+        // const DEFAULT_WEBMAP_ID2 = '259c3847301c4cd1a2cc1f5227839ff4';
 
-      const DEFAULT_WEBMAP_ID = 'aa5e8c8a7cc74273ad86733b224370ed';
-      // const DEFAULT_WEBMAP_ID2 = '259c3847301c4cd1a2cc1f5227839ff4';
-
-      const map = new WebMap({
-        portalItem: {
-          id: DEFAULT_WEBMAP_ID,
-        },
-      });
-      const view = new MapView({
-        map,
-        container: 'viewDiv',
-      });
-
-      const templateAppItem = new PortalItem({
-        id: 'ec629fbdaa01491e8fc16a443d526443',
-      });
-
-      function getLangSwitcherData() {
-        return {
-          langTranslatorConfigData: {
-            // Series of setting data - type, label, value, uiLocation, and tip
-            customHeaderHTML: {
-              type: 'textEditor',
-              label: 'Custom header HTML',
-              value: '<p>Custom header HTML value</p>',
-              uiLocation: {
-                section: {
-                  id: 'about',
-                  label: 'About',
-                },
-                subsection: {
-                  id: 'appComprehension',
-                  label: 'App details',
-                },
-              },
-              tip: 'Include a more customized look for the app title. Rich text editor accessibility instructions can be accessed through ALT+0 (Mac users: Option+0).',
-            },
-            customURLParamName: {
-              type: 'string',
-              label: 'URL parameter name',
-              value: 'URL parameter name value',
-              uiLocation: {
-                section: {
-                  id: 'interactivity',
-                  label: 'Interactivity',
-                },
-                subsection: {
-                  id: 'customURLParams',
-                  label: 'URL parameter',
-                },
-              },
-              tip: 'Set up your app to support a custom URL parameter that users can append to your app URL. For example, if your map contains a feature layer with parcel information, you could find parcels using a URL parameter. For example, if your custom parameter name is parcel users would append the custom search to the app URl like this: index.html?parcel=3045',
-            },
-            splashButtonText: {
-              type: 'string',
-              label: 'Introduction panel button text',
-              value: 'Introduction panel button value',
-              uiLocation: {
-                section: {
-                  id: 'about',
-                  label: 'About',
-                },
-                subsection: {
-                  id: 'appComprehension',
-                  label: 'App details',
-                },
-              },
-            },
-            splashContent: {
-              type: 'textEditor',
-              label: 'Introduction panel content',
-              value: '<p>Test value</p>',
-              uiLocation: {
-                section: {
-                  id: 'about',
-                  label: 'About',
-                },
-                subsection: {
-                  id: 'appComprehension',
-                  label: 'App details',
-                },
-              },
-              tip: 'Add text, links, and small graphics here (rich text editor). Rich text editor accessibility instructions can be accessed through ALT+0 (Mac users: Option+0).',
-            },
-            splashTitle: {
-              type: 'string',
-              label: 'Introduction panel title',
-              value: 'Introduction panel title value',
-              uiLocation: {
-                section: {
-                  id: 'about',
-                  label: 'About',
-                },
-                subsection: {
-                  id: 'appComprehension',
-                  label: 'App details',
-                },
-              },
-            },
-            title: {
-              type: 'string',
-              label: 'App title',
-              value: 'App title value',
-              uiLocation: {
-                section: {
-                  id: 'about',
-                  label: 'About',
-                },
-                subsection: {
-                  id: 'appComprehension',
-                  label: 'App details',
-                },
-              },
-              tip: "Include title text to introduce the map's main topic",
-            },
-            // Only for runtime - to be used when switching between languages for translation workflow - configuration
-            translatedLanguageLabels: {
-              ar: {
-                customHeaderHTML: 'تحرير الرأس المخصص',
-                customURLParamName: 'اسم معلمة عنوان URL',
-                splashButtonText: 'نص زر لوحة المقددمة',
-                splashContent: 'محتوى لوحة المقدمة',
-                splashTitle: 'عنوان لوحة المقدمة',
-                title: 'عنوان التطبيق',
-              },
-              ca: {
-                customHeaderHTML: "Edita l'encapçalament personalitzat",
-                customURLParamName: "Nom del paràmetre d'URL",
-                splashButtonText: "Text del botó del panell d'introducció",
-                splashContent: "Contingut del panell d'introducció",
-                splashTitle: "Títol del panell d'introducció",
-                title: "Títol de l'aplicació",
-              },
-              fr: {
-                customHeaderHTML: 'Mettre à jour l’en-tête personnalisé',
-                customURLParamName: 'Nom du paramètre d’URL',
-                splashButtonText: 'Texte du bouton du volet de présentation',
-                splashContent: 'Contenu du volet de présentation',
-                splashTitle: 'Titre du volet de présentation',
-                title: 'Titre de l’application',
-              },
-              th: {
-                customHeaderHTML: 'แก้ไขส่วนหัวแบบกำหนดเอง',
-                customURLParamName: 'ชื่อพารามิเตอร์ URL',
-                splashButtonText: 'ข้อความปุ่มพาเนลแนะนำ',
-                splashContent: 'เนื้อหาของพาเนลแนะนำ',
-                splashTitle: 'หัวข้อพาเนลแนะนำ',
-                title: 'ชื่อแอพ',
-              },
-              uk: {
-                customHeaderHTML: 'Редагувати настроюваний верхній колонтитул',
-                customURLParamName: "Ім'я параметра URL",
-                splashButtonText: 'Текст кнопки панелі вступу',
-                splashContent: 'Вміст панелі вступу',
-                splashTitle: 'Заголовок панелі вступу',
-                title: 'Заголовок додатку',
-              },
-            },
+        const map = new WebMap({
+          portalItem: {
+            id: DEFAULT_WEBMAP_ID,
           },
-          langSwitcherConfigData: {
-            locales: [
-              {
-                locale: 'ar',
-              },
-              {
-                locale: 'ca',
-              },
-              {
-                locale: 'fr',
-              },
-              {
-                locale: 'th',
-              },
-              {
-                locale: 'uk',
-              },
-            ],
-            icon: 'language',
-            portalItemResourceId: 't9n/ec629fbdaa01491e8fc16a443d526443.json',
-          },
-        };
-      }
-
-      // function getLangSwitcherData2() {
-      //   return {
-      //     langTranslatorConfigData: {},
-      //     langSwitcherConfigData: {
-      //       locales: [
-      //         {
-      //           locale: 'ja',
-      //           webmap: '5077fc70de664cdaa6e81a6c0c1a300b',
-      //         },
-      //         {
-      //           locale: 'el',
-      //           webmap: '01e275c1f04442cdb1e36e3b6dc4dbc5',
-      //         },
-      //         {
-      //           locale: 'fr',
-      //           webmap: '97a918af3a5f46e780c95f1b696b70c3',
-      //         },
-      //       ],
-      //       icon: 'language',
-      //       portalItemResourceId: 't9n/ec629fbdaa01491e8fc16a443d526443.json',
-      //     },
-      //   };
-      // }
-
-      const { langTranslatorConfigData, langSwitcherConfigData } = getLangSwitcherData();
-
-      function createLanguageTranslator(langSwitcher) {
-        const langTranslator = document.getElementById('langTranslator');
-        langTranslator.portalItem = templateAppItem;
-        langTranslator.appSettings = langTranslatorConfigData;
-        langTranslator.translatedLanguages = langSwitcherConfigData.locales;
-
-        langTranslator.userLocaleInputOnChangeCallback = function (fieldName, value) {
-          console.log('FIELD NAME: ', fieldName);
-          console.log('VALUE: ', value);
-        };
-
-        const openButton = document.getElementById('openLangTranslator');
-        openButton.addEventListener('click', () => (langTranslator.open = true));
-
-        langTranslator.addEventListener('translatorDataUpdated', () => {
-          langSwitcher.refresh();
         });
-      }
-
-      function createLanguageSwitcher() {
-        const content = document.createElement('instant-apps-language-switcher');
-        content.portalItem = templateAppItem;
-        content.icon = langSwitcherConfigData.icon;
-        content.locales = langSwitcherConfigData.locales;
-        content.view = view;
-
-        const expand = new Expand({
-          view,
-          content,
-          expanded: true,
-          expandIcon: langSwitcherConfigData.icon,
+        const view = new MapView({
+          map,
+          container: 'viewDiv',
         });
 
-        view.ui.add(expand, 'top-left');
-
-        content.addEventListener('selectedLanguageUpdated', e => {
-          const data = e.detail;
-          if (data?.webmap) {
-            view.map = new WebMap({
-              portalItem: {
-                id: data?.webmap,
-              },
-            });
-          } else {
-            view.map = new WebMap({
-              portalItem: {
-                id: DEFAULT_WEBMAP_ID,
-              },
-            });
-          }
-
-          console.log('T9N UI DATA: ', data);
+        const templateAppItem = new PortalItem({
+          id: 'ec629fbdaa01491e8fc16a443d526443',
         });
-        return content;
-      }
 
-      const langSwitcher = createLanguageSwitcher();
-      createLanguageTranslator(langSwitcher);
+        function getLangSwitcherData() {
+          return {
+            langTranslatorConfigData: {
+              // Series of setting data - type, label, value, uiLocation, and tip
+              customHeaderHTML: {
+                type: 'textEditor',
+                label: 'Custom header HTML',
+                value: '<p>Custom header HTML value</p>',
+                uiLocation: {
+                  section: {
+                    id: 'about',
+                    label: 'About',
+                  },
+                  subsection: {
+                    id: 'appComprehension',
+                    label: 'App details',
+                  },
+                },
+                tip: 'Include a more customized look for the app title. Rich text editor accessibility instructions can be accessed through ALT+0 (Mac users: Option+0).',
+              },
+              customURLParamName: {
+                type: 'string',
+                label: 'URL parameter name',
+                value: 'URL parameter name value',
+                uiLocation: {
+                  section: {
+                    id: 'interactivity',
+                    label: 'Interactivity',
+                  },
+                  subsection: {
+                    id: 'customURLParams',
+                    label: 'URL parameter',
+                  },
+                },
+                tip: 'Set up your app to support a custom URL parameter that users can append to your app URL. For example, if your map contains a feature layer with parcel information, you could find parcels using a URL parameter. For example, if your custom parameter name is parcel users would append the custom search to the app URl like this: index.html?parcel=3045',
+              },
+              splashButtonText: {
+                type: 'string',
+                label: 'Introduction panel button text',
+                value: 'Introduction panel button value',
+                uiLocation: {
+                  section: {
+                    id: 'about',
+                    label: 'About',
+                  },
+                  subsection: {
+                    id: 'appComprehension',
+                    label: 'App details',
+                  },
+                },
+              },
+              splashContent: {
+                type: 'textEditor',
+                label: 'Introduction panel content',
+                value: '<p>Test value</p>',
+                uiLocation: {
+                  section: {
+                    id: 'about',
+                    label: 'About',
+                  },
+                  subsection: {
+                    id: 'appComprehension',
+                    label: 'App details',
+                  },
+                },
+                tip: 'Add text, links, and small graphics here (rich text editor). Rich text editor accessibility instructions can be accessed through ALT+0 (Mac users: Option+0).',
+              },
+              splashTitle: {
+                type: 'string',
+                label: 'Introduction panel title',
+                value: 'Introduction panel title value',
+                uiLocation: {
+                  section: {
+                    id: 'about',
+                    label: 'About',
+                  },
+                  subsection: {
+                    id: 'appComprehension',
+                    label: 'App details',
+                  },
+                },
+              },
+              title: {
+                type: 'string',
+                label: 'App title',
+                value: 'App title value',
+                uiLocation: {
+                  section: {
+                    id: 'about',
+                    label: 'About',
+                  },
+                  subsection: {
+                    id: 'appComprehension',
+                    label: 'App details',
+                  },
+                },
+                tip: "Include title text to introduce the map's main topic",
+              },
+              // Only for runtime - to be used when switching between languages for translation workflow - configuration
+              translatedLanguageLabels: {
+                ar: {
+                  customHeaderHTML: 'تحرير الرأس المخصص',
+                  customURLParamName: 'اسم معلمة عنوان URL',
+                  splashButtonText: 'نص زر لوحة المقددمة',
+                  splashContent: 'محتوى لوحة المقدمة',
+                  splashTitle: 'عنوان لوحة المقدمة',
+                  title: 'عنوان التطبيق',
+                },
+                ca: {
+                  customHeaderHTML: "Edita l'encapçalament personalitzat",
+                  customURLParamName: "Nom del paràmetre d'URL",
+                  splashButtonText: "Text del botó del panell d'introducció",
+                  splashContent: "Contingut del panell d'introducció",
+                  splashTitle: "Títol del panell d'introducció",
+                  title: "Títol de l'aplicació",
+                },
+                fr: {
+                  customHeaderHTML: 'Mettre à jour l’en-tête personnalisé',
+                  customURLParamName: 'Nom du paramètre d’URL',
+                  splashButtonText: 'Texte du bouton du volet de présentation',
+                  splashContent: 'Contenu du volet de présentation',
+                  splashTitle: 'Titre du volet de présentation',
+                  title: 'Titre de l’application',
+                },
+                th: {
+                  customHeaderHTML: 'แก้ไขส่วนหัวแบบกำหนดเอง',
+                  customURLParamName: 'ชื่อพารามิเตอร์ URL',
+                  splashButtonText: 'ข้อความปุ่มพาเนลแนะนำ',
+                  splashContent: 'เนื้อหาของพาเนลแนะนำ',
+                  splashTitle: 'หัวข้อพาเนลแนะนำ',
+                  title: 'ชื่อแอพ',
+                },
+                uk: {
+                  customHeaderHTML: 'Редагувати настроюваний верхній колонтитул',
+                  customURLParamName: "Ім'я параметра URL",
+                  splashButtonText: 'Текст кнопки панелі вступу',
+                  splashContent: 'Вміст панелі вступу',
+                  splashTitle: 'Заголовок панелі вступу',
+                  title: 'Заголовок додатку',
+                },
+              },
+            },
+            langSwitcherConfigData: {
+              locales: [
+                {
+                  locale: 'ar',
+                },
+                {
+                  locale: 'ca',
+                },
+                {
+                  locale: 'fr',
+                },
+                {
+                  locale: 'th',
+                },
+                {
+                  locale: 'uk',
+                },
+              ],
+              icon: 'language',
+              portalItemResourceId: 't9n/ec629fbdaa01491e8fc16a443d526443.json',
+            },
+          };
+        }
 
-      // Misc widgets
-      const search = new Search({
-        view,
+        // function getLangSwitcherData2() {
+        //   return {
+        //     langTranslatorConfigData: {},
+        //     langSwitcherConfigData: {
+        //       locales: [
+        //         {
+        //           locale: 'ja',
+        //           webmap: '5077fc70de664cdaa6e81a6c0c1a300b',
+        //         },
+        //         {
+        //           locale: 'el',
+        //           webmap: '01e275c1f04442cdb1e36e3b6dc4dbc5',
+        //         },
+        //         {
+        //           locale: 'fr',
+        //           webmap: '97a918af3a5f46e780c95f1b696b70c3',
+        //         },
+        //       ],
+        //       icon: 'language',
+        //       portalItemResourceId: 't9n/ec629fbdaa01491e8fc16a443d526443.json',
+        //     },
+        //   };
+        // }
+
+        const { langTranslatorConfigData, langSwitcherConfigData } = getLangSwitcherData();
+
+        function createLanguageTranslator(langSwitcher) {
+          const langTranslator = document.getElementById('langTranslator');
+          langTranslator.portalItem = templateAppItem;
+          langTranslator.appSettings = langTranslatorConfigData;
+          langTranslator.translatedLanguages = langSwitcherConfigData.locales;
+
+          langTranslator.userLocaleInputOnChangeCallback = function (fieldName, value) {
+            console.log('FIELD NAME: ', fieldName);
+            console.log('VALUE: ', value);
+          };
+
+          const openButton = document.getElementById('openLangTranslator');
+          openButton.addEventListener('click', () => (langTranslator.open = true));
+
+          langTranslator.addEventListener('translatorDataUpdated', () => {
+            langSwitcher.refresh();
+          });
+        }
+
+        function createLanguageSwitcher() {
+          const content = document.createElement('instant-apps-language-switcher');
+          content.portalItem = templateAppItem;
+          content.icon = langSwitcherConfigData.icon;
+          content.locales = langSwitcherConfigData.locales;
+          content.view = view;
+
+          const expand = new Expand({
+            view,
+            content,
+            expanded: true,
+            expandIcon: langSwitcherConfigData.icon,
+          });
+
+          view.ui.add(expand, 'top-left');
+
+          content.addEventListener('selectedLanguageUpdated', e => {
+            const data = e.detail;
+            if (data?.webmap) {
+              view.map = new WebMap({
+                portalItem: {
+                  id: data?.webmap,
+                },
+              });
+            } else {
+              view.map = new WebMap({
+                portalItem: {
+                  id: DEFAULT_WEBMAP_ID,
+                },
+              });
+            }
+          });
+          return content;
+        }
+
+        const langSwitcher = createLanguageSwitcher();
+        createLanguageTranslator(langSwitcher);
+
+        (function createSearch() {
+          const search = new Search({
+            view,
+          });
+
+          const searchExpand = new Expand({
+            view,
+            content: search,
+            expanded: true,
+          });
+
+          view.ui.add(searchExpand, 'top-right');
+        })();
+
+        (function createLayerList() {
+          const layerList = new LayerList({
+            view,
+          });
+
+          const layerListExpand = new Expand({
+            view,
+            content: layerList,
+            expanded: true,
+          });
+
+          view.ui.add(layerListExpand, 'top-right');
+        })();
       });
-
-      const searchExpand = new Expand({
-        view,
-        content: search,
-        expanded: true,
-      });
-
-      view.ui.add(searchExpand, 'top-right');
     </script>
   </body>
 </html>
