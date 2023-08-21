@@ -409,6 +409,10 @@ export namespace Components {
          */
         "appSettings": any;
         /**
+          * Specified languages that the user-defined strings will be translated in.
+         */
+        "locales": LocaleItem[];
+        /**
           * Controls the open/close state of the modal.
          */
         "open": boolean;
@@ -416,10 +420,6 @@ export namespace Components {
           * Instant App portal item - used to fetch it's associated portal item resource. The portal item resource will contain the user defined translated strings.
          */
         "portalItem": __esri.PortalItem;
-        /**
-          * Specified languages that the user-defined strings will be translated in.
-         */
-        "translatedLanguages": LocaleItem[];
         /**
           * Function to be called when data in user locale inputs have changed. This function will have 2 arguments - fieldName and value. Field name is a unique identifier for a given setting/field. Value is the entered value within the input.
          */
@@ -1286,6 +1286,10 @@ declare namespace LocalJSX {
           * Data object containing a series of key-value pairs used to render the components UI.
          */
         "appSettings"?: any;
+        /**
+          * Specified languages that the user-defined strings will be translated in.
+         */
+        "locales"?: LocaleItem[];
         "onTranslatorDataUpdated"?: (event: InstantAppsLanguageTranslatorCustomEvent<string>) => void;
         /**
           * Controls the open/close state of the modal.
@@ -1295,10 +1299,6 @@ declare namespace LocalJSX {
           * Instant App portal item - used to fetch it's associated portal item resource. The portal item resource will contain the user defined translated strings.
          */
         "portalItem": __esri.PortalItem;
-        /**
-          * Specified languages that the user-defined strings will be translated in.
-         */
-        "translatedLanguages"?: LocaleItem[];
         /**
           * Function to be called when data in user locale inputs have changed. This function will have 2 arguments - fieldName and value. Field name is a unique identifier for a given setting/field. Value is the entered value within the input.
          */

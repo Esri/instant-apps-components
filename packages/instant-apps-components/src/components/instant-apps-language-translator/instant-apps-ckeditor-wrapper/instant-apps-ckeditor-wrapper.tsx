@@ -1,14 +1,15 @@
 import { Component, Element, Event, EventEmitter, Host, Prop, Watch, h } from '@stencil/core';
 import { styles } from './support/constants';
 
-import ClassicEditorBuild from '@ckeditor/ckeditor5-build-classic';
-import { IClassicEditor } from '../../interfaces/interfaces';
+import { IClassicEditor } from '../../../interfaces/interfaces';
 
 import { EditorConfig } from '@ckeditor/ckeditor5-core/src/editor/editorconfig';
 
 const CKEDITOR_STYLES_ID = 'instant-apps-components__ckeditor-wrapper';
 
 import { GetCallback, BaseEvent } from '@ckeditor/ckeditor5-utils/src/emittermixin';
+
+declare const ClassicEditor;
 
 @Component({
   tag: 'instant-apps-ckeditor-wrapper',
@@ -90,13 +91,13 @@ export class InstantAppsCkeditorWrapper {
     }
   }
 
-  async createEditor(): Promise<ClassicEditorBuild | null> {
+  async createEditor(): Promise<IClassicEditor | null> {
     try {
       let editor: IClassicEditor;
       if (this.config) {
-        editor = await ClassicEditorBuild.create(this.el, this.config);
+        editor = await ClassicEditor.create(this.el, this.config);
       } else {
-        editor = await ClassicEditorBuild.create(this.el);
+        editor = await ClassicEditor.create(this.el);
       }
       this.editorInstance = editor;
       return Promise.resolve(editor);

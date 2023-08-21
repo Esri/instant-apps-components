@@ -9,7 +9,6 @@ const t9nAssetsObj = {
 
 export const config: Config = {
   namespace: 'instant-apps-components',
-  sourceMap: true,
   outputTargets: [
     {
       type: 'dist',
@@ -19,7 +18,7 @@ export const config: Config = {
     { type: 'dist-custom-elements', autoDefineCustomElements: true },
     {
       type: 'www',
-      copy: [{ src: '**/*.html' }, { ...t9nAssetsObj, dest: 'assets/t9n' }],
+      copy: [{ src: '**/*.html' }, { ...t9nAssetsObj, dest: 'assets/t9n' }, { src: '../node_modules/@ckeditor', dest: './ckeditor5' }],
       serviceWorker: null, // disable service workers
     },
     reactOutputTarget({

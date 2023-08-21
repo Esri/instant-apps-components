@@ -56,7 +56,7 @@ export class InstantAppsLanguageTranslator {
    * Specified languages that the user-defined strings will be translated in.
    */
   @Prop()
-  translatedLanguages: LocaleItem[];
+  locales: LocaleItem[];
 
   /**
    * Controls the open/close state of the modal.
@@ -116,15 +116,15 @@ export class InstantAppsLanguageTranslator {
 
   initUIData(): void {
     // Initialize store with UI Data (for translator-item rendering)
-    const { appSettings, translatedLanguages } = this;
-    const uiData = generateUIData(appSettings, translatedLanguages) as LocaleUIData;
+    const { appSettings, locales } = this;
+    const uiData = generateUIData(appSettings, locales) as LocaleUIData;
     store.set('uiData', uiData);
   }
 
   // Initialize selected language
   initSelectLanguage(): void {
-    const { translatedLanguages } = this;
-    const initialLanguage = translatedLanguages?.[0] ?? this.intl.getLocale();
+    const { locales } = this;
+    const initialLanguage = locales?.[0] ?? this.intl.getLocale();
     store.set('currentLanguage', initialLanguage.locale);
   }
 
@@ -199,7 +199,7 @@ export class InstantAppsLanguageTranslator {
   }
 
   renderContent(): HTMLDivElement {
-    const localeItems = getLocales(this.translatedLanguages);
+    const localeItems = getLocales(this.locales);
     return (
       <div slot="content">
         {this.renderTopBar()}
