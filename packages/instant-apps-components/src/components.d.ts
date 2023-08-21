@@ -5,7 +5,8 @@
  * It contains typing information for all components that exist in this project.
  */
 import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
-import { ActiveTool, ControlPanelComponent, ExportOutput, ExtentSelector, IMeasureConfiguration, InstantAppsPopoverMessageOverrides, LayerExpression, PopoverPlacement } from "./interfaces/interfaces";
+import { ActiveTool, ControlPanelComponent, ExportOutput, ExtentSelector, IClassicEditor, IMeasureConfiguration, InstantAppsPopoverMessageOverrides, LayerExpression, PopoverPlacement } from "./interfaces/interfaces";
+import { EditorConfig } from "@ckeditor/ckeditor5-core/src/editor/editorconfig";
 import { FilterMode } from "./components/instant-apps-interactive-legend/instant-apps-interactive-legend-classic/interfaces/interfaces";
 import { HorizontalAlignment, VerticalAlignment } from "./components/instant-apps-landing-page/support/interfaces";
 import { LocaleItem, SettingType } from "./components/instant-apps-language-translator/support/interfaces";
@@ -14,10 +15,11 @@ import { LogicalPlacement } from "@esri/calcite-components/dist/types/utils/floa
 import { ScoreboardItem, ScoreboardMode, ScoreboardPosition } from "./components/instant-apps-scoreboard/types/interfaces";
 export namespace Components {
     interface InstantAppsCkeditorWrapper {
+        "config": EditorConfig;
         /**
           * Instance of text editor
          */
-        "editorInstance": any;
+        "editorInstance": IClassicEditor;
         /**
           * Current value of text editor instance.
          */
@@ -864,10 +866,11 @@ declare global {
 }
 declare namespace LocalJSX {
     interface InstantAppsCkeditorWrapper {
+        "config"?: EditorConfig;
         /**
           * Instance of text editor
          */
-        "editorInstance"?: any;
+        "editorInstance"?: IClassicEditor;
         "onDataChanged"?: (event: InstantAppsCkeditorWrapperCustomEvent<string>) => void;
         "onIsFocused"?: (event: InstantAppsCkeditorWrapperCustomEvent<{ fieldName: string; isFocused: boolean }>) => void;
         /**

@@ -2,7 +2,9 @@ import { Component, Element, Event, EventEmitter, Host, Prop, Watch, h } from '@
 import { styles } from './support/constants';
 
 import ClassicEditorBuild from '@ckeditor/ckeditor5-build-classic';
-import ClassicEditor from '@ckeditor/ckeditor5-editor-classic/src/classiceditor';
+import { IClassicEditor } from '../../interfaces/interfaces';
+
+import { EditorConfig } from '@ckeditor/ckeditor5-core/src/editor/editorconfig';
 
 const CKEDITOR_STYLES_ID = 'instant-apps-components__ckeditor-wrapper';
 
@@ -30,7 +32,10 @@ export class InstantAppsCkeditorWrapper {
   @Prop({
     mutable: true,
   })
-  editorInstance;
+  editorInstance: IClassicEditor;
+
+  @Prop()
+  config: EditorConfig;
 
   @Watch('value')
   updateValue(): void {
@@ -87,8 +92,12 @@ export class InstantAppsCkeditorWrapper {
 
   async createEditor(): Promise<ClassicEditorBuild | null> {
     try {
-      const config = { toolbar: [] };
-      const editor = await ClassicEditorBuild.create(this.el, config);
+      let editor: IClassicEditor;
+      if (this.config) {
+        editor = await ClassicEditorBuild.create(this.el, this.config);
+      } else {
+        editor = await ClassicEditorBuild.create(this.el);
+      }
       this.editorInstance = editor;
       return Promise.resolve(editor);
     } catch {
@@ -96,7 +105,7 @@ export class InstantAppsCkeditorWrapper {
     }
   }
 
-  getEditorFocusedCallback(editor: ClassicEditor): GetCallback<BaseEvent> {
+  getEditorFocusedCallback(editor: IClassicEditor): GetCallback<BaseEvent> {
     return (_event, _name, _isFocused) => {
       if (!_isFocused) {
         const editorData = editor.getData();

@@ -1,4 +1,6 @@
-import Widget from 'esri/widgets/Widget';
+import ClassicEditor from '@ckeditor/ckeditor5-editor-classic/src/classiceditor';
+
+export interface IClassicEditor extends ClassicEditor {}
 
 export interface GenericObject {
   [key: string]: unknown;

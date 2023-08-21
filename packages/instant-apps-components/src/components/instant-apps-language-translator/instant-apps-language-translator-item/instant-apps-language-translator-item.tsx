@@ -165,6 +165,7 @@ export class InstantAppsLanguageTranslatorItem {
         onIsFocused={this.handleSelection}
         value={value ?? ''}
         data-field-name={this.fieldName}
+        config={{ toolbar: [] }}
       />
     );
   }
