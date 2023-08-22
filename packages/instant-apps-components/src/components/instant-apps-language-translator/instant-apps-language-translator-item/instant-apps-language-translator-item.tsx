@@ -56,10 +56,10 @@ export class InstantAppsLanguageTranslatorItem {
   type: SettingType;
 
   /**
-   * Function to be called when data in user locale inputs have changed. This function will have 2 arguments - fieldName and value. Field name is a unique identifier for a given setting/field. Value is the entered value within the input.
+   * Function that return a promise that will be called when data in the user locale inputs have changed. This function will have 2 arguments - fieldName and value. Field name is a unique identifier for a given setting/field. Value is the entered value within the input.
    */
   @Prop()
-  userLocaleInputOnChangeCallback: (fieldName: string, value: string) => void;
+  userLocaleInputOnChangeCallback: (fieldName: string, value: string) => Promise<void>;
 
   @Event()
   translatorItemDataUpdated: EventEmitter<void>;
@@ -131,7 +131,7 @@ export class InstantAppsLanguageTranslatorItem {
         data-field-name={this.fieldName}
         value={value}
         onFocus={this.handleSelection}
-        onCalciteInputChange={e => this.userLocaleInputOnChangeCallback(this.fieldName, e.target.value)}
+        onCalciteInputChange={this.handleUserInputChange.bind(this)}
       >
         {this.renderCopyButton(EInputType.User)}
       </calcite-input>
@@ -157,9 +157,9 @@ export class InstantAppsLanguageTranslatorItem {
     return (
       <instant-apps-ckeditor-wrapper
         ref={this.setEditor.bind(this, type)}
-        onDataChanged={e => {
+        onDataChanged={async e => {
           if (type === EInputType.User) {
-            this.userLocaleInputOnChangeCallback(this.fieldName, e.detail);
+            this.handleUserTextEditorChange(e);
           } else {
             this.handleDataChange(e);
           }
@@ -338,5 +338,20 @@ export class InstantAppsLanguageTranslatorItem {
     } catch {
       store.set('saving', false);
     }
+  }
+
+  async handleUserInputChange(e: CustomEvent): Promise<void> {
+    store.set('saving', true);
+    const node = e.target as HTMLCalciteInputElement;
+    const value = node.value;
+    await this.userLocaleInputOnChangeCallback(this.fieldName, value);
+    console.log('test');
+    store.set('saving', false);
+  }
+
+  async handleUserTextEditorChange(e: CustomEvent): Promise<void> {
+    store.set('saving', true);
+    await this.userLocaleInputOnChangeCallback(this.fieldName, e.detail);
+    store.set('saving', false);
   }
 }

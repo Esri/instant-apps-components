@@ -320,10 +320,13 @@
           langTranslator.appSettings = langTranslatorConfigData;
           langTranslator.locales = langSwitcherConfigData.locales;
 
-          langTranslator.userLocaleInputOnChangeCallback = function (fieldName, value) {
-            console.log('FIELD NAME: ', fieldName);
-            console.log('VALUE: ', value);
-          };
+          langTranslator.userLocaleInputOnChangeCallback = (fieldName, value) =>
+            new Promise((resolve, reject) => {
+              setTimeout(resolve, 1000);
+            }).then(res => {
+              console.log('FIELD NAME: ', fieldName);
+              console.log('VALUE: ', value);
+            });
 
           const openButton = document.getElementById('openLangTranslator');
           openButton.addEventListener('click', () => (langTranslator.open = true));

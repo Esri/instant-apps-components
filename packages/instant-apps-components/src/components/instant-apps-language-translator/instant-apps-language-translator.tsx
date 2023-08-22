@@ -70,7 +70,7 @@ export class InstantAppsLanguageTranslator {
    * Function to be called when data in user locale inputs have changed. This function will have 2 arguments - fieldName and value. Field name is a unique identifier for a given setting/field. Value is the entered value within the input.
    */
   @Prop()
-  userLocaleInputOnChangeCallback: (fieldName: string, value: string) => void;
+  userLocaleInputOnChangeCallback: (fieldName: string, value: string) => Promise<void>;
 
   @State()
   saving = false;

@@ -423,7 +423,7 @@ export namespace Components {
         /**
           * Function to be called when data in user locale inputs have changed. This function will have 2 arguments - fieldName and value. Field name is a unique identifier for a given setting/field. Value is the entered value within the input.
          */
-        "userLocaleInputOnChangeCallback": (fieldName: string, value: string) => void;
+        "userLocaleInputOnChangeCallback": (fieldName: string, value: string) => Promise<void>;
     }
     interface InstantAppsLanguageTranslatorItem {
         /**
@@ -439,9 +439,9 @@ export namespace Components {
          */
         "type": SettingType;
         /**
-          * Function to be called when data in user locale inputs have changed. This function will have 2 arguments - fieldName and value. Field name is a unique identifier for a given setting/field. Value is the entered value within the input.
+          * Function that return a promise that will be called when data in the user locale inputs have changed. This function will have 2 arguments - fieldName and value. Field name is a unique identifier for a given setting/field. Value is the entered value within the input.
          */
-        "userLocaleInputOnChangeCallback": (fieldName: string, value: string) => void;
+        "userLocaleInputOnChangeCallback": (fieldName: string, value: string) => Promise<void>;
     }
     interface InstantAppsLanguageTranslatorSearch {
         /**
@@ -1302,7 +1302,7 @@ declare namespace LocalJSX {
         /**
           * Function to be called when data in user locale inputs have changed. This function will have 2 arguments - fieldName and value. Field name is a unique identifier for a given setting/field. Value is the entered value within the input.
          */
-        "userLocaleInputOnChangeCallback"?: (fieldName: string, value: string) => void;
+        "userLocaleInputOnChangeCallback"?: (fieldName: string, value: string) => Promise<void>;
     }
     interface InstantAppsLanguageTranslatorItem {
         /**
@@ -1319,9 +1319,9 @@ declare namespace LocalJSX {
          */
         "type"?: SettingType;
         /**
-          * Function to be called when data in user locale inputs have changed. This function will have 2 arguments - fieldName and value. Field name is a unique identifier for a given setting/field. Value is the entered value within the input.
+          * Function that return a promise that will be called when data in the user locale inputs have changed. This function will have 2 arguments - fieldName and value. Field name is a unique identifier for a given setting/field. Value is the entered value within the input.
          */
-        "userLocaleInputOnChangeCallback"?: (fieldName: string, value: string) => void;
+        "userLocaleInputOnChangeCallback"?: (fieldName: string, value: string) => Promise<void>;
     }
     interface InstantAppsLanguageTranslatorSearch {
         "onSuggestionSelected"?: (event: InstantAppsLanguageTranslatorSearchCustomEvent<string>) => void;
