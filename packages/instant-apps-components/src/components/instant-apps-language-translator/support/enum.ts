@@ -18,3 +18,8 @@ export enum EIcons {
   Breadcrumb = 'chevron-right',
   DefaultIcon = 'globe',
 }
+
+export enum ECalciteMode {
+  Light = 'calcite-mode-light',
+  Dark = 'calcite-mode-dark',
+}

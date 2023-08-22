@@ -19,4 +19,8 @@ export const styles = `
     --ck-z-modal: 700;
     z-index: 700;
   }
+
+  .calcite-mode-dark .ck-editor__editable {
+    color: var(--calcite-ui-text-inverse) !important;
+  }
 `;

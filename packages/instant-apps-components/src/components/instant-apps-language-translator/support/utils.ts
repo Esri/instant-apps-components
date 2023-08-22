@@ -1,5 +1,6 @@
 import LanguageTranslator_t9n from '../../../assets/t9n/instant-apps-language-translator/resources.json';
 import { getLocaleComponentStrings } from '../../../utils/locale';
+import { ECalciteMode } from './enum';
 import { LocaleItem, LocaleUIData } from './interfaces';
 import { languageTranslatorState, store } from './store';
 
@@ -101,4 +102,8 @@ export async function writeToPortalItemResource(portalItemResource: __esri.Porta
 
 export function getLocales(localeItems: LocaleItem[]) {
   return localeItems?.map(localeItem => localeItem.locale) ?? [];
+}
+
+export function isCalciteModeDark(): boolean {
+  return document.body.classList.contains(ECalciteMode.Dark);
 }

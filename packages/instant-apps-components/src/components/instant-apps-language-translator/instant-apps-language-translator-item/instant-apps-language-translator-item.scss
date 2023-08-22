@@ -80,6 +80,22 @@
   }
 }
 
+:host(.calcite-mode-dark) {
+  .instant-apps-language-translator-item__section--selected {
+    background-color: #f1faff;
+
+    background-color: var(--calcite-ui-brand);
+    color: var(--calcite-ui-text-inverse);
+    calcite-action {
+      --calcite-ui-icon-color: var(--calcite-ui-text-inverse);
+    }
+
+    calcite-icon {
+      color: var(--calcite-ui-text-inverse);
+    }
+  }
+}
+
 :host(.instant-apps-language-translator--last-item) {
   .instant-apps-language-translator-item__section {
     border-bottom: none;

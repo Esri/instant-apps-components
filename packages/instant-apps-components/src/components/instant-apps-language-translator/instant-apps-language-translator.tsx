@@ -1,5 +1,5 @@
 import { Component, Host, Prop, h, Event } from '@stencil/core';
-import { Element, EventEmitter, HostElement, Listen, State } from '@stencil/core/internal';
+import { Element, EventEmitter, HostElement, Watch, State, Listen } from '@stencil/core/internal';
 
 import { generateUIData, getLocales, getMessages, getPortalItemResource, getUIDataKeys } from './support/utils';
 
@@ -84,6 +84,16 @@ export class InstantAppsLanguageTranslator {
   @Listen('translatorItemDataUpdated', { target: 'window' })
   handleT9nItemUpdate(): void {
     this.translatorDataUpdated.emit();
+  }
+
+  @Watch('locales')
+  handleLocaleChange() {
+    this.initUIData();
+  }
+
+  @Watch('appSettings')
+  handleAppSettings() {
+    this.initUIData();
   }
 
   @Event()
@@ -275,7 +285,8 @@ export class InstantAppsLanguageTranslator {
   }
 
   renderTranslatedLangOptions(): HTMLCalciteOptionElement[] {
-    const locales = languageTranslatorState.uiData?.locales as LocaleItem[];
+    const uiData = store.get('uiData');
+    const locales = uiData?.locales as LocaleItem[];
     const localeFlags = getLocales(locales);
     return localeFlags?.map(locale => {
       const { messages } = this;
@@ -310,7 +321,7 @@ export class InstantAppsLanguageTranslator {
   }
 
   renderUIDataItem(key: string, keyIndex: number, uiDataKeysLen: number): HTMLDivElement {
-    const translatedLabel = this.appSettings.translatedLanguageLabels[languageTranslatorState.currentLanguage as string][key];
+    const translatedLabel = this.appSettings?.translatedLanguageLabels?.[languageTranslatorState.currentLanguage as string]?.[key];
     const isLast = `${keyIndex === uiDataKeysLen - 1 ? CSS.lastItem : ''}`;
     return (
       <instant-apps-language-translator-item

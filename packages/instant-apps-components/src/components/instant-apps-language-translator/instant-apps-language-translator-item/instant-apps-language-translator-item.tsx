@@ -1,8 +1,8 @@
 import { Component, Element, Event, EventEmitter, Host, Prop, h } from '@stencil/core';
 
-import { getT9nData, getUIDataKeys, writeToPortalItemResource } from '../support/utils';
+import { getT9nData, getUIDataKeys, isCalciteModeDark, writeToPortalItemResource } from '../support/utils';
 import { languageTranslatorState, store } from '../support/store';
-import { EInputType, ESettingType, EIcons } from '../support/enum';
+import { EInputType, ESettingType, EIcons, ECalciteMode } from '../support/enum';
 import { LocaleSettingItem, LocaleUIData, InputType, SettingType } from '../support/interfaces';
 
 const BASE = 'instant-apps-language-translator-item';
@@ -75,7 +75,7 @@ export class InstantAppsLanguageTranslatorItem {
   render() {
     const uiDataItem = this.getUIDataItem() as LocaleSettingItem;
     return (
-      <Host>
+      <Host class={`${isCalciteModeDark() ? ECalciteMode.Dark : ECalciteMode.Light}`}>
         {this.renderBase(uiDataItem)}
         {this.renderPopover(uiDataItem)}
       </Host>
@@ -126,6 +126,7 @@ export class InstantAppsLanguageTranslatorItem {
   renderUserLocaleInput(value: string): HTMLCalciteInputElement {
     return (
       <calcite-input
+        class={ECalciteMode.Light}
         ref={(node: HTMLCalciteInputElement) => (this.userLocaleInput = node)}
         data-field-name={this.fieldName}
         value={value}
@@ -140,6 +141,7 @@ export class InstantAppsLanguageTranslatorItem {
   renderTranslatedLanguageInput(value: string): HTMLCalciteInputElement {
     return (
       <calcite-input
+        class={ECalciteMode.Light}
         ref={(node: HTMLCalciteInputElement) => (this.translatedLangInput = node)}
         data-field-name={this.fieldName}
         onFocus={this.handleSelection}
@@ -207,7 +209,16 @@ export class InstantAppsLanguageTranslatorItem {
   }
 
   renderCopyButton(type: InputType) {
-    return <calcite-button onclick={this.copySelection.bind(this, type)} slot="action" icon-start={EIcons.Copy} appearance="outline-fill" />;
+    const darkMode = isCalciteModeDark();
+    return (
+      <calcite-button
+        class={darkMode ? ECalciteMode.Dark : ECalciteMode.Light}
+        onclick={this.copySelection.bind(this, type)}
+        slot="action"
+        icon-start={EIcons.Copy}
+        appearance="outline-fill"
+      />
+    );
   }
 
   getUIDataItem(): LocaleSettingItem | undefined {
