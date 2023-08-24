@@ -4,7 +4,7 @@ import { loadModules } from '../../utils/loadModules';
 
 import { FilterMode } from './instant-apps-interactive-legend-classic/interfaces/interfaces';
 
-import { getLocaleComponentStrings } from '../../utils/locale';
+import { getMessages } from '../../utils/locale';
 import { getTheme } from './support/helpers';
 
 const CSS = {
@@ -80,7 +80,7 @@ export class InstantAppsInteractiveLegend {
   }
 
   async componentDidLoad() {
-    await this.getMessages();
+    getMessages(this);
   }
 
   async initializeModules() {
@@ -159,20 +159,5 @@ export class InstantAppsInteractiveLegend {
       this._renderOnActiveLayerInfoChange(childActiveLayerInfo, reactiveUtils);
       if (childActiveLayerInfo?.children?.length > 0) childActiveLayerInfo?.children?.forEach(innerChild => this._renderOnActiveLayerInfoChange(innerChild, reactiveUtils));
     });
-  }
-
-  async getMessages(): Promise<any> {
-    let messages;
-    try {
-      const res = await getLocaleComponentStrings(this.el);
-      messages = res[0];
-      this.messages = {
-        ...this.messages,
-        ...messages,
-      };
-    } catch (err) {
-      Promise.reject(err);
-    } finally {
-    }
   }
 }

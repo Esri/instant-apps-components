@@ -10,7 +10,7 @@ import { Component, Host, State, Prop, Event, EventEmitter, Element, h } from '@
 
 import Measurement_T9n from '../../assets/t9n/instant-apps-measurement/resources.json';
 
-import { getLocaleComponentStrings } from '../../utils/locale';
+import { getMessages } from '../../utils/locale';
 import { ActiveTool } from '../../interfaces/interfaces';
 
 const CSS = {
@@ -44,14 +44,10 @@ export class InstantAppsMeasurement {
 
   measureTool: HTMLInstantAppsMeasurementToolElement | undefined;
   async componentWillLoad() {
-    await this.getMessages();
+    getMessages(this);
   }
 
   componentDidLoad() {}
-  async getMessages() {
-    const messages = await getLocaleComponentStrings(this.el);
-    this.messages = messages[0] as typeof Measurement_T9n;
-  }
 
   render() {
     const { messages, view, coordinateFormat, areaUnit, linearUnit, activeToolType } = this;

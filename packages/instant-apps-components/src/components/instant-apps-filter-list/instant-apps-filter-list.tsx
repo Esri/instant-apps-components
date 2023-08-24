@@ -15,7 +15,7 @@ import {
   LayerExpression,
 } from '../../interfaces/interfaces';
 import { loadModules } from '../../utils/loadModules';
-import { getLocaleComponentStrings } from '../../utils/locale';
+import { getMessages } from '../../utils/locale';
 import { getMode } from '../../utils/mode';
 import { baseClassDark, baseClassLight, supportedTypes } from './resources';
 import { convertToDate, handleSingleQuote, resetDatePicker } from './utils';
@@ -122,7 +122,7 @@ export class InstantAppsFilterList {
   async componentWillLoad(): Promise<void> {
     this.baseClass = getMode(this.hostElement) === 'dark' ? baseClassDark : baseClassLight;
     await this.initializeModules();
-    this.getMessages();
+    getMessages(this);
     this.filterLayerExpressions = this.layerExpressions;
     this.disabled = this.filterLayerExpressions?.length ? undefined : true;
     this.reactiveUtils.whenOnce(() => this.view).then(() => this.handleLayerExpressionsUpdate());
@@ -394,11 +394,6 @@ export class InstantAppsFilterList {
     }
 
     this.filterLayerExpressions = [...tmpLE];
-  }
-
-  async getMessages(): Promise<void> {
-    const messages = await getLocaleComponentStrings(this.hostElement);
-    this.messages = messages[0] as typeof FilterList_T9n;
   }
 
   handleResetFilter(): void {

@@ -11,7 +11,7 @@ import { InstantAppsPopovers } from '../instant-apps-popovers/instant-apps-popov
 
 import Popover_T9n from '../../assets/t9n/instant-apps-popover/resources.json';
 
-import { getLocaleComponentStrings } from '../../utils/locale';
+import { getMessages } from '../../utils/locale';
 import { LogicalPlacement } from '@esri/calcite-components/dist/types/utils/floating-ui';
 import { InstantAppsPopoverMessageOverrides } from '../../interfaces/interfaces';
 
@@ -106,7 +106,7 @@ export class InstantAppsPopover {
   messageOverrides: InstantAppsPopoverMessageOverrides;
 
   async componentDidLoad() {
-    await this.getMessages();
+    getMessages(this);
     this.messages = {
       ...this.messages,
       ...this.messageOverrides,
@@ -187,11 +187,5 @@ export class InstantAppsPopover {
         </calcite-button>
       </div>
     );
-  }
-
-  async getMessages() {
-    const messages = await getLocaleComponentStrings(this.el);
-    this.messages = messages[0] as typeof Popover_T9n;
-    return Promise.resolve();
   }
 }
