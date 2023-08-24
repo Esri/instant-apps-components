@@ -72,6 +72,9 @@ export class InstantAppsLanguageTranslator {
   @Prop()
   userLocaleInputOnChangeCallback: (fieldName: string, value: string) => Promise<void>;
 
+  @Prop()
+  translatedLocaleInputOnChangeCallback: (fieldName: string, value: string) => Promise<any>;
+
   @State()
   saving = false;
 
@@ -331,6 +334,7 @@ export class InstantAppsLanguageTranslator {
         translatedLanguageLabel={translatedLabel}
         type={this.appSettings[key].type}
         userLocaleInputOnChangeCallback={this.userLocaleInputOnChangeCallback}
+        translatedLocaleInputOnChangeCallback={this.translatedLocaleInputOnChangeCallback}
       />
     );
   }

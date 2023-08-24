@@ -420,6 +420,7 @@ export namespace Components {
           * Instant App portal item - used to fetch it's associated portal item resource. The portal item resource will contain the user defined translated strings.
          */
         "portalItem": __esri.PortalItem;
+        "translatedLocaleInputOnChangeCallback": (fieldName: string, value: string) => Promise<any>;
         /**
           * Function to be called when data in user locale inputs have changed. This function will have 2 arguments - fieldName and value. Field name is a unique identifier for a given setting/field. Value is the entered value within the input.
          */
@@ -434,6 +435,7 @@ export namespace Components {
           * Label of item in currently selected language.
          */
         "translatedLanguageLabel": string;
+        "translatedLocaleInputOnChangeCallback": (fieldName: string, value: string, locale: string, resource: __esri.PortalItemResource) => Promise<void>;
         /**
           * Determines whether to use a regular input or text editor
          */
@@ -1299,6 +1301,7 @@ declare namespace LocalJSX {
           * Instant App portal item - used to fetch it's associated portal item resource. The portal item resource will contain the user defined translated strings.
          */
         "portalItem": __esri.PortalItem;
+        "translatedLocaleInputOnChangeCallback"?: (fieldName: string, value: string) => Promise<any>;
         /**
           * Function to be called when data in user locale inputs have changed. This function will have 2 arguments - fieldName and value. Field name is a unique identifier for a given setting/field. Value is the entered value within the input.
          */
@@ -1314,6 +1317,7 @@ declare namespace LocalJSX {
           * Label of item in currently selected language.
          */
         "translatedLanguageLabel"?: string;
+        "translatedLocaleInputOnChangeCallback"?: (fieldName: string, value: string, locale: string, resource: __esri.PortalItemResource) => Promise<void>;
         /**
           * Determines whether to use a regular input or text editor
          */

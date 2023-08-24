@@ -1,6 +1,6 @@
 import { Component, Element, Event, EventEmitter, Host, Prop, h } from '@stencil/core';
 
-import { getT9nData, getUIDataKeys, isCalciteModeDark, writeToPortalItemResource } from '../support/utils';
+import { getT9nData, getUIDataKeys, isCalciteModeDark } from '../support/utils';
 import { languageTranslatorState, store } from '../support/store';
 import { EInputType, ESettingType, EIcons, ECalciteMode } from '../support/enum';
 import { LocaleSettingItem, LocaleUIData, InputType, SettingType } from '../support/interfaces';
@@ -60,6 +60,9 @@ export class InstantAppsLanguageTranslatorItem {
    */
   @Prop()
   userLocaleInputOnChangeCallback: (fieldName: string, value: string) => Promise<void>;
+
+  @Prop()
+  translatedLocaleInputOnChangeCallback: (fieldName: string, value: string, locale: string, resource: __esri.PortalItemResource) => Promise<void>;
 
   @Event()
   translatorItemDataUpdated: EventEmitter<void>;
@@ -145,7 +148,7 @@ export class InstantAppsLanguageTranslatorItem {
         ref={(node: HTMLCalciteInputElement) => (this.translatedLangInput = node)}
         data-field-name={this.fieldName}
         onFocus={this.handleSelection}
-        onCalciteInputChange={this.handleCalciteInputChange.bind(this)}
+        onCalciteInputChange={this.handleTranslatedInputChange.bind(this)}
         value={value}
       >
         {this.renderCopyButton(EInputType.Translation)}
@@ -157,13 +160,7 @@ export class InstantAppsLanguageTranslatorItem {
     return (
       <instant-apps-ckeditor-wrapper
         ref={this.setEditor.bind(this, type)}
-        onDataChanged={async e => {
-          if (type === EInputType.User) {
-            this.handleUserTextEditorChange(e);
-          } else {
-            this.handleDataChange(e);
-          }
-        }}
+        onDataChanged={this.handleTextEditorDataChange.bind(this, type)}
         onIsFocused={this.handleSelection}
         value={value ?? ''}
         data-field-name={this.fieldName}
@@ -226,34 +223,11 @@ export class InstantAppsLanguageTranslatorItem {
     return languageTranslatorState.uiData[this.fieldName] as LocaleSettingItem;
   }
 
-  handleCalciteInputChange(e: CustomEvent) {
-    this.updateT9nStore(e);
-    this.handleTranslatedLanguageInput();
-  }
-
-  updateT9nStore(e: CustomEvent): void {
+  updateT9nStore(fieldName: string, value: string): void {
     const currentLanguage = store.get('currentLanguage') as string;
-    const composedPath = e.composedPath();
-    const node = composedPath[0] as HTMLCalciteInputElement;
-    const fieldName = node.getAttribute('data-field-name') as string;
-    const dataToWrite = { [fieldName]: node.value };
+    const dataToWrite = { [fieldName]: value };
     const updatedData = getT9nData(currentLanguage, dataToWrite);
     store.set('portalItemResourceT9n', updatedData);
-  }
-
-  // Write data to portal item resource
-  async handleTranslatedLanguageInput(): Promise<void> {
-    store.set('saving', true);
-    try {
-      const resource = store.get('portalItemResource') as __esri.PortalItemResource;
-      const data = store.get('portalItemResourceT9n');
-      await writeToPortalItemResource(resource, data);
-      setTimeout(() => store.set('saving', false), 1500);
-      this.translatorItemDataUpdated.emit();
-    } catch (err) {
-      console.error('Error writing to portal item resource: ', err);
-      store.set('saving', false);
-    }
   }
 
   handleExpand(uiDataItem: LocaleSettingItem): void {
@@ -325,33 +299,81 @@ export class InstantAppsLanguageTranslatorItem {
     }
   }
 
-  async handleDataChange(e: CustomEvent): Promise<void> {
+  // INPUT DATA HANDLING
+
+  // User locale input data handling
+  async handleUserInputChange(e: CustomEvent): Promise<void> {
     store.set('saving', true);
     try {
-      const dataToWrite = { [this.fieldName]: e.detail };
-      const updatedData = getT9nData(store.get('currentLanguage') as string, dataToWrite);
-      store.set('portalItemResourceT9n', updatedData);
-
-      const resource = store.get('portalItemResource') as __esri.PortalItemResource;
-      await writeToPortalItemResource(resource, updatedData);
-      setTimeout(() => store.set('saving', false), 1500);
+      const node = e.target as HTMLCalciteInputElement;
+      const value = node.value;
+      const uiDataItem = this.getUIDataItem() as LocaleSettingItem;
+      uiDataItem.userLocaleData.value = value;
+      await this.userLocaleInputOnChangeCallback(this.fieldName, value);
+      store.set('saving', false);
     } catch {
       store.set('saving', false);
     }
   }
 
-  async handleUserInputChange(e: CustomEvent): Promise<void> {
-    store.set('saving', true);
-    const node = e.target as HTMLCalciteInputElement;
-    const value = node.value;
-    await this.userLocaleInputOnChangeCallback(this.fieldName, value);
-    console.log('test');
-    store.set('saving', false);
-  }
-
   async handleUserTextEditorChange(e: CustomEvent): Promise<void> {
     store.set('saving', true);
-    await this.userLocaleInputOnChangeCallback(this.fieldName, e.detail);
-    store.set('saving', false);
+    try {
+      const value = e.detail;
+      const uiDataItem = this.getUIDataItem() as LocaleSettingItem;
+      uiDataItem.userLocaleData.value = value;
+      await this.userLocaleInputOnChangeCallback(this.fieldName, value);
+      store.set('saving', false);
+    } catch {
+      store.set('saving', false);
+    }
+  }
+
+  // Translated locale input data handling
+  async handleTranslatedInputChange(e: CustomEvent): Promise<void> {
+    store.set('saving', true);
+    try {
+      const composedPath = e.composedPath();
+      const node = composedPath[0] as HTMLCalciteInputElement;
+      this.updateT9nStore(this.fieldName, node.value);
+      const { fieldName, locale, resource } = this.getTranslatedLocaleCallbackData();
+      const value = (e.target as HTMLCalciteInputElement).value;
+      await this.translatedLocaleInputOnChangeCallback(fieldName, value, locale, resource);
+      setTimeout(() => store.set('saving', false), 1500);
+      this.translatorItemDataUpdated.emit();
+    } catch (err) {
+      console.error('Error writing to portal item resource: ', err);
+      store.set('saving', false);
+    }
+  }
+
+  async handleTranslatedTextEditorChange(e: CustomEvent): Promise<void> {
+    store.set('saving', true);
+    try {
+      this.updateT9nStore(this.fieldName, e.detail);
+      const { fieldName, locale, resource } = this.getTranslatedLocaleCallbackData();
+      const value = e.detail;
+      await this.translatedLocaleInputOnChangeCallback(fieldName, value, locale, resource);
+      setTimeout(() => store.set('saving', false), 1500);
+      this.translatorItemDataUpdated.emit();
+    } catch (err) {
+      console.error('Error writing to portal item resource: ', err);
+      store.set('saving', false);
+    }
+  }
+
+  handleTextEditorDataChange(type: EInputType.User | EInputType.Translation, e: CustomEvent) {
+    if (type === EInputType.User) {
+      this.handleUserTextEditorChange(e);
+    } else {
+      this.handleTranslatedTextEditorChange(e);
+    }
+  }
+
+  getTranslatedLocaleCallbackData(): { fieldName: string; locale: string; resource: __esri.PortalItemResource } {
+    const { fieldName } = this;
+    const locale = store.get('currentLanguage') as string;
+    const resource = store.get('portalItemResource') as __esri.PortalItemResource;
+    return { fieldName, locale, resource };
   }
 }

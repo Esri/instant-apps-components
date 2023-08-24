@@ -204,6 +204,8 @@ export class InstantAppsLanguageSwitcher {
       const reqConfig = { responseType: 'json', cacheBust: true };
       const reqRes = await request(t9nResourceItem.url, reqConfig);
       this.t9nData = reqRes.data;
+      const refreshedData = { locale: this.selectedLanguage as string, data: this.t9nData[this.selectedLanguage as string] };
+      this.selectedLanguageUpdated.emit(refreshedData);
     } catch {}
   }
 }

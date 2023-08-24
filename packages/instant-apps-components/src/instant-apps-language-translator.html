@@ -328,6 +328,16 @@
               console.log('VALUE: ', value);
             });
 
+          langTranslator.translatedLocaleInputOnChangeCallback = (fieldName, value, locale, resource) =>
+            new Promise((resolve, reject) => {
+              setTimeout(resolve, 1000);
+            }).then(res => {
+              console.log('FIELD NAME: ', fieldName);
+              console.log('VALUE: ', value);
+              console.log('LOCALE: ', locale);
+              console.log('RESOURCE: ', resource);
+            });
+
           const openButton = document.getElementById('openLangTranslator');
           openButton.addEventListener('click', () => (langTranslator.open = true));
 

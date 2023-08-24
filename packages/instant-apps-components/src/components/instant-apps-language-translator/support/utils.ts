@@ -85,21 +85,6 @@ export function getT9nData(locale: string, data: { [key: string]: string }) {
   return dataToWrite;
 }
 
-export async function writeToPortalItemResource(portalItemResource: __esri.PortalItemResource, data: { [key: string]: string }): Promise<void> {
-  try {
-    const dataStr = JSON.stringify(data);
-    const blobParts = [dataStr];
-    const options = { type: 'application/json' };
-    const blob = new Blob(blobParts, options);
-    await portalItemResource.update(blob);
-    return Promise.resolve();
-  } catch (err) {
-    console.error('Failed to update portal item resource.');
-    console.error(`Error from 'instant-apps-language-translator': `, err);
-    return Promise.reject();
-  }
-}
-
 export function getLocales(localeItems: LocaleItem[]) {
   return localeItems?.map(localeItem => localeItem.locale) ?? [];
 }
