@@ -19,10 +19,16 @@ export class InstantAppsControlPanel {
 
   @Element()
   el: HostElement;
-
+  
+  /**
+   * Determine which widgets or components to display in the control panel
+   */
   @Prop()
   components: ControlPanelComponent[] = [];
-
+ 
+  /**
+   * MapView or SceneView
+   */
   @Prop()
   view: __esri.MapView | __esri.SceneView;
 
