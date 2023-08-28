@@ -4,7 +4,7 @@
   "expandAll": "Expand all",
   "goToSetting": "Go to setting",
   "header": "Language translator",
-  "headerTip": "Language translator tip",
+  "headerTip": "All text entered by the app author is displayed below with the option to add in translated text to support each language selected. If the text box for any selected language is left blank, the app will show the default language text until the translated text is entered. Use the search to help find text, the search includes the default and translated text areas.",
   "languages": {
     "ar": "Arabic",
     "bg": "Bulgarian",
