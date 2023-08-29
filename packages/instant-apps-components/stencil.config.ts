@@ -1,6 +1,7 @@
 import { Config } from '@stencil/core';
 import { sass } from '@stencil/sass';
 import { reactOutputTarget } from '@stencil/react-output-target';
+import nodePolyfills from 'rollup-plugin-node-polyfills';
 
 const t9nAssetsObj = {
   src: './assets/t9n',
@@ -43,5 +44,5 @@ email: contracts@esri.com
 `,
     },
   ],
-  plugins: [sass()],
+  plugins: [nodePolyfills(), sass()],
 };
