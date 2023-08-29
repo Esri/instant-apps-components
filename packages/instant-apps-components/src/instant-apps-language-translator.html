@@ -1,0 +1,409 @@
+<!-- /*
+ *   Copyright (c) 2023 Esri
+ *   All rights reserved under the copyright laws of the United States and applicable international laws, treaties, and conventions.
+ *   This material is licensed for use under the Esri Master License Agreement (MLA), and is bound by the terms of that agreement.
+ *   You may redistribute and use this code without modification, provided you adhere to the terms of the MLA and include this copyright notice.
+ *   See use restrictions at http://www.esri.com/legal/pdfs/mla_e204_e300/english
+ */ -->
+
+<!DOCTYPE html>
+<html dir="ltr">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=5.0" />
+    <title>ArcGIS Instant Apps Components: Language Translator/Switcher</title>
+    <script src="/ckeditor5/ckeditor5-build-classic/build/ckeditor.js"></script>
+    <link rel="stylesheet" href="https://js.arcgis.com/4.27/@arcgis/core/assets/esri/themes/light/main.css" />
+    <script src="https://js.arcgis.com/4.27/"></script>
+    <script type="module" src="https://js.arcgis.com/calcite-components/1.5.0/calcite.esm.js"></script>
+    <link rel="stylesheet" type="text/css" href="https://js.arcgis.com/calcite-components/1.5.0/calcite.css" />
+    <script type="module" src="/build/instant-apps-components.esm.js"></script>
+    <script nomodule src="/build/instant-apps-components.js"></script>
+    <style>
+      html,
+      body,
+      #viewDiv {
+        box-sizing: border-box;
+        width: 100%;
+        height: 100%;
+        margin: 0;
+        padding: 0;
+      }
+
+      #settings {
+        padding: 10px;
+      }
+
+      #stringPreview {
+        padding: 10px;
+      }
+
+      .setting-container-item {
+        display: flex;
+        flex-direction: column;
+        border-top: 1px solid lightgray;
+        padding: 10px 0;
+      }
+
+      .setting-container-item:first-child {
+        border-top: none;
+      }
+
+      .setting-container-item:last-child {
+        border-bottom: 1px solid lightgray;
+      }
+
+      .setting-label {
+        font-weight: 450;
+      }
+
+      .string-preview-header {
+        font-weight: 450;
+        text-decoration: underline;
+        font-size: 18px;
+      }
+    </style>
+  </head>
+
+  <body class="calcite-mode-dark">
+    <calcite-shell>
+      <instant-apps-header slot="header" title-text="Instant Apps Components: Language translator/switcher"></instant-apps-header>
+      <calcite-shell-panel slot="panel-start">
+        <calcite-panel>
+          <div id="settings">
+            <calcite-label>
+              Language translator
+              <calcite-button id="openLangTranslator">Open language translator</calcite-button>
+            </calcite-label>
+          </div>
+          <div id="stringPreview">
+            <span class="string-preview-header">Preview: </span>
+            <div id="settingContainer"></div>
+          </div>
+        </calcite-panel>
+      </calcite-shell-panel>
+      <div id="viewDiv"></div>
+    </calcite-shell>
+    <instant-apps-language-translator tabindex="-1" id="langTranslator"></instant-apps-language-translator>
+    <script type="module">
+      require(['esri/views/MapView', 'esri/WebMap', 'esri/widgets/Expand', 'esri/widgets/Search', 'esri/widgets/LayerList', 'esri/portal/PortalItem', 'esri/config', 'esri/intl'], (
+        MapView,
+        WebMap,
+        Expand,
+        Search,
+        LayerList,
+        PortalItem,
+        esriConfig,
+        intl,
+      ) => {
+        const DEFAULT_LOCALE = intl.getLocale();
+
+        esriConfig.portalUrl = 'https://nw-brews.mapsdevext.arcgis.com';
+
+        const DEFAULT_WEBMAP_ID = '259c3847301c4cd1a2cc1f5227839ff4';
+
+        const map = new WebMap({
+          portalItem: {
+            id: DEFAULT_WEBMAP_ID,
+          },
+        });
+        const view = new MapView({
+          map,
+          container: 'viewDiv',
+        });
+
+        const templateAppItem = new PortalItem({
+          id: 'de9e286c9cd142798ff1c6a88ef21439',
+        });
+
+        function getLangSwitcherData() {
+          return {
+            langTranslatorConfigData: {
+              customHeaderHTML: {
+                type: 'textEditor',
+                label: 'Custom header HTML',
+                value: '<p>Really cool header</p>',
+                uiLocation: {
+                  section: {
+                    id: 'about',
+                    label: 'About',
+                  },
+                  subsection: {
+                    id: 'appComprehension',
+                    label: 'App details',
+                  },
+                },
+                tip: 'Include a more customized look for the app title. Rich text editor accessibility instructions can be accessed through ALT+0 (Mac users: Option+0).',
+              },
+              customURLParamName: {
+                type: 'string',
+                label: 'URL parameter name',
+                value: 'district',
+                uiLocation: {
+                  section: {
+                    id: 'interactivity',
+                    label: 'Interactivity',
+                  },
+                  subsection: {
+                    id: 'customURLParams',
+                    label: 'URL parameter',
+                  },
+                },
+                tip: 'Set up your app to support a custom URL parameter that users can append to your app URL. For example, if your map contains a feature layer with parcel information, you could find parcels using a URL parameter. For example, if your custom parameter name is parcel users would append the custom search to the app URl like this: index.html?parcel=3045',
+              },
+              splashButtonText: {
+                type: 'string',
+                label: 'Introduction panel button text',
+                value: 'Enter',
+                uiLocation: {
+                  section: {
+                    id: 'about',
+                    label: 'About',
+                  },
+                  subsection: {
+                    id: 'appComprehension',
+                    label: 'App details',
+                  },
+                },
+              },
+              splashContent: {
+                type: 'textEditor',
+                label: 'Introduction panel content',
+                value: '<p>Pineapple</p><ul><li>Alpha</li><li>Beta</li><li>Gamma</li></ul>',
+                uiLocation: {
+                  section: {
+                    id: 'about',
+                    label: 'About',
+                  },
+                  subsection: {
+                    id: 'appComprehension',
+                    label: 'App details',
+                  },
+                },
+                tip: 'Add text, links, and small graphics here (rich text editor). Rich text editor accessibility instructions can be accessed through ALT+0 (Mac users: Option+0).',
+              },
+              splashTitle: {
+                type: 'string',
+                label: 'Introduction panel title',
+                value: 'Welcome!',
+                uiLocation: {
+                  section: {
+                    id: 'about',
+                    label: 'About',
+                  },
+                  subsection: {
+                    id: 'appComprehension',
+                    label: 'App details',
+                  },
+                },
+              },
+              title: {
+                type: 'string',
+                label: 'App title',
+                value: 'Language switcher test',
+                uiLocation: {
+                  section: {
+                    id: 'about',
+                    label: 'About',
+                  },
+                  subsection: {
+                    id: 'appComprehension',
+                    label: 'App details',
+                  },
+                },
+                tip: "Include title text to introduce the map's main topic",
+              },
+              translatedLanguageLabels: {
+                ja: {
+                  customHeaderHTML: 'カスタム ヘッダーの編集',
+                  customURLParamName: 'URL パラメーター名',
+                  splashButtonText: '概要パネルのボタン テキスト',
+                  splashContent: '概要パネルのコンテンツ',
+                  splashTitle: '概要パネルのタイトル',
+                  title: 'アプリのタイトル',
+                },
+                el: {
+                  customHeaderHTML: 'Επεξεργασία εξατομικευμένης κεφαλίδας',
+                  customURLParamName: 'Όνομα παραμέτρου διεύθυνσης URL',
+                  splashButtonText: 'Κείμενο κουμπιού πλαισίου εισαγωγής',
+                  splashContent: 'Περιεχόμενο πλαισίου εισαγωγής',
+                  splashTitle: 'Τίτλος πλαισίου εισαγωγής',
+                  title: 'Τίτλος εφαρμογής',
+                },
+                fr: {
+                  customHeaderHTML: 'Mettre à jour l’en-tête personnalisé',
+                  customURLParamName: 'Nom du paramètre d’URL',
+                  splashButtonText: 'Texte du bouton du volet de présentation',
+                  splashContent: 'Contenu du volet de présentation',
+                  splashTitle: 'Titre du volet de présentation',
+                  title: 'Titre de l’application',
+                },
+              },
+            },
+            langSwitcherConfigData: {
+              locales: [
+                {
+                  locale: 'ja',
+                  webmap: 'd58ef172169e4bd28a31e37ff8ca336b',
+                },
+                {
+                  locale: 'el',
+                  webmap: 'e8e79bb8cbb349d4881f93cd8e023bf3',
+                },
+                {
+                  locale: 'fr',
+                  webmap: '86ac3d14a77749c19f4e279f4507b045',
+                },
+              ],
+              icon: 'language-translate',
+              portalItemResourceId: '',
+            },
+          };
+        }
+
+        const { langTranslatorConfigData, langSwitcherConfigData } = getLangSwitcherData();
+
+        const settingContainer = document.getElementById('settingContainer');
+
+        function applyStringPreview() {
+          settingContainer.innerHTML = '';
+          const settingKeys = Object.keys(langTranslatorConfigData).filter(settingKey => settingKey !== 'translatedLanguageLabels');
+
+          settingKeys.forEach(key => {
+            const container = document.createElement('div');
+            container.classList.add('setting-container-item');
+
+            const label = document.createElement('span');
+            label.classList.add('setting-label');
+            label.innerHTML = langTranslatorConfigData[key].label;
+
+            const value = document.createElement('span');
+            value.innerHTML = langTranslatorConfigData[key].value;
+
+            container.appendChild(label);
+            container.appendChild(value);
+
+            settingContainer.appendChild(container);
+          });
+        }
+
+        applyStringPreview();
+
+        function updateStringPreview(data) {
+          settingContainer.innerHTML = '';
+
+          const settingKeys = Object.keys(langTranslatorConfigData).filter(settingKey => settingKey !== 'translatedLanguageLabels');
+
+          const t9nData = data.data;
+
+          settingKeys.forEach(key => {
+            const container = document.createElement('div');
+            container.classList.add('setting-container-item');
+
+            const label = document.createElement('span');
+            label.classList.add('setting-label');
+            label.innerHTML = langTranslatorConfigData.translatedLanguageLabels[data.locale][key];
+
+            const value = document.createElement('span');
+            value.innerHTML = t9nData[key];
+
+            container.appendChild(label);
+            container.appendChild(value);
+
+            settingContainer.appendChild(container);
+          });
+        }
+
+        function createLanguageTranslator(langSwitcher) {
+          const langTranslator = document.getElementById('langTranslator');
+          langTranslator.portalItem = templateAppItem;
+          langTranslator.appSettings = langTranslatorConfigData;
+          langTranslator.locales = langSwitcherConfigData.locales;
+
+          langTranslator.userLocaleInputOnChangeCallback = (fieldName, value) =>
+            new Promise((resolve, reject) => {
+              setTimeout(resolve, 1000);
+            }).then(res => {
+              console.log('FIELD NAME: ', fieldName);
+              console.log('VALUE: ', value);
+            });
+
+          langTranslator.translatedLocaleInputOnChangeCallback = (fieldName, value, locale, resource) =>
+            new Promise((resolve, reject) => {
+              setTimeout(resolve, 1000);
+            }).then(res => {
+              console.log('FIELD NAME: ', fieldName);
+              console.log('VALUE: ', value);
+              console.log('LOCALE: ', locale);
+              console.log('RESOURCE: ', resource);
+            });
+
+          const openButton = document.getElementById('openLangTranslator');
+          openButton.addEventListener('click', () => (langTranslator.open = true));
+
+          langTranslator.addEventListener('translatorDataUpdated', () => {
+            langSwitcher.refresh();
+          });
+        }
+
+        function createLanguageSwitcher() {
+          const content = document.createElement('instant-apps-language-switcher');
+          content.portalItem = templateAppItem;
+          content.icon = langSwitcherConfigData.icon;
+          content.locales = langSwitcherConfigData.locales;
+          content.view = view;
+
+          const expand = new Expand({
+            view,
+            content,
+            expanded: true,
+            expandIcon: langSwitcherConfigData.icon,
+          });
+
+          view.ui.add(expand, 'top-left');
+
+          return content;
+        }
+
+        document.body.addEventListener('selectedLanguageUpdated', e => {
+          if (e.detail?.locale && e.detail?.locale !== DEFAULT_LOCALE) {
+            updateStringPreview(e.detail);
+          } else {
+            applyStringPreview();
+          }
+        });
+
+        const langSwitcher = createLanguageSwitcher();
+        createLanguageTranslator(langSwitcher);
+
+        (function createSearch() {
+          const search = new Search({
+            view,
+          });
+
+          const searchExpand = new Expand({
+            view,
+            content: search,
+            expanded: true,
+          });
+
+          view.ui.add(searchExpand, 'top-right');
+        })();
+
+        (function createLayerList() {
+          const layerList = new LayerList({
+            view,
+          });
+
+          const layerListExpand = new Expand({
+            view,
+            content: layerList,
+            expanded: true,
+          });
+
+          view.ui.add(layerListExpand, 'top-right');
+        })();
+      });
+    </script>
+  </body>
+</html>

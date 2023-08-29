@@ -3,7 +3,7 @@ import { CalciteCheckboxCustomEvent, CalciteInputCustomEvent } from '@esri/calci
 
 import Export_T9n from '../../assets/t9n/instant-apps-export/resources.json';
 import { ExportOutput, PopoverPlacement } from '../../interfaces/interfaces';
-import { getLocaleComponentStrings } from '../../utils/locale';
+import { getMessages } from '../../utils/locale';
 import { printStyling } from './resources';
 import { loadModules } from '../../utils/loadModules';
 import { getMode } from '../../utils/mode';
@@ -166,7 +166,7 @@ export class InstantAppsExport {
 
   componentWillLoad(): void {
     this.baseClass = getMode(this.hostElement) === 'dark' ? CSS.baseDark : CSS.baseLight;
-    this.getMessages();
+    getMessages(this);
     this.initializeModules();
   }
 
@@ -211,7 +211,14 @@ export class InstantAppsExport {
       >
         {panel}
       </calcite-popover>,
-      <calcite-action id="export-popover-btn" alignment="center" icon={this.popoverIcon} scale={this.scale} title={this.messages?.exportBtn} text={this.messages?.exportBtn}></calcite-action>,
+      <calcite-action
+        id="export-popover-btn"
+        alignment="center"
+        icon={this.popoverIcon}
+        scale={this.scale}
+        title={this.messages?.exportBtn}
+        text={this.messages?.exportBtn}
+      ></calcite-action>,
     ];
   }
 
@@ -563,10 +570,5 @@ export class InstantAppsExport {
         });
       }
     }
-  }
-
-  async getMessages(): Promise<void> {
-    const messages = await getLocaleComponentStrings(this.hostElement);
-    this.messages = messages[0] as typeof Export_T9n;
   }
 }

@@ -1,0 +1,104 @@
+:host {
+  display: block;
+
+  calcite-modal {
+    --calcite-modal-content-padding: 0;
+  }
+
+  .instant-apps-language-translator {
+    &__header {
+      display: flex;
+      justify-content: space-between;
+      width: 100%;
+    }
+
+    &__header-text {
+      font-size: 18px;
+    }
+
+    &__saving-indicator {
+      display: flex;
+      align-items: center;
+      font-size: 14.5px;
+      color: var(--calcite-ui-brand);
+    }
+
+    &__writing-icon {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin-right: 5px;
+    }
+
+    &__close-button {
+      width: 175px;
+    }
+
+    &__header-tip {
+      padding: 20px;
+      max-width: 45vw;
+    }
+
+    &__top-bar {
+      display: flex;
+      width: 100%;
+      position: sticky;
+      top: 0;
+      background: var(--calcite-ui-foreground-1);
+      z-index: 1;
+
+      calcite-label {
+        --calcite-label-margin-bottom: 0;
+        font-weight: var(--calcite-font-weight-medium);
+      }
+
+      &-section {
+        box-sizing: border-box;
+        display: flex;
+        align-items: center;
+        width: 50%;
+        padding: 0.5%;
+      }
+    }
+
+    &__user-lang-text {
+      font-weight: var(--calcite-font-weight-medium);
+    }
+
+    &__top-bar-section:first-child {
+      display: flex;
+      justify-content: space-between;
+    }
+
+    &__top-bar-section:nth-child(2) {
+      calcite-select {
+        width: 255px;
+      }
+    }
+
+    &__collapse-search-container {
+      display: flex;
+      justify-content: space-between;
+
+      calcite-input {
+        width: 300px;
+        margin-left: 30px;
+      }
+    }
+  }
+}
+
+.ck.ck-reset.ck-editor.ck-rounded-corners {
+  margin-top: 10px !important;
+  margin-left: 55px !important;
+}
+.ck-editor__editable {
+  height: 70px !important;
+  font-size: 0.875rem !important;
+  line-height: 1.375 !important;
+}
+
+.ck.ck-editor__editable_inline > :first-child,
+.ck.ck-editor__editable_inline > :last-child {
+  --ck-spacing-large: 0.5rem !important;
+}

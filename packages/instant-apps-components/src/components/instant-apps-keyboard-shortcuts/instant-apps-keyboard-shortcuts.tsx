@@ -10,7 +10,7 @@ import { Component, Host, State, Prop, Element, h } from '@stencil/core';
 import SceneView from 'esri/views/SceneView';
 import KeyboardShortcuts_T9n from '../../assets/t9n/instant-apps-keyboard-shortcuts/resources.json';
 
-import { getLocaleComponentStrings } from '../../utils/locale';
+import { getMessages } from '../../utils/locale';
 const CSS = {
   content: 'instant-apps-keyboard-shortcuts__content',
 };
@@ -61,11 +61,7 @@ export class InstantAppsKeyboardShortcuts {
     );
   }
   componentDidLoad() {
-    this.getMessages();
-  }
-  async getMessages() {
-    const messages = await getLocaleComponentStrings(this.el);
-    this.messages = messages[0] as typeof KeyboardShortcuts_T9n;
+    getMessages(this);
   }
 
   renderTableHeader() {

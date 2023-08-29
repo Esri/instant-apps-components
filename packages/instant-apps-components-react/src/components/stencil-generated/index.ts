@@ -8,6 +8,7 @@ import type { JSX } from '@esri/instant-apps-components';
 import { defineCustomElements } from '@esri/instant-apps-components/loader';
 
 defineCustomElements();
+export const InstantAppsCkeditorWrapper = /*@__PURE__*/createReactComponent<JSX.InstantAppsCkeditorWrapper, HTMLInstantAppsCkeditorWrapperElement>('instant-apps-ckeditor-wrapper');
 export const InstantAppsControlPanel = /*@__PURE__*/createReactComponent<JSX.InstantAppsControlPanel, HTMLInstantAppsControlPanelElement>('instant-apps-control-panel');
 export const InstantAppsExport = /*@__PURE__*/createReactComponent<JSX.InstantAppsExport, HTMLInstantAppsExportElement>('instant-apps-export');
 export const InstantAppsFilterList = /*@__PURE__*/createReactComponent<JSX.InstantAppsFilterList, HTMLInstantAppsFilterListElement>('instant-apps-filter-list');
@@ -24,6 +25,10 @@ export const InstantAppsInteractiveLegendLegendElementCaption = /*@__PURE__*/cre
 export const InstantAppsInteractiveLegendRelationship = /*@__PURE__*/createReactComponent<JSX.InstantAppsInteractiveLegendRelationship, HTMLInstantAppsInteractiveLegendRelationshipElement>('instant-apps-interactive-legend-relationship');
 export const InstantAppsKeyboardShortcuts = /*@__PURE__*/createReactComponent<JSX.InstantAppsKeyboardShortcuts, HTMLInstantAppsKeyboardShortcutsElement>('instant-apps-keyboard-shortcuts');
 export const InstantAppsLandingPage = /*@__PURE__*/createReactComponent<JSX.InstantAppsLandingPage, HTMLInstantAppsLandingPageElement>('instant-apps-landing-page');
+export const InstantAppsLanguageSwitcher = /*@__PURE__*/createReactComponent<JSX.InstantAppsLanguageSwitcher, HTMLInstantAppsLanguageSwitcherElement>('instant-apps-language-switcher');
+export const InstantAppsLanguageTranslator = /*@__PURE__*/createReactComponent<JSX.InstantAppsLanguageTranslator, HTMLInstantAppsLanguageTranslatorElement>('instant-apps-language-translator');
+export const InstantAppsLanguageTranslatorItem = /*@__PURE__*/createReactComponent<JSX.InstantAppsLanguageTranslatorItem, HTMLInstantAppsLanguageTranslatorItemElement>('instant-apps-language-translator-item');
+export const InstantAppsLanguageTranslatorSearch = /*@__PURE__*/createReactComponent<JSX.InstantAppsLanguageTranslatorSearch, HTMLInstantAppsLanguageTranslatorSearchElement>('instant-apps-language-translator-search');
 export const InstantAppsMeasurement = /*@__PURE__*/createReactComponent<JSX.InstantAppsMeasurement, HTMLInstantAppsMeasurementElement>('instant-apps-measurement');
 export const InstantAppsMeasurementTool = /*@__PURE__*/createReactComponent<JSX.InstantAppsMeasurementTool, HTMLInstantAppsMeasurementToolElement>('instant-apps-measurement-tool');
 export const InstantAppsPopover = /*@__PURE__*/createReactComponent<JSX.InstantAppsPopover, HTMLInstantAppsPopoverElement>('instant-apps-popover');
