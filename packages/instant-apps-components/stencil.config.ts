@@ -1,7 +1,6 @@
 import { Config } from '@stencil/core';
 import { sass } from '@stencil/sass';
 import { reactOutputTarget } from '@stencil/react-output-target';
-import nodePolyfills from 'rollup-plugin-node-polyfills';
 
 const t9nAssetsObj = {
   src: './assets/t9n',
@@ -19,7 +18,7 @@ export const config: Config = {
     { type: 'dist-custom-elements', autoDefineCustomElements: true },
     {
       type: 'www',
-      copy: [{ src: '**/*.html' }, { ...t9nAssetsObj, dest: 'assets/t9n' }, { src: '../node_modules/@ckeditor', dest: './ckeditor5' }],
+      copy: [{ src: '**/*.html' }, { ...t9nAssetsObj, dest: 'assets/t9n' }],
       serviceWorker: null, // disable service workers
     },
     reactOutputTarget({
@@ -44,5 +43,5 @@ email: contracts@esri.com
 `,
     },
   ],
-  plugins: [nodePolyfills(), sass()],
+  plugins: [sass()],
 };
