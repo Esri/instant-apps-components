@@ -1,6 +1,6 @@
 # instant-apps-language-switcher
 
-
+Language switcher provides end users with the ability to translate a web app's UI by selecting a language from a dropdown. 
 
 <!-- Auto Generated Below -->
 
@@ -17,9 +17,9 @@
 
 ## Events
 
-| Event                     | Description | Type                                                                               |
-| ------------------------- | ----------- | ---------------------------------------------------------------------------------- |
-| `selectedLanguageUpdated` |             | `CustomEvent<{ locale: string; data?: { [key: string]: string; } \| undefined; }>` |
+| Event                     | Description                                                                                                                                                                                                  | Type                                                                               |
+| ------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ---------------------------------------------------------------------------------- |
+| `selectedLanguageUpdated` | Fires when a language is selected from the dropdown. This event will emit an object containing the information on the selected language and a flat object of unique identifiers and their associated values. | `CustomEvent<{ locale: string; data?: { [key: string]: string; } \| undefined; }>` |
 
 
 ## Methods

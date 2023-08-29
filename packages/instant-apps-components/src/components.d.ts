@@ -420,9 +420,12 @@ export namespace Components {
           * Instant App portal item - used to fetch it's associated portal item resource. The portal item resource will contain the user defined translated strings.
          */
         "portalItem": __esri.PortalItem;
-        "translatedLocaleInputOnChangeCallback": (fieldName: string, value: string) => Promise<any>;
         /**
-          * Function to be called when data in user locale inputs have changed. This function will have 2 arguments - fieldName and value. Field name is a unique identifier for a given setting/field. Value is the entered value within the input.
+          * Function that is called when the value in a translated locale's input has changed. This function will have 4 arguments - fieldName, value, locale, and resource - and will return a promise. The callback function can be used to construct the data of key-value pairs that will be written to the portal item resource.
+         */
+        "translatedLocaleInputOnChangeCallback": (fieldName: string, value: string, locale: string, resource: __esri.PortalItemResource) => Promise<any>;
+        /**
+          * Function to be called when the value in a user locale input has changed. This function will have 2 arguments - fieldName and value - and will return a promise.
          */
         "userLocaleInputOnChangeCallback": (fieldName: string, value: string) => Promise<void>;
     }
@@ -435,13 +438,16 @@ export namespace Components {
           * Label of item in currently selected language.
          */
         "translatedLanguageLabel": string;
+        /**
+          * Function that is called when the value in a translated locale's input has changed. This function will have 4 arguments - fieldName, value, locale, and resource - and will return a promise. The callback function can be used to construct the data of key-value pairs that will be written to the portal item resource.
+         */
         "translatedLocaleInputOnChangeCallback": (fieldName: string, value: string, locale: string, resource: __esri.PortalItemResource) => Promise<void>;
         /**
           * Determines whether to use a regular input or text editor
          */
         "type": SettingType;
         /**
-          * Function that return a promise that will be called when data in the user locale inputs have changed. This function will have 2 arguments - fieldName and value. Field name is a unique identifier for a given setting/field. Value is the entered value within the input.
+          * Function to be called when the value in a user locale input has changed. This function will have 2 arguments - fieldName and value - and will return a promise.
          */
         "userLocaleInputOnChangeCallback": (fieldName: string, value: string) => Promise<void>;
     }
@@ -1268,6 +1274,9 @@ declare namespace LocalJSX {
           * Data used to populate language switcher dropdown.
          */
         "locales"?: { locale: string; webmap?: string }[];
+        /**
+          * Fires when a language is selected from the dropdown. This event will emit an object containing the information on the selected language and a flat object of unique identifiers and their associated values.
+         */
         "onSelectedLanguageUpdated"?: (event: InstantAppsLanguageSwitcherCustomEvent<{
     locale: string;
     data?: {
@@ -1301,9 +1310,12 @@ declare namespace LocalJSX {
           * Instant App portal item - used to fetch it's associated portal item resource. The portal item resource will contain the user defined translated strings.
          */
         "portalItem": __esri.PortalItem;
-        "translatedLocaleInputOnChangeCallback"?: (fieldName: string, value: string) => Promise<any>;
         /**
-          * Function to be called when data in user locale inputs have changed. This function will have 2 arguments - fieldName and value. Field name is a unique identifier for a given setting/field. Value is the entered value within the input.
+          * Function that is called when the value in a translated locale's input has changed. This function will have 4 arguments - fieldName, value, locale, and resource - and will return a promise. The callback function can be used to construct the data of key-value pairs that will be written to the portal item resource.
+         */
+        "translatedLocaleInputOnChangeCallback"?: (fieldName: string, value: string, locale: string, resource: __esri.PortalItemResource) => Promise<any>;
+        /**
+          * Function to be called when the value in a user locale input has changed. This function will have 2 arguments - fieldName and value - and will return a promise.
          */
         "userLocaleInputOnChangeCallback"?: (fieldName: string, value: string) => Promise<void>;
     }
@@ -1317,13 +1329,16 @@ declare namespace LocalJSX {
           * Label of item in currently selected language.
          */
         "translatedLanguageLabel"?: string;
+        /**
+          * Function that is called when the value in a translated locale's input has changed. This function will have 4 arguments - fieldName, value, locale, and resource - and will return a promise. The callback function can be used to construct the data of key-value pairs that will be written to the portal item resource.
+         */
         "translatedLocaleInputOnChangeCallback"?: (fieldName: string, value: string, locale: string, resource: __esri.PortalItemResource) => Promise<void>;
         /**
           * Determines whether to use a regular input or text editor
          */
         "type"?: SettingType;
         /**
-          * Function that return a promise that will be called when data in the user locale inputs have changed. This function will have 2 arguments - fieldName and value. Field name is a unique identifier for a given setting/field. Value is the entered value within the input.
+          * Function to be called when the value in a user locale input has changed. This function will have 2 arguments - fieldName and value - and will return a promise.
          */
         "userLocaleInputOnChangeCallback"?: (fieldName: string, value: string) => Promise<void>;
     }
