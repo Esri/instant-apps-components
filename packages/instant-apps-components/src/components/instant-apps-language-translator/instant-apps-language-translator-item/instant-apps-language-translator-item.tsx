@@ -56,11 +56,14 @@ export class InstantAppsLanguageTranslatorItem {
   type: SettingType;
 
   /**
-   * Function that return a promise that will be called when data in the user locale inputs have changed. This function will have 2 arguments - fieldName and value. Field name is a unique identifier for a given setting/field. Value is the entered value within the input.
+   * Function to be called when the value in a user locale input has changed. This function will have 2 arguments - fieldName and value - and will return a promise. 
    */
   @Prop()
   userLocaleInputOnChangeCallback: (fieldName: string, value: string) => Promise<void>;
 
+   /**
+   * Function that is called when the value in a translated locale's input has changed. This function will have 4 arguments - fieldName, value, locale, and resource - and will return a promise. The callback function can be used to construct the data of key-value pairs that will be written to the portal item resource. 
+   */
   @Prop()
   translatedLocaleInputOnChangeCallback: (fieldName: string, value: string, locale: string, resource: __esri.PortalItemResource) => Promise<void>;
 

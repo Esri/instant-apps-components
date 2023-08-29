@@ -54,6 +54,9 @@ export class InstantAppsLanguageSwitcher {
   @State()
   t9nData: any = null;
 
+    /**
+   * Fires when a language is selected from the dropdown. This event will emit an object containing the information on the selected language and a flat object of unique identifiers and their associated values. 
+   */
   @Event()
   selectedLanguageUpdated: EventEmitter<{
     locale: string;
@@ -66,20 +69,28 @@ export class InstantAppsLanguageSwitcher {
     const [intl] = await loadModules(['esri/intl']);
     this.intl = intl;
     this.messages = await getMessages(document.createElement('instant-apps-language-translator'));
-    this.portalItemResourceT9n = await this.getPortalItemResourceT9n();
-    const t9nData = await getPortalItemResourceT9nData(this.portalItemResourceT9n);
-    const lang = getComponentClosestLanguage(document.body) as string;
-    if (lang) {
-      this.userLocale = lang;
-      this.selectedLanguage = lang;
+    try {
+      this.portalItemResourceT9n = await this.getPortalItemResourceT9n();
+      const t9nData = await getPortalItemResourceT9nData(this.portalItemResourceT9n);
+      if (t9nData) {
+        this.t9nData = t9nData;
+      }
+    } catch(err) {
+      this.t9nData = {};
+      console.error("NO PORTAL ITEM RESOURCE AVAILABLE.");
+    } finally {
+      const lang = getComponentClosestLanguage(document.body) as string;
+      if (lang) {
+        this.userLocale = lang;
+        this.selectedLanguage = lang;
+      }
+   
+      if (this.view) {
+        const webmap = this.view.map as __esri.WebMap;
+        this.defaultWebMapId = webmap.portalItem.id;
+      }
     }
-    if (t9nData) {
-      this.t9nData = t9nData;
-    }
-    if (this.view) {
-      const webmap = this.view.map as __esri.WebMap;
-      this.defaultWebMapId = webmap.portalItem.id;
-    }
+
   }
 
   render() {
