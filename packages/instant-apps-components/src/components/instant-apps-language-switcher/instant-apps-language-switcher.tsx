@@ -66,6 +66,7 @@ export class InstantAppsLanguageSwitcher {
   }>;
 
   async componentWillLoad() {
+
     const [intl, WebMap] = await loadModules(['esri/intl', 'esri/WebMap']);
     this.intl = intl;
     this.messages = await getMessages(document.createElement('instant-apps-language-translator'));
@@ -225,6 +226,9 @@ export class InstantAppsLanguageSwitcher {
     }
   }
 
+  /**
+   * Refreshes the component by fetching the latest translation data from the portal item resource.
+   */
   @Method()
   async refresh(): Promise<void> {
     try {

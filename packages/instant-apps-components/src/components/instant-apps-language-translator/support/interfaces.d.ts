@@ -1,3 +1,21 @@
+interface AppSettings {
+  [fieldName: string]: LocaleSettingData | TranslatedLanguageLabels;
+  translatedLanguageLabels: TranslatedLanguageLabels;
+}
+
+interface LocaleSettingData {
+  type: SettingType;
+  label: string;
+  value: string;
+  uiLocation?: any;
+}
+
+interface TranslatedLanguageLabels {
+  [locale: string]: {
+    label: string;
+  };
+}
+
 export interface LocaleItem {
   locale: string;
   webmap?: string;
