@@ -18,9 +18,9 @@
 
 ## Events
 
-| Event                       | Description | Type                |
-| --------------------------- | ----------- | ------------------- |
-| `translatorItemDataUpdated` |             | `CustomEvent<void>` |
+| Event                       | Description                                         | Type                |
+| --------------------------- | --------------------------------------------------- | ------------------- |
+| `translatorItemDataUpdated` | Fires when a translation input's value has changed. | `CustomEvent<void>` |
 
 
 ## Dependencies

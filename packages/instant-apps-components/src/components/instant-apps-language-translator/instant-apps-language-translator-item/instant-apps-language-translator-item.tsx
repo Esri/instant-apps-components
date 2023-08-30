@@ -67,6 +67,9 @@ export class InstantAppsLanguageTranslatorItem {
   @Prop()
   translatedLocaleInputOnChangeCallback: (fieldName: string, value: string, locale: string, resource: __esri.PortalItemResource) => Promise<void>;
 
+  /**
+   * Fires when a translation input's value has changed.
+   */
   @Event()
   translatorItemDataUpdated: EventEmitter<void>;
 

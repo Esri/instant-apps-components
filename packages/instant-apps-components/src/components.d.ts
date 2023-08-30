@@ -9,7 +9,7 @@ import { ActiveTool, ControlPanelComponent, ExportOutput, ExtentSelector, IClass
 import { EditorConfig } from "@ckeditor/ckeditor5-core/src/editor/editorconfig";
 import { FilterMode } from "./components/instant-apps-interactive-legend/instant-apps-interactive-legend-classic/interfaces/interfaces";
 import { HorizontalAlignment, VerticalAlignment } from "./components/instant-apps-landing-page/support/interfaces";
-import { LocaleItem, SettingType } from "./components/instant-apps-language-translator/support/interfaces";
+import { AppSettings, LocaleItem, SettingType } from "./components/instant-apps-language-translator/support/interfaces";
 import { InstantAppsPopovers } from "./components/instant-apps-popovers/instant-apps-popovers";
 import { LogicalPlacement } from "@esri/calcite-components/dist/types/utils/floating-ui";
 import { ScoreboardItem, ScoreboardMode, ScoreboardPosition } from "./components/instant-apps-scoreboard/types/interfaces";
@@ -397,6 +397,9 @@ export namespace Components {
           * Instant App portal item - used to fetch it's associated portal item resource. The portal item resource will contain the user defined translated strings.
          */
         "portalItem": __esri.PortalItem;
+        /**
+          * Refreshes the component by fetching the latest translation data from the portal item resource.
+         */
         "refresh": () => Promise<void>;
         /**
           * Reference to map view to switch web maps if present in locales.
@@ -405,9 +408,9 @@ export namespace Components {
     }
     interface InstantAppsLanguageTranslator {
         /**
-          * Data object containing a series of key-value pairs used to render the components UI.
+          * Object used to render each `instant-apps-translator-item`, containing either a `calcite-input` or rich text editor (handles HTML formatting); and, the languages to translate within the dropdown.
          */
-        "appSettings": any;
+        "appSettings": AppSettings;
         /**
           * Specified languages that the user-defined strings will be translated in.
          */
@@ -417,13 +420,13 @@ export namespace Components {
          */
         "open": boolean;
         /**
-          * Instant App portal item - used to fetch it's associated portal item resource. The portal item resource will contain the user defined translated strings.
+          * Instant App portal item - used to fetch it's associated portal item resource. The portal item resource will contain the user-defined translated strings.
          */
         "portalItem": __esri.PortalItem;
         /**
           * Function that is called when the value in a translated locale's input has changed. This function will have 4 arguments - fieldName, value, locale, and resource - and will return a promise. The callback function can be used to construct the data of key-value pairs that will be written to the portal item resource.
          */
-        "translatedLocaleInputOnChangeCallback": (fieldName: string, value: string, locale: string, resource: __esri.PortalItemResource) => Promise<any>;
+        "translatedLocaleInputOnChangeCallback": (fieldName: string, value: string, locale: string, resource: __esri.PortalItemResource) => Promise<void>;
         /**
           * Function to be called when the value in a user locale input has changed. This function will have 2 arguments - fieldName and value - and will return a promise.
          */
@@ -1294,26 +1297,29 @@ declare namespace LocalJSX {
     }
     interface InstantAppsLanguageTranslator {
         /**
-          * Data object containing a series of key-value pairs used to render the components UI.
+          * Object used to render each `instant-apps-translator-item`, containing either a `calcite-input` or rich text editor (handles HTML formatting); and, the languages to translate within the dropdown.
          */
-        "appSettings"?: any;
+        "appSettings"?: AppSettings;
         /**
           * Specified languages that the user-defined strings will be translated in.
          */
         "locales"?: LocaleItem[];
+        /**
+          * Fires when a translation input's value has changed.
+         */
         "onTranslatorDataUpdated"?: (event: InstantAppsLanguageTranslatorCustomEvent<string>) => void;
         /**
           * Controls the open/close state of the modal.
          */
         "open"?: boolean;
         /**
-          * Instant App portal item - used to fetch it's associated portal item resource. The portal item resource will contain the user defined translated strings.
+          * Instant App portal item - used to fetch it's associated portal item resource. The portal item resource will contain the user-defined translated strings.
          */
         "portalItem": __esri.PortalItem;
         /**
           * Function that is called when the value in a translated locale's input has changed. This function will have 4 arguments - fieldName, value, locale, and resource - and will return a promise. The callback function can be used to construct the data of key-value pairs that will be written to the portal item resource.
          */
-        "translatedLocaleInputOnChangeCallback"?: (fieldName: string, value: string, locale: string, resource: __esri.PortalItemResource) => Promise<any>;
+        "translatedLocaleInputOnChangeCallback"?: (fieldName: string, value: string, locale: string, resource: __esri.PortalItemResource) => Promise<void>;
         /**
           * Function to be called when the value in a user locale input has changed. This function will have 2 arguments - fieldName and value - and will return a promise.
          */
@@ -1324,6 +1330,9 @@ declare namespace LocalJSX {
           * Unique identifier tied to an associated setting in an app.
          */
         "fieldName"?: string;
+        /**
+          * Fires when a translation input's value has changed.
+         */
         "onTranslatorItemDataUpdated"?: (event: InstantAppsLanguageTranslatorItemCustomEvent<void>) => void;
         /**
           * Label of item in currently selected language.

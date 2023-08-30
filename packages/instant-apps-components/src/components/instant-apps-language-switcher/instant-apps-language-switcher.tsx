@@ -5,7 +5,7 @@ import { getMessages } from '../instant-apps-language-translator/support/utils';
 import { Element } from '@stencil/core';
 import { getPortalItemResourceT9nData } from '../../utils/languageSwitcher';
 import { loadModules } from 'esri-loader';
-import { getComponentClosestLanguage } from '../../utils/locale';
+import { getDefaultLanguage } from '../../utils/locale';
 
 @Component({
   tag: 'instant-apps-language-switcher',
@@ -66,7 +66,8 @@ export class InstantAppsLanguageSwitcher {
   }>;
 
   async componentWillLoad() {
-    const [intl] = await loadModules(['esri/intl']);
+
+    const [intl, WebMap] = await loadModules(['esri/intl', 'esri/WebMap']);
     this.intl = intl;
     this.messages = await getMessages(document.createElement('instant-apps-language-translator'));
     try {
@@ -79,15 +80,30 @@ export class InstantAppsLanguageSwitcher {
       this.t9nData = {};
       console.error("NO PORTAL ITEM RESOURCE AVAILABLE.");
     } finally {
-      const lang = getComponentClosestLanguage(document.body) as string;
+      const lang = getDefaultLanguage(intl, this.portalItem.portal) as string;
       if (lang) {
         this.userLocale = lang;
-        this.selectedLanguage = lang;
+
+        const params = new URLSearchParams(window.location.search);
+        const locale = params.get("locale");
+        this.selectedLanguage = locale ?? lang;
+
+        this.selectedLanguageUpdated.emit({ locale:  this.selectedLanguage, data: this.t9nData?.[this.selectedLanguage] ?? null });
+
       }
    
       if (this.view) {
         const webmap = this.view.map as __esri.WebMap;
         this.defaultWebMapId = webmap.portalItem.id;
+
+        const translatedWebmap = this.locales?.filter(localeItem => localeItem?.webmap && localeItem?.webmap !== this.defaultWebMapId && localeItem?.locale === this.selectedLanguage)?.[0]?.webmap;
+        if (translatedWebmap) {
+          this.view.map = new WebMap({
+            portalItem: {
+              id: translatedWebmap,
+            },
+          });
+        }
       }
     }
 
@@ -163,11 +179,14 @@ export class InstantAppsLanguageSwitcher {
             },
           });
         } else {
-          this.view.map = new WebMap({
-            portalItem: {
-              id: this.defaultWebMapId,
-            },
-          });
+          const currentMapId = (this.view?.map as __esri.WebMap)?.portalItem?.id;
+          if (currentMapId && this.defaultWebMapId !== currentMapId) {
+            this.view.map = new WebMap({
+              portalItem: {
+                id: this.defaultWebMapId,
+              },
+            });
+          }
         }
       }
 
@@ -207,6 +226,9 @@ export class InstantAppsLanguageSwitcher {
     }
   }
 
+  /**
+   * Refreshes the component by fetching the latest translation data from the portal item resource.
+   */
   @Method()
   async refresh(): Promise<void> {
     try {

@@ -6,7 +6,7 @@ import { generateUIData, getLocales, getMessages, getPortalItemResource, getUIDa
 import { languageTranslatorState, store } from './support/store';
 
 import { EIcons } from './support/enum';
-import { LocaleItem, LocaleSettingItem, LocaleUIData } from './support/interfaces';
+import { AppSettings, LocaleItem, LocaleSettingItem, LocaleUIData, SettingType } from './support/interfaces';
 
 import LanguageTranslator_t9n from '../../assets/t9n/instant-apps-language-translator/resources.json';
 import { loadModules } from 'esri-loader';
@@ -41,16 +41,16 @@ export class InstantAppsLanguageTranslator {
   el: HTMLInstantAppsLanguageTranslatorElement;
 
   /**
-   * Instant App portal item - used to fetch it's associated portal item resource. The portal item resource will contain the user defined translated strings.
+   * Instant App portal item - used to fetch it's associated portal item resource. The portal item resource will contain the user-defined translated strings.
    */
   @Prop()
   portalItem!: __esri.PortalItem;
 
   /**
-   * Data object containing a series of key-value pairs used to render the components UI.
+   * Object used to render each `instant-apps-translator-item`, containing either a `calcite-input` or rich text editor (handles HTML formatting); and, the languages to translate within the dropdown. 
    */
   @Prop()
-  appSettings: any;
+  appSettings: AppSettings;
 
   /**
    * Specified languages that the user-defined strings will be translated in.
@@ -76,7 +76,7 @@ export class InstantAppsLanguageTranslator {
    * Function that is called when the value in a translated locale's input has changed. This function will have 4 arguments - fieldName, value, locale, and resource - and will return a promise. The callback function can be used to construct the data of key-value pairs that will be written to the portal item resource. 
    */
   @Prop()
-  translatedLocaleInputOnChangeCallback: (fieldName: string, value: string, locale: string, resource: __esri.PortalItemResource) => Promise<any>;
+  translatedLocaleInputOnChangeCallback: (fieldName: string, value: string, locale: string, resource: __esri.PortalItemResource) => Promise<void>;
 
   @State()
   saving = false;
@@ -102,6 +102,9 @@ export class InstantAppsLanguageTranslator {
     this.initUIData();
   }
 
+  /**
+   * Fires when a translation input's value has changed.
+   */
   @Event()
   translatorDataUpdated: EventEmitter<string>;
 
@@ -335,7 +338,7 @@ export class InstantAppsLanguageTranslator {
         class={isLast}
         fieldName={key}
         translatedLanguageLabel={translatedLabel}
-        type={this.appSettings[key].type}
+        type={this.appSettings[key].type as SettingType}
         userLocaleInputOnChangeCallback={this.userLocaleInputOnChangeCallback}
         translatedLocaleInputOnChangeCallback={this.translatedLocaleInputOnChangeCallback}
       />

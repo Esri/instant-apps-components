@@ -2,6 +2,53 @@
 
 Language switcher provides end users with the ability to translate a web app's UI by selecting a language from a dropdown. 
 
+## Typings
+
+```
+  interface LocaleItem {
+    locale: string;
+    webmap?: string;
+  }
+```
+
+## Examples
+
+### Basic usage:
+
+```
+  <instant-apps-language-switcher
+    icon={icon}
+    locales={locales}
+    portalItem={portalItem}
+  />
+```
+
+### Locales
+
+```
+[
+    ...
+    {
+        "locale": "ja"
+    },
+    {
+        "locale": "el"
+    },
+    {
+        "locale": "fr"
+    }
+    ...
+]
+```
+
+### Events
+ ```
+document.addEventListener("selectedLanguageUpdated", (e: CustomEvent) => {
+  const data = e.detail;
+  // Write logic to apply strings throughout your app here.
+});
+ ```
+
 <!-- Auto Generated Below -->
 
 
@@ -26,7 +73,7 @@ Language switcher provides end users with the ability to translate a web app's U
 
 ### `refresh() => Promise<void>`
 
-
+Refreshes the component by fetching the latest translation data from the portal item resource.
 
 #### Returns
 
