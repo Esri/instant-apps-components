@@ -26,7 +26,13 @@ export namespace Components {
         "value": string;
     }
     interface InstantAppsControlPanel {
+        /**
+          * Determine which widgets or components to display in the control panel
+         */
         "components": ControlPanelComponent[];
+        /**
+          * MapView or SceneView
+         */
         "view": __esri.MapView | __esri.SceneView;
     }
     interface InstantAppsExport {
@@ -890,7 +896,13 @@ declare namespace LocalJSX {
         "value"?: string;
     }
     interface InstantAppsControlPanel {
+        /**
+          * Determine which widgets or components to display in the control panel
+         */
         "components"?: ControlPanelComponent[];
+        /**
+          * MapView or SceneView
+         */
         "view"?: __esri.MapView | __esri.SceneView;
     }
     interface InstantAppsExport {
