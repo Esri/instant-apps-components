@@ -61,10 +61,10 @@ view.ui.add(controlPanel, 'top-left');
 
 ## Properties
 
-| Property     | Attribute | Description | Type                      | Default     |
-| ------------ | --------- | ----------- | ------------------------- | ----------- |
-| `components` | --        |             | `ControlPanelComponent[]` | `[]`        |
-| `view`       | --        |             | `MapView \| SceneView`    | `undefined` |
+| Property     | Attribute | Description                                                           | Type                      | Default     |
+| ------------ | --------- | --------------------------------------------------------------------- | ------------------------- | ----------- |
+| `components` | --        | Determine which widgets or components to display in the control panel | `ControlPanelComponent[]` | `[]`        |
+| `view`       | --        | MapView or SceneView                                                  | `MapView \| SceneView`    | `undefined` |
 
 
 ----------------------------------------------
