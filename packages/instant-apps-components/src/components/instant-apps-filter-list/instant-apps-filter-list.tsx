@@ -93,7 +93,7 @@ export class InstantAppsFilterList {
   @Prop({ mutable: true }) urlParams?: URLSearchParams;
 
   /**
-   * MapView or SceneView to reference when filtering.
+   * A reference to the MapView or SceneView.
    */
   @Prop() view: __esri.MapView | __esri.SceneView;
 

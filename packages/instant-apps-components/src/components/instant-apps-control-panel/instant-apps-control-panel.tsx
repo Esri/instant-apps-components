@@ -27,7 +27,7 @@ export class InstantAppsControlPanel {
   components: ControlPanelComponent[] = [];
  
   /**
-   * MapView or SceneView
+   * A reference to the MapView or SceneView
    */
   @Prop()
   view: __esri.MapView | __esri.SceneView;
