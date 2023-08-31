@@ -1,11 +1,11 @@
 import { Component, Event, EventEmitter, Method, Prop, State, h } from '@stencil/core';
 
 import LanguageTranslator_t9n from '../../assets/t9n/instant-apps-language-translator/resources.json';
-import { getMessages } from '../instant-apps-language-translator/support/utils';
+import {  getMessages } from '../instant-apps-language-translator/support/utils';
 import { Element } from '@stencil/core';
-import { getPortalItemResourceT9nData } from '../../utils/languageSwitcher';
 import { loadModules } from 'esri-loader';
 import { getDefaultLanguage } from '../../utils/locale';
+import { getPortalItemResource, fetchResourceData } from '../../utils/languageSwitcher';
 
 @Component({
   tag: 'instant-apps-language-switcher',
@@ -13,9 +13,10 @@ import { getDefaultLanguage } from '../../utils/locale';
   shadow: true,
 })
 export class InstantAppsLanguageSwitcher {
-  portalItemResourceT9n: __esri.PortalItemResource;
+  portalItemResource: __esri.PortalItemResource;
   userLocale: string;
   intl: __esri.intl;
+  request: __esri.request;
   defaultWebMapId: string;
 
   @Element()
@@ -67,15 +68,14 @@ export class InstantAppsLanguageSwitcher {
 
   async componentWillLoad() {
 
-    const [intl, WebMap] = await loadModules(['esri/intl', 'esri/WebMap']);
+    const [intl, WebMap, request] = await loadModules(['esri/intl', 'esri/WebMap', 'esri/request']);
     this.intl = intl;
+    this.request = request;
     this.messages = await getMessages(document.createElement('instant-apps-language-translator'));
     try {
-      this.portalItemResourceT9n = await this.getPortalItemResourceT9n();
-      const t9nData = await getPortalItemResourceT9nData(this.portalItemResourceT9n);
-      if (t9nData) {
-        this.t9nData = t9nData;
-      }
+      this.portalItemResource = await getPortalItemResource(this.portalItem) as __esri.PortalItemResource;
+      const t9nData = await fetchResourceData(request, this.portalItemResource);
+      this.t9nData = t9nData ?? {};
     } catch(err) {
       this.t9nData = {};
       console.error("NO PORTAL ITEM RESOURCE AVAILABLE.");
@@ -213,18 +213,7 @@ export class InstantAppsLanguageSwitcher {
     return `${translatedLanguageName} - ${enLanguageName}`;
   }
 
-  async getPortalItemResourceT9n(): Promise<__esri.PortalItemResource> {
-    const { portalItem } = this;
-    try {
-      const fetchResourcesRes = await portalItem.fetchResources();
-      const testPath = 't9n/';
-      const t9nDataItems = fetchResourcesRes.resources.filter(resourceDataItem => resourceDataItem.resource.path.indexOf(testPath) > -1);
-      const t9nResourceItem = t9nDataItems[0].resource;
-      return Promise.resolve(t9nResourceItem);
-    } catch {
-      return Promise.reject(null);
-    }
-  }
+
 
   /**
    * Refreshes the component by fetching the latest translation data from the portal item resource.
@@ -232,13 +221,14 @@ export class InstantAppsLanguageSwitcher {
   @Method()
   async refresh(): Promise<void> {
     try {
-      const t9nResourceItem = await this.getPortalItemResourceT9n();
-      const [request] = await loadModules(['esri/request']);
-      const reqConfig = { responseType: 'json', cacheBust: true };
-      const reqRes = await request(t9nResourceItem.url, reqConfig);
-      this.t9nData = reqRes.data;
-      const refreshedData = { locale: this.selectedLanguage as string, data: this.t9nData[this.selectedLanguage as string] };
+      const resource = await getPortalItemResource(this.portalItem) as __esri.PortalItemResource;
+      const t9nData = await fetchResourceData(this.request, resource);
+      this.t9nData = t9nData;
+      const refreshedData = { locale: this.selectedLanguage as string, data: t9nData[this.selectedLanguage as string] };
       this.selectedLanguageUpdated.emit(refreshedData);
     } catch {}
   }
+
+ 
 }
+
