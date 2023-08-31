@@ -1,5 +1,14 @@
 # instant-apps-keyboard-shortcuts
 
+## Description
+
+The `instant-apps-keyboard-shortcuts` component is a tool that displays a list of keyboard shortcuts that can be used for interacting with the map or scene view. 
+
+This tool can helpful to make your app more accessible for users that are looking to explore the map using keyboard navigation. 
+
+<p align="center">
+<img alt="Screenshot of keyboard shortcuts in sample app" img src="https://i.imgur.com/98jmml6.jpg"/>
+</p>
 <!-- Auto Generated Below -->
 
 

@@ -9,7 +9,10 @@ Widgets or components that can be added in the control panel:
 - Any of the [JSAPI 4.x widgets](https://developers.arcgis.com/javascript/latest/api-reference/#:~:text=WMTSLayer-,Widgets,-AreaMeasurement2D) 
 - Other instant apps components like `instant-apps-measure`, `instant-apps-social-share`, `instant-apps-keyboard-shortcuts`, etc.
 
-![GIF of opening the legend in the control panel component in a sample app](https://i.imgur.com/atWmzgs.gif)
+
+<p align="center">
+<img alt="GIF of mouse cursor opening the legend tool in the control panel from the sample app" img src="https://i.imgur.com/atWmzgs.gif"/>
+</p>
 
 ## Usage
 

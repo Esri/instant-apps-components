@@ -1,5 +1,21 @@
 # instant-apps-header
 
+## Description
+
+The `instant-apps-header` component is an element that can be used to provide context for the content in an app. 
+
+This component appears as a page header that can include a title, logo, info button and additional actions like social sharing or a hyperlink. A slot at the end of the header to include actions like a link to a site or tool like the instant-apps-social-share tool. 
+
+The header component includes custom CSS properties to adjust the style of the header. The custom properties include ways to:
+-	Change the height or size of the header
+-	Update the logo height and width scale: `small`, `medium` or `large`
+-	Style header text as a hyperlink
+
+
+<p align="center">
+<img alt="Screenshot of header in sample app" img src="https://i.imgur.com/Ds1BJNK.jpg"/>
+</p>
+
 <!-- Auto Generated Below -->
 
 

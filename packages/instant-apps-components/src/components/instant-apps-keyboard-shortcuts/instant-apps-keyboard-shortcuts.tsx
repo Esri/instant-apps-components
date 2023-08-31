@@ -26,7 +26,7 @@ export class InstantAppsKeyboardShortcuts {
   @State() messages: typeof KeyboardShortcuts_T9n;
 
   /**
-   * MapView or SceneView to reference when URL parameter values are generated, i.e. center, level, viewpoint, etc.
+   * A reference to the MapView or SceneView
    */
   @Prop() view: __esri.MapView | __esri.SceneView;
 

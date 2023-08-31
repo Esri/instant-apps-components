@@ -1,5 +1,18 @@
 # instant-apps-filter-list
 
+## Description
+The `instant-apps-filter-list` component is a tool that can be used in apps as a way for users to apply filters onto layers displaying in the map or scene view. 
+
+The filters in the list can be determined based on data expressions set up on the layers in the map. The features in a layer that meet the criteria from a data expression will draw in the view. Layer expressions can be set up two ways:
+-	Point to a field in a layer, this would allow users interacting with the filter to use a dropdown menu, date picker, or numeric slider to choose the attributes to filter on.
+-	Set up a definition expression that is based on a where clause and could look something like this:
+    - `(<Field> = ‘<Attribute>’)`
+    - `(<Field> INCLUDES (<Attribute1, Attribute2, Attribute3, Attribute4>)) AND (<Field> = ‘<Attribute>’)`
+
+Filters are listed in the component and users can interact with them using a check box or dropdown menu to enable a filter on a layer. Once a filter is enabled the layer will display in the map to honor the filter criteria.   
+
+
+
 ## Usage
 
 ### Basic

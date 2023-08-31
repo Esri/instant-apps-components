@@ -1,6 +1,19 @@
 # instant-apps-export
 
+## Description
+The `instant-apps-export` component is a tool that can be used in apps to create an output file that includes an image or information from the map or scene view. 
 
+Use the export tool to capture the view as an image and export the output as a PDF file or print it from the browser. If the map is included in the output, the current extent and scale of the view will be captured. This component can be useful in apps where users are looking to create custom images from the app for record keeping or to share results with others. 
+
+The export tool is configurable and can include additional elements in the output, these include:
+-	`Legend`: The legend describes the symbols and styles that are used to represent the layers and features in the map, include the legend in the output to provide context about the layers displaying in the map
+-	`Popup`: The popup displays content from feature attributes, include popup information from the selected feature in the map in the output
+-	`ExtraContent`: Choose additional elements to include in the output, like results or additional text description from an app
+
+
+<p align="center">
+<img alt="GIF of export tool bring used in sample app" img src="https://i.imgur.com/9D18PMI.gif"/>
+</p>
 
 <!-- Auto Generated Below -->
 
