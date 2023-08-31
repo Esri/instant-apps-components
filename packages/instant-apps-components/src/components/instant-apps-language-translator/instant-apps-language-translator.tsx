@@ -1,7 +1,7 @@
 import { Component, Host, Prop, h, Event } from '@stencil/core';
 import { Element, EventEmitter, HostElement, Watch, State, Listen } from '@stencil/core/internal';
 
-import { generateUIData, getLocales, getMessages, getPortalItemResource, getUIDataKeys } from './support/utils';
+import {  generateUIData, getLocales, getMessages,  getUIDataKeys } from './support/utils';
 
 import { languageTranslatorState, store } from './support/store';
 
@@ -11,6 +11,7 @@ import { AppSettings, LocaleItem, LocaleSettingItem, LocaleUIData, SettingType }
 import LanguageTranslator_t9n from '../../assets/t9n/instant-apps-language-translator/resources.json';
 import { loadModules } from 'esri-loader';
 import { getComponentClosestLanguage } from '../../utils/locale';
+import { getPortalItemResource, fetchResourceData } from '../../utils/languageSwitcher';
 
 const BASE = 'instant-apps-language-translator';
 
@@ -36,6 +37,7 @@ const CSS = {
 })
 export class InstantAppsLanguageTranslator {
   intl: __esri.intl;
+  request: __esri.request
 
   @Element()
   el: HTMLInstantAppsLanguageTranslatorElement;
@@ -113,8 +115,9 @@ export class InstantAppsLanguageTranslator {
   }
 
   async initialize(): Promise<void> {
-    const [intl] = await loadModules(['esri/intl']);
+    const [intl, request] = await loadModules(['esri/intl', 'esri/request']);
     this.intl = intl;
+    this.request = request;
     await this.initMessages();
     this.initUIData();
     this.initPortalItemResourceT9nData();
@@ -150,9 +153,9 @@ export class InstantAppsLanguageTranslator {
   // Fetch portal item resource associated with portal item. Fetch and store t9n data
   async initPortalItemResourceT9nData(): Promise<void> {
     try {
-      const portalItemResource = await getPortalItemResource(this.portalItem);
+      const portalItemResource = await getPortalItemResource(this.portalItem) as __esri.PortalItemResource;
       store.set('portalItemResource', portalItemResource as __esri.PortalItemResource);
-      const t9nData = await portalItemResource?.fetch();
+      const t9nData = await fetchResourceData(this.request, portalItemResource);
       store.set('portalItemResourceT9n', t9nData);
     } catch {}
   }
