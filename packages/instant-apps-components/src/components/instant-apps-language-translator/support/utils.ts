@@ -7,6 +7,7 @@ import { languageTranslatorState, store } from './store';
 
 export function generateUIData(appSettings, locales: LocaleItem[]): LocaleUIData | void {
   if (!appSettings) return;
+  const existingUIData = store.get("uiData");
   const settingKeys = Object.keys(appSettings).filter(settingKey => settingKey !== 'translatedLanguageLabels');
   const uiData = {
     locales,
@@ -21,7 +22,7 @@ export function generateUIData(appSettings, locales: LocaleItem[]): LocaleUIData
     uiData[key] = {
       userLocaleData: { type, label, value },
       expanded: true,
-      selected: false,
+      selected: existingUIData?.[key]?.["selected"] ?? false,
       uiLocation,
       tip: appSetting?.tip,
     };
@@ -30,7 +31,7 @@ export function generateUIData(appSettings, locales: LocaleItem[]): LocaleUIData
   const noneSelected = settingKeys.every(key => !uiData[key].selected);
 
   if (noneSelected && uiData[settingKeys[0]]) {
-    uiData[settingKeys[0]].selected = true;
+    uiData[settingKeys[0]].selected = existingUIData?.[settingKeys[0]]?.["selected"] ?? true;
   }
 
   return uiData;
@@ -58,7 +59,11 @@ export async function getPortalItemResourceT9nData(resource: __esri.PortalItemRe
 
 export function getT9nData(locale: string, data: { [key: string]: string }) {
   const portalItemResourceT9n = store.get('portalItemResourceT9n');
-  const dataToWrite = { ...portalItemResourceT9n, [locale]: { ...portalItemResourceT9n[locale], ...data } };
+  let dataToWrite: { [locale: string]: string; };
+  if (!portalItemResourceT9n?.[locale]) {
+    portalItemResourceT9n[locale] = {};
+  }
+  dataToWrite = { ...portalItemResourceT9n, [locale]: { ...portalItemResourceT9n[locale], ...data } };
   return dataToWrite;
 }
 
