@@ -97,11 +97,13 @@ export class InstantAppsLanguageTranslator {
   @Watch('locales')
   handleLocaleChange() {
     this.initUIData();
+    this.initSelectLanguage();
   }
 
   @Watch('appSettings')
   handleAppSettings() {
     this.initUIData();
+    this.initSelectLanguage();
   }
 
   /**
@@ -156,7 +158,7 @@ export class InstantAppsLanguageTranslator {
       const portalItemResource = await getPortalItemResource(this.portalItem) as __esri.PortalItemResource;
       store.set('portalItemResource', portalItemResource as __esri.PortalItemResource);
       const t9nData = await fetchResourceData(this.request, portalItemResource);
-      store.set('portalItemResourceT9n', t9nData);
+      store.set('portalItemResourceT9n', t9nData ?? {});
     } catch {}
   }
 
