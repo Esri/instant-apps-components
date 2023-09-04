@@ -41,25 +41,25 @@ export class InstantAppsInteractiveLegend {
   widget: __esri.Widget;
 
   /**
-   * Reference to Map View or Scene View
+   * Reference to Map View
    */
   @Prop()
   view: __esri.MapView;
 
   /**
-   * Displays 'Zoom To' button - updates the extent of the view based on the selected legend infos.
+   * Displays ‘Zoom to’ button, updates the extent of the view based on the results from the legend
    */
   @Prop()
   zoomTo: boolean = false;
 
   /**
-   * Display individual counts and total counts for legend infos.
+   * Display the individual counts for categories and total counts for layers in the legend
    */
   @Prop()
   featureCount: boolean = false;
 
   /**
-   * Filter mode to use when filtering features.
+   * Use effects to differentiate between features that are included and excluded from legend filter results 
    */
   @Prop()
   filterMode: FilterMode = {

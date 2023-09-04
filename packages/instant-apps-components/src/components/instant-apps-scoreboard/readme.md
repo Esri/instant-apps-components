@@ -1,6 +1,16 @@
 # instant-apps-scoreboard
 
-Calculates and displays a series of statistics based on a layer(s) and field attributes.
+## Description 
+The `instant-apps-scoreboard` component is a tool that calculates and displays a series of statistics based on field attributes from layers in a map or scene view. 
+
+The scoreboard component can be useful to get an overview of statistics from a layer in the view. The `geometry` property determines which area of the view statistics should be calculated for like the current visible extent or a specific area of the view. 
+
+The `items` property defines which statistics will appear in the scoreboard. Pick a layer and field that will provide the data for the statistic. An operator must be picked for the statistic, the operator types include: *sum*, *count*, *average*, *minimum value* and *maximum value*. A label for each statistic should also be added to describe what each statistic is representing in the view. 
+
+<p align="center">
+<img alt="Screenshot of the scorboard component in the sample app" img src="https://i.imgur.com/bvgVFno.jpg"/>
+</p>
+
 
 ## Interfaces and Enums
 
