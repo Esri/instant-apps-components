@@ -227,19 +227,19 @@ export namespace Components {
     }
     interface InstantAppsInteractiveLegend {
         /**
-          * Display individual counts and total counts for legend infos.
+          * Display the individual counts for categories and total counts for layers in the legend
          */
         "featureCount": boolean;
         /**
-          * Filter mode to use when filtering features.
+          * Use effects to differentiate between features that are included and excluded from legend filter results
          */
         "filterMode": FilterMode;
         /**
-          * Reference to Map View or Scene View
+          * Reference to Map View
          */
         "view": __esri.MapView;
         /**
-          * Displays 'Zoom To' button - updates the extent of the view based on the selected legend infos.
+          * Displays ‘Zoom to’ button, updates the extent of the view based on the results from the legend
          */
         "zoomTo": boolean;
     }
@@ -1125,19 +1125,19 @@ declare namespace LocalJSX {
     }
     interface InstantAppsInteractiveLegend {
         /**
-          * Display individual counts and total counts for legend infos.
+          * Display the individual counts for categories and total counts for layers in the legend
          */
         "featureCount"?: boolean;
         /**
-          * Filter mode to use when filtering features.
+          * Use effects to differentiate between features that are included and excluded from legend filter results
          */
         "filterMode"?: FilterMode;
         /**
-          * Reference to Map View or Scene View
+          * Reference to Map View
          */
         "view"?: __esri.MapView;
         /**
-          * Displays 'Zoom To' button - updates the extent of the view based on the selected legend infos.
+          * Displays ‘Zoom to’ button, updates the extent of the view based on the results from the legend
          */
         "zoomTo"?: boolean;
     }
