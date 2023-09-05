@@ -31,7 +31,7 @@ export namespace Components {
          */
         "components": ControlPanelComponent[];
         /**
-          * MapView or SceneView
+          * A reference to the MapView or SceneView
          */
         "view": __esri.MapView | __esri.SceneView;
     }
@@ -53,19 +53,19 @@ export namespace Components {
          */
         "headerTitle"?: string;
         /**
-          * When `true`, include `extraContent` HTML element in PDF.
+          * When `true`, `extraContent` HTML element is included in the PDF.
          */
         "includeExtraContent"?: boolean;
         /**
-          * When `true`, include legend in export.
+          * When `true`, legend is included in the export.
          */
         "includeLegend"?: boolean;
         /**
-          * When `true`, include map in export.
+          * When `true`, map is included in the export.
          */
         "includeMap"?: boolean;
         /**
-          * When `true`, include popup in export.
+          * When `true`, popup is included in the export.
          */
         "includePopup"?: boolean;
         /**
@@ -93,19 +93,19 @@ export namespace Components {
          */
         "scale"?: 's' | 'm' | 'l';
         /**
-          * Show header title input.
+          * Show header title input in export tool.
          */
         "showHeaderTitle"?: boolean;
         /**
-          * Show include legend checkbox.
+          * Show include legend checkbox in export tool.
          */
         "showIncludeLegend"?: boolean;
         /**
-          * Show include map checkbox.
+          * Show include map checkbox in export tool.
          */
         "showIncludeMap"?: boolean;
         /**
-          * Show popup checkbox.
+          * Show popup checkbox in export tool.
          */
         "showIncludePopup"?: boolean;
         /**
@@ -113,7 +113,7 @@ export namespace Components {
          */
         "showScaleBar"?: boolean;
         /**
-          * MapView or SceneView to reference when filtering.
+          * A reference to the MapView or SceneView.
          */
         "view": __esri.MapView | __esri.SceneView | undefined;
     }
@@ -155,7 +155,7 @@ export namespace Components {
          */
         "urlParams"?: URLSearchParams;
         /**
-          * MapView or SceneView to reference when filtering.
+          * A reference to the MapView or SceneView.
          */
         "view": __esri.MapView | __esri.SceneView;
     }
@@ -336,7 +336,7 @@ export namespace Components {
     }
     interface InstantAppsKeyboardShortcuts {
         /**
-          * MapView or SceneView to reference when URL parameter values are generated, i.e. center, level, viewpoint, etc.
+          * A reference to the MapView or SceneView
          */
         "view": __esri.MapView | __esri.SceneView;
     }
@@ -467,12 +467,24 @@ export namespace Components {
         "t9nPlaceholder": string;
     }
     interface InstantAppsMeasurement {
+        /**
+          * Determine the tool that will be open on load
+         */
         "activeToolType": ActiveTool;
+        /**
+          * Choose which unit will be used for the area tool by default
+         */
         "areaUnit"?: __esri.AreaUnit;
+        /**
+          * Choose which formats to include as options while converting coordinates
+         */
         "coordinateFormat"?: string;
+        /**
+          * Choose which unit will be used for the distance tool by default
+         */
         "linearUnit"?: __esri.LengthUnit;
         /**
-          * MapView or SceneView
+          * A reference to the MapView or SceneView
          */
         "view": __esri.MapView | __esri.SceneView;
     }
@@ -901,7 +913,7 @@ declare namespace LocalJSX {
          */
         "components"?: ControlPanelComponent[];
         /**
-          * MapView or SceneView
+          * A reference to the MapView or SceneView
          */
         "view"?: __esri.MapView | __esri.SceneView;
     }
@@ -923,19 +935,19 @@ declare namespace LocalJSX {
          */
         "headerTitle"?: string;
         /**
-          * When `true`, include `extraContent` HTML element in PDF.
+          * When `true`, `extraContent` HTML element is included in the PDF.
          */
         "includeExtraContent"?: boolean;
         /**
-          * When `true`, include legend in export.
+          * When `true`, legend is included in the export.
          */
         "includeLegend"?: boolean;
         /**
-          * When `true`, include map in export.
+          * When `true`, map is included in the export.
          */
         "includeMap"?: boolean;
         /**
-          * When `true`, include popup in export.
+          * When `true`, popup is included in the export.
          */
         "includePopup"?: boolean;
         /**
@@ -967,19 +979,19 @@ declare namespace LocalJSX {
          */
         "scale"?: 's' | 'm' | 'l';
         /**
-          * Show header title input.
+          * Show header title input in export tool.
          */
         "showHeaderTitle"?: boolean;
         /**
-          * Show include legend checkbox.
+          * Show include legend checkbox in export tool.
          */
         "showIncludeLegend"?: boolean;
         /**
-          * Show include map checkbox.
+          * Show include map checkbox in export tool.
          */
         "showIncludeMap"?: boolean;
         /**
-          * Show popup checkbox.
+          * Show popup checkbox in export tool.
          */
         "showIncludePopup"?: boolean;
         /**
@@ -987,7 +999,7 @@ declare namespace LocalJSX {
          */
         "showScaleBar"?: boolean;
         /**
-          * MapView or SceneView to reference when filtering.
+          * A reference to the MapView or SceneView.
          */
         "view"?: __esri.MapView | __esri.SceneView | undefined;
     }
@@ -1037,7 +1049,7 @@ declare namespace LocalJSX {
          */
         "urlParams"?: URLSearchParams;
         /**
-          * MapView or SceneView to reference when filtering.
+          * A reference to the MapView or SceneView.
          */
         "view"?: __esri.MapView | __esri.SceneView;
     }
@@ -1226,7 +1238,7 @@ declare namespace LocalJSX {
     }
     interface InstantAppsKeyboardShortcuts {
         /**
-          * MapView or SceneView to reference when URL parameter values are generated, i.e. center, level, viewpoint, etc.
+          * A reference to the MapView or SceneView
          */
         "view"?: __esri.MapView | __esri.SceneView;
     }
@@ -1371,16 +1383,28 @@ declare namespace LocalJSX {
         "t9nPlaceholder"?: string;
     }
     interface InstantAppsMeasurement {
+        /**
+          * Determine the tool that will be open on load
+         */
         "activeToolType"?: ActiveTool;
+        /**
+          * Choose which unit will be used for the area tool by default
+         */
         "areaUnit"?: __esri.AreaUnit;
+        /**
+          * Choose which formats to include as options while converting coordinates
+         */
         "coordinateFormat"?: string;
+        /**
+          * Choose which unit will be used for the distance tool by default
+         */
         "linearUnit"?: __esri.LengthUnit;
         /**
           * Emits when there is an active measure tool to allow app devs to disable other tools/popups when tools are active .
          */
         "onMeasureActive"?: (event: InstantAppsMeasurementCustomEvent<boolean>) => void;
         /**
-          * MapView or SceneView
+          * A reference to the MapView or SceneView
          */
         "view"?: __esri.MapView | __esri.SceneView;
     }

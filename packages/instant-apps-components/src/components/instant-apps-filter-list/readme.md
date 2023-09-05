@@ -120,7 +120,7 @@ const layerExpressions = [
 | `layerExpressions`     | --                | Use this to create filters that update a layer's definitionExpression. | `LayerExpression[]`            | `undefined` |
 | `openFilters`          | `open-filters`    | When `true`, the layer filter block is expanded.                       | `boolean \| undefined`         | `false`     |
 | `urlParams`            | --                | URL params set by using filters.                                       | `URLSearchParams \| undefined` | `undefined` |
-| `view`                 | --                | MapView or SceneView to reference when filtering.                      | `MapView \| SceneView`         | `undefined` |
+| `view`                 | --                | A reference to the MapView or SceneView.                               | `MapView \| SceneView`         | `undefined` |
 
 
 ## Events
