@@ -1,5 +1,27 @@
 # instant-apps-interactive-legend (Beta)
 
+## Description
+The `instant-apps-interactive-legend` component allows a user to filter layers by changing the visibility of features in the map view based on types and ranges from the legend. 
+
+This tool is useful to narrow in on certain layer categories represented by symbols or styles in the map. While using the legend, if you click on a style type or range, the features that do not use that drawing style will be filtered out of the map. 
+
+Consider including properties like `featureCount`, `filterMode`, and `zoomTo` to as actions to use while data in the map is being filtered out. In the legend only certain drawing styles can be used to filter layers, the supported [drawing styles](https://doc.arcgis.com/en/arcgis-online/create-maps/apply-styles-mv.htm#ESRI_SECTION1_195BD40347774AEDAEC373A7A0898A80)  include:
+-	Types(Unique symbols)
+-	Counts and amounts (Size)
+-	Counts and amounts (Color)
+-	Relationship
+-	Predominant category 
+-	Predominant category and size
+-	Types and size 
+
+### Prerequisites
+This component is only compatible with [ArcGIS Online feature layers](https://doc.arcgis.com/en/arcgis-online/reference/feature-layers.htm#ESRI_SECTION1_26EBAE21F63042B9A51A4312A08A1B25) or [ArcGIS Server feature layers](https://doc.arcgis.com/en/arcgis-online/reference/feature-layers.htm#ESRI_SECTION1_0BEFA4197C154A219A5B113039AB73F2)
+
+<p align="center">
+<img alt="GIF of the interactive legend being used to filter features in the sample app" img src="https://i.imgur.com/1S3M1wJ.gif"/>
+</p>
+
+
 <!-- Auto Generated Below -->
 
 

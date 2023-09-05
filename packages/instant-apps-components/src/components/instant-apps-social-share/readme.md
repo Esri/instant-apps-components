@@ -1,5 +1,18 @@
 # instant-apps-social-share
 
+## Description
+The `instant-apps-social-share` component is a tool that can be used to share an app using social media or a link. 
+
+The URL that is generated from the tool can be set up to preserve certain characteristics of the view using parameters. Parameters added to the URL can be useful to preserve things like: 
+-	**Selected feature**: If there is a feature selected in the view, that will be added to the generated URL as a parameter *(Note: This is only supported in map views)*
+-	**Layer visibility**: If there are layers that have been turned off/on using a widget like the layer list, the layer visibility will be added to the URL as a parameter
+-	**Viewpoint of the map or scene view**: The center, scale level and view point of the current visible extent can be added as a URL. By doing this the view will open to where the view was when the link was generated. 
+
+<p align="center">
+<img alt="GIF of the social share tool being used in the sample app" img src=" https://i.imgur.com/QLs5gVe.gif"/>
+</p>
+
+
 <!-- Auto Generated Below -->
 
 
