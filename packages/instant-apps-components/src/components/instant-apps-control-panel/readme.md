@@ -67,7 +67,7 @@ view.ui.add(controlPanel, 'top-left');
 | Property     | Attribute | Description                                                           | Type                      | Default     |
 | ------------ | --------- | --------------------------------------------------------------------- | ------------------------- | ----------- |
 | `components` | --        | Determine which widgets or components to display in the control panel | `ControlPanelComponent[]` | `[]`        |
-| `view`       | --        | MapView or SceneView                                                  | `MapView \| SceneView`    | `undefined` |
+| `view`       | --        | A reference to the MapView or SceneView                               | `MapView \| SceneView`    | `undefined` |
 
 
 ----------------------------------------------

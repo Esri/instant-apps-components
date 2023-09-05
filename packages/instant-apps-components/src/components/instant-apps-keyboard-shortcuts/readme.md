@@ -14,9 +14,9 @@ This tool can helpful to make your app more accessible for users that are lookin
 
 ## Properties
 
-| Property | Attribute | Description                                                                                                    | Type                   | Default     |
-| -------- | --------- | -------------------------------------------------------------------------------------------------------------- | ---------------------- | ----------- |
-| `view`   | --        | MapView or SceneView to reference when URL parameter values are generated, i.e. center, level, viewpoint, etc. | `MapView \| SceneView` | `undefined` |
+| Property | Attribute | Description                             | Type                   | Default     |
+| -------- | --------- | --------------------------------------- | ---------------------- | ----------- |
+| `view`   | --        | A reference to the MapView or SceneView | `MapView \| SceneView` | `undefined` |
 
 
 ----------------------------------------------
