@@ -27,12 +27,12 @@ This component is only compatible with [ArcGIS Online feature layers](https://do
 
 ## Properties
 
-| Property       | Attribute       | Description                                                                                    | Type         | Default                     |
-| -------------- | --------------- | ---------------------------------------------------------------------------------------------- | ------------ | --------------------------- |
-| `featureCount` | `feature-count` | Display individual counts and total counts for legend infos.                                   | `boolean`    | `false`                     |
-| `filterMode`   | --              | Filter mode to use when filtering features.                                                    | `FilterMode` | `{     type: 'filter',   }` |
-| `view`         | --              | Reference to Map View or Scene View                                                            | `MapView`    | `undefined`                 |
-| `zoomTo`       | `zoom-to`       | Displays 'Zoom To' button - updates the extent of the view based on the selected legend infos. | `boolean`    | `false`                     |
+| Property       | Attribute       | Description                                                                                             | Type         | Default                     |
+| -------------- | --------------- | ------------------------------------------------------------------------------------------------------- | ------------ | --------------------------- |
+| `featureCount` | `feature-count` | Display the individual counts for categories and total counts for layers in the legend                  | `boolean`    | `false`                     |
+| `filterMode`   | --              | Use effects to differentiate between features that are included and excluded from legend filter results | `FilterMode` | `{     type: 'filter',   }` |
+| `view`         | --              | Reference to Map View                                                                                   | `MapView`    | `undefined`                 |
+| `zoomTo`       | `zoom-to`       | Displays ‘Zoom to’ button, updates the extent of the view based on the results from the legend          | `boolean`    | `false`                     |
 
 
 ## Dependencies
