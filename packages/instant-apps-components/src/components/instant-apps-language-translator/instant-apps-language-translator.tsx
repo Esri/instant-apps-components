@@ -1,7 +1,7 @@
 import { Component, Host, Prop, h, Event } from '@stencil/core';
 import { Element, EventEmitter, HostElement, Watch, State, Listen } from '@stencil/core/internal';
 
-import {  generateUIData, getLocales, getMessages,  getUIDataKeys } from './support/utils';
+import { generateUIData, getLocales, getMessages, getUIDataKeys } from './support/utils';
 
 import { languageTranslatorState, store } from './support/store';
 
@@ -37,7 +37,7 @@ const CSS = {
 })
 export class InstantAppsLanguageTranslator {
   intl: __esri.intl;
-  request: __esri.request
+  request: __esri.request;
 
   @Element()
   el: HTMLInstantAppsLanguageTranslatorElement;
@@ -49,7 +49,7 @@ export class InstantAppsLanguageTranslator {
   portalItem!: __esri.PortalItem;
 
   /**
-   * Object used to render each `instant-apps-translator-item`, containing either a `calcite-input` or rich text editor (handles HTML formatting); and, the languages to translate within the dropdown. 
+   * Object used to render each `instant-apps-translator-item`, containing either a `calcite-input` or rich text editor (handles HTML formatting); and, the languages to translate within the dropdown.
    */
   @Prop()
   appSettings: AppSettings;
@@ -69,13 +69,13 @@ export class InstantAppsLanguageTranslator {
   open = false;
 
   /**
-   * Function to be called when the value in a user locale input has changed. This function will have 2 arguments - fieldName and value - and will return a promise. 
+   * Function to be called when the value in a user locale input has changed. This function will have 2 arguments - fieldName and value - and will return a promise.
    */
   @Prop()
   userLocaleInputOnChangeCallback: (fieldName: string, value: string) => Promise<void>;
 
-   /**
-   * Function that is called when the value in a translated locale's input has changed. This function will have 4 arguments - fieldName, value, locale, and resource - and will return a promise. The callback function can be used to construct the data of key-value pairs that will be written to the portal item resource. 
+  /**
+   * Function that is called when the value in a translated locale's input has changed. This function will have 4 arguments - fieldName, value, locale, and resource - and will return a promise. The callback function can be used to construct the data of key-value pairs that will be written to the portal item resource.
    */
   @Prop()
   translatedLocaleInputOnChangeCallback: (fieldName: string, value: string, locale: string, resource: __esri.PortalItemResource) => Promise<void>;
@@ -148,14 +148,18 @@ export class InstantAppsLanguageTranslator {
   // Initialize selected language
   initSelectLanguage(): void {
     const { locales } = this;
-    const initialLanguage = locales?.[0] ?? this.intl.getLocale();
-    store.set('currentLanguage', initialLanguage.locale);
+    const initialLanguage = locales?.[0]?.locale ?? this.intl.getLocale();
+    const currentLanguage = store.get('currentLanguage');
+    const reselectLanguage = this.locales.filter(locale => locale.locale === currentLanguage).length === 0;
+    if (reselectLanguage) {
+      store.set('currentLanguage', initialLanguage);
+    }
   }
 
   // Fetch portal item resource associated with portal item. Fetch and store t9n data
   async initPortalItemResourceT9nData(): Promise<void> {
     try {
-      const portalItemResource = await getPortalItemResource(this.portalItem) as __esri.PortalItemResource;
+      const portalItemResource = (await getPortalItemResource(this.portalItem)) as __esri.PortalItemResource;
       store.set('portalItemResource', portalItemResource as __esri.PortalItemResource);
       const t9nData = await fetchResourceData(this.request, portalItemResource);
       store.set('portalItemResourceT9n', t9nData ?? {});
