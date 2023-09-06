@@ -27,8 +27,8 @@
       "tooltip": "Click to share to your Facebook account"
     },
     "twitter": {
-      "label": "Twitter",
-      "tooltip": "Click to share to your Twitter account"
+      "label": "X",
+      "tooltip": "Click to share to your X account"
     },
     "linkedIn": {
       "label": "LinkedIn",
