@@ -7,12 +7,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## v1.0.0-beta.119
 
+### instant-apps-language-translator
+
+- Current language bug fix
+
+## v1.0.0-beta.119
+
 - Address build issue
 
 ## v1.0.0-beta.118
 
 - Resolve build issue
-- Generate README documentation for control-panel, export, filter-list, keyboard-shortcuts, and measurement. 
+- Generate README documentation for control-panel, export, filter-list, keyboard-shortcuts, and measurement.
 
 ## v1.0.0-beta.117
 
