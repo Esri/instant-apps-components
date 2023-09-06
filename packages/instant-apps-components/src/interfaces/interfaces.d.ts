@@ -157,6 +157,7 @@ export interface Expression {
   range?: { min: string | number | undefined; max: string | number | undefined };
   step?: number;
   numDisplayOption?: 'slider' | 'drop-down';
+  pointCloudFilters?: PointCloudFilters;
 }
 
 export interface LayerExpression {
@@ -193,9 +194,31 @@ export interface ExtentSelector {
 
 type ExpressionField = 'string' | 'number' | 'date' | 'coded-value' | 'range' | 'checkbox';
 type ActiveTool = 'distance' | 'point' | 'area' | 'clear';
-export type FilterLayer = __esri.FeatureLayer | __esri.ImageryLayer | __esri.WFSLayer | __esri.StreamLayer | __esri.CSVLayer | __esri.GeoJSONLayer;
-export type FilterQueryLayer = __esri.FeatureLayer | __esri.WFSLayer | __esri.CSVLayer | __esri.GeoJSONLayer;
+// export type FilterLayer = __esri.FeatureLayer | __esri.ImageryLayer | __esri.WFSLayer | __esri.StreamLayer | __esri.CSVLayer | __esri.GeoJSONLayer;
+export type FilterQueryLayer =   | __esri.FeatureLayer
+| __esri.WFSLayer
+| __esri.CSVLayer
+| __esri.GeoJSONLayer
+| __esri.SubtypeGroupLayer
+| ISceneLayer;
 export type FilterQueryLayerView = __esri.FeatureLayerView | __esri.WFSLayerView | __esri.CSVLayerView | __esri.GeoJSONLayerView;
+export type FilterLayer =
+  | __esri.FeatureLayer
+  | __esri.WFSLayer
+  | __esri.CSVLayer
+  | __esri.GeoJSONLayer
+  | __esri.SubtypeGroupLayer
+  | ISceneLayer
+  | __esri.PointCloudLayer;
+
+export interface ISceneLayer extends __esri.SceneLayer {
+  associatedLayer: __esri.FeatureLayer;
+  attributeStorageInfo: any[];
+  hasCachedStatistics(fieldName: string): boolean;
+}
+
+export type PointCloudFilter = __esri.PointCloudValueFilter | __esri.PointCloudReturnFilter;
+export type PointCloudFilters = PointCloudFilter[];
 
 // Export
 export interface ExportOutput {
