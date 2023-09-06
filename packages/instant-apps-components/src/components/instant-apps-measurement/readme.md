@@ -1,17 +1,30 @@
-# instant-apps-interactive-legend (Beta)
+# instant-apps-measurement
 
+## Description
+ 
+ The `instant-apps-measurement` component is a tool that is used in apps to calculate measurements for distance, area and coordinates in a map or scene view. 
+
+The measurement tool consists of four tools in the component: 
+- **Distance measurement**: Determines and displays the distance between two or more points in the view
+- **Area measurement**: Calculates and displays the area and perimeter of a polygon in the view
+- **Coordinate conversion**: Measures the coordinates of a point in the view and provides additional formats to convert the coordinate to 
+- **Clear measurement**: Used to clear any existing measurements calculated using the tools in the component   
+
+<p align="center">
+<img alt= "Gif of distance measurement, area measurement and coorindate conversion tools being used in sample app" img src="https://i.imgur.com/ChLpnb3.gif"/>
+</p>
 <!-- Auto Generated Below -->
 
 
 ## Properties
 
-| Property           | Attribute           | Description          | Type                                                                                                                                                                                                                                                        | Default     |
-| ------------------ | ------------------- | -------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------- |
-| `activeToolType`   | `active-tool-type`  |                      | `"area" \| "clear" \| "distance" \| "point"`                                                                                                                                                                                                                | `undefined` |
-| `areaUnit`         | `area-unit`         |                      | `"acres" \| "ares" \| "hectares" \| "square-centimeters" \| "square-decimeters" \| "square-feet" \| "square-inches" \| "square-kilometers" \| "square-meters" \| "square-miles" \| "square-millimeters" \| "square-us-feet" \| "square-yards" \| undefined` | `undefined` |
-| `coordinateFormat` | `coordinate-format` |                      | `string \| undefined`                                                                                                                                                                                                                                       | `undefined` |
-| `linearUnit`       | `linear-unit`       |                      | `"centimeters" \| "decimeters" \| "feet" \| "inches" \| "kilometers" \| "meters" \| "miles" \| "millimeters" \| "nautical-miles" \| "us-feet" \| "yards" \| undefined`                                                                                      | `undefined` |
-| `view`             | --                  | MapView or SceneView | `MapView \| SceneView`                                                                                                                                                                                                                                      | `undefined` |
+| Property           | Attribute           | Description                                                             | Type                                                                                                                                                                                                                                                        | Default     |
+| ------------------ | ------------------- | ----------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------- |
+| `activeToolType`   | `active-tool-type`  | Determine the tool that will be open on load                            | `"area" \| "clear" \| "distance" \| "point"`                                                                                                                                                                                                                | `undefined` |
+| `areaUnit`         | `area-unit`         | Choose which unit will be used for the area tool by default             | `"acres" \| "ares" \| "hectares" \| "square-centimeters" \| "square-decimeters" \| "square-feet" \| "square-inches" \| "square-kilometers" \| "square-meters" \| "square-miles" \| "square-millimeters" \| "square-us-feet" \| "square-yards" \| undefined` | `undefined` |
+| `coordinateFormat` | `coordinate-format` | Choose which formats to include as options while converting coordinates | `string \| undefined`                                                                                                                                                                                                                                       | `undefined` |
+| `linearUnit`       | `linear-unit`       | Choose which unit will be used for the distance tool by default         | `"centimeters" \| "decimeters" \| "feet" \| "inches" \| "kilometers" \| "meters" \| "miles" \| "millimeters" \| "nautical-miles" \| "us-feet" \| "yards" \| undefined`                                                                                      | `undefined` |
+| `view`             | --                  | A reference to the MapView or SceneView                                 | `MapView \| SceneView`                                                                                                                                                                                                                                      | `undefined` |
 
 
 ## Events

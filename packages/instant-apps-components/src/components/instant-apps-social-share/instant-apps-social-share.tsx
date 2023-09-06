@@ -12,7 +12,7 @@ import { loadModules } from '../../utils/loadModules';
 
 import SocialShare_T9n from '../../assets/t9n/instant-apps-social-share/resources.json';
 
-import { getLocaleComponentStrings } from '../../utils/locale';
+import { getMessages } from '../../utils/locale';
 import { LogicalPlacement } from '@esri/calcite-components/dist/types/utils/floating-ui';
 // import { PopperPlacement } from '@esri/calcite-components/dist/types/utils/popper';
 
@@ -211,7 +211,7 @@ export class InstantAppsSocialShare {
   @State() embedHeight = 600;
 
   componentDidLoad() {
-    this.getMessages();
+    getMessages(this);
     this.setupAutoCloseListeners();
     if (this.mode === 'popover') {
       if (this.opened) this.popoverRef.open = true;
@@ -241,11 +241,6 @@ export class InstantAppsSocialShare {
       this.embedHeightRef?.removeEventListener('change', this.updateDimensions.bind(this));
       this.dialogContentRef?.removeEventListener('click', this.stopPropagationCallback.bind(this));
     }
-  }
-
-  async getMessages() {
-    const messages = await getLocaleComponentStrings(this.el);
-    this.messages = messages[0] as typeof SocialShare_T9n;
   }
 
   setupAutoCloseListeners() {

@@ -5,7 +5,69 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## v1.0.0-beta.120
+
+### instant-apps-language-translator
+
+- Current language bug fix
+
+## v1.0.0-beta.119
+
+- Address build issue
+
+## v1.0.0-beta.118
+
+- Resolve build issue
+- Generate README documentation for control-panel, export, filter-list, keyboard-shortcuts, and measurement.
+
+## v1.0.0-beta.117
+
+- Update package version numbers
+
+## v1.0.0-beta.116
+
+### instant-apps-language-translator & instant-apps-language-switcher
+
+- fix: selected translator-item on input change
+- fix: portal item resource access
+- fix: portal item resource data on create
+
+## v1.0.0-beta.115
+
+- Fix build issue
+
+## v1.0.0-beta.114
+
+### instant-apps-language-translator & instant-apps-language-switcher
+
+- Bust cache when requesting t9n data from portal item resource to get latest data within instant apps config
+
+## v1.0.0-beta.113
+
+- Updated doc with typings and examples for language-translator and langauge-switcher comoponents
+
+## v1.0.0-beta.112
+
+### instant-apps-language-translator & instant-apps-language-switcher
+
+- Update language translator/switcher doc.
+- Render switcher dropdown with or without portal item resource.
+
+## v1.0.0-beta.111
+
+- T9N updates
+
 ## v1.0.0-beta.110
+
+- Created `getMessages` utility function to be used in all components to listen for `onLocaleChange`.
+
+### instant-apps-language-translator
+
+- Component to translate strings in different languages
+
+### instant-apps-language-switcher
+
+- Component to switch between different languages via
 
 ### instant-apps-export
 

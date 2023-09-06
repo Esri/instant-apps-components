@@ -5,15 +5,34 @@
  * It contains typing information for all components that exist in this project.
  */
 import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
-import { ActiveTool, ControlPanelComponent, ExportOutput, ExtentSelector, IMeasureConfiguration, InstantAppsPopoverMessageOverrides, LayerExpression, PopoverPlacement } from "./interfaces/interfaces";
+import { ActiveTool, ControlPanelComponent, ExportOutput, ExtentSelector, IClassicEditor, IMeasureConfiguration, InstantAppsPopoverMessageOverrides, LayerExpression, PopoverPlacement } from "./interfaces/interfaces";
+import { EditorConfig } from "@ckeditor/ckeditor5-core/src/editor/editorconfig";
 import { FilterMode } from "./components/instant-apps-interactive-legend/instant-apps-interactive-legend-classic/interfaces/interfaces";
 import { HorizontalAlignment, VerticalAlignment } from "./components/instant-apps-landing-page/support/interfaces";
+import { AppSettings, LocaleItem, SettingType } from "./components/instant-apps-language-translator/support/interfaces";
 import { InstantAppsPopovers } from "./components/instant-apps-popovers/instant-apps-popovers";
 import { LogicalPlacement } from "@esri/calcite-components/dist/types/utils/floating-ui";
 import { ScoreboardItem, ScoreboardMode, ScoreboardPosition } from "./components/instant-apps-scoreboard/types/interfaces";
 export namespace Components {
+    interface InstantAppsCkeditorWrapper {
+        "config": EditorConfig;
+        /**
+          * Instance of text editor
+         */
+        "editorInstance": IClassicEditor;
+        /**
+          * Current value of text editor instance.
+         */
+        "value": string;
+    }
     interface InstantAppsControlPanel {
+        /**
+          * Determine which widgets or components to display in the control panel
+         */
         "components": ControlPanelComponent[];
+        /**
+          * A reference to the MapView or SceneView
+         */
         "view": __esri.MapView | __esri.SceneView;
     }
     interface InstantAppsExport {
@@ -34,19 +53,19 @@ export namespace Components {
          */
         "headerTitle"?: string;
         /**
-          * When `true`, include `extraContent` HTML element in PDF.
+          * When `true`, `extraContent` HTML element is included in the PDF.
          */
         "includeExtraContent"?: boolean;
         /**
-          * When `true`, include legend in export.
+          * When `true`, legend is included in the export.
          */
         "includeLegend"?: boolean;
         /**
-          * When `true`, include map in export.
+          * When `true`, map is included in the export.
          */
         "includeMap"?: boolean;
         /**
-          * When `true`, include popup in export.
+          * When `true`, popup is included in the export.
          */
         "includePopup"?: boolean;
         /**
@@ -74,19 +93,19 @@ export namespace Components {
          */
         "scale"?: 's' | 'm' | 'l';
         /**
-          * Show header title input.
+          * Show header title input in export tool.
          */
         "showHeaderTitle"?: boolean;
         /**
-          * Show include legend checkbox.
+          * Show include legend checkbox in export tool.
          */
         "showIncludeLegend"?: boolean;
         /**
-          * Show include map checkbox.
+          * Show include map checkbox in export tool.
          */
         "showIncludeMap"?: boolean;
         /**
-          * Show popup checkbox.
+          * Show popup checkbox in export tool.
          */
         "showIncludePopup"?: boolean;
         /**
@@ -94,7 +113,7 @@ export namespace Components {
          */
         "showScaleBar"?: boolean;
         /**
-          * MapView or SceneView to reference when filtering.
+          * A reference to the MapView or SceneView.
          */
         "view": __esri.MapView | __esri.SceneView | undefined;
     }
@@ -136,7 +155,7 @@ export namespace Components {
          */
         "urlParams"?: URLSearchParams;
         /**
-          * MapView or SceneView to reference when filtering.
+          * A reference to the MapView or SceneView.
          */
         "view": __esri.MapView | __esri.SceneView;
     }
@@ -208,19 +227,19 @@ export namespace Components {
     }
     interface InstantAppsInteractiveLegend {
         /**
-          * Display individual counts and total counts for legend infos.
+          * Display the individual counts for categories and total counts for layers in the legend
          */
         "featureCount": boolean;
         /**
-          * Filter mode to use when filtering features.
+          * Use effects to differentiate between features that are included and excluded from legend filter results
          */
         "filterMode": FilterMode;
         /**
-          * Reference to Map View or Scene View
+          * Reference to Map View
          */
         "view": __esri.MapView;
         /**
-          * Displays 'Zoom To' button - updates the extent of the view based on the selected legend infos.
+          * Displays ‘Zoom to’ button, updates the extent of the view based on the results from the legend
          */
         "zoomTo": boolean;
     }
@@ -317,7 +336,7 @@ export namespace Components {
     }
     interface InstantAppsKeyboardShortcuts {
         /**
-          * MapView or SceneView to reference when URL parameter values are generated, i.e. center, level, viewpoint, etc.
+          * A reference to the MapView or SceneView
          */
         "view": __esri.MapView | __esri.SceneView;
     }
@@ -371,13 +390,101 @@ export namespace Components {
          */
         "titleText": string;
     }
+    interface InstantAppsLanguageSwitcher {
+        /**
+          * Icon to display.
+         */
+        "icon": string;
+        /**
+          * Data used to populate language switcher dropdown.
+         */
+        "locales": { locale: string; webmap?: string }[];
+        /**
+          * Instant App portal item - used to fetch it's associated portal item resource. The portal item resource will contain the user defined translated strings.
+         */
+        "portalItem": __esri.PortalItem;
+        /**
+          * Refreshes the component by fetching the latest translation data from the portal item resource.
+         */
+        "refresh": () => Promise<void>;
+        /**
+          * Reference to map view to switch web maps if present in locales.
+         */
+        "view"?: __esri.MapView | __esri.SceneView;
+    }
+    interface InstantAppsLanguageTranslator {
+        /**
+          * Object used to render each `instant-apps-translator-item`, containing either a `calcite-input` or rich text editor (handles HTML formatting); and, the languages to translate within the dropdown.
+         */
+        "appSettings": AppSettings;
+        /**
+          * Specified languages that the user-defined strings will be translated in.
+         */
+        "locales": LocaleItem[];
+        /**
+          * Controls the open/close state of the modal.
+         */
+        "open": boolean;
+        /**
+          * Instant App portal item - used to fetch it's associated portal item resource. The portal item resource will contain the user-defined translated strings.
+         */
+        "portalItem": __esri.PortalItem;
+        /**
+          * Function that is called when the value in a translated locale's input has changed. This function will have 4 arguments - fieldName, value, locale, and resource - and will return a promise. The callback function can be used to construct the data of key-value pairs that will be written to the portal item resource.
+         */
+        "translatedLocaleInputOnChangeCallback": (fieldName: string, value: string, locale: string, resource: __esri.PortalItemResource) => Promise<void>;
+        /**
+          * Function to be called when the value in a user locale input has changed. This function will have 2 arguments - fieldName and value - and will return a promise.
+         */
+        "userLocaleInputOnChangeCallback": (fieldName: string, value: string) => Promise<void>;
+    }
+    interface InstantAppsLanguageTranslatorItem {
+        /**
+          * Unique identifier tied to an associated setting in an app.
+         */
+        "fieldName": string;
+        /**
+          * Label of item in currently selected language.
+         */
+        "translatedLanguageLabel": string;
+        /**
+          * Function that is called when the value in a translated locale's input has changed. This function will have 4 arguments - fieldName, value, locale, and resource - and will return a promise. The callback function can be used to construct the data of key-value pairs that will be written to the portal item resource.
+         */
+        "translatedLocaleInputOnChangeCallback": (fieldName: string, value: string, locale: string, resource: __esri.PortalItemResource) => Promise<void>;
+        /**
+          * Determines whether to use a regular input or text editor
+         */
+        "type": SettingType;
+        /**
+          * Function to be called when the value in a user locale input has changed. This function will have 2 arguments - fieldName and value - and will return a promise.
+         */
+        "userLocaleInputOnChangeCallback": (fieldName: string, value: string) => Promise<void>;
+    }
+    interface InstantAppsLanguageTranslatorSearch {
+        /**
+          * Placeholder string for search input.
+         */
+        "t9nPlaceholder": string;
+    }
     interface InstantAppsMeasurement {
+        /**
+          * Determine the tool that will be open on load
+         */
         "activeToolType": ActiveTool;
+        /**
+          * Choose which unit will be used for the area tool by default
+         */
         "areaUnit"?: __esri.AreaUnit;
+        /**
+          * Choose which formats to include as options while converting coordinates
+         */
         "coordinateFormat"?: string;
+        /**
+          * Choose which unit will be used for the distance tool by default
+         */
         "linearUnit"?: __esri.LengthUnit;
         /**
-          * MapView or SceneView
+          * A reference to the MapView or SceneView
          */
         "view": __esri.MapView | __esri.SceneView;
     }
@@ -534,6 +641,10 @@ export namespace Components {
         "titleText": string;
     }
 }
+export interface InstantAppsCkeditorWrapperCustomEvent<T> extends CustomEvent<T> {
+    detail: T;
+    target: HTMLInstantAppsCkeditorWrapperElement;
+}
 export interface InstantAppsExportCustomEvent<T> extends CustomEvent<T> {
     detail: T;
     target: HTMLInstantAppsExportElement;
@@ -558,6 +669,22 @@ export interface InstantAppsInteractiveLegendLegendElementCaptionCustomEvent<T> 
     detail: T;
     target: HTMLInstantAppsInteractiveLegendLegendElementCaptionElement;
 }
+export interface InstantAppsLanguageSwitcherCustomEvent<T> extends CustomEvent<T> {
+    detail: T;
+    target: HTMLInstantAppsLanguageSwitcherElement;
+}
+export interface InstantAppsLanguageTranslatorCustomEvent<T> extends CustomEvent<T> {
+    detail: T;
+    target: HTMLInstantAppsLanguageTranslatorElement;
+}
+export interface InstantAppsLanguageTranslatorItemCustomEvent<T> extends CustomEvent<T> {
+    detail: T;
+    target: HTMLInstantAppsLanguageTranslatorItemElement;
+}
+export interface InstantAppsLanguageTranslatorSearchCustomEvent<T> extends CustomEvent<T> {
+    detail: T;
+    target: HTMLInstantAppsLanguageTranslatorSearchElement;
+}
 export interface InstantAppsMeasurementCustomEvent<T> extends CustomEvent<T> {
     detail: T;
     target: HTMLInstantAppsMeasurementElement;
@@ -567,6 +694,12 @@ export interface InstantAppsScoreboardCustomEvent<T> extends CustomEvent<T> {
     target: HTMLInstantAppsScoreboardElement;
 }
 declare global {
+    interface HTMLInstantAppsCkeditorWrapperElement extends Components.InstantAppsCkeditorWrapper, HTMLStencilElement {
+    }
+    var HTMLInstantAppsCkeditorWrapperElement: {
+        prototype: HTMLInstantAppsCkeditorWrapperElement;
+        new (): HTMLInstantAppsCkeditorWrapperElement;
+    };
     interface HTMLInstantAppsControlPanelElement extends Components.InstantAppsControlPanel, HTMLStencilElement {
     }
     var HTMLInstantAppsControlPanelElement: {
@@ -663,6 +796,30 @@ declare global {
         prototype: HTMLInstantAppsLandingPageElement;
         new (): HTMLInstantAppsLandingPageElement;
     };
+    interface HTMLInstantAppsLanguageSwitcherElement extends Components.InstantAppsLanguageSwitcher, HTMLStencilElement {
+    }
+    var HTMLInstantAppsLanguageSwitcherElement: {
+        prototype: HTMLInstantAppsLanguageSwitcherElement;
+        new (): HTMLInstantAppsLanguageSwitcherElement;
+    };
+    interface HTMLInstantAppsLanguageTranslatorElement extends Components.InstantAppsLanguageTranslator, HTMLStencilElement {
+    }
+    var HTMLInstantAppsLanguageTranslatorElement: {
+        prototype: HTMLInstantAppsLanguageTranslatorElement;
+        new (): HTMLInstantAppsLanguageTranslatorElement;
+    };
+    interface HTMLInstantAppsLanguageTranslatorItemElement extends Components.InstantAppsLanguageTranslatorItem, HTMLStencilElement {
+    }
+    var HTMLInstantAppsLanguageTranslatorItemElement: {
+        prototype: HTMLInstantAppsLanguageTranslatorItemElement;
+        new (): HTMLInstantAppsLanguageTranslatorItemElement;
+    };
+    interface HTMLInstantAppsLanguageTranslatorSearchElement extends Components.InstantAppsLanguageTranslatorSearch, HTMLStencilElement {
+    }
+    var HTMLInstantAppsLanguageTranslatorSearchElement: {
+        prototype: HTMLInstantAppsLanguageTranslatorSearchElement;
+        new (): HTMLInstantAppsLanguageTranslatorSearchElement;
+    };
     interface HTMLInstantAppsMeasurementElement extends Components.InstantAppsMeasurement, HTMLStencilElement {
     }
     var HTMLInstantAppsMeasurementElement: {
@@ -706,6 +863,7 @@ declare global {
         new (): HTMLInstantAppsSplashElement;
     };
     interface HTMLElementTagNameMap {
+        "instant-apps-ckeditor-wrapper": HTMLInstantAppsCkeditorWrapperElement;
         "instant-apps-control-panel": HTMLInstantAppsControlPanelElement;
         "instant-apps-export": HTMLInstantAppsExportElement;
         "instant-apps-filter-list": HTMLInstantAppsFilterListElement;
@@ -722,6 +880,10 @@ declare global {
         "instant-apps-interactive-legend-relationship": HTMLInstantAppsInteractiveLegendRelationshipElement;
         "instant-apps-keyboard-shortcuts": HTMLInstantAppsKeyboardShortcutsElement;
         "instant-apps-landing-page": HTMLInstantAppsLandingPageElement;
+        "instant-apps-language-switcher": HTMLInstantAppsLanguageSwitcherElement;
+        "instant-apps-language-translator": HTMLInstantAppsLanguageTranslatorElement;
+        "instant-apps-language-translator-item": HTMLInstantAppsLanguageTranslatorItemElement;
+        "instant-apps-language-translator-search": HTMLInstantAppsLanguageTranslatorSearchElement;
         "instant-apps-measurement": HTMLInstantAppsMeasurementElement;
         "instant-apps-measurement-tool": HTMLInstantAppsMeasurementToolElement;
         "instant-apps-popover": HTMLInstantAppsPopoverElement;
@@ -732,8 +894,27 @@ declare global {
     }
 }
 declare namespace LocalJSX {
+    interface InstantAppsCkeditorWrapper {
+        "config"?: EditorConfig;
+        /**
+          * Instance of text editor
+         */
+        "editorInstance"?: IClassicEditor;
+        "onDataChanged"?: (event: InstantAppsCkeditorWrapperCustomEvent<string>) => void;
+        "onIsFocused"?: (event: InstantAppsCkeditorWrapperCustomEvent<{ fieldName: string; isFocused: boolean }>) => void;
+        /**
+          * Current value of text editor instance.
+         */
+        "value"?: string;
+    }
     interface InstantAppsControlPanel {
+        /**
+          * Determine which widgets or components to display in the control panel
+         */
         "components"?: ControlPanelComponent[];
+        /**
+          * A reference to the MapView or SceneView
+         */
         "view"?: __esri.MapView | __esri.SceneView;
     }
     interface InstantAppsExport {
@@ -754,19 +935,19 @@ declare namespace LocalJSX {
          */
         "headerTitle"?: string;
         /**
-          * When `true`, include `extraContent` HTML element in PDF.
+          * When `true`, `extraContent` HTML element is included in the PDF.
          */
         "includeExtraContent"?: boolean;
         /**
-          * When `true`, include legend in export.
+          * When `true`, legend is included in the export.
          */
         "includeLegend"?: boolean;
         /**
-          * When `true`, include map in export.
+          * When `true`, map is included in the export.
          */
         "includeMap"?: boolean;
         /**
-          * When `true`, include popup in export.
+          * When `true`, popup is included in the export.
          */
         "includePopup"?: boolean;
         /**
@@ -798,19 +979,19 @@ declare namespace LocalJSX {
          */
         "scale"?: 's' | 'm' | 'l';
         /**
-          * Show header title input.
+          * Show header title input in export tool.
          */
         "showHeaderTitle"?: boolean;
         /**
-          * Show include legend checkbox.
+          * Show include legend checkbox in export tool.
          */
         "showIncludeLegend"?: boolean;
         /**
-          * Show include map checkbox.
+          * Show include map checkbox in export tool.
          */
         "showIncludeMap"?: boolean;
         /**
-          * Show popup checkbox.
+          * Show popup checkbox in export tool.
          */
         "showIncludePopup"?: boolean;
         /**
@@ -818,7 +999,7 @@ declare namespace LocalJSX {
          */
         "showScaleBar"?: boolean;
         /**
-          * MapView or SceneView to reference when filtering.
+          * A reference to the MapView or SceneView.
          */
         "view"?: __esri.MapView | __esri.SceneView | undefined;
     }
@@ -868,7 +1049,7 @@ declare namespace LocalJSX {
          */
         "urlParams"?: URLSearchParams;
         /**
-          * MapView or SceneView to reference when filtering.
+          * A reference to the MapView or SceneView.
          */
         "view"?: __esri.MapView | __esri.SceneView;
     }
@@ -944,19 +1125,19 @@ declare namespace LocalJSX {
     }
     interface InstantAppsInteractiveLegend {
         /**
-          * Display individual counts and total counts for legend infos.
+          * Display the individual counts for categories and total counts for layers in the legend
          */
         "featureCount"?: boolean;
         /**
-          * Filter mode to use when filtering features.
+          * Use effects to differentiate between features that are included and excluded from legend filter results
          */
         "filterMode"?: FilterMode;
         /**
-          * Reference to Map View or Scene View
+          * Reference to Map View
          */
         "view"?: __esri.MapView;
         /**
-          * Displays 'Zoom To' button - updates the extent of the view based on the selected legend infos.
+          * Displays ‘Zoom to’ button, updates the extent of the view based on the results from the legend
          */
         "zoomTo"?: boolean;
     }
@@ -1057,7 +1238,7 @@ declare namespace LocalJSX {
     }
     interface InstantAppsKeyboardShortcuts {
         /**
-          * MapView or SceneView to reference when URL parameter values are generated, i.e. center, level, viewpoint, etc.
+          * A reference to the MapView or SceneView
          */
         "view"?: __esri.MapView | __esri.SceneView;
     }
@@ -1111,17 +1292,119 @@ declare namespace LocalJSX {
          */
         "titleText": string;
     }
+    interface InstantAppsLanguageSwitcher {
+        /**
+          * Icon to display.
+         */
+        "icon"?: string;
+        /**
+          * Data used to populate language switcher dropdown.
+         */
+        "locales"?: { locale: string; webmap?: string }[];
+        /**
+          * Fires when a language is selected from the dropdown. This event will emit an object containing the information on the selected language and a flat object of unique identifiers and their associated values.
+         */
+        "onSelectedLanguageUpdated"?: (event: InstantAppsLanguageSwitcherCustomEvent<{
+    locale: string;
+    data?: {
+      [key: string]: string;
+    };
+  }>) => void;
+        /**
+          * Instant App portal item - used to fetch it's associated portal item resource. The portal item resource will contain the user defined translated strings.
+         */
+        "portalItem": __esri.PortalItem;
+        /**
+          * Reference to map view to switch web maps if present in locales.
+         */
+        "view"?: __esri.MapView | __esri.SceneView;
+    }
+    interface InstantAppsLanguageTranslator {
+        /**
+          * Object used to render each `instant-apps-translator-item`, containing either a `calcite-input` or rich text editor (handles HTML formatting); and, the languages to translate within the dropdown.
+         */
+        "appSettings"?: AppSettings;
+        /**
+          * Specified languages that the user-defined strings will be translated in.
+         */
+        "locales"?: LocaleItem[];
+        /**
+          * Fires when a translation input's value has changed.
+         */
+        "onTranslatorDataUpdated"?: (event: InstantAppsLanguageTranslatorCustomEvent<string>) => void;
+        /**
+          * Controls the open/close state of the modal.
+         */
+        "open"?: boolean;
+        /**
+          * Instant App portal item - used to fetch it's associated portal item resource. The portal item resource will contain the user-defined translated strings.
+         */
+        "portalItem": __esri.PortalItem;
+        /**
+          * Function that is called when the value in a translated locale's input has changed. This function will have 4 arguments - fieldName, value, locale, and resource - and will return a promise. The callback function can be used to construct the data of key-value pairs that will be written to the portal item resource.
+         */
+        "translatedLocaleInputOnChangeCallback"?: (fieldName: string, value: string, locale: string, resource: __esri.PortalItemResource) => Promise<void>;
+        /**
+          * Function to be called when the value in a user locale input has changed. This function will have 2 arguments - fieldName and value - and will return a promise.
+         */
+        "userLocaleInputOnChangeCallback"?: (fieldName: string, value: string) => Promise<void>;
+    }
+    interface InstantAppsLanguageTranslatorItem {
+        /**
+          * Unique identifier tied to an associated setting in an app.
+         */
+        "fieldName"?: string;
+        /**
+          * Fires when a translation input's value has changed.
+         */
+        "onTranslatorItemDataUpdated"?: (event: InstantAppsLanguageTranslatorItemCustomEvent<void>) => void;
+        /**
+          * Label of item in currently selected language.
+         */
+        "translatedLanguageLabel"?: string;
+        /**
+          * Function that is called when the value in a translated locale's input has changed. This function will have 4 arguments - fieldName, value, locale, and resource - and will return a promise. The callback function can be used to construct the data of key-value pairs that will be written to the portal item resource.
+         */
+        "translatedLocaleInputOnChangeCallback"?: (fieldName: string, value: string, locale: string, resource: __esri.PortalItemResource) => Promise<void>;
+        /**
+          * Determines whether to use a regular input or text editor
+         */
+        "type"?: SettingType;
+        /**
+          * Function to be called when the value in a user locale input has changed. This function will have 2 arguments - fieldName and value - and will return a promise.
+         */
+        "userLocaleInputOnChangeCallback"?: (fieldName: string, value: string) => Promise<void>;
+    }
+    interface InstantAppsLanguageTranslatorSearch {
+        "onSuggestionSelected"?: (event: InstantAppsLanguageTranslatorSearchCustomEvent<string>) => void;
+        /**
+          * Placeholder string for search input.
+         */
+        "t9nPlaceholder"?: string;
+    }
     interface InstantAppsMeasurement {
+        /**
+          * Determine the tool that will be open on load
+         */
         "activeToolType"?: ActiveTool;
+        /**
+          * Choose which unit will be used for the area tool by default
+         */
         "areaUnit"?: __esri.AreaUnit;
+        /**
+          * Choose which formats to include as options while converting coordinates
+         */
         "coordinateFormat"?: string;
+        /**
+          * Choose which unit will be used for the distance tool by default
+         */
         "linearUnit"?: __esri.LengthUnit;
         /**
           * Emits when there is an active measure tool to allow app devs to disable other tools/popups when tools are active .
          */
         "onMeasureActive"?: (event: InstantAppsMeasurementCustomEvent<boolean>) => void;
         /**
-          * MapView or SceneView
+          * A reference to the MapView or SceneView
          */
         "view"?: __esri.MapView | __esri.SceneView;
     }
@@ -1278,6 +1561,7 @@ declare namespace LocalJSX {
         "titleText"?: string;
     }
     interface IntrinsicElements {
+        "instant-apps-ckeditor-wrapper": InstantAppsCkeditorWrapper;
         "instant-apps-control-panel": InstantAppsControlPanel;
         "instant-apps-export": InstantAppsExport;
         "instant-apps-filter-list": InstantAppsFilterList;
@@ -1294,6 +1578,10 @@ declare namespace LocalJSX {
         "instant-apps-interactive-legend-relationship": InstantAppsInteractiveLegendRelationship;
         "instant-apps-keyboard-shortcuts": InstantAppsKeyboardShortcuts;
         "instant-apps-landing-page": InstantAppsLandingPage;
+        "instant-apps-language-switcher": InstantAppsLanguageSwitcher;
+        "instant-apps-language-translator": InstantAppsLanguageTranslator;
+        "instant-apps-language-translator-item": InstantAppsLanguageTranslatorItem;
+        "instant-apps-language-translator-search": InstantAppsLanguageTranslatorSearch;
         "instant-apps-measurement": InstantAppsMeasurement;
         "instant-apps-measurement-tool": InstantAppsMeasurementTool;
         "instant-apps-popover": InstantAppsPopover;
@@ -1307,6 +1595,7 @@ export { LocalJSX as JSX };
 declare module "@stencil/core" {
     export namespace JSX {
         interface IntrinsicElements {
+            "instant-apps-ckeditor-wrapper": LocalJSX.InstantAppsCkeditorWrapper & JSXBase.HTMLAttributes<HTMLInstantAppsCkeditorWrapperElement>;
             "instant-apps-control-panel": LocalJSX.InstantAppsControlPanel & JSXBase.HTMLAttributes<HTMLInstantAppsControlPanelElement>;
             "instant-apps-export": LocalJSX.InstantAppsExport & JSXBase.HTMLAttributes<HTMLInstantAppsExportElement>;
             "instant-apps-filter-list": LocalJSX.InstantAppsFilterList & JSXBase.HTMLAttributes<HTMLInstantAppsFilterListElement>;
@@ -1323,6 +1612,10 @@ declare module "@stencil/core" {
             "instant-apps-interactive-legend-relationship": LocalJSX.InstantAppsInteractiveLegendRelationship & JSXBase.HTMLAttributes<HTMLInstantAppsInteractiveLegendRelationshipElement>;
             "instant-apps-keyboard-shortcuts": LocalJSX.InstantAppsKeyboardShortcuts & JSXBase.HTMLAttributes<HTMLInstantAppsKeyboardShortcutsElement>;
             "instant-apps-landing-page": LocalJSX.InstantAppsLandingPage & JSXBase.HTMLAttributes<HTMLInstantAppsLandingPageElement>;
+            "instant-apps-language-switcher": LocalJSX.InstantAppsLanguageSwitcher & JSXBase.HTMLAttributes<HTMLInstantAppsLanguageSwitcherElement>;
+            "instant-apps-language-translator": LocalJSX.InstantAppsLanguageTranslator & JSXBase.HTMLAttributes<HTMLInstantAppsLanguageTranslatorElement>;
+            "instant-apps-language-translator-item": LocalJSX.InstantAppsLanguageTranslatorItem & JSXBase.HTMLAttributes<HTMLInstantAppsLanguageTranslatorItemElement>;
+            "instant-apps-language-translator-search": LocalJSX.InstantAppsLanguageTranslatorSearch & JSXBase.HTMLAttributes<HTMLInstantAppsLanguageTranslatorSearchElement>;
             "instant-apps-measurement": LocalJSX.InstantAppsMeasurement & JSXBase.HTMLAttributes<HTMLInstantAppsMeasurementElement>;
             "instant-apps-measurement-tool": LocalJSX.InstantAppsMeasurementTool & JSXBase.HTMLAttributes<HTMLInstantAppsMeasurementToolElement>;
             "instant-apps-popover": LocalJSX.InstantAppsPopover & JSXBase.HTMLAttributes<HTMLInstantAppsPopoverElement>;

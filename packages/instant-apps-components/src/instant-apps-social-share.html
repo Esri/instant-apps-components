@@ -67,21 +67,29 @@
         </calcite-action-bar>
         <calcite-panel>
           <p class="panel-content"><strong>Social Share</strong> Select a feature on the map to share.</p>
+          <calcite-label>
+            <calcite-select id="langSelect">
+              <calcite-option value="en">English</calcite-option>
+              <calcite-option value="ja">Japanese</calcite-option>
+              <calcite-option value="el">Greek</calcite-option>
+            </calcite-select>
+          </calcite-label>
         </calcite-panel>
       </calcite-shell-panel>
       <div id="viewDiv"></div>
     </calcite-shell>
 
     <script>
-      require(['esri/WebMap', 'esri/widgets/Expand', 'esri/views/MapView', 'esri/layers/FeatureLayer', 'esri/widgets/FeatureTable', 'esri/core/reactiveUtils', 'esri/config'], (
-        WebMap,
-        Expand,
-        MapView,
-        FeatureLayer,
-        FeatureTable,
-        reactiveUtils,
-        esriConfig,
-      ) => {
+      require([
+        'esri/WebMap',
+        'esri/widgets/Expand',
+        'esri/views/MapView',
+        'esri/layers/FeatureLayer',
+        'esri/widgets/FeatureTable',
+        'esri/core/reactiveUtils',
+        'esri/config',
+        'esri/intl',
+      ], (WebMap, Expand, MapView, FeatureLayer, FeatureTable, reactiveUtils, esriConfig, intl) => {
         esriConfig.portalUrl = 'https://nw-brews.mapsdevext.arcgis.com';
 
         const map = new WebMap({
@@ -126,6 +134,12 @@
 
         const socialShare = document.querySelector('instant-apps-social-share');
         socialShare.view = view;
+
+        const langSelect = document.getElementById('langSelect');
+        langSelect.addEventListener('calciteSelectChange', e => {
+          const locale = e.target.value;
+          intl.setLocale(locale);
+        });
       });
     </script>
   </body>

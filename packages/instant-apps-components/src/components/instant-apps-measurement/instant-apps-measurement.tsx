@@ -10,7 +10,7 @@ import { Component, Host, State, Prop, Event, EventEmitter, Element, h } from '@
 
 import Measurement_T9n from '../../assets/t9n/instant-apps-measurement/resources.json';
 
-import { getLocaleComponentStrings } from '../../utils/locale';
+import { getMessages } from '../../utils/locale';
 import { ActiveTool } from '../../interfaces/interfaces';
 
 const CSS = {
@@ -28,12 +28,24 @@ export class InstantAppsMeasurement {
 
   @State() messages: typeof Measurement_T9n;
   /**
-   * MapView or SceneView
+   * A reference to the MapView or SceneView
    */
   @Prop() view: __esri.MapView | __esri.SceneView;
+  /**
+   * Choose which unit will be used for the area tool by default
+   */
   @Prop() areaUnit?: __esri.AreaUnit;
+  /**
+   * Choose which unit will be used for the distance tool by default
+   */
   @Prop() linearUnit?: __esri.LengthUnit;
+  /**
+   * Choose which formats to include as options while converting coordinates 
+   */
   @Prop() coordinateFormat?: string;
+  /**
+   * Determine the tool that will be open on load
+   */
   @Prop() activeToolType: ActiveTool;
   /**
    * Emits when there is an active measure tool
@@ -44,14 +56,10 @@ export class InstantAppsMeasurement {
 
   measureTool: HTMLInstantAppsMeasurementToolElement | undefined;
   async componentWillLoad() {
-    await this.getMessages();
+    getMessages(this);
   }
 
   componentDidLoad() {}
-  async getMessages() {
-    const messages = await getLocaleComponentStrings(this.el);
-    this.messages = messages[0] as typeof Measurement_T9n;
-  }
 
   render() {
     const { messages, view, coordinateFormat, areaUnit, linearUnit, activeToolType } = this;

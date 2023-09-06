@@ -3,7 +3,7 @@ import { CalciteCheckboxCustomEvent, CalciteInputCustomEvent } from '@esri/calci
 
 import Export_T9n from '../../assets/t9n/instant-apps-export/resources.json';
 import { ExportOutput, PopoverPlacement } from '../../interfaces/interfaces';
-import { getLocaleComponentStrings } from '../../utils/locale';
+import { getMessages } from '../../utils/locale';
 import { printStyling } from './resources';
 import { loadModules } from '../../utils/loadModules';
 import { getMode } from '../../utils/mode';
@@ -68,22 +68,22 @@ export class InstantAppsExport {
   @Prop({ mutable: true }) headerTitle?: string = '';
 
   /**
-   * When `true`, include `extraContent` HTML element in PDF.
+   * When `true`, `extraContent` HTML element is included in the PDF.
    */
   @Prop({ mutable: true }) includeExtraContent?: boolean = true;
 
   /**
-   * When `true`, include legend in export.
+   * When `true`, legend is included in the export.
    */
   @Prop({ mutable: true }) includeLegend?: boolean = true;
 
   /**
-   * When `true`, include map in export.
+   * When `true`, map is included in the export.
    */
   @Prop({ mutable: true }) includeMap?: boolean = true;
 
   /**
-   * When `true`, include popup in export.
+   * When `true`, popup is included in the export.
    */
   @Prop({ mutable: true }) includePopup?: boolean = false;
 
@@ -108,22 +108,22 @@ export class InstantAppsExport {
   @Prop() scale?: 's' | 'm' | 'l' = 'm';
 
   /**
-   * Show header title input.
+   * Show header title input in export tool.
    */
   @Prop() showHeaderTitle?: boolean = true;
 
   /**
-   * Show include legend checkbox.
+   * Show include legend checkbox in export tool.
    */
   @Prop() showIncludeLegend?: boolean = true;
 
   /**
-   * Show include map checkbox.
+   * Show include map checkbox in export tool.
    */
   @Prop() showIncludeMap?: boolean = false;
 
   /**
-   * Show popup checkbox.
+   * Show popup checkbox in export tool.
    */
   @Prop() showIncludePopup?: boolean = true;
 
@@ -133,7 +133,7 @@ export class InstantAppsExport {
   @Prop() showScaleBar?: boolean = true;
 
   /**
-   * MapView or SceneView to reference when filtering.
+   * A reference to the MapView or SceneView.
    */
   @Prop() view: __esri.MapView | __esri.SceneView | undefined;
 
@@ -166,7 +166,7 @@ export class InstantAppsExport {
 
   componentWillLoad(): void {
     this.baseClass = getMode(this.hostElement) === 'dark' ? CSS.baseDark : CSS.baseLight;
-    this.getMessages();
+    getMessages(this);
     this.initializeModules();
   }
 
@@ -211,7 +211,14 @@ export class InstantAppsExport {
       >
         {panel}
       </calcite-popover>,
-      <calcite-action id="export-popover-btn" alignment="center" icon={this.popoverIcon} scale={this.scale} title={this.messages?.exportBtn} text={this.messages?.exportBtn}></calcite-action>,
+      <calcite-action
+        id="export-popover-btn"
+        alignment="center"
+        icon={this.popoverIcon}
+        scale={this.scale}
+        title={this.messages?.exportBtn}
+        text={this.messages?.exportBtn}
+      ></calcite-action>,
     ];
   }
 
@@ -563,10 +570,5 @@ export class InstantAppsExport {
         });
       }
     }
-  }
-
-  async getMessages(): Promise<void> {
-    const messages = await getLocaleComponentStrings(this.hostElement);
-    this.messages = messages[0] as typeof Export_T9n;
   }
 }

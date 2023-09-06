@@ -1,7 +1,7 @@
 {
   "name": "@esri/instant-apps-components-react",
   "sideEffects": false,
-  "version": "1.0.0-beta.94",
+  "version": "1.0.0-beta.110",
   "description": "A set of React components that wrap Instant Apps components",
   "license": "SEE LICENSE IN LICENSE.md",
   "scripts": {
@@ -21,7 +21,7 @@
     "dist/"
   ],
   "devDependencies": {
-    "@esri/calcite-components": "1.0.7",
+    "@esri/calcite-components": "1.5.0",
     "@types/arcgis-js-api": "^4.26.0",
     "@types/node": "~15.12.1",
     "@types/react": "^16.7.6",
@@ -32,7 +32,8 @@
     "typescript": "4.7.4"
   },
   "dependencies": {
-    "@esri/instant-apps-components": "^1.0.0-beta.94"
+    "@esri/instant-apps-components": "^1.0.0-beta.110",
+    "@ckeditor/ckeditor5-build-classic": "^39.0.1"
   },
   "peerDependencies": {
     "react": ">=16.7",

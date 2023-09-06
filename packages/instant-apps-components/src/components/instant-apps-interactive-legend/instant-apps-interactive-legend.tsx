@@ -4,7 +4,7 @@ import { loadModules } from '../../utils/loadModules';
 
 import { FilterMode } from './instant-apps-interactive-legend-classic/interfaces/interfaces';
 
-import { getLocaleComponentStrings } from '../../utils/locale';
+import { getMessages } from '../../utils/locale';
 import { getTheme } from './support/helpers';
 
 const CSS = {
@@ -41,25 +41,25 @@ export class InstantAppsInteractiveLegend {
   widget: __esri.Widget;
 
   /**
-   * Reference to Map View or Scene View
+   * Reference to Map View
    */
   @Prop()
   view: __esri.MapView;
 
   /**
-   * Displays 'Zoom To' button - updates the extent of the view based on the selected legend infos.
+   * Displays ‘Zoom to’ button, updates the extent of the view based on the results from the legend
    */
   @Prop()
   zoomTo: boolean = false;
 
   /**
-   * Display individual counts and total counts for legend infos.
+   * Display the individual counts for categories and total counts for layers in the legend
    */
   @Prop()
   featureCount: boolean = false;
 
   /**
-   * Filter mode to use when filtering features.
+   * Use effects to differentiate between features that are included and excluded from legend filter results 
    */
   @Prop()
   filterMode: FilterMode = {
@@ -80,7 +80,7 @@ export class InstantAppsInteractiveLegend {
   }
 
   async componentDidLoad() {
-    await this.getMessages();
+    getMessages(this);
   }
 
   async initializeModules() {
@@ -159,20 +159,5 @@ export class InstantAppsInteractiveLegend {
       this._renderOnActiveLayerInfoChange(childActiveLayerInfo, reactiveUtils);
       if (childActiveLayerInfo?.children?.length > 0) childActiveLayerInfo?.children?.forEach(innerChild => this._renderOnActiveLayerInfoChange(innerChild, reactiveUtils));
     });
-  }
-
-  async getMessages(): Promise<any> {
-    let messages;
-    try {
-      const res = await getLocaleComponentStrings(this.el);
-      messages = res[0];
-      this.messages = {
-        ...this.messages,
-        ...messages,
-      };
-    } catch (err) {
-      Promise.reject(err);
-    } finally {
-    }
   }
 }

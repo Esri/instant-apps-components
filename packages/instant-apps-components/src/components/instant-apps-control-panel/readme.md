@@ -1,5 +1,19 @@
 # instant-apps-control-panel
 
+## Description
+The `instant-apps-control-panel` component is a configurable toolbar that contains components or widgets that can be used in a map or scene view. 
+
+The component’s purpose is to store widgets used for exploring or modifying the map in a central location. Storing widgets in the control-panel makes it easy to find tools to use with the map or scene like a legend or zoom tools. 
+
+Widgets or components that can be added in the control panel:
+- Any of the [JSAPI 4.x widgets](https://developers.arcgis.com/javascript/latest/api-reference/#:~:text=WMTSLayer-,Widgets,-AreaMeasurement2D) 
+- Other instant apps components like `instant-apps-measure`, `instant-apps-social-share`, `instant-apps-keyboard-shortcuts`, etc.
+
+
+<p align="center">
+<img alt="GIF of mouse cursor opening the legend tool in the control panel from the sample app" img src="https://i.imgur.com/atWmzgs.gif"/>
+</p>
+
 ## Usage
 
 #### Type
@@ -50,10 +64,10 @@ view.ui.add(controlPanel, 'top-left');
 
 ## Properties
 
-| Property     | Attribute | Description | Type                      | Default     |
-| ------------ | --------- | ----------- | ------------------------- | ----------- |
-| `components` | --        |             | `ControlPanelComponent[]` | `[]`        |
-| `view`       | --        |             | `MapView \| SceneView`    | `undefined` |
+| Property     | Attribute | Description                                                           | Type                      | Default     |
+| ------------ | --------- | --------------------------------------------------------------------- | ------------------------- | ----------- |
+| `components` | --        | Determine which widgets or components to display in the control panel | `ControlPanelComponent[]` | `[]`        |
+| `view`       | --        | A reference to the MapView or SceneView                               | `MapView \| SceneView`    | `undefined` |
 
 
 ----------------------------------------------

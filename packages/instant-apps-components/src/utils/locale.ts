@@ -1,7 +1,8 @@
 // https://medium.com/stencil-tricks/implementing-internationalisation-i18n-with-stencil-5e6559554117
+import { loadModules } from 'esri-loader';
 import { languageMap } from './languageUtil';
 
-function getComponentClosestLanguage(element: HTMLElement): string | undefined {
+export function getComponentClosestLanguage(element: HTMLElement): string | undefined {
   const closestElement = (element.closest('[lang]') as HTMLElement) ?? element.shadowRoot?.ownerDocument?.documentElement;
   // language set by the calling application or browser. defaults to english.
   const lang = (closestElement?.lang || navigator?.language || 'en').toLowerCase() as string;
@@ -39,9 +40,21 @@ function fetchLocaleStringsForComponent<T extends StringBundle = StringBundle>(c
   });
 }
 
-export async function getLocaleComponentStrings<T extends StringBundle = StringBundle>(element: HTMLElement): Promise<[T, string]> {
+export function getDefaultLanguage(intl: __esri.intl, portal: __esri.Portal): string {
+    // User profile - locale set in user profile
+    const userProfileLocale: string = portal?.get("user.culture");
+    // Browser - window.navigator.language
+    const browserLocale: string = window?.navigator?.language;
+    // ArcGIS JS API - locale currently set in JS api
+    const jsapiLocale: string = intl.getLocale();
+    // Fallback locale - "en"
+    const fallbackLocale = "en";
+    return intl.normalizeMessageBundleLocale(userProfileLocale || browserLocale || jsapiLocale || fallbackLocale) as string;
+}
+
+export async function getLocaleComponentStrings<T extends StringBundle = StringBundle>(element: HTMLElement, locale?: string): Promise<[T, string]> {
   const componentName = element.tagName.toLowerCase();
-  const componentLanguage = getComponentClosestLanguage(element) as string;
+  const componentLanguage = locale ?? (getComponentClosestLanguage(element) as string);
   let strings: T;
   try {
     strings = await fetchLocaleStringsForComponent(componentName, componentLanguage);
@@ -50,4 +63,14 @@ export async function getLocaleComponentStrings<T extends StringBundle = StringB
     strings = await fetchLocaleStringsForComponent(componentName, 'en');
   }
   return [strings, componentLanguage];
+}
+
+export async function getMessages(component) {
+  const messages = await getLocaleComponentStrings(component.el);
+  component.messages = messages[0];
+  const [intl] = await loadModules(['esri/intl']);
+  (intl as __esri.intl).onLocaleChange(async locale => {
+    const messages = await getLocaleComponentStrings(component.el, locale);
+    component.messages = messages[0];
+  });
 }
