@@ -207,7 +207,7 @@ export class InstantAppsLanguageTranslator {
     const { messages } = this;
     return (
       <div class={CSS.headerText}>
-        <span>{`${messages?.header} | ${messages?.subHeader}`}</span>
+        <span>{messages?.header}</span>
         <calcite-button id="headerTip" appearance="transparent">
           <calcite-icon icon={EIcons.Popover} scale="s" />
         </calcite-button>

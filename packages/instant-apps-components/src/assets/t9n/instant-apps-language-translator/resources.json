@@ -3,8 +3,8 @@
   "collapseAll": "Collapse all",
   "expandAll": "Expand all",
   "goToSetting": "Go to setting",
-  "header": "Language translator",
-  "headerTip": "All text entered by the app author is displayed below with the option to add in translated text to support each language selected. If the text box for any selected language is left blank, the app will show the default language text until the translated text is entered. Use the search to help find text, the search includes the default and translated text areas.",
+  "header": "Translation",
+  "headerTip": "All text that you enter in the app configuration appears below with the option to add translated text for the selected languages. When a text box is empty for any selected language, the app will show the default language until you provide the translated text. Find text using the search, which includes the default and translated text areas.",
   "languages": {
     "ar": "Arabic",
     "bg": "Bulgarian",
