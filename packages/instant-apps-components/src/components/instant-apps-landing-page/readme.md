@@ -1,7 +1,7 @@
 # instant-apps-landing-page
 
 ## Description
-The i`nstant-apps-landing-page` component that can be used as the opening or lead-in page for an app. This component can be helpful as a starting point for apps to establish its purpose and provide information on the brand or owner of the app. 
+The `instant-apps-landing-page` component that can be used as the opening or lead-in page for an app. This component can be helpful as a starting point for apps to establish its purpose and provide information on the brand or owner of the app. 
 
 The landing page can be set up to include a title, subtitle, description, icon or graphic, or a background image. The `alignment` property to control the positioning of the elements in the landing page. Use CSS custom properties to adjust the color, size, and scale elements set up in the landing page. 
 

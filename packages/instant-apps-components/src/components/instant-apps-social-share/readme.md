@@ -9,7 +9,7 @@ The URL that is generated from the tool can be set up to preserve certain charac
 -	**Viewpoint of the map or scene view**: The center, scale level and view point of the current visible extent can be added as a URL. By doing this the view will open to where the view was when the link was generated. 
 
 <p align="center">
-<img alt="GIF of the social share tool being used in the sample app" img src=" https://i.imgur.com/QLs5gVe.gif"/>
+<img alt="GIF of the social share tool being used in the sample app" img src="https://i.imgur.com/QLs5gVe.gif"/>
 </p>
 
 

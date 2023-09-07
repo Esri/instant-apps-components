@@ -11,7 +11,7 @@ The measurement tool consists of four tools in the component:
 - **Clear measurement**: Used to clear any existing measurements calculated using the tools in the component   
 
 <p align="center">
-<img alt= "Gif of distance measurement, area measurement and coorindate conversion tools being used in sample app" img src="https://i.imgur.com/ChLpnb3.gif"/>
+<img alt= "Gif of distance measurement, area measurement and coorindate conversion tools being used in sample app" img src="https://i.imgur.com/ChLpnb3.gif" width="1000"/>
 </p>
 <!-- Auto Generated Below -->
 
