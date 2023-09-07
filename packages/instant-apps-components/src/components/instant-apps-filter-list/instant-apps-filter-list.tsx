@@ -46,7 +46,7 @@ const CSS = {
   shadow: true,
 })
 export class InstantAppsFilterList {
-  @Element() hostElement: HTMLElement;
+  @Element() el: HTMLElement;
 
   /**
    * Use this to create filters that update a layer's definitionExpression.
@@ -103,7 +103,7 @@ export class InstantAppsFilterList {
   @State() baseClass = baseClassLight;
   @State() disabled: boolean | undefined = true;
   @State() initDefExpressions: GenericStringObject;
-  @State() initPointCloudFilters: { [key: string]: PointCloudFilters }
+  @State() initPointCloudFilters: { [key: string]: PointCloudFilters };
 
   /**
    * Emits when the reset button is pushed.
@@ -127,7 +127,7 @@ export class InstantAppsFilterList {
   zoomToGraphics: __esri.Graphic[];
 
   async componentWillLoad(): Promise<void> {
-    this.baseClass = getMode(this.hostElement) === 'dark' ? baseClassDark : baseClassLight;
+    this.baseClass = getMode(this.el) === 'dark' ? baseClassDark : baseClassLight;
     await this.initializeModules();
     getMessages(this);
     this.filterLayerExpressions = this.layerExpressions;
@@ -469,8 +469,8 @@ export class InstantAppsFilterList {
     this.view.map.allLayers.forEach(layer => {
       if (supportedTypes.includes(layer.type)) {
         const fl = layer as FilterLayer;
-        if (fl.type === "point-cloud") {
-          fl.filters = this.initPointCloudFilters?.[fl.id]
+        if (fl.type === 'point-cloud') {
+          fl.filters = this.initPointCloudFilters?.[fl.id];
         } else {
           fl.definitionExpression = this.initDefExpressions?.[fl.id];
         }
@@ -611,7 +611,7 @@ export class InstantAppsFilterList {
     if (layer && supportedTypes.includes(layer.type)) {
       const query = layer.createQuery();
       query.where = this.initDefExpressions?.[layerId] || '1=1';
-      if ((layer?.capabilities?.query as any)?.supportsCacheHint ) {
+      if ((layer?.capabilities?.query as any)?.supportsCacheHint) {
         query.cacheHint = true;
       }
       if (field) {
@@ -840,10 +840,10 @@ export class InstantAppsFilterList {
     const { id } = layerExpression;
     const fl = this.view.map.findLayerById(id) as FilterLayer;
     if (fl != null) {
-      if (fl.type === "point-cloud") {
-        this.updateFilterLayerPCLFilter(fl, filters)
+      if (fl.type === 'point-cloud') {
+        this.updateFilterLayerPCLFilter(fl, filters);
       } else {
-        this.updateFilterLayerDefExpression(fl, defExpressions, layerExpression)
+        this.updateFilterLayerDefExpression(fl, defExpressions, layerExpression);
       }
     }
   }
@@ -856,11 +856,11 @@ export class InstantAppsFilterList {
         : defExpressions.length > 0
         ? defExpressions.join(operator)
         : this.initDefExpressions[id];
-      layer.definitionExpression = combinedExpressions;
+    layer.definitionExpression = combinedExpressions;
   }
 
   updateFilterLayerPCLFilter(layer: __esri.PointCloudLayer, filters: PointCloudFilters): void {
-      layer.filters = filters;
+    layer.filters = filters;
   }
 
   async handleWhenView(): Promise<void> {
@@ -880,7 +880,7 @@ export class InstantAppsFilterList {
     map.allLayers.forEach(layer => {
       if (supportedTypes.includes(layer.type)) {
         const fl = layer as FilterLayer;
-        if (fl.type === "point-cloud") {
+        if (fl.type === 'point-cloud') {
           this.initPointCloudFilters[fl.id] = fl.filters;
         } else {
           this.initDefExpressions[fl.id] = fl.definitionExpression;
@@ -959,10 +959,10 @@ export class InstantAppsFilterList {
           defExpressions.push(`(${definitionExpression})`);
         }
         if (active && pointCloudFilters != null && pointCloudFilters.length > 0) {
-          filters = filters.concat(pointCloudFilters)
+          filters = filters.concat(pointCloudFilters);
         }
       }
-      this.updateFilter(layerExpression, defExpressions, filters)
+      this.updateFilter(layerExpression, defExpressions, filters);
       this.generateURLParams();
       this.filterUpdate.emit();
     }

@@ -35,7 +35,7 @@ const CSS = {
   shadow: true,
 })
 export class InstantAppsExport {
-  @Element() hostElement: HTMLElement;
+  @Element() el: HTMLElement;
 
   /**
    * Output to use to set up export.
@@ -165,7 +165,7 @@ export class InstantAppsExport {
   viewEl: HTMLDivElement;
 
   componentWillLoad(): void {
-    this.baseClass = getMode(this.hostElement) === 'dark' ? CSS.baseDark : CSS.baseLight;
+    this.baseClass = getMode(this.el) === 'dark' ? CSS.baseDark : CSS.baseLight;
     getMessages(this);
     this.initializeModules();
   }
