@@ -130,7 +130,7 @@ export class InstantAppsFilterList {
     this.baseClass = getMode(this.el) === 'dark' ? baseClassDark : baseClassLight;
     await this.initializeModules();
     getMessages(this);
-    this.filterLayerExpressions = this.layerExpressions;
+    this.filterLayerExpressions = JSON.parse(JSON.stringify(this.layerExpressions));
     this.disabled = this.filterLayerExpressions?.length ? undefined : true;
     this.reactiveUtils.whenOnce(() => this.view).then(() => this.handleLayerExpressionsUpdate());
   }
@@ -139,13 +139,18 @@ export class InstantAppsFilterList {
     if (name === 'view' && newValue != null) {
       this.handleWhenView();
     } else if (name === 'layerExpressions') {
-      this.filterLayerExpressions = this.layerExpressions;
+      this.filterLayerExpressions = JSON.parse(JSON.stringify(this.layerExpressions));
       this.handleLayerExpressionsUpdate();
     }
   }
 
   componentWillRender(): void {
     this.disabled = this.filterLayerExpressions?.length > 0 ? undefined : true;
+  }
+
+  disconnectedCallback(): void {
+    this.filterLayerExpressions = JSON.parse(JSON.stringify(this.layerExpressions));
+    this.resetAllFilters();
   }
 
   async initializeModules(): Promise<void> {
@@ -851,11 +856,11 @@ export class InstantAppsFilterList {
   updateFilterLayerDefExpression(layer: FilterQueryLayer, defExpressions: string[], layerExpression: LayerExpression): void {
     const { id, operator } = layerExpression;
     const combinedExpressions =
-      defExpressions?.length > 0 && this.initDefExpressions[id] != null
+      defExpressions?.length > 0 && this.initDefExpressions?.[id] != null
         ? `(${defExpressions.join(operator)}) AND (${this.initDefExpressions[id]})`
         : defExpressions.length > 0
         ? defExpressions.join(operator)
-        : this.initDefExpressions[id];
+        : this.initDefExpressions?.[id];
     layer.definitionExpression = combinedExpressions;
   }
 
