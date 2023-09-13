@@ -8,7 +8,7 @@ import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
 import { ActiveTool, ControlPanelComponent, ExportOutput, ExtentSelector, IClassicEditor, IMeasureConfiguration, InstantAppsPopoverMessageOverrides, LayerExpression, PopoverPlacement } from "./interfaces/interfaces";
 import { EditorConfig } from "@ckeditor/ckeditor5-core/src/editor/editorconfig";
 import { FilterMode } from "./components/instant-apps-interactive-legend/instant-apps-interactive-legend-classic/interfaces/interfaces";
-import { HorizontalAlignment, VerticalAlignment } from "./components/instant-apps-landing-page/support/interfaces";
+import { AlignmentPositions } from "./components/instant-apps-landing-page/support/enum";
 import { AppSettings, LocaleItem, SettingType } from "./components/instant-apps-language-translator/support/interfaces";
 import { InstantAppsPopovers } from "./components/instant-apps-popovers/instant-apps-popovers";
 import { LogicalPlacement } from "@esri/calcite-components/dist/types/utils/floating-ui";
@@ -344,7 +344,7 @@ export namespace Components {
         /**
           * Controls the positioning of the text and image content. This accepts an array containing two values. Possible values for HorizontalAlignment: 'left', 'right', 'center'. Possible values for VeritcalAlignment: 'top', 'middle', 'bottom'.
          */
-        "alignment": [HorizontalAlignment, VerticalAlignment];
+        "alignment": AlignmentPositions;
         /**
           * Displays a background image via URL
          */
@@ -1246,7 +1246,7 @@ declare namespace LocalJSX {
         /**
           * Controls the positioning of the text and image content. This accepts an array containing two values. Possible values for HorizontalAlignment: 'left', 'right', 'center'. Possible values for VeritcalAlignment: 'top', 'middle', 'bottom'.
          */
-        "alignment"?: [HorizontalAlignment, VerticalAlignment];
+        "alignment"?: AlignmentPositions;
         /**
           * Displays a background image via URL
          */

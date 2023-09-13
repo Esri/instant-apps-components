@@ -98,7 +98,7 @@
     top: -100%;
   }
 
-  .instant-apps-landing-page__alignment--center-top {
+  .instant-apps-landing-page__alignment--top-center {
     justify-content: flex-start;
     align-items: center;
 
@@ -113,7 +113,7 @@
     }
   }
 
-  .instant-apps-landing-page__alignment--center-middle {
+  .instant-apps-landing-page__alignment--center {
     justify-content: center;
     align-items: center;
 
@@ -128,7 +128,7 @@
     }
   }
 
-  .instant-apps-landing-page__alignment--center-bottom {
+  .instant-apps-landing-page__alignment--bottom-center {
     justify-content: flex-end;
     align-items: center;
 
@@ -143,7 +143,7 @@
     }
   }
 
-  .instant-apps-landing-page__alignment--left-top {
+  .instant-apps-landing-page__alignment--top-left {
     justify-content: flex-start;
     align-items: flex-start;
 
@@ -152,7 +152,7 @@
     }
   }
 
-  .instant-apps-landing-page__alignment--left-middle {
+  .instant-apps-landing-page__alignment--center-left {
     justify-content: center;
     align-items: flex-start;
 
@@ -161,7 +161,7 @@
     }
   }
 
-  .instant-apps-landing-page__alignment--left-bottom {
+  .instant-apps-landing-page__alignment--bottom-left {
     justify-content: flex-end;
     align-items: flex-start;
 
@@ -170,7 +170,7 @@
     }
   }
 
-  .instant-apps-landing-page__alignment--right-top {
+  .instant-apps-landing-page__alignment--top-right {
     justify-content: flex-start;
     align-items: flex-end;
 
@@ -185,7 +185,7 @@
     }
   }
 
-  .instant-apps-landing-page__alignment--right-middle {
+  .instant-apps-landing-page__alignment--center-right {
     justify-content: center;
     align-items: flex-end;
 
@@ -200,7 +200,7 @@
     }
   }
 
-  .instant-apps-landing-page__alignment--right-bottom {
+  .instant-apps-landing-page__alignment--bottom-right {
     justify-content: flex-end;
     align-items: flex-end;
 
