@@ -1,5 +1,5 @@
 import { Component, Element, Prop, h, Host } from '@stencil/core';
-import { HorizontalAlignment, VerticalAlignment } from './support/interfaces';
+import { AlignmentPositions } from './support/enum';
 
 const CSS = {
   BASE: 'instant-apps-landing-page',
@@ -75,13 +75,13 @@ export class InstantAppsLandingPage {
    * Controls the positioning of the text and image content. This accepts an array containing two values. Possible values for HorizontalAlignment: 'left', 'right', 'center'. Possible values for VeritcalAlignment: 'top', 'middle', 'bottom'.
    */
   @Prop()
-  alignment: [HorizontalAlignment, VerticalAlignment] = ['center', 'middle'];
+  alignment: AlignmentPositions = AlignmentPositions.Center;
 
   /**
    * Controls whether to enable/disable the transition animation the occurs when dismissing the landing page.
    */
   @Prop()
-  disableTransition = false;
+  disableTransition = true;
 
   /**
    * Displays a background image via URL
@@ -163,8 +163,7 @@ export class InstantAppsLandingPage {
   }
 
   getAlignmentClass(): string {
-    const [x, y] = this.alignment;
-    return ` ${CSS.alignment}${x}-${y}`;
+    return ` ${CSS.alignment}${this.alignment}`;
   }
 
   getIconImageScale(): string {
