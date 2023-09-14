@@ -23,6 +23,13 @@ In the splash tool there is a check box that allows users to “Don’t show thi
 | `titleText`                    | `title-text`            | Title of splash screen.                                                                                  | `string`  | `''`        |
 
 
+## Events
+
+| Event         | Description                            | Type                |
+| ------------- | -------------------------------------- | ------------------- |
+| `splashClose` | Emits when the splash modal is closed. | `CustomEvent<void>` |
+
+
 ----------------------------------------------
 
 ## License

@@ -1,4 +1,4 @@
-import { Component, Element, Prop, State, Watch, h } from '@stencil/core';
+import { Component, Element, Event, EventEmitter, Prop, State, Watch, h } from '@stencil/core';
 import Sanitizer from '@esri/arcgis-html-sanitizer';
 import { createSanitizerInstance } from 'templates-common-library/functionality/securityUtils';
 import { getLocalStorageItem, removeItemFromLocalStorage, setLocalStorageItem } from './support/storageUtils';
@@ -61,13 +61,14 @@ export class InstantAppsSplash {
   @State()
   messages: typeof Splash_T9n;
 
+  /**
+   * Emits when the splash modal is closed.
+   */
+  @Event() splashClose: EventEmitter<void>;
+
   @Watch('content')
   sanitizeContent(): void {
     this.content = this._sanitizer.sanitize(this.content);
-  }
-
-  componentDidLoad(): void {
-    this.setMessages();
   }
 
   componentWillLoad(): void {
@@ -80,6 +81,10 @@ export class InstantAppsSplash {
     }
     this.el.open = open;
     if (this.content && this._sanitizer) this.sanitizeContent();
+  }
+
+  componentDidLoad(): void {
+    this.setMessages();
   }
 
   render(): HTMLCalciteModalElement {
@@ -127,6 +132,7 @@ export class InstantAppsSplash {
 
   close(): void {
     this.open = false;
+    this.splashClose.emit();
   }
 
   async setMessages(): Promise<void> {

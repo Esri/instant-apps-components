@@ -693,6 +693,10 @@ export interface InstantAppsScoreboardCustomEvent<T> extends CustomEvent<T> {
     detail: T;
     target: HTMLInstantAppsScoreboardElement;
 }
+export interface InstantAppsSplashCustomEvent<T> extends CustomEvent<T> {
+    detail: T;
+    target: HTMLInstantAppsSplashElement;
+}
 declare global {
     interface HTMLInstantAppsCkeditorWrapperElement extends Components.InstantAppsCkeditorWrapper, HTMLStencilElement {
     }
@@ -1547,6 +1551,10 @@ declare namespace LocalJSX {
           * Local storage key used to determine whether or not user has opted into "Don't show this again" checkbox.
          */
         "localStorageKey": string;
+        /**
+          * Emits when the splash modal is closed.
+         */
+        "onSplashClose"?: (event: InstantAppsSplashCustomEvent<void>) => void;
         /**
           * Controls the 'open' state of the modal element.
          */
