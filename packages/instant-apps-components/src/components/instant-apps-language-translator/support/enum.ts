@@ -16,7 +16,7 @@ export enum EIcons {
   Collapsed = 'chevron-right',
   Copy = 'copy-to-clipboard',
   Breadcrumb = 'chevron-right',
-  DefaultIcon = 'globe',
+  DefaultIcon = 'language',
 }
 
 export enum ECalciteMode {
