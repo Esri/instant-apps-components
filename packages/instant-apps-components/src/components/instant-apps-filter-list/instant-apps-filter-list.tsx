@@ -130,7 +130,7 @@ export class InstantAppsFilterList {
     this.baseClass = getMode(this.el) === 'dark' ? baseClassDark : baseClassLight;
     await this.initializeModules();
     getMessages(this);
-    this.filterLayerExpressions = JSON.parse(JSON.stringify(this.layerExpressions));
+    this.filterLayerExpressions = this.layerExpressions != null ? JSON.parse(JSON.stringify(this.layerExpressions)) : undefined;
     this.disabled = this.filterLayerExpressions?.length ? undefined : true;
     this.reactiveUtils.whenOnce(() => this.view).then(() => this.handleLayerExpressionsUpdate());
   }
@@ -595,20 +595,35 @@ export class InstantAppsFilterList {
         query.orderByFields = [`${field} DESC`];
         query.returnDistinctValues = true;
         query.returnGeometry = false;
-        query.maxRecordCountFactor = 3;
-        query.returnExceededLimitFeatures = true;
         if (this.extentSelector && this.extentSelectorConfig) {
           const geo = this.getExtent(this.extentSelector, this.extentSelectorConfig);
           if (geo != null) query.geometry = geo;
           query.spatialRelationship = 'intersects';
         }
-        const results = await layer.queryFeatures(query);
-        const features = results?.features.filter(feature => feature.attributes?.[field]);
-        return features?.map(feature => feature.attributes?.[field]).sort();
+        const maxRecordCount = layer.capabilities?.query?.['maxRecordCount'];
+        const featureCount = await layer.queryFeatureCount();
+        if (maxRecordCount != null && featureCount > maxRecordCount) {
+          query.num = layer.capabilities?.query?.['maxRecordCount'];
+          let features: any[] = [];
+          for (let index = 0; index < featureCount; index += maxRecordCount) {
+            query.start = index;
+            const results = await this.queryForFeatures(layer, query, field);
+            features = features.concat(results);
+          }
+          return features.sort();
+        } else {
+          return (await this.queryForFeatures(layer, query, field))?.sort();
+        }
       }
     }
 
     return [];
+  }
+
+  async queryForFeatures(layer: FilterQueryLayer, query: __esri.Query, field: string): Promise<string[] | number[]> {
+    const results = await layer.queryFeatures(query);
+    const features = results?.features.filter(feature => feature.attributes?.[field]);
+    return features?.map(feature => feature.attributes?.[field]);
   }
 
   async calculateMinMaxStatistics(layerId: string, field: string | undefined): Promise<__esri.Graphic[]> {
