@@ -51,4 +51,4 @@ export interface LanguageTranslatorSearchResult extends LocaleSettingItem {
 }
 
 export type InputType = 'user' | 'translation';
-export type SettingType = 'string' | 'textEditor';
+export type SettingType = 'string' | 'textEditor' | 'textarea';

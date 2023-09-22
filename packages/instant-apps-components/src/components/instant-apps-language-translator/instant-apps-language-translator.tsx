@@ -341,7 +341,7 @@ export class InstantAppsLanguageTranslator {
   renderUIDataItem(key: string, keyIndex: number, uiDataKeysLen: number): HTMLDivElement {
     const translatedLabel = this.appSettings?.translatedLanguageLabels?.[languageTranslatorState.currentLanguage as string]?.[key];
     const isLast = `${keyIndex === uiDataKeysLen - 1 ? CSS.lastItem : ''}`;
-    const setting = this.appSettings.content.filter(contentItem => contentItem.id)[0];
+    const setting = this.appSettings.content.filter(contentItem => contentItem.id === key)[0];
     return (
       <instant-apps-language-translator-item
         key={`${key}-${keyIndex}`}

@@ -129,7 +129,11 @@ export class InstantAppsLanguageTranslatorItem {
   }
 
   renderInput(value: string, type: InputType): HTMLElement {
-    return this.type === 'string' ? (type === EInputType.User ? this.renderUserLocaleInput(value) : this.renderTranslatedLanguageInput(value)) : this.renderTextEditor(value, type);
+    return this.type === 'string' || this.type === 'textarea'
+      ? type === EInputType.User
+        ? this.renderUserLocaleInput(value)
+        : this.renderTranslatedLanguageInput(value)
+      : this.renderTextEditor(value, type);
   }
 
   renderUserLocaleInput(value: string): HTMLCalciteInputElement {
@@ -200,7 +204,6 @@ export class InstantAppsLanguageTranslatorItem {
   }
 
   renderPopover(uiDataItem: LocaleSettingItem): HTMLCalcitePopoverElement {
-    console.log(uiDataItem);
     const tip = this.getTip(uiDataItem);
     return (
       <calcite-popover reference-element={`${this.fieldName}goTo`} auto-close="true" placement="trailing" closable>
