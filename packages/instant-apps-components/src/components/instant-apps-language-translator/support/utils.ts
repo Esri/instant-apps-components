@@ -15,10 +15,11 @@ export function generateUIData(appSettings, locales: LocaleItem[]): LocaleUIData
 
   appSettings.content.forEach(contentItem => {
     const { type, label, value, uiLocation } = contentItem;
+    const setting = existingUIData?.get(contentItem.id);
     uiData.set(contentItem.id, {
       userLocaleData: { type, label, value },
       expanded: true,
-      selected: existingUIData?.[contentItem.id]?.['selected'] ?? false,
+      selected: setting?.['selected'] ?? false,
       uiLocation,
       tip: contentItem?.tip,
     });
@@ -31,8 +32,10 @@ export function generateUIData(appSettings, locales: LocaleItem[]): LocaleUIData
     return !setting.selected;
   });
 
-  if (noneSelected && uiData[settingKeys[0]]) {
-    uiData[settingKeys[0]].selected = existingUIData?.[settingKeys[0]]?.['selected'] ?? true;
+  const setting = uiData.get(settingKeys[0]);
+  if (noneSelected && setting) {
+    const existingData = existingUIData?.get(settingKeys[0]);
+    setting.selected = existingData?.['selected'] ?? true;
   }
 
   return uiData;

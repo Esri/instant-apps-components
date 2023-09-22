@@ -3,7 +3,7 @@ import { Component, Element, Event, EventEmitter, Host, Prop, h } from '@stencil
 import { getT9nData, getUIDataKeys, isCalciteModeDark } from '../support/utils';
 import { languageTranslatorState, store } from '../support/store';
 import { EInputType, ESettingType, EIcons, ECalciteMode } from '../support/enum';
-import { LocaleSettingItem, LocaleUIData, InputType, SettingType } from '../support/interfaces';
+import { LocaleSettingItem, InputType, SettingType } from '../support/interfaces';
 
 const BASE = 'instant-apps-language-translator-item';
 
@@ -242,16 +242,15 @@ export class InstantAppsLanguageTranslatorItem {
 
   handleExpand(uiDataItem: LocaleSettingItem): void {
     uiDataItem.expanded = !uiDataItem.expanded;
-    const uiData = {
-      ...languageTranslatorState.uiData,
-      [this.fieldName]: uiDataItem as LocaleSettingItem,
-    } as LocaleUIData;
+    const uiData = new Map(languageTranslatorState.uiData);
+    uiData.set(this.fieldName, uiDataItem);
+
     store.set('uiData', uiData);
   }
 
   handleEditorCollapse(): void {
     const uiData = store.get('uiData');
-    const localeSettingItem = uiData?.[this.fieldName] as LocaleSettingItem;
+    const localeSettingItem = uiData?.get(this.fieldName) as LocaleSettingItem;
     const isExpanded = localeSettingItem?.expanded;
     if (!isExpanded && this.userEditorWrapper?.editorInstance && this.translatedEditorWrapper?.editorInstance) {
       const { userEditorWrapper, translatedEditorWrapper } = this;
@@ -265,13 +264,17 @@ export class InstantAppsLanguageTranslatorItem {
   }
 
   handleSelection(event: Event): void {
-    const uiData = { ...languageTranslatorState.uiData } as LocaleUIData;
+    const uiData = new Map(languageTranslatorState.uiData);
     const uiDataKeys = getUIDataKeys();
-    uiDataKeys.forEach(key => ((uiData[key] as LocaleSettingItem).selected = false));
+    uiDataKeys.forEach(key => {
+      const setting = uiData?.get(key);
+      setting.selected = false;
+    });
     uiDataKeys.forEach(key => {
       const fieldName = (event?.target as HTMLCalciteInputElement)?.getAttribute('data-field-name');
       if (key === fieldName) {
-        (uiData[key] as LocaleSettingItem).selected = true;
+        const setting = uiData?.get(key);
+        setting.selected = true;
       }
     });
     store.set('uiData', uiData);

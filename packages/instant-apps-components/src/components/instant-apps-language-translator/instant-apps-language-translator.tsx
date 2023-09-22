@@ -365,18 +365,18 @@ export class InstantAppsLanguageTranslator {
 
   handleExpandCollapseAll(): void {
     this.isCollapse = !this.isCollapse;
-    const uiData = { ...languageTranslatorState.uiData };
+    const uiData = new Map(languageTranslatorState.uiData);
     const uiDataKeys = getUIDataKeys();
-    uiDataKeys.forEach(key => ((uiData[key] as LocaleSettingItem).expanded = this.isCollapse));
-    store.set('uiData', { ...uiData } as LocaleUIData);
+    uiDataKeys.forEach(key => ((uiData.get(key) as LocaleSettingItem).expanded = this.isCollapse));
+    store.set('uiData', uiData as LocaleUIData);
   }
 
   onSuggestionSelect(e: CustomEvent): void {
     const fieldName = e.detail;
-    const uiData = { ...languageTranslatorState.uiData } as LocaleUIData;
+    const uiData = new Map(languageTranslatorState.uiData);
     const uiDataKeys = getUIDataKeys();
     const handleSelection = (key: string) => {
-      const setting = uiData[key] as LocaleSettingItem;
+      const setting = uiData.get(key) as LocaleSettingItem;
       if (key === fieldName) {
         setting.selected = true;
         return;

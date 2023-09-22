@@ -1,6 +1,7 @@
 import { Component, Event, EventEmitter, Host, Prop, State, h } from '@stencil/core';
 import { store } from '../support/store';
 import { LanguageTranslatorSearchResult, LocaleSettingItem, LocaleUIData } from '../support/interfaces';
+import { getUIDataKeys } from '../support/utils';
 
 const BASE = 'instant-apps-language-translator-search';
 
@@ -74,7 +75,7 @@ export class InstantAppsLanguageTranslatorSearch {
     const userInput = node.value?.toLowerCase()?.trim();
 
     const uiData = store.get('uiData') as LocaleUIData;
-    const settingKeys = Object.keys(uiData);
+    const settingKeys = getUIDataKeys();
 
     const portalItemResrouceT9n = store.get('portalItemResourceT9n');
     const currentLanguage = store.get('currentLanguage') as string;
@@ -84,7 +85,7 @@ export class InstantAppsLanguageTranslatorSearch {
     const matchedResults = possibleResultKeys.filter(this.matchedResultsCallback(uiData, translatedData, userInput, currentLanguage));
     this.results = [
       ...matchedResults.map(matchedKey => {
-        const result = { fieldName: matchedKey, ...uiData[matchedKey] } as LanguageTranslatorSearchResult;
+        const result = { fieldName: matchedKey, ...uiData.get(matchedKey) } as LanguageTranslatorSearchResult;
         return result;
       }),
     ];
@@ -92,7 +93,7 @@ export class InstantAppsLanguageTranslatorSearch {
 
   matchedResultsCallback(uiData: LocaleUIData, translatedData: { [key: string]: string }, userInput: string, currentLanguage: string) {
     return (key: string) => {
-      const setting = uiData[key] as LocaleSettingItem;
+      const setting = uiData.get(key) as LocaleSettingItem;
 
       const { label } = setting.userLocaleData;
       const { value } = setting.userLocaleData;
@@ -116,7 +117,7 @@ export class InstantAppsLanguageTranslatorSearch {
   }
 
   testUserInput(testValue: string, userInput: string): boolean {
-    return !!testValue.trim() && !!userInput.trim() && testValue?.toLowerCase()?.search(userInput) !== -1;
+    return !!testValue?.trim() && !!userInput?.trim() && testValue?.toLowerCase()?.search(userInput) !== -1;
   }
 
   selectSuggestion(e: CustomEvent) {
