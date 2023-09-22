@@ -98,7 +98,7 @@
       ) => {
         const DEFAULT_LOCALE = intl.getLocale();
 
-        esriConfig.portalUrl = 'https://nw-brews.mapsdevext.arcgis.com';
+        esriConfig.portalUrl = 'https://holistic.mapsdevext.arcgis.com';
 
         const DEFAULT_WEBMAP_ID = '259c3847301c4cd1a2cc1f5227839ff4';
 
@@ -113,130 +113,158 @@
         });
 
         const templateAppItem = new PortalItem({
-          id: 'de9e286c9cd142798ff1c6a88ef21439',
+          id: 'fb6dc769dd344f2da661bc1427f13f7b',
         });
 
         function getLangSwitcherData() {
           return {
             langTranslatorConfigData: {
-              customHeaderHTML: {
-                type: 'textEditor',
-                label: 'Custom header HTML',
-                value: '<p>Really cool header</p>',
-                uiLocation: {
-                  section: {
-                    id: 'about',
-                    label: 'About',
+              content: [
+                {
+                  id: 'title',
+                  type: 'string',
+                  label: 'App title',
+                  value: 'Language switcher',
+                  uiLocation: {
+                    section: {
+                      id: 'about',
+                      label: 'About',
+                    },
+                    subsection: {
+                      id: null,
+                      label: null,
+                    },
                   },
-                  subsection: {
-                    id: 'appComprehension',
-                    label: 'App details',
+                  tip: "Include title text to introduce the map's main topic",
+                },
+                {
+                  id: 'splashTitle',
+                  type: 'string',
+                  label: 'Introduction window title',
+                  value: 'Welcome!',
+                  uiLocation: {
+                    section: {
+                      id: 'about',
+                      label: 'About',
+                    },
+                    subsection: {
+                      id: null,
+                      label: null,
+                    },
                   },
                 },
-                tip: 'Include a more customized look for the app title. Rich text editor accessibility instructions can be accessed through ALT+0 (Mac users: Option+0).',
-              },
-              customURLParamName: {
-                type: 'string',
-                label: 'URL parameter name',
-                value: 'district',
-                uiLocation: {
-                  section: {
-                    id: 'interactivity',
-                    label: 'Interactivity',
+                {
+                  id: 'splashContent',
+                  type: 'textEditor',
+                  label: 'Introduction window content',
+                  value: '<ul><li>Here is some sample content!</li><li>Here is some sample content!</li><li>Here is some sample content!</li></ul>',
+                  uiLocation: {
+                    section: {
+                      id: 'about',
+                      label: 'About',
+                    },
+                    subsection: {
+                      id: null,
+                      label: null,
+                    },
                   },
-                  subsection: {
-                    id: 'customURLParams',
-                    label: 'URL parameter',
+                  tip: 'Add text, links, and small graphics here (rich text editor). Rich text editor accessibility instructions can be accessed through ALT+0 (Mac users: Option+0).',
+                },
+                {
+                  id: 'splashButtonText',
+                  type: 'string',
+                  label: 'Introduction window button text',
+                  value: 'Enter',
+                  uiLocation: {
+                    section: {
+                      id: 'about',
+                      label: 'About',
+                    },
+                    subsection: {
+                      id: null,
+                      label: null,
+                    },
                   },
                 },
-                tip: 'Set up your app to support a custom URL parameter that users can append to your app URL. For example, if your map contains a feature layer with parcel information, you could find parcels using a URL parameter. For example, if your custom parameter name is parcel users would append the custom search to the app URl like this: index.html?parcel=3045',
-              },
-              splashButtonText: {
-                type: 'string',
-                label: 'Introduction panel button text',
-                value: 'Enter',
-                uiLocation: {
-                  section: {
-                    id: 'about',
-                    label: 'About',
+                {
+                  id: 'customHeaderHTML',
+                  type: 'textEditor',
+                  label: 'Custom header HTML',
+                  value: '<p>Here is some sample content!</p>',
+                  uiLocation: {
+                    section: {
+                      id: 'about',
+                      label: 'About',
+                    },
+                    subsection: {
+                      id: null,
+                      label: null,
+                    },
                   },
-                  subsection: {
-                    id: 'appComprehension',
-                    label: 'App details',
-                  },
+                  tip: 'Include a more customized look for the app title. Rich text editor accessibility instructions can be accessed through ALT+0 (Mac users: Option+0).',
                 },
-              },
-              splashContent: {
-                type: 'textEditor',
-                label: 'Introduction panel content',
-                value: '<p>Pineapple</p><ul><li>Alpha</li><li>Beta</li><li>Gamma</li></ul>',
-                uiLocation: {
-                  section: {
-                    id: 'about',
-                    label: 'About',
+                {
+                  id: 'mapA11yDesc',
+                  type: 'textarea',
+                  label: 'Text alternative for the map',
+                  value: '',
+                  uiLocation: {
+                    section: {
+                      id: 'about',
+                      label: 'About',
+                    },
+                    subsection: {
+                      id: null,
+                      label: null,
+                    },
                   },
-                  subsection: {
-                    id: 'appComprehension',
-                    label: 'App details',
-                  },
+                  tip: 'Add a description to provide a text equivalent of your map and its content for app viewers with vision impairment.',
                 },
-                tip: 'Add text, links, and small graphics here (rich text editor). Rich text editor accessibility instructions can be accessed through ALT+0 (Mac users: Option+0).',
-              },
-              splashTitle: {
-                type: 'string',
-                label: 'Introduction panel title',
-                value: 'Welcome!',
-                uiLocation: {
-                  section: {
-                    id: 'about',
-                    label: 'About',
+                {
+                  id: 'customCSS',
+                  type: 'textarea',
+                  label: 'Custom CSS',
+                  value: '',
+                  uiLocation: {
+                    section: {
+                      id: 'themeLayout',
+                      label: 'Theme & Layout',
+                    },
+                    subsection: {
+                      id: 'theme',
+                      label: 'Theme',
+                    },
                   },
-                  subsection: {
-                    id: 'appComprehension',
-                    label: 'App details',
-                  },
+                  tip: "Customize the appearance using Cascading Style Sheets (CSS). Warning: Release updates for the source template may impact your app's custom CSS",
                 },
-              },
-              title: {
-                type: 'string',
-                label: 'App title',
-                value: 'Language switcher test',
-                uiLocation: {
-                  section: {
-                    id: 'about',
-                    label: 'About',
-                  },
-                  subsection: {
-                    id: 'appComprehension',
-                    label: 'App details',
-                  },
-                },
-                tip: "Include title text to introduce the map's main topic",
-              },
+              ],
               translatedLanguageLabels: {
-                ja: {
-                  customHeaderHTML: 'カスタム ヘッダーの編集',
-                  customURLParamName: 'URL パラメーター名',
-                  splashButtonText: '概要パネルのボタン テキスト',
-                  splashContent: '概要パネルのコンテンツ',
-                  splashTitle: '概要パネルのタイトル',
-                  title: 'アプリのタイトル',
-                },
-                el: {
-                  customHeaderHTML: 'Επεξεργασία εξατομικευμένης κεφαλίδας',
-                  customURLParamName: 'Όνομα παραμέτρου διεύθυνσης URL',
-                  splashButtonText: 'Κείμενο κουμπιού πλαισίου εισαγωγής',
-                  splashContent: 'Περιεχόμενο πλαισίου εισαγωγής',
-                  splashTitle: 'Τίτλος πλαισίου εισαγωγής',
-                  title: 'Τίτλος εφαρμογής',
+                ar: {
+                  title: 'عنوان التطبيق',
+                  splashTitle: 'بيت_Introduction window title__________________________لاحقة',
+                  splashContent: 'بيت_Introduction window content____________________________لاحقة',
+                  splashButtonText: 'بيت_Introduction window button text_________________لاحقة',
+                  customHeaderHTML: 'تحرير الرأس المخصص',
+                  mapA11yDesc: 'بديل نصي للخريطة',
+                  customCSS: 'CSS مخصص',
                 },
                 fr: {
-                  customHeaderHTML: 'Mettre à jour l’en-tête personnalisé',
-                  customURLParamName: 'Nom du paramètre d’URL',
-                  splashButtonText: 'Texte du bouton du volet de présentation',
-                  splashContent: 'Contenu du volet de présentation',
-                  splashTitle: 'Titre du volet de présentation',
                   title: 'Titre de l’application',
+                  splashTitle: 'æ_Introduction window title__________________________Â',
+                  splashContent: 'æ_Introduction window content____________________________Â',
+                  splashButtonText: 'æ_Introduction window button text_________________Â',
+                  customHeaderHTML: 'Mettre à jour l’en-tête personnalisé',
+                  mapA11yDesc: 'Texte alternatif pour la carte',
+                  customCSS: 'Code CSS personnalisé',
+                },
+                ja: {
+                  title: 'アプリのタイトル',
+                  splashTitle: '須_Introduction window title__________________________鷗',
+                  splashContent: '須_Introduction window content____________________________鷗',
+                  splashButtonText: '須_Introduction window button text_________________鷗',
+                  customHeaderHTML: 'カスタム ヘッダーの編集',
+                  mapA11yDesc: 'マップの代替テキスト',
+                  customCSS: 'カスタム CSS',
                 },
               },
             },
@@ -244,15 +272,12 @@
               locales: [
                 {
                   locale: 'ja',
-                  webmap: 'd58ef172169e4bd28a31e37ff8ca336b',
                 },
                 {
                   locale: 'el',
-                  webmap: 'e8e79bb8cbb349d4881f93cd8e023bf3',
                 },
                 {
                   locale: 'fr',
-                  webmap: '86ac3d14a77749c19f4e279f4507b045',
                 },
               ],
               icon: 'language-translate',
@@ -265,9 +290,10 @@
 
         const settingContainer = document.getElementById('settingContainer');
 
+        const settingKeys = langTranslatorConfigData.content.map(contentItem => contentItem.id);
+
         function applyStringPreview() {
           settingContainer.innerHTML = '';
-          const settingKeys = Object.keys(langTranslatorConfigData).filter(settingKey => settingKey !== 'translatedLanguageLabels');
 
           settingKeys.forEach(key => {
             const container = document.createElement('div');
@@ -275,10 +301,11 @@
 
             const label = document.createElement('span');
             label.classList.add('setting-label');
-            label.innerHTML = langTranslatorConfigData[key].label;
+            const setting = langTranslatorConfigData.content.filter(contentItem => contentItem.id === key)[0];
+            label.innerHTML = setting.label;
 
             const value = document.createElement('span');
-            value.innerHTML = langTranslatorConfigData[key].value;
+            value.innerHTML = setting.value;
 
             container.appendChild(label);
             container.appendChild(value);
@@ -292,9 +319,9 @@
         function updateStringPreview(data) {
           settingContainer.innerHTML = '';
 
-          const settingKeys = Object.keys(langTranslatorConfigData).filter(settingKey => settingKey !== 'translatedLanguageLabels');
-
           const t9nData = data.data;
+
+          if (!t9nData) return;
 
           settingKeys.forEach(key => {
             const container = document.createElement('div');
@@ -302,7 +329,7 @@
 
             const label = document.createElement('span');
             label.classList.add('setting-label');
-            label.innerHTML = langTranslatorConfigData.translatedLanguageLabels[data.locale][key];
+            label.innerHTML = langTranslatorConfigData?.translatedLanguageLabels?.[data.locale]?.[key];
 
             const value = document.createElement('span');
             value.innerHTML = t9nData[key];

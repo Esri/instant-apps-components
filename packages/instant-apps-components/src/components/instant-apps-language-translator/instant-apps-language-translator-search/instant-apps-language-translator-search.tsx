@@ -96,7 +96,8 @@ export class InstantAppsLanguageTranslatorSearch {
 
       const { label } = setting.userLocaleData;
       const { value } = setting.userLocaleData;
-      const translatedLanguageLabel = uiData.translatedLanguageLabels[currentLanguage][key];
+      const translatedLanguageLabels = uiData.get('translatedLanguageLabels');
+      const translatedLanguageLabel = translatedLanguageLabels?.[currentLanguage]?.[key];
       const translatedLanguageValue = translatedData[key];
 
       const labelMatch = this.testUserInput(label, userInput);

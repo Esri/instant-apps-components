@@ -20,7 +20,8 @@
     "lib": ["DOM", "DOM.Iterable", "ScriptHost", "ES2020", "ES2021"],
     "resolveJsonModule": true,
     "esModuleInterop": true,
-    "types": ["arcgis-js-api"]
+    "types": ["arcgis-js-api"],
+    "sourceMap": true
   },
   "files": ["node_modules/@esri/calcite-components/dist/types/components.d.ts"],
   "include": ["src", "src/**/*.d.ts"]

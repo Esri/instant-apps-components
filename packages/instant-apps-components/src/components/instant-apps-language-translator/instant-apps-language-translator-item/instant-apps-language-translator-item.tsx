@@ -56,13 +56,13 @@ export class InstantAppsLanguageTranslatorItem {
   type: SettingType;
 
   /**
-   * Function to be called when the value in a user locale input has changed. This function will have 2 arguments - fieldName and value - and will return a promise. 
+   * Function to be called when the value in a user locale input has changed. This function will have 2 arguments - fieldName and value - and will return a promise.
    */
   @Prop()
   userLocaleInputOnChangeCallback: (fieldName: string, value: string) => Promise<void>;
 
-   /**
-   * Function that is called when the value in a translated locale's input has changed. This function will have 4 arguments - fieldName, value, locale, and resource - and will return a promise. The callback function can be used to construct the data of key-value pairs that will be written to the portal item resource. 
+  /**
+   * Function that is called when the value in a translated locale's input has changed. This function will have 4 arguments - fieldName, value, locale, and resource - and will return a promise. The callback function can be used to construct the data of key-value pairs that will be written to the portal item resource.
    */
   @Prop()
   translatedLocaleInputOnChangeCallback: (fieldName: string, value: string, locale: string, resource: __esri.PortalItemResource) => Promise<void>;
@@ -200,6 +200,7 @@ export class InstantAppsLanguageTranslatorItem {
   }
 
   renderPopover(uiDataItem: LocaleSettingItem): HTMLCalcitePopoverElement {
+    console.log(uiDataItem);
     const tip = this.getTip(uiDataItem);
     return (
       <calcite-popover reference-element={`${this.fieldName}goTo`} auto-close="true" placement="trailing" closable>
@@ -226,7 +227,7 @@ export class InstantAppsLanguageTranslatorItem {
 
   getUIDataItem(): LocaleSettingItem | undefined {
     if (!languageTranslatorState.uiData) return;
-    return languageTranslatorState.uiData[this.fieldName] as LocaleSettingItem;
+    return languageTranslatorState.uiData.get(this.fieldName);
   }
 
   updateT9nStore(fieldName: string, value: string): void {
