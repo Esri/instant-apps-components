@@ -6,18 +6,19 @@ Language translator provides a UI to edit user-defined strings in a an end-user'
 
 ```
 interface AppSettings {
-  [fieldName: string]: LocaleSettingData | TranslatedLanguageLabels;
+  content: LocaleSettingData[];
   translatedLanguageLabels: TranslatedLanguageLabels;
 }
 ```
 
 ```
 interface LocaleSettingData {
+  id: string; // Unique ID of setting
   type: SettingType; // Determines whether an input will be rendered as a calcite-input or text editor (used to handle HTML formatting).
   label: string; // Setting label
   value: string; // Input value
   tip?: string; // Used to display a tooltip of information on a given setting
-  uiLocation?: any; // Specific to ArcGIS Instant Apps. Displays the location of a setting within the ArcGIS Instant Apps Configuration window. 
+  uiLocation?: any; // Specific to ArcGIS Instant Apps. Displays the location of a setting within the ArcGIS Instant Apps Configuration window.
 }
 ```
 
@@ -30,7 +31,7 @@ interface TranslatedLanguageLabels {
 ```
 
 ```
-type SettingType = 'string' | 'textEditor';
+type SettingType = 'string' | 'textEditor' | 'textarea';
 ```
 
 ```
@@ -80,15 +81,21 @@ interface LocaleItem {
 ```
 
 ### AppSettings
+
 ```
 {
   ...
-  "title": {
+  "content": [
+    ...
+    {
+      "id": "title",
       "type": "string",
       "label": "App title",
       "value": "Language switcher",
       "tip": "Include title text to introduce the map's main topic"
-  },
+    }
+    ...
+  ],
   ...
   "translatedLanguageLabels": {
       "ja": {
@@ -111,6 +118,7 @@ interface LocaleItem {
 ```
 
 ### Locales
+
 ```
 [
     ...
