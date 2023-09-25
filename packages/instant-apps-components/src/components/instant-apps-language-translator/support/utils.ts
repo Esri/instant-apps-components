@@ -4,34 +4,38 @@ import { ECalciteMode } from './enum';
 import { LocaleItem, LocaleUIData } from './interfaces';
 import { languageTranslatorState, store } from './store';
 
-
 export function generateUIData(appSettings, locales: LocaleItem[]): LocaleUIData | void {
   if (!appSettings) return;
-  const existingUIData = store.get("uiData");
-  const settingKeys = Object.keys(appSettings).filter(settingKey => settingKey !== 'translatedLanguageLabels');
-  const uiData = {
-    locales,
-    translatedLanguageLabels: {
-      ...appSettings.translatedLanguageLabels,
-    },
-  };
-
-  settingKeys.forEach(key => {
-    const appSetting = appSettings[key];
-    const { type, label, value, uiLocation } = appSetting;
-    uiData[key] = {
-      userLocaleData: { type, label, value },
-      expanded: true,
-      selected: existingUIData?.[key]?.["selected"] ?? false,
-      uiLocation,
-      tip: appSetting?.tip,
-    };
+  const existingUIData = store.get('uiData');
+  const uiData = new Map();
+  uiData.set('locales', locales);
+  uiData.set('translatedLanguageLabels', {
+    ...appSettings.translatedLanguageLabels,
   });
 
-  const noneSelected = settingKeys.every(key => !uiData[key].selected);
+  appSettings.content.forEach(contentItem => {
+    const { type, label, value, uiLocation } = contentItem;
+    const setting = existingUIData?.get(contentItem.id);
+    uiData.set(contentItem.id, {
+      userLocaleData: { type, label, value },
+      expanded: true,
+      selected: setting?.['selected'] ?? false,
+      uiLocation,
+      tip: contentItem?.tip,
+    });
+  });
 
-  if (noneSelected && uiData[settingKeys[0]]) {
-    uiData[settingKeys[0]].selected = existingUIData?.[settingKeys[0]]?.["selected"] ?? true;
+  const settingKeys = appSettings.content.map(contentItem => contentItem.id);
+
+  const noneSelected = settingKeys.every((key: string) => {
+    const setting = uiData.get(key);
+    return !setting.selected;
+  });
+
+  const setting = uiData.get(settingKeys[0]);
+  if (noneSelected && setting) {
+    const existingData = existingUIData?.get(settingKeys[0]);
+    setting.selected = existingData?.['selected'] ?? true;
   }
 
   return uiData;
@@ -43,9 +47,14 @@ export async function getMessages(el: HTMLInstantAppsLanguageTranslatorElement):
 }
 
 export function getUIDataKeys(): string[] {
-  return Object.keys(languageTranslatorState.uiData as LocaleUIData).filter(key => key !== 'locales' && key !== 'translatedLanguageLabels');
+  const settingKeys: string[] = [];
+  languageTranslatorState.uiData?.forEach((_value, key) => {
+    if (key !== 'locales' && key !== 'translatedLanguageLabels') {
+      settingKeys.push(key);
+    }
+  });
+  return settingKeys;
 }
-
 
 export async function getPortalItemResourceT9nData(resource: __esri.PortalItemResource) {
   if (!resource) return null;
@@ -59,7 +68,7 @@ export async function getPortalItemResourceT9nData(resource: __esri.PortalItemRe
 
 export function getT9nData(locale: string, data: { [key: string]: string }) {
   const portalItemResourceT9n = store.get('portalItemResourceT9n');
-  let dataToWrite: { [locale: string]: string; };
+  let dataToWrite: { [locale: string]: string };
   if (!portalItemResourceT9n?.[locale]) {
     portalItemResourceT9n[locale] = {};
   }

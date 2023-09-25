@@ -147,6 +147,7 @@ export class InstantAppsLanguageTranslator {
 
   // Initialize selected language
   initSelectLanguage(): void {
+    if (!this.intl) return;
     const { locales } = this;
     const initialLanguage = locales?.[0]?.locale ?? this.intl.getLocale();
     const currentLanguage = store.get('currentLanguage');
@@ -304,7 +305,7 @@ export class InstantAppsLanguageTranslator {
 
   renderTranslatedLangOptions(): HTMLCalciteOptionElement[] {
     const uiData = store.get('uiData');
-    const locales = uiData?.locales as LocaleItem[];
+    const locales = uiData?.get('locales') as LocaleItem[];
     const localeFlags = getLocales(locales);
     return localeFlags?.map(locale => {
       const { messages } = this;
@@ -324,7 +325,6 @@ export class InstantAppsLanguageTranslator {
   renderUIData(): HTMLDivElement | undefined {
     if (!languageTranslatorState?.uiData) return;
     const uiDataKeys = getUIDataKeys();
-
     return <div>{uiDataKeys?.map((key, keyIndex) => this.renderUIDataItem(key, keyIndex, uiDataKeys.length))}</div>;
   }
 
@@ -341,13 +341,14 @@ export class InstantAppsLanguageTranslator {
   renderUIDataItem(key: string, keyIndex: number, uiDataKeysLen: number): HTMLDivElement {
     const translatedLabel = this.appSettings?.translatedLanguageLabels?.[languageTranslatorState.currentLanguage as string]?.[key];
     const isLast = `${keyIndex === uiDataKeysLen - 1 ? CSS.lastItem : ''}`;
+    const setting = this.appSettings.content.filter(contentItem => contentItem.id === key)[0];
     return (
       <instant-apps-language-translator-item
         key={`${key}-${keyIndex}`}
         class={isLast}
         fieldName={key}
         translatedLanguageLabel={translatedLabel}
-        type={this.appSettings[key].type as SettingType}
+        type={setting.type as SettingType}
         userLocaleInputOnChangeCallback={this.userLocaleInputOnChangeCallback}
         translatedLocaleInputOnChangeCallback={this.translatedLocaleInputOnChangeCallback}
       />
@@ -364,18 +365,18 @@ export class InstantAppsLanguageTranslator {
 
   handleExpandCollapseAll(): void {
     this.isCollapse = !this.isCollapse;
-    const uiData = { ...languageTranslatorState.uiData };
+    const uiData = new Map(languageTranslatorState.uiData);
     const uiDataKeys = getUIDataKeys();
-    uiDataKeys.forEach(key => ((uiData[key] as LocaleSettingItem).expanded = this.isCollapse));
-    store.set('uiData', { ...uiData } as LocaleUIData);
+    uiDataKeys.forEach(key => ((uiData.get(key) as LocaleSettingItem).expanded = this.isCollapse));
+    store.set('uiData', uiData as LocaleUIData);
   }
 
   onSuggestionSelect(e: CustomEvent): void {
     const fieldName = e.detail;
-    const uiData = { ...languageTranslatorState.uiData } as LocaleUIData;
+    const uiData = new Map(languageTranslatorState.uiData);
     const uiDataKeys = getUIDataKeys();
     const handleSelection = (key: string) => {
-      const setting = uiData[key] as LocaleSettingItem;
+      const setting = uiData.get(key) as LocaleSettingItem;
       if (key === fieldName) {
         setting.selected = true;
         return;

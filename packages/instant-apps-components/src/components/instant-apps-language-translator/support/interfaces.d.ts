@@ -1,9 +1,10 @@
 interface AppSettings {
-  [fieldName: string]: LocaleSettingData | TranslatedLanguageLabels;
+  content: LocaleSettingData[];
   translatedLanguageLabels: TranslatedLanguageLabels;
 }
 
 interface LocaleSettingData {
+  id: string;
   type: SettingType;
   label: string;
   value: string;
@@ -21,10 +22,7 @@ export interface LocaleItem {
   webmap?: string;
 }
 
-export interface LocaleUIData {
-  locales: LocaleItem[];
-  [fieldName: string]: LocaleSettingItem | LocaleItem[];
-}
+export type LocaleUIData = Map<string, any>;
 
 interface LocaleSettingItem {
   userLocaleData: LocaleData;
@@ -53,4 +51,4 @@ export interface LanguageTranslatorSearchResult extends LocaleSettingItem {
 }
 
 export type InputType = 'user' | 'translation';
-export type SettingType = 'string' | 'textEditor';
+export type SettingType = 'string' | 'textEditor' | 'textarea';

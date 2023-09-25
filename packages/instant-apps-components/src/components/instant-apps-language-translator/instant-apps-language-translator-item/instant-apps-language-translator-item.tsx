@@ -3,7 +3,7 @@ import { Component, Element, Event, EventEmitter, Host, Prop, h } from '@stencil
 import { getT9nData, getUIDataKeys, isCalciteModeDark } from '../support/utils';
 import { languageTranslatorState, store } from '../support/store';
 import { EInputType, ESettingType, EIcons, ECalciteMode } from '../support/enum';
-import { LocaleSettingItem, LocaleUIData, InputType, SettingType } from '../support/interfaces';
+import { LocaleSettingItem, InputType, SettingType } from '../support/interfaces';
 
 const BASE = 'instant-apps-language-translator-item';
 
@@ -56,13 +56,13 @@ export class InstantAppsLanguageTranslatorItem {
   type: SettingType;
 
   /**
-   * Function to be called when the value in a user locale input has changed. This function will have 2 arguments - fieldName and value - and will return a promise. 
+   * Function to be called when the value in a user locale input has changed. This function will have 2 arguments - fieldName and value - and will return a promise.
    */
   @Prop()
   userLocaleInputOnChangeCallback: (fieldName: string, value: string) => Promise<void>;
 
-   /**
-   * Function that is called when the value in a translated locale's input has changed. This function will have 4 arguments - fieldName, value, locale, and resource - and will return a promise. The callback function can be used to construct the data of key-value pairs that will be written to the portal item resource. 
+  /**
+   * Function that is called when the value in a translated locale's input has changed. This function will have 4 arguments - fieldName, value, locale, and resource - and will return a promise. The callback function can be used to construct the data of key-value pairs that will be written to the portal item resource.
    */
   @Prop()
   translatedLocaleInputOnChangeCallback: (fieldName: string, value: string, locale: string, resource: __esri.PortalItemResource) => Promise<void>;
@@ -129,7 +129,11 @@ export class InstantAppsLanguageTranslatorItem {
   }
 
   renderInput(value: string, type: InputType): HTMLElement {
-    return this.type === 'string' ? (type === EInputType.User ? this.renderUserLocaleInput(value) : this.renderTranslatedLanguageInput(value)) : this.renderTextEditor(value, type);
+    return this.type === 'string' || this.type === 'textarea'
+      ? type === EInputType.User
+        ? this.renderUserLocaleInput(value)
+        : this.renderTranslatedLanguageInput(value)
+      : this.renderTextEditor(value, type);
   }
 
   renderUserLocaleInput(value: string): HTMLCalciteInputElement {
@@ -226,7 +230,7 @@ export class InstantAppsLanguageTranslatorItem {
 
   getUIDataItem(): LocaleSettingItem | undefined {
     if (!languageTranslatorState.uiData) return;
-    return languageTranslatorState.uiData[this.fieldName] as LocaleSettingItem;
+    return languageTranslatorState.uiData.get(this.fieldName);
   }
 
   updateT9nStore(fieldName: string, value: string): void {
@@ -238,16 +242,15 @@ export class InstantAppsLanguageTranslatorItem {
 
   handleExpand(uiDataItem: LocaleSettingItem): void {
     uiDataItem.expanded = !uiDataItem.expanded;
-    const uiData = {
-      ...languageTranslatorState.uiData,
-      [this.fieldName]: uiDataItem as LocaleSettingItem,
-    } as LocaleUIData;
+    const uiData = new Map(languageTranslatorState.uiData);
+    uiData.set(this.fieldName, uiDataItem);
+
     store.set('uiData', uiData);
   }
 
   handleEditorCollapse(): void {
     const uiData = store.get('uiData');
-    const localeSettingItem = uiData?.[this.fieldName] as LocaleSettingItem;
+    const localeSettingItem = uiData?.get(this.fieldName) as LocaleSettingItem;
     const isExpanded = localeSettingItem?.expanded;
     if (!isExpanded && this.userEditorWrapper?.editorInstance && this.translatedEditorWrapper?.editorInstance) {
       const { userEditorWrapper, translatedEditorWrapper } = this;
@@ -261,13 +264,17 @@ export class InstantAppsLanguageTranslatorItem {
   }
 
   handleSelection(event: Event): void {
-    const uiData = { ...languageTranslatorState.uiData } as LocaleUIData;
+    const uiData = new Map(languageTranslatorState.uiData);
     const uiDataKeys = getUIDataKeys();
-    uiDataKeys.forEach(key => ((uiData[key] as LocaleSettingItem).selected = false));
+    uiDataKeys.forEach(key => {
+      const setting = uiData?.get(key);
+      setting.selected = false;
+    });
     uiDataKeys.forEach(key => {
       const fieldName = (event?.target as HTMLCalciteInputElement)?.getAttribute('data-field-name');
       if (key === fieldName) {
-        (uiData[key] as LocaleSettingItem).selected = true;
+        const setting = uiData?.get(key);
+        setting.selected = true;
       }
     });
     store.set('uiData', uiData);

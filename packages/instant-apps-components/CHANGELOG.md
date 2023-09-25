@@ -5,6 +5,15 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## v1.0.0-beta.129
+
+### instant-apps-language-translator
+
+- fix: instant-apps-language-translator-search to return results
+- fix: maintain order based on app settings by using hash map rather than just an object
+- feat: update data structure to use an array of objects to maintain insertion order
+- feat: add support for 'textarea' setting type to include map description from Instant Apps configuration
+
 ## v1.0.0-beta.128
 
 ### instant-apps-filter-list

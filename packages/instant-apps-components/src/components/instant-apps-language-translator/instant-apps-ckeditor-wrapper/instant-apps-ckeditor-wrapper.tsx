@@ -101,7 +101,8 @@ export class InstantAppsCkeditorWrapper {
       }
       this.editorInstance = editor;
       return Promise.resolve(editor);
-    } catch {
+    } catch (err) {
+      console.error(err);
       return Promise.reject(null);
     }
   }
