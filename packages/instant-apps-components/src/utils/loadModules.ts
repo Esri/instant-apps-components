@@ -6,9 +6,10 @@
  *   See use restrictions at http://www.esri.com/legal/pdfs/mla_e204_e300/english
  */
 
-import { ILoadScriptOptions, loadModules as _loadModules } from 'esri-loader';
+import { ILoadScriptOptions, loadModules as _loadModules, setDefaultOptions } from 'esri-loader';
 
 export const loadModules = async (moduleNames: string[], options?: ILoadScriptOptions): Promise<any> => {
+  setDefaultOptions({ url: 'https://jsdev.arcgis.com/4.28/' });
   const mods = await _loadModules(moduleNames, options);
   return mods.map(mod => (mod.__esModule && mod.default ? mod.default : mod));
 };
