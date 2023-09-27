@@ -5,11 +5,17 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## v1.0.0-beta.130
+## v1.0.0-beta.131
 
 ### instant-apps-export
 
 - fix: arcgis v4.28 changed compass to calcite-button and calcite-icon, icon takes time to load so added a work around.
+
+## v1.0.0-beta.130
+
+### instant-apps-language-translator
+
+- fix: instant-apps-language-translator-search to return results
 
 ## v1.0.0-beta.129
 
