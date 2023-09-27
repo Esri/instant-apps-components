@@ -99,7 +99,7 @@ export class InstantAppsLanguageTranslatorSearch {
       const { value } = setting.userLocaleData;
       const translatedLanguageLabels = uiData.get('translatedLanguageLabels');
       const translatedLanguageLabel = translatedLanguageLabels?.[currentLanguage]?.[key];
-      const translatedLanguageValue = translatedData[key];
+      const translatedLanguageValue = translatedData?.[key];
 
       const labelMatch = this.testUserInput(label, userInput);
       const valueMatch = this.testUserInput(value, userInput);
@@ -108,7 +108,7 @@ export class InstantAppsLanguageTranslatorSearch {
 
       const isMatch = labelMatch || valueMatch || translatedLanguageLabelMatch || translatedLanguageValueMatch;
 
-      return value && isMatch;
+      return isMatch;
     };
   }
 
