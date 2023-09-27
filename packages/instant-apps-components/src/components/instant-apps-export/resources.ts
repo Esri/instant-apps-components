@@ -30,6 +30,7 @@ export const printStyling = `
     flex-flow: row wrap;
     align-content: flex-start;
     gap: 36px;
+    --esri-calcite-mode-name: "light";
   }
 
   .instant-apps-export-print, .instant-apps-export-print * {
@@ -136,7 +137,8 @@ export const printStyling = `
     gap: 6pt 12pt;
   }
 
-  .instant-apps-export-print .esri-legend--card:not(:first-child) {
+  .instant-apps-export-print .esri-legend--card:not(:first-child),
+  .instant-apps-export-print .esri-compass.esri-widget:not(:first-child) {
     display: none;
   }
 
@@ -156,6 +158,13 @@ export const printStyling = `
     left: 15px;
     background: #fff;
     box-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+    --calcite-ui-icon-color: #000;
+    border-radius: 50%;
+    height: fit-content;
+  }
+
+  .instant-apps-export-print__compass-container .esri-compass {
+    background: #fff;
   }
 
   .instant-apps-export-print__compass-container .esri-compass__icon.esri-icon-compass {
