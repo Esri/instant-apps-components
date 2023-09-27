@@ -13,6 +13,7 @@ const CSS = {
   baseLight: 'instant-apps-export calcite-mode-light',
   inlineContainer: 'instant-apps-export__inline-container',
   popoverContainer: 'instant-apps-export__popover-container',
+  hidden: 'instant-apps-export__visually-hidden',
   print: {
     base: 'instant-apps-export-print',
     extraContainer: 'instant-apps-export-print__extra-container',
@@ -146,7 +147,7 @@ export class InstantAppsExport {
    */
   @Event() exportOutputUpdated: EventEmitter<void>;
 
-  compass: __esri.Compass;
+  compass: __esri.Compass | null;
   compassContainerEl: HTMLDivElement;
   extraContainerEl: HTMLDivElement;
   handles: __esri.Handles | null;
@@ -159,6 +160,7 @@ export class InstantAppsExport {
   printContainerEl: HTMLDivElement;
   printEl: HTMLDivElement;
   printStyleEl: HTMLStyleElement | undefined;
+  reactiveUtils: __esri.reactiveUtils;
   scaleBar: __esri.ScaleBar;
   scaleBarContainerEl: HTMLDivElement;
   viewWrapperEl: HTMLDivElement;
@@ -181,7 +183,8 @@ export class InstantAppsExport {
   }
 
   async initializeModules() {
-    const [Handles] = await loadModules(['esri/core/Handles']);
+    const [Handles, reactiveUtils] = await loadModules(['esri/core/Handles', 'esri/core/reactiveUtils']);
+    this.reactiveUtils = reactiveUtils;
     this.handles = new Handles();
 
     return Promise.resolve();
@@ -189,10 +192,12 @@ export class InstantAppsExport {
 
   render() {
     const mode = this.mode === 'popover' ? this.renderPopover() : this.renderPanel();
+    const compass = this.renderCompass();
     return (
       <Host>
         <div class={this.baseClass} onMouseOver={this.handleWidgetCreation.bind(this)} onFocusin={this.handleWidgetCreation.bind(this)}>
           {mode}
+          <div class={CSS.hidden}>{compass}</div>
         </div>
       </Host>
     );
@@ -292,14 +297,12 @@ export class InstantAppsExport {
   }
 
   renderPrintMap(): VNode {
-    const compass = this.renderCompass();
     const scaleBar = this.renderScaleBar();
     return (
       <div class={CSS.print.viewContainer}>
         <div class={CSS.print.viewWrapper} ref={(el: HTMLDivElement) => (this.viewWrapperEl = el)}>
           <instant-apps-header titleText={this.headerTitle}></instant-apps-header>
           <div class={CSS.print.view} ref={(el: HTMLImageElement) => (this.viewEl = el)}></div>
-          {compass}
           {scaleBar}
         </div>
       </div>
@@ -342,6 +345,9 @@ export class InstantAppsExport {
 
   async exportOnClick(): Promise<void> {
     await this.beforeExport();
+    if (!this.viewWrapperEl.contains(this.compassContainerEl)) {
+      this.viewWrapperEl.append(this.compassContainerEl);
+    }
     this.handleViewExportOnClick();
     this.updateExportOutput();
   }
@@ -496,9 +502,11 @@ export class InstantAppsExport {
       if (!checkId) {
         this.view.when(async (view: __esri.MapView | __esri.SceneView) => {
           this.compass?.destroy();
-          this.compassContainerEl.innerHTML = '';
+          this.compass = null;
+          const container = document.createElement('div');
+          this.compassContainerEl.append(container);
           const [Compass] = await loadModules(['esri/widgets/Compass']);
-          this.compass = new Compass({ container: this.compassContainerEl, view });
+          this.compass = new Compass({ container, view });
         });
       }
     }
@@ -522,6 +530,7 @@ export class InstantAppsExport {
 
   async viewScreenshot(): Promise<void> {
     if (this.view != null && this.includeMap) {
+      await this.reactiveUtils.whenOnce(() => !this.view?.updating);
       const screenshot = await this.view.takeScreenshot({
         width: this.view.width,
         height: this.view.height,
