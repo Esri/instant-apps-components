@@ -32,6 +32,7 @@ const CSS = {
   tipHeader: `${base}__tip-header`,
   tipContent: `${base}__tip-content`,
   icon: `${base}__icon`,
+  iconContainer: `${base}__icon-container`,
   optionText: `${base}__option-text`,
   popoverButton: `${base}__popover-button`,
   layout: {
@@ -356,7 +357,9 @@ export class InstantAppsSocialShare {
                 title={this.messages?.share?.label}
                 scale={this.scale}
               >
-                <calcite-icon icon="share" scale={this.popoverButtonIconScale} />
+                <div class={CSS.iconContainer}>
+                  <calcite-icon icon="share" scale={this.popoverButtonIconScale} />
+                </div>
               </calcite-button>,
             ]
           : [
