@@ -1,4 +1,5 @@
 /**
+* @prop --instant-apps-export-action-background: Popup's trigger button's background color.
 * @prop --instant-apps-export-action-width: Popup's trigger button's width.
 * @prop  --instant-apps-export-action-icon-color: Popup's trigger button's icon color.
 * @prop --instant-apps-export-action-icon-hover-color: Popup's trigger button's icon color when hovered over.
@@ -9,6 +10,7 @@
 
 :host {
   display: block;
+  --instant-apps-export-action-background: var(--calcite-ui-foreground-1);
   --instant-apps-export-action-width: fit-content;
   --instant-apps-export-action-icon-color: var(--calcite-ui-text-3);
   --instant-apps-export-action-icon-hover-color: var(--calcite-ui-text-1);
@@ -34,6 +36,7 @@
   }
 
   calcite-action {
+    --calcite-ui-foreground-1: var(--instant-apps-export-action-background);
     width: var(--instant-apps-export-action-width);
     --calcite-ui-text-3: var(--instant-apps-export-action-icon-color);
     --calcite-ui-text-1: var(--instant-apps-export-action-icon-hover-color);

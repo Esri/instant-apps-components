@@ -77,16 +77,39 @@
     height: var(--instant-apps-header-height);
     background-color: var(--calcite-ui-foreground-1);
     color: var(--calcite-ui-text-1);
-    padding-top: 5px;
-    padding-bottom: 5px;
     font-family: var(--calcite-sans-family);
     min-height: var(--instant-apps-header-min-height);
 
-    .instant-apps-header__header-content {
+    .instant-apps-header__header-container {
       display: flex;
       align-items: center;
       width: 100%;
-      min-width:0;
+      height: inherit;
+
+      slot {
+        display: flex;
+        height: inherit;
+      }
+
+      ::slotted(*) {
+        display: flex;
+        min-height: var(--instant-apps-header-min-height);
+        height: var(--instant-apps-header-height);
+      }
+
+      ::slotted(*) calcite-button {
+        height: 100%;
+      }
+    }
+
+    .instant-apps-header__header-content {
+      box-sizing: border-box;
+      display: flex;
+      align-items: center;
+      width: 100%;
+      min-width: 0;
+      height: inherit;
+      padding: 5px 10px;
 
       a {
         display: flex;
@@ -123,10 +146,6 @@
     .instant-apps-header__header-content--right {
       justify-content: end;
     }
-  }
-
-  .instant-apps-header__standard-height {
-    padding: 5px 10px;
   }
 
   .instant-apps-header__logo-height--s {

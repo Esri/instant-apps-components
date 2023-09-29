@@ -15,6 +15,7 @@ import { widthBreakpoints } from '../../utils/breakpoints';
 
 const CSS = {
   base: 'instant-apps-header--standard',
+  headerContainer: 'instant-apps-header__header-container',
   headerContent: 'instant-apps-header__header-content',
   flipRtl: 'instant-apps-header--rtl',
   logoScale: 'instant-apps-header__logo-scale--',
@@ -199,25 +200,27 @@ export class InstantAppsHeader {
             class={`${CSS.base}${this.dir === 'rtl' ? ` ${CSS.flipRtl}` : ''}${this.logoImage && !hasEmptyLogo ? ` ${CSS.logoHeight}${this.logoScale}` : ` ${CSS.standardHeight}`}`}
             style={{ backgroundColor: this.backgroundColor, fontFamily: this.fontFamily }}
           >
-            <span class={headerContentClass}>
-              {logo}
-              {title}
-              {this.infoButton ? (
-                <calcite-button
-                  style={{ '--calcite-ui-text-1': this.textColor }}
-                  id="infoButton"
-                  alignment="start"
-                  appearance="transparent"
-                  kind="neutral"
-                  icon-start="information-f"
-                  scale="s"
-                  label={this.infoTitleText}
-                  title={this.infoTitleText}
-                  onClick={this.toggleInfo.bind(this)}
-                ></calcite-button>
-              ) : null}
-            </span>
-            <slot name="actions-end" />
+            <div class={CSS.headerContainer}>
+              <span class={headerContentClass}>
+                {logo}
+                {title}
+                {this.infoButton ? (
+                  <calcite-button
+                    style={{ '--calcite-ui-text-1': this.textColor }}
+                    id="infoButton"
+                    alignment="start"
+                    appearance="transparent"
+                    kind="neutral"
+                    icon-start="information-f"
+                    scale="s"
+                    label={this.infoTitleText}
+                    title={this.infoTitleText}
+                    onClick={this.toggleInfo.bind(this)}
+                  ></calcite-button>
+                ) : null}
+              </span>
+              <slot name="actions-end" />
+            </div>
           </header>
         )}
       </Host>

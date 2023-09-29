@@ -261,10 +261,15 @@ $xLogoDark: #ffffff;
         }
       }
     }
+
+    &__icon-container {
+      display: flex;
+      align-items: center;
+    }
   }
 }
 
-:host([scale='s']) {
+:host([scale="s"]) {
   .instant-apps-social-share {
     &__dialog {
       width: var(--instant-apps-social-share-width--s);
@@ -290,7 +295,7 @@ $xLogoDark: #ffffff;
   }
 }
 
-:host([scale='m']) {
+:host([scale="m"]) {
   .instant-apps-social-share {
     &__dialog {
       width: var(--instant-apps-social-share-width--m);
@@ -316,7 +321,7 @@ $xLogoDark: #ffffff;
   }
 }
 
-:host([scale='l']) {
+:host([scale="l"]) {
   .instant-apps-social-share {
     &__dialog {
       width: var(--instant-apps-social-share-width--l);
