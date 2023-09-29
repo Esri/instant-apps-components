@@ -4,6 +4,7 @@ import { getT9nData, getUIDataKeys, isCalciteModeDark } from '../support/utils';
 import { languageTranslatorState, store } from '../support/store';
 import { EInputType, ESettingType, EIcons, ECalciteMode } from '../support/enum';
 import { LocaleSettingItem, InputType, SettingType } from '../support/interfaces';
+import { IClassicEditor } from '../../../interfaces/interfaces';
 
 const BASE = 'instant-apps-language-translator-item';
 
@@ -304,11 +305,23 @@ export class InstantAppsLanguageTranslatorItem {
 
   copyTextEditorContent(type: InputType): void {
     const editor = type === EInputType.User ? this.userEditorWrapper?.editorInstance : this.translatedEditorWrapper?.editorInstance;
+    const duration = 50;
+    setTimeout(() => {
+      this.selectContent(editor);
+      setTimeout(() => this.selectContent(editor), duration);
+    }, duration);
+    this.copyContent(editor);
+  }
+
+  selectContent(editor: IClassicEditor): void {
     editor.editing.view.focus();
     const { model } = editor;
     const doc = model.document;
     const range = model.createRangeIn(doc.getRoot() as any);
     model.change(writer => writer.setSelection(range));
+  }
+
+  copyContent(editor: IClassicEditor): void {
     const data = editor.getData();
     const tempElement = document.createElement('div');
     tempElement.contentEditable = 'true';
