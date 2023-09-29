@@ -5,6 +5,20 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## v1.0.0-beta.132
+
+### instant-apps-export
+
+- Add `--instant-apps-export-action-background` to update the action button background color
+
+### instant-apps-header
+
+- Update `actions-end` slot so that it doesn't have padding
+
+### instant-apps-social-share
+
+- Add container div for calcite-icon so that it can be properly centered
+
 ## v1.0.0-beta.131
 
 ### instant-apps-export

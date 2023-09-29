@@ -55,6 +55,7 @@ The export tool is configurable and can include additional elements in the outpu
 
 | Name                                            | Description                                            |
 | ----------------------------------------------- | ------------------------------------------------------ |
+| `--instant-apps-export-action-background`       | Popup's trigger button's background color.             |
 | `--instant-apps-export-action-icon-color`       | Popup's trigger button's icon color.                   |
 | `--instant-apps-export-action-icon-hover-color` | Popup's trigger button's icon color when hovered over. |
 | `--instant-apps-export-action-width`            | Popup's trigger button's width.                        |
