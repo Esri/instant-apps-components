@@ -145,9 +145,7 @@ export class InstantAppsLanguageTranslatorItem {
         value={value}
         onFocus={this.handleSelection}
         onCalciteInputChange={this.handleUserInputChange.bind(this)}
-      >
-        {this.renderCopyButton(EInputType.User)}
-      </calcite-input>
+      />
     );
   }
 
@@ -160,9 +158,7 @@ export class InstantAppsLanguageTranslatorItem {
         onFocus={this.handleSelection}
         onCalciteInputChange={this.handleTranslatedInputChange.bind(this)}
         value={value}
-      >
-        {this.renderCopyButton(EInputType.Translation)}
-      </calcite-input>
+      />
     );
   }
 
@@ -179,19 +175,20 @@ export class InstantAppsLanguageTranslatorItem {
     );
   }
 
-  renderItemHeader(type: string, label: string): HTMLDivElement {
+  renderItemHeader(type: InputType, label: string): HTMLDivElement {
     return (
       <div class={CSS.topRow}>
         <div class={CSS.labelContainer}>
           {this.renderExpandCollapseButton()}
           <calcite-icon icon={EIcons.SettingIndicator} scale="s" />
           <span class={CSS.label}>{type === EInputType.Translation ? this.translatedLanguageLabel : label}</span>
+          {type === EInputType.User ? (
+            <button id={`${this.fieldName}goTo`} class={CSS.infoButton}>
+              <calcite-icon class={CSS.infoIcon} icon={EIcons.Popover} scale="s" />
+            </button>
+          ) : null}
         </div>
-        {type === EInputType.User ? (
-          <button id={`${this.fieldName}goTo`} class={CSS.infoButton}>
-            <calcite-icon class={CSS.infoIcon} icon={EIcons.Popover} scale="s" />
-          </button>
-        ) : null}
+        {this.renderCopyButton(type)}
       </div>
     );
   }
@@ -218,12 +215,12 @@ export class InstantAppsLanguageTranslatorItem {
   renderCopyButton(type: InputType) {
     const darkMode = isCalciteModeDark();
     return (
-      <calcite-button
+      <calcite-action
         class={darkMode ? ECalciteMode.Dark : ECalciteMode.Light}
         onclick={this.copySelection.bind(this, type)}
         slot="action"
-        icon-start={EIcons.Copy}
-        appearance="outline-fill"
+        icon={EIcons.Copy}
+        appearance="transparent"
       />
     );
   }
@@ -297,7 +294,36 @@ export class InstantAppsLanguageTranslatorItem {
     return tip;
   }
 
-  copySelection(type: InputType) {
+  copySelection(type: InputType): void {
+    if (this.type === ESettingType.TextEditor) {
+      this.copyTextEditorContent(type);
+    } else {
+      this.copyCalciteInputContent(type);
+    }
+  }
+
+  copyTextEditorContent(type: InputType): void {
+    const editor = type === EInputType.User ? this.userEditorWrapper?.editorInstance : this.translatedEditorWrapper?.editorInstance;
+    editor.editing.view.focus();
+    const { model } = editor;
+    const doc = model.document;
+    const range = model.createRangeIn(doc.getRoot() as any);
+    model.change(writer => writer.setSelection(range));
+    const data = editor.getData();
+    const tempElement = document.createElement('div');
+    tempElement.contentEditable = 'true';
+    tempElement.innerHTML = data;
+    document.body.appendChild(tempElement);
+    const tempRange = document.createRange();
+    tempRange.selectNodeContents(tempElement);
+    const selection = window.getSelection();
+    selection?.removeAllRanges();
+    selection?.addRange(tempRange);
+    document.execCommand('copy');
+    document.body.removeChild(tempElement);
+  }
+
+  copyCalciteInputContent(type: InputType): void {
     const input = type === EInputType.User ? this.userLocaleInput : this.translatedLangInput;
     input.selectText();
     const value = input.value;
