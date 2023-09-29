@@ -18,6 +18,7 @@ export class InstantAppsLanguageSwitcher {
   intl: __esri.intl;
   request: __esri.request;
   defaultWebMapId: string;
+  trigger: HTMLCalciteButtonElement;
 
   @Element()
   el: HTMLInstantAppsLanguageSwitcherElement;
@@ -113,7 +114,11 @@ export class InstantAppsLanguageSwitcher {
     const dropdown = this.renderDropdownItems();
     const { userLocale } = this;
     return (
-      <calcite-dropdown width="m">
+      <calcite-dropdown
+        onCalciteDropdownBeforeOpen={() => (this.trigger.iconEnd = 'chevron-up')}
+        onCalciteDropdownBeforeClose={() => (this.trigger.iconEnd = 'chevron-down')}
+        width="m"
+      >
         {trigger}
         <calcite-dropdown-item
           key={`default-${userLocale}`}
@@ -129,7 +134,11 @@ export class InstantAppsLanguageSwitcher {
   }
 
   renderTrigger(): HTMLCalciteActionElement {
-    return <calcite-action slot="trigger" icon={this.icon} text={this.getSelectedLanguageText(this.selectedLanguage as string)} text-enabled={true} />;
+    return (
+      <calcite-button ref={node => (this.trigger = node)} slot="trigger" icon-start={this.icon} icon-end="chevron-down" width="full" appearance="outline">
+        {this.getSelectedLanguageText(this.selectedLanguage as string)}
+      </calcite-button>
+    );
   }
 
   renderDropdownItems(): HTMLCalciteDropdownItemElement[] {

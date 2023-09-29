@@ -6,8 +6,12 @@ $minWidth: 200px;
   color: var(--calcite-ui-text-1);
   min-width: $minWidth;
 
-  calcite-dropdown,
-  calcite-action {
+  calcite-dropdown {
     width: 100%;
+  }
+
+  calcite-button {
+    --calcite-ui-brand: var(--calcite-ui-text-3);
+    --calcite-ui-brand-hover: var(--calcite-ui-text-3);
   }
 }
