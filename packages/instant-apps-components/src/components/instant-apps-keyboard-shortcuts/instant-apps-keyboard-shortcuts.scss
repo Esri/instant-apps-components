@@ -11,7 +11,7 @@
   padding: 0.5em;
   margin-bottom: 0;
   overflow:auto;
-  
+
   table{
     border:none;
     border-collapse: collapse;
@@ -21,6 +21,10 @@
   table td, table th{
     border:solid 1px var(--calcite-ui-border-1);
     padding: 0.5rem 0.75rem 0.5rem 0.75rem;
+    white-space: normal;
+  }
+  
+  table td:lang(ja),table td:lang(ja-JP),table td:lang(ja-JP), table th:lang(ja){
     white-space: nowrap;
   }
    tr:nth-child(even){
