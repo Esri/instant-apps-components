@@ -10,8 +10,6 @@ $calciteBlue: #007ac2;
 $border: #d3d3d3;
 $hoverLight: #f3f3f3;
 $hoverDark: #262626;
-$xLogoLight: #000000;
-$xLogoDark: #ffffff;
 
 :host {
   display: block;
@@ -94,18 +92,6 @@ $xLogoDark: #ffffff;
       li:hover {
         cursor: pointer;
         background-color: var(--calcite-ui-foreground-2);
-      }
-    }
-
-    &__x-logo--light {
-      path {
-        fill: $xLogoLight;
-      }
-    }
-
-    &__x-logo--dark {
-      path {
-        fill: $xLogoDark;
       }
     }
 
