@@ -47,6 +47,12 @@ export class InstantAppsLanguageSwitcher {
   @Prop()
   locales: { locale: string; webmap?: string }[] = [];
 
+  /**
+   Defines the default language of the language switcher dropdown. Set internally if not defined. 
+   */
+  @Prop()
+  defaultLocale?: string;
+
   @State()
   messages: typeof LanguageTranslator_t9n;
 
@@ -80,7 +86,7 @@ export class InstantAppsLanguageSwitcher {
       this.t9nData = {};
       console.error('NO PORTAL ITEM RESOURCE AVAILABLE.');
     } finally {
-      const lang = getDefaultLanguage(intl, this.portalItem.portal) as string;
+      const lang = this.defaultLocale ?? (getDefaultLanguage(intl, this.portalItem.portal) as string);
       if (lang) {
         this.userLocale = lang;
 
@@ -128,9 +134,7 @@ export class InstantAppsLanguageSwitcher {
 
   renderDefaultLocale(): HTMLCalciteDropdownItemElement {
     const { userLocale } = this;
-    const locales = this.locales.map(locale => locale.locale);
-    const doesNotExist = locales.indexOf(userLocale) === -1;
-    return doesNotExist ? (
+    return (
       <calcite-dropdown-item
         key={`default-${userLocale}`}
         value={userLocale}
@@ -139,7 +143,7 @@ export class InstantAppsLanguageSwitcher {
       >
         {this.getSelectedLanguageText(userLocale)}
       </calcite-dropdown-item>
-    ) : null;
+    );
   }
 
   renderTrigger(): HTMLCalciteActionElement {
