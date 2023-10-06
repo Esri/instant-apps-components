@@ -392,7 +392,7 @@ export namespace Components {
     }
     interface InstantAppsLanguageSwitcher {
         /**
-          * Defines the default language of the language switcher. Set internally if not defined.
+          * Defines the default language of the language switcher dropdown. Set internally if not defined.
          */
         "defaultLocale"?: string;
         /**
@@ -1302,7 +1302,7 @@ declare namespace LocalJSX {
     }
     interface InstantAppsLanguageSwitcher {
         /**
-          * Defines the default language of the language switcher. Set internally if not defined.
+          * Defines the default language of the language switcher dropdown. Set internally if not defined.
          */
         "defaultLocale"?: string;
         /**
