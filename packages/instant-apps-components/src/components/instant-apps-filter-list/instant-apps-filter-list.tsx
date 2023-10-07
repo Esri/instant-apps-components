@@ -241,18 +241,28 @@ export class InstantAppsFilterList {
           scale="s"
           max-items="6"
         >
-          {expression.fields?.map((field, index) => this.renderComboboxItem(expression, field, index))}
+          {expression.fields?.map((value, index) => this.renderComboboxItem(expression, value, index))}
         </calcite-combobox>
       </label>
     );
   }
 
-  renderComboboxItem(expression: Expression, field: string, index: number): VNode {
-    const name = expression.type === 'coded-value' ? (expression.codedValues?.[field] as string) : field;
-    const selectedFields = expression?.selectedFields as string[];
-    const selected = selectedFields?.includes(field) ?? false;
+  renderComboboxItem(expression: Expression, value: string | number, index: number): VNode {
+    let label = value;
+    if (expression.type === 'coded-value') {
+      label = expression.codedValues?.[value] as string;
+    } else if (expression.type === 'number' && typeof value === 'number' && expression.format != null) {
+      if (expression.format.places != null) {
+        label = this.roundNumber(value, expression.format.places) as number;
+      }
+      if (expression.format.digitSeparator) {
+        label = this.numberWithCommas(label as number);
+      }
+    }
+    const selectedFields = expression?.selectedFields as unknown[];
+    const selected = selectedFields?.includes(value) ?? false;
 
-    return <calcite-combobox-item key={`${name}-${index}`} value={field} textLabel={name} selected={selected}></calcite-combobox-item>;
+    return <calcite-combobox-item key={`${label}-${index}`} value={value} textLabel={label} selected={selected}></calcite-combobox-item>;
   }
 
   initFilterConfig(): VNode[] | undefined {
@@ -300,6 +310,7 @@ export class InstantAppsFilterList {
             labelHandles={true}
             snap={true}
             value={value}
+            group-separator={expression?.format?.digitSeparator}
           ></calcite-slider>
         </div>
       </label>
@@ -483,9 +494,10 @@ export class InstantAppsFilterList {
     });
   }
 
-  async updateStringExpression(id: string, expression: Expression): Promise<boolean> {
+  async updateStringExpression(layerId: string, expression: Expression): Promise<boolean> {
     const { field } = expression;
-    expression.fields = await this.getFeatureAttributes(id, field);
+    const layer = this.view.map.allLayers.find(({ id }) => id === layerId) as FilterQueryLayer;
+    expression.fields = await this.getFeatureAttributes(layer, field);
     if (expression?.selectedFields) {
       const selectedFields = expression.selectedFields.map((field: string | number) => (typeof field === 'number' ? field : `'${handleSingleQuote(field)}'`));
       expression.definitionExpression = `${field} IN (${selectedFields.join(',')})`;
@@ -495,32 +507,42 @@ export class InstantAppsFilterList {
     return Promise.resolve(false);
   }
 
-  async updateNumberExpression(id: string, expression: Expression): Promise<boolean> {
+  async updateNumberExpression(layerId: string, expression: Expression): Promise<boolean> {
     if ((!expression?.min && expression?.min !== 0) || (!expression?.max && expression?.max !== 0)) {
+      const layer = this.view.map.allLayers.find(({ id }) => id === layerId) as FilterQueryLayer;
       const { field } = expression;
-      if (expression?.numDisplayOption === 'drop-down') {
-        const fields = (await this.getFeatureAttributes(id, field)) as number[];
-        fields.sort((a, b) => a - b);
-        expression.fields = fields;
-      } else {
-        const graphic = await this.calculateMinMaxStatistics(id, field);
-        const attributes = graphic?.[0]?.attributes;
-        expression.min = attributes[`min${field}`];
-        expression.max = attributes[`max${field}`];
-        if (expression?.range && Object.keys(expression.range).length) {
-          const { min, max } = expression.range;
-          expression.definitionExpression = `${expression.field} BETWEEN ${min} AND ${max}`;
+      if (field != null) {
+        this.setExpressionFormat(layer as __esri.FeatureLayer, expression, field);
+        if (expression?.numDisplayOption === 'drop-down') {
+          const fields = (await this.getFeatureAttributes(layer, field)) as number[];
+          fields.sort((a, b) => a - b);
+          expression.fields = fields;
+        } else {
+          const graphic = await this.calculateMinMaxStatistics(layer, field);
+          const attributes = graphic?.[0]?.attributes as { [key: string]: number };
+          if (expression.format?.places != null) {
+            expression.min = this.roundMinNumberDown(attributes[`min${field}`], expression.format.places);
+            expression.max = this.roundMaxNumberUp(attributes[`max${field}`], expression.format.places);
+          } else {
+            expression.min = attributes[`min${field}`];
+            expression.max = attributes[`max${field}`];
+          }
+          if (expression?.range && Object.keys(expression.range).length) {
+            const { min, max } = expression.range;
+            expression.definitionExpression = `${expression.field} BETWEEN ${min} AND ${max}`;
 
-          return true;
+            return true;
+          }
         }
       }
     }
     return false;
   }
 
-  async updateDateExpression(id: string, expression: Expression): Promise<boolean> {
+  async updateDateExpression(layerId: string, expression: Expression): Promise<boolean> {
     const { field, range } = expression;
-    const graphic = await this.calculateMinMaxStatistics(id, field);
+    const layer = this.view.map.allLayers.find(({ id }) => id === layerId) as FilterQueryLayer;
+    const graphic = await this.calculateMinMaxStatistics(layer, field);
     const attributes = graphic?.[0]?.attributes;
     expression.min = convertToDate(attributes[`min${field}`]);
     expression.max = convertToDate(attributes[`max${field}`]);
@@ -582,15 +604,14 @@ export class InstantAppsFilterList {
     return false;
   }
 
-  async getFeatureAttributes(layerId: string, field: string | undefined): Promise<string[] | number[]> {
-    const layer = this.view.map.allLayers.find(({ id }) => id === layerId) as FilterQueryLayer;
+  async getFeatureAttributes(layer: FilterQueryLayer, field: string | undefined): Promise<string[] | number[]> {
     if (layer && supportedTypes.includes(layer.type)) {
       const query = layer.createQuery();
       if (layer?.capabilities?.query?.['supportsCacheHint']) {
         query.cacheHint = true;
       }
       if (field) {
-        query.where = this.initDefExpressions?.[layerId] || '1=1';
+        query.where = this.initDefExpressions?.[layer.id] || '1=1';
         query.outFields = [field];
         query.orderByFields = [`${field} DESC`];
         query.returnDistinctValues = true;
@@ -626,11 +647,10 @@ export class InstantAppsFilterList {
     return features?.map(feature => feature.attributes?.[field]);
   }
 
-  async calculateMinMaxStatistics(layerId: string, field: string | undefined): Promise<__esri.Graphic[]> {
-    const layer = this.view.map.allLayers.find(({ id }) => id === layerId) as FilterQueryLayer;
+  async calculateMinMaxStatistics(layer: FilterQueryLayer, field: string | undefined): Promise<__esri.Graphic[]> {
     if (layer && supportedTypes.includes(layer.type)) {
       const query = layer.createQuery();
-      query.where = this.initDefExpressions?.[layerId] || '1=1';
+      query.where = this.initDefExpressions?.[layer.id] || '1=1';
       if ((layer?.capabilities?.query as any)?.supportsCacheHint) {
         query.cacheHint = true;
       }
@@ -952,12 +972,30 @@ export class InstantAppsFilterList {
       }
       const filter = lv.featureEffect?.filter != null ? lv.featureEffect.filter : lv.filter;
       if (filter != null) {
-        query.distance = filter.distance;
-        query.geometry = filter.geometry;
-        query.spatialRelationship = filter.spatialRelationship as __esri.Query['spatialRelationship'];
-        query.units = filter.units;
-        query.where = filter.where;
-        query.timeExtent = filter.timeExtent;
+        if (filter.objectIds != null) {
+          query.objectIds = filter.objectIds;
+        }
+        if (filter.distance != null) {
+          query.distance = filter.distance;
+        }
+        if (filter.geometry != null) {
+          query.geometry = filter.geometry;
+        }
+        if (filter.distance != null) {
+          query.distance = filter.distance;
+        }
+        if (filter.spatialRelationship != null) {
+          query.spatialRelationship = filter.spatialRelationship as __esri.Query['spatialRelationship'];
+        }
+        if (filter.units != null) {
+          query.units = filter.units;
+        }
+        if (filter.where != null) {
+          query.where = filter.where;
+        }
+        if (filter.timeExtent != null) {
+          query.timeExtent = filter.timeExtent;
+        }
       }
       try {
         const results = await layer.queryFeatures(query);
@@ -985,6 +1023,63 @@ export class InstantAppsFilterList {
       this.updateFilter(layerExpression, defExpressions, filters);
       this.generateURLParams();
       this.filterUpdate.emit();
+    }
+  }
+
+  numberWithCommas(num: number) {
+    return num.toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ',');
+  }
+
+  // If fieldInfo.format.places limits decimal digits then use this for min value to make sure the min is actually included in slider.
+  // e.g. when using Math.round() with a min of 1.058 with only 2 decimal places would be 1.06 so the slider wouldn't contain the min. Math.floor() ensures it does.
+  // Inverse of this reasoning for roundMaxNumberUp().
+
+  roundMinNumberDown(num: number, decimalPlaces: number): number | undefined {
+    if (num == null) return;
+    if (!('' + num).includes('e')) {
+      return +(Math.floor((num + 'e+' + decimalPlaces) as unknown as number) + 'e-' + decimalPlaces);
+    } else {
+      var arr = ('' + num).split('e');
+      var sig = '';
+      if (+arr[1] + decimalPlaces > 0) {
+        sig = '+';
+      }
+      return +(Math.floor((+arr[0] + 'e' + sig + (+arr[1] + decimalPlaces)) as unknown as number) + 'e-' + decimalPlaces);
+    }
+  }
+
+  roundMaxNumberUp(num: number, decimalPlaces: number): number | undefined {
+    if (num == null) return;
+    if (!('' + num).includes('e')) {
+      return +(Math.ceil((num + 'e+' + decimalPlaces) as unknown as number) + 'e-' + decimalPlaces);
+    } else {
+      var arr = ('' + num).split('e');
+      var sig = '';
+      if (+arr[1] + decimalPlaces > 0) {
+        sig = '+';
+      }
+      return +(Math.ceil((+arr[0] + 'e' + sig + (+arr[1] + decimalPlaces)) as unknown as number) + 'e-' + decimalPlaces);
+    }
+  }
+
+  roundNumber(num: number, decimalPlaces: number): number | undefined {
+    if (num == null) return;
+    if (!('' + num).includes('e')) {
+      return +(Math.round((num + 'e+' + decimalPlaces) as unknown as number) + 'e-' + decimalPlaces);
+    } else {
+      var arr = ('' + num).split('e');
+      var sig = '';
+      if (+arr[1] + decimalPlaces > 0) {
+        sig = '+';
+      }
+      return +(Math.round((+arr[0] + 'e' + sig + (+arr[1] + decimalPlaces)) as unknown as number) + 'e-' + decimalPlaces);
+    }
+  }
+
+  setExpressionFormat(layer: __esri.FeatureLayer, expression: Expression, field: string): void {
+    if (layer?.popupTemplate != null) {
+      const fieldInfo = layer.popupTemplate.fieldInfos.find(({ fieldName }) => fieldName === field);
+      expression.format = fieldInfo?.format;
     }
   }
 }

@@ -158,6 +158,7 @@ export interface Expression {
   step?: number;
   numDisplayOption?: 'slider' | 'drop-down';
   pointCloudFilters?: PointCloudFilters;
+  format?: __esri.FieldInfoFormat;
 }
 
 export interface LayerExpression {
@@ -194,21 +195,9 @@ export interface ExtentSelector {
 
 type ExpressionField = 'string' | 'number' | 'date' | 'coded-value' | 'range' | 'checkbox';
 type ActiveTool = 'distance' | 'point' | 'area' | 'clear';
-export type FilterQueryLayer =   | __esri.FeatureLayer
-| __esri.WFSLayer
-| __esri.CSVLayer
-| __esri.GeoJSONLayer
-| __esri.SubtypeGroupLayer
-| ISceneLayer;
+export type FilterQueryLayer = __esri.FeatureLayer | __esri.WFSLayer | __esri.CSVLayer | __esri.GeoJSONLayer | __esri.SubtypeGroupLayer | ISceneLayer;
 export type FilterQueryLayerView = __esri.FeatureLayerView | __esri.WFSLayerView | __esri.CSVLayerView | __esri.GeoJSONLayerView;
-export type FilterLayer =
-  | __esri.FeatureLayer
-  | __esri.WFSLayer
-  | __esri.CSVLayer
-  | __esri.GeoJSONLayer
-  | __esri.SubtypeGroupLayer
-  | ISceneLayer
-  | __esri.PointCloudLayer;
+export type FilterLayer = __esri.FeatureLayer | __esri.WFSLayer | __esri.CSVLayer | __esri.GeoJSONLayer | __esri.SubtypeGroupLayer | ISceneLayer | __esri.PointCloudLayer;
 
 export interface ISceneLayer extends __esri.SceneLayer {
   associatedLayer: __esri.FeatureLayer;

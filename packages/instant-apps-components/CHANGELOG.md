@@ -5,6 +5,13 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## v1.0.0-beta.139
+
+### instant-apps-filter-list
+
+- fix: when zooming to features only update query if layerViews filter has the corresponding value.
+- For numbers, use fieldInfo.format to get max decimal places and to check if commas as separators are necessary
+
 ## v1.0.0-beta.138
 
 ## v1.0.0-beta.137
