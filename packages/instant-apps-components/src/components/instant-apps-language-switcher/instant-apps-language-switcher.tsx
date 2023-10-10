@@ -92,8 +92,9 @@ export class InstantAppsLanguageSwitcher {
 
         const params = new URLSearchParams(window.location.search);
         const locale = params.get('locale');
-        this.selectedLanguage = locale ?? lang;
-
+        const localeExists = this.locales?.map(locale => locale?.locale)?.filter(localeFlag => localeFlag === locale)?.length > 0;
+        this.selectedLanguage = locale && localeExists ? locale : null ?? lang;
+        if (locale !== this.selectedLanguage) this.calciteDropdownItemSelectCallback(this.selectedLanguage)();
         this.selectedLanguageUpdated.emit({ locale: this.selectedLanguage, data: this.t9nData?.[this.selectedLanguage] ?? null });
       }
 
