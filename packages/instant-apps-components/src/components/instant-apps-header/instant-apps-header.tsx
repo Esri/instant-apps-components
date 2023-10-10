@@ -191,6 +191,7 @@ export class InstantAppsHeader {
     const title = this.renderTitle();
     const headerContentClass =
       this.headerAlignment === 'right' || this.headerAlignment === 'center' ? CSS.headerContent.concat(' ', CSS.alignment[this.headerAlignment]) : CSS.headerContent;
+    const fontFamily = this.fontFamily == null ? `"Avenir Next","Avenir","Helvetica Neue",sans-serif` : this.fontFamily;
     return (
       <Host>
         {this.customHeaderHtml ? (
@@ -198,7 +199,7 @@ export class InstantAppsHeader {
         ) : (
           <header
             class={`${CSS.base}${this.dir === 'rtl' ? ` ${CSS.flipRtl}` : ''}${this.logoImage && !hasEmptyLogo ? ` ${CSS.logoHeight}${this.logoScale}` : ` ${CSS.standardHeight}`}`}
-            style={{ backgroundColor: this.backgroundColor, fontFamily: this.fontFamily }}
+            style={{ backgroundColor: this.backgroundColor, fontFamily }}
           >
             <div class={CSS.headerContainer}>
               <span class={headerContentClass}>
