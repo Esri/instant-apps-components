@@ -19,13 +19,13 @@ export class InstantAppsControlPanel {
 
   @Element()
   el: HostElement;
-  
+
   /**
    * Determine which widgets or components to display in the control panel
    */
   @Prop()
   components: ControlPanelComponent[] = [];
- 
+
   /**
    * A reference to the MapView or SceneView
    */
@@ -70,6 +70,7 @@ export class InstantAppsControlPanel {
       if (component.isExpand) {
         content = this._getExpand(component);
         if (component.expandIconClass) content.expandIconClass = component.expandIconClass;
+        if (component.expandIcon) content.expandIcon = component.expandIcon;
         if (component.collapseTooltip) content.collapseTooltip = component.collapseTooltip;
         if (component.expandTooltip) content.expandTooltip = component.expandTooltip;
       }
