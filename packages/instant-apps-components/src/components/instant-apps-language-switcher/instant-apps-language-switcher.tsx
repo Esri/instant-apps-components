@@ -86,17 +86,23 @@ export class InstantAppsLanguageSwitcher {
       this.t9nData = {};
       console.error('NO PORTAL ITEM RESOURCE AVAILABLE.');
     } finally {
-      const lang = this.defaultLocale ?? (getDefaultLanguage(intl, this.portalItem.portal) as string);
-      if (lang) {
-        this.userLocale = lang;
+      // Language that the app was configured in
+      this.userLocale = this.defaultLocale as string;
 
-        const params = new URLSearchParams(window.location.search);
-        const locale = params.get('locale');
-        const localeExists = this.locales?.map(locale => locale?.locale)?.filter(localeFlag => localeFlag === locale)?.length > 0;
-        this.selectedLanguage = locale && localeExists ? locale : null ?? lang;
-        if (locale !== this.selectedLanguage) this.calciteDropdownItemSelectCallback(this.selectedLanguage)();
-        this.selectedLanguageUpdated.emit({ locale: this.selectedLanguage, data: this.t9nData?.[this.selectedLanguage] ?? null });
-      }
+      // Language from URL parameter
+      const params = new URLSearchParams(window.location.search);
+      const localeUrlParam = params.get('locale');
+      const localeUrlFromParamExists = this.locales?.map(locale => locale?.locale)?.filter(localeFlag => localeFlag === localeUrlParam)?.length > 0;
+
+      // Browser's default language
+      const defaultLangauge = getDefaultLanguage(intl, this.portalItem.portal) as string;
+      const localeFromDefaultLanguageExists = this.locales?.map(locale => locale?.locale)?.filter(localeFlag => localeFlag === defaultLangauge)?.length > 0;
+
+      this.selectedLanguage = localeUrlFromParamExists ? localeUrlParam : localeFromDefaultLanguageExists ? defaultLangauge : this.userLocale;
+
+      const selectedLanguage = this.selectedLanguage as string;
+      this.calciteDropdownItemSelectCallback(selectedLanguage)();
+      this.selectedLanguageUpdated.emit({ locale: selectedLanguage, data: this.t9nData?.[selectedLanguage] ?? null });
 
       if (this.view) {
         const webmap = this.view.map as __esri.WebMap;
