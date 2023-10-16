@@ -725,7 +725,9 @@ export class InstantAppsSocialShare {
     });
     // Use pointToConvert to project point. Once projected, pass point to generate the share URL parameters
     const point = await this.processPoint(centerPoint);
-    return this.generateShareUrlParams(point);
+    const { isWGS84, isWebMercator } = point.spatialReference;
+    const isNotProjected = isWGS84 || isWebMercator;
+    return this.generateShareUrlParams(point, isNotProjected);
   }
 
   async processPoint(point: __esri.Point): Promise<__esri.Point> {
@@ -735,30 +737,33 @@ export class InstantAppsSocialShare {
       return point;
     }
     const [SpatialReference, projection] = await loadModules(['esri/geometry/SpatialReference', 'esri/geometry/projection']);
-    const outputSpatialReference = new SpatialReference({
-      wkid: 4326,
-    });
-    await projection.load();
-    const projectedPoint = projection.project(point, outputSpatialReference) as __esri.Point;
-    return projectedPoint;
+    const outputSpatialReference = new SpatialReference({ wkid: 4326 });
+    try {
+      await projection.load();
+      const projectedPoint = projection.project(point, outputSpatialReference) as __esri.Point;
+      return Promise.resolve(projectedPoint);
+    } catch (err) {
+      console.error('Failed to project point', err);
+      return Promise.reject(null);
+    }
   }
 
-  generateShareUrlParams(point: __esri.Point): string {
-    const { longitude, latitude } = point;
+  generateShareUrlParams(point: __esri.Point, isNotProjected: boolean): string {
+    const { longitude, latitude, x, y } = point;
     if (longitude === undefined || latitude === undefined) {
       return this.shareUrl;
     }
 
-    const roundedLon = this.roundValue(longitude);
-    const roundedLat = this.roundValue(latitude);
+    const roundedLon = this.roundValue(isNotProjected ? longitude : x);
+    const roundedLat = this.roundValue(isNotProjected ? latitude : y);
     const { zoom } = this.view;
     const roundedZoom = this.roundValue(zoom);
-    const graphic = this.view.get('popup.selectedFeature') as __esri.Graphic;
-    const visible = this.view.get('popup.visible');
+    const graphic = this.view?.popup?.selectedFeature as __esri.Graphic;
+    const visible = this.view?.popup?.visible;
     let layerId;
     let oid;
     if (graphic && visible) {
-      const featureLayer = graphic.get('layer') as __esri.FeatureLayer;
+      const featureLayer = graphic?.layer as __esri.FeatureLayer;
       layerId = featureLayer.id;
       oid = graphic.attributes[featureLayer.objectIdField];
     }

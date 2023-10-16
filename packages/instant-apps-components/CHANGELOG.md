@@ -14,6 +14,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### instant-apps-social-share
 
 - Update projection.loadModules to projection.load
+- fix: projection point logic
 
 ## v1.0.0-beta.145
 
