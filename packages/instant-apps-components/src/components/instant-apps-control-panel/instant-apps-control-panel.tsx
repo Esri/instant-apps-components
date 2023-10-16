@@ -1,6 +1,6 @@
 import { Component, Element, Host, Prop, h } from '@stencil/core';
 import { HostElement } from '@stencil/core/internal';
-import { loadModules } from 'esri-loader';
+import { loadModules } from '../../utils/loadModules';
 import { ControlPanelComponent } from '../../interfaces/interfaces';
 
 const MODE = 'floating';

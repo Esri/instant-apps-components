@@ -1,5 +1,5 @@
 import { Component, h, Prop, Listen } from '@stencil/core';
-import { loadModules } from 'esri-loader';
+import { loadModules } from '../../../utils/loadModules';
 import { FilterMode } from '../instant-apps-interactive-legend-classic/interfaces/interfaces';
 import { getMergedEffect } from '../support/effects';
 import { interactiveLegendState } from '../support/store';

@@ -738,7 +738,7 @@ export class InstantAppsSocialShare {
     const outputSpatialReference = new SpatialReference({
       wkid: 4326,
     });
-    await projection.loadProjection();
+    await projection.load();
     const projectedPoint = projection.project(point, outputSpatialReference) as __esri.Point;
     return projectedPoint;
   }

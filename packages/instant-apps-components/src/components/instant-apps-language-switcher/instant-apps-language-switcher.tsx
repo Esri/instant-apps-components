@@ -3,7 +3,7 @@ import { Component, Event, EventEmitter, Method, Prop, State, h } from '@stencil
 import LanguageTranslator_t9n from '../../assets/t9n/instant-apps-language-translator/resources.json';
 import { getMessages } from '../instant-apps-language-translator/support/utils';
 import { Element } from '@stencil/core';
-import { loadModules } from 'esri-loader';
+import { loadModules } from '../../utils/loadModules';
 import { getDefaultLanguage } from '../../utils/locale';
 import { getPortalItemResource, fetchResourceData } from '../../utils/languageSwitcher';
 

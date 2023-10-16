@@ -9,7 +9,7 @@ import { EIcons } from './support/enum';
 import { AppSettings, LocaleItem, LocaleSettingItem, LocaleUIData, SettingType } from './support/interfaces';
 
 import LanguageTranslator_t9n from '../../assets/t9n/instant-apps-language-translator/resources.json';
-import { loadModules } from 'esri-loader';
+import { loadModules } from '../../utils/loadModules';
 import { getComponentClosestLanguage } from '../../utils/locale';
 import { getPortalItemResource, fetchResourceData } from '../../utils/languageSwitcher';
 
