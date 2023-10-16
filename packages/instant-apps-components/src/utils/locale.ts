@@ -1,5 +1,5 @@
 // https://medium.com/stencil-tricks/implementing-internationalisation-i18n-with-stencil-5e6559554117
-import { loadModules } from 'esri-loader';
+import { loadModules } from '../utils/loadModules';
 import { languageMap } from './languageUtil';
 
 export function getComponentClosestLanguage(element: HTMLElement): string | undefined {
@@ -41,15 +41,15 @@ function fetchLocaleStringsForComponent<T extends StringBundle = StringBundle>(c
 }
 
 export function getDefaultLanguage(intl: __esri.intl, portal: __esri.Portal): string {
-    // User profile - locale set in user profile
-    const userProfileLocale: string = portal?.get("user.culture");
-    // Browser - window.navigator.language
-    const browserLocale: string = window?.navigator?.language;
-    // ArcGIS JS API - locale currently set in JS api
-    const jsapiLocale: string = intl.getLocale();
-    // Fallback locale - "en"
-    const fallbackLocale = "en";
-    return intl.normalizeMessageBundleLocale(userProfileLocale || browserLocale || jsapiLocale || fallbackLocale) as string;
+  // User profile - locale set in user profile
+  const userProfileLocale: string = portal?.get('user.culture');
+  // Browser - window.navigator.language
+  const browserLocale: string = window?.navigator?.language;
+  // ArcGIS JS API - locale currently set in JS api
+  const jsapiLocale: string = intl.getLocale();
+  // Fallback locale - "en"
+  const fallbackLocale = 'en';
+  return intl.normalizeMessageBundleLocale(userProfileLocale || browserLocale || jsapiLocale || fallbackLocale) as string;
 }
 
 export async function getLocaleComponentStrings<T extends StringBundle = StringBundle>(element: HTMLElement, locale?: string): Promise<[T, string]> {

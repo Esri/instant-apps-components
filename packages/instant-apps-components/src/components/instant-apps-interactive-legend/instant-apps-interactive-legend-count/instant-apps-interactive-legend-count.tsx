@@ -1,6 +1,6 @@
 import { Component, Element, forceUpdate, h, Prop } from '@stencil/core';
 import { ICategory } from '../instant-apps-interactive-legend-classic/interfaces/interfaces';
-import { loadModules } from 'esri-loader';
+import { loadModules } from '../../../utils/loadModules';
 import { interactiveLegendState } from '../support/store';
 import {
   calculateTotalCount,

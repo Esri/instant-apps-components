@@ -1,4 +1,4 @@
-import { loadModules } from 'esri-loader';
+import { loadModules } from '../../../utils/loadModules';
 import { IInteractiveLegendData, ICategories, IIntLegendLayerData, ICategory, FilterMode } from '../instant-apps-interactive-legend-classic/interfaces/interfaces';
 import { getMergedEffect } from './effects';
 import { interactiveLegendState, store } from '../support/store';

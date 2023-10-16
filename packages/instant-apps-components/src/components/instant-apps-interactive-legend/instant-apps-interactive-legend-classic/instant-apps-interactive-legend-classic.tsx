@@ -26,7 +26,7 @@ import {
   handleFilterChange,
 } from '../support/helpers';
 
-import { loadModules } from 'esri-loader';
+import { loadModules } from '../../../utils/loadModules';
 
 import { FilterMode, IIntLegendLayerData } from './interfaces/interfaces';
 import {
@@ -167,7 +167,7 @@ export class InstantAppsInteractiveLegendClassic {
           await this.reactiveUtils.whenOnce(() => this.legendvm?.view?.updating === false);
           // Initial data setup
           const data = await generateData(this.legendvm, this.reactiveUtils);
-          store.set('data', { ...interactiveLegendState.data, ...data  });
+          store.set('data', { ...interactiveLegendState.data, ...data });
           this.isLoading = false;
           this.setupWatchersAndListeners();
         } catch {
@@ -766,7 +766,7 @@ export class InstantAppsInteractiveLegendClassic {
                   () => !this.legendvm?.view?.updating,
                   async () => {
                     const data = await handleFeatureCount(this.legendvm, interactiveLegendState.data);
-                    store.set("data", {...interactiveLegendState.data, ...data});
+                    store.set('data', { ...interactiveLegendState.data, ...data });
                     this.calculatingFeatureCount = false;
                   },
                   { once: true, initial: true },
@@ -786,7 +786,7 @@ export class InstantAppsInteractiveLegendClassic {
         'change',
         async activeLayerInfo => {
           const data = await generateData(this.legendvm, this.reactiveUtils);
-          store.set('data', { ...interactiveLegendState.data, ...data  });
+          store.set('data', { ...interactiveLegendState.data, ...data });
           forceUpdate(this.el);
           this.handles?.add(
             this.reactiveUtils.on(
@@ -794,7 +794,7 @@ export class InstantAppsInteractiveLegendClassic {
               'change',
               async () => {
                 const data = await generateData(this.legendvm, this.reactiveUtils);
-                store.set('data', { ...interactiveLegendState.data, ...data  });
+                store.set('data', { ...interactiveLegendState.data, ...data });
                 forceUpdate(this.el);
               },
             ),
@@ -813,7 +813,7 @@ export class InstantAppsInteractiveLegendClassic {
       updateStore({ intLegendLayerData: dataForLayer, layerId: fLayer?.id });
       if (this.featureCount) {
         const data = await handleFeatureCount(this.legendvm, interactiveLegendState.data);
-        store.set("data", {...interactiveLegendState.data, ...data});
+        store.set('data', { ...interactiveLegendState.data, ...data });
       }
     }
   }

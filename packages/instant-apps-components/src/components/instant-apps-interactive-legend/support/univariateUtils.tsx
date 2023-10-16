@@ -2,7 +2,7 @@ import { pt2px } from './screenUtils';
 import type { Projector } from 'maquette';
 import { createProjector } from 'maquette';
 import { h } from '@stencil/core';
-import { loadModules } from 'esri-loader';
+import { loadModules } from '../../../utils/loadModules';
 import { ColorRampElement, SizeRampElement, UnivariateColorSizeRampElement } from '../../../interfaces/interfaces';
 
 const projector: Projector = createProjector();

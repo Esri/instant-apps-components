@@ -2,7 +2,7 @@
 import { Component, Host, h, Prop, State, Element, Watch, Event, EventEmitter } from '@stencil/core';
 
 // esri-loader
-import { loadModules } from 'esri-loader';
+import { loadModules } from '../../utils/loadModules';
 
 // Utils
 import { getLocaleComponentStrings } from '../../utils/locale';
@@ -104,7 +104,7 @@ export class InstantAppsScoreboard {
    * Optional geometry in which the statistics will be calculated. To re-calculate the scoreboard's statistics based on the current view extent, set this property to `null`.
    */
   @Prop({
-    mutable: true
+    mutable: true,
   })
   geometry: __esri.Geometry | null = null;
 
