@@ -7,6 +7,7 @@ const CSS = {
   subtitleText: 'instant-apps-landing-page__subtitle-text',
   descriptionText: 'instant-apps-landing-page__description-text',
   closed: 'instant-apps-landing-page--closed',
+  closedNoTransition: 'instant-apps-landing-page--closed-no-transition',
   iconImage: 'instant-apps-landing-page__icon-image',
   removeTransition: 'instant-apps-landing-page__remove-transition',
   alignment: 'instant-apps-landing-page__alignment--',
@@ -108,7 +109,7 @@ export class InstantAppsLandingPage {
   }
 
   renderLandingPageContent(): HTMLDivElement {
-    const closed = !this.open ? ` ${CSS.closed}` : '';
+    const closed = !this.open ? (this.disableTransition ? ` ${CSS.closedNoTransition}` : ` ${CSS.closed}`) : '';
     const alignmentClass = this.getAlignmentClass();
     const removeTransition = this.disableTransition ? ` ${CSS.removeTransition}` : '';
     return (
