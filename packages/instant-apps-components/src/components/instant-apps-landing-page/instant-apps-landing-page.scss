@@ -94,6 +94,10 @@
     transition: none;
   }
 
+  .instant-apps-landing-page--closed-no-transition {
+    display: none;
+  }
+
   .instant-apps-landing-page--closed {
     top: -100%;
   }
