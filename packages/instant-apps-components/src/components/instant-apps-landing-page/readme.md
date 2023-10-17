@@ -54,6 +54,7 @@ enum AlignmentPositions {
 | `--instant-apps-landing-page-background-color`           | Brand color of landing page that affects the background (if a backgound image is not set) and entry button colors |
 | `--instant-apps-landing-page-description-text-font-size` | Font size of description text.                                                                                    |
 | `--instant-apps-landing-page-entry-button-color`         | Brand color of the entry button.                                                                                  |
+| `--instant-apps-landing-page-entry-button-margin`        | Option to provide spacing in case a secondary action is added to the landing page.                                |
 | `--instant-apps-landing-page-icon-image-scale--l`        | Icon image width when scale is set to 'l'. Default value is 500px.                                                |
 | `--instant-apps-landing-page-icon-image-scale--m`        | Icon image width when scale is set to 'm'. Default value is 250px.                                                |
 | `--instant-apps-landing-page-icon-image-scale--s`        | Icon image width when scale is set to 's'. Default value is 100px.                                                |

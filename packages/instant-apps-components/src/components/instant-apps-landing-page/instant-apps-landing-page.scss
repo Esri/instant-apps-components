@@ -9,6 +9,7 @@
  * @prop --instant-apps-landing-page-icon-image-scale--s: Icon image width when scale is set to 's'. Default value is 100px.
  * @prop --instant-apps-landing-page-icon-image-scale--m: Icon image width when scale is set to 'm'. Default value is 250px.
  * @prop --instant-apps-landing-page-icon-image-scale--l: Icon image width when scale is set to 'l'. Default value is 500px.
+ * @prop --instant-apps-landing-page-entry-button-margin: Option to provide spacing in case a secondary action is added to the landing page.
  */
   --instant-apps-landing-page-background-color: var(--calcite-ui-brand);
   --instant-apps-landing-page-text-color: var(--calcite-ui-text-inverse);
@@ -19,6 +20,7 @@
   --instant-apps-landing-page-icon-image-scale--s: 100px;
   --instant-apps-landing-page-icon-image-scale--m: 250px;
   --instant-apps-landing-page-icon-image-scale--l: 500px;
+  --instant-apps-landing-page-entry-button-margin: 0;
 
   .instant-apps-landing-page {
     box-sizing: border-box;
@@ -51,6 +53,7 @@
     &__description-text {
       font-size: var(--instant-apps-landing-page-description-text-font-size);
       width: 50%;
+      min-width: 250px;
     }
 
     &__title-text,
@@ -79,7 +82,7 @@
       display: flex;
 
       .instant-apps-landing-page__entry-button {
-        margin-right: 10px;
+        margin: var(--instant-apps-landing-page-entry-button-margin);
       }
     }
 
@@ -110,6 +113,7 @@
       display: flex;
       flex-direction: column;
       align-items: center;
+      justify-content: center;
     }
 
     .instant-apps-landing-page__description-text {

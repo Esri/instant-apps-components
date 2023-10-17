@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### instant-apps-landing-page
 
 - Use `display: none;`
+- CSS updates
 
 ## v1.0.0-beta.146
 
