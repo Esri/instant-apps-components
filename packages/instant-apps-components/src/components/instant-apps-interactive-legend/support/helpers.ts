@@ -50,9 +50,16 @@ export async function createInteractiveLegendDataForLayer(
 ): Promise<IIntLegendLayerData | null> {
   try {
     // Get first Legend Element from Active LayerInfo - only first legend element will be interactive
+    const isGroup = activeLayerInfo?.layer?.type === 'group';
+    const someVisible = (activeLayerInfo?.layer as __esri.GroupLayer)?.layers?.some(layer => layer.visible);
     await reactiveUtils.whenOnce(() => legendViewModel?.state === 'ready');
-    await reactiveUtils.whenOnce(() => activeLayerInfo?.ready);
-    const legendElement = activeLayerInfo.legendElements[0] as __esri.LegendElement;
+    if (!isGroup || (isGroup && someVisible)) {
+      await reactiveUtils.whenOnce(() => activeLayerInfo?.ready);
+    } else {
+      await reactiveUtils.whenOnce(() => activeLayerInfo?.legendElements);
+    }
+
+    const legendElement = activeLayerInfo?.legendElements?.[0] as __esri.LegendElement;
 
     // Each active layer info will have it's own property in object - we'll use the layer ID to categorize each layer
     // Hash map for each layers interactive categories i.e. Global power plants, Hydro, Solar, Wind, etc.
@@ -65,34 +72,36 @@ export async function createInteractiveLegendDataForLayer(
     await reactiveUtils.whenOnce(() => fLayerView?.updating === false);
     const field = fLayer.renderer?.get('field') as string;
 
-    legendElement?.infos?.forEach(legendElementInfo => {
-      const isNestedUniqueSymbol = legendElementInfo.type === 'symbol-table';
-      if (isNestedUniqueSymbol) {
-        const nestedInfos: any = [];
-        legendElementInfo.infos.forEach(nestedUniqueSymbolInfo => {
+    if (legendElement !== undefined) {
+      legendElement?.infos?.forEach(legendElementInfo => {
+        const isNestedUniqueSymbol = legendElementInfo.type === 'symbol-table';
+        if (isNestedUniqueSymbol) {
+          const nestedInfos: any = [];
+          legendElementInfo.infos.forEach(nestedUniqueSymbolInfo => {
+            const category = {
+              count: null,
+              selected: false,
+              legendElementInfo: nestedUniqueSymbolInfo,
+            };
+            nestedInfos.push(category);
+          });
           const category = {
             count: null,
             selected: false,
-            legendElementInfo: nestedUniqueSymbolInfo,
+            legendElementInfo,
+            nestedInfos,
           };
-          nestedInfos.push(category);
-        });
-        const category = {
-          count: null,
-          selected: false,
-          legendElementInfo,
-          nestedInfos,
-        };
-        categories.set(legendElementInfo.title, category);
-      } else {
-        const category = {
-          count: null,
-          selected: false,
-          legendElementInfo,
-        };
-        categories.set(legendElementInfo.label ?? fLayer.id, category);
-      }
-    });
+          categories.set(legendElementInfo.title, category);
+        } else {
+          const category = {
+            count: null,
+            selected: false,
+            legendElementInfo,
+          };
+          categories.set(legendElementInfo.label ?? fLayer.id, category);
+        }
+      });
+    }
 
     // Generated expression to apply to layer filters
     const queryExpressions: string[] = [];
@@ -125,10 +134,14 @@ export async function generateData(legendViewModel: __esri.LegendViewModel, reac
   legendViewModel.activeLayerInfos.forEach(activeLayerInfoCallback(intLegendDataPromises, legendViewModel, reactiveUtils));
 
   // Store resolved data
-  const intLegendLayerDataObjs = await Promise.all(intLegendDataPromises);
-  intLegendLayerDataObjs.forEach(intLegendLayerDataObj => (data[intLegendLayerDataObj?.activeLayerInfo?.layer?.id] = intLegendLayerDataObj));
+  try {
+    const intLegendLayerDataObjs = await Promise.all(intLegendDataPromises);
+    intLegendLayerDataObjs.forEach(intLegendLayerDataObj => (data[intLegendLayerDataObj?.activeLayerInfo?.layer?.id] = intLegendLayerDataObj));
 
-  return data;
+    return Promise.resolve(data);
+  } catch (err) {
+    return Promise.reject(null);
+  }
 }
 
 // data getters
