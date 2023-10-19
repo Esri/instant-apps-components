@@ -345,8 +345,8 @@ export class InstantAppsExport {
 
   async exportOnClick(): Promise<void> {
     await this.beforeExport();
-    if (!this.viewWrapperEl.contains(this.compassContainerEl)) {
-      this.viewWrapperEl.append(this.compassContainerEl);
+    if (!this.viewWrapperEl?.contains(this.compassContainerEl)) {
+      this.viewWrapperEl?.append(this.compassContainerEl);
     }
     this.handleViewExportOnClick();
     this.updateExportOutput();
