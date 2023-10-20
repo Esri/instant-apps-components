@@ -1027,7 +1027,7 @@ export class InstantAppsFilterList {
   }
 
   numberWithCommas(num: number) {
-    return num.toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ',');
+    return num.toLocaleString('en-US', { maximumFractionDigits: 20 });
   }
 
   // If fieldInfo.format.places limits decimal digits then use this for min value to make sure the min is actually included in slider.
