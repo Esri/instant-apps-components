@@ -23,8 +23,8 @@ The header component includes custom CSS properties to adjust the style of the h
 
 | Property                | Attribute                 | Description                                                                         | Type                            | Default                         |
 | ----------------------- | ------------------------- | ----------------------------------------------------------------------------------- | ------------------------------- | ------------------------------- |
-| `backgroundColor`       | `background-color`        | Background color to display in header - accepts a hexidecimal value i.e. `#000000`. | `string`                        | `undefined`                     |
-| `customHeaderCss`       | `custom-header-css`       | CSS styles to be used in conjuction with `custom-header-html`.                      | `string`                        | `undefined`                     |
+| `backgroundColor`       | `background-color`        | Background color to display in header - accepts a hexadecimal value i.e. `#000000`. | `string`                        | `undefined`                     |
+| `customHeaderCss`       | `custom-header-css`       | CSS styles to be used in conjunction with `custom-header-html`.                     | `string`                        | `undefined`                     |
 | `customHeaderHtml`      | `custom-header-html`      | HTML code for custom headers.                                                       | `string`                        | `undefined`                     |
 | `fontFamily`            | `font-family`             | Font family to use for text                                                         | `string`                        | `'var(--calcite-sans-family);'` |
 | `headerAlignment`       | `header-alignment`        | Change alignment of header.                                                         | `"center" \| "left" \| "right"` | `'left'`                        |
@@ -36,7 +36,7 @@ The header component includes custom CSS properties to adjust the style of the h
 | `logoLink`              | `logo-link`               | Logo URL to link out to another page.                                               | `string`                        | `undefined`                     |
 | `logoScale`             | `logo-scale`              | Adjusts scale of logo image.                                                        | `"l" \| "m" \| "s"`             | `'m'`                           |
 | `mobileWidthBreakpoint` | `mobile-width-breakpoint` | Mobile breakpoint value in pixels(px).                                              | `number`                        | `widthBreakpoints.medium[1]`    |
-| `textColor`             | `text-color`              | Text color to display in header - accepts a hexidecimal value i.e. `#FFFFFF`.       | `string`                        | `undefined`                     |
+| `textColor`             | `text-color`              | Text color to display in header - accepts a hexadecimal value i.e. `#FFFFFF`.       | `string`                        | `undefined`                     |
 | `titleText`             | `title-text`              | Main text to display in header.                                                     | `string`                        | `undefined`                     |
 | `titleTextLink`         | `title-text-link`         | Url to link out to from title text                                                  | `string`                        | `undefined`                     |
 
