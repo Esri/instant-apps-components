@@ -4,13 +4,14 @@ export const printStyling = `
       size:  Portrait;
       margin: .25in;
     }
-    html {
-      background-color: #FFFFFF;
-      margin: 0;
-    }
-    body {
+
+    html, body {
       padding: 0;
+      margin: 0;
+      height: 100%;
+      width: 100%;
     }
+
     body > *:not(.instant-apps-export-print) { display: none; }
   }
 

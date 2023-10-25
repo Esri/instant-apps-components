@@ -73,12 +73,12 @@ export class InstantAppsHeader {
    */
   @Prop() titleTextLink: string;
   /**
-   * Background color to display in header - accepts a hexidecimal value i.e. `#000000`.
+   * Background color to display in header - accepts a hexadecimal value i.e. `#000000`.
    */
   @Prop() backgroundColor: string;
 
   /**
-   * Text color to display in header - accepts a hexidecimal value i.e. `#FFFFFF`.
+   * Text color to display in header - accepts a hexadecimal value i.e. `#FFFFFF`.
    */
   @Prop() textColor: string;
 
@@ -149,7 +149,7 @@ export class InstantAppsHeader {
   }
 
   /**
-   * CSS styles to be used in conjuction with `custom-header-html`.
+   * CSS styles to be used in conjunction with `custom-header-html`.
    */
   @Prop({
     mutable: true,

@@ -161,11 +161,11 @@ export namespace Components {
     }
     interface InstantAppsHeader {
         /**
-          * Background color to display in header - accepts a hexidecimal value i.e. `#000000`.
+          * Background color to display in header - accepts a hexadecimal value i.e. `#000000`.
          */
         "backgroundColor": string;
         /**
-          * CSS styles to be used in conjuction with `custom-header-html`.
+          * CSS styles to be used in conjunction with `custom-header-html`.
          */
         "customHeaderCss": string;
         /**
@@ -213,7 +213,7 @@ export namespace Components {
          */
         "mobileWidthBreakpoint": number;
         /**
-          * Text color to display in header - accepts a hexidecimal value i.e. `#FFFFFF`.
+          * Text color to display in header - accepts a hexadecimal value i.e. `#FFFFFF`.
          */
         "textColor": string;
         /**
@@ -1063,11 +1063,11 @@ declare namespace LocalJSX {
     }
     interface InstantAppsHeader {
         /**
-          * Background color to display in header - accepts a hexidecimal value i.e. `#000000`.
+          * Background color to display in header - accepts a hexadecimal value i.e. `#000000`.
          */
         "backgroundColor"?: string;
         /**
-          * CSS styles to be used in conjuction with `custom-header-html`.
+          * CSS styles to be used in conjunction with `custom-header-html`.
          */
         "customHeaderCss"?: string;
         /**
@@ -1119,7 +1119,7 @@ declare namespace LocalJSX {
          */
         "onInfoIsOpenChanged"?: (event: InstantAppsHeaderCustomEvent<boolean>) => void;
         /**
-          * Text color to display in header - accepts a hexidecimal value i.e. `#FFFFFF`.
+          * Text color to display in header - accepts a hexadecimal value i.e. `#FFFFFF`.
          */
         "textColor"?: string;
         /**

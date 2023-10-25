@@ -1,4 +1,4 @@
-import { Component, Element, Event, EventEmitter, h, Host, Prop, State, VNode } from '@stencil/core';
+import { Component, Element, Event, EventEmitter, h, Host, Prop, State, VNode, Watch } from '@stencil/core';
 import { CalciteCheckboxCustomEvent, CalciteInputCustomEvent } from '@esri/calcite-components';
 
 import Export_T9n from '../../assets/t9n/instant-apps-export/resources.json';
@@ -147,6 +147,13 @@ export class InstantAppsExport {
    */
   @Event() exportOutputUpdated: EventEmitter<void>;
 
+  @Watch('includeMap')
+  watchIncludeMap(newValue: boolean): void {
+    if (newValue) {
+      this.updateLegend();
+    }
+  }
+
   compass: __esri.Compass | null;
   compassContainerEl: HTMLDivElement;
   extraContainerEl: HTMLDivElement;
@@ -160,10 +167,10 @@ export class InstantAppsExport {
   printContainerEl: HTMLDivElement;
   printEl: HTMLDivElement;
   printStyleEl: HTMLStyleElement | undefined;
-  reactiveUtils: __esri.reactiveUtils;
-  scaleBar: __esri.ScaleBar;
+  scaleBar: __esri.ScaleBar | null;
   scaleBarContainerEl: HTMLDivElement;
   viewWrapperEl: HTMLDivElement;
+  viewContainerEl: HTMLDivElement;
   viewEl: HTMLDivElement;
 
   componentWillLoad(): void {
@@ -183,8 +190,7 @@ export class InstantAppsExport {
   }
 
   async initializeModules() {
-    const [Handles, reactiveUtils] = await loadModules(['esri/core/Handles', 'esri/core/reactiveUtils']);
-    this.reactiveUtils = reactiveUtils;
+    const [Handles] = await loadModules(['esri/core/Handles']);
     this.handles = new Handles();
 
     return Promise.resolve();
@@ -195,7 +201,7 @@ export class InstantAppsExport {
     const compass = this.renderCompass();
     return (
       <Host>
-        <div class={this.baseClass} onMouseOver={this.handleWidgetCreation.bind(this)} onFocusin={this.handleWidgetCreation.bind(this)}>
+        <div class={this.baseClass} onMouseEnter={this.handleWidgetCreation.bind(this)} onFocusin={this.handleWidgetCreation.bind(this)}>
           {mode}
           <div class={CSS.hidden}>{compass}</div>
         </div>
@@ -282,15 +288,15 @@ export class InstantAppsExport {
   renderPrint(): VNode {
     const printMap = this.includeMap ? this.renderPrintMap() : null;
     const extraContent = this.renderExtraContent();
-    const legend = this.showIncludeLegend ? this.renderLegend() : null;
-    const popup = this.showIncludePopup ? this.renderPopup() : null;
+    const legend = this.includeMap && this.showIncludeLegend ? this.renderLegend() : null;
+    const popup = this.includeMap && this.showIncludePopup ? this.renderPopup() : null;
     return (
       <div ref={(el: HTMLDivElement) => (this.printContainerEl = el)}>
         <div class={CSS.print.base} ref={(el: HTMLDivElement) => (this.printEl = el)}>
           {printMap}
           {legend}
-          {extraContent}
           {popup}
+          {extraContent}
         </div>
       </div>
     );
@@ -299,9 +305,9 @@ export class InstantAppsExport {
   renderPrintMap(): VNode {
     const scaleBar = this.renderScaleBar();
     return (
-      <div class={CSS.print.viewContainer}>
+      <div class={CSS.print.viewContainer} ref={(el: HTMLDivElement) => (this.viewContainerEl = el)}>
         <div class={CSS.print.viewWrapper} ref={(el: HTMLDivElement) => (this.viewWrapperEl = el)}>
-          <instant-apps-header titleText={this.headerTitle}></instant-apps-header>
+          {this.headerTitle ? <instant-apps-header titleText={this.headerTitle} backgroundColor="#fff" textColor="#323232"></instant-apps-header> : null}
           <div class={CSS.print.view} ref={(el: HTMLImageElement) => (this.viewEl = el)}></div>
           {scaleBar}
         </div>
@@ -331,35 +337,43 @@ export class InstantAppsExport {
   }
 
   renderExtraContent(): VNode {
-    return <div class={CSS.print.extraContainer} ref={(el: HTMLDivElement) => (this.extraContainerEl = el)}></div>;
+    return <div class={CSS.print.extraContainer} id="export-content" ref={(el: HTMLDivElement) => (this.extraContainerEl = el)}></div>;
   }
 
   optionOnChange(e: CalciteCheckboxCustomEvent<Event>): void {
     const { checked, value } = e.target;
     this[value] = checked;
+    this.updateExportOutput();
   }
 
   updateHeaderTitle(e: CalciteInputCustomEvent<Event>): void {
     this.headerTitle = e.target.value;
+    this.updateExportOutput();
   }
 
   async exportOnClick(): Promise<void> {
     await this.beforeExport();
-    if (!this.viewWrapperEl?.contains(this.compassContainerEl)) {
-      this.viewWrapperEl?.append(this.compassContainerEl);
+    if (this.viewWrapperEl != null && !this.viewWrapperEl.contains(this.compassContainerEl)) {
+      this.viewWrapperEl.append(this.compassContainerEl);
     }
     this.handleViewExportOnClick();
-    this.updateExportOutput();
+    if (this.popoverEl != null) {
+      this.popoverEl.open = false;
+    }
   }
 
   async handleViewExportOnClick(): Promise<void> {
     if (this.view != null) {
       this.addPrintStyling();
+      document.body.prepend(this.printEl);
       this.handleExtraContent();
       if (this.includeMap) {
-        this.handleImgLoaded();
+        if (this.viewContainerEl != null) {
+          this.viewContainerEl.style.display = 'flex';
+        }
         this.updatePopupToPrint();
-        await this.viewScreenshot();
+        this.viewScreenshot();
+        this.handleImgLoaded();
       } else {
         this.handleImgLoaded();
       }
@@ -383,18 +397,18 @@ export class InstantAppsExport {
     setTimeout(() => {
       this.exportIsLoading = undefined;
       this.setupViewPrintElements();
-      this.resetPrintContent();
     }, 1500);
   }
 
   handleExtraContent(): void {
-    if (this.extraContainerEl != null) {
-      this.extraContainerEl.innerHTML = '';
+    const extraContainerEl = this.printEl.querySelector('#export-content') as HTMLDivElement;
+    if (extraContainerEl != null) {
+      extraContainerEl.innerHTML = '';
       if (this.extraContent != null && this.includeExtraContent) {
-        this.extraContainerEl.style.display = 'block';
-        this.extraContainerEl.append(this.extraContent.cloneNode(true));
+        extraContainerEl.style.display = 'block';
+        extraContainerEl.append(this.extraContent.cloneNode(true));
       } else {
-        this.extraContainerEl.style.display = 'none';
+        extraContainerEl.style.display = 'none';
       }
     }
   }
@@ -404,8 +418,9 @@ export class InstantAppsExport {
       this.printContainerEl?.prepend(this.printEl);
       this.printStyleEl?.remove();
       this.printStyleEl = undefined;
-      if (this.popoverEl != null) {
-        this.popoverEl.open = false;
+      const extraContainerEl = this.printEl.querySelector('#export-content') as HTMLDivElement;
+      if (extraContainerEl) {
+        extraContainerEl.innerHTML = '';
       }
     }
   }
@@ -448,7 +463,6 @@ export class InstantAppsExport {
 
   setupViewPrintElements(): void {
     if (this.view != null) {
-      document.body.prepend(this.printEl);
       this.handleLegendSetup();
       const title = document.title;
       if (this.showHeaderTitle && this.headerTitle) {
@@ -456,11 +470,14 @@ export class InstantAppsExport {
       }
       window.print();
       document.title = title;
+      setTimeout(() => {
+        this.resetPrintContent();
+      }, 1000);
     }
   }
 
   handleLegendSetup(): void {
-    if (this.showIncludeLegend && this.view != null && this.includeMap) {
+    if (this.showIncludeLegend && this.view != null && this.includeMap && this.legendContainerEl != null) {
       this.legendContainerEl.style.display = this.includeLegend ? 'block' : 'none';
     }
   }
@@ -472,65 +489,79 @@ export class InstantAppsExport {
   }
 
   handleLegendCreation(): void {
-    if (this.includeMap && this.view != null && this.showIncludeLegend) {
+    if (this.includeMap && this.view != null && this.showIncludeLegend && this.legendContainerEl != null) {
       const map = this.view.map as __esri.WebMap | __esri.WebScene;
-      const legendMap = this.legend?.view.map as __esri.WebMap | __esri.WebScene;
+      const legendMap = this.legend?.view?.map as __esri.WebMap | __esri.WebScene;
       const checkId = map?.portalItem.id === legendMap?.portalItem.id;
       if (!checkId) {
-        this.view.when(async (view: __esri.MapView | __esri.SceneView) => {
-          this.legend?.destroy();
-          this.legendContainerEl.innerHTML = '';
-          const [Legend] = await loadModules(['esri/widgets/Legend']);
-          this.legend = new Legend({
-            container: this.legendContainerEl,
-            view,
-            style: {
-              type: 'card',
-              layout: 'side-by-side',
-            },
-          });
-        });
+        this.updateLegend();
       }
     }
+  }
+
+  updateLegend(): void {
+    this.view?.when(async (view: __esri.MapView | __esri.SceneView) => {
+      this.legend?.destroy();
+      if (this.legendContainerEl != null) {
+        this.legendContainerEl.innerHTML = '';
+        const [Legend] = await loadModules(['esri/widgets/Legend']);
+        this.legend = new Legend({
+          container: this.legendContainerEl,
+          view,
+          style: {
+            type: 'card',
+            layout: 'side-by-side',
+          },
+        });
+      }
+    });
   }
 
   handleCompassCreation(): void {
-    if (this.includeMap && this.view != null) {
+    if (this.includeMap && this.view != null && this.compassContainerEl != null) {
       const map = this.view.map as __esri.WebMap | __esri.WebScene;
-      const compassMap = this.compass?.view.map as __esri.WebMap | __esri.WebScene;
+      const compassMap = this.compass?.view?.map as __esri.WebMap | __esri.WebScene;
       const checkId = map?.portalItem.id === compassMap?.portalItem.id;
       if (!checkId) {
-        this.view.when(async (view: __esri.MapView | __esri.SceneView) => {
-          this.compass?.destroy();
-          this.compass = null;
-          const container = document.createElement('div');
-          this.compassContainerEl.append(container);
-          const [Compass] = await loadModules(['esri/widgets/Compass']);
-          this.compass = new Compass({ container, view });
-        });
+        this.updateCompass();
       }
     }
   }
 
+  updateCompass(): void {
+    this.view?.when(async (view: __esri.MapView | __esri.SceneView) => {
+      this.compass?.destroy();
+      this.compass = null;
+      const container = document.createElement('div');
+      this.compassContainerEl.append(container);
+      const [Compass] = await loadModules(['esri/widgets/Compass']);
+      this.compass = new Compass({ container, view });
+    });
+  }
+
   handleScaleBarCreation(): void {
-    if (this.showScaleBar && this.includeMap && this.view != null) {
-      const map = this.view.map as __esri.WebMap | __esri.WebScene;
-      const scaleBarMap = this.scaleBar?.view.map as __esri.WebMap | __esri.WebScene;
-      const checkId = map?.portalItem.id === scaleBarMap?.portalItem.id;
+    if (this.showScaleBar && this.includeMap && this.view != null && this.view.type === '2d' && this.scaleBarContainerEl != null) {
+      const map = this.view.map as __esri.WebMap;
+      const scaleBarMap = this.scaleBar?.view?.map as __esri.WebMap;
+      const checkId = map?.portalItem.id === scaleBarMap?.portalItem.id && this.scaleBarContainerEl.innerHTML;
       if (!checkId) {
-        this.view.when(async (view: __esri.MapView | __esri.SceneView) => {
-          this.scaleBar?.destroy();
-          this.scaleBarContainerEl.innerHTML = '';
-          const [ScaleBar] = await loadModules(['esri/widgets/ScaleBar']);
-          this.scaleBar = new ScaleBar({ container: this.scaleBarContainerEl, unit: 'dual', view });
-        });
+        this.updateScaleBar();
       }
     }
+  }
+
+  updateScaleBar(): void {
+    this.view?.when(async (view: __esri.MapView) => {
+      this.scaleBar?.destroy();
+      this.scaleBar = null;
+      this.scaleBarContainerEl.innerHTML = '';
+      const [ScaleBar] = await loadModules(['esri/widgets/ScaleBar']);
+      this.scaleBar = new ScaleBar({ container: this.scaleBarContainerEl, unit: 'dual', view });
+    });
   }
 
   async viewScreenshot(): Promise<void> {
     if (this.view != null && this.includeMap) {
-      await this.reactiveUtils.whenOnce(() => !this.view?.updating);
       const screenshot = await this.view.takeScreenshot({
         width: this.view.width,
         height: this.view.height,
@@ -554,7 +585,7 @@ export class InstantAppsExport {
   checkPopupOpen(): void {
     if (this.view != null) {
       const popupContainer = this.view.popup.container as HTMLElement;
-      const popup = popupContainer?.querySelector('.esri-popup__content');
+      const popup = popupContainer?.querySelector('.esri-popup .esri-feature__main-container');
       if (popup != null) {
         const popupCanvas = popup.querySelectorAll('canvas');
         this.popupContentEl.innerHTML = '';
