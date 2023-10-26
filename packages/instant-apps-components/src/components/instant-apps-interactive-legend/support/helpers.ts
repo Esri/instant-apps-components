@@ -52,9 +52,15 @@ export async function createInteractiveLegendDataForLayer(
     // Get first Legend Element from Active LayerInfo - only first legend element will be interactive
     const isGroup = activeLayerInfo?.layer?.type === 'group';
     const someVisible = (activeLayerInfo?.layer as __esri.GroupLayer)?.layers?.some(layer => layer.visible);
+    const noLegendEnabled = (activeLayerInfo?.layer as __esri.GroupLayer)?.layers?.every((layer: __esri.FeatureLayer) => !layer?.legendEnabled);
     await reactiveUtils.whenOnce(() => legendViewModel?.state === 'ready');
+
     if (!isGroup || (isGroup && someVisible)) {
-      await reactiveUtils.whenOnce(() => activeLayerInfo?.ready);
+      if (isGroup && noLegendEnabled) {
+        await reactiveUtils.whenOnce(() => activeLayerInfo?.layer?.loaded);
+      } else {
+        await reactiveUtils.whenOnce(() => activeLayerInfo?.ready);
+      }
     } else {
       await reactiveUtils.whenOnce(() => activeLayerInfo?.legendElements);
     }
