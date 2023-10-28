@@ -101,8 +101,10 @@ export class InstantAppsLanguageSwitcher {
       this.selectedLanguage = localeUrlFromParamExists ? localeUrlParam : localeFromDefaultLanguageExists ? defaultLangauge : this.userLocale;
 
       const selectedLanguage = this.selectedLanguage as string;
-      this.calciteDropdownItemSelectCallback(selectedLanguage)();
-      this.selectedLanguageUpdated.emit({ locale: selectedLanguage, data: this.t9nData?.[selectedLanguage] ?? null });
+      if (selectedLanguage !== this.userLocale) {
+        this.calciteDropdownItemSelectCallback(selectedLanguage)();
+        this.selectedLanguageUpdated.emit({ locale: selectedLanguage, data: this.t9nData?.[selectedLanguage] ?? null });
+      }
 
       if (this.view) {
         const webmap = this.view.map as __esri.WebMap;
@@ -191,9 +193,13 @@ export class InstantAppsLanguageSwitcher {
 
       if (selectedLanguage !== userLocale) eventData['data'] = t9nData[translatedLanguage];
 
-      // Set url parameter 'locale' with value
       const params = new URLSearchParams(window.location.search);
-      params.set('locale', this.selectedLanguage);
+      if (selectedLanguage !== userLocale) {
+        // Set url parameter 'locale' with value
+        params.set('locale', this.selectedLanguage);
+      } else {
+        params.delete('locale');
+      }
 
       intl.setLocale(selectedLanguage);
 
