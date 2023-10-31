@@ -1,7 +1,7 @@
 {
   "homepage": "https://esri.github.io/instant-apps-components",
   "name": "@esri/instant-apps-components",
-  "version": "1.0.0-beta.152",
+  "version": "1.0.0-beta.153",
   "description": "Reusable ArcGIS Instant Apps web components.",
   "main": "dist/index.cjs.js",
   "module": "dist/index.js",
@@ -54,7 +54,7 @@
     "@storybook/addon-knobs": "^6.4.0",
     "@storybook/addon-links": "^6.4.9",
     "@storybook/web-components": "^6.4.9",
-    "@types/arcgis-js-api": "^4.27.0",
+    "@types/arcgis-js-api": "^4.28.0",
     "@types/jest": "^26.0.24",
     "@types/sortablejs": "^1.10.7",
     "@whitespace/storybook-addon-html": "^5.0.0",
