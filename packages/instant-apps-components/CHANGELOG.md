@@ -10,6 +10,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### instant-apps-filter-list
 
 - Add mapImageLayer sublayer support
+- Add loader
+- revert back to limiting features to maxRecords
 
 ## v1.0.0-beta.152
 

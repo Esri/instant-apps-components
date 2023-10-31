@@ -98,6 +98,7 @@ export class InstantAppsFilterList {
    */
   @Prop() view: __esri.MapView | __esri.SceneView;
 
+  @State() loading: boolean;
   @State() filterLayerExpressions: LayerExpression[];
   @State() messages: typeof FilterList_T9n;
   @State() baseClass = baseClassLight;
@@ -179,7 +180,7 @@ export class InstantAppsFilterList {
   }
 
   render(): VNode {
-    const filterConfig = this.initFilterConfig();
+    const filterConfig = this.loading ? this.renderLoading() : this.initFilterConfig();
     const footer = this.closeBtn ? this.renderFullFooter() : this.renderFooter();
     return (
       <Host>
@@ -193,6 +194,10 @@ export class InstantAppsFilterList {
         </calcite-panel>
       </Host>
     );
+  }
+
+  renderLoading(): VNode {
+    return <calcite-loader label="Loading filters..."></calcite-loader>;
   }
 
   renderFilter(layerExpression: LayerExpression): VNode[] {
@@ -420,6 +425,7 @@ export class InstantAppsFilterList {
   }
 
   async initExpressions(): Promise<void> {
+    this.loading = true;
     if (this.filterLayerExpressions == null) return;
     const tmpLE = this.filterLayerExpressions;
     for (let i = 0; i < tmpLE?.length; i++) {
@@ -431,7 +437,7 @@ export class InstantAppsFilterList {
         await this.setInitExpression(tmpLE[i], expressions[j]);
       }
     }
-
+    this.loading = false;
     this.filterLayerExpressions = [...tmpLE];
   }
 
@@ -632,31 +638,20 @@ export class InstantAppsFilterList {
         query.cacheHint = true;
       }
       if (field) {
-        let initDefExpr = this.getInitDefExprFromLayer(layer);
+        const initDefExpr = this.getInitDefExprFromLayer(layer);
         query.where = initDefExpr || '1=1';
         query.outFields = [field];
         query.orderByFields = [`${field} DESC`];
         query.returnDistinctValues = true;
         query.returnGeometry = false;
+        query.maxRecordCountFactor = 3;
         if (this.extentSelector && this.extentSelectorConfig) {
           const geo = this.getExtent(this.extentSelector, this.extentSelectorConfig);
           if (geo != null) query.geometry = geo;
           query.spatialRelationship = 'intersects';
         }
-        const maxRecordCount = queryLayer.capabilities?.query?.['maxRecordCount'];
-        const featureCount = await queryLayer.queryFeatureCount();
-        if (maxRecordCount != null && featureCount > maxRecordCount) {
-          query.num = queryLayer.capabilities?.query?.['maxRecordCount'];
-          let features: any[] = [];
-          for (let index = 0; index < featureCount; index += maxRecordCount) {
-            query.start = index;
-            const results = await this.queryForFeatures(layer, query, field);
-            features = features.concat(results);
-          }
-          return features.sort();
-        } else {
-          return (await this.queryForFeatures(layer, query, field))?.sort();
-        }
+
+        return (await this.queryForFeatures(layer, query, field))?.sort();
       }
     }
 

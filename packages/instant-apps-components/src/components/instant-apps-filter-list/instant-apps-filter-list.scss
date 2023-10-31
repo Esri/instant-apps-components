@@ -112,6 +112,13 @@
   }
 }
 
+@media (prefers-reduced-motion) {
+  .instant-apps-filter-list calcite-loader {
+    --calcite-internal-duration-factor: 2;
+    --calcite-internal-animation-timing-slow: calc(300ms * 2);
+  }
+}
+
 .instant-apps-filter-list.calcite-mode-dark {
   .instant-apps-filter-list__header-container {
     background: #2b2b2b;
