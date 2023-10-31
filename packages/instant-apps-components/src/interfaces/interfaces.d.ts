@@ -163,6 +163,7 @@ export interface Expression {
 
 export interface LayerExpression {
   id: string;
+  sublayerId: number;
   title: string;
   expressions: Expression[];
   operator: string;
@@ -195,9 +196,18 @@ export interface ExtentSelector {
 
 type ExpressionField = 'string' | 'number' | 'date' | 'coded-value' | 'range' | 'checkbox';
 type ActiveTool = 'distance' | 'point' | 'area' | 'clear';
-export type FilterQueryLayer = __esri.FeatureLayer | __esri.WFSLayer | __esri.CSVLayer | __esri.GeoJSONLayer | __esri.SubtypeGroupLayer | ISceneLayer;
+export type FilterQueryLayer = __esri.FeatureLayer | __esri.WFSLayer | __esri.CSVLayer | __esri.GeoJSONLayer | __esri.SubtypeGroupLayer | ISceneLayer | __esri.Sublayer;
 export type FilterQueryLayerView = __esri.FeatureLayerView | __esri.WFSLayerView | __esri.CSVLayerView | __esri.GeoJSONLayerView;
-export type FilterLayer = __esri.FeatureLayer | __esri.WFSLayer | __esri.CSVLayer | __esri.GeoJSONLayer | __esri.SubtypeGroupLayer | ISceneLayer | __esri.PointCloudLayer;
+export type FilterLayer =
+  | __esri.FeatureLayer
+  | __esri.WFSLayer
+  | __esri.CSVLayer
+  | __esri.GeoJSONLayer
+  | __esri.SubtypeGroupLayer
+  | ISceneLayer
+  | __esri.PointCloudLayer
+  | __esri.Sublayer
+  | __esri.MapImageLayer;
 
 export interface ISceneLayer extends __esri.SceneLayer {
   associatedLayer: __esri.FeatureLayer;
