@@ -522,7 +522,7 @@ export class InstantAppsFilterList {
 
   async updateStringExpression(layerExpression: LayerExpression, expression: Expression): Promise<boolean> {
     const { field } = expression;
-    const layer = this.view.map.allLayers.find(({ id }) => id === layerExpression.id) as FilterQueryLayer;
+    const layer = this.findFilterLayer(layerExpression);
     expression.fields = await this.getFeatureAttributes(layer, field);
     if (expression?.selectedFields) {
       const selectedFields = expression.selectedFields.map((field: string | number) => (typeof field === 'number' ? field : `'${handleSingleQuote(field)}'`));
@@ -535,7 +535,7 @@ export class InstantAppsFilterList {
 
   async updateNumberExpression(layerExpression: LayerExpression, expression: Expression): Promise<boolean> {
     if ((!expression?.min && expression?.min !== 0) || (!expression?.max && expression?.max !== 0)) {
-      const layer = this.view.map.allLayers.find(({ id }) => id === layerExpression.id) as FilterQueryLayer;
+      const layer = this.findFilterLayer(layerExpression);
       const { field } = expression;
       if (field != null) {
         this.setExpressionFormat(layer as __esri.FeatureLayer, expression, field);
@@ -567,7 +567,7 @@ export class InstantAppsFilterList {
 
   async updateDateExpression(layerExpression: LayerExpression, expression: Expression): Promise<boolean> {
     const { field, range } = expression;
-    const layer = this.view.map.allLayers.find(({ id }) => id === layerExpression.id) as FilterQueryLayer;
+    const layer = this.findFilterLayer(layerExpression);
     const graphic = await this.calculateMinMaxStatistics(layer, field);
     const attributes = graphic?.[0]?.attributes;
     expression.min = convertToDate(attributes[`min${field}`]);
@@ -632,9 +632,8 @@ export class InstantAppsFilterList {
 
   async getFeatureAttributes(layer: FilterQueryLayer, field: string | undefined): Promise<string[] | number[]> {
     if (layer && supportedTypes.includes(layer.type)) {
-      const queryLayer = layer.type === 'sublayer' ? await layer.createFeatureLayer() : layer;
       const query = layer.createQuery();
-      if (queryLayer?.capabilities?.query?.['supportsCacheHint']) {
+      if ((layer as any)?.capabilities?.query?.['supportsCacheHint']) {
         query.cacheHint = true;
       }
       if (field) {
@@ -1138,5 +1137,14 @@ export class InstantAppsFilterList {
 
   getInitDefExprFromLayerExpression(layerExpression: LayerExpression): string {
     return layerExpression?.sublayerId != null ? this.initMapImageExpressions?.[layerExpression.id]?.[layerExpression.sublayerId] : this.initDefExpressions?.[layerExpression.id];
+  }
+
+  findFilterLayer(layerExpression: LayerExpression): FilterQueryLayer {
+    const layer = this.view.map.allLayers.find(({ id }) => id === layerExpression.id) as FilterLayer;
+    if (layer.type === 'map-image') {
+      return layer.findSublayerById(layerExpression.sublayerId);
+    } else {
+      return layer as FilterQueryLayer;
+    }
   }
 }
