@@ -1142,7 +1142,7 @@ export class InstantAppsFilterList {
   findFilterLayer(layerExpression: LayerExpression): FilterQueryLayer {
     const layer = this.view.map.allLayers.find(({ id }) => id === layerExpression.id) as FilterLayer;
     if (layer.type === 'map-image') {
-      return layer.findSublayerById(layerExpression.sublayerId);
+      return layer?.findSublayerById(layerExpression.sublayerId);
     } else {
       return layer as FilterQueryLayer;
     }
