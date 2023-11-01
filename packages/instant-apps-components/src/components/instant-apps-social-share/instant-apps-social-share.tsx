@@ -816,7 +816,7 @@ export class InstantAppsSocialShare {
     if (defaultUrlParams?.center !== false) url.searchParams.set('center', `${roundedLon};${roundedLat}`);
     if (defaultUrlParams?.level !== false) url.searchParams.set('level', `${roundedZoom}`);
     if (layerId && oid && defaultUrlParams?.selectedFeature !== false) url.searchParams.set('selectedFeature', `${layerId};${oid}`);
-    if (hiddenLayers && defaultUrlParams?.selectedFeature !== false) url.searchParams.set('hiddenLayers', hiddenLayers);
+    if (hiddenLayers && defaultUrlParams?.hiddenLayers !== false) url.searchParams.set('hiddenLayers', hiddenLayers);
     url.search = decodeURIComponent(url.search);
     return url.href;
   }
