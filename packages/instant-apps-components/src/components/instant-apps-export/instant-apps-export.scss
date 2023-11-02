@@ -3,6 +3,7 @@
 * @prop --instant-apps-export-action-background-hover: Popup's trigger button's background color on hover.
 * @prop --instant-apps-export-action-background-press: Popup's trigger button's background color on press.
 * @prop --instant-apps-export-action-width: Popup's trigger button's width.
+* @prop --instant-apps-export-action-height: Popup's trigger button's height.
 * @prop  --instant-apps-export-action-icon-color: Popup's trigger button's icon color.
 * @prop --instant-apps-export-action-icon-hover-color: Popup's trigger button's icon color when hovered over.
 * @prop --instant-apps-export-background: Export's container background color.
@@ -15,6 +16,7 @@
   --instant-apps-export-action-background: var(--calcite-ui-foreground-1);
   --instant-apps-export-action-background-hover: var(--calcite-ui-foreground-2);
   --instant-apps-export-action-background-press: var(--calcite-ui-foreground-3);
+  --instant-apps-export-action-height: 100%;
   --instant-apps-export-action-width: fit-content;
   --instant-apps-export-action-icon-color: var(--calcite-ui-text-3);
   --instant-apps-export-action-icon-hover-color: var(--calcite-ui-text-1);
@@ -24,6 +26,8 @@
 }
 
 .instant-apps-export {
+  height: 100%;
+
   * {
     box-sizing: border-box;
   }
@@ -40,10 +44,11 @@
   }
 
   calcite-action {
+    height: var(--instant-apps-export-action-height);
+    width: var(--instant-apps-export-action-width);
     --calcite-ui-foreground-1: var(--instant-apps-export-action-background);
     --calcite-ui-foreground-2: var(--instant-apps-export-action-background-hover);
     --calcite-ui-foreground-3: var(--instant-apps-export-action-background-press);
-    width: var(--instant-apps-export-action-width);
     --calcite-ui-text-3: var(--instant-apps-export-action-icon-color);
     --calcite-ui-text-1: var(--instant-apps-export-action-icon-hover-color);
   }
