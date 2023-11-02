@@ -716,20 +716,18 @@ export class InstantAppsFilterList {
 
   setInitExpression(layerExpression: LayerExpression, expression: Expression): Promise<void> {
     if (expression.field && expression.type) {
-      let layer = this.view.map.findLayerById(layerExpression.id) as FilterLayer;
-      let fl: FilterLayer;
-      if (layer.type === 'map-image') {
-        fl = layer.findSublayerById(layerExpression.sublayerId);
-      } else {
-        fl = layer;
+      const filterLayer = this.findFilterLayer(layerExpression);
+      if (filterLayer == null) {
+        return Promise.resolve();
       }
-      return fl?.when(async () => {
-        if (fl.type != 'map-image') {
-          const layerField = fl.fields?.find(({ name }) => name === expression.field);
-          const domainType = layerField?.domain?.type;
-          expression.type = domainType === 'coded-value' || domainType === 'range' ? domainType : expression.type;
-          await this.updateExpression(layerExpression, expression, layerField);
-        }
+      if (filterLayer.loadStatus === 'not-loaded' || filterLayer.loadStatus === 'failed') {
+        filterLayer.load();
+      }
+      return filterLayer.when(async () => {
+        const layerField = filterLayer.fields?.find(({ name }) => name === expression.field);
+        const domainType = layerField?.domain?.type;
+        expression.type = domainType === 'coded-value' || domainType === 'range' ? domainType : expression.type;
+        await this.updateExpression(layerExpression, expression, layerField);
       });
     } else {
       this.updateExpression(layerExpression, expression, undefined);
