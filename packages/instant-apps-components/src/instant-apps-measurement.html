@@ -68,7 +68,7 @@
       // Optionally specify an active tool
       measure.activeToolType = 'point';
       measure.closable = false;
-      measure.coordinateFormat = "utm"
+      measure.coordinateFormat = "utm";
       // disable popups when measure tools are active
       measure.addEventListener('measureActive', e => {
         view.popupEnabled = !e?.detail;
