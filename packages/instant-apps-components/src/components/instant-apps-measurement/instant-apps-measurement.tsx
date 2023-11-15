@@ -40,13 +40,17 @@ export class InstantAppsMeasurement {
    */
   @Prop() linearUnit?: __esri.LengthUnit;
   /**
-   * Choose which formats to include as options while converting coordinates 
+   * Choose which formats to include as options while converting coordinates
    */
   @Prop() coordinateFormat?: string;
   /**
    * Determine the tool that will be open on load
    */
   @Prop() activeToolType: ActiveTool;
+  /**
+   * When true the measure widget is closable
+   */
+  @Prop() closable: boolean = false;
   /**
    * Emits when there is an active measure tool
    * to allow app devs to disable other tools/popups when
@@ -62,46 +66,77 @@ export class InstantAppsMeasurement {
   componentDidLoad() {}
 
   render() {
-    const { messages, view, coordinateFormat, areaUnit, linearUnit, activeToolType } = this;
     return (
       <Host>
-        <calcite-panel class={CSS.content}>
-          <calcite-action-pad expand-disabled={true} layout="horizontal">
-            <calcite-action
-              class={activeToolType === 'distance' ? 'active-tool' : null}
-              text={messages?.line}
-              text-enabled="false"
-              icon="measure"
-              data-value="distance"
-              onClick={this._handleToolClick.bind(this)}
-            ></calcite-action>
-            <calcite-action
-              class={activeToolType === 'area' ? 'active-tool' : null}
-              text={messages?.area}
-              text-enabled="false"
-              icon="measure-area"
-              data-value="area"
-              onClick={this._handleToolClick.bind(this)}
-            ></calcite-action>
-            <calcite-action
-              class={activeToolType === 'point' ? 'active-tool' : null}
-              text={messages?.point}
-              text-enabled="false"
-              icon="pin-plus"
-              data-value="point"
-              onClick={this._handleToolClick.bind(this)}
-            ></calcite-action>
-            <calcite-action text={messages?.clear} text-enabled="false" icon="trash" data-value="clear" onClick={this._handleToolClick.bind(this)}></calcite-action>
-          </calcite-action-pad>
-          <instant-apps-measurement-tool
-            ref={el => {
-              this.measureTool = el;
-            }}
-            view={view}
-            measureConfiguration={{ coordinateFormat, areaUnit, linearUnit, activeToolType }}
-          ></instant-apps-measurement-tool>
+        <calcite-panel heading={this?.messages?.label} closable={this.closable}>
+          <div>{this.renderActionPad()}</div>
+          {this.renderMeasureToolPanel()}
         </calcite-panel>
       </Host>
+    );
+  }
+  renderMeasureToolPanel() {
+    const { view, coordinateFormat, areaUnit, linearUnit, activeToolType } = this;
+    return (
+      <calcite-panel class={CSS.content}>
+        <instant-apps-measurement-tool
+          ref={el => {
+            this.measureTool = el;
+          }}
+          view={view}
+          measureConfiguration={{ coordinateFormat, areaUnit, linearUnit, activeToolType }}
+        ></instant-apps-measurement-tool>
+      </calcite-panel>
+    );
+  }
+
+  renderActionPad() {
+    const { messages, activeToolType } = this;
+    return (
+      <calcite-action-pad expand-disabled={true} layout="horizontal" position="end">
+        <calcite-action
+          class={activeToolType === 'distance' ? 'active-tool' : null}
+          text={messages?.line}
+          icon="measure"
+          scale="m"
+          data-value="distance"
+          onClick={this._handleToolClick.bind(this)}
+        >
+          <calcite-tooltip close-on-click={true} placement="bottom" slot="tooltip">
+            {messages?.line}
+          </calcite-tooltip>
+        </calcite-action>
+        <calcite-action
+          class={activeToolType === 'area' ? 'active-tool' : null}
+          text={messages?.area}
+          scale="m"
+          icon="measure-area"
+          data-value="area"
+          onClick={this._handleToolClick.bind(this)}
+        >
+          <calcite-tooltip close-on-click={true} placement="bottom" slot="tooltip">
+            {messages?.area}
+          </calcite-tooltip>
+        </calcite-action>
+        <calcite-action
+          class={activeToolType === 'point' ? 'active-tool' : null}
+          text={messages?.point}
+          scale="m"
+          icon="pin-plus"
+          data-value="point"
+          onClick={this._handleToolClick.bind(this)}
+        >
+          <calcite-tooltip close-on-click={true} placement="bottom" slot="tooltip">
+            {messages?.point}
+          </calcite-tooltip>
+        </calcite-action>
+
+        <calcite-action text={messages?.clear} scale="m" icon="trash" data-value="clear" onClick={this._handleToolClick.bind(this)}>
+          <calcite-tooltip close-on-click={true} placement="bottom" slot="tooltip">
+            {messages?.clear}
+          </calcite-tooltip>
+        </calcite-action>
+      </calcite-action-pad>
     );
   }
   protected _handleToolClick(e) {

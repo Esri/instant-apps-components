@@ -1,11 +1,9 @@
 :host {
-  display: flex;
+ 
     .sc-instant-apps-measurement{
     background:var(--calcite-ui-foreground-1);
     }
-    calcite-panel{
-      width:100%;
-    }
+  
     .active-tool{
       --calcite-ui-foreground-1:#c7eaff;
     }

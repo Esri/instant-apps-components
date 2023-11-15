@@ -480,6 +480,10 @@ export namespace Components {
          */
         "areaUnit"?: __esri.AreaUnit;
         /**
+          * When true the measure widget is closable
+         */
+        "closable": boolean;
+        /**
           * Choose which formats to include as options while converting coordinates
          */
         "coordinateFormat"?: string;
@@ -1403,6 +1407,10 @@ declare namespace LocalJSX {
           * Choose which unit will be used for the area tool by default
          */
         "areaUnit"?: __esri.AreaUnit;
+        /**
+          * When true the measure widget is closable
+         */
+        "closable"?: boolean;
         /**
           * Choose which formats to include as options while converting coordinates
          */
