@@ -254,6 +254,7 @@ export interface IMeasureConfiguration {
   linearUnit?: __esri.LengthUnit;
   coordinateFormat?: string;
   activeToolType?: ActiveTool;
+  closable?: boolean;
 }
 
 // Control Panel

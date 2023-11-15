@@ -12,7 +12,7 @@ Instant Apps Components, is a library of [Web Components](https://developer.mozi
 
 1. `git clone https://github.com/Esri/instant-apps-components.git`
 
-2. `cd instant-apps-components`
+2. `cd packages/instant-apps-components`
 
 3. `npm install`
 

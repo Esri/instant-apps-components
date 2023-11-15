@@ -18,6 +18,7 @@ import { Component, Element, Host, h, Prop, VNode, Watch } from '@stencil/core';
 import { ActiveTool, IMeasureConfiguration } from '../../../interfaces/interfaces';
 
 import { loadModules } from '../../../utils/loadModules';
+
 const base = 'instant-apps-measurement-tool';
 const CSS = {
   base,
@@ -46,7 +47,6 @@ export class InstantAppsMeasurementTool {
 
   @Prop() measureConfiguration: IMeasureConfiguration;
   @Prop() activeTool: ActiveTool;
-
   //--------------------------------------------------------------------------
   //
   //  Properties (protected)
@@ -73,22 +73,6 @@ export class InstantAppsMeasurementTool {
   //  Watch handlers
   //
   //--------------------------------------------------------------------------
-  @Watch('activeTool')
-  _activeToolHandler(value: string) {
-    const viewType = this.view.type;
-    if (!this._measureWidget) return;
-
-    this._measureWidget.clear();
-    this._coordinateElement?.classList.add(CSS.hide);
-    if (value === 'distance') {
-      const toolName = viewType === '2d' ? 'distance' : 'direct-line';
-      this._measureWidget.activeTool = toolName;
-    } else if (value === 'area') {
-      this._measureWidget.activeTool = 'area';
-    } else if (value === 'point') {
-      this._coordinateElement?.classList.remove(CSS.hide);
-    }
-  }
 
   //--------------------------------------------------------------------------
   //
@@ -158,7 +142,10 @@ export class InstantAppsMeasurementTool {
     this._initMeasurementWidget();
     this._initCoordinateWidget();
   }
-
+  @Watch('activeTool')
+  _updateToolType(tool) {
+    this._setActiveTool(tool);
+  }
   /**
    * Initialize the measurement widget and listen to key events
    *
@@ -167,25 +154,33 @@ export class InstantAppsMeasurementTool {
   protected _initMeasurementWidget(): void {
     if (this.view && this._measureElement && !this._measureWidget) {
       this._measureWidget = new this.Measurement({ view: this.view, container: this._measureElement, ...this.measureConfiguration });
-      if (this?.measureConfiguration?.activeToolType !== undefined && this?.measureConfiguration?.activeToolType !== 'point') {
-        this.activeTool = this.measureConfiguration.activeToolType;
-      }
+      if (this.measureConfiguration.activeToolType) this._setActiveTool(this.measureConfiguration.activeToolType);
     }
   }
-
+  protected _setActiveTool(tool: string) {
+    const viewType = this.view.type;
+    this._measureWidget.clear();
+    this._coordinateElement?.classList.add(CSS.hide);
+    if (tool === 'distance') {
+      this._measureWidget.activeTool = viewType === '2d' ? 'distance' : 'direct-line';
+    } else if (tool === 'area') {
+      this._measureWidget.activeTool = 'area';
+    } else if (tool === 'point') {
+      this._coordinateElement?.classList?.remove(CSS.hide);
+    }
+  }
   protected _initCoordinateWidget(): void {
+    const { activeToolType, coordinateFormat } = this.measureConfiguration;
     if (this?.view && this._coordinateElement && !this._coordinateWidget) {
       this._coordinateWidget = new this.CoordinateConversion({ view: this.view, storageEnabled: false, container: this._coordinateElement });
 
-      if (this?.measureConfiguration?.coordinateFormat !== null && this?.measureConfiguration?.coordinateFormat !== undefined) {
+      if (coordinateFormat != null) {
         const format = this._coordinateWidget.formats.find(f => {
-          return f.name === this.measureConfiguration.coordinateFormat;
+          return f.name === coordinateFormat;
         });
         this._coordinateWidget?.conversions?.splice(0, 0, new this.Conversion({ format }));
       }
     }
-    if (this?.measureConfiguration?.activeToolType === 'point') {
-      this.activeTool = this.measureConfiguration.activeToolType;
-    }
+    if (activeToolType != null) this._setActiveTool(activeToolType);
   }
 }
