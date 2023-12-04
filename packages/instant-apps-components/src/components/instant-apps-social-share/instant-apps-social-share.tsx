@@ -91,7 +91,7 @@ export class InstantAppsSocialShare {
   copyEmbedPopoverRef: HTMLCalcitePopoverElement;
   dialogContentRef: HTMLDivElement | undefined;
   shareListRef: HTMLUListElement | undefined;
-  popoverButtonRef: HTMLCalciteButtonElement | undefined;
+  popoverButtonRef: HTMLCalciteButtonElement | HTMLCalciteActionElement |undefined;
 
   // PUBLIC PROPERTIES
 
@@ -133,6 +133,14 @@ export class InstantAppsSocialShare {
     reflect: true,
   })
   shareButtonColor: 'inverse' | 'neutral' = 'neutral';
+
+  /**
+   * Renders tool in popover mode with a trigger button or action
+   */
+  @Prop({
+    reflect: true,
+  })
+  shareButtonType: 'button' | 'action' = 'button';
 
   /**
    * Text to nest in embed iframe code.
@@ -339,21 +347,7 @@ export class InstantAppsSocialShare {
               >
                 {dialogContent}
               </calcite-popover>,
-              <calcite-button
-                ref={el => (this.popoverButtonRef = el)}
-                onClick={this.togglePopover.bind(this)}
-                id="shareButton"
-                class={CSS.popoverButton}
-                kind={this.shareButtonColor}
-                appearance="transparent"
-                label={this.messages?.share?.label}
-                title={this.messages?.share?.label}
-                scale={this.scale}
-              >
-                <div class={CSS.iconContainer}>
-                  <calcite-icon icon="share" scale={this.popoverButtonIconScale} />
-                </div>
-              </calcite-button>,
+              (this.renderButton()),
             ]
           : [
               dialogContent,
@@ -377,6 +371,42 @@ export class InstantAppsSocialShare {
               </calcite-popover>,
             ]}
       </Host>
+    );
+  }
+
+  renderButton() {
+    return this.shareButtonType === "button" ? (
+      <calcite-button
+        ref={el => (this.popoverButtonRef = el)}
+        onClick={this.togglePopover.bind(this)}
+        id="shareButton"
+        class={CSS.popoverButton}
+        kind={this.shareButtonColor}
+        appearance="transparent"
+        label={this.messages?.share?.label}
+        title={this.messages?.share?.label}
+        scale={this.scale}
+      >
+        <div class={CSS.iconContainer}>
+          <calcite-icon icon="share" scale={this.popoverButtonIconScale} />
+        </div>
+      </calcite-button>
+    ) : (
+      <calcite-action
+        ref={el => (this.popoverButtonRef = el)}
+        onClick={this.togglePopover.bind(this)}
+        id="shareButton"
+        class={CSS.popoverButton}
+        kind={this.shareButtonColor}
+        appearance="transparent"
+        label={this.messages?.share?.label}
+        title={this.messages?.share?.label}
+        scale={this.scale}
+      >
+        <div class={CSS.iconContainer}>
+          <calcite-icon icon="share" scale={this.popoverButtonIconScale} />
+        </div>
+      </calcite-action>
     );
   }
 
