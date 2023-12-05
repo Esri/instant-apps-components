@@ -8,116 +8,118 @@
 
 <!DOCTYPE html>
 <html dir="ltr" lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=5.0" />
-    <title>ArcGIS Instant Apps Components</title>
 
-    <link rel="stylesheet" href="https://js.arcgis.com/4.28/esri/themes/light/main.css" />
-    <script src="https://js.arcgis.com/4.28/"></script>
-    <script type="module" src="https://js.arcgis.com/calcite-components/1.9.2/calcite.esm.js"></script>
-    <link rel="stylesheet" type="text/css" href="https://js.arcgis.com/calcite-components/1.9.2/calcite.css" />
-    <script type="module" src="/build/instant-apps-components.esm.js"></script>
-    <script nomodule src="/build/instant-apps-components.js"></script>
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=5.0" />
+  <title>ArcGIS Instant Apps Components</title>
 
-    <style>
-      html,
-      body,
-      #viewDiv {
-        width: 100%;
-        height: 100%;
-        margin: 0;
-        padding: 0;
-      }
+  <link rel="stylesheet" href="https://jsdev.arcgis.com/4.29/esri/themes/light/main.css" />
+  <script src="https://jsdev.arcgis.com/4.29/"></script>
+  <script type="module" src="https://js.arcgis.com/calcite-components/2.0.0/calcite.esm.js"></script>
+  <link rel="stylesheet" type="text/css" href="https://js.arcgis.com/calcite-components/2.0.0/calcite.css" />
+  <script type="module" src="/build/instant-apps-components.esm.js"></script>
+  <script nomodule src="/build/instant-apps-components.js"></script>
 
-      calcite-panel {
-        padding: 10px;
-      }
-    </style>
-  </head>
+  <style>
+    html,
+    body,
+    #viewDiv {
+      width: 100%;
+      height: 100%;
+      margin: 0;
+      padding: 0;
+    }
 
-  <body class="calcite-mode-light">
-    <calcite-shell>
-      <calcite-shell-panel slot="panel-start">
-        <calcite-panel>
-          <calcite-label layout="inline">
-            Use preset layer effects
-            <calcite-switch id="filterMode" />
-          </calcite-label>
-          <calcite-label>
-            Layer effects
-            <calcite-select id="layerEffects">
-              <calcite-option value="strong-drop-shadow">Strong drop shadow</calcite-option>
-              <calcite-option value="bloom">Bloom</calcite-option>
-            </calcite-select>
-          </calcite-label>
-        </calcite-panel>
-      </calcite-shell-panel>
-      <div id="viewDiv"></div>
-    </calcite-shell>
+    calcite-panel {
+      padding: 10px;
+    }
+  </style>
+</head>
+
+<body class="calcite-mode-light">
+  <calcite-shell>
+    <calcite-shell-panel slot="panel-start">
+      <calcite-panel>
+        <calcite-label layout="inline">
+          Use preset layer effects
+          <calcite-switch id="filterMode" />
+        </calcite-label>
+        <calcite-label>
+          Layer effects
+          <calcite-select id="layerEffects">
+            <calcite-option value="strong-drop-shadow">Strong drop shadow</calcite-option>
+            <calcite-option value="bloom">Bloom</calcite-option>
+          </calcite-select>
+        </calcite-label>
+      </calcite-panel>
+    </calcite-shell-panel>
     <div id="viewDiv"></div>
-    <script>
-      require(['esri/WebMap', 'esri/widgets/Expand', 'esri/views/MapView', 'esri/core/reactiveUtils'], (WebMap, Expand, MapView, reactiveUtils) => {
-        const map = new WebMap({
-          portalItem: {
-            id: 'ddf28dc057b8400dbfa148ef403f7c57',
-          },
-        });
-
-        const view = new MapView({
-          map,
-          container: 'viewDiv',
-        });
-
-        const legend = document.createElement('instant-apps-interactive-legend');
-        legend.classList.add('calcite-mode-light');
-        legend.featureCount = true;
-        legend.zoomTo = true;
-        legend.view = view;
-        view.ui.add(legend, 'top-right');
-
-        let effect = {
-          includedEffect: 'drop-shadow(4px, 4px, 4px, #000000)',
-          excludedEffect: '',
-        };
-
-        const filterModeSwitch = document.getElementById('filterMode');
-        filterModeSwitch.addEventListener('calciteSwitchChange', e => {
-          const value = e.target.checked;
-          if (!value) {
-            legend.filterMode = {
-              type: 'filter',
-            };
-          } else {
-            legend.filterMode = {
-              type: 'effect',
-              effect,
-            };
-          }
-        });
-
-        const layerEffectsDropdown = document.getElementById('layerEffects');
-        layerEffectsDropdown.addEventListener('calciteSelectChange', e => {
-          const value = e.target.value;
-          if (value === 'bloom') {
-            effect = {
-              includedEffect: 'bloom(1.3, 0.75px, 0.3)',
-              excludedEffect: 'blur(3px) opacity(65%)',
-            };
-          } else if (value === 'strong-drop-shadow') {
-            effect = {
-              includedEffect: 'drop-shadow(4px, 4px, 4px, #000000)',
-              excludedEffect: '',
-            };
-          }
-          if (legend.filterMode.type === 'effect') {
-            legend.filterMode = {
-              type: 'effect',
-              effect,
-            };
-          }
-        });
+  </calcite-shell>
+  <div id="viewDiv"></div>
+  <script>
+    require(['esri/WebMap', 'esri/widgets/Expand', 'esri/views/MapView', 'esri/core/reactiveUtils'], (WebMap, Expand, MapView, reactiveUtils) => {
+      const map = new WebMap({
+        portalItem: {
+          id: 'ddf28dc057b8400dbfa148ef403f7c57',
+        },
       });
-    </script>
-  </body>
+
+      const view = new MapView({
+        map,
+        container: 'viewDiv',
+      });
+
+      const legend = document.createElement('instant-apps-interactive-legend');
+      legend.classList.add('calcite-mode-light');
+      legend.featureCount = true;
+      legend.zoomTo = true;
+      legend.view = view;
+      view.ui.add(legend, 'top-right');
+
+      let effect = {
+        includedEffect: 'drop-shadow(4px, 4px, 4px, #000000)',
+        excludedEffect: '',
+      };
+
+      const filterModeSwitch = document.getElementById('filterMode');
+      filterModeSwitch.addEventListener('calciteSwitchChange', e => {
+        const value = e.target.checked;
+        if (!value) {
+          legend.filterMode = {
+            type: 'filter',
+          };
+        } else {
+          legend.filterMode = {
+            type: 'effect',
+            effect,
+          };
+        }
+      });
+
+      const layerEffectsDropdown = document.getElementById('layerEffects');
+      layerEffectsDropdown.addEventListener('calciteSelectChange', e => {
+        const value = e.target.value;
+        if (value === 'bloom') {
+          effect = {
+            includedEffect: 'bloom(1.3, 0.75px, 0.3)',
+            excludedEffect: 'blur(3px) opacity(65%)',
+          };
+        } else if (value === 'strong-drop-shadow') {
+          effect = {
+            includedEffect: 'drop-shadow(4px, 4px, 4px, #000000)',
+            excludedEffect: '',
+          };
+        }
+        if (legend.filterMode.type === 'effect') {
+          legend.filterMode = {
+            type: 'effect',
+            effect,
+          };
+        }
+      });
+    });
+  </script>
+</body>
+
 </html>

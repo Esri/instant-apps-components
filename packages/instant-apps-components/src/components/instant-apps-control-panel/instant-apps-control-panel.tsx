@@ -5,7 +5,7 @@ import { ControlPanelComponent } from '../../interfaces/interfaces';
 
 const MODE = 'floating';
 const GROUP = 'instant-apps-control-panel';
-const BORDER = 'border-bottom: 1px solid var(--calcite-ui-border-3)';
+const BORDER = 'border-bottom: 1px solid var(--calcite-color-border-3)';
 const SLOT_NAME = 'components';
 const SLOT_SELECTOR = `[slot="${SLOT_NAME}"]`;
 

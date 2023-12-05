@@ -1,7 +1,7 @@
 import { newE2EPage } from '@stencil/core/testing';
 
 describe('instant-apps-measurement', () => {
-  it('renders', async () => {
+  it('should render a instant-apps-measurement', async () => {
     const page = await newE2EPage();
     await page.setContent('<instant-apps-measurement></instant-apps-measurement>');
 

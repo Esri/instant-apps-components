@@ -597,6 +597,10 @@ export namespace Components {
         "scale": 's' | 'm' | 'l';
         "shareButtonColor": 'inverse' | 'neutral';
         /**
+          * Renders tool in popover mode with a trigger button or action
+         */
+        "shareButtonType": 'button' | 'action';
+        /**
           * Display the share icons in a vertical or horizontal layout.
          */
         "shareIconsLayout": 'vertical' | 'horizontal';
@@ -1528,6 +1532,10 @@ declare namespace LocalJSX {
          */
         "scale"?: 's' | 'm' | 'l';
         "shareButtonColor"?: 'inverse' | 'neutral';
+        /**
+          * Renders tool in popover mode with a trigger button or action
+         */
+        "shareButtonType"?: 'button' | 'action';
         /**
           * Display the share icons in a vertical or horizontal layout.
          */
