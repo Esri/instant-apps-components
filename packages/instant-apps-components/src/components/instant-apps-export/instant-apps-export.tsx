@@ -246,7 +246,7 @@ export class InstantAppsExport {
         {includeExtraContent}
         {includeMap}
         {options}
-        <calcite-button width="full" onClick={this.exportOnClick.bind(this)} loading={this.exportIsLoading}>
+        <calcite-button width="full" onClick={this.exportOnClick.bind(this)} loading={this.exportIsLoading} disabled={this.exportIsLoading}>
           {this.messages?.export}
         </calcite-button>
         {print}

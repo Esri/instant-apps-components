@@ -971,6 +971,7 @@ export class InstantAppsFilterList {
     const zoomToBtn = this.panelEl.querySelector(zoomId) as HTMLCalciteButtonElement;
     if (zoomToBtn != null) {
       zoomToBtn.loading = true;
+      zoomToBtn.disabled = true;
     }
     this.zoomToGraphics = [];
     let loadingTime = 0;
@@ -980,6 +981,7 @@ export class InstantAppsFilterList {
         this.view.goTo(this.zoomToGraphics);
         if (zoomToBtn != null) {
           zoomToBtn.loading = false;
+          zoomToBtn.disabled = false;
         }
         clearInterval(zoomToInterval);
       }

@@ -132,7 +132,7 @@ export class InstantAppsLanguageSwitcher {
       <calcite-dropdown
         onCalciteDropdownBeforeOpen={() => (this.trigger.iconEnd = 'chevron-up')}
         onCalciteDropdownBeforeClose={() => (this.trigger.iconEnd = 'chevron-down')}
-        width="m"
+        width-scale="m"
       >
         {trigger}
         {defaultLocale}
