@@ -2,8 +2,8 @@ $minWidth: 200px;
 
 :host {
   display: block;
-  background-color: var(--calcite-ui-foreground-1);
-  color: var(--calcite-ui-text-1);
+  background-color: var(--calcite-color-foreground-1);
+  color: var(--calcite-color-text-1);
   min-width: $minWidth;
 
   calcite-dropdown {
@@ -11,7 +11,7 @@ $minWidth: 200px;
   }
 
   calcite-button {
-    --calcite-ui-brand: var(--calcite-ui-text-3);
-    --calcite-ui-brand-hover: var(--calcite-ui-text-3);
+    --calcite-color-brand: var(--calcite-color-text-3);
+    --calcite-color-brand-hover: var(--calcite-color-text-3);
   }
 }

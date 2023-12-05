@@ -8,30 +8,33 @@
 
 <!DOCTYPE html>
 <html dir="ltr" lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=5.0" />
-    <title>ArcGIS Instant Apps Components</title>
 
-    <link rel="stylesheet" href="https://js.arcgis.com/4.28/esri/themes/light/main.css" />
-    <script src="https://js.arcgis.com/4.28/"></script>
-    <script type="module" src="https://js.arcgis.com/calcite-components/1.9.2/calcite.esm.js"></script>
-    <link rel="stylesheet" type="text/css" href="https://js.arcgis.com/calcite-components/1.9.2/calcite.css" />
-    <script type="module" src="/build/instant-apps-components.esm.js"></script>
-    <script nomodule src="/build/instant-apps-components.js"></script>
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=5.0" />
+  <title>ArcGIS Instant Apps Components</title>
 
-    <style></style>
-  </head>
+  <link rel="stylesheet" href="https://jsdev.arcgis.com/4.29/esri/themes/light/main.css" />
+  <script src="https://jsdev.arcgis.com/4.29/"></script>
+  <script type="module" src="https://js.arcgis.com/calcite-components/2.0.0/calcite.esm.js"></script>
+  <link rel="stylesheet" type="text/css" href="https://js.arcgis.com/calcite-components/2.0.0/calcite.css" />
+  <script type="module" src="/build/instant-apps-components.esm.js"></script>
+  <script nomodule src="/build/instant-apps-components.js"></script>
 
-  <body>
-    <instant-apps-splash title-text="Title" content="<p>Content</p>" primary-button-text="Enter" close-button-disabled="true"></instant-apps-splash>
-    <calcite-button>Open</calcite-button>
-    <script>
-      const button = document.querySelector('calcite-button');
-      const splash = document.querySelector('instant-apps-splash');
-      button.addEventListener('click', () => {
-        splash.open = true;
-      });
-    </script>
-  </body>
+  <style></style>
+</head>
+
+<body>
+  <instant-apps-splash title-text="Title" content="<p>Content</p>" primary-button-text="Enter"
+    close-button-disabled="true"></instant-apps-splash>
+  <calcite-button>Open</calcite-button>
+  <script>
+    const button = document.querySelector('calcite-button');
+    const splash = document.querySelector('instant-apps-splash');
+    button.addEventListener('click', () => {
+      splash.open = true;
+    });
+  </script>
+</body>
+
 </html>

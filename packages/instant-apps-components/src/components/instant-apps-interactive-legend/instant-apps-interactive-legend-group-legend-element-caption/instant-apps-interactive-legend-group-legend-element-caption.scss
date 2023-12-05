@@ -2,7 +2,7 @@
   display: block;
   --instant-apps-interactive-legend-heading-font-size: 1rem;
   --instant-apps-interactive-legend-heading-font-weight: normal;
-  --instant-apps-interactive-legend-secondary-color: var(--calcite-ui-text-1);
+  --instant-apps-interactive-legend-secondary-color: var(--calcite-color-text-1);
   --instant-apps-interactive-legend-ui-padding: 15px 10px;
 
   .esri-widget__heading {
@@ -75,13 +75,13 @@
 :host(.calcite-mode-dark) {
   .instant-apps-interactive-legend__header {
     background-color: #242424;
-    color: var(--calcite-ui-text-1);
+    color: var(--calcite-color-text-1);
   }
 }
 
 :host(.calcite-mode-light) {
   .instant-apps-interactive-legend__header {
     background-color: #ffffff;
-    color: var(--calcite-ui-text-1);
+    color: var(--calcite-color-text-1);
   }
 }

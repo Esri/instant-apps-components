@@ -58,7 +58,7 @@ export class InstantAppsInteractiveLegendLayerElementCaption {
       <header
         class={`${CSS.interacitveLegendHeader} ${getTheme(this.el)}`}
         style={{
-          borderLeft: '1px solid var(--calcite-ui-border-3)',
+          borderLeft: '1px solid var(--calcite-color-border-3)',
         }}
       >
         <span>

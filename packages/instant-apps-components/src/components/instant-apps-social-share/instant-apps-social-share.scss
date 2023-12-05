@@ -29,7 +29,7 @@ $hoverDark: #262626;
   --instant-apps-social-share-width-horizontal--m: 380px;
   --instant-apps-social-share-width-horizontal--l: 420px;
 
-  --instant-apps-social-share-background-color: var(--calcite-ui-foreground-1);
+  --instant-apps-social-share-background-color: var(--calcite-color-foreground-1);
   --instant-apps-social-share-popover-button-background-color: transparent;
   --instant-apps-social-share-popover-button-icon-color: var(--calcite-ui-icon-color);
   --instant-apps-social-share-embed-border: 1px solid $border;
@@ -91,7 +91,7 @@ $hoverDark: #262626;
 
       li:hover {
         cursor: pointer;
-        background-color: var(--calcite-ui-foreground-2);
+        background-color: var(--calcite-color-foreground-2);
       }
     }
 
@@ -132,7 +132,7 @@ $hoverDark: #262626;
         align-items: center;
         margin-right: 5px;
         calcite-icon {
-          color: var(--calcite-ui-success);
+          color: var(--calcite-color-status-success);
         }
       }
 
@@ -169,7 +169,7 @@ $hoverDark: #262626;
             width: 100%;
             font-family: var(--calcite-sans-family);
             // font-size: 14px;
-            color: var(--calcite-ui-text-1);
+            color: var(--calcite-color-text-1);
           }
           button {
             display: flex;
@@ -183,7 +183,7 @@ $hoverDark: #262626;
             // font-size: 16px;
             font-weight: 400;
             padding: 3%;
-            color: var(--calcite-ui-text-1);
+            color: var(--calcite-color-text-1);
 
             calcite-icon {
               color: $calciteBlue;
@@ -193,7 +193,7 @@ $hoverDark: #262626;
 
           button:hover {
             cursor: pointer;
-            background-color: var(--calcite-ui-foreground-2);
+            background-color: var(--calcite-color-foreground-2);
             transition: background-color 0.15s ease-out 0s;
           }
         }

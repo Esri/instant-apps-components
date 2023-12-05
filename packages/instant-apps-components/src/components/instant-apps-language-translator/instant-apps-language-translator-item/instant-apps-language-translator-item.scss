@@ -6,8 +6,8 @@
 
   .instant-apps-language-translator-item__section {
     padding: 10px;
-    border-bottom: 1px solid var(--calcite-ui-border-1);
-    background-color: var(--calcite-ui-foreground-2);
+    border-bottom: 1px solid var(--calcite-color-border-1);
+    background-color: var(--calcite-color-foreground-2);
     width: 49%;
 
     .instant-apps-language-translator-item__top-row {
@@ -70,7 +70,7 @@
   }
 
   .instant-apps-language-translator-item__info-icon {
-    color: var(--calcite-ui-brand);
+    color: var(--calcite-color-brand);
   }
 
   .instant-apps-language-translator-item__info-button {
@@ -84,14 +84,14 @@
   .instant-apps-language-translator-item__section--selected {
     background-color: #f1faff;
 
-    background-color: var(--calcite-ui-brand);
-    color: var(--calcite-ui-text-inverse);
+    background-color: var(--calcite-color-brand);
+    color: var(--calcite-color-text-inverse);
     calcite-action {
-      --calcite-ui-icon-color: var(--calcite-ui-text-inverse);
+      --calcite-ui-icon-color: var(--calcite-color-text-inverse);
     }
 
     calcite-icon {
-      color: var(--calcite-ui-text-inverse);
+      color: var(--calcite-color-text-inverse);
     }
   }
 }

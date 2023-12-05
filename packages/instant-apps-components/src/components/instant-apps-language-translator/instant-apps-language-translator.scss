@@ -20,7 +20,7 @@
       display: flex;
       align-items: center;
       font-size: 14.5px;
-      color: var(--calcite-ui-brand);
+      color: var(--calcite-color-brand);
     }
 
     &__writing-icon {
@@ -44,7 +44,7 @@
       width: 100%;
       position: sticky;
       top: 0;
-      background: var(--calcite-ui-foreground-1);
+      background: var(--calcite-color-foreground-1);
       z-index: 1;
 
       calcite-label {

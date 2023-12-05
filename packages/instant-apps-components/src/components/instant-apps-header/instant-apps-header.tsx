@@ -207,7 +207,7 @@ export class InstantAppsHeader {
                 {title}
                 {this.infoButton ? (
                   <calcite-button
-                    style={{ '--calcite-ui-text-1': this.textColor }}
+                    style={{ '--calcite-color-text-1': this.textColor }}
                     id="infoButton"
                     alignment="start"
                     appearance="transparent"
