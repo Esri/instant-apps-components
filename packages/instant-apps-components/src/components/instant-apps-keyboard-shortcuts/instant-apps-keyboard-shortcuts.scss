@@ -5,8 +5,8 @@
   flex-direction: column;
   font-family: var(--calcite-sans-family);
   font-size: 0.875rem;
-  background-color: var(--calcite-ui-background);
-  color: var(--calcite-ui-text-1);
+  background-color: var(--calcite-color-background);
+  color: var(--calcite-color-text-1);
   width: auto;
   padding: 0.5em;
   margin-bottom: 0;
@@ -19,7 +19,7 @@
     margin-bottom:1em;
   }
   table td, table th{
-    border:solid 1px var(--calcite-ui-border-1);
+    border:solid 1px var(--calcite-color-border-1);
     padding: 0.5rem 0.75rem 0.5rem 0.75rem;
     white-space: normal;
   }
@@ -28,7 +28,7 @@
     white-space: nowrap;
   }
    tr:nth-child(even){
-   background-color:var(--calcite-ui-foreground-2);
+   background-color:var(--calcite-color-foreground-2);
   }
 
   tr th{

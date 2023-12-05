@@ -6,7 +6,7 @@
  *   See use restrictions at http://www.esri.com/legal/pdfs/mla_e204_e300/english
  */
 
-$borderColor: var(--calcite-ui-border-1);
+$borderColor: var(--calcite-color-border-1);
 $boxShadow: 0px 3px 15px rgba(0, 0, 0, 0.2);
 
 :host {
@@ -16,8 +16,8 @@ $boxShadow: 0px 3px 15px rgba(0, 0, 0, 0.2);
  * @prop --instant-apps-scoreboard-text-color: Text color of scoreboard.
   * @prop --instant-apps-scoreboard-mobile-position-bottom: Scoreboard's bottom position (px) of absolutely positioned element on mobile.
  */
-  --instant-apps-scoreboard-background-color: var(--calcite-ui-foreground-1);
-  --instant-apps-scoreboard-text-color: var(--calcite-ui-text-1);
+  --instant-apps-scoreboard-background-color: var(--calcite-color-foreground-1);
+  --instant-apps-scoreboard-text-color: var(--calcite-color-text-1);
   --instant-apps-scoreboard-mobile-position-bottom: 0;
   background-color: var(--instant-apps-scoreboard-background-color);
   color: var(--instant-apps-scoreboard-text-color);
@@ -93,7 +93,7 @@ $boxShadow: 0px 3px 15px rgba(0, 0, 0, 0.2);
         display: inline-block;
         width: 32px;
         height: 32px;
-        background-color: var(--calcite-ui-foreground-3);
+        background-color: var(--calcite-color-foreground-3);
         border-radius: 4px;
       }
     }

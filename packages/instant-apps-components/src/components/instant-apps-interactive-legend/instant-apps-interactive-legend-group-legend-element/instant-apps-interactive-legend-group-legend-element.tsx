@@ -54,7 +54,7 @@ export class InstantAppsInteractiveLegendGroupLegendElement {
     return (
       <div
         style={{
-          borderLeft: '1px solid var(--calcite-ui-border-3)',
+          borderLeft: '1px solid var(--calcite-color-border-3)',
         }}
         class={`${CSS.service} ${CSS.groupLayer}`}
       >
