@@ -75,8 +75,8 @@
     justify-content: space-between;
     width: 100%;
     height: var(--instant-apps-header-height);
-    background-color: var(--calcite-ui-foreground-1);
-    color: var(--calcite-ui-text-1);
+    background-color: var(--calcite-color-foreground-1);
+    color: var(--calcite-color-text-1);
     font-family: var(--calcite-sans-family);
     min-height: var(--instant-apps-header-min-height);
 
@@ -127,7 +127,7 @@
       h1 {
         margin: 0;
         font-size: 1.25rem;
-        color: var(--calcite-ui-text-1);
+        color: var(--calcite-color-text-1);
         font-weight: 430;
         white-space: nowrap;
         overflow: hidden;

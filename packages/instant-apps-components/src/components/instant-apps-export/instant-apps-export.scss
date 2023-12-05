@@ -13,15 +13,15 @@
 
 :host {
   display: block;
-  --instant-apps-export-action-background: var(--calcite-ui-foreground-1);
-  --instant-apps-export-action-background-hover: var(--calcite-ui-foreground-2);
-  --instant-apps-export-action-background-press: var(--calcite-ui-foreground-3);
+  --instant-apps-export-action-background: var(--calcite-color-foreground-1);
+  --instant-apps-export-action-background-hover: var(--calcite-color-foreground-2);
+  --instant-apps-export-action-background-press: var(--calcite-color-foreground-3);
   --instant-apps-export-action-height: 100%;
   --instant-apps-export-action-width: fit-content;
-  --instant-apps-export-action-icon-color: var(--calcite-ui-text-3);
-  --instant-apps-export-action-icon-hover-color: var(--calcite-ui-text-1);
-  --instant-apps-export-background: var(--calcite-ui-foreground-1);
-  --instant-apps-export-text-color: var(--calcite-ui-text-1);
+  --instant-apps-export-action-icon-color: var(--calcite-color-text-3);
+  --instant-apps-export-action-icon-hover-color: var(--calcite-color-text-1);
+  --instant-apps-export-background: var(--calcite-color-foreground-1);
+  --instant-apps-export-text-color: var(--calcite-color-text-1);
   --instant-apps-export-popover-width: 250px;
 }
 
@@ -36,7 +36,7 @@
   &__inline-container {
     padding: 12px;
     background: var(--instant-apps-export-background);
-    --calcite-ui-text-1: var(--instant-apps-export-text-color);
+    --calcite-color-text-1: var(--instant-apps-export-text-color);
   }
 
   &__popover-container {
@@ -46,11 +46,11 @@
   calcite-action {
     height: var(--instant-apps-export-action-height);
     width: var(--instant-apps-export-action-width);
-    --calcite-ui-foreground-1: var(--instant-apps-export-action-background);
-    --calcite-ui-foreground-2: var(--instant-apps-export-action-background-hover);
-    --calcite-ui-foreground-3: var(--instant-apps-export-action-background-press);
-    --calcite-ui-text-3: var(--instant-apps-export-action-icon-color);
-    --calcite-ui-text-1: var(--instant-apps-export-action-icon-hover-color);
+    --calcite-color-foreground-1: var(--instant-apps-export-action-background);
+    --calcite-color-foreground-2: var(--instant-apps-export-action-background-hover);
+    --calcite-color-foreground-3: var(--instant-apps-export-action-background-press);
+    --calcite-color-text-3: var(--instant-apps-export-action-icon-color);
+    --calcite-color-text-1: var(--instant-apps-export-action-icon-hover-color);
   }
 
   .instant-apps-export-print {
@@ -65,22 +65,22 @@
   }
 
   calcite-input {
-    --calcite-ui-foreground-1: var(--instant-apps-export-background);
-    --calcite-ui-text-1: var(--instant-apps-export-text-color);
+    --calcite-color-foreground-1: var(--instant-apps-export-background);
+    --calcite-color-text-1: var(--instant-apps-export-text-color);
   }
 
   calcite-popover {
-    --calcite-ui-foreground-1: var(--instant-apps-export-background);
+    --calcite-color-foreground-1: var(--instant-apps-export-background);
   }
 
   calcite-switch {
-    --calcite-ui-foreground-1: #fff;
-    --calcite-ui-foreground-2: #f3f3f3;
+    --calcite-color-foreground-1: #fff;
+    --calcite-color-foreground-2: #f3f3f3;
   }
 
   .calcite-mode-dark calcite-switch {
-    --calcite-ui-foreground-1: #2b2b2b;
-    --calcite-ui-foreground-2: #202020;
+    --calcite-color-foreground-1: #2b2b2b;
+    --calcite-color-foreground-2: #202020;
   }
 }
 

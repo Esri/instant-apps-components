@@ -1,96 +1,98 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=5.0" />
-    <title>Instant Apps Components: Control Panel</title>
 
-    <link rel="stylesheet" href="https://js.arcgis.com/4.28/esri/themes/light/main.css" />
-    <script src="https://js.arcgis.com/4.28/"></script>
-    <script type="module" src="https://js.arcgis.com/calcite-components/1.9.2/calcite.esm.js"></script>
-    <link rel="stylesheet" type="text/css" href="https://js.arcgis.com/calcite-components/1.9.2/calcite.css" />
-    <script type="module" src="/build/instant-apps-components.esm.js"></script>
-    <script nomodule src="/build/instant-apps-components.js"></script>
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=5.0" />
+  <title>Instant Apps Components: Control Panel</title>
 
-    <style>
-      html,
-      body {
-        box-sizing: border-box;
-        width: 100%;
-        height: 100%;
-        margin: 0;
-        padding: 0;
-      }
+  <link rel="stylesheet" href="https://jsdev.arcgis.com/4.29/esri/themes/light/main.css" />
+  <script src="https://jsdev.arcgis.com/4.29/"></script>
+  <script type="module" src="https://js.arcgis.com/calcite-components/2.0.0/calcite.esm.js"></script>
+  <link rel="stylesheet" type="text/css" href="https://js.arcgis.com/calcite-components/2.0.0/calcite.css" />
+  <script type="module" src="/build/instant-apps-components.esm.js"></script>
+  <script nomodule src="/build/instant-apps-components.js"></script>
 
-      #viewDiv {
-        margin: 0;
-        padding: 0;
-        width: 100%;
-        height: 100%;
-      }
-    </style>
-  </head>
+  <style>
+    html,
+    body {
+      box-sizing: border-box;
+      width: 100%;
+      height: 100%;
+      margin: 0;
+      padding: 0;
+    }
 
-  <body>
-    <div id="viewDiv"></div>
-    <script>
-      require([
-        'esri/WebMap',
-        'esri/views/MapView',
-        'esri/core/reactiveUtils',
-        'esri/config',
-        'esri/widgets/Home',
-        'esri/widgets/Zoom',
-        'esri/widgets/Expand',
-        'esri/widgets/Legend',
-      ], (WebMap, MapView, reactiveUtils, esriConfig, Home, Zoom, Expand, Legend) => {
-        esriConfig.portalUrl = 'https://nw-brews.mapsdevext.arcgis.com';
+    #viewDiv {
+      margin: 0;
+      padding: 0;
+      width: 100%;
+      height: 100%;
+    }
+  </style>
+</head>
 
-        const map = new WebMap({
-          portalItem: {
-            id: '8891ee1d2e0e428bb96c58b8ecf8c408',
-          },
-        });
+<body>
+  <div id="viewDiv"></div>
+  <script>
+    require([
+      'esri/WebMap',
+      'esri/views/MapView',
+      'esri/core/reactiveUtils',
+      'esri/config',
+      'esri/widgets/Home',
+      'esri/widgets/Zoom',
+      'esri/widgets/Expand',
+      'esri/widgets/Legend',
+    ], (WebMap, MapView, reactiveUtils, esriConfig, Home, Zoom, Expand, Legend) => {
+      esriConfig.portalUrl = 'https://nw-brews.mapsdevext.arcgis.com';
 
-        const view = new MapView({
-          container: 'viewDiv',
-          map,
-          ui: {
-            components: [],
-          },
-        });
-
-        const legend = new Legend({
-          view,
-        });
-
-        const controlPanel = document.createElement('instant-apps-control-panel');
-        controlPanel.view = view;
-
-        const home = new Home({ view });
-        const zoom = new Zoom({ view });
-
-        const socialShare = document.createElement('instant-apps-social-share');
-        socialShare.classList.add('calcite-mode-light');
-        socialShare.mode = 'inline';
-
-        controlPanel.components = [
-          {
-            content: home,
-          },
-          {
-            content: zoom,
-          },
-          { content: legend, isExpand: true, expandTooltip: 'Open legend', collapseTooltip: 'Close legend' },
-          { content: socialShare, isExpand: true, expandIconClass: 'esri-icon-share2', expandTooltip: 'Open social share', collapseTooltip: 'Close social share' },
-        ];
-
-        view.ui.add(controlPanel, 'top-left');
-
-        const componentsDiv = document.createElement('div');
-        componentsDiv.setAttribute('slot', 'components');
-        controlPanel.appendChild(componentsDiv);
+      const map = new WebMap({
+        portalItem: {
+          id: '8891ee1d2e0e428bb96c58b8ecf8c408',
+        },
       });
-    </script>
-  </body>
+
+      const view = new MapView({
+        container: 'viewDiv',
+        map,
+        ui: {
+          components: [],
+        },
+      });
+
+      const legend = new Legend({
+        view,
+      });
+
+      const controlPanel = document.createElement('instant-apps-control-panel');
+      controlPanel.view = view;
+
+      const home = new Home({ view });
+      const zoom = new Zoom({ view });
+
+      const socialShare = document.createElement('instant-apps-social-share');
+      socialShare.classList.add('calcite-mode-light');
+      socialShare.mode = 'inline';
+
+      controlPanel.components = [
+        {
+          content: home,
+        },
+        {
+          content: zoom,
+        },
+        { content: legend, isExpand: true, expandTooltip: 'Open legend', collapseTooltip: 'Close legend' },
+        { content: socialShare, isExpand: true, expandIconClass: 'esri-icon-share2', expandTooltip: 'Open social share', collapseTooltip: 'Close social share' },
+      ];
+
+      view.ui.add(controlPanel, 'top-left');
+
+      const componentsDiv = document.createElement('div');
+      componentsDiv.setAttribute('slot', 'components');
+      controlPanel.appendChild(componentsDiv);
+    });
+  </script>
+</body>
+
 </html>

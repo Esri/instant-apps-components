@@ -12,13 +12,13 @@
     
   .instant-apps-popover__action {
     align-self: flex-start;
-    --calcite-ui-foreground-2: transparent;
+    --calcite-color-foreground-2: transparent;
   }
 
   span {
     display: inline-block;
     font-weight: var(--calcite-font-weight-medium);
-    color: var(--calcite-ui-text-1);
+    color: var(--calcite-color-text-1);
     margin: 0 0 10px 0;
     font-family: var(--calcite-sans-family);
   }
@@ -44,7 +44,7 @@
     }
 
     calcite-button:first-child {
-      --calcite-ui-foreground-3: transparent;
+      --calcite-color-foreground-3: transparent;
     }
 
     calcite-button:last-child {

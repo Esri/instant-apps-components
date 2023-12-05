@@ -15,7 +15,7 @@
       max-height: 30vh;
       overflow: auto;
       border-left: none;
-      background-color: var(--calcite-ui-foreground-1);
+      background-color: var(--calcite-color-foreground-1);
       border: 1px solid #c0c0c0;
       z-index: 702;
 
@@ -34,7 +34,7 @@
       }
 
       &-item:hover {
-        background-color: var(--calcite-ui-foreground-2);
+        background-color: var(--calcite-color-foreground-2);
       }
     }
   }

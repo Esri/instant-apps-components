@@ -7,7 +7,7 @@ export const styles = `
     height: 70px !important;
     font-size: 0.875rem !important;
     line-height: 	1.375 !important;
-    color: var(--calcite-ui-text-1) !important;
+    color: var(--calcite-color-text-1) !important;
   }
 
   .ck.ck-editor__editable_inline>:first-child,
@@ -21,6 +21,6 @@ export const styles = `
   }
 
   .calcite-mode-dark .ck-editor__editable {
-    color: var(--calcite-ui-text-inverse) !important;
+    color: var(--calcite-color-text-inverse) !important;
   }
 `;

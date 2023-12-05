@@ -11,9 +11,9 @@
  * @prop --instant-apps-landing-page-icon-image-scale--l: Icon image width when scale is set to 'l'. Default value is 500px.
  * @prop --instant-apps-landing-page-entry-button-margin: Option to provide spacing in case a secondary action is added to the landing page.
  */
-  --instant-apps-landing-page-background-color: var(--calcite-ui-brand);
-  --instant-apps-landing-page-text-color: var(--calcite-ui-text-inverse);
-  --instant-apps-landing-page-entry-button-color: var(--calcite-ui-brand);
+  --instant-apps-landing-page-background-color: var(--calcite-color-brand);
+  --instant-apps-landing-page-text-color: var(--calcite-color-text-inverse);
+  --instant-apps-landing-page-entry-button-color: var(--calcite-color-brand);
   --instant-apps-landing-page-title-text-font-size: var(--calcite-font-size-6);
   --instant-apps-landing-page-subtitle-text-font-size: var(--calcite-font-size-3);
   --instant-apps-landing-page-description-text-font-size: var(--calcite-font-size-0);
@@ -87,9 +87,9 @@
     }
 
     &__entry-button {
-      --calcite-ui-brand: var(--instant-apps-landing-page-entry-button-color);
-      --calcite-ui-brand-hover: var(--instant-apps-landing-page-entry-button-color);
-      --calcite-ui-brand-press: var(--instant-apps-landing-page-entry-button-color);
+      --calcite-color-brand: var(--instant-apps-landing-page-entry-button-color);
+      --calcite-color-brand-hover: var(--instant-apps-landing-page-entry-button-color);
+      --calcite-color-brand-press: var(--instant-apps-landing-page-entry-button-color);
     }
   }
 

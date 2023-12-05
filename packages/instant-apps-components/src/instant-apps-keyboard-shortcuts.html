@@ -8,83 +8,85 @@
 
 <!DOCTYPE html>
 <html dir="ltr" lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=5.0" />
-    <title>ArcGIS Instant Apps Components</title>
 
-    <link rel="stylesheet" href="https://js.arcgis.com/4.28/esri/themes/light/main.css" />
-    <script src="https://js.arcgis.com/4.28/"></script>
-    <script type="module" src="https://js.arcgis.com/calcite-components/1.9.2/calcite.esm.js"></script>
-    <link rel="stylesheet" type="text/css" href="https://js.arcgis.com/calcite-components/1.9.2/calcite.css" />
-    <script type="module" src="/build/instant-apps-components.esm.js"></script>
-    <script nomodule src="/build/instant-apps-components.js"></script>
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=5.0" />
+  <title>ArcGIS Instant Apps Components</title>
 
-    <style>
-      html,
-      body,
-      #viewDiv {
-        box-sizing: border-box;
-        width: 100%;
-        height: 100%;
-        margin: 0;
-        padding: 0;
+  <link rel="stylesheet" href="https://jsdev.arcgis.com/4.29/esri/themes/light/main.css" />
+  <script src="https://jsdev.arcgis.com/4.29/"></script>
+  <script type="module" src="https://js.arcgis.com/calcite-components/2.0.0/calcite.esm.js"></script>
+  <link rel="stylesheet" type="text/css" href="https://js.arcgis.com/calcite-components/2.0.0/calcite.css" />
+  <script type="module" src="/build/instant-apps-components.esm.js"></script>
+  <script nomodule src="/build/instant-apps-components.js"></script>
+
+  <style>
+    html,
+    body,
+    #viewDiv {
+      box-sizing: border-box;
+      width: 100%;
+      height: 100%;
+      margin: 0;
+      padding: 0;
+    }
+  </style>
+</head>
+
+<body>
+  <div id="viewDiv"></div>
+
+  <script>
+    require(['esri/WebMap', 'esri/widgets/Expand', 'esri/views/MapView', 'esri/config'], (WebMap, Expand, MapView, esriConfig) => {
+      esriConfig.portalUrl = 'https://nw-brews.mapsdevext.arcgis.com';
+
+      const map = new WebMap({
+        portalItem: {
+          id: '8891ee1d2e0e428bb96c58b8ecf8c408',
+        },
+      });
+
+      const url = new URL(window.location.href);
+      const searchParams = url.searchParams;
+      let center = searchParams.get('center');
+      let zoom = searchParams.get('level');
+      if (center) center = center.split(';').map(item => parseFloat(item));
+      if (zoom) zoom = parseInt(zoom);
+
+      const view = new MapView({
+        map,
+        container: 'viewDiv',
+        zoom,
+        center,
+      });
+
+      /************************
+       * KEYBOARD SHORTCUTS
+       **************************/
+      const keyboardShortcuts = document.createElement('instant-apps-keyboard-shortcuts');
+      keyboardShortcuts.view = view;
+      const keyboardExpand = new Expand({
+        view,
+        group: 'top-right',
+        mode: 'floating',
+        expandIcon: 'keyboard',
+        expanded: true,
+        content: keyboardShortcuts,
+      });
+      view.ui.add(keyboardExpand, 'top-right');
+    });
+  </script>
+  <script>
+    const popovers = document.getElementById('popovers');
+    document.body.addEventListener('click', e => {
+      const node = e.target;
+      if (node.classList.contains('open')) {
+        const id = node.getAttribute('value');
+        popovers.open(id);
       }
-    </style>
-  </head>
+    });
+  </script>
+</body>
 
-  <body>
-    <div id="viewDiv"></div>
-
-    <script>
-      require(['esri/WebMap', 'esri/widgets/Expand', 'esri/views/MapView', 'esri/config'], (WebMap, Expand, MapView, esriConfig) => {
-        esriConfig.portalUrl = 'https://nw-brews.mapsdevext.arcgis.com';
-
-        const map = new WebMap({
-          portalItem: {
-            id: '8891ee1d2e0e428bb96c58b8ecf8c408',
-          },
-        });
-
-        const url = new URL(window.location.href);
-        const searchParams = url.searchParams;
-        let center = searchParams.get('center');
-        let zoom = searchParams.get('level');
-        if (center) center = center.split(';').map(item => parseFloat(item));
-        if (zoom) zoom = parseInt(zoom);
-
-        const view = new MapView({
-          map,
-          container: 'viewDiv',
-          zoom,
-          center,
-        });
-
-        /************************
-         * KEYBOARD SHORTCUTS
-         **************************/
-        const keyboardShortcuts = document.createElement('instant-apps-keyboard-shortcuts');
-        keyboardShortcuts.view = view;
-        const keyboardExpand = new Expand({
-          view,
-          group: 'top-right',
-          mode: 'floating',
-          expandIcon: 'keyboard',
-          expanded: true,
-          content: keyboardShortcuts,
-        });
-        view.ui.add(keyboardExpand, 'top-right');
-      });
-    </script>
-    <script>
-      const popovers = document.getElementById('popovers');
-      document.body.addEventListener('click', e => {
-        const node = e.target;
-        if (node.classList.contains('open')) {
-          const id = node.getAttribute('value');
-          popovers.open(id);
-        }
-      });
-    </script>
-  </body>
 </html>
