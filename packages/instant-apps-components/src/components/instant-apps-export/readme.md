@@ -58,6 +58,7 @@ The export tool is configurable and can include additional elements in the outpu
 | `--instant-apps-export-action-background`       | Popup's trigger button's background color.             |
 | `--instant-apps-export-action-background-hover` | Popup's trigger button's background color on hover.    |
 | `--instant-apps-export-action-background-press` | Popup's trigger button's background color on press.    |
+| `--instant-apps-export-action-height`           | Popup's trigger button's height.                       |
 | `--instant-apps-export-action-icon-color`       | Popup's trigger button's icon color.                   |
 | `--instant-apps-export-action-icon-hover-color` | Popup's trigger button's icon color when hovered over. |
 | `--instant-apps-export-action-width`            | Popup's trigger button's width.                        |

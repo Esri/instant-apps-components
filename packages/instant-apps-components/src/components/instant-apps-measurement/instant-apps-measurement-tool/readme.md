@@ -9,11 +9,8 @@
 
 | Property               | Attribute     | Description | Type                                         | Default     |
 | ---------------------- | ------------- | ----------- | -------------------------------------------- | ----------- |
-| `activeToolType`           | `active-tool-type` |             | `"area" \| "clear" \| "distance" \| "point"` | `undefined` |
-| `areaUnit` | `area-unit`            |             | `Unit system (imperial, metric) or specific unit used for displaying the area values. Possible values are: metric, imperial, square-inches, square-feet, square-us-feet, square-yards, square-miles, square-meters, square-kilometers, acres, ares, hectares.`                      | `undefined` |
-| `lengthUnit` | `length-unit`            |             | `Unit system (imperial, metric) or specific unit used for displaying the distance values.`                      | `undefined` |
-| `coordinateFormat` | `coordinate-format`            |             | `"basemap" \| "dd" \| "ddm" \| "dms" \| "mgrs" \| "usng" \| "utm" \| "xy" \|`                      | `xy` |
-| `closable` | --            |             | `boolean`                      | `false` |
+| `activeTool`           | `active-tool` |             | `"area" \| "clear" \| "distance" \| "point"` | `undefined` |
+| `measureConfiguration` | --            |             | `IMeasureConfiguration`                      | `undefined` |
 | `view`                 | --            |             | `MapView \| SceneView`                       | `undefined` |
 
 
