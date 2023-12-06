@@ -15,7 +15,7 @@ export const config: Config = {
       copy: [t9nAssetsObj],
       esmLoaderPath: '../loader',
     },
-    { type: 'dist-custom-elements', autoDefineCustomElements: true },
+    { type: 'dist-custom-elements', customElementsExportBehavior: 'auto-define-custom-elements' },
     {
       type: 'www',
       copy: [{ src: '**/*.html' }, { ...t9nAssetsObj, dest: 'assets/t9n' }],
