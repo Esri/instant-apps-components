@@ -13,6 +13,14 @@ import { AppSettings, LocaleItem, SettingType } from "./components/instant-apps-
 import { InstantAppsPopovers } from "./components/instant-apps-popovers/instant-apps-popovers";
 import { LogicalPlacement } from "@esri/calcite-components/dist/types/utils/floating-ui";
 import { ScoreboardItem, ScoreboardMode, ScoreboardPosition } from "./components/instant-apps-scoreboard/types/interfaces";
+export { ActiveTool, ControlPanelComponent, ExportOutput, ExtentSelector, IClassicEditor, IMeasureConfiguration, InstantAppsPopoverMessageOverrides, LayerExpression, PopoverPlacement } from "./interfaces/interfaces";
+export { EditorConfig } from "@ckeditor/ckeditor5-core/src/editor/editorconfig";
+export { FilterMode } from "./components/instant-apps-interactive-legend/instant-apps-interactive-legend-classic/interfaces/interfaces";
+export { AlignmentPositions } from "./components/instant-apps-landing-page/support/enum";
+export { AppSettings, LocaleItem, SettingType } from "./components/instant-apps-language-translator/support/interfaces";
+export { InstantAppsPopovers } from "./components/instant-apps-popovers/instant-apps-popovers";
+export { LogicalPlacement } from "@esri/calcite-components/dist/types/utils/floating-ui";
+export { ScoreboardItem, ScoreboardMode, ScoreboardPosition } from "./components/instant-apps-scoreboard/types/interfaces";
 export namespace Components {
     interface InstantAppsCkeditorWrapper {
         "config": EditorConfig;
@@ -710,7 +718,19 @@ export interface InstantAppsSplashCustomEvent<T> extends CustomEvent<T> {
     target: HTMLInstantAppsSplashElement;
 }
 declare global {
+    interface HTMLInstantAppsCkeditorWrapperElementEventMap {
+        "isFocused": { fieldName: string; isFocused: boolean };
+        "dataChanged": string;
+    }
     interface HTMLInstantAppsCkeditorWrapperElement extends Components.InstantAppsCkeditorWrapper, HTMLStencilElement {
+        addEventListener<K extends keyof HTMLInstantAppsCkeditorWrapperElementEventMap>(type: K, listener: (this: HTMLInstantAppsCkeditorWrapperElement, ev: InstantAppsCkeditorWrapperCustomEvent<HTMLInstantAppsCkeditorWrapperElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLInstantAppsCkeditorWrapperElementEventMap>(type: K, listener: (this: HTMLInstantAppsCkeditorWrapperElement, ev: InstantAppsCkeditorWrapperCustomEvent<HTMLInstantAppsCkeditorWrapperElementEventMap[K]>) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
     }
     var HTMLInstantAppsCkeditorWrapperElement: {
         prototype: HTMLInstantAppsCkeditorWrapperElement;
@@ -722,19 +742,53 @@ declare global {
         prototype: HTMLInstantAppsControlPanelElement;
         new (): HTMLInstantAppsControlPanelElement;
     };
+    interface HTMLInstantAppsExportElementEventMap {
+        "exportOutputUpdated": void;
+    }
     interface HTMLInstantAppsExportElement extends Components.InstantAppsExport, HTMLStencilElement {
+        addEventListener<K extends keyof HTMLInstantAppsExportElementEventMap>(type: K, listener: (this: HTMLInstantAppsExportElement, ev: InstantAppsExportCustomEvent<HTMLInstantAppsExportElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLInstantAppsExportElementEventMap>(type: K, listener: (this: HTMLInstantAppsExportElement, ev: InstantAppsExportCustomEvent<HTMLInstantAppsExportElementEventMap[K]>) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
     }
     var HTMLInstantAppsExportElement: {
         prototype: HTMLInstantAppsExportElement;
         new (): HTMLInstantAppsExportElement;
     };
+    interface HTMLInstantAppsFilterListElementEventMap {
+        "filterListReset": void;
+        "filterUpdate": void;
+    }
     interface HTMLInstantAppsFilterListElement extends Components.InstantAppsFilterList, HTMLStencilElement {
+        addEventListener<K extends keyof HTMLInstantAppsFilterListElementEventMap>(type: K, listener: (this: HTMLInstantAppsFilterListElement, ev: InstantAppsFilterListCustomEvent<HTMLInstantAppsFilterListElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLInstantAppsFilterListElementEventMap>(type: K, listener: (this: HTMLInstantAppsFilterListElement, ev: InstantAppsFilterListCustomEvent<HTMLInstantAppsFilterListElementEventMap[K]>) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
     }
     var HTMLInstantAppsFilterListElement: {
         prototype: HTMLInstantAppsFilterListElement;
         new (): HTMLInstantAppsFilterListElement;
     };
+    interface HTMLInstantAppsHeaderElementEventMap {
+        "infoIsOpenChanged": boolean;
+    }
     interface HTMLInstantAppsHeaderElement extends Components.InstantAppsHeader, HTMLStencilElement {
+        addEventListener<K extends keyof HTMLInstantAppsHeaderElementEventMap>(type: K, listener: (this: HTMLInstantAppsHeaderElement, ev: InstantAppsHeaderCustomEvent<HTMLInstantAppsHeaderElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLInstantAppsHeaderElementEventMap>(type: K, listener: (this: HTMLInstantAppsHeaderElement, ev: InstantAppsHeaderCustomEvent<HTMLInstantAppsHeaderElementEventMap[K]>) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
     }
     var HTMLInstantAppsHeaderElement: {
         prototype: HTMLInstantAppsHeaderElement;
@@ -764,7 +818,18 @@ declare global {
         prototype: HTMLInstantAppsInteractiveLegendGroupLegendElementElement;
         new (): HTMLInstantAppsInteractiveLegendGroupLegendElementElement;
     };
+    interface HTMLInstantAppsInteractiveLegendGroupLegendElementCaptionElementEventMap {
+        "groupLayerCaptionElementExpandUpdated": boolean;
+    }
     interface HTMLInstantAppsInteractiveLegendGroupLegendElementCaptionElement extends Components.InstantAppsInteractiveLegendGroupLegendElementCaption, HTMLStencilElement {
+        addEventListener<K extends keyof HTMLInstantAppsInteractiveLegendGroupLegendElementCaptionElementEventMap>(type: K, listener: (this: HTMLInstantAppsInteractiveLegendGroupLegendElementCaptionElement, ev: InstantAppsInteractiveLegendGroupLegendElementCaptionCustomEvent<HTMLInstantAppsInteractiveLegendGroupLegendElementCaptionElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLInstantAppsInteractiveLegendGroupLegendElementCaptionElementEventMap>(type: K, listener: (this: HTMLInstantAppsInteractiveLegendGroupLegendElementCaptionElement, ev: InstantAppsInteractiveLegendGroupLegendElementCaptionCustomEvent<HTMLInstantAppsInteractiveLegendGroupLegendElementCaptionElementEventMap[K]>) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
     }
     var HTMLInstantAppsInteractiveLegendGroupLegendElementCaptionElement: {
         prototype: HTMLInstantAppsInteractiveLegendGroupLegendElementCaptionElement;
@@ -776,7 +841,18 @@ declare global {
         prototype: HTMLInstantAppsInteractiveLegendLayerElementElement;
         new (): HTMLInstantAppsInteractiveLegendLayerElementElement;
     };
+    interface HTMLInstantAppsInteractiveLegendLayerElementCaptionElementEventMap {
+        "layerCaptionElementExpandUpdated": boolean;
+    }
     interface HTMLInstantAppsInteractiveLegendLayerElementCaptionElement extends Components.InstantAppsInteractiveLegendLayerElementCaption, HTMLStencilElement {
+        addEventListener<K extends keyof HTMLInstantAppsInteractiveLegendLayerElementCaptionElementEventMap>(type: K, listener: (this: HTMLInstantAppsInteractiveLegendLayerElementCaptionElement, ev: InstantAppsInteractiveLegendLayerElementCaptionCustomEvent<HTMLInstantAppsInteractiveLegendLayerElementCaptionElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLInstantAppsInteractiveLegendLayerElementCaptionElementEventMap>(type: K, listener: (this: HTMLInstantAppsInteractiveLegendLayerElementCaptionElement, ev: InstantAppsInteractiveLegendLayerElementCaptionCustomEvent<HTMLInstantAppsInteractiveLegendLayerElementCaptionElementEventMap[K]>) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
     }
     var HTMLInstantAppsInteractiveLegendLayerElementCaptionElement: {
         prototype: HTMLInstantAppsInteractiveLegendLayerElementCaptionElement;
@@ -788,7 +864,19 @@ declare global {
         prototype: HTMLInstantAppsInteractiveLegendLegendElementElement;
         new (): HTMLInstantAppsInteractiveLegendLegendElementElement;
     };
+    interface HTMLInstantAppsInteractiveLegendLegendElementCaptionElementEventMap {
+        "showAllSelected": boolean;
+        "legendLayerExpandUpdated": boolean;
+    }
     interface HTMLInstantAppsInteractiveLegendLegendElementCaptionElement extends Components.InstantAppsInteractiveLegendLegendElementCaption, HTMLStencilElement {
+        addEventListener<K extends keyof HTMLInstantAppsInteractiveLegendLegendElementCaptionElementEventMap>(type: K, listener: (this: HTMLInstantAppsInteractiveLegendLegendElementCaptionElement, ev: InstantAppsInteractiveLegendLegendElementCaptionCustomEvent<HTMLInstantAppsInteractiveLegendLegendElementCaptionElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLInstantAppsInteractiveLegendLegendElementCaptionElementEventMap>(type: K, listener: (this: HTMLInstantAppsInteractiveLegendLegendElementCaptionElement, ev: InstantAppsInteractiveLegendLegendElementCaptionCustomEvent<HTMLInstantAppsInteractiveLegendLegendElementCaptionElementEventMap[K]>) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
     }
     var HTMLInstantAppsInteractiveLegendLegendElementCaptionElement: {
         prototype: HTMLInstantAppsInteractiveLegendLegendElementCaptionElement;
@@ -812,31 +900,91 @@ declare global {
         prototype: HTMLInstantAppsLandingPageElement;
         new (): HTMLInstantAppsLandingPageElement;
     };
+    interface HTMLInstantAppsLanguageSwitcherElementEventMap {
+        "selectedLanguageUpdated": {
+    locale: string;
+    data?: {
+      [key: string]: string;
+    };
+  };
+    }
     interface HTMLInstantAppsLanguageSwitcherElement extends Components.InstantAppsLanguageSwitcher, HTMLStencilElement {
+        addEventListener<K extends keyof HTMLInstantAppsLanguageSwitcherElementEventMap>(type: K, listener: (this: HTMLInstantAppsLanguageSwitcherElement, ev: InstantAppsLanguageSwitcherCustomEvent<HTMLInstantAppsLanguageSwitcherElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLInstantAppsLanguageSwitcherElementEventMap>(type: K, listener: (this: HTMLInstantAppsLanguageSwitcherElement, ev: InstantAppsLanguageSwitcherCustomEvent<HTMLInstantAppsLanguageSwitcherElementEventMap[K]>) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
     }
     var HTMLInstantAppsLanguageSwitcherElement: {
         prototype: HTMLInstantAppsLanguageSwitcherElement;
         new (): HTMLInstantAppsLanguageSwitcherElement;
     };
+    interface HTMLInstantAppsLanguageTranslatorElementEventMap {
+        "translatorDataUpdated": string;
+    }
     interface HTMLInstantAppsLanguageTranslatorElement extends Components.InstantAppsLanguageTranslator, HTMLStencilElement {
+        addEventListener<K extends keyof HTMLInstantAppsLanguageTranslatorElementEventMap>(type: K, listener: (this: HTMLInstantAppsLanguageTranslatorElement, ev: InstantAppsLanguageTranslatorCustomEvent<HTMLInstantAppsLanguageTranslatorElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLInstantAppsLanguageTranslatorElementEventMap>(type: K, listener: (this: HTMLInstantAppsLanguageTranslatorElement, ev: InstantAppsLanguageTranslatorCustomEvent<HTMLInstantAppsLanguageTranslatorElementEventMap[K]>) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
     }
     var HTMLInstantAppsLanguageTranslatorElement: {
         prototype: HTMLInstantAppsLanguageTranslatorElement;
         new (): HTMLInstantAppsLanguageTranslatorElement;
     };
+    interface HTMLInstantAppsLanguageTranslatorItemElementEventMap {
+        "translatorItemDataUpdated": void;
+    }
     interface HTMLInstantAppsLanguageTranslatorItemElement extends Components.InstantAppsLanguageTranslatorItem, HTMLStencilElement {
+        addEventListener<K extends keyof HTMLInstantAppsLanguageTranslatorItemElementEventMap>(type: K, listener: (this: HTMLInstantAppsLanguageTranslatorItemElement, ev: InstantAppsLanguageTranslatorItemCustomEvent<HTMLInstantAppsLanguageTranslatorItemElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLInstantAppsLanguageTranslatorItemElementEventMap>(type: K, listener: (this: HTMLInstantAppsLanguageTranslatorItemElement, ev: InstantAppsLanguageTranslatorItemCustomEvent<HTMLInstantAppsLanguageTranslatorItemElementEventMap[K]>) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
     }
     var HTMLInstantAppsLanguageTranslatorItemElement: {
         prototype: HTMLInstantAppsLanguageTranslatorItemElement;
         new (): HTMLInstantAppsLanguageTranslatorItemElement;
     };
+    interface HTMLInstantAppsLanguageTranslatorSearchElementEventMap {
+        "suggestionSelected": string;
+    }
     interface HTMLInstantAppsLanguageTranslatorSearchElement extends Components.InstantAppsLanguageTranslatorSearch, HTMLStencilElement {
+        addEventListener<K extends keyof HTMLInstantAppsLanguageTranslatorSearchElementEventMap>(type: K, listener: (this: HTMLInstantAppsLanguageTranslatorSearchElement, ev: InstantAppsLanguageTranslatorSearchCustomEvent<HTMLInstantAppsLanguageTranslatorSearchElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLInstantAppsLanguageTranslatorSearchElementEventMap>(type: K, listener: (this: HTMLInstantAppsLanguageTranslatorSearchElement, ev: InstantAppsLanguageTranslatorSearchCustomEvent<HTMLInstantAppsLanguageTranslatorSearchElementEventMap[K]>) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
     }
     var HTMLInstantAppsLanguageTranslatorSearchElement: {
         prototype: HTMLInstantAppsLanguageTranslatorSearchElement;
         new (): HTMLInstantAppsLanguageTranslatorSearchElement;
     };
+    interface HTMLInstantAppsMeasurementElementEventMap {
+        "measureActive": boolean;
+    }
     interface HTMLInstantAppsMeasurementElement extends Components.InstantAppsMeasurement, HTMLStencilElement {
+        addEventListener<K extends keyof HTMLInstantAppsMeasurementElementEventMap>(type: K, listener: (this: HTMLInstantAppsMeasurementElement, ev: InstantAppsMeasurementCustomEvent<HTMLInstantAppsMeasurementElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLInstantAppsMeasurementElementEventMap>(type: K, listener: (this: HTMLInstantAppsMeasurementElement, ev: InstantAppsMeasurementCustomEvent<HTMLInstantAppsMeasurementElementEventMap[K]>) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
     }
     var HTMLInstantAppsMeasurementElement: {
         prototype: HTMLInstantAppsMeasurementElement;
@@ -860,7 +1008,18 @@ declare global {
         prototype: HTMLInstantAppsPopoversElement;
         new (): HTMLInstantAppsPopoversElement;
     };
+    interface HTMLInstantAppsScoreboardElementEventMap {
+        "scoreboardItemsUpdated": ScoreboardItem[];
+    }
     interface HTMLInstantAppsScoreboardElement extends Components.InstantAppsScoreboard, HTMLStencilElement {
+        addEventListener<K extends keyof HTMLInstantAppsScoreboardElementEventMap>(type: K, listener: (this: HTMLInstantAppsScoreboardElement, ev: InstantAppsScoreboardCustomEvent<HTMLInstantAppsScoreboardElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLInstantAppsScoreboardElementEventMap>(type: K, listener: (this: HTMLInstantAppsScoreboardElement, ev: InstantAppsScoreboardCustomEvent<HTMLInstantAppsScoreboardElementEventMap[K]>) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
     }
     var HTMLInstantAppsScoreboardElement: {
         prototype: HTMLInstantAppsScoreboardElement;
@@ -872,7 +1031,18 @@ declare global {
         prototype: HTMLInstantAppsSocialShareElement;
         new (): HTMLInstantAppsSocialShareElement;
     };
+    interface HTMLInstantAppsSplashElementEventMap {
+        "splashClose": void;
+    }
     interface HTMLInstantAppsSplashElement extends Components.InstantAppsSplash, HTMLStencilElement {
+        addEventListener<K extends keyof HTMLInstantAppsSplashElementEventMap>(type: K, listener: (this: HTMLInstantAppsSplashElement, ev: InstantAppsSplashCustomEvent<HTMLInstantAppsSplashElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLInstantAppsSplashElementEventMap>(type: K, listener: (this: HTMLInstantAppsSplashElement, ev: InstantAppsSplashCustomEvent<HTMLInstantAppsSplashElementEventMap[K]>) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
     }
     var HTMLInstantAppsSplashElement: {
         prototype: HTMLInstantAppsSplashElement;

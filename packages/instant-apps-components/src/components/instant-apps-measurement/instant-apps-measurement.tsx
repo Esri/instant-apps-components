@@ -95,7 +95,7 @@ export class InstantAppsMeasurement {
     return (
       <calcite-action-pad expand-disabled={true} layout="horizontal" position="end">
         <calcite-action
-          class={activeToolType === 'distance' ? 'active-tool' : null}
+          class={activeToolType === 'distance' ? 'active-tool' : ""}
           text={messages?.line}
           icon="measure"
           scale="m"
@@ -107,7 +107,7 @@ export class InstantAppsMeasurement {
           </calcite-tooltip>
         </calcite-action>
         <calcite-action
-          class={activeToolType === 'area' ? 'active-tool' : null}
+          class={activeToolType === 'area' ? 'active-tool' : ""}
           text={messages?.area}
           scale="m"
           icon="measure-area"
@@ -119,7 +119,7 @@ export class InstantAppsMeasurement {
           </calcite-tooltip>
         </calcite-action>
         <calcite-action
-          class={activeToolType === 'point' ? 'active-tool' : null}
+          class={activeToolType === 'point' ? 'active-tool' : ""}
           text={messages?.point}
           scale="m"
           icon="pin-plus"

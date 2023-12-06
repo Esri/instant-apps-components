@@ -197,14 +197,14 @@ export class InstantAppsLanguageTranslatorItem {
   renderExpandCollapseButton(): HTMLCalciteActionElement {
     const uiDataItem = this.getUIDataItem() as LocaleSettingItem;
     return (
-      <calcite-action onClick={this.handleExpand.bind(this, uiDataItem)} icon={uiDataItem?.expanded ? EIcons.Expanded : EIcons.Collapsed} scale="s" appearance="transparent" />
+      <calcite-action onClick={this.handleExpand.bind(this, uiDataItem)} icon={uiDataItem?.expanded ? EIcons.Expanded : EIcons.Collapsed} scale="s" appearance="transparent" text="" />
     );
   }
 
   renderPopover(uiDataItem: LocaleSettingItem): HTMLCalcitePopoverElement {
     const tip = this.getTip(uiDataItem);
     return (
-      <calcite-popover reference-element={`${this.fieldName}goTo`} auto-close="true" placement="trailing" closable>
+      <calcite-popover referenceElement={`${this.fieldName}goTo`} label="" auto-close="true" placement="trailing" closable>
         <span class={CSS.uiLocationPopoverContent}>
           <span class={CSS.uiLocationItems}>{this.getUILocation(uiDataItem)}</span>
           {tip ? <span class={CSS.tip}>{tip}</span> : null}
@@ -218,10 +218,11 @@ export class InstantAppsLanguageTranslatorItem {
     return (
       <calcite-action
         class={darkMode ? ECalciteMode.Dark : ECalciteMode.Light}
-        onclick={this.copySelection.bind(this, type)}
+        onClick={this.copySelection.bind(this, type)}
         slot="action"
         icon={EIcons.Copy}
         appearance="transparent"
+        text=""
       />
     );
   }

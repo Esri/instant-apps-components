@@ -114,7 +114,7 @@ export class InstantAppsSplash {
     return (
       <div class={CSS.back} slot="back">
         <calcite-label layout="inline">
-          <calcite-checkbox onCalciteCheckboxChange={this.handleDontShowThisAgain.bind(this)} checked={checked} />
+          <calcite-checkbox onCalciteCheckboxChange={this.handleDontShowThisAgain.bind(this)} checked={checked ?? undefined} />
           {messages?.dontShowThisAgain}
         </calcite-label>
       </div>
