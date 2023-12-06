@@ -5,6 +5,10 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## v1.0.0-beta.161
+
+- fix: iac react
+
 ## v1.0.0-beta.160
 
 - fix: use customElementsExportBehavior with autoDefineCustomElements in stencil.config.ts
