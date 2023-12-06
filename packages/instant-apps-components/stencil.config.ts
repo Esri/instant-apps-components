@@ -24,7 +24,8 @@ export const config: Config = {
     reactOutputTarget({
       componentCorePackage: '@esri/instant-apps-components',
       proxiesFile: '../instant-apps-components-react/src/components/stencil-generated/index.ts',
-      includeDefineCustomElements: true,
+      excludeComponents: ['context-consumer'],
+      customElementsDir: 'dist/components',
     }),
     {
       type: 'docs-readme',
