@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## v1.0.0-beta.160
 
 - fix: use customElementsExportBehavior with autoDefineCustomElements in stencil.config.ts
+- chore: update @stencil/store to 2.0.8
 
 ## v1.0.0-beta.159
 
