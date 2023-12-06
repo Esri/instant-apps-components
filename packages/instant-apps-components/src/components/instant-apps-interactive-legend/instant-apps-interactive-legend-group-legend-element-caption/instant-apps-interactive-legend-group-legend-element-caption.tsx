@@ -13,9 +13,9 @@ const CSS = {
   styleUrl: 'instant-apps-interactive-legend-group-legend-element-caption.scss',
   scoped: true,
 })
-export class InstantAppsInteractiveLegendLayerElementCaption {
+export class InstantAppsInteractiveLegendGroupLegendElementCaption {
   @Element()
-  el: HTMLInstantAppsInteractiveLegendLayerElementCaptionElement;
+  el: InstantAppsInteractiveLegendGroupLegendElementCaption;
 
   @Prop()
   legendvm: __esri.LegendViewModel;
@@ -56,7 +56,7 @@ export class InstantAppsInteractiveLegendLayerElementCaption {
 
     return (
       <header
-        class={`${CSS.interacitveLegendHeader} ${getTheme(this.el)}`}
+        class={`${CSS.interacitveLegendHeader} ${getTheme(this.el as any)}`}
         style={{
           borderLeft: '1px solid var(--calcite-color-border-3)',
         }}

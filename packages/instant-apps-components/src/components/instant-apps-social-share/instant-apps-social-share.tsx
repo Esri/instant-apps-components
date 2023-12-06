@@ -397,11 +397,11 @@ export class InstantAppsSocialShare {
         onClick={this.togglePopover.bind(this)}
         id="shareButton"
         class={CSS.popoverButton}
-        kind={this.shareButtonColor}
         appearance="transparent"
         label={this.messages?.share?.label}
         title={this.messages?.share?.label}
         scale={this.scale}
+        text=""
       >
         <div class={CSS.iconContainer}>
           <calcite-icon icon="share" scale={this.popoverButtonIconScale} />

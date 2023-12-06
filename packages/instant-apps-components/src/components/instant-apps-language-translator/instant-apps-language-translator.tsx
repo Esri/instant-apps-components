@@ -188,7 +188,7 @@ export class InstantAppsLanguageTranslator {
 
   renderPopoverTip(): HTMLCalcitePopoverElement {
     return (
-      <calcite-popover reference-element="headerTip" placement="trailing" auto-close={true} closable>
+      <calcite-popover label="" referenceElement="headerTip" placement="trailing" auto-close={true} closable>
         <div class={CSS.headerTip}>{this.messages?.headerTip}</div>
       </calcite-popover>
     );
@@ -298,7 +298,7 @@ export class InstantAppsLanguageTranslator {
     return (
       <calcite-label layout="inline">
         {this.messages?.translatedLanguage}
-        <calcite-select onCalciteSelectChange={this.handleLanguageSelection.bind(this)}>{this.renderTranslatedLangOptions()}</calcite-select>
+        <calcite-select label="" onCalciteSelectChange={this.handleLanguageSelection.bind(this)}>{this.renderTranslatedLangOptions()}</calcite-select>
       </calcite-label>
     );
   }

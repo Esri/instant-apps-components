@@ -132,7 +132,7 @@ export class InstantAppsLanguageSwitcher {
       <calcite-dropdown
         onCalciteDropdownBeforeOpen={() => (this.trigger.iconEnd = 'chevron-up')}
         onCalciteDropdownBeforeClose={() => (this.trigger.iconEnd = 'chevron-down')}
-        width="m"
+        width-scale="m"
       >
         {trigger}
         {defaultLocale}
@@ -146,7 +146,6 @@ export class InstantAppsLanguageSwitcher {
     return (
       <calcite-dropdown-item
         key={`default-${userLocale}`}
-        value={userLocale}
         onCalciteDropdownItemSelect={this.calciteDropdownItemSelectCallback(userLocale)}
         selected={this.selectedLanguage === this.userLocale}
       >
@@ -157,7 +156,7 @@ export class InstantAppsLanguageSwitcher {
 
   renderTrigger(): HTMLCalciteActionElement {
     return (
-      <calcite-button ref={node => (this.trigger = node)} slot="trigger" icon-start={this.icon} icon-end="chevron-down" width="full" appearance="outline">
+      <calcite-button ref={node => (this.trigger = node as HTMLCalciteButtonElement)} slot="trigger" icon-start={this.icon} icon-end="chevron-down" width="full" appearance="outline">
         {this.getSelectedLanguageText(this.selectedLanguage as string)}
       </calcite-button>
     );
@@ -174,7 +173,6 @@ export class InstantAppsLanguageSwitcher {
     return (
       <calcite-dropdown-item
         key={translatedLanguage}
-        value={translatedLanguage}
         selected={selected}
         onCalciteDropdownItemSelect={this.calciteDropdownItemSelectCallback(translatedLanguage)}
       >
