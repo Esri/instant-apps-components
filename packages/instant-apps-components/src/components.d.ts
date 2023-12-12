@@ -605,6 +605,10 @@ export namespace Components {
         "scale": 's' | 'm' | 'l';
         "shareButtonColor": 'inverse' | 'neutral';
         /**
+          * Adjust scale of popover button
+         */
+        "shareButtonScale": 's' | 'm' | 'l';
+        /**
           * Renders tool in popover mode with a trigger button or action
          */
         "shareButtonType": 'button' | 'action';
@@ -1702,6 +1706,10 @@ declare namespace LocalJSX {
          */
         "scale"?: 's' | 'm' | 'l';
         "shareButtonColor"?: 'inverse' | 'neutral';
+        /**
+          * Adjust scale of popover button
+         */
+        "shareButtonScale"?: 's' | 'm' | 'l';
         /**
           * Renders tool in popover mode with a trigger button or action
          */

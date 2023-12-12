@@ -91,7 +91,7 @@ export class InstantAppsSocialShare {
   copyEmbedPopoverRef: HTMLCalcitePopoverElement;
   dialogContentRef: HTMLDivElement | undefined;
   shareListRef: HTMLUListElement | undefined;
-  popoverButtonRef: HTMLCalciteButtonElement | HTMLCalciteActionElement |undefined;
+  popoverButtonRef: HTMLCalciteButtonElement | HTMLCalciteActionElement | undefined;
 
   // PUBLIC PROPERTIES
 
@@ -141,6 +141,14 @@ export class InstantAppsSocialShare {
     reflect: true,
   })
   shareButtonType: 'button' | 'action' = 'button';
+
+  /**
+   * Adjust scale of popover button
+   */
+  @Prop({
+    reflect: true,
+  })
+  shareButtonScale: 's' | 'm' | 'l';
 
   /**
    * Text to nest in embed iframe code.
@@ -347,7 +355,7 @@ export class InstantAppsSocialShare {
               >
                 {dialogContent}
               </calcite-popover>,
-              (this.renderButton()),
+              this.renderButton(),
             ]
           : [
               dialogContent,
@@ -375,7 +383,8 @@ export class InstantAppsSocialShare {
   }
 
   renderButton() {
-    return this.shareButtonType === "button" ? (
+    const scale = this.shareButtonScale != null ? this.shareButtonScale : this.scale;
+    return this.shareButtonType === 'button' ? (
       <calcite-button
         ref={el => (this.popoverButtonRef = el)}
         onClick={this.togglePopover.bind(this)}
@@ -385,7 +394,7 @@ export class InstantAppsSocialShare {
         appearance="transparent"
         label={this.messages?.share?.label}
         title={this.messages?.share?.label}
-        scale={this.scale}
+        scale={scale}
       >
         <div class={CSS.iconContainer}>
           <calcite-icon icon="share" scale={this.popoverButtonIconScale} />
@@ -400,7 +409,7 @@ export class InstantAppsSocialShare {
         appearance="transparent"
         label={this.messages?.share?.label}
         title={this.messages?.share?.label}
-        scale={this.scale}
+        scale={scale}
         text=""
       >
         <div class={CSS.iconContainer}>
