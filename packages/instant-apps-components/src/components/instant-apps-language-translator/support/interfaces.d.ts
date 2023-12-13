@@ -6,9 +6,11 @@ interface AppSettings {
 interface LocaleSettingData {
   id: string;
   type: SettingType;
+  stringType: StringType;
   label: string;
   value: string;
   uiLocation?: any;
+  content?: LocaleSettingData[];
 }
 
 interface TranslatedLanguageLabels {
@@ -52,3 +54,4 @@ export interface LanguageTranslatorSearchResult extends LocaleSettingItem {
 
 export type InputType = 'user' | 'translation';
 export type SettingType = 'string' | 'textEditor' | 'textarea';
+export type StringType = 'title' | 'subtitle' | 'text' | 'description' | 'button' | 'string';

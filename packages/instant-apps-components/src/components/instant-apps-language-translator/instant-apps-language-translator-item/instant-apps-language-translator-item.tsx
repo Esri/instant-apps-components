@@ -3,7 +3,7 @@ import { Component, Element, Event, EventEmitter, Host, Prop, h } from '@stencil
 import { getT9nData, getUIDataKeys, isCalciteModeDark } from '../support/utils';
 import { languageTranslatorState, store } from '../support/store';
 import { EInputType, ESettingType, EIcons, ECalciteMode } from '../support/enum';
-import { LocaleSettingItem, InputType, SettingType } from '../support/interfaces';
+import { LocaleSettingItem, InputType, LocaleSettingData } from '../support/interfaces';
 import { IClassicEditor } from '../../../interfaces/interfaces';
 
 const BASE = 'instant-apps-language-translator-item';
@@ -21,6 +21,7 @@ const CSS = {
   infoIcon: `${BASE}__info-icon`,
   infoButton: `${BASE}__info-button`,
   tip: `${BASE}__tip`,
+  nestedInput: `${BASE}__nested-input`,
 };
 
 @Component({
@@ -50,11 +51,8 @@ export class InstantAppsLanguageTranslatorItem {
   @Prop()
   translatedLanguageLabel: string;
 
-  /**
-   * Determines whether to use a regular input or text editor
-   */
   @Prop()
-  type: SettingType;
+  setting: LocaleSettingData;
 
   /**
    * Function to be called when the value in a user locale input has changed. This function will have 2 arguments - fieldName and value - and will return a promise.
@@ -79,7 +77,7 @@ export class InstantAppsLanguageTranslatorItem {
   }
 
   init(): void {
-    if (this.type === ESettingType.TextEditor) store.onChange('uiData', () => this.handleEditorCollapse());
+    if (this.setting.type === ESettingType.TextEditor) store.onChange('uiData', () => this.handleEditorCollapse());
   }
 
   render() {
@@ -110,9 +108,26 @@ export class InstantAppsLanguageTranslatorItem {
     return (
       <div class={`${CSS.section}${selected}`}>
         {this.renderItemHeader(EInputType.User, label)}
-        {uiDataItem?.expanded ? this.renderInput(value, EInputType.User) : null}
+        {uiDataItem?.expanded ? (this.setting.hasOwnProperty('content') ? this.renderNestedInputs(EInputType.User) : this.renderInput(value, EInputType.User)) : null}
       </div>
     );
+  }
+
+  renderNestedInputs(inputType: InputType, contentItem?: LocaleSettingData) {
+    const settingToRender = contentItem ?? this.setting;
+    const content = settingToRender.content?.map(contentItem => {
+      if (contentItem.hasOwnProperty('content')) {
+        return this.renderNestedInputs(inputType, contentItem);
+      } else {
+        return (
+          <div class={CSS.nestedInput}>
+            {this.renderItemHeader(inputType, contentItem.label, contentItem)}
+            {this.renderInput(contentItem.value, inputType, contentItem)}
+          </div>
+        );
+      }
+    });
+    return content;
   }
 
   renderTranslatedLanguageSection(): HTMLDivElement {
@@ -123,14 +138,15 @@ export class InstantAppsLanguageTranslatorItem {
     const value = data?.[locale]?.[this.fieldName];
     return (
       <div class={`${CSS.section}${isSelected ? ` ${CSS.selected}` : ''}`}>
-        {this.renderItemHeader(EInputType.Translation, this.translatedLanguageLabel)}
-        {uiDataItem?.expanded ? this.renderInput(value, EInputType.Translation) : null}
+        {this.renderItemHeader(EInputType.Translation, this.translatedLanguageLabel ?? uiDataItem?.userLocaleData?.label)}
+        {uiDataItem?.expanded ? (this.setting.hasOwnProperty('content') ? this.renderNestedInputs(EInputType.Translation) : this.renderInput(value, EInputType.Translation)) : null}
       </div>
     );
   }
 
-  renderInput(value: string, type: InputType): HTMLElement {
-    return this.type === 'string' || this.type === 'textarea'
+  renderInput(value: string, type: InputType, contentItem?: LocaleSettingData): HTMLElement {
+    const setting = contentItem ?? this.setting;
+    return setting.type === 'string' || setting.type === 'textarea'
       ? type === EInputType.User
         ? this.renderUserLocaleInput(value)
         : this.renderTranslatedLanguageInput(value)
@@ -176,20 +192,20 @@ export class InstantAppsLanguageTranslatorItem {
     );
   }
 
-  renderItemHeader(type: InputType, label: string): HTMLDivElement {
+  renderItemHeader(type: InputType, label: string, contentItem?: LocaleSettingData): HTMLDivElement {
     return (
       <div class={CSS.topRow}>
         <div class={CSS.labelContainer}>
-          {this.renderExpandCollapseButton()}
-          <calcite-icon icon={EIcons.SettingIndicator} scale="s" />
-          <span class={CSS.label}>{type === EInputType.Translation ? this.translatedLanguageLabel : label}</span>
-          {type === EInputType.User ? (
+          {!contentItem ? this.renderExpandCollapseButton() : null}
+          <calcite-icon icon={contentItem ? this.getIcon(contentItem) : this.getIcon()} scale="s" />
+          <span class={CSS.label}>{label}</span>
+          {type === EInputType.User && !contentItem ? (
             <button id={`${this.fieldName}goTo`} class={CSS.infoButton}>
               <calcite-icon class={CSS.infoIcon} icon={EIcons.Popover} scale="s" />
             </button>
           ) : null}
         </div>
-        {this.renderCopyButton(type)}
+        {!this.setting.hasOwnProperty('content') ? this.renderCopyButton(type) : null}
       </div>
     );
   }
@@ -197,7 +213,13 @@ export class InstantAppsLanguageTranslatorItem {
   renderExpandCollapseButton(): HTMLCalciteActionElement {
     const uiDataItem = this.getUIDataItem() as LocaleSettingItem;
     return (
-      <calcite-action onClick={this.handleExpand.bind(this, uiDataItem)} icon={uiDataItem?.expanded ? EIcons.Expanded : EIcons.Collapsed} scale="s" appearance="transparent" text="" />
+      <calcite-action
+        onClick={this.handleExpand.bind(this, uiDataItem)}
+        icon={uiDataItem?.expanded ? EIcons.Expanded : EIcons.Collapsed}
+        scale="s"
+        appearance="transparent"
+        text=""
+      />
     );
   }
 
@@ -297,7 +319,7 @@ export class InstantAppsLanguageTranslatorItem {
   }
 
   copySelection(type: InputType): void {
-    if (this.type === ESettingType.TextEditor) {
+    if (this.setting.type === ESettingType.TextEditor) {
       this.copyTextEditorContent(type);
     } else {
       this.copyCalciteInputContent(type);
@@ -428,5 +450,25 @@ export class InstantAppsLanguageTranslatorItem {
     const locale = store.get('currentLanguage') as string;
     const resource = store.get('portalItemResource') as __esri.PortalItemResource;
     return { fieldName, locale, resource };
+  }
+
+  getIcon(setting?: LocaleSettingData) {
+    const settingToUse = setting ?? this.setting;
+    switch (settingToUse.stringType) {
+      case 'title':
+        return EIcons.Title;
+      case 'subtitle':
+        return EIcons.Subtitle;
+      case 'text':
+        return EIcons.Text;
+      case 'description':
+        return EIcons.Description;
+      case 'button':
+        return EIcons.Button;
+      case 'string':
+        return EIcons.String;
+      default:
+        return EIcons.SettingIndicator;
+    }
   }
 }

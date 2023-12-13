@@ -17,6 +17,12 @@ export enum EIcons {
   Copy = 'copy-to-clipboard',
   Breadcrumb = 'chevron-right',
   DefaultIcon = 'language',
+  Title = 'title',
+  Subtitle = 'subheading',
+  Text = 'text',
+  Description = 'description',
+  Button = 'button',
+  String = 'string',
 }
 
 export enum ECalciteMode {
