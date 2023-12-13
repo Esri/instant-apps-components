@@ -455,6 +455,9 @@ export namespace Components {
           * Unique identifier tied to an associated setting in an app.
          */
         "fieldName": string;
+        /**
+          * Object containing data that describes the UI i.e. icon to indicate type of setting, label, value, etc.
+         */
         "setting": LocaleSettingData;
         /**
           * Label of item in currently selected language.
@@ -1545,6 +1548,9 @@ declare namespace LocalJSX {
           * Fires when a translation input's value has changed.
          */
         "onTranslatorItemDataUpdated"?: (event: InstantAppsLanguageTranslatorItemCustomEvent<void>) => void;
+        /**
+          * Object containing data that describes the UI i.e. icon to indicate type of setting, label, value, etc.
+         */
         "setting"?: LocaleSettingData;
         /**
           * Label of item in currently selected language.
