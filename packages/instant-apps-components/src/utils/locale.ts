@@ -42,7 +42,7 @@ function fetchLocaleStringsForComponent<T extends StringBundle = StringBundle>(c
 
 export function getDefaultLanguage(intl: __esri.intl, portal: __esri.Portal): string {
   // User profile - locale set in user profile
-  const userProfileLocale: string = portal?.get('user.culture');
+  const userProfileLocale: string = portal?.user?.culture;
   // Browser - window.navigator.language
   const browserLocale: string = window?.navigator?.language;
   // ArcGIS JS API - locale currently set in JS api

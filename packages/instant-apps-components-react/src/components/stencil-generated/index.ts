@@ -5,9 +5,8 @@ import { createReactComponent } from './react-component-lib';
 
 import type { JSX } from '@esri/instant-apps-components';
 
-import { defineCustomElements } from '@esri/instant-apps-components/loader';
 
-defineCustomElements();
+
 export const InstantAppsCkeditorWrapper = /*@__PURE__*/createReactComponent<JSX.InstantAppsCkeditorWrapper, HTMLInstantAppsCkeditorWrapperElement>('instant-apps-ckeditor-wrapper');
 export const InstantAppsControlPanel = /*@__PURE__*/createReactComponent<JSX.InstantAppsControlPanel, HTMLInstantAppsControlPanelElement>('instant-apps-control-panel');
 export const InstantAppsExport = /*@__PURE__*/createReactComponent<JSX.InstantAppsExport, HTMLInstantAppsExportElement>('instant-apps-export');
