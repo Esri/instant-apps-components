@@ -47,6 +47,9 @@ export class InstantAppsLanguageTranslatorItem {
   @Prop()
   translatedLanguageLabel: string;
 
+  /**
+   * Object containing data that describes the UI i.e. icon to indicate type of setting, label, value, etc.
+   */
   @Prop()
   setting: LocaleSettingData;
 
@@ -105,7 +108,7 @@ export class InstantAppsLanguageTranslatorItem {
     return (
       <div class={`${CSS.section}${selected}`}>
         {this.renderItemHeader(EInputType.User, label, uid)}
-        {uiDataItem?.expanded ? (this.setting.hasOwnProperty('content') ? this.renderNestedInputs(EInputType.User) : this.renderInput(value, EInputType.User, uid)) : null}
+        {this.handleInputRender(uiDataItem, value, uid, EInputType.User)}
       </div>
     );
   }
@@ -117,16 +120,20 @@ export class InstantAppsLanguageTranslatorItem {
     const data = store.get('portalItemResourceT9n');
     const value = data?.[locale]?.[this.fieldName];
     const uid = this.setting.id;
+    const label = this.translatedLanguageLabel ?? uiDataItem?.userLocaleData?.label;
+    const selected = isSelected ? ` ${CSS.selected}` : '';
     return (
-      <div class={`${CSS.section}${isSelected ? ` ${CSS.selected}` : ''}`}>
-        {this.renderItemHeader(EInputType.Translation, this.translatedLanguageLabel ?? uiDataItem?.userLocaleData?.label, uid)}
-        {uiDataItem?.expanded
-          ? this.setting.hasOwnProperty('content')
-            ? this.renderNestedInputs(EInputType.Translation)
-            : this.renderInput(value, EInputType.Translation, uid)
-          : null}
+      <div class={`${CSS.section}${selected}`}>
+        {this.renderItemHeader(EInputType.Translation, label, uid)}
+        {this.handleInputRender(uiDataItem, value, uid, EInputType.Translation)}
       </div>
     );
+  }
+
+  handleInputRender(uiDataItem: LocaleSettingItem, value: string, uid: string, type: InputType) {
+    const isExpanded = uiDataItem?.expanded;
+    const hasNestedContent = this.setting.hasOwnProperty('content');
+    return isExpanded ? (hasNestedContent ? this.renderNestedInputs(type) : this.renderInput(value, type, uid)) : null;
   }
 
   renderNestedInputs(inputType: InputType, contentItem?: LocaleSettingData) {
@@ -137,12 +144,13 @@ export class InstantAppsLanguageTranslatorItem {
       } else {
         const locale = store.get('currentLanguage') as string;
         const data = store.get('portalItemResourceT9n');
-        const value = data?.[locale]?.[this.fieldName];
         const uid = contentItem?.id;
+        const translatedValue = data?.[locale]?.[uid];
+        const value = inputType === EInputType.User ? contentItem.value : translatedValue;
         return (
           <div class={CSS.nestedInput}>
             {this.renderItemHeader(inputType, contentItem.label, uid, contentItem)}
-            {this.renderInput(inputType === EInputType.User ? contentItem.value : value, inputType, uid, contentItem)}
+            {this.renderInput(value, inputType, uid, contentItem)}
           </div>
         );
       }
@@ -281,7 +289,6 @@ export class InstantAppsLanguageTranslatorItem {
     uiDataItem.expanded = !uiDataItem.expanded;
     const uiData = new Map(languageTranslatorState.uiData);
     uiData.set(this.fieldName, uiDataItem);
-
     store.set('uiData', uiData);
   }
 
@@ -402,7 +409,7 @@ export class InstantAppsLanguageTranslatorItem {
       const value = node.value;
       const uiDataItem = this.getUIDataItem() as LocaleSettingItem;
       uiDataItem.userLocaleData.value = value;
-      await this.userLocaleInputOnChangeCallback(this.fieldName, value);
+      await this.userLocaleInputOnChangeCallback(node.id, value);
       store.set('saving', false);
     } catch {
       store.set('saving', false);
@@ -428,10 +435,10 @@ export class InstantAppsLanguageTranslatorItem {
     try {
       const composedPath = e.composedPath();
       const node = composedPath[0] as HTMLCalciteInputElement;
-      this.updateT9nStore(this.fieldName, node.value);
-      const { fieldName, locale, resource } = this.getTranslatedLocaleCallbackData();
+      this.updateT9nStore(node.id, node.value);
+      const { locale, resource } = this.getTranslatedLocaleCallbackData();
       const value = (e.target as HTMLCalciteInputElement).value;
-      await this.translatedLocaleInputOnChangeCallback(fieldName, value, locale, resource);
+      await this.translatedLocaleInputOnChangeCallback(node.id, value, locale, resource);
       setTimeout(() => store.set('saving', false), 1500);
       this.translatorItemDataUpdated.emit();
     } catch (err) {
