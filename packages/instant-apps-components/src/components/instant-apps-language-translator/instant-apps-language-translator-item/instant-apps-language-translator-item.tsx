@@ -1,11 +1,10 @@
-import { Component, Element, Event, EventEmitter, Host, Prop, h } from '@stencil/core';
+import { Component, Event, EventEmitter, Host, Prop, h } from '@stencil/core';
 
 import { getT9nData, getUIDataKeys, isCalciteModeDark } from '../support/utils';
 import { languageTranslatorState, store } from '../support/store';
 import { EInputType, ESettingType, EIcons, ECalciteMode } from '../support/enum';
-import { LocaleSettingItem, InputType, LocaleSettingData } from '../support/interfaces';
+import { LocaleSettingItem, InputType, LocaleSettingData, CalciteInputMap } from '../support/interfaces';
 import { IClassicEditor } from '../../../interfaces/interfaces';
-import { uniqueId } from 'lodash-es';
 
 const BASE = 'instant-apps-language-translator-item';
 
@@ -31,14 +30,10 @@ const CSS = {
   scoped: true,
 })
 export class InstantAppsLanguageTranslatorItem {
-  userLocaleInput: HTMLCalciteInputElement;
+  userInputs: CalciteInputMap = {};
+  translatedInputs: CalciteInputMap = {};
   userEditorWrapper: HTMLInstantAppsCkeditorWrapperElement;
-
-  translatedLangInput: HTMLCalciteInputElement;
   translatedEditorWrapper: HTMLInstantAppsCkeditorWrapperElement;
-
-  @Element()
-  el: HTMLInstantAppsLanguageTranslatorElement;
 
   /**
    * Unique identifier tied to an associated setting in an app.
@@ -106,7 +101,7 @@ export class InstantAppsLanguageTranslatorItem {
     const value = userLocaleData?.value;
     const isSelected = uiDataItem?.selected;
     const selected = isSelected ? ` ${CSS.selected}` : '';
-    const uid = uniqueId(`${this.setting.id}-${EInputType.User}-`);
+    const uid = this.setting.id;
     return (
       <div class={`${CSS.section}${selected}`}>
         {this.renderItemHeader(EInputType.User, label, uid)}
@@ -115,31 +110,13 @@ export class InstantAppsLanguageTranslatorItem {
     );
   }
 
-  renderNestedInputs(inputType: InputType, contentItem?: LocaleSettingData) {
-    const settingToRender = contentItem ?? this.setting;
-    const content = settingToRender.content?.map(contentItem => {
-      if (contentItem.hasOwnProperty('content')) {
-        return this.renderNestedInputs(inputType, contentItem);
-      } else {
-        const uid = uniqueId(`${this.setting.id}${contentItem?.id ? `-${contentItem.id}` : ''}-${inputType}`);
-        return (
-          <div class={CSS.nestedInput}>
-            {this.renderItemHeader(inputType, contentItem.label, uid, contentItem)}
-            {this.renderInput(contentItem.value, inputType, uid, contentItem)}
-          </div>
-        );
-      }
-    });
-    return content;
-  }
-
   renderTranslatedLanguageSection(): HTMLDivElement {
     const uiDataItem = this.getUIDataItem() as LocaleSettingItem;
     const isSelected = uiDataItem?.selected;
     const locale = store.get('currentLanguage') as string;
     const data = store.get('portalItemResourceT9n');
     const value = data?.[locale]?.[this.fieldName];
-    const uid = uniqueId(`${this.setting.id}-${EInputType.Translation}-`);
+    const uid = this.setting.id;
     return (
       <div class={`${CSS.section}${isSelected ? ` ${CSS.selected}` : ''}`}>
         {this.renderItemHeader(EInputType.Translation, this.translatedLanguageLabel ?? uiDataItem?.userLocaleData?.label, uid)}
@@ -150,6 +127,27 @@ export class InstantAppsLanguageTranslatorItem {
           : null}
       </div>
     );
+  }
+
+  renderNestedInputs(inputType: InputType, contentItem?: LocaleSettingData) {
+    const settingToRender = contentItem ?? this.setting;
+    const content = settingToRender.content?.map(contentItem => {
+      if (contentItem.hasOwnProperty('content')) {
+        return this.renderNestedInputs(inputType, contentItem);
+      } else {
+        const locale = store.get('currentLanguage') as string;
+        const data = store.get('portalItemResourceT9n');
+        const value = data?.[locale]?.[this.fieldName];
+        const uid = contentItem?.id;
+        return (
+          <div class={CSS.nestedInput}>
+            {this.renderItemHeader(inputType, contentItem.label, uid, contentItem)}
+            {this.renderInput(inputType === EInputType.User ? contentItem.value : value, inputType, uid, contentItem)}
+          </div>
+        );
+      }
+    });
+    return content;
   }
 
   renderInput(value: string, type: InputType, uid: string, contentItem?: LocaleSettingData): HTMLElement {
@@ -164,9 +162,12 @@ export class InstantAppsLanguageTranslatorItem {
   renderUserLocaleInput(value: string, uid: string): HTMLCalciteInputElement {
     return (
       <calcite-input
+        key={uid}
         id={uid}
         class={ECalciteMode.Light}
-        ref={(node: HTMLCalciteInputElement) => (this.userLocaleInput = node)}
+        ref={(node: HTMLCalciteInputElement) => {
+          this.userInputs[uid] = node;
+        }}
         data-field-name={this.fieldName}
         value={value}
         onFocus={this.handleSelection}
@@ -178,9 +179,12 @@ export class InstantAppsLanguageTranslatorItem {
   renderTranslatedLanguageInput(value: string, uid: string): HTMLCalciteInputElement {
     return (
       <calcite-input
+        key={uid}
         id={uid}
         class={ECalciteMode.Light}
-        ref={(node: HTMLCalciteInputElement) => (this.translatedLangInput = node)}
+        ref={(node: HTMLCalciteInputElement) => {
+          this.translatedInputs[uid] = node;
+        }}
         data-field-name={this.fieldName}
         onFocus={this.handleSelection}
         onCalciteInputChange={this.handleTranslatedInputChange.bind(this)}
@@ -334,7 +338,7 @@ export class InstantAppsLanguageTranslatorItem {
     if (this.setting.type === ESettingType.TextEditor) {
       this.copyTextEditorContent(type);
     } else {
-      this.copyCalciteInputContent(uid);
+      this.copyCalciteInputContent(uid, type);
     }
   }
 
@@ -371,11 +375,13 @@ export class InstantAppsLanguageTranslatorItem {
     document.body.removeChild(tempElement);
   }
 
-  copyCalciteInputContent(uid: string): void {
-    const input = this.el.querySelector(`#${uid}`) as any;
-    input.selectText();
-    const value = input.value;
-    navigator.clipboard.writeText(value);
+  copyCalciteInputContent(uid: string, inputType: InputType): void {
+    const input = inputType === EInputType.User ? this.userInputs[uid] : this.translatedInputs[uid];
+    if (input) {
+      input.selectText();
+      const value = input.value;
+      navigator.clipboard.writeText(value);
+    }
   }
 
   setEditor(type: InputType, node: HTMLInstantAppsCkeditorWrapperElement) {
