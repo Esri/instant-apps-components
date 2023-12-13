@@ -160,7 +160,7 @@
                   type: 'textEditor',
                   stringType: 'text',
                   label: 'Introduction window content',
-                  value: 'Content',
+                  value: '<p>Content</p>',
                   uiLocation: {
                     section: {
                       id: 'about',
@@ -209,6 +209,46 @@
                   tip: 'Add a description to provide a text equivalent of your map and its content for app viewers with vision impairment.',
                 },
                 {
+                  id: 'filterConfig',
+                  label: 'Attribute filter',
+                  uiLocation: {
+                    section: {
+                      id: 'interactivity',
+                      label: 'Interactivity',
+                    },
+                    subsection: {
+                      id: 'filter',
+                      label: 'Attribute filter',
+                    },
+                  },
+                  content: [
+                    {
+                      id: 'layerExpressions',
+                      content: [
+                        {
+                          label: 'Global Power Plants',
+                          content: [
+                            {
+                              id: 'filterConfig.expressions.name-1b91d97372a',
+                              type: 'string',
+                              stringType: 'title',
+                              label: "Name for 'Global power plants'",
+                              value: 'Global power plants',
+                            },
+                            {
+                              id: 'filterConfig.expressions.name-b91d97372a1',
+                              type: 'string',
+                              stringType: 'title',
+                              label: "Name for 'Global power plants 2'",
+                              value: 'Global power plants 2',
+                            },
+                          ],
+                        },
+                      ],
+                    },
+                  ],
+                },
+                {
                   id: 'searchConfiguration',
                   label: 'Search configuration',
                   uiLocation: {
@@ -236,14 +276,14 @@
                           label: 'ArcGIS World Geocoding Service',
                           content: [
                             {
-                              id: 'name',
+                              id: 'searchConfiguration.sources.name-91d97372a1e',
                               type: 'string',
                               stringType: 'title',
                               label: "Name for 'ArcGIS World Geocoding Service'",
                               value: 'ArcGIS World Geocoding Service',
                             },
                             {
-                              id: 'placeholder',
+                              id: 'searchConfiguration.sources.placeholder-91d97372a1e',
                               type: 'string',
                               stringType: 'string',
                               label: "Placeholder for 'ArcGIS World Geocoding Service'",
@@ -255,14 +295,14 @@
                           label: 'Sample Server 6 San Diego Locator ',
                           content: [
                             {
-                              id: 'name',
+                              id: 'searchConfiguration.sources.name-1d97372a1ef',
                               type: 'string',
                               stringType: 'title',
                               label: "Name for 'Sample Server 6 San Diego Locator '",
                               value: 'Sample Server 6 San Diego Locator ',
                             },
                             {
-                              id: 'placeholder',
+                              id: 'searchConfiguration.sources.placeholder-1d97372a1ef',
                               type: 'string',
                               stringType: 'string',
                               label: "Placeholder for 'Sample Server 6 San Diego Locator '",
@@ -282,14 +322,27 @@
                   splashContent: 'Inhalt des Einführungsfensters',
                   splashButtonText: 'Text für Einführungsfenster-Schaltfläche',
                   mapA11yDesc: 'Alternativtext für Karte',
+                  filterConfig: 'Attributfilter',
                   searchConfiguration: 'Suchkonfiguration',
+                },
+                cs: {
+                  title: 'Název aplikace',
+                  splashTitle: 'Název úvodního okna',
+                  splashContent: 'Obsah úvodního okna',
+                  splashButtonText: 'Text tlačítka úvodního okna',
+                  mapA11yDesc: 'Alternativní text pro mapu',
+                  filterConfig: 'Atributový filtr',
+                  searchConfiguration: 'Konfigurace vyhledávání',
                 },
               },
             },
             langSwitcherConfigData: {
               locales: [
                 {
-                  locale: 'bg',
+                  locale: 'de',
+                },
+                {
+                  locale: 'cs',
                 },
               ],
               icon: 'language-translate',

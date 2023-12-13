@@ -52,6 +52,10 @@ export interface LanguageTranslatorSearchResult extends LocaleSettingItem {
   fieldName: string;
 }
 
+export interface CalciteInputMap {
+  [id: string]: HTMLCalciteInputElement;
+}
+
 export type InputType = 'user' | 'translation';
 export type SettingType = 'string' | 'textEditor' | 'textarea';
 export type StringType = 'title' | 'subtitle' | 'text' | 'description' | 'button' | 'string';
