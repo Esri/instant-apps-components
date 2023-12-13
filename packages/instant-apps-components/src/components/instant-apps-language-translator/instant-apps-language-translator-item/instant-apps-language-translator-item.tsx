@@ -512,8 +512,6 @@ export class InstantAppsLanguageTranslatorItem {
         return EIcons.Subtitle;
       case 'text':
         return EIcons.Text;
-      case 'description':
-        return EIcons.Description;
       case 'button':
         return EIcons.Button;
       case 'string':
