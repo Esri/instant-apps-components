@@ -65,12 +65,26 @@ export async function getLocaleComponentStrings<T extends StringBundle = StringB
   return [strings, componentLanguage];
 }
 
-export async function getMessages(component) {
+export async function getMessages(component: any, messageOverrides?: unknown) {
   const messages = await getLocaleComponentStrings(component.el);
-  component.messages = messages[0];
+  updateMessages(component, messages, messageOverrides);
   const [intl] = await loadModules(['esri/intl']);
-  (intl as __esri.intl).onLocaleChange(async locale => {
+  (intl as __esri.intl).onLocaleChange(handleOnLocaleChange(component, messageOverrides));
+}
+
+function updateMessages(component, messages: unknown[], messageOverrides: unknown) {
+  component.messages = messages[0];
+  if (messageOverrides) {
+    component.messages = {
+      ...component.messages,
+      ...messageOverrides,
+    };
+  }
+}
+
+function handleOnLocaleChange(component, messageOverrides: unknown) {
+  return async (locale: string) => {
     const messages = await getLocaleComponentStrings(component.el, locale);
-    component.messages = messages[0];
-  });
+    updateMessages(component, messages, messageOverrides);
+  };
 }
