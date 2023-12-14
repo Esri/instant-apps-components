@@ -71,10 +71,6 @@ export class InstantAppsLanguageTranslatorItem {
   @Event()
   translatorItemDataUpdated: EventEmitter<void>;
 
-  componentDidLoad() {
-    this.init();
-  }
-
   get isTextEditor() {
     return this.setting.type === ESettingType.TextEditor;
   }
@@ -84,11 +80,17 @@ export class InstantAppsLanguageTranslatorItem {
   }
 
   get hasNestedContent() {
-    return this.setting.hasOwnProperty('content');
+    return !!this.setting?.content;
   }
 
-  init(): void {
-    if (this.isTextEditor) store.onChange('uiData', () => this.handleEditorCollapse());
+  get tipID() {
+    return `${this.fieldName}goTo`;
+  }
+
+  componentDidLoad() {
+    if (this.isTextEditor) {
+      store.onChange('uiData', () => this.handleEditorCollapse());
+    }
   }
 
   render() {
@@ -109,21 +111,33 @@ export class InstantAppsLanguageTranslatorItem {
     );
   }
 
+  renderPopover(): HTMLCalcitePopoverElement {
+    const tip = this.getTip();
+    return (
+      <calcite-popover referenceElement={this.tipID} label="" auto-close="true" placement="trailing" closable>
+        <span class={CSS.uiLocationPopoverContent}>
+          <span class={CSS.uiLocationItems}>{this.getUILocation()}</span>
+          {tip ? <span class={CSS.tip}>{tip}</span> : null}
+        </span>
+      </calcite-popover>
+    );
+  }
+
   renderUserLocaleSection(): HTMLDivElement {
     const uiDataItem = this.getUIDataItem() as LocaleSettingItem;
     const userLocaleData = uiDataItem?.userLocaleData;
+
     const isSelected = uiDataItem?.selected;
+    const selected = isSelected ? ` ${CSS.selected}` : '';
 
     const label = userLocaleData?.label;
     const value = userLocaleData?.value;
-
-    const selected = isSelected ? ` ${CSS.selected}` : '';
 
     const uid = this.setting.id;
     return (
       <div class={`${CSS.section}${selected}`}>
         {this.renderItemHeader(EInputType.User, label, uid)}
-        {this.handleInputRender(value, uid, EInputType.User)}
+        {this.handleInputRender(EInputType.User, value, uid)}
       </div>
     );
   }
@@ -137,18 +151,18 @@ export class InstantAppsLanguageTranslatorItem {
     const data = store.get('portalItemResourceT9n');
 
     const label = this.translatedLanguageLabel ?? uiDataItem?.userLocaleData?.label;
-    const value = data?.[locale]?.[uid];
+    const value = data?.[locale]?.[uid] as string;
 
     const selected = uiDataItem?.selected ? ` ${CSS.selected}` : '';
     return (
       <div class={`${CSS.section}${selected}`}>
         {this.renderItemHeader(EInputType.Translation, label, uid)}
-        {this.handleInputRender(value, uid, EInputType.Translation)}
+        {this.handleInputRender(EInputType.Translation, value, uid)}
       </div>
     );
   }
 
-  handleInputRender(value: string, uid: string, type: InputType) {
+  handleInputRender(type: InputType, value: string, uid: string) {
     const uiDataItem = this.getUIDataItem() as LocaleSettingItem;
     const isExpanded = uiDataItem?.expanded;
     return isExpanded ? (this.hasNestedContent ? this.renderNestedInputs(type) : this.renderInput(type, value, uid)) : null;
@@ -175,6 +189,49 @@ export class InstantAppsLanguageTranslatorItem {
         {this.renderInput(inputType, inputValue, uid, contentItem)}
       </div>
     );
+  }
+
+  renderItemHeader(type: InputType, label: string, uid: string, contentItem?: LocaleSettingData): HTMLDivElement {
+    const doesNotHaveNestedContent = !this.hasNestedContent;
+    const isNestedItem = !!contentItem;
+    const showCopyButton = doesNotHaveNestedContent || isNestedItem;
+    return (
+      <div class={CSS.topRow}>
+        {this.renderItemHeaderLabel(type, label, contentItem)}
+        {showCopyButton ? this.renderCopyButton(type, uid) : null}
+      </div>
+    );
+  }
+
+  renderItemHeaderLabel(type: InputType, label: string, contentItem: LocaleSettingData | undefined) {
+    const isUserSectionWithNoNestedContent = type === EInputType.User && !contentItem;
+    return (
+      <div class={CSS.labelContainer}>
+        {!contentItem ? this.renderExpandCollapseButton() : null}
+        <calcite-icon icon={this.getIcon(contentItem)} scale="s" />
+        <span class={CSS.label}>{label}</span>
+        {isUserSectionWithNoNestedContent ? this.renderInfoButton() : null}
+      </div>
+    );
+  }
+
+  renderExpandCollapseButton(): HTMLCalciteActionElement {
+    const uiDataItem = this.getUIDataItem() as LocaleSettingItem;
+    const isExpanded = uiDataItem?.expanded;
+    const icon = isExpanded ? EIcons.Expanded : EIcons.Collapsed;
+    return <calcite-action onClick={this.handleExpand.bind(this, uiDataItem)} icon={icon} scale="s" appearance="transparent" text="" />;
+  }
+
+  renderInfoButton() {
+    return (
+      <button id={this.tipID} class={CSS.infoButton}>
+        <calcite-icon class={CSS.infoIcon} icon={EIcons.Popover} scale="s" />
+      </button>
+    );
+  }
+
+  renderCopyButton(type: InputType, uid: string) {
+    return <calcite-action class={this.calciteMode} onClick={this.copySelection.bind(this, type, uid)} slot="action" icon={EIcons.Copy} appearance="transparent" text="" />;
   }
 
   renderInput(type: InputType, value: string, uid: string, contentItem?: LocaleSettingData): HTMLElement {
@@ -231,61 +288,6 @@ export class InstantAppsLanguageTranslatorItem {
     );
   }
 
-  renderItemHeader(type: InputType, label: string, uid: string, contentItem?: LocaleSettingData): HTMLDivElement {
-    const doesNotHaveNestedContent = !this.hasNestedContent;
-    const isNestedItem = !!contentItem;
-    const showCopyButton = doesNotHaveNestedContent || isNestedItem;
-    return (
-      <div class={CSS.topRow}>
-        {this.renderItemHeaderLabel(type, label, contentItem)}
-        {showCopyButton ? this.renderCopyButton(type, uid) : null}
-      </div>
-    );
-  }
-
-  renderItemHeaderLabel(type: InputType, label: string, contentItem: LocaleSettingData | undefined) {
-    const isUserSectionWithNoNestedContent = type === EInputType.User && !contentItem;
-    return (
-      <div class={CSS.labelContainer}>
-        {!contentItem ? this.renderExpandCollapseButton() : null}
-        <calcite-icon icon={this.getIcon(contentItem)} scale="s" />
-        <span class={CSS.label}>{label}</span>
-        {isUserSectionWithNoNestedContent ? this.renderInfoButton() : null}
-      </div>
-    );
-  }
-
-  renderExpandCollapseButton(): HTMLCalciteActionElement {
-    const uiDataItem = this.getUIDataItem() as LocaleSettingItem;
-    const isExpanded = uiDataItem?.expanded;
-    const icon = isExpanded ? EIcons.Expanded : EIcons.Collapsed;
-    return <calcite-action onClick={this.handleExpand.bind(this, uiDataItem)} icon={icon} scale="s" appearance="transparent" text="" />;
-  }
-
-  renderInfoButton() {
-    return (
-      <button id={`${this.fieldName}goTo`} class={CSS.infoButton}>
-        <calcite-icon class={CSS.infoIcon} icon={EIcons.Popover} scale="s" />
-      </button>
-    );
-  }
-
-  renderPopover(): HTMLCalcitePopoverElement {
-    const tip = this.getTip();
-    return (
-      <calcite-popover referenceElement={`${this.fieldName}goTo`} label="" auto-close="true" placement="trailing" closable>
-        <span class={CSS.uiLocationPopoverContent}>
-          <span class={CSS.uiLocationItems}>{this.getUILocation()}</span>
-          {tip ? <span class={CSS.tip}>{tip}</span> : null}
-        </span>
-      </calcite-popover>
-    );
-  }
-
-  renderCopyButton(type: InputType, uid: string) {
-    return <calcite-action class={this.calciteMode} onClick={this.copySelection.bind(this, type, uid)} slot="action" icon={EIcons.Copy} appearance="transparent" text="" />;
-  }
-
   getUIDataItem(): LocaleSettingItem | undefined {
     if (!languageTranslatorState.uiData) return;
     return languageTranslatorState.uiData.get(this.fieldName);
@@ -329,7 +331,8 @@ export class InstantAppsLanguageTranslatorItem {
       setting.selected = false;
     });
     uiDataKeys.forEach(key => {
-      const fieldName = (event?.target as HTMLCalciteInputElement)?.getAttribute('data-field-name');
+      const node = event?.target as HTMLCalciteInputElement;
+      const fieldName = node?.getAttribute('data-field-name');
       if (key === fieldName) {
         const setting = uiData?.get(key);
         setting.selected = true;
@@ -340,7 +343,6 @@ export class InstantAppsLanguageTranslatorItem {
 
   getUILocation(): HTMLElement[] {
     const uiDataItem = this.getUIDataItem() as LocaleSettingItem;
-
     const { uiLocation, userLocaleData } = uiDataItem;
     const { section, subsection } = uiLocation;
     const breadCrumbLabels = [section.label, subsection.label, userLocaleData.label].filter(uiLocationStr => !!uiLocationStr);
@@ -359,7 +361,6 @@ export class InstantAppsLanguageTranslatorItem {
   }
 
   copySelection(type: InputType, uid: string): void {
-    console.log(type, uid);
     if (this.setting.type === ESettingType.TextEditor) {
       this.copyTextEditorContent(type);
     } else {
@@ -418,16 +419,16 @@ export class InstantAppsLanguageTranslatorItem {
   }
 
   // INPUT DATA HANDLING
-
   // User locale input data handling
   async handleUserInputChange(e: CustomEvent): Promise<void> {
     store.set('saving', true);
     try {
       const node = e.target as HTMLCalciteInputElement;
+      const uid = node.id;
       const value = node.value;
       const uiDataItem = this.getUIDataItem() as LocaleSettingItem;
       uiDataItem.userLocaleData.value = value;
-      await this.userLocaleInputOnChangeCallback(node.id, value);
+      await this.userLocaleInputOnChangeCallback(uid, value);
       store.set('saving', false);
     } catch {
       store.set('saving', false);
@@ -453,10 +454,11 @@ export class InstantAppsLanguageTranslatorItem {
     try {
       const composedPath = e.composedPath();
       const node = composedPath[0] as HTMLCalciteInputElement;
-      this.updateT9nStore(node.id, node.value);
+      const uid = node.id;
+      this.updateT9nStore(uid, node.value);
       const { locale, resource } = this.getTranslatedLocaleCallbackData();
       const value = (e.target as HTMLCalciteInputElement).value;
-      await this.translatedLocaleInputOnChangeCallback(node.id, value, locale, resource);
+      await this.translatedLocaleInputOnChangeCallback(uid, value, locale, resource);
       setTimeout(() => store.set('saving', false), 1500);
       this.translatorItemDataUpdated.emit();
     } catch (err) {
@@ -469,10 +471,11 @@ export class InstantAppsLanguageTranslatorItem {
     store.set('saving', true);
     try {
       const node = e.target as HTMLElement;
-      this.updateT9nStore(node.id, e.detail);
+      const uid = node.id;
+      this.updateT9nStore(uid, e.detail);
       const { locale, resource } = this.getTranslatedLocaleCallbackData();
       const value = e.detail;
-      await this.translatedLocaleInputOnChangeCallback(node.id, value, locale, resource);
+      await this.translatedLocaleInputOnChangeCallback(uid, value, locale, resource);
       setTimeout(() => store.set('saving', false), 1500);
       this.translatorItemDataUpdated.emit();
     } catch (err) {
