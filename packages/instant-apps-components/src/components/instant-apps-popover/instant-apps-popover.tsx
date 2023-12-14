@@ -106,11 +106,7 @@ export class InstantAppsPopover {
   messageOverrides: InstantAppsPopoverMessageOverrides;
 
   async componentDidLoad() {
-    getMessages(this);
-    this.messages = {
-      ...this.messages,
-      ...this.messageOverrides,
-    };
+    getMessages(this, this.messageOverrides);
   }
 
   componentDidUpdate() {
