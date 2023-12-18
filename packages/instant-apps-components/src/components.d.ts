@@ -460,9 +460,9 @@ export namespace Components {
          */
         "setting": LocaleSettingData;
         /**
-          * Label of item in currently selected language.
+          * Object containing labels of items in currently selected language.
          */
-        "translatedLanguageLabel": string;
+        "translatedLanguageLabels": { [key: string]: string };
         /**
           * Function that is called when the value in a translated locale's input has changed. This function will have 4 arguments - fieldName, value, locale, and resource - and will return a promise. The callback function can be used to construct the data of key-value pairs that will be written to the portal item resource.
          */
@@ -1557,9 +1557,9 @@ declare namespace LocalJSX {
          */
         "setting"?: LocaleSettingData;
         /**
-          * Label of item in currently selected language.
+          * Object containing labels of items in currently selected language.
          */
-        "translatedLanguageLabel"?: string;
+        "translatedLanguageLabels"?: { [key: string]: string };
         /**
           * Function that is called when the value in a translated locale's input has changed. This function will have 4 arguments - fieldName, value, locale, and resource - and will return a promise. The callback function can be used to construct the data of key-value pairs that will be written to the portal item resource.
          */
