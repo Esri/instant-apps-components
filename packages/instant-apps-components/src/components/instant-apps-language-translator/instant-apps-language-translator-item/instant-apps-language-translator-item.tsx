@@ -42,10 +42,10 @@ export class InstantAppsLanguageTranslatorItem {
   fieldName: string;
 
   /**
-   * Label of item in currently selected language.
+   * Object containing labels of items in currently selected language.
    */
   @Prop()
-  translatedLanguageLabel: string;
+  translatedLanguageLabels: { [key: string]: string };
 
   /**
    * Object containing data that describes the UI i.e. icon to indicate type of setting, label, value, etc.
@@ -150,7 +150,7 @@ export class InstantAppsLanguageTranslatorItem {
     const locale = store.get('currentLanguage') as string;
     const data = store.get('portalItemResourceT9n');
 
-    const label = this.translatedLanguageLabel ?? uiDataItem?.userLocaleData?.label;
+    const label = this.translatedLanguageLabels[this.fieldName];
     const value = data?.[locale]?.[uid] as string;
 
     const selected = uiDataItem?.selected ? ` ${CSS.selected}` : '';
@@ -180,12 +180,13 @@ export class InstantAppsLanguageTranslatorItem {
     const uid = contentItem?.id;
     const localeData = data?.[locale];
     const translatedValue = localeData?.[uid];
-    const { label, value } = contentItem;
+    const { label, value, id } = contentItem;
+    const inputLabel = inputType === EInputType.Translation ? this.translatedLanguageLabels[id] : label;
     const isUser = inputType === EInputType.User;
     const inputValue = isUser ? value : translatedValue;
     return (
       <div class={CSS.nestedInput}>
-        {this.renderItemHeader(inputType, label, uid, contentItem)}
+        {this.renderItemHeader(inputType, inputLabel, uid, contentItem)}
         {this.renderInput(inputType, inputValue, uid, contentItem)}
       </div>
     );
