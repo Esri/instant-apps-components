@@ -53,7 +53,7 @@ export interface LanguageTranslatorSearchResult extends LocaleSettingItem {
 }
 
 export interface CalciteInputMap {
-  [id: string]: HTMLCalciteInputElement;
+  [id: string]: any;
 }
 
 export type InputType = 'user' | 'translation';
