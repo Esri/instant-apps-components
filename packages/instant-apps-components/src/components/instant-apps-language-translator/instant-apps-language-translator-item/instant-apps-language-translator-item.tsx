@@ -1,4 +1,4 @@
-import { Component, Event, EventEmitter, Host, Prop, h } from '@stencil/core';
+import { Component, Event, EventEmitter, Fragment, Host, Prop, h } from '@stencil/core';
 
 import { getT9nData, getUIDataKeys, isCalciteModeDark } from '../support/utils';
 import { languageTranslatorState, store } from '../support/store';
@@ -94,12 +94,16 @@ export class InstantAppsLanguageTranslatorItem {
   }
 
   render() {
-    return (
-      <Host class={this.calciteMode}>
-        {this.renderBase()}
-        {this.renderPopover()}
-      </Host>
-    );
+    if ('content' in this.setting && this.setting.content?.every(contentItem => contentItem?.content?.length === 0)) {
+      return <Fragment></Fragment>;
+    } else {
+      return (
+        <Host class={this.calciteMode}>
+          {this.renderBase()}
+          {this.renderPopover()}
+        </Host>
+      );
+    }
   }
 
   renderBase(): HTMLDivElement {
