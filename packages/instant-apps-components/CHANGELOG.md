@@ -5,6 +5,19 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## v1.0.0-beta.166
+
+# instant-apps-language-translator
+
+- Add support for nested/grouped settings
+
+  Examples: Search configuration search sources, filter configuration layer expressions, cover page configuration, portfolio section descriptions
+
+- Display icon based on stringType property to indicate different types of string settings
+  - calcite-icons used: title, subheading, text, button, string
+- Update language translator sample with new updates
+- Clean up/refactor in instant-apps-language-translator-item
+
 ## v1.0.0-beta.165
 
 # General

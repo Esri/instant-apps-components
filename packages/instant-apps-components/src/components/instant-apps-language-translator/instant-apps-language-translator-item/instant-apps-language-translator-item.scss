@@ -78,6 +78,14 @@
     background-color: transparent;
     cursor: pointer;
   }
+
+  .instant-apps-language-translator-item__nested-input {
+    margin-left: 60px;
+    margin-top: 8px;
+    calcite-input {
+      margin-left: 30px;
+    }
+  }
 }
 
 :host(.calcite-mode-dark) {

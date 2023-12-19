@@ -6,7 +6,7 @@ import { generateUIData, getLocales, getMessages, getUIDataKeys } from './suppor
 import { languageTranslatorState, store } from './support/store';
 
 import { EIcons } from './support/enum';
-import { AppSettings, LocaleItem, LocaleSettingItem, LocaleUIData, SettingType } from './support/interfaces';
+import { AppSettings, LocaleItem, LocaleSettingItem, LocaleUIData } from './support/interfaces';
 
 import LanguageTranslator_t9n from '../../assets/t9n/instant-apps-language-translator/resources.json';
 import { loadModules } from '../../utils/loadModules';
@@ -298,7 +298,9 @@ export class InstantAppsLanguageTranslator {
     return (
       <calcite-label layout="inline">
         {this.messages?.translatedLanguage}
-        <calcite-select label="" onCalciteSelectChange={this.handleLanguageSelection.bind(this)}>{this.renderTranslatedLangOptions()}</calcite-select>
+        <calcite-select label="" onCalciteSelectChange={this.handleLanguageSelection.bind(this)}>
+          {this.renderTranslatedLangOptions()}
+        </calcite-select>
       </calcite-label>
     );
   }
@@ -339,7 +341,7 @@ export class InstantAppsLanguageTranslator {
   }
 
   renderUIDataItem(key: string, keyIndex: number, uiDataKeysLen: number): HTMLDivElement {
-    const translatedLabel = this.appSettings?.translatedLanguageLabels?.[languageTranslatorState.currentLanguage as string]?.[key];
+    const translatedLanguageLabels = this.appSettings?.translatedLanguageLabels?.[languageTranslatorState.currentLanguage as string];
     const isLast = `${keyIndex === uiDataKeysLen - 1 ? CSS.lastItem : ''}`;
     const setting = this.appSettings.content.filter(contentItem => contentItem.id === key)[0];
     return (
@@ -347,8 +349,8 @@ export class InstantAppsLanguageTranslator {
         key={`${key}-${keyIndex}`}
         class={isLast}
         fieldName={key}
-        translatedLanguageLabel={translatedLabel}
-        type={setting.type as SettingType}
+        translatedLanguageLabels={translatedLanguageLabels}
+        setting={setting}
         userLocaleInputOnChangeCallback={this.userLocaleInputOnChangeCallback}
         translatedLocaleInputOnChangeCallback={this.translatedLocaleInputOnChangeCallback}
       />

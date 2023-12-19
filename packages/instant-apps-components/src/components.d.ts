@@ -9,7 +9,7 @@ import { ActiveTool, ControlPanelComponent, ExportOutput, ExtentSelector, IClass
 import { EditorConfig } from "@ckeditor/ckeditor5-core/src/editor/editorconfig";
 import { FilterMode } from "./components/instant-apps-interactive-legend/instant-apps-interactive-legend-classic/interfaces/interfaces";
 import { AlignmentPositions } from "./components/instant-apps-landing-page/support/enum";
-import { AppSettings, LocaleItem, SettingType } from "./components/instant-apps-language-translator/support/interfaces";
+import { AppSettings, LocaleItem, LocaleSettingData } from "./components/instant-apps-language-translator/support/interfaces";
 import { InstantAppsPopovers } from "./components/instant-apps-popovers/instant-apps-popovers";
 import { LogicalPlacement } from "@esri/calcite-components/dist/types/utils/floating-ui";
 import { ScoreboardItem, ScoreboardMode, ScoreboardPosition } from "./components/instant-apps-scoreboard/types/interfaces";
@@ -17,7 +17,7 @@ export { ActiveTool, ControlPanelComponent, ExportOutput, ExtentSelector, IClass
 export { EditorConfig } from "@ckeditor/ckeditor5-core/src/editor/editorconfig";
 export { FilterMode } from "./components/instant-apps-interactive-legend/instant-apps-interactive-legend-classic/interfaces/interfaces";
 export { AlignmentPositions } from "./components/instant-apps-landing-page/support/enum";
-export { AppSettings, LocaleItem, SettingType } from "./components/instant-apps-language-translator/support/interfaces";
+export { AppSettings, LocaleItem, LocaleSettingData } from "./components/instant-apps-language-translator/support/interfaces";
 export { InstantAppsPopovers } from "./components/instant-apps-popovers/instant-apps-popovers";
 export { LogicalPlacement } from "@esri/calcite-components/dist/types/utils/floating-ui";
 export { ScoreboardItem, ScoreboardMode, ScoreboardPosition } from "./components/instant-apps-scoreboard/types/interfaces";
@@ -455,18 +455,19 @@ export namespace Components {
           * Unique identifier tied to an associated setting in an app.
          */
         "fieldName": string;
+        "setting": LocaleSettingData;
         /**
-          * Label of item in currently selected language.
+          * Object containing data that describes the UI i.e. icon to indicate type of setting, label, value, etc.
          */
-        "translatedLanguageLabel": string;
+        "setting": LocaleSettingData;
+        /**
+          * Object containing labels of items in currently selected language.
+         */
+        "translatedLanguageLabels": { [key: string]: string };
         /**
           * Function that is called when the value in a translated locale's input has changed. This function will have 4 arguments - fieldName, value, locale, and resource - and will return a promise. The callback function can be used to construct the data of key-value pairs that will be written to the portal item resource.
          */
         "translatedLocaleInputOnChangeCallback": (fieldName: string, value: string, locale: string, resource: __esri.PortalItemResource) => Promise<void>;
-        /**
-          * Determines whether to use a regular input or text editor
-         */
-        "type": SettingType;
         /**
           * Function to be called when the value in a user locale input has changed. This function will have 2 arguments - fieldName and value - and will return a promise.
          */
@@ -1552,18 +1553,19 @@ declare namespace LocalJSX {
           * Fires when a translation input's value has changed.
          */
         "onTranslatorItemDataUpdated"?: (event: InstantAppsLanguageTranslatorItemCustomEvent<void>) => void;
+        "setting"?: LocaleSettingData;
         /**
-          * Label of item in currently selected language.
+          * Object containing data that describes the UI i.e. icon to indicate type of setting, label, value, etc.
          */
-        "translatedLanguageLabel"?: string;
+        "setting"?: LocaleSettingData;
+        /**
+          * Object containing labels of items in currently selected language.
+         */
+        "translatedLanguageLabels"?: { [key: string]: string };
         /**
           * Function that is called when the value in a translated locale's input has changed. This function will have 4 arguments - fieldName, value, locale, and resource - and will return a promise. The callback function can be used to construct the data of key-value pairs that will be written to the portal item resource.
          */
         "translatedLocaleInputOnChangeCallback"?: (fieldName: string, value: string, locale: string, resource: __esri.PortalItemResource) => Promise<void>;
-        /**
-          * Determines whether to use a regular input or text editor
-         */
-        "type"?: SettingType;
         /**
           * Function to be called when the value in a user locale input has changed. This function will have 2 arguments - fieldName and value - and will return a promise.
          */

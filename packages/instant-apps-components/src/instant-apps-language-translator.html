@@ -8,416 +8,494 @@
 
 <!DOCTYPE html>
 <html dir="ltr">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=5.0" />
+    <title>ArcGIS Instant Apps Components: Language Translator/Switcher</title>
+    <script src="/ckeditor5/ckeditor5-build-classic/build/ckeditor.js"></script>
+    <link rel="stylesheet" href="https://jsdev.arcgis.com/4.29/esri/themes/light/main.css" />
+    <script src="https://jsdev.arcgis.com/4.29/"></script>
+    <script type="module" src="https://js.arcgis.com/calcite-components/2.0.0/calcite.esm.js"></script>
+    <link rel="stylesheet" type="text/css" href="https://js.arcgis.com/calcite-components/2.0.0/calcite.css" />
+    <script type="module" src="/build/instant-apps-components.esm.js"></script>
+    <script nomodule src="/build/instant-apps-components.js"></script>
+    <style>
+      html,
+      body,
+      #viewDiv {
+        box-sizing: border-box;
+        width: 100%;
+        height: 100%;
+        margin: 0;
+        padding: 0;
+      }
 
-<head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=5.0" />
-  <title>ArcGIS Instant Apps Components: Language Translator/Switcher</title>
-  <script src="/ckeditor5/ckeditor5-build-classic/build/ckeditor.js"></script>
-  <link rel="stylesheet" href="https://jsdev.arcgis.com/4.29/esri/themes/light/main.css" />
-  <script src="https://jsdev.arcgis.com/4.29/"></script>
-  <script type="module" src="https://js.arcgis.com/calcite-components/2.0.0/calcite.esm.js"></script>
-  <link rel="stylesheet" type="text/css" href="https://js.arcgis.com/calcite-components/2.0.0/calcite.css" />
-  <script type="module" src="/build/instant-apps-components.esm.js"></script>
-  <script nomodule src="/build/instant-apps-components.js"></script>
-  <style>
-    html,
-    body,
-    #viewDiv {
-      box-sizing: border-box;
-      width: 100%;
-      height: 100%;
-      margin: 0;
-      padding: 0;
-    }
+      #settings {
+        padding: 10px;
+      }
 
-    #settings {
-      padding: 10px;
-    }
+      #stringPreview {
+        padding: 10px;
+      }
 
-    #stringPreview {
-      padding: 10px;
-    }
+      .setting-container-item {
+        display: flex;
+        flex-direction: column;
+        border-top: 1px solid lightgray;
+        padding: 10px 0;
+      }
 
-    .setting-container-item {
-      display: flex;
-      flex-direction: column;
-      border-top: 1px solid lightgray;
-      padding: 10px 0;
-    }
+      .setting-container-item:first-child {
+        border-top: none;
+      }
 
-    .setting-container-item:first-child {
-      border-top: none;
-    }
+      .setting-container-item:last-child {
+        border-bottom: 1px solid lightgray;
+      }
 
-    .setting-container-item:last-child {
-      border-bottom: 1px solid lightgray;
-    }
+      .setting-label {
+        font-weight: 450;
+      }
 
-    .setting-label {
-      font-weight: 450;
-    }
+      .string-preview-header {
+        font-weight: 450;
+        text-decoration: underline;
+        font-size: 18px;
+      }
+    </style>
+  </head>
 
-    .string-preview-header {
-      font-weight: 450;
-      text-decoration: underline;
-      font-size: 18px;
-    }
-  </style>
-</head>
+  <body class="calcite-mode-dark">
+    <calcite-shell>
+      <instant-apps-header slot="header" title-text="Instant Apps Components: Language translator/switcher"></instant-apps-header>
+      <calcite-shell-panel slot="panel-start">
+        <calcite-panel>
+          <div id="settings">
+            <calcite-label>
+              Language translator
+              <calcite-button id="openLangTranslator">Open language translator</calcite-button>
+            </calcite-label>
+          </div>
+          <div id="stringPreview">
+            <span class="string-preview-header">Preview: </span>
+            <div id="settingContainer"></div>
+          </div>
+        </calcite-panel>
+      </calcite-shell-panel>
+      <div id="viewDiv"></div>
+    </calcite-shell>
+    <instant-apps-language-translator tabindex="-1" id="langTranslator"></instant-apps-language-translator>
+    <script type="module">
+      require(['esri/views/MapView', 'esri/WebMap', 'esri/widgets/Expand', 'esri/widgets/Search', 'esri/widgets/LayerList', 'esri/portal/PortalItem', 'esri/config', 'esri/intl'], (
+        MapView,
+        WebMap,
+        Expand,
+        Search,
+        LayerList,
+        PortalItem,
+        esriConfig,
+        intl,
+      ) => {
+        const DEFAULT_LOCALE = intl.getLocale();
 
-<body class="calcite-mode-dark">
-  <calcite-shell>
-    <instant-apps-header slot="header"
-      title-text="Instant Apps Components: Language translator/switcher"></instant-apps-header>
-    <calcite-shell-panel slot="panel-start">
-      <calcite-panel>
-        <div id="settings">
-          <calcite-label>
-            Language translator
-            <calcite-button id="openLangTranslator">Open language translator</calcite-button>
-          </calcite-label>
-        </div>
-        <div id="stringPreview">
-          <span class="string-preview-header">Preview: </span>
-          <div id="settingContainer"></div>
-        </div>
-      </calcite-panel>
-    </calcite-shell-panel>
-    <div id="viewDiv"></div>
-  </calcite-shell>
-  <instant-apps-language-translator tabindex="-1" id="langTranslator"></instant-apps-language-translator>
-  <script type="module">
-    require(['esri/views/MapView', 'esri/WebMap', 'esri/widgets/Expand', 'esri/widgets/Search', 'esri/widgets/LayerList', 'esri/portal/PortalItem', 'esri/config', 'esri/intl'], (
-      MapView,
-      WebMap,
-      Expand,
-      Search,
-      LayerList,
-      PortalItem,
-      esriConfig,
-      intl,
-    ) => {
-      const DEFAULT_LOCALE = intl.getLocale();
+        esriConfig.portalUrl = 'https://holistic.mapsdevext.arcgis.com';
 
-      esriConfig.portalUrl = 'https://holistic.mapsdevext.arcgis.com';
+        const DEFAULT_WEBMAP_ID = '259c3847301c4cd1a2cc1f5227839ff4';
 
-      const DEFAULT_WEBMAP_ID = '259c3847301c4cd1a2cc1f5227839ff4';
+        const map = new WebMap({
+          portalItem: {
+            id: DEFAULT_WEBMAP_ID,
+          },
+        });
+        const view = new MapView({
+          map,
+          container: 'viewDiv',
+        });
 
-      const map = new WebMap({
-        portalItem: {
-          id: DEFAULT_WEBMAP_ID,
-        },
-      });
-      const view = new MapView({
-        map,
-        container: 'viewDiv',
-      });
+        const templateAppItem = new PortalItem({
+          id: 'c5900a43af964bf4a3401ecb0772381d',
+        });
 
-      const templateAppItem = new PortalItem({
-        id: 'fb6dc769dd344f2da661bc1427f13f7b',
-      });
-
-      function getLangSwitcherData() {
-        return {
-          langTranslatorConfigData: {
-            content: [
-              {
-                id: 'title',
-                type: 'string',
-                label: 'App title',
-                value: 'Language switcher',
-                uiLocation: {
-                  section: {
-                    id: 'about',
-                    label: 'About',
+        function getLangSwitcherData() {
+          return {
+            langTranslatorConfigData: {
+              content: [
+                {
+                  id: 'title',
+                  type: 'string',
+                  stringType: 'title',
+                  label: 'App title',
+                  value: 'More language switcher 24.R1 testing',
+                  uiLocation: {
+                    section: {
+                      id: 'about',
+                      label: 'About',
+                    },
+                    subsection: {
+                      id: null,
+                      label: null,
+                    },
                   },
-                  subsection: {
-                    id: null,
-                    label: null,
+                  tip: "Include title text to introduce the map's main topic",
+                },
+                {
+                  id: 'splashTitle',
+                  type: 'string',
+                  stringType: 'title',
+                  label: 'Introduction window title',
+                  value: 'Title',
+                  uiLocation: {
+                    section: {
+                      id: 'about',
+                      label: 'About',
+                    },
+                    subsection: {
+                      id: null,
+                      label: null,
+                    },
                   },
                 },
-                tip: "Include title text to introduce the map's main topic",
-              },
-              {
-                id: 'splashTitle',
-                type: 'string',
-                label: 'Introduction window title',
-                value: 'Welcome!',
-                uiLocation: {
-                  section: {
-                    id: 'about',
-                    label: 'About',
+                {
+                  id: 'splashContent',
+                  type: 'textEditor',
+                  stringType: 'text',
+                  label: 'Introduction window content',
+                  value: 'Content',
+                  uiLocation: {
+                    section: {
+                      id: 'about',
+                      label: 'About',
+                    },
+                    subsection: {
+                      id: null,
+                      label: null,
+                    },
                   },
-                  subsection: {
-                    id: null,
-                    label: null,
+                  tip: 'Add text, links, and small graphics here (rich text editor). Rich text editor accessibility instructions can be accessed through ALT+0 (Mac users: Option+0).',
+                },
+                {
+                  id: 'splashButtonText',
+                  type: 'string',
+                  stringType: 'button',
+                  label: 'Introduction window button text',
+                  value: 'Enter',
+                  uiLocation: {
+                    section: {
+                      id: 'about',
+                      label: 'About',
+                    },
+                    subsection: {
+                      id: null,
+                      label: null,
+                    },
                   },
                 },
-              },
-              {
-                id: 'splashContent',
-                type: 'textEditor',
-                label: 'Introduction window content',
-                value: '<ul><li>Here is some sample content!</li><li>Here is some sample content!</li><li>Here is some sample content!</li></ul>',
-                uiLocation: {
-                  section: {
-                    id: 'about',
-                    label: 'About',
+                {
+                  id: 'mapA11yDesc',
+                  type: 'textarea',
+                  stringType: 'text',
+                  label: 'Text alternative for the map',
+                  value: '',
+                  uiLocation: {
+                    section: {
+                      id: 'about',
+                      label: 'About',
+                    },
+                    subsection: {
+                      id: null,
+                      label: null,
+                    },
                   },
-                  subsection: {
-                    id: null,
-                    label: null,
-                  },
+                  tip: 'Add a description to provide a text equivalent of your map and its content for app viewers with vision impairment.',
                 },
-                tip: 'Add text, links, and small graphics here (rich text editor). Rich text editor accessibility instructions can be accessed through ALT+0 (Mac users: Option+0).',
-              },
-              {
-                id: 'splashButtonText',
-                type: 'string',
-                label: 'Introduction window button text',
-                value: 'Enter',
-                uiLocation: {
-                  section: {
-                    id: 'about',
-                    label: 'About',
+                {
+                  id: 'filterConfig',
+                  label: 'Attribute filter',
+                  uiLocation: {
+                    section: {
+                      id: 'interactivity',
+                      label: 'Interactivity',
+                    },
+                    subsection: {
+                      id: 'filter',
+                      label: 'Attribute filter',
+                    },
                   },
-                  subsection: {
-                    id: null,
-                    label: null,
-                  },
+                  content: [
+                    {
+                      id: 'layerExpressions',
+                      content: [
+                        {
+                          label: 'Whale Sighting Report  - survey',
+                          content: [
+                            {
+                              id: 'filterConfig.layerExpressions.title-5ef9f56471b',
+                              type: 'string',
+                              stringType: 'title',
+                              labelPropertyName: 'title',
+                              label: "Title for 'Whale Sighting Report  - survey'",
+                              itemLabel: 'Whale Sighting Report  - survey',
+                              value: 'Whale Sighting Report  - survey',
+                            },
+                            {
+                              id: 'filterConfig.expressions.name-98220725089',
+                              type: 'string',
+                              stringType: 'title',
+                              labelPropertyName: 'name',
+                              itemLabel: '124',
+                              label: "Name for '124'",
+                              value: '124',
+                            },
+                          ],
+                        },
+                      ],
+                    },
+                  ],
                 },
-              },
-              {
-                id: 'customHeaderHTML',
-                type: 'textEditor',
-                label: 'Custom header HTML',
-                value: '<p>Here is some sample content!</p>',
-                uiLocation: {
-                  section: {
-                    id: 'about',
-                    label: 'About',
+                {
+                  id: 'searchConfiguration',
+                  label: 'Search configuration',
+                  uiLocation: {
+                    section: {
+                      id: 'interactivity',
+                      label: 'Interactivity',
+                    },
+                    subsection: {
+                      id: 'search',
+                      label: 'Search',
+                    },
                   },
-                  subsection: {
-                    id: null,
-                    label: null,
-                  },
+                  content: [
+                    {
+                      id: 'searchConfiguration.allPlaceholder',
+                      type: 'string',
+                      stringType: 'string',
+                      label: 'Search all placeholder',
+                      value: 'Find address or place',
+                    },
+                    {
+                      id: 'sources',
+                      content: [
+                        {
+                          label: 'ArcGIS World Geocoding Service',
+                          content: [
+                            {
+                              id: 'searchConfiguration.sources.name-7ee11493388',
+                              type: 'string',
+                              stringType: 'title',
+                              labelPropertyName: 'name',
+                              label: "Name for 'ArcGIS World Geocoding Service'",
+                              itemLabel: 'ArcGIS World Geocoding Service',
+                              value: 'ArcGIS World Geocoding Service',
+                            },
+                            {
+                              id: 'searchConfiguration.sources.placeholder-7ee11493388',
+                              type: 'string',
+                              stringType: 'string',
+                              labelPropertyName: 'name',
+                              label: "Placeholder for 'ArcGIS World Geocoding Service'",
+                              itemLabel: 'ArcGIS World Geocoding Service',
+                              value: 'Find address or place',
+                            },
+                          ],
+                        },
+                      ],
+                    },
+                  ],
                 },
-                tip: 'Include a more customized look for the app title. Rich text editor accessibility instructions can be accessed through ALT+0 (Mac users: Option+0).',
-              },
-              {
-                id: 'mapA11yDesc',
-                type: 'textarea',
-                label: 'Text alternative for the map',
-                value: 'asdf',
-                uiLocation: {
-                  section: {
-                    id: 'about',
-                    label: 'About',
-                  },
-                  subsection: {
-                    id: null,
-                    label: null,
-                  },
+              ],
+              translatedLanguageLabels: {
+                de: {
+                  'title': 'App-Titel',
+                  'splashTitle': 'Titel des Einführungsfensters',
+                  'splashContent': 'Inhalt des Einführungsfensters',
+                  'splashButtonText': 'Text für Einführungsfenster-Schaltfläche',
+                  'mapA11yDesc': 'Alternativtext für Karte',
+                  'filterConfig.layerExpressions.title-5ef9f56471b': "Titel für 'Whale Sighting Report  - survey'",
+                  'filterConfig.expressions.name-98220725089': "Name für '124'",
+                  'filterConfig': 'Atributový filtr',
+                  'searchConfiguration.allPlaceholder': 'Alle Platzhalter durchsuchen',
+                  'searchConfiguration.sources.name-7ee11493388': "Name für 'ArcGIS World Geocoding Service'",
+                  'searchConfiguration.sources.placeholder-7ee11493388': "Platzhalter für 'ArcGIS World Geocoding Service'",
+                  'searchConfiguration': 'Suchkonfiguration',
                 },
-                tip: 'Add a description to provide a text equivalent of your map and its content for app viewers with vision impairment.',
-              },
-            ],
-            translatedLanguageLabels: {
-              ar: {
-                title: 'عنوان التطبيق',
-                splashTitle: 'بيت_Introduction window title__________________________لاحقة',
-                splashContent: 'بيت_Introduction window content____________________________لاحقة',
-                splashButtonText: 'بيت_Introduction window button text_________________لاحقة',
-                customHeaderHTML: 'تحرير الرأس المخصص',
-                mapA11yDesc: 'بديل نصي للخريطة',
-                customCSS: 'CSS مخصص',
-              },
-              fr: {
-                title: 'Titre de l’application',
-                splashTitle: 'æ_Introduction window title__________________________Â',
-                splashContent: 'æ_Introduction window content____________________________Â',
-                splashButtonText: 'æ_Introduction window button text_________________Â',
-                customHeaderHTML: 'Mettre à jour l’en-tête personnalisé',
-                mapA11yDesc: 'Texte alternatif pour la carte',
-                customCSS: 'Code CSS personnalisé',
-              },
-              ja: {
-                title: 'アプリのタイトル',
-                splashTitle: '須_Introduction window title__________________________鷗',
-                splashContent: '須_Introduction window content____________________________鷗',
-                splashButtonText: '須_Introduction window button text_________________鷗',
-                customHeaderHTML: 'カスタム ヘッダーの編集',
-                mapA11yDesc: 'マップの代替テキスト',
-                customCSS: 'カスタム CSS',
+                cs: {
+                  'title': 'Název aplikace',
+                  'splashTitle': 'Název úvodního okna',
+                  'splashContent': 'Obsah úvodního okna',
+                  'splashButtonText': 'Text tlačítka úvodního okna',
+                  'mapA11yDesc': 'Alternativní text pro mapu',
+                  'filterConfig.layerExpressions.title-5ef9f56471b': "Název pro 'Whale Sighting Report  - survey'",
+                  'filterConfig.expressions.name-98220725089': "Jméno pro '124'",
+                  'filterConfig': 'Atributový filtr',
+                  'searchConfiguration.allPlaceholder': 'Prohledat všechny zástupné symboly',
+                  'searchConfiguration.sources.name-7ee11493388': "Název pro 'ArcGIS World Geocoding Service'",
+                  'searchConfiguration.sources.placeholder-7ee11493388': "Zástupný symbol pro 'ArcGIS World Geocoding Service'",
+                  'searchConfiguration': 'Konfigurace vyhledávání',
+                },
               },
             },
-          },
-          langSwitcherConfigData: {
-            locales: [
-              {
-                locale: 'ja',
-              },
-              {
-                locale: 'el',
-              },
-              {
-                locale: 'fr',
-              },
-            ],
-            icon: 'language-translate',
-            portalItemResourceId: '',
-          },
-        };
-      }
-
-      const { langTranslatorConfigData, langSwitcherConfigData } = getLangSwitcherData();
-
-      const settingContainer = document.getElementById('settingContainer');
-
-      const settingKeys = langTranslatorConfigData.content.map(contentItem => contentItem.id);
-
-      function applyStringPreview() {
-        settingContainer.innerHTML = '';
-
-        settingKeys.forEach(key => {
-          const container = document.createElement('div');
-          container.classList.add('setting-container-item');
-
-          const label = document.createElement('span');
-          label.classList.add('setting-label');
-          const setting = langTranslatorConfigData.content.filter(contentItem => contentItem.id === key)[0];
-          label.innerHTML = setting.label;
-
-          const value = document.createElement('span');
-          value.innerHTML = setting.value;
-
-          container.appendChild(label);
-          container.appendChild(value);
-
-          settingContainer.appendChild(container);
-        });
-      }
-
-      applyStringPreview();
-
-      function updateStringPreview(data) {
-        settingContainer.innerHTML = '';
-
-        const t9nData = data.data;
-
-        if (!t9nData) return;
-
-        settingKeys.forEach(key => {
-          const container = document.createElement('div');
-          container.classList.add('setting-container-item');
-
-          const label = document.createElement('span');
-          label.classList.add('setting-label');
-          label.innerHTML = langTranslatorConfigData?.translatedLanguageLabels?.[data.locale]?.[key];
-
-          const value = document.createElement('span');
-          value.innerHTML = t9nData[key];
-
-          container.appendChild(label);
-          container.appendChild(value);
-
-          settingContainer.appendChild(container);
-        });
-      }
-
-      function createLanguageTranslator(langSwitcher) {
-        const langTranslator = document.getElementById('langTranslator');
-        langTranslator.portalItem = templateAppItem;
-        langTranslator.appSettings = langTranslatorConfigData;
-        langTranslator.locales = langSwitcherConfigData.locales;
-
-        langTranslator.userLocaleInputOnChangeCallback = (fieldName, value) =>
-          new Promise((resolve, reject) => {
-            setTimeout(resolve, 1000);
-          }).then(res => {
-            console.log('FIELD NAME: ', fieldName);
-            console.log('VALUE: ', value);
-          });
-
-        langTranslator.translatedLocaleInputOnChangeCallback = (fieldName, value, locale, resource) =>
-          new Promise((resolve, reject) => {
-            setTimeout(resolve, 1000);
-          }).then(res => {
-            console.log('FIELD NAME: ', fieldName);
-            console.log('VALUE: ', value);
-            console.log('LOCALE: ', locale);
-            console.log('RESOURCE: ', resource);
-          });
-
-        const openButton = document.getElementById('openLangTranslator');
-        openButton.addEventListener('click', () => (langTranslator.open = true));
-
-        langTranslator.addEventListener('translatorDataUpdated', () => {
-          langSwitcher.refresh();
-        });
-      }
-
-      function createLanguageSwitcher() {
-        const content = document.createElement('instant-apps-language-switcher');
-        content.portalItem = templateAppItem;
-        content.icon = langSwitcherConfigData.icon;
-        content.locales = langSwitcherConfigData.locales;
-        content.view = view;
-        content.defaultLocale = 'en';
-
-        const expand = new Expand({
-          view,
-          content,
-          expanded: true,
-          expandIcon: langSwitcherConfigData.icon,
-        });
-
-        view.ui.add(expand, 'top-left');
-
-        return content;
-      }
-
-      document.body.addEventListener('selectedLanguageUpdated', e => {
-        if (e.detail?.locale && e.detail?.locale !== DEFAULT_LOCALE) {
-          updateStringPreview(e.detail);
-        } else {
-          applyStringPreview();
+            langSwitcherConfigData: {
+              locales: [
+                {
+                  locale: 'de',
+                },
+                {
+                  locale: 'cs',
+                },
+              ],
+              icon: 'language-translate',
+              portalItemResourceId: '',
+            },
+          };
         }
+
+        const { langTranslatorConfigData, langSwitcherConfigData } = getLangSwitcherData();
+
+        const settingContainer = document.getElementById('settingContainer');
+
+        const settingKeys = langTranslatorConfigData.content.map(contentItem => contentItem.id);
+
+        function applyStringPreview() {
+          settingContainer.innerHTML = '';
+
+          settingKeys.forEach(key => {
+            const container = document.createElement('div');
+            container.classList.add('setting-container-item');
+
+            const label = document.createElement('span');
+            label.classList.add('setting-label');
+            const setting = langTranslatorConfigData.content.filter(contentItem => contentItem.id === key)[0];
+            label.innerHTML = setting.label;
+
+            const value = document.createElement('span');
+            value.innerHTML = setting.value;
+
+            container.appendChild(label);
+            container.appendChild(value);
+
+            settingContainer.appendChild(container);
+          });
+        }
+
+        applyStringPreview();
+
+        function updateStringPreview(data) {
+          settingContainer.innerHTML = '';
+
+          const t9nData = data.data;
+
+          if (!t9nData) return;
+
+          settingKeys.forEach(key => {
+            const container = document.createElement('div');
+            container.classList.add('setting-container-item');
+
+            const label = document.createElement('span');
+            label.classList.add('setting-label');
+            label.innerHTML = langTranslatorConfigData?.translatedLanguageLabels?.[data.locale]?.[key];
+
+            const value = document.createElement('span');
+            value.innerHTML = t9nData[key];
+
+            container.appendChild(label);
+            container.appendChild(value);
+
+            settingContainer.appendChild(container);
+          });
+        }
+
+        function createLanguageTranslator(langSwitcher) {
+          const langTranslator = document.getElementById('langTranslator');
+          langTranslator.portalItem = templateAppItem;
+          langTranslator.appSettings = langTranslatorConfigData;
+          langTranslator.locales = langSwitcherConfigData.locales;
+
+          langTranslator.userLocaleInputOnChangeCallback = (fieldName, value) =>
+            new Promise((resolve, reject) => {
+              setTimeout(resolve, 1000);
+            }).then(res => {
+              console.log('FIELD NAME: ', fieldName);
+              console.log('VALUE: ', value);
+            });
+
+          langTranslator.translatedLocaleInputOnChangeCallback = (fieldName, value, locale, resource) =>
+            new Promise((resolve, reject) => {
+              setTimeout(resolve, 1000);
+            }).then(res => {
+              console.log('FIELD NAME: ', fieldName);
+              console.log('VALUE: ', value);
+              console.log('LOCALE: ', locale);
+              console.log('RESOURCE: ', resource);
+            });
+
+          const openButton = document.getElementById('openLangTranslator');
+          openButton.addEventListener('click', () => (langTranslator.open = true));
+
+          langTranslator.addEventListener('translatorDataUpdated', () => {
+            langSwitcher.refresh();
+          });
+        }
+
+        function createLanguageSwitcher() {
+          const content = document.createElement('instant-apps-language-switcher');
+          content.portalItem = templateAppItem;
+          content.icon = langSwitcherConfigData.icon;
+          content.locales = langSwitcherConfigData.locales;
+          content.view = view;
+          content.defaultLocale = 'en';
+
+          const expand = new Expand({
+            view,
+            content,
+            expanded: true,
+            expandIcon: langSwitcherConfigData.icon,
+          });
+
+          view.ui.add(expand, 'top-left');
+
+          return content;
+        }
+
+        document.body.addEventListener('selectedLanguageUpdated', e => {
+          if (e.detail?.locale && e.detail?.locale !== DEFAULT_LOCALE) {
+            updateStringPreview(e.detail);
+          } else {
+            applyStringPreview();
+          }
+        });
+
+        const langSwitcher = createLanguageSwitcher();
+        createLanguageTranslator(langSwitcher);
+
+        (function createSearch() {
+          const search = new Search({
+            view,
+          });
+
+          const searchExpand = new Expand({
+            view,
+            content: search,
+            expanded: true,
+          });
+
+          view.ui.add(searchExpand, 'top-right');
+        })();
+
+        (function createLayerList() {
+          const layerList = new LayerList({
+            view,
+          });
+
+          const layerListExpand = new Expand({
+            view,
+            content: layerList,
+            expanded: true,
+          });
+
+          view.ui.add(layerListExpand, 'top-right');
+        })();
       });
-
-      const langSwitcher = createLanguageSwitcher();
-      createLanguageTranslator(langSwitcher);
-
-      (function createSearch() {
-        const search = new Search({
-          view,
-        });
-
-        const searchExpand = new Expand({
-          view,
-          content: search,
-          expanded: true,
-        });
-
-        view.ui.add(searchExpand, 'top-right');
-      })();
-
-      (function createLayerList() {
-        const layerList = new LayerList({
-          view,
-        });
-
-        const layerListExpand = new Expand({
-          view,
-          content: layerList,
-          expanded: true,
-        });
-
-        view.ui.add(layerListExpand, 'top-right');
-      })();
-    });
-  </script>
-</body>
-
+    </script>
+  </body>
 </html>

@@ -17,11 +17,15 @@ export function generateUIData(appSettings, locales: LocaleItem[]): LocaleUIData
     const { type, label, value, uiLocation } = contentItem;
     const setting = existingUIData?.get(contentItem.id);
     uiData.set(contentItem.id, {
-      userLocaleData: { type, label, value },
+      userLocaleData: {
+        type: type ?? null,
+        label: label ?? null,
+        value: value ?? null,
+      },
       expanded: true,
       selected: setting?.['selected'] ?? false,
       uiLocation,
-      tip: contentItem?.tip,
+      tip: contentItem?.tip ?? null,
     });
   });
 
