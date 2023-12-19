@@ -58,4 +58,4 @@ export interface CalciteInputMap {
 
 export type InputType = 'user' | 'translation';
 export type SettingType = 'string' | 'textEditor' | 'textarea';
-export type StringType = 'title' | 'subtitle' | 'text' | 'description' | 'button' | 'string';
+export type StringType = 'title' | 'subtitle' | 'text' | 'button' | 'string';
