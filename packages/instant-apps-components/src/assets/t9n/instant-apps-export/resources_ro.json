@@ -1,5 +1,6 @@
 {
   "export": "Export",
+  "exportBtn": "Imprimați sau exportați ca PDF",
   "exportPopover": "Export semn de carte",
   "includeExtraContent": "Includeți rezultate",
   "includeHeaderTheme": "Includere temă antet",

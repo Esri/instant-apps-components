@@ -1,5 +1,6 @@
 {
   "export": "Εξαγωγή",
+  "exportBtn": "Εκτύπωση ή Εξαγωγή ως PDF",
   "exportPopover": "Εξαγωγή αναδυόμενου εργαλείου",
   "includeExtraContent": "Συμπερίληψη αποτελεσμάτων",
   "includeHeaderTheme": "Συμπερίληψη θέματος κεφαλίδας",

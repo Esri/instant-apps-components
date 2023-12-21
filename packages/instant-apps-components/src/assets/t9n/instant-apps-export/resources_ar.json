@@ -1,5 +1,6 @@
 {
   "export": "تصدير",
+  "exportBtn": "طباعة أو تصدير كملف PDF",
   "exportPopover": "قائمة التصدير المنبثقة",
   "includeExtraContent": "تضمين النتائج",
   "includeHeaderTheme": "تضمين موضوع العنوان",

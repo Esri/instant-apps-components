@@ -1,5 +1,6 @@
 {
   "export": "Izvezi",
+  "exportBtn": "Odštampaj ili izvezi kao PDF",
   "exportPopover": "Iskačući prozor za izvoz",
   "includeExtraContent": "Uključi rezultate",
   "includeHeaderTheme": "Uključi temu zaglavlja",

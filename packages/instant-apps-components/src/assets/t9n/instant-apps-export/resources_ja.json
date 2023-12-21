@@ -1,5 +1,6 @@
 {
   "export": "エクスポート",
+  "exportBtn": "印刷または PDF としてエクスポート",
   "exportPopover": "エクスポート ポップオーバー",
   "includeExtraContent": "結果を含める",
   "includeHeaderTheme": "ヘッダー テーマを含める",

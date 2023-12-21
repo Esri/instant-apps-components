@@ -1,5 +1,6 @@
 {
   "export": "Export",
+  "exportBtn": "Tlačiť alebo exportovať ako PDF",
   "exportPopover": "Vyskakovacie okno Export",
   "includeExtraContent": "Zahrnúť výsledky",
   "includeHeaderTheme": "Zahrnúť motív záhlavia",

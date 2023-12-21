@@ -1,5 +1,6 @@
 {
   "export": "Exporteren",
+  "exportBtn": "Als PDF afdrukken of exporteren",
   "exportPopover": "Pop-over exporteren",
   "includeExtraContent": "Resultaten opnemen",
   "includeHeaderTheme": "Kopthema opnemen",

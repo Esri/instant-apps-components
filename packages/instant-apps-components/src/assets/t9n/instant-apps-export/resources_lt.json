@@ -1,5 +1,6 @@
 {
   "export": "Eksportuoti",
+  "exportBtn": "Spausdinti arba eksportuoti kaip PDF",
   "exportPopover": "Eksportuoti užvedus iškylantį langą",
   "includeExtraContent": "Įtraukti rezultatus",
   "includeHeaderTheme": "Įtraukti antraštės temą",

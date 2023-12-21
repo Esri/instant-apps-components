@@ -1,5 +1,6 @@
 {
   "export": "匯出",
+  "exportBtn": "列印或匯出為 PDF",
   "exportPopover": "匯出浮動提示",
   "includeExtraContent": "包含結果",
   "includeHeaderTheme": "包含標頭主題",

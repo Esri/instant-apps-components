@@ -1,5 +1,6 @@
 {
   "export": "Exportieren",
+  "exportBtn": "Als PDF-Datei drucken oder exportieren",
   "exportPopover": "Popover exportieren",
   "includeExtraContent": "Ergebnisse einbeziehen",
   "includeHeaderTheme": "Kopfzeilendesign einbeziehen",

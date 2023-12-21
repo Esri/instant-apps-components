@@ -1,5 +1,6 @@
 {
   "export": "ייצא",
+  "exportBtn": "הדפס או ייצא כ-PDF",
   "exportPopover": "חלן קופץ של ייצוא",
   "includeExtraContent": "כלול תוצאות",
   "includeHeaderTheme": "כלול ערכת נושא של כותרת עליונה",

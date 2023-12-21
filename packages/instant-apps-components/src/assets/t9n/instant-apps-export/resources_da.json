@@ -1,5 +1,6 @@
 {
   "export": "Eksportér",
+  "exportBtn": "Udskriv eller eksportér som PDF",
   "exportPopover": "Eksport-popover",
   "includeExtraContent": "Medtag resultater",
   "includeHeaderTheme": "Medtag overskriftstema",

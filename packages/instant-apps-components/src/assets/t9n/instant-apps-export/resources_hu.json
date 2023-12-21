@@ -1,5 +1,6 @@
 {
   "export": "Exportálás",
+  "exportBtn": "Nyomtatás vagy mentés PDF-ként",
   "exportPopover": "Előugró ablak exportálása",
   "includeExtraContent": "Eredmények belefoglalása",
   "includeHeaderTheme": "Fejléctéma belefoglalása",

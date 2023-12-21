@@ -1,5 +1,6 @@
 {
   "export": "내보내기",
+  "exportBtn": "PDF로 내보내기 또는 인쇄",
   "exportPopover": "팝오버 내보내기",
   "includeExtraContent": "결과 포함",
   "includeHeaderTheme": "헤더 테마 포함",
