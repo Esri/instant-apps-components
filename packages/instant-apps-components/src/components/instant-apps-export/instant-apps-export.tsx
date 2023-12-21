@@ -519,12 +519,7 @@ export class InstantAppsExport {
 
   handleCompassCreation(): void {
     if (this.includeMap && this.view != null && this.compassContainerEl != null) {
-      const map = this.view.map as __esri.WebMap | __esri.WebScene;
-      const compassMap = this.compass?.view?.map as __esri.WebMap | __esri.WebScene;
-      const checkId = map?.portalItem.id === compassMap?.portalItem.id;
-      if (!checkId) {
-        this.updateCompass();
-      }
+      this.updateCompass();
     }
   }
 
@@ -532,11 +527,24 @@ export class InstantAppsExport {
     this.view?.when(async (view: __esri.MapView | __esri.SceneView) => {
       this.compass?.destroy();
       this.compass = null;
-      const container = document.createElement('div');
-      this.compassContainerEl.append(container);
-      const [Compass] = await loadModules(['esri/widgets/Compass']);
-      this.compass = new Compass({ container, view });
+      if (this.compassRotationCheck()) {
+        const container = document.createElement('div');
+        this.compassContainerEl.append(container);
+        const [Compass] = await loadModules(['esri/widgets/Compass']);
+        this.compass = new Compass({ container, view });
+      }
     });
+  }
+
+  compassRotationCheck(): boolean {
+    if (this.view != null) {
+      if (this.view.type === '2d') {
+        return this.view.viewpoint.rotation !== 0;
+      } else if (this.view.type === '3d') {
+        return this.view.viewpoint.camera.heading !== 0;
+      }
+    }
+    return false;
   }
 
   handleScaleBarCreation(): void {

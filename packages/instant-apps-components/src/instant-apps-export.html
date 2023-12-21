@@ -8,122 +8,126 @@
 
 <!DOCTYPE html>
 <html dir="ltr" lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=5.0" />
+    <title>ArcGIS Instant Apps Components</title>
 
-<head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=5.0" />
-  <title>ArcGIS Instant Apps Components</title>
+    <link rel="stylesheet" href="https://jsdev.arcgis.com/4.29/esri/themes/light/main.css" />
+    <script src="https://jsdev.arcgis.com/4.29/"></script>
+    <script type="module" src="https://js.arcgis.com/calcite-components/2.0.0/calcite.esm.js"></script>
+    <link rel="stylesheet" type="text/css" href="https://js.arcgis.com/calcite-components/2.0.0/calcite.css" />
+    <script type="module" src="/build/instant-apps-components.esm.js"></script>
+    <script nomodule src="/build/instant-apps-components.js"></script>
 
-  <link rel="stylesheet" href="https://jsdev.arcgis.com/4.29/esri/themes/light/main.css" />
-  <script src="https://jsdev.arcgis.com/4.29/"></script>
-  <script type="module" src="https://js.arcgis.com/calcite-components/2.0.0/calcite.esm.js"></script>
-  <link rel="stylesheet" type="text/css" href="https://js.arcgis.com/calcite-components/2.0.0/calcite.css" />
-  <script type="module" src="/build/instant-apps-components.esm.js"></script>
-  <script nomodule src="/build/instant-apps-components.js"></script>
+    <style>
+      html,
+      body,
+      #viewDiv {
+        box-sizing: border-box;
+        width: 100%;
+        height: 100%;
+        margin: 0;
+        padding: 0;
+      }
 
-  <style>
-    html,
-    body,
-    #viewDiv {
-      box-sizing: border-box;
-      width: 100%;
-      height: 100%;
-      margin: 0;
-      padding: 0;
-    }
+      .panel-content {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        padding: 5%;
+        font-size: 1rem;
+        font-weight: 400;
+        margin: 0;
+      }
 
-    .panel-content {
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      padding: 5%;
-      font-size: 1rem;
-      font-weight: 400;
-      margin: 0;
-    }
+      instant-apps-export:first-of-type {
+        margin-bottom: 20px;
+      }
 
-    instant-apps-export:first-of-type {
-      margin-bottom: 20px;
-    }
+      #slide-note {
+        visibility: hidden;
+        background: red;
+        height: 200px;
+        width: 200px;
+        color: #fff;
+        padding: 12px;
+      }
+    </style>
+  </head>
 
-    #slide-note {
-      visibility: hidden;
-      background: red;
-      height: 200px;
-      width: 200px;
-      color: #fff;
-      padding: 12px;
-    }
-  </style>
-</head>
+  <body>
+    <calcite-shell class="calcite-mode-light">
+      <instant-apps-header
+        id="instant-apps-header"
+        slot="header"
+        title-text="Filter List"
+        logo-image="https://www.esri.com/content/dam/esrisites/en-us/common/icons/product-logos/arcgis-instant-apps-64.svg"
+        logo-image-alt-text="ArcGIS Instant Apps logo"
+        logo-link="https://www.esri.com/en-us/arcgis/products/arcgis-instant-apps/overview"
+      >
+      </instant-apps-header>
+      <calcite-shell-panel slot="panel-start">
+        <calcite-panel>
+          <div class="panel-content">
+            <instant-apps-export id="export-inline" mode="inline"> </instant-apps-export>
+            <instant-apps-export id="export-popover" mode="popover"></instant-apps-export>
+          </div>
+        </calcite-panel>
+      </calcite-shell-panel>
+      <div id="viewDiv">
+        <div id="slide-note">Note 1</div>
+      </div>
+    </calcite-shell>
+    <script>
+      require(['esri/WebMap', 'esri/views/MapView', 'esri/config', 'esri/widgets/ScaleBar', 'esri/widgets/Home'], (WebMap, MapView, esriConfig, ScaleBar, Home) => {
+        esriConfig.portalUrl = 'https://nw-brews.mapsdevext.arcgis.com';
 
-<body>
-  <calcite-shell class="calcite-mode-light">
-    <instant-apps-header id="instant-apps-header" slot="header" title-text="Filter List"
-      logo-image="https://www.esri.com/content/dam/esrisites/en-us/common/icons/product-logos/arcgis-instant-apps-64.svg"
-      logo-image-alt-text="ArcGIS Instant Apps logo"
-      logo-link="https://www.esri.com/en-us/arcgis/products/arcgis-instant-apps/overview">
-    </instant-apps-header>
-    <calcite-shell-panel slot="panel-start">
-      <calcite-panel>
-        <div class="panel-content">
-          <instant-apps-export id="export-inline" mode="inline"> </instant-apps-export>
-          <instant-apps-export id="export-popover" mode="popover"></instant-apps-export>
-        </div>
-      </calcite-panel>
-    </calcite-shell-panel>
-    <div id="viewDiv">
-      <div id="slide-note">Note 1</div>
-    </div>
-  </calcite-shell>
-  <script>
-    require(['esri/WebMap', 'esri/views/MapView', 'esri/config', 'esri/widgets/ScaleBar'], (WebMap, MapView, esriConfig, ScaleBar) => {
-      esriConfig.portalUrl = 'https://nw-brews.mapsdevext.arcgis.com';
-
-      const map = new WebMap({
-        portalItem: {
-          id: 'c0c59986e2e74d98be80ed493f91de10',
-        },
-      });
-
-      const url = new URL(window.location.href);
-      const searchParams = url.searchParams;
-      let center = searchParams.get('center');
-      let zoom = searchParams.get('level');
-      if (center) center = center.split(';').map(item => parseFloat(item));
-      if (zoom) zoom = parseInt(zoom);
-
-      const view = new MapView({
-        map,
-        container: 'viewDiv',
-        zoom,
-        center,
-      });
-
-      const sb = new ScaleBar({ view, unit: 'dual' });
-      view.ui.add(sb, 'bottom-left');
-
-      view.when(async () => {
-        const note = document.getElementById('slide-note');
-        view.ui.add(note, 'bottom-right');
-        note.style.visibility = 'visible';
-        await view.map.loadAll();
-        const exportPopover = document.getElementById('export-popover');
-        exportPopover.headerTitle = 'Instant Apps: Header (Shared Theme)';
-        exportPopover.addEventListener('exportOutputUpdated', e => {
-          console.log('exportOutputUpdated: ', e.target.output);
+        const map = new WebMap({
+          portalItem: {
+            id: 'c0c59986e2e74d98be80ed493f91de10',
+          },
         });
-        const exportInline = document.getElementById('export-inline');
-        exportInline.view = view;
-        exportInline.showIncludeMap = true;
-        exportInline.headerTitle = 'Instant Apps: Header (Shared Theme)';
-        exportInline.extraContent = note;
-        exportInline.addEventListener('exportOutputUpdated', e => {
-          console.log('exportOutputUpdated: ', e.target.output);
+
+        const url = new URL(window.location.href);
+        const searchParams = url.searchParams;
+        let center = searchParams.get('center');
+        let zoom = searchParams.get('level');
+        if (center) center = center.split(';').map(item => parseFloat(item));
+        if (zoom) zoom = parseInt(zoom);
+
+        const view = new MapView({
+          map,
+          container: 'viewDiv',
+          zoom,
+          center,
+        });
+
+        const sb = new ScaleBar({ view, unit: 'dual' });
+        const home = new Home({ view });
+        view.ui.add(sb, 'bottom-left');
+        view.ui.add(home, 'top-left');
+
+        view.when(async () => {
+          const note = document.getElementById('slide-note');
+          view.ui.add(note, 'bottom-right');
+          note.style.visibility = 'visible';
+          await view.map.loadAll();
+          const exportPopover = document.getElementById('export-popover');
+          exportPopover.headerTitle = 'Instant Apps: Header (Shared Theme)';
+          exportPopover.addEventListener('exportOutputUpdated', e => {
+            console.log('exportOutputUpdated: ', e.target.output);
+          });
+          const exportInline = document.getElementById('export-inline');
+          exportInline.view = view;
+          exportInline.showIncludeMap = true;
+          exportInline.headerTitle = 'Instant Apps: Header (Shared Theme)';
+          exportInline.extraContent = note;
+          exportInline.addEventListener('exportOutputUpdated', e => {
+            console.log('exportOutputUpdated: ', e.target.output);
+          });
         });
       });
-    });
-  </script>
-</body>
-
+    </script>
+  </body>
 </html>
