@@ -5,11 +5,13 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## v1.0.0-beta.169
+
 ## v1.0.0-beta.168
 
 ### instant-apps-export
 
-- Only show compass when map is rotated
+- Update export's t9n
 
 ## v1.0.0-beta.167
 
