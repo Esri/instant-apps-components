@@ -1,5 +1,6 @@
 {
   "export": "Exporta",
+  "exportBtn": "Imprimeix o exporta com a PDF",
   "exportPopover": "Element emergent d'exportació",
   "includeExtraContent": "Inclou els resultats",
   "includeHeaderTheme": "Inclou un tema de capçalera",

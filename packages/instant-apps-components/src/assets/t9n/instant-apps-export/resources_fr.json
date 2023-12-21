@@ -1,5 +1,6 @@
 {
   "export": "Exporter",
+  "exportBtn": "Imprimer ou exporter au format PDF",
   "exportPopover": "Fenêtre contextuelle Exporter",
   "includeExtraContent": "Inclure les résultats",
   "includeHeaderTheme": "Inclure le thème d’en-tête",

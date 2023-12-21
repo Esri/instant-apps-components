@@ -1,5 +1,6 @@
 {
   "export": "Експорт",
+  "exportBtn": "Роздрукувати або експортувати як PDF",
   "exportPopover": "Експорт спливного меню",
   "includeExtraContent": "Включити результати",
   "includeHeaderTheme": "Включити тема заголовку",

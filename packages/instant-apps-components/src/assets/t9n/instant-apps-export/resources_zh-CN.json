@@ -1,5 +1,6 @@
 {
   "export": "导出",
+  "exportBtn": "打印或导出为 PDF",
   "exportPopover": "导出弹出窗口",
   "includeExtraContent": "包含结果",
   "includeHeaderTheme": "包含页眉主题",

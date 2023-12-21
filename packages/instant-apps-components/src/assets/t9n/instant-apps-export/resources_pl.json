@@ -1,5 +1,6 @@
 {
   "export": "Eksportuj",
+  "exportBtn": "Drukuj lub eksportuj jako plik PDF",
   "exportPopover": "Eksportuj okno podręczne",
   "includeExtraContent": "Uwzględnij wyniki",
   "includeHeaderTheme": "Uwzględnij motyw nagłówka",

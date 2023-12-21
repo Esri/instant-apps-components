@@ -1,5 +1,6 @@
 {
   "export": "Ekspordi",
+  "exportBtn": "Prindi või ekspordi PDF-ina",
   "exportPopover": "Ekspordi hüpik",
   "includeExtraContent": "Kaasa tulemused",
   "includeHeaderTheme": "Kaasa päise teema",

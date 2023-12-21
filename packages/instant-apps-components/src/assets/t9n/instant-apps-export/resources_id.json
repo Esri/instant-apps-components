@@ -1,5 +1,6 @@
 {
   "export": "Ekspor",
+  "exportBtn": "Cetak atau Ekspor sebagai PDF",
   "exportPopover": "Ekspor popover",
   "includeExtraContent": "Sertakan hasil",
   "includeHeaderTheme": "Sertakan tema header",

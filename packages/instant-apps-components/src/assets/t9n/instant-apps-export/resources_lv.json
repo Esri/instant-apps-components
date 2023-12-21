@@ -1,5 +1,6 @@
 {
   "export": "Eksportēt",
+  "exportBtn": "Drukāt vai eksportēt PDF formātā",
   "exportPopover": "Eksportēt uznirstošo logu",
   "includeExtraContent": "Iekļaut rezultātus",
   "includeHeaderTheme": "Iekļaut galvenes motīvu",

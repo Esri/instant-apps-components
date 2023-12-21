@@ -1,5 +1,6 @@
 {
   "export": "Vie",
+  "exportBtn": "Tulosta tai vie PDF-tiedostona",
   "exportPopover": "Vie ponnahdus",
   "includeExtraContent": "Sisällytä tulokset",
   "includeHeaderTheme": "Sisällytä ylätunnisteen teema",

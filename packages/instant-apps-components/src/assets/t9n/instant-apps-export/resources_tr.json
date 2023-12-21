@@ -1,5 +1,6 @@
 {
   "export": "Dışa Aktar",
+  "exportBtn": "Yazdır veya PDF olarak Dışa Aktar",
   "exportPopover": "Açılır pencereyi dışarı aktar",
   "includeExtraContent": "Sonuçları dahil et",
   "includeHeaderTheme": "Üst bilgi temasını dahil et",
