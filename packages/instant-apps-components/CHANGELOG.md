@@ -5,6 +5,14 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## v1.0.0-beta.170
+
+### instant-apps-splash
+
+### instant-apps-landing-page
+
+- Hardcoded button text due to issue with `calcite-button` not updating button text when initially empty.
+
 ## v1.0.0-beta.169
 
 ## v1.0.0-beta.168
