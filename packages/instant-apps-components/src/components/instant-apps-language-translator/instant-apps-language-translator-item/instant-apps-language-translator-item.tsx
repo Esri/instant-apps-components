@@ -246,7 +246,7 @@ export class InstantAppsLanguageTranslatorItem {
       ? type === EInputType.User
         ? this.renderUserLocaleInput(value, uid)
         : this.renderTranslatedLanguageInput(value, uid)
-      : this.renderTextEditor(value, type);
+      : this.renderTextEditor(value, type, uid);
   }
 
   renderUserLocaleInput(value: string, uid: string): HTMLCalciteInputElement {
@@ -279,10 +279,11 @@ export class InstantAppsLanguageTranslatorItem {
     );
   }
 
-  renderTextEditor(value: string, type: InputType): HTMLInstantAppsCkeditorWrapperElement {
+  renderTextEditor(value: string, type: InputType, uid: string): HTMLInstantAppsCkeditorWrapperElement {
     const config = { toolbar: [] };
     return (
       <instant-apps-ckeditor-wrapper
+        id={uid}
         ref={this.setEditor.bind(this, type)}
         onDataChanged={this.handleTextEditorDataChange.bind(this, type)}
         onIsFocused={this.handleSelection}
