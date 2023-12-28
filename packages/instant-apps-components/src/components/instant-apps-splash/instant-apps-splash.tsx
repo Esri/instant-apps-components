@@ -125,7 +125,7 @@ export class InstantAppsSplash {
     const { primaryButtonText } = this;
     return (
       <calcite-button onClick={this.close.bind(this)} slot="primary">
-        {primaryButtonText}
+        {primaryButtonText ? primaryButtonText : 'Enter'}
       </calcite-button>
     );
   }
