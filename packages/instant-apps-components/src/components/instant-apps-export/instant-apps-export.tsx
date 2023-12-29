@@ -4,7 +4,7 @@ import { CalciteCheckboxCustomEvent, CalciteInputCustomEvent } from '@esri/calci
 import Export_T9n from '../../assets/t9n/instant-apps-export/resources.json';
 import { ExportOutput, PopoverPlacement } from '../../interfaces/interfaces';
 import { getMessages } from '../../utils/locale';
-import { printStyling } from './resources';
+import { screenshotStyling, printStyling } from './resources';
 import { loadModules } from '../../utils/loadModules';
 import { getMode } from '../../utils/mode';
 
@@ -16,6 +16,7 @@ const CSS = {
   hidden: 'instant-apps-export__visually-hidden',
   print: {
     base: 'instant-apps-export-print',
+    contentContainer: 'instant-apps-export-print__content-container',
     extraContainer: 'instant-apps-export-print__extra-container',
     legendContainer: 'instant-apps-export-print__legend-container',
     compassContainer: 'instant-apps-export-print__compass-container',
@@ -29,6 +30,8 @@ const CSS = {
     viewWrapper: 'instant-apps-export-print__view-wrapper',
   },
 };
+
+const dragHandlerName = 'instant-app-export-drag';
 
 @Component({
   tag: 'instant-apps-export',
@@ -138,6 +141,16 @@ export class InstantAppsExport {
    */
   @Prop() view: __esri.MapView | __esri.SceneView | undefined;
 
+  /**
+   * Adjust the mask background color for when users are setting the map area
+   */
+  @Prop() maskBackground = 'rgba(255, 51, 0, 0.1)';
+
+  /**
+   * Adjust the mask border for when users are setting the map area
+   */
+  @Prop() maskBorder = '2px dashed rgb(255, 51, 0)';
+
   @State() baseClass = CSS.baseLight;
   @State() exportIsLoading: boolean | undefined = undefined;
   @State() messages: typeof Export_T9n;
@@ -154,12 +167,14 @@ export class InstantAppsExport {
     }
   }
 
+  area: __esri.MapViewTakeScreenshotOptionsArea | __esri.MapViewTakeScreenshotOptionsArea | undefined;
   compass: __esri.Compass | null;
   compassContainerEl: HTMLDivElement;
   extraContainerEl: HTMLDivElement;
   handles: __esri.Handles | null;
   legend: __esri.Legend;
   legendContainerEl: HTMLDivElement;
+  maskDivEl: HTMLDivElement;
   popoverEl: HTMLCalcitePopoverElement;
   popupContainerEl: HTMLDivElement;
   popupContentEl: HTMLDivElement;
@@ -169,9 +184,14 @@ export class InstantAppsExport {
   printStyleEl: HTMLStyleElement | undefined;
   scaleBar: __esri.ScaleBar | null;
   scaleBarContainerEl: HTMLDivElement;
+  screenshot: __esri.Screenshot | null;
+  screenshotPreview: HTMLDivElement;
+  screenshotImgContainer: HTMLDivElement;
+  screenshotImg: HTMLImageElement;
+  screenshotStyle: HTMLStyleElement;
   viewWrapperEl: HTMLDivElement;
   viewContainerEl: HTMLDivElement;
-  viewEl: HTMLDivElement;
+  viewEl: HTMLImageElement;
 
   componentWillLoad(): void {
     this.baseClass = getMode(this.el) === 'dark' ? CSS.baseDark : CSS.baseLight;
@@ -240,12 +260,18 @@ export class InstantAppsExport {
     const options = this.includeMap ? this.renderMapOptions() : null;
     const print = this.renderPrint();
     const panelClass = this.mode === 'inline' ? CSS.inlineContainer : CSS.popoverContainer;
+    const showMapAreaBtn = this.showIncludeMap && this.includeMap;
     return (
       <div class={panelClass}>
         {headerTitle}
         {includeExtraContent}
         {includeMap}
         {options}
+        {showMapAreaBtn ? (
+          <calcite-button appearance="transparent" width="full" onClick={this.setMapAreaOnClick.bind(this)} disabled={this.exportIsLoading}>
+            {this.messages?.setMapArea}
+          </calcite-button>
+        ) : null}
         <calcite-button width="full" onClick={this.exportOnClick.bind(this)} loading={this.exportIsLoading} disabled={this.exportIsLoading}>
           {this.messages?.export}
         </calcite-button>
@@ -295,8 +321,10 @@ export class InstantAppsExport {
         <div class={CSS.print.base} ref={(el: HTMLDivElement) => (this.printEl = el)}>
           {printMap}
           {legend}
-          {popup}
-          {extraContent}
+          <div class={CSS.print.contentContainer}>
+            {popup}
+            {extraContent}
+          </div>
         </div>
       </div>
     );
@@ -308,7 +336,7 @@ export class InstantAppsExport {
       <div class={CSS.print.viewContainer} ref={(el: HTMLDivElement) => (this.viewContainerEl = el)}>
         <div class={CSS.print.viewWrapper} ref={(el: HTMLDivElement) => (this.viewWrapperEl = el)}>
           {this.headerTitle ? <instant-apps-header titleText={this.headerTitle} backgroundColor="#fff" textColor="#323232"></instant-apps-header> : null}
-          <div class={CSS.print.view} ref={(el: HTMLImageElement) => (this.viewEl = el)}></div>
+          <img class={CSS.print.view} ref={(el: HTMLImageElement) => (this.viewEl = el)}></img>
           {scaleBar}
         </div>
       </div>
@@ -352,6 +380,7 @@ export class InstantAppsExport {
   }
 
   async exportOnClick(): Promise<void> {
+    this.removeScreenshotElements();
     await this.beforeExport();
     if (this.viewWrapperEl != null && !this.viewWrapperEl.contains(this.compassContainerEl)) {
       this.viewWrapperEl.append(this.compassContainerEl);
@@ -368,9 +397,6 @@ export class InstantAppsExport {
       document.body.prepend(this.printEl);
       this.handleExtraContent();
       if (this.includeMap) {
-        if (this.viewContainerEl != null) {
-          this.viewContainerEl.style.display = 'flex';
-        }
         this.updatePopupToPrint();
         this.viewScreenshot();
         this.handleImgLoaded();
@@ -415,6 +441,7 @@ export class InstantAppsExport {
 
   resetPrintContent(): void {
     if (this.view != null) {
+      this.screenshot = null;
       this.printContainerEl?.prepend(this.printEl);
       this.printStyleEl?.remove();
       this.printStyleEl = undefined;
@@ -562,24 +589,39 @@ export class InstantAppsExport {
 
   async viewScreenshot(): Promise<void> {
     if (this.view != null && this.includeMap) {
-      const screenshot = await this.view.takeScreenshot({
-        width: this.view.width,
-        height: this.view.height,
-      });
-      const maxIMGWidth = 800;
-      const maxIMGHeight = 494;
+      if (this.screenshot == null) {
+        this.screenshot = await this.view.takeScreenshot({
+          width: this.view.width * 2,
+          height: this.view.height * 2,
+        });
+      }
+      this.handleScaleBarSize();
       if (this.viewEl != null && this.viewWrapperEl != null) {
-        if (this.view.width < maxIMGWidth) {
-          this.viewWrapperEl.style.width = `${this.view.width}px`;
-          this.viewWrapperEl.style.maxWidth = '';
+        const { height, width } = this.screenshot.data;
+        if (height > width) {
+          this.setMaxRowHeightOnViewContainer();
         } else {
-          this.viewWrapperEl.style.maxWidth = `${this.view.width}px`;
-          this.viewWrapperEl.style.width = '';
+          this.setMaxWidthOnViewContainer();
         }
-        this.viewWrapperEl.style.height = this.view.height < maxIMGHeight ? `${this.view.height}px` : '';
-        this.viewEl.style.backgroundImage = `url("${screenshot.dataUrl}")`;
+        this.viewEl.src = this.screenshot.dataUrl;
       }
     }
+  }
+
+  setMaxRowHeightOnViewContainer(): void {
+    this.printEl.style.gridTemplateRows = 'minmax(auto, 70%)';
+    this.viewEl.style.height = '100%';
+    this.viewEl.style.width = '';
+    this.viewWrapperEl.style.height = '100%';
+    this.viewWrapperEl.style.width = 'fit-content';
+  }
+
+  setMaxWidthOnViewContainer(): void {
+    this.printEl.style.gridTemplateRows = '';
+    this.viewEl.style.width = '100%';
+    this.viewEl.style.height = '';
+    this.viewWrapperEl.style.height = 'fit-content';
+    this.viewWrapperEl.style.width = '100%';
   }
 
   checkPopupOpen(): void {
@@ -610,5 +652,145 @@ export class InstantAppsExport {
         });
       }
     }
+  }
+
+  createScreenshot(): void {
+    if (this.view != null) {
+      this.screenshotPreview = document.createElement('div');
+      this.screenshotPreview.className = 'screenshot-preview hide';
+      this.screenshotImgContainer = document.createElement('div');
+      this.screenshotImgContainer.className = 'screenshot-img-container';
+      this.screenshotImg = document.createElement('img');
+      const screenshotBtnContainer = document.createElement('div');
+      const exportBtn = document.createElement('calcite-button');
+      const returnBtn = document.createElement('calcite-button');
+      exportBtn.innerHTML = this.messages?.export;
+      returnBtn.innerHTML = this.messages?.returnToMap;
+      returnBtn.appearance = 'outline-fill';
+      exportBtn.onclick = this.exportOnClick.bind(this);
+      returnBtn.onclick = this.screenshotReturn.bind(this);
+      screenshotBtnContainer.append(returnBtn, exportBtn);
+      this.screenshotImgContainer.append(this.screenshotImg, screenshotBtnContainer);
+      this.screenshotPreview.append(this.screenshotImgContainer);
+      this.view.container.append(this.screenshotPreview);
+    }
+  }
+
+  createMaskDiv(): void {
+    if (this.view != null) {
+      this.maskDivEl = document.createElement('div');
+      this.maskDivEl.id = 'screenshot-mask';
+      this.maskDivEl.className = 'hide screenshot-cursor';
+      this.maskDivEl.style.setProperty('--instant-apps-screenshot-mask-background', this.maskBackground);
+      this.maskDivEl.style.setProperty('--instant-apps-screenshot-mask-border', this.maskBorder);
+      this.screenshotStyle = document.createElement('style');
+      this.screenshotStyle.innerHTML = screenshotStyling;
+      this.view.container.append(this.screenshotStyle);
+      this.view.container.append(this.maskDivEl);
+    }
+  }
+
+  screenshotReturn(): void {
+    this.removeScreenshotElements();
+    this.exportIsLoading = false;
+    this.screenshot = null;
+  }
+
+  setMapAreaOnClick(): void {
+    if (this.view == null) return;
+    this.exportIsLoading = true;
+    this.createMaskDiv();
+    this.createScreenshot();
+    this.view.container.classList.add('screenshot-cursor', 'relative');
+    this.view.addHandles(
+      this.view.on('drag', async event => {
+        if (this.view == null) return;
+        event.stopPropagation();
+        if (event.action !== 'end') {
+          this.updateMaskSize(event);
+        } else {
+          this.maskScreenshot();
+        }
+      }),
+      dragHandlerName,
+    );
+  }
+
+  updateMaskSize(event: __esri.ViewDragEvent): void {
+    if (this.view != null) {
+      const xmin = this.clamp(Math.min(event.origin.x, event.x), 0, this.view.width);
+      const xmax = this.clamp(Math.max(event.origin.x, event.x), 0, this.view.width);
+      const ymin = this.clamp(Math.min(event.origin.y, event.y), 0, this.view.height);
+      const ymax = this.clamp(Math.max(event.origin.y, event.y), 0, this.view.height);
+      this.area = {
+        x: xmin,
+        y: ymin,
+        width: xmax - xmin,
+        height: ymax - ymin,
+      };
+      this.setMaskPosition(this.area);
+    }
+  }
+
+  maskScreenshot(): void {
+    if (this.view != null && this.area != null) {
+      this.view.removeHandles(dragHandlerName);
+      const height = this.area.height!;
+      const width = this.area.width!;
+      this.view.takeScreenshot({ area: this.area, width: width * 2, height: height * 2, format: 'jpg' }).then(screenshot => {
+        this.screenshot = screenshot;
+        this.showPreview();
+        this.view?.container.classList.remove('screenshot-cursor');
+        this.setMaskPosition(null);
+      });
+    }
+  }
+
+  setMaskPosition(area: __esri.MapViewTakeScreenshotOptionsArea | __esri.MapViewTakeScreenshotOptionsArea | null) {
+    if (area != null) {
+      this.maskDivEl.classList.remove('hide');
+      this.maskDivEl.style.left = `${area.x}px`;
+      this.maskDivEl.style.top = `${area.y}px`;
+      this.maskDivEl.style.width = `${area.width}px`;
+      this.maskDivEl.style.height = `${area.height}px`;
+    } else {
+      this.maskDivEl.remove();
+    }
+  }
+
+  clamp(value: number, from: number, to: number) {
+    return value < from ? from : value > to ? to : value;
+  }
+
+  showPreview() {
+    this.screenshotPreview.classList.remove('hide');
+    if (this.screenshotImg != null && this.screenshot != null) {
+      this.screenshotImg.src = this.screenshot.dataUrl;
+    }
+  }
+
+  handleScaleBarSize(): void {
+    if (this.view?.type === '2d') {
+      if (this.scaleBarContainerEl != null) {
+        const topBar: HTMLDivElement | null = this.scaleBarContainerEl.querySelector('.esri-scale-bar__line--top');
+        const bottomBar: HTMLDivElement | null = this.scaleBarContainerEl.querySelector('.esri-scale-bar__line--bottom');
+        this.setScalebarWidth(topBar, 'top');
+        this.setScalebarWidth(bottomBar, 'bottom');
+      }
+    }
+  }
+
+  setScalebarWidth(bar: HTMLDivElement | null, position: 'bottom' | 'top'): void {
+    if (this.view != null && bar != null && this.screenshot != null) {
+      const width = this.screenshot.data.width / 2;
+      const barWidth = Number(bar.style.width.replace('px', ''));
+      const widthPercentage = (barWidth / width) * 100;
+      bar.style.setProperty(`--instant-apps-scale-bar-${position}`, `${widthPercentage}%`);
+    }
+  }
+
+  removeScreenshotElements(): void {
+    this.screenshotPreview?.remove();
+    this.screenshotStyle?.remove();
   }
 }

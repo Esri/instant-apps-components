@@ -77,6 +77,14 @@ export namespace Components {
          */
         "includePopup"?: boolean;
         /**
+          * Adjust the mask background color for when users are setting the map area
+         */
+        "maskBackground": string;
+        /**
+          * Adjust the mask border for when users are setting the map area
+         */
+        "maskBorder": string;
+        /**
           * Renders tool as a popover with a trigger button, or inline to place in a custom container.
          */
         "mode": 'popover' | 'inline';
@@ -1156,6 +1164,14 @@ declare namespace LocalJSX {
           * When `true`, popup is included in the export.
          */
         "includePopup"?: boolean;
+        /**
+          * Adjust the mask background color for when users are setting the map area
+         */
+        "maskBackground"?: string;
+        /**
+          * Adjust the mask border for when users are setting the map area
+         */
+        "maskBorder"?: string;
         /**
           * Renders tool as a popover with a trigger button, or inline to place in a custom container.
          */
