@@ -158,7 +158,7 @@ export class InstantAppsLandingPage {
   renderEntryButton(): HTMLCalciteButtonElement {
     return (
       <calcite-button class={CSS.entryButton} onClick={() => (this.open = false)} scale={this.entryButtonScale} appearance="outline-fill">
-        {this.entryButtonText}
+        {this.entryButtonText ? this.entryButtonText : 'Enter'}
       </calcite-button>
     );
   }
