@@ -693,6 +693,10 @@ export interface InstantAppsInteractiveLegendLegendElementCaptionCustomEvent<T> 
     detail: T;
     target: HTMLInstantAppsInteractiveLegendLegendElementCaptionElement;
 }
+export interface InstantAppsLandingPageCustomEvent<T> extends CustomEvent<T> {
+    detail: T;
+    target: HTMLInstantAppsLandingPageElement;
+}
 export interface InstantAppsLanguageSwitcherCustomEvent<T> extends CustomEvent<T> {
     detail: T;
     target: HTMLInstantAppsLanguageSwitcherElement;
@@ -898,7 +902,19 @@ declare global {
         prototype: HTMLInstantAppsKeyboardShortcutsElement;
         new (): HTMLInstantAppsKeyboardShortcutsElement;
     };
+    interface HTMLInstantAppsLandingPageElementEventMap {
+        "landingPageOpen": void;
+        "landingPageClose": void;
+    }
     interface HTMLInstantAppsLandingPageElement extends Components.InstantAppsLandingPage, HTMLStencilElement {
+        addEventListener<K extends keyof HTMLInstantAppsLandingPageElementEventMap>(type: K, listener: (this: HTMLInstantAppsLandingPageElement, ev: InstantAppsLandingPageCustomEvent<HTMLInstantAppsLandingPageElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLInstantAppsLandingPageElementEventMap>(type: K, listener: (this: HTMLInstantAppsLandingPageElement, ev: InstantAppsLandingPageCustomEvent<HTMLInstantAppsLandingPageElementEventMap[K]>) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
     }
     var HTMLInstantAppsLandingPageElement: {
         prototype: HTMLInstantAppsLandingPageElement;
@@ -1469,6 +1485,14 @@ declare namespace LocalJSX {
           * Scale of icon image/graphic.
          */
         "iconImageScale"?: 's' | 'm' | 'l';
+        /**
+          * Emits when the landing page is closed.
+         */
+        "onLandingPageClose"?: (event: InstantAppsLandingPageCustomEvent<void>) => void;
+        /**
+          * Emits when the landing page is opened.
+         */
+        "onLandingPageOpen"?: (event: InstantAppsLandingPageCustomEvent<void>) => void;
         /**
           * Controls the open/close state of the landing page.
          */

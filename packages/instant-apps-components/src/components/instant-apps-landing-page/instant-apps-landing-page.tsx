@@ -1,4 +1,4 @@
-import { Component, Element, Prop, h, Host } from '@stencil/core';
+import { Component, Element, Prop, h, Host, Event, EventEmitter, Watch } from '@stencil/core';
 import { AlignmentPositions } from './support/enum';
 
 const CSS = {
@@ -103,6 +103,27 @@ export class InstantAppsLandingPage {
    */
   @Prop()
   entryButtonScale: 's' | 'm' | 'l' = 'l';
+
+  /**
+   * Emits when the landing page is opened.
+   */
+  @Event()
+  landingPageOpen: EventEmitter<void>;
+
+  /**
+   * Emits when the landing page is closed.
+   */
+  @Event()
+  landingPageClose: EventEmitter<void>;
+
+  @Watch('open')
+  emitToggleEvent() {
+    if (this.open) {
+      this.landingPageOpen.emit();
+    } else {
+      this.landingPageClose.emit();
+    }
+  }
 
   render() {
     return <Host>{this.renderLandingPageContent()}</Host>;
