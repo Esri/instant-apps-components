@@ -47,6 +47,14 @@ enum AlignmentPositions {
 | `titleText` _(required)_ | `title-text`           | Title text.                                                                                                                                                                                                                                | `string`                                                                                                                                                                                                                                                                                          | `undefined`                 |
 
 
+## Events
+
+| Event              | Description                            | Type                |
+| ------------------ | -------------------------------------- | ------------------- |
+| `landingPageClose` | Emits when the landing page is closed. | `CustomEvent<void>` |
+| `landingPageOpen`  | Emits when the landing page is opened. | `CustomEvent<void>` |
+
+
 ## CSS Custom Properties
 
 | Name                                                     | Description                                                                                                       |
