@@ -11,6 +11,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Added `landingPageOpen` and `landingPageClose` events that are emitted when the landing page is opened or closed, respectively.
 
+### instant-apps-export
+
+- Add set map area functionality
+- Update layout
+
 ## v1.0.0-beta.171
 
 ### instant-apps-language-translator
