@@ -228,7 +228,7 @@ export const printStyling = `
     break-before: auto;
   }`;
 
-export const maskStyling = `
+export const screenshotStyling = `
 .screenshot-preview.hide, .hide {
   display: none;
 }
@@ -243,8 +243,8 @@ export const maskStyling = `
 
 #screenshot-mask {
   position: absolute;
-  background: rgba(255, 51, 0, 0.1);
-  border: 2px dashed rgb(255, 51, 0);
+  background: var(--instant-apps-screenshot-mask-background);
+  border: var(--instant-apps-screenshot-mask-border);
 }
 
 .screenshot-preview {
@@ -265,7 +265,8 @@ export const maskStyling = `
 }
 
 .screenshot-img-container img {
-  max-height: inherit;
+  max-height: 75%;
+  max-width: 75%;
   object-fit: contain;
   border: 10px solid white;
   box-shadow: 2px 2px 5px 0 rgba(0, 0, 0, 0.5);

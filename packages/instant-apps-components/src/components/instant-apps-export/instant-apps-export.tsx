@@ -4,7 +4,7 @@ import { CalciteCheckboxCustomEvent, CalciteInputCustomEvent } from '@esri/calci
 import Export_T9n from '../../assets/t9n/instant-apps-export/resources.json';
 import { ExportOutput, PopoverPlacement } from '../../interfaces/interfaces';
 import { getMessages } from '../../utils/locale';
-import { maskStyling, printStyling } from './resources';
+import { screenshotStyling, printStyling } from './resources';
 import { loadModules } from '../../utils/loadModules';
 import { getMode } from '../../utils/mode';
 
@@ -30,6 +30,8 @@ const CSS = {
     viewWrapper: 'instant-apps-export-print__view-wrapper',
   },
 };
+
+const dragHandlerName = 'instant-app-export-drag';
 
 @Component({
   tag: 'instant-apps-export',
@@ -139,6 +141,16 @@ export class InstantAppsExport {
    */
   @Prop() view: __esri.MapView | __esri.SceneView | undefined;
 
+  /**
+   * Adjust the mask background color for when users are setting the map area
+   */
+  @Prop() maskBackground = 'rgba(255, 51, 0, 0.1)';
+
+  /**
+   * Adjust the mask border for when users are setting the map area
+   */
+  @Prop() maskBorder = '2px dashed rgb(255, 51, 0)';
+
   @State() baseClass = CSS.baseLight;
   @State() exportIsLoading: boolean | undefined = undefined;
   @State() messages: typeof Export_T9n;
@@ -155,6 +167,7 @@ export class InstantAppsExport {
     }
   }
 
+  area: __esri.MapViewTakeScreenshotOptionsArea | __esri.MapViewTakeScreenshotOptionsArea | undefined;
   compass: __esri.Compass | null;
   compassContainerEl: HTMLDivElement;
   extraContainerEl: HTMLDivElement;
@@ -175,6 +188,7 @@ export class InstantAppsExport {
   screenshotPreview: HTMLDivElement;
   screenshotImgContainer: HTMLDivElement;
   screenshotImg: HTMLImageElement;
+  screenshotStyle: HTMLStyleElement;
   viewWrapperEl: HTMLDivElement;
   viewContainerEl: HTMLDivElement;
   viewEl: HTMLImageElement;
@@ -254,7 +268,7 @@ export class InstantAppsExport {
         {includeMap}
         {options}
         {showMapAreaBtn ? (
-          <calcite-button appearance="transparent" width="full" onClick={this.handleScreenshot.bind(this)} disabled={this.exportIsLoading}>
+          <calcite-button appearance="transparent" width="full" onClick={this.setMapAreaOnClick.bind(this)} disabled={this.exportIsLoading}>
             {this.messages?.setMapArea}
           </calcite-button>
         ) : null}
@@ -366,7 +380,7 @@ export class InstantAppsExport {
   }
 
   async exportOnClick(): Promise<void> {
-    this.screenshotPreview?.classList.add('hide');
+    this.removeScreenshotElements();
     await this.beforeExport();
     if (this.viewWrapperEl != null && !this.viewWrapperEl.contains(this.compassContainerEl)) {
       this.viewWrapperEl.append(this.compassContainerEl);
@@ -585,21 +599,29 @@ export class InstantAppsExport {
       if (this.viewEl != null && this.viewWrapperEl != null) {
         const { height, width } = this.screenshot.data;
         if (height > width) {
-          this.printEl.style.gridTemplateRows = 'minmax(auto, 70%)';
-          this.viewEl.style.height = '100%';
-          this.viewEl.style.width = '';
-          this.viewWrapperEl.style.height = '100%';
-          this.viewWrapperEl.style.width = 'fit-content';
+          this.setMaxRowHeightOnViewContainer();
         } else {
-          this.printEl.style.gridTemplateRows = '';
-          this.viewEl.style.width = '100%';
-          this.viewEl.style.height = '';
-          this.viewWrapperEl.style.height = 'fit-content';
-          this.viewWrapperEl.style.width = '100%';
+          this.setMaxWidthOnViewContainer();
         }
         this.viewEl.src = this.screenshot.dataUrl;
       }
     }
+  }
+
+  setMaxRowHeightOnViewContainer(): void {
+    this.printEl.style.gridTemplateRows = 'minmax(auto, 70%)';
+    this.viewEl.style.height = '100%';
+    this.viewEl.style.width = '';
+    this.viewWrapperEl.style.height = '100%';
+    this.viewWrapperEl.style.width = 'fit-content';
+  }
+
+  setMaxWidthOnViewContainer(): void {
+    this.printEl.style.gridTemplateRows = '';
+    this.viewEl.style.width = '100%';
+    this.viewEl.style.height = '';
+    this.viewWrapperEl.style.height = 'fit-content';
+    this.viewWrapperEl.style.width = '100%';
   }
 
   checkPopupOpen(): void {
@@ -659,55 +681,69 @@ export class InstantAppsExport {
       this.maskDivEl = document.createElement('div');
       this.maskDivEl.id = 'screenshot-mask';
       this.maskDivEl.className = 'hide screenshot-cursor';
-      const maskStylingEl = document.createElement('style');
-      maskStylingEl.id = 'maskStyling';
-      maskStylingEl.innerHTML = maskStyling;
-      this.view.container.append(maskStylingEl);
+      this.maskDivEl.style.setProperty('--instant-apps-screenshot-mask-background', this.maskBackground);
+      this.maskDivEl.style.setProperty('--instant-apps-screenshot-mask-border', this.maskBorder);
+      this.screenshotStyle = document.createElement('style');
+      this.screenshotStyle.innerHTML = screenshotStyling;
+      this.view.container.append(this.screenshotStyle);
       this.view.container.append(this.maskDivEl);
     }
   }
 
   screenshotReturn(): void {
-    this.screenshotPreview.classList.add('hide');
+    this.removeScreenshotElements();
     this.exportIsLoading = false;
     this.screenshot = null;
   }
 
-  handleScreenshot(): void {
+  setMapAreaOnClick(): void {
     if (this.view == null) return;
     this.exportIsLoading = true;
     this.createMaskDiv();
     this.createScreenshot();
     this.view.container.classList.add('screenshot-cursor', 'relative');
-    let area: __esri.MapViewTakeScreenshotOptionsArea | __esri.MapViewTakeScreenshotOptionsArea | undefined;
+    this.view.addHandles(
+      this.view.on('drag', async event => {
+        if (this.view == null) return;
+        event.stopPropagation();
+        if (event.action !== 'end') {
+          this.updateMaskSize(event);
+        } else {
+          this.maskScreenshot();
+        }
+      }),
+      dragHandlerName,
+    );
+  }
 
-    const dragHandler = this.view.on('drag', async event => {
-      if (this.view == null) return;
-      event.stopPropagation();
-      if (event.action !== 'end') {
-        const xmin = this.clamp(Math.min(event.origin.x, event.x), 0, this.view.width);
-        const xmax = this.clamp(Math.max(event.origin.x, event.x), 0, this.view.width);
-        const ymin = this.clamp(Math.min(event.origin.y, event.y), 0, this.view.height);
-        const ymax = this.clamp(Math.max(event.origin.y, event.y), 0, this.view.height);
-        area = {
-          x: xmin,
-          y: ymin,
-          width: xmax - xmin,
-          height: ymax - ymin,
-        };
-        this.setMaskPosition(area);
-      } else {
-        dragHandler.remove();
-        const height = area?.height!;
-        const width = area?.width!;
-        this.view.takeScreenshot({ area, width: width * 2, height: height * 2, format: 'jpg' }).then(screenshot => {
-          this.screenshot = screenshot;
-          this.showPreview();
-          this.view?.container.classList.remove('screenshot-cursor');
-          this.setMaskPosition(null);
-        });
-      }
-    });
+  updateMaskSize(event: __esri.ViewDragEvent): void {
+    if (this.view != null) {
+      const xmin = this.clamp(Math.min(event.origin.x, event.x), 0, this.view.width);
+      const xmax = this.clamp(Math.max(event.origin.x, event.x), 0, this.view.width);
+      const ymin = this.clamp(Math.min(event.origin.y, event.y), 0, this.view.height);
+      const ymax = this.clamp(Math.max(event.origin.y, event.y), 0, this.view.height);
+      this.area = {
+        x: xmin,
+        y: ymin,
+        width: xmax - xmin,
+        height: ymax - ymin,
+      };
+      this.setMaskPosition(this.area);
+    }
+  }
+
+  maskScreenshot(): void {
+    if (this.view != null && this.area != null) {
+      this.view.removeHandles(dragHandlerName);
+      const height = this.area.height!;
+      const width = this.area.width!;
+      this.view.takeScreenshot({ area: this.area, width: width * 2, height: height * 2, format: 'jpg' }).then(screenshot => {
+        this.screenshot = screenshot;
+        this.showPreview();
+        this.view?.container.classList.remove('screenshot-cursor');
+        this.setMaskPosition(null);
+      });
+    }
   }
 
   setMaskPosition(area: __esri.MapViewTakeScreenshotOptionsArea | __esri.MapViewTakeScreenshotOptionsArea | null) {
@@ -718,7 +754,7 @@ export class InstantAppsExport {
       this.maskDivEl.style.width = `${area.width}px`;
       this.maskDivEl.style.height = `${area.height}px`;
     } else {
-      this.maskDivEl.classList.add('hide');
+      this.maskDivEl.remove();
     }
   }
 
@@ -729,35 +765,8 @@ export class InstantAppsExport {
   showPreview() {
     this.screenshotPreview.classList.remove('hide');
     if (this.screenshotImg != null && this.screenshot != null) {
-      const { height, width } = this.screenshot.data;
-      if (height > width) {
-        this.screenshotImg.style.maxWidth = '75%';
-        this.screenshotImg.style.maxHeight = '75%';
-      } else {
-        this.screenshotImg.style.maxWidth = '75%';
-        this.screenshotImg.style.maxHeight = '75%';
-      }
-
       this.screenshotImg.src = this.screenshot.dataUrl;
     }
-  }
-
-  getImageWithText(screenshot: __esri.Screenshot, text: string) {
-    const imageData = screenshot.data;
-    const canvas = document.createElement('canvas');
-    const context = canvas.getContext('2d');
-    if (context == null) return;
-    canvas.height = imageData.height;
-    canvas.width = imageData.width;
-
-    context.putImageData(imageData, 0, 0);
-    context.font = '20px Arial';
-    context.fillStyle = '#000';
-    context.fillRect(0, imageData.height - 40, context.measureText(text).width + 20, 30);
-    context.fillStyle = '#fff';
-    context.fillText(text, 10, imageData.height - 20);
-
-    return canvas.toDataURL();
   }
 
   handleScaleBarSize(): void {
@@ -778,5 +787,10 @@ export class InstantAppsExport {
       const widthPercentage = (barWidth / width) * 100;
       bar.style.setProperty(`--instant-apps-scale-bar-${position}`, `${widthPercentage}%`);
     }
+  }
+
+  removeScreenshotElements(): void {
+    this.screenshotPreview?.remove();
+    this.screenshotStyle?.remove();
   }
 }
