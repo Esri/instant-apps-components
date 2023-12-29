@@ -27,10 +27,9 @@ export const printStyling = `
     position: absolute;
     z-index: -999;
     color: #323232 !important;
-    display: flex;
-    flex-flow: row wrap;
-    align-content: flex-start;
-    gap: 36px;
+    display: grid;
+    gap: 24px;
+    grid-auto-flow: row;
     --esri-calcite-mode-name: "light";
   }
 
@@ -43,26 +42,24 @@ export const printStyling = `
   }
 
   .instant-apps-export-print__view-container {
-    height: 60%;
+    height: 100%;
     width: 100%;
     display: flex;
     justify-content: center;
   }
 
   .instant-apps-export-print__view-wrapper {
+    height: fit-content;
+    width: fit-content;
     position: relative;
-    height: 100%;
-    width: 100%;
     display: flex;
     flex-direction: column;
     border: 2pt solid #323232;
+    overflow: hidden;
   }
 
   .instant-apps-export-print__view {
-    height: 100%;
-    width: 100%;
-    background-position: center;
-    background-repeat: no-repeat;
+    object-fit: contain;
   }
 
   .instant-apps-export-print__popup-container {
@@ -90,8 +87,8 @@ export const printStyling = `
 
   .instant-apps-export-print__legend-container {
     height: min-content;
-    max-width: 300px;
     background: #fff;
+    overflow: unset;
   }
 
   .esri-legend--card, .esri-legend--card__service-content {
@@ -177,6 +174,7 @@ export const printStyling = `
   }
 
   .instant-apps-export-print__scale-bar-container {
+    width: 100%;
     position: absolute;
     bottom: 15px;
     left: 15px;
@@ -191,7 +189,12 @@ export const printStyling = `
   }
 
   .instant-apps-export-print__scale-bar-container .esri-scale-bar__line--top {
+    width: var(--instant-apps-scale-bar-top) !important;
     border-bottom: 2px solid #323232;
+  }
+
+  .instant-apps-export-print__scale-bar-container .esri-scale-bar__line--bottom {
+    width: var(--instant-apps-scale-bar-bottom) !important;
   }
 
   .instant-apps-export-print__scale-bar-container .esri-scale-bar__label {
@@ -216,4 +219,71 @@ export const printStyling = `
 
   .instant-apps-export-print__popup-content .esri-popup__content {
     margin: 0;
+  }
+
+  .instant-apps-export-print__content-container {
+    display: flex;
+    gap: 24px;
+    break-inside: avoid;
+    break-before: auto;
   }`;
+
+export const maskStyling = `
+.screenshot-preview.hide, .hide {
+  display: none;
+}
+
+.screenshot-cursor {
+  cursor: crosshair;
+}
+
+.relative {
+  position: relative;
+}
+
+#screenshot-mask {
+  position: absolute;
+  background: rgba(255, 51, 0, 0.1);
+  border: 2px dashed rgb(255, 51, 0);
+}
+
+.screenshot-preview {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  text-align: center;
+  background-color: rgba(0, 0, 0, 0.75);
+}
+
+.screenshot-preview * {
+  box-sizing: border-box;
+}
+
+.screenshot-img-container img {
+  max-height: inherit;
+  object-fit: contain;
+  border: 10px solid white;
+  box-shadow: 2px 2px 5px 0 rgba(0, 0, 0, 0.5);
+  margin-bottom: 0.5em;
+}
+
+.screenshot-img-container {
+  height: 100%;
+  width: 100%;
+  overflow-y: auto;
+  margin-bottom: 8px;
+  display: flex;
+  flex-flow: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.screenshot-img-container calcite-button {
+  margin: 5px;
+}
+`;

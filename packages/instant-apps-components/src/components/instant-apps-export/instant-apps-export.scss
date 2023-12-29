@@ -78,6 +78,10 @@
     --calcite-color-foreground-2: #f3f3f3;
   }
 
+  calcite-button:last-of-type {
+    margin-top: 0.5rem;
+  }
+
   .calcite-mode-dark calcite-switch {
     --calcite-color-foreground-1: #2b2b2b;
     --calcite-color-foreground-2: #202020;
@@ -90,4 +94,18 @@
   .esri-compass__icon.esri-icon-compass {
     color: #6e6e6e;
   }
+}
+
+.hide {
+  display: none;
+}
+
+.screenshotCursor {
+  cursor: crosshair;
+}
+
+#maskDiv {
+  position: absolute;
+  background: red;
+  border: 2px dashed rgb(255, 51, 0);
 }
