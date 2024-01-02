@@ -174,6 +174,10 @@ export namespace Components {
           * A reference to the MapView or SceneView.
          */
         "view": __esri.MapView | __esri.SceneView;
+        /**
+          * Display zoom button.
+         */
+        "zoomBtn"?: boolean;
     }
     interface InstantAppsHeader {
         /**
@@ -381,6 +385,10 @@ export namespace Components {
           * Button text which closes/dismisses the landing page.
          */
         "entryButtonText": string;
+        /**
+          * Font family to use for text
+         */
+        "fontFamily": string;
         /**
           * Image/graphic that is positioned near the text content.
          */
@@ -1274,6 +1282,10 @@ declare namespace LocalJSX {
           * A reference to the MapView or SceneView.
          */
         "view"?: __esri.MapView | __esri.SceneView;
+        /**
+          * Display zoom button.
+         */
+        "zoomBtn"?: boolean;
     }
     interface InstantAppsHeader {
         /**
@@ -1489,6 +1501,10 @@ declare namespace LocalJSX {
           * Button text which closes/dismisses the landing page.
          */
         "entryButtonText"?: string;
+        /**
+          * Font family to use for text
+         */
+        "fontFamily"?: string;
         /**
           * Image/graphic that is positioned near the text content.
          */
