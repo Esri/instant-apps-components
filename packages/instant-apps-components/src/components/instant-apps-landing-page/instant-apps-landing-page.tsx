@@ -1,5 +1,6 @@
 import { Component, Element, Prop, h, Host, Event, EventEmitter, Watch } from '@stencil/core';
 import { AlignmentPositions } from './support/enum';
+import { getFontFamily } from '../../utils/styles';
 
 const CSS = {
   BASE: 'instant-apps-landing-page',
@@ -105,6 +106,14 @@ export class InstantAppsLandingPage {
   entryButtonScale: 's' | 'm' | 'l' = 'l';
 
   /**
+   * Font family to use for text
+   */
+  @Prop({
+    reflect: true,
+  })
+  fontFamily: string = 'var(--calcite-sans-family);';
+
+  /**
    * Emits when the landing page is opened.
    */
   @Event()
@@ -133,16 +142,21 @@ export class InstantAppsLandingPage {
     const closed = !this.open ? (this.disableTransition ? ` ${CSS.closedNoTransition}` : ` ${CSS.closed}`) : '';
     const alignmentClass = this.getAlignmentClass();
     const removeTransition = this.disableTransition ? ` ${CSS.removeTransition}` : '';
+    const fontFamily = getFontFamily(this.fontFamily);
+    const style = {
+      fontFamily,
+    };
     return (
       <div
         style={
           this.backgroundImageSrc
             ? {
+                ...style,
                 backgroundSize: 'cover',
                 backgroundImage: `url("${this.backgroundImageSrc}")`,
                 backgroundRepeat: 'no-repeat',
               }
-            : {}
+            : style
         }
         class={`${CSS.BASE}${alignmentClass}${closed}${removeTransition}`}
       >

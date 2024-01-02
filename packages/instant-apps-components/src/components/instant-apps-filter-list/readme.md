@@ -121,6 +121,7 @@ const layerExpressions = [
 | `openFilters`          | `open-filters`    | When `true`, the layer filter block is expanded.                       | `boolean \| undefined`         | `false`     |
 | `urlParams`            | --                | URL params set by using filters.                                       | `URLSearchParams \| undefined` | `undefined` |
 | `view`                 | --                | A reference to the MapView or SceneView.                               | `MapView \| SceneView`         | `undefined` |
+| `zoomBtn`              | `zoom-btn`        | Display zoom button.                                                   | `boolean \| undefined`         | `true`      |
 
 
 ## Events

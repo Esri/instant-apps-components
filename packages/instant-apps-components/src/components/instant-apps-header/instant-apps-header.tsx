@@ -12,6 +12,7 @@ import { getElementDir } from '../../utils/languageUtil';
 import Sanitizer from '@esri/arcgis-html-sanitizer';
 
 import { widthBreakpoints } from '../../utils/breakpoints';
+import { getFontFamily } from '../../utils/styles';
 
 const CSS = {
   base: 'instant-apps-header--standard',
@@ -191,7 +192,7 @@ export class InstantAppsHeader {
     const title = this.renderTitle();
     const headerContentClass =
       this.headerAlignment === 'right' || this.headerAlignment === 'center' ? CSS.headerContent.concat(' ', CSS.alignment[this.headerAlignment]) : CSS.headerContent;
-    const fontFamily = this.fontFamily == null ? `"Avenir Next","Avenir","Helvetica Neue",sans-serif` : this.fontFamily;
+    const fontFamily = getFontFamily(this.fontFamily);
     return (
       <Host>
         {this.customHeaderHtml ? (
