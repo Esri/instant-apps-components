@@ -98,6 +98,11 @@ export class InstantAppsFilterList {
    */
   @Prop() view: __esri.MapView | __esri.SceneView;
 
+  /**
+   * Display zoom button.
+   */
+  @Prop() zoomBtn?: boolean = true;
+
   @State() loading: boolean;
   @State() filterLayerExpressions: LayerExpression[];
   @State() messages: typeof FilterList_T9n;
@@ -391,13 +396,13 @@ export class InstantAppsFilterList {
 
   renderZoomTo(layerExpression: LayerExpression): VNode {
     const id = layerExpression?.sublayerId ? `zoom-to-${layerExpression.id}-${layerExpression.sublayerId}` : `zoom-to-${layerExpression.id}`;
-    return (
+    return this.zoomBtn ? (
       <div class={CSS.zoomTo}>
         <calcite-button id={id} appearance="transparent" kind="neutral" scale="s" iconStart="magnifying-glass-plus" onClick={this.handleZoomTo.bind(this, layerExpression)}>
           {this.messages?.zoomTo}
         </calcite-button>
       </div>
-    );
+    ) : undefined;
   }
 
   handleResetDatePicker(expression: Expression, layerExpression: LayerExpression): void {
