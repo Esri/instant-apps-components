@@ -426,4 +426,27 @@ export class InstantAppsLanguageTranslator {
   async getPortalItemResource() {
     return store.get('portalItemResource') as __esri.PortalItemResource;
   }
+
+  /**
+   * Batch write data to associated portal item resource.
+   */
+  @Method()
+  async batchWriteToPortalItemResource(data: any) {
+    store.set('saving', true);
+    try {
+      const resource = await this.getPortalItemResource();
+      const dataStr = JSON.stringify(data);
+      const blobParts = [dataStr];
+      const options = { type: 'application/json' };
+      const blob = new Blob(blobParts, options);
+      await resource.update(blob);
+      setTimeout(() => store.set('saving', false), 1500);
+      this.translatorDataUpdated.emit();
+      return Promise.resolve();
+    } catch (err) {
+      console.error('Error writing to portal item resource: ', err);
+      store.set('saving', false);
+      return Promise.reject();
+    }
+  }
 }

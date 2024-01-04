@@ -446,6 +446,10 @@ export namespace Components {
          */
         "appSettings": AppSettings;
         /**
+          * Batch write data to associated portal item resource.
+         */
+        "batchWriteToPortalItemResource": (data: any) => Promise<void>;
+        /**
           * Gets portal item resource containing the translation data.
          */
         "getPortalItemResource": () => Promise<__esri.PortalItemResource>;
