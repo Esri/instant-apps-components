@@ -159,6 +159,16 @@ interface LocaleItem {
 
 ## Methods
 
+### `batchWriteToPortalItemResource(data: any) => Promise<void>`
+
+Batch write data to associated portal item resource.
+
+#### Returns
+
+Type: `Promise<void>`
+
+
+
 ### `getPortalItemResource() => Promise<__esri.PortalItemResource>`
 
 Gets portal item resource containing the translation data.
