@@ -1,5 +1,5 @@
 import { Component, Host, Prop, h, Event } from '@stencil/core';
-import { Element, EventEmitter, HostElement, Watch, State, Listen } from '@stencil/core/internal';
+import { Element, EventEmitter, HostElement, Watch, State, Listen, Fragment, Method } from '@stencil/core/internal';
 
 import { generateUIData, getLocales, getMessages, getUIDataKeys } from './support/utils';
 
@@ -275,9 +275,13 @@ export class InstantAppsLanguageTranslator {
     const { isCollapse, messages } = this;
     const text = isCollapse ? messages?.collapseAll : messages?.expandAll;
     return (
-      <calcite-button onClick={this.handleExpandCollapseAll.bind(this)} appearance="transparent" icon-start={EIcons.ExpandCollapse}>
-        {text}
-      </calcite-button>
+      <Fragment>
+        <slot name="primary-custom-action"></slot>
+        <slot name="secondary-custom-action"></slot>
+        <calcite-button onClick={this.handleExpandCollapseAll.bind(this)} appearance="transparent" icon-start={EIcons.ExpandCollapse}>
+          {text}
+        </calcite-button>
+      </Fragment>
     );
   }
 
@@ -397,5 +401,29 @@ export class InstantAppsLanguageTranslator {
     const node = e.target as HTMLCalciteSelectElement;
     const value = node.value;
     store.set('currentLanguage', value);
+  }
+
+  /**
+   * Gets translation data for all languages and fields.
+   */
+  @Method()
+  async getTranslationData() {
+    return store.get('portalItemResourceT9n');
+  }
+
+  /**
+   * Updates translation data for all languages and fields.
+   */
+  @Method()
+  async setTranslationData(data: any) {
+    return store.set('portalItemResourceT9n', data);
+  }
+
+  /**
+   * Gets portal item resource containing the translation data.
+   */
+  @Method()
+  async getPortalItemResource() {
+    return store.get('portalItemResource') as __esri.PortalItemResource;
   }
 }

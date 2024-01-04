@@ -84,7 +84,10 @@
       </calcite-shell-panel>
       <div id="viewDiv"></div>
     </calcite-shell>
-    <instant-apps-language-translator tabindex="-1" id="langTranslator"></instant-apps-language-translator>
+    <instant-apps-language-translator tabindex="-1" id="langTranslator">
+      <calcite-button slot="primary-custom-action" icon-start="import" appearance="transparent">Export</calcite-button>
+      <calcite-button slot="secondary-custom-action" icon-start="export" appearance="transparent">Import</calcite-button>
+    </instant-apps-language-translator>
     <script type="module">
       require(['esri/views/MapView', 'esri/WebMap', 'esri/widgets/Expand', 'esri/widgets/Search', 'esri/widgets/LayerList', 'esri/portal/PortalItem', 'esri/config', 'esri/intl'], (
         MapView,
