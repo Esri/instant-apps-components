@@ -132,13 +132,6 @@
           },
         });
 
-        const url = new URL(window.location.href);
-        const searchParams = url.searchParams;
-        let center = searchParams.get('center');
-        let zoom = searchParams.get('level');
-        if (center) center = center.split(';').map(item => parseFloat(item));
-        if (zoom) zoom = parseInt(zoom);
-
         const view = new MapView({
           map,
           container: 'viewDiv',
