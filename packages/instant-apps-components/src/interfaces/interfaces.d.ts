@@ -157,6 +157,7 @@ export interface Expression {
   range?: { min: string | number | undefined; max: string | number | undefined };
   step?: number;
   numDisplayOption?: 'slider' | 'drop-down';
+  displayOption?: 'range' | 'drop-down';
   pointCloudFilters?: PointCloudFilters;
   format?: __esri.FieldInfoFormat;
 }
