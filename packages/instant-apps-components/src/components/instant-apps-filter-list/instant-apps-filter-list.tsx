@@ -414,11 +414,14 @@ export class InstantAppsFilterList {
     if (type === 'string' || type == 'coded-value') {
       return this.renderCombobox(layerExpression, expression);
     } else if (type === 'number' || type == 'range') {
-      if (expression?.numDisplayOption === 'drop-down') {
+      if (expression?.numDisplayOption === 'drop-down' || expression?.displayOption === 'drop-down') {
         return this.renderCombobox(layerExpression, expression);
       }
       return this.renderNumberSlider(layerExpression, expression);
     } else if (type === 'date') {
+      if (expression?.displayOption === 'drop-down') {
+        return this.renderCombobox(layerExpression, expression);
+      }
       return this.renderDatePicker(layerExpression, expression);
     }
     return;
@@ -450,7 +453,7 @@ export class InstantAppsFilterList {
         } else if (type === 'date') {
           this.resetDatePicker(expression);
         } else if (type === 'number' || type === 'range') {
-          if (expression?.numDisplayOption === 'drop-down') {
+          if (expression?.numDisplayOption === 'drop-down' || expression?.displayOption === 'drop-down') {
             this.resetCombobox(expression);
           } else {
             this.resetNumberRange(expression);
@@ -539,7 +542,7 @@ export class InstantAppsFilterList {
       const { field } = expression;
       if (field != null) {
         this.setExpressionFormat(layer as __esri.FeatureLayer, expression, field);
-        if (expression?.numDisplayOption === 'drop-down') {
+        if (expression?.numDisplayOption === 'drop-down' || expression?.displayOption === 'drop-down') {
           const fields = (await this.getFeatureAttributes(layer, field)) as number[];
           fields.sort((a, b) => a - b);
           expression.fields = fields;
@@ -743,7 +746,11 @@ export class InstantAppsFilterList {
     } else if (type === 'number') {
       update = await this.updateNumberExpression(layerExpression, expression);
     } else if (type === 'date') {
-      update = await this.updateDateExpression(layerExpression, expression);
+      if (expression.displayOption === 'drop-down') {
+        update = await this.updateStringExpression(layerExpression, expression);
+      } else {
+        update = await this.updateDateExpression(layerExpression, expression);
+      }
     } else if (type === 'coded-value') {
       update = this.updateCodedValueExpression(expression, layerField);
     } else if (type === 'range') {
