@@ -1,5 +1,5 @@
 import { Component, Host, Prop, h, Event } from '@stencil/core';
-import { Element, EventEmitter, HostElement, Watch, State, Listen } from '@stencil/core/internal';
+import { Element, EventEmitter, HostElement, Watch, State, Listen, Fragment, Method } from '@stencil/core/internal';
 
 import { generateUIData, getLocales, getMessages, getUIDataKeys } from './support/utils';
 
@@ -275,9 +275,13 @@ export class InstantAppsLanguageTranslator {
     const { isCollapse, messages } = this;
     const text = isCollapse ? messages?.collapseAll : messages?.expandAll;
     return (
-      <calcite-button onClick={this.handleExpandCollapseAll.bind(this)} appearance="transparent" icon-start={EIcons.ExpandCollapse}>
-        {text}
-      </calcite-button>
+      <Fragment>
+        <slot name="primary-custom-action"></slot>
+        <slot name="secondary-custom-action"></slot>
+        <calcite-button onClick={this.handleExpandCollapseAll.bind(this)} appearance="transparent" icon-start={EIcons.ExpandCollapse}>
+          {text}
+        </calcite-button>
+      </Fragment>
     );
   }
 
@@ -397,5 +401,52 @@ export class InstantAppsLanguageTranslator {
     const node = e.target as HTMLCalciteSelectElement;
     const value = node.value;
     store.set('currentLanguage', value);
+  }
+
+  /**
+   * Gets translation data for all languages and fields.
+   */
+  @Method()
+  async getTranslationData() {
+    return store.get('portalItemResourceT9n');
+  }
+
+  /**
+   * Updates translation data for all languages and fields.
+   */
+  @Method()
+  async setTranslationData(data: any) {
+    return store.set('portalItemResourceT9n', data);
+  }
+
+  /**
+   * Gets portal item resource containing the translation data.
+   */
+  @Method()
+  async getPortalItemResource() {
+    return store.get('portalItemResource') as __esri.PortalItemResource;
+  }
+
+  /**
+   * Batch write data to associated portal item resource.
+   */
+  @Method()
+  async batchWriteToPortalItemResource(data: any) {
+    store.set('saving', true);
+    try {
+      const resource = await this.getPortalItemResource();
+      const dataStr = JSON.stringify(data);
+      const blobParts = [dataStr];
+      const options = { type: 'application/json' };
+      const blob = new Blob(blobParts, options);
+      await resource.update(blob);
+      setTimeout(() => store.set('saving', false), 1500);
+      this.translatorDataUpdated.emit();
+      return Promise.resolve();
+    } catch (err) {
+      console.error('Error writing to portal item resource: ', err);
+      store.set('saving', false);
+      return Promise.reject();
+    }
   }
 }

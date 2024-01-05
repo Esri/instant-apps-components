@@ -5,6 +5,38 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## v1.0.0-beta.176
+
+### instant-apps-language-translator
+
+- feat: batchWriteToPortalItemResource - Exposed public method to batch write to portal item resource.
+
+## v1.0.0-beta.175
+
+### instant-apps-language-translator
+
+Exposed public methods to use for custom actions.
+
+- getTranslationData - Gets translation data for all languages and fields.
+- setTranslationData - Updates translation data for all languages and fields.
+- getPortalItemResource - Gets portal item resource containing the translation data.
+
+## v1.0.0-beta.174
+
+# General
+
+- feat: Implemented font family utility function
+
+### instant-apps-landing-page
+
+- feat: added `fontFamily` property
+
+## v1.0.0-beta.173
+
+### instant-apps-export
+
+- fix: update set map area button check
+
 ## v1.0.0-beta.172
 
 ### instant-apps-landing-page

@@ -260,14 +260,13 @@ export class InstantAppsExport {
     const options = this.includeMap ? this.renderMapOptions() : null;
     const print = this.renderPrint();
     const panelClass = this.mode === 'inline' ? CSS.inlineContainer : CSS.popoverContainer;
-    const showMapAreaBtn = this.showIncludeMap && this.includeMap;
     return (
       <div class={panelClass}>
         {headerTitle}
         {includeExtraContent}
         {includeMap}
         {options}
-        {showMapAreaBtn ? (
+        {this.includeMap ? (
           <calcite-button appearance="transparent" width="full" onClick={this.setMapAreaOnClick.bind(this)} disabled={this.exportIsLoading}>
             {this.messages?.setMapArea}
           </calcite-button>

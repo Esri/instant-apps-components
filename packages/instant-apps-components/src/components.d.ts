@@ -174,6 +174,10 @@ export namespace Components {
           * A reference to the MapView or SceneView.
          */
         "view": __esri.MapView | __esri.SceneView;
+        /**
+          * Display zoom button.
+         */
+        "zoomBtn"?: boolean;
     }
     interface InstantAppsHeader {
         /**
@@ -382,6 +386,10 @@ export namespace Components {
          */
         "entryButtonText": string;
         /**
+          * Font family to use for text
+         */
+        "fontFamily": string;
+        /**
           * Image/graphic that is positioned near the text content.
          */
         "iconImage": string;
@@ -438,6 +446,18 @@ export namespace Components {
          */
         "appSettings": AppSettings;
         /**
+          * Batch write data to associated portal item resource.
+         */
+        "batchWriteToPortalItemResource": (data: any) => Promise<void>;
+        /**
+          * Gets portal item resource containing the translation data.
+         */
+        "getPortalItemResource": () => Promise<__esri.PortalItemResource>;
+        /**
+          * Gets translation data for all languages and fields.
+         */
+        "getTranslationData": () => Promise<any>;
+        /**
           * Specified languages that the user-defined strings will be translated in.
          */
         "locales": LocaleItem[];
@@ -449,6 +469,10 @@ export namespace Components {
           * Instant App portal item - used to fetch it's associated portal item resource. The portal item resource will contain the user-defined translated strings.
          */
         "portalItem": __esri.PortalItem;
+        /**
+          * Updates translation data for all languages and fields.
+         */
+        "setTranslationData": (data: any) => Promise<void>;
         /**
           * Function that is called when the value in a translated locale's input has changed. This function will have 4 arguments - fieldName, value, locale, and resource - and will return a promise. The callback function can be used to construct the data of key-value pairs that will be written to the portal item resource.
          */
@@ -1274,6 +1298,10 @@ declare namespace LocalJSX {
           * A reference to the MapView or SceneView.
          */
         "view"?: __esri.MapView | __esri.SceneView;
+        /**
+          * Display zoom button.
+         */
+        "zoomBtn"?: boolean;
     }
     interface InstantAppsHeader {
         /**
@@ -1489,6 +1517,10 @@ declare namespace LocalJSX {
           * Button text which closes/dismisses the landing page.
          */
         "entryButtonText"?: string;
+        /**
+          * Font family to use for text
+         */
+        "fontFamily"?: string;
         /**
           * Image/graphic that is positioned near the text content.
          */

@@ -157,6 +157,49 @@ interface LocaleItem {
 | `translatorDataUpdated` | Fires when a translation input's value has changed. | `CustomEvent<string>` |
 
 
+## Methods
+
+### `batchWriteToPortalItemResource(data: any) => Promise<void>`
+
+Batch write data to associated portal item resource.
+
+#### Returns
+
+Type: `Promise<void>`
+
+
+
+### `getPortalItemResource() => Promise<__esri.PortalItemResource>`
+
+Gets portal item resource containing the translation data.
+
+#### Returns
+
+Type: `Promise<PortalItemResource>`
+
+
+
+### `getTranslationData() => Promise<any>`
+
+Gets translation data for all languages and fields.
+
+#### Returns
+
+Type: `Promise<any>`
+
+
+
+### `setTranslationData(data: any) => Promise<void>`
+
+Updates translation data for all languages and fields.
+
+#### Returns
+
+Type: `Promise<void>`
+
+
+
+
 ## Dependencies
 
 ### Used by
