@@ -271,7 +271,7 @@ export class InstantAppsExport {
             {this.messages?.setMapArea}
           </calcite-button>
         ) : null}
-        <calcite-button width="full" onClick={this.exportOnClick.bind(this)} loading={this.exportIsLoading} disabled={this.exportIsLoading}>
+        <calcite-button width="full" onClick={this.exportOnClick.bind(this)} disabled={this.exportIsLoading}>
           {this.messages?.export}
         </calcite-button>
         {print}
