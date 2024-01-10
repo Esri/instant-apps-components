@@ -512,7 +512,8 @@ export class InstantAppsFilterList {
   }
 
   resetAllFilters(): void {
-    this.view?.map?.allLayers?.forEach(layer => {
+    const allLayersAndTables = this.view?.map?.allLayers?.concat(this.view?.map?.allTables);
+    allLayersAndTables?.forEach(layer => {
       if (supportedTypes.includes(layer.type)) {
         const fl = layer as FilterLayer;
         if (fl.type === 'point-cloud') {
@@ -913,7 +914,7 @@ export class InstantAppsFilterList {
 
   updateFilter(layerExpression: LayerExpression, defExpressions: string[], filters: PointCloudFilters): void {
     const { id } = layerExpression;
-    const fl = this.view.map.findLayerById(id) as FilterLayer;
+    const fl = (this.view.map.findLayerById(id) || this.view.map.findTableById(id)) as FilterLayer;
     if (fl != null) {
       if (fl.type === 'point-cloud') {
         this.updateFilterLayerPCLFilter(fl, filters);
@@ -957,8 +958,9 @@ export class InstantAppsFilterList {
     this.initDefExpressions = {};
     this.initPointCloudFilters = {};
     this.initMapImageExpressions = {};
-    for (let i = 0; i < map.allLayers.length; i++) {
-      const layer = map.allLayers.getItemAt(i);
+    const layersAndTables = map.allLayers.concat(map.allTables);
+    for (let i = 0; i < layersAndTables.length; i++) {
+      const layer = layersAndTables.getItemAt(i);
       if (supportedTypes.includes(layer.type)) {
         const fl = layer as FilterLayer;
         if (fl.type === 'point-cloud') {
@@ -1152,7 +1154,8 @@ export class InstantAppsFilterList {
   }
 
   findFilterLayer(layerExpression: LayerExpression): FilterQueryLayer {
-    const layer = this.view.map.allLayers.find(({ id }) => id === layerExpression.id) as FilterLayer;
+    const allLayersAndTables = this.view.map.allLayers.concat(this.view.map.allTables);
+    const layer = allLayersAndTables.find(({ id }) => id === layerExpression.id) as FilterLayer;
     if (layer.type === 'map-image') {
       return layer?.findSublayerById(layerExpression.sublayerId);
     } else {
