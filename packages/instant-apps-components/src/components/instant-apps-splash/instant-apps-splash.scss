@@ -1,6 +1,12 @@
 :host {
   display: block;
 
+  .image.image_resized {
+    img {
+      width: 100%;
+    }
+  }
+
   .instant-apps-splash__back-content {
     display: flex;
     align-items: center;
