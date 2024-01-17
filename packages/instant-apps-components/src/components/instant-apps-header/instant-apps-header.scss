@@ -68,6 +68,13 @@
   --instant-apps-header-logo-height--logo-scale--l: 60px;
 
   width: 100%;
+
+  .image.image_resized {
+    img {
+      width: 100%;
+    }
+  }
+
   .instant-apps-header--standard {
     box-sizing: border-box;
     display: flex;
