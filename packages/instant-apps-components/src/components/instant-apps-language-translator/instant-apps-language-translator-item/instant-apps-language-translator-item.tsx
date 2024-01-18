@@ -154,7 +154,7 @@ export class InstantAppsLanguageTranslatorItem {
     const locale = store.get('currentLanguage') as string;
     const data = store.get('portalItemResourceT9n');
 
-    const label = this.translatedLanguageLabels[this.fieldName];
+    const label = this.translatedLanguageLabels?.[this.fieldName];
     const value = data?.[locale]?.[uid] as string;
 
     const selected = uiDataItem?.selected ? ` ${CSS.selected}` : '';
@@ -185,7 +185,7 @@ export class InstantAppsLanguageTranslatorItem {
     const localeData = data?.[locale];
     const translatedValue = localeData?.[uid];
     const { label, value, id } = contentItem;
-    const inputLabel = inputType === EInputType.Translation ? this.translatedLanguageLabels[id] : label;
+    const inputLabel = inputType === EInputType.Translation ? this.translatedLanguageLabels?.[id] : label;
     const isUser = inputType === EInputType.User;
     const inputValue = isUser ? value : translatedValue;
     return (
