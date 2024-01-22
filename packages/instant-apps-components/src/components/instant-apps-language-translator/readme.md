@@ -200,6 +200,15 @@ Type: `Promise<void>`
 
 
 
+## Slots
+
+| Slot                          | Description                                                                    |
+| ----------------------------- | ------------------------------------------------------------------------------ |
+| `"primary-custom-action"`     | A slot for adding a primary action.                                            |
+| `"secondary-custom-action"`   | A slot for adding a secondary action.                                          |
+| `"translation-custom-action"` | A slot for adding a custom action in the translation header section of the UI. |
+
+
 ## Dependencies
 
 ### Used by

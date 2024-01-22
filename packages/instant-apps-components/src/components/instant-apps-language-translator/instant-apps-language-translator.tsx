@@ -30,6 +30,12 @@ const CSS = {
   writingIcon: `${BASE}__writing-icon`,
 };
 
+/**
+ * @slot primary-custom-action - A slot for adding a primary action.
+ * @slot secondary-custom-action - A slot for adding a secondary action.
+ * @slot translation-custom-action - A slot for adding a custom action in the translation header section of the UI.
+ */
+
 @Component({
   tag: 'instant-apps-language-translator',
   styleUrl: 'instant-apps-language-translator.scss',
@@ -295,7 +301,12 @@ export class InstantAppsLanguageTranslator {
   }
 
   renderTrailingTopBarSection(): void {
-    return <div class={CSS.topBarSection}>{this.renderLanguageSelection()}</div>;
+    return (
+      <div class={CSS.topBarSection}>
+        {this.renderLanguageSelection()}
+        <slot name="translation-custom-action"></slot>
+      </div>
+    );
   }
 
   renderLanguageSelection(): HTMLCalciteLabelElement {
