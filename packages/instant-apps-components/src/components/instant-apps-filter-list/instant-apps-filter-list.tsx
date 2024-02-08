@@ -138,6 +138,7 @@ export class InstantAppsFilterList {
   }
 
   geometryJsonUtils: typeof __esri.JSONSupport;
+  intl: __esri.intl;
   locale: string;
   panelEl: HTMLCalcitePanelElement;
   reactiveUtils: __esri.reactiveUtils;
@@ -180,6 +181,7 @@ export class InstantAppsFilterList {
     this.geometryJsonUtils = geometryJsonUtils;
     this.reactiveUtils = reactiveUtils;
     this.locale = intl.getLocale();
+    this.intl = intl;
 
     return Promise.resolve();
   }
@@ -274,17 +276,7 @@ export class InstantAppsFilterList {
   }
 
   renderComboboxItem(expression: Expression, value: string | number, index: number): VNode {
-    let label = value;
-    if (expression.type === 'coded-value') {
-      label = expression.codedValues?.[value] as string;
-    } else if (expression.type === 'number' && typeof value === 'number' && expression.format != null) {
-      if (expression.format.places != null) {
-        label = this.roundNumber(value, expression.format.places) as number;
-      }
-      if (expression.format.digitSeparator) {
-        label = this.numberWithCommas(label as number);
-      }
-    }
+    const label = this.createLabel(expression, value)
     const selectedFields = expression?.selectedFields as unknown[];
     const selected = selectedFields?.includes(value) ?? false;
 
@@ -530,9 +522,15 @@ export class InstantAppsFilterList {
   }
 
   async updateStringExpression(layerExpression: LayerExpression, expression: Expression): Promise<boolean> {
-    const { field } = expression;
+    const { field, type } = expression;
     const layer = this.findFilterLayer(layerExpression);
     expression.fields = await this.getFeatureAttributes(layer, field);
+    if (type === 'date') {
+      const layerField = layer.fields.find(({name}) => name === field)
+      if (layerField?.type === 'date-only') {
+        expression.dateOnly = true;
+      }
+    }
     if (expression?.selectedFields) {
       const selectedFields = expression.selectedFields.map((field: string | number) => (typeof field === 'number' ? field : `'${handleSingleQuote(field)}'`));
       expression.definitionExpression = `${field} IN (${selectedFields.join(',')})`;
@@ -1161,5 +1159,23 @@ export class InstantAppsFilterList {
     } else {
       return layer as FilterQueryLayer;
     }
+  }
+
+  createLabel(expression: Expression, value: string | number): string | number {
+    let label = value;
+    if (expression.type === 'coded-value') {
+      label = expression.codedValues?.[value] as string;
+    } else if (expression.type === 'number' && typeof value === 'number' && expression.format != null) {
+      if (expression.format.places != null) {
+        label = this.roundNumber(value, expression.format.places) as number;
+      }
+      if (expression.format.digitSeparator) {
+        label = this.numberWithCommas(label as number);
+      }
+    } else if (expression.type === 'date') {
+      const format = expression.dateOnly ? this.intl.convertDateFormatToIntlOptions("short-date") : undefined;
+      label = this.intl.formatDate(value as number, format)
+    }
+    return label;
   }
 }

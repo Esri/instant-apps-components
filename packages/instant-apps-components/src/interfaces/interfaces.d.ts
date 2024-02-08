@@ -160,6 +160,7 @@ export interface Expression {
   displayOption?: 'range' | 'drop-down';
   pointCloudFilters?: PointCloudFilters;
   format?: __esri.FieldInfoFormat;
+  dateOnly?: boolean;
 }
 
 export interface LayerExpression {
