@@ -9,7 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### instant-apps-filter-list
 
-- fix: add date expression builder, remove fixed position,
+- fix: add date expression builder, remove fixed position
 
 ## v1.0.0-beta.186
 
