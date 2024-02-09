@@ -264,7 +264,6 @@ export class InstantAppsFilterList {
           onCalciteComboboxChange={this.handleComboSelect.bind(this, expression, layerExpression)}
           label={expression.name}
           placeholder={expression.placeholder}
-          overlayPositioning="fixed"
           selectionMode="multiple"
           scale="s"
           max-items="6"
@@ -276,7 +275,7 @@ export class InstantAppsFilterList {
   }
 
   renderComboboxItem(expression: Expression, value: string | number, index: number): VNode {
-    const label = this.createLabel(expression, value)
+    const label = this.createLabel(expression, value);
     const selectedFields = expression?.selectedFields as unknown[];
     const selected = selectedFields?.includes(value) ?? false;
 
@@ -351,7 +350,6 @@ export class InstantAppsFilterList {
             max={max}
             scale="s"
             lang={this.locale ?? 'en'}
-            overlay-positioning="fixed"
             layout="vertical"
             value={value}
             range
@@ -526,7 +524,7 @@ export class InstantAppsFilterList {
     const layer = this.findFilterLayer(layerExpression);
     expression.fields = await this.getFeatureAttributes(layer, field);
     if (type === 'date') {
-      const layerField = layer.fields.find(({name}) => name === field)
+      const layerField = layer.fields.find(({ name }) => name === field);
       if (layerField?.type === 'date-only') {
         expression.dateOnly = true;
       }
@@ -796,12 +794,17 @@ export class InstantAppsFilterList {
   handleComboSelect(expression: Expression, layerExpression: LayerExpression, event: CustomEvent): void {
     const combobox = event.target as HTMLCalciteComboboxElement;
     const items = combobox.selectedItems as HTMLCalciteComboboxItemElement[];
-    const { field } = expression;
+    const { field, type } = expression;
     if (items && items.length) {
       const values = items.map(({ value }) => (typeof value === 'number' ? value : `'${handleSingleQuote(value)}'`));
-      expression.selectedFields = items.map(({ value }) => value);
-      const definitionExpression = `${field} IN (${values.join(',')})`;
-      expression.definitionExpression = definitionExpression;
+      if (type === 'date') {
+        expression.selectedFields = items.map(({ value }) => value);
+        expression.definitionExpression = values.map(value => this.buildDateExpression(value, field!)).join(' OR ');
+      } else {
+        expression.selectedFields = items.map(({ value }) => value);
+        const definitionExpression = `${field} IN (${values.join(',')})`;
+        expression.definitionExpression = definitionExpression;
+      }
       expression.active = true;
     } else {
       expression.definitionExpression = undefined;
@@ -856,19 +859,19 @@ export class InstantAppsFilterList {
 
   createURLParamExpression(layerExpression: LayerExpression, expression: Expression): GenericObject {
     const { id, range, selectedFields, type } = expression;
-    if (type === 'number' || type === 'range' || type === 'date') {
-      return {
-        type: 'range',
-        layerId: layerExpression.id,
-        expressionId: id.toString(),
-        range,
-      };
-    } else if (type === 'string' || type === 'coded-value') {
+    if (type === 'string' || type === 'coded-value' || expression?.numDisplayOption === 'drop-down' || expression?.displayOption === 'drop-down') {
       return {
         type: 'select',
         layerId: layerExpression.id,
         expressionId: id.toString(),
         selectedFields,
+      };
+    } else if (type === 'number' || type === 'range' || type === 'date') {
+      return {
+        type: 'range',
+        layerId: layerExpression.id,
+        expressionId: id.toString(),
+        range,
       };
     } else {
       return {
@@ -1172,10 +1175,26 @@ export class InstantAppsFilterList {
       if (expression.format.digitSeparator) {
         label = this.numberWithCommas(label as number);
       }
-    } else if (expression.type === 'date') {
-      const format = expression.dateOnly ? this.intl.convertDateFormatToIntlOptions("short-date") : undefined;
-      label = this.intl.formatDate(value as number, format)
+    } else if (expression.type === 'date' && !expression.dateOnly) {
+      const format = expression.dateOnly ? this.intl.convertDateFormatToIntlOptions('short-date-long-time') : undefined;
+      label = this.intl.formatDate(value as number, format);
     }
     return label;
+  }
+
+  buildDateExpression(date: string | number | undefined, field: string): string | undefined {
+    if (date) {
+      const tmpDate = new Date(date);
+      const tmpCompareDate = new Date(date);
+      const tmpCompareDate1 = new Date(tmpCompareDate.setDate(tmpDate.getDate() + 1));
+      const formattedDate = `${tmpDate.getFullYear()}-${tmpDate.getMonth() + 1}-${tmpDate.getDate()}`;
+      const time = `${tmpDate.getHours()}:${tmpDate.getMinutes()}:${tmpDate.getSeconds()}`;
+      const compareTime = `${tmpCompareDate1.getHours()}:${tmpCompareDate1.getMinutes()}:${tmpCompareDate1.getSeconds()}`;
+      const compareFormattedDate = `${tmpCompareDate1.getFullYear()}-${tmpCompareDate1.getMonth() + 1}-${tmpCompareDate1.getDate()}`;
+
+      return `${field} BETWEEN '${formattedDate} ${time}' AND '${compareFormattedDate} ${compareTime}'`;
+    }
+
+    return;
   }
 }
