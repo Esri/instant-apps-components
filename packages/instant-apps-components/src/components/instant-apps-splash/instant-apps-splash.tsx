@@ -2,7 +2,7 @@ import { Component, Element, Event, EventEmitter, Prop, State, Watch, h } from '
 import Sanitizer from '@esri/arcgis-html-sanitizer';
 import { createSanitizerInstance } from 'templates-common-library/functionality/securityUtils';
 import { getLocalStorageItem, removeItemFromLocalStorage, setLocalStorageItem } from './support/storageUtils';
-import { getLocaleComponentStrings } from '../../utils/locale';
+import { getMessages } from '../../utils/locale';
 import Splash_T9n from '../../assets/t9n/instant-apps-splash/resources.json';
 
 const CSS = {
@@ -84,7 +84,7 @@ export class InstantAppsSplash {
   }
 
   componentDidLoad(): void {
-    this.setMessages();
+    getMessages(this);
   }
 
   render(): HTMLCalciteModalElement {
@@ -133,11 +133,6 @@ export class InstantAppsSplash {
   close(): void {
     this.open = false;
     this.splashClose.emit();
-  }
-
-  async setMessages(): Promise<void> {
-    const messages = await getLocaleComponentStrings(this.el);
-    this.messages = messages[0] as typeof Splash_T9n;
   }
 
   protected handleDontShowThisAgain(event: CustomEvent): void {

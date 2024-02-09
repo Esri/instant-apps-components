@@ -5,11 +5,23 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## v1.0.0-beta.187
+## v1.0.0-beta.189
 
 ### instant-apps-filter-list
 
 - fix: add date expression builder, remove fixed position
+
+## v1.0.0-beta.188
+
+### instant-apps-language-switcher
+
+- fix: optional chaining for map
+
+## v1.0.0-beta.187
+
+### instant-apps-splash
+
+- fix: update messages set up
 
 ## v1.0.0-beta.186
 

@@ -108,7 +108,7 @@ export class InstantAppsLanguageSwitcher {
 
       if (this.view) {
         const webmap = this.view.map as __esri.WebMap;
-        this.defaultWebMapId = webmap.portalItem.id;
+        this.defaultWebMapId = webmap?.portalItem?.id;
 
         const translatedWebmap = this.locales?.filter(
           localeItem => localeItem?.webmap && localeItem?.webmap !== this.defaultWebMapId && localeItem?.locale === this.selectedLanguage,
