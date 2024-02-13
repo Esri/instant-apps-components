@@ -114,6 +114,10 @@
       width: min-content;
     }
   }
+
+  calcite-input-date-picker {
+    --calcite-font-size--1: 16px;
+  }
 }
 
 @media (prefers-reduced-motion) {
