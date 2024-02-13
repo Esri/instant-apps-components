@@ -95,7 +95,7 @@ export const printStyling = `
     flex-flow: row wrap;
   }
 
-  .instant-apps-export-print .esri-widget > *:not(.instant-apps-export-print__scale-bar-container > *) {
+  .instant-apps-export-print .esri-widget > *:not(.esri-scale-bar.esri-widget > *) {
     background: #fff;
     color: #323232;
   }
