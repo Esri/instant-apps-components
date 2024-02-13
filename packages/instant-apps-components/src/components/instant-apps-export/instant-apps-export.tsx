@@ -567,12 +567,7 @@ export class InstantAppsExport {
 
   handleScaleBarCreation(): void {
     if (this.showScaleBar && this.includeMap && this.view != null && this.view.type === '2d' && this.scaleBarContainerEl != null) {
-      const map = this.view.map as __esri.WebMap;
-      const scaleBarMap = this.scaleBar?.view?.map as __esri.WebMap;
-      const checkId = map?.portalItem.id === scaleBarMap?.portalItem.id && this.scaleBarContainerEl.innerHTML;
-      if (!checkId) {
-        this.updateScaleBar();
-      }
+      this.updateScaleBar();
     }
   }
 

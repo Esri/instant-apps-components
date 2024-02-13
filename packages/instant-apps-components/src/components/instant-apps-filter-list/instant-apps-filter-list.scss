@@ -50,6 +50,11 @@
 
     calcite-combobox {
       width: 100%;
+      --calcite-font-size--1: 16px;
+    }
+
+    calcite-combobox-item {
+      --calcite-font-size--1: 12px;
     }
   }
 
@@ -70,7 +75,7 @@
     width: 100%;
 
     calcite-action {
-      height: 48px;
+      height: 64px;
       border-top: 1px solid var(--calcite-color-border-input);
       border-right: 1px solid var(--calcite-color-border-input);
       border-bottom: 1px solid var(--calcite-color-border-input);

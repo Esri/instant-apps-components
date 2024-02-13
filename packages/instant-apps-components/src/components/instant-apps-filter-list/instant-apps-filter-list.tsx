@@ -265,7 +265,6 @@ export class InstantAppsFilterList {
           label={expression.name}
           placeholder={expression.placeholder}
           selectionMode="multiple"
-          scale="s"
           max-items="6"
         >
           {expression.fields?.map((value, index) => this.renderComboboxItem(expression, value, index))}
@@ -335,8 +334,7 @@ export class InstantAppsFilterList {
   }
 
   renderDatePicker(layerExpression: LayerExpression, expression: Expression): VNode {
-    const min = convertToDate(expression.min);
-    const max = convertToDate(expression.max);
+    const { min, max } = expression;
     const value = [expression?.range?.min, expression?.range?.max] as string[];
     const check = min != null && max != null;
     return check ? (
@@ -348,7 +346,7 @@ export class InstantAppsFilterList {
             onCalciteInputDatePickerChange={this.handleDatePickerRangeChange.bind(this, expression, layerExpression)}
             min={min}
             max={max}
-            scale="s"
+            overlay-positioning="fixed"
             lang={this.locale ?? 'en'}
             layout="vertical"
             value={value}
@@ -446,7 +444,11 @@ export class InstantAppsFilterList {
         if (type === 'string' || type === 'coded-value') {
           this.resetCombobox(expression);
         } else if (type === 'date') {
-          this.resetDatePicker(expression);
+          if (expression?.numDisplayOption === 'drop-down' || expression?.displayOption === 'drop-down') {
+            this.resetCombobox(expression);
+          } else {
+            this.resetDatePicker(expression);
+          }
         } else if (type === 'number' || type === 'range') {
           if (expression?.numDisplayOption === 'drop-down' || expression?.displayOption === 'drop-down') {
             this.resetCombobox(expression);
