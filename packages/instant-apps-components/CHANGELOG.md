@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## v1.0.0-beta.191
 
+### instant-apps-filter-list
+
+- fix: update input font-size
+
 ## v1.0.0-beta.190
 
 ### instant-apps-filter-list
