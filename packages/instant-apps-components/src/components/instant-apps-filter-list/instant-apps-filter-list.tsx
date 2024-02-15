@@ -712,8 +712,8 @@ export class InstantAppsFilterList {
       let newConstraints = { ...constraints };
       const geometry = newConstraints?.geometry;
       if (geometry) {
-        const tmpExtent = this.geometryJsonUtils.fromJSON(geometry);
-        if (tmpExtent && (tmpExtent?.type === 'extent' || tmpExtent?.type === 'polygon')) {
+        const tmpExtent = 'extent' in geometry ? geometry : this.geometryJsonUtils.fromJSON(geometry);
+        if (tmpExtent?.type === 'extent' || tmpExtent?.type === 'polygon') {
           return tmpExtent;
         }
       }
