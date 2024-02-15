@@ -349,10 +349,6 @@ export class InstantAppsExport {
     return <div class={CSS.print.compassContainer} ref={(el: HTMLDivElement) => (this.compassContainerEl = el)}></div>;
   }
 
-  renderScaleBar(): VNode {
-    return <div class={CSS.print.scaleBarContainer} ref={(el: HTMLDivElement) => (this.scaleBarContainerEl = el)}></div>;
-  }
-
   renderPopup(): VNode {
     return (
       <div class={CSS.print.popupContainer} ref={(el: HTMLDivElement) => (this.popupContainerEl = el)}>
@@ -755,7 +751,7 @@ export class InstantAppsExport {
   }
 
   handleScaleBarSize(): void {
-    if (this.view?.type === '2d') {
+    if (this.showScaleBar && this.view?.type === '2d') {
       if (this.scaleBarContainerEl != null) {
         const topBar: HTMLDivElement | null = this.scaleBarContainerEl.querySelector('.esri-scale-bar__line--top');
         const bottomBar: HTMLDivElement | null = this.scaleBarContainerEl.querySelector('.esri-scale-bar__line--bottom');
@@ -766,7 +762,7 @@ export class InstantAppsExport {
   }
 
   setScalebarWidth(bar: HTMLDivElement | null, position: 'bottom' | 'top'): void {
-    if (this.view != null && bar != null && this.screenshot != null) {
+    if (bar != null && this.screenshot != null) {
       const width = this.screenshot.data.width / 2;
       const barWidth = Number(bar.style.width.replace('px', ''));
       const widthPercentage = (barWidth / width) * 100;
@@ -780,7 +776,7 @@ export class InstantAppsExport {
   }
 
   handleScaleBarContainerEl(el: HTMLDivElement): void {
-    if (this.view != null && this.view.type === '2d') {
+    if (this.showScaleBar && this.view?.type === '2d') {
       const map = this.view.map as __esri.WebMap;
       const scaleBarMap = this.scaleBar?.view?.map as __esri.WebMap;
       this.scaleBarContainerEl = el;
