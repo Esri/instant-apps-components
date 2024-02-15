@@ -180,6 +180,10 @@ export const printStyling = `
     left: 15px;
   }
 
+  .instant-apps-export-print__scale-bar-container .esri-scale-bar__label {
+    font-size: 10px;
+  }
+
   .instant-apps-export-print__scale-bar-container .esri-scale-bar__bar-container:nth-child(1n+3) {
     display: none;
   }

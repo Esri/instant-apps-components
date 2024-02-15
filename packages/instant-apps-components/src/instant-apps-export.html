@@ -115,6 +115,8 @@
           await view.map.loadAll();
           const exportPopover = document.getElementById('export-popover');
           exportPopover.headerTitle = 'Instant Apps: Header (Shared Theme)';
+          exportPopover.view = view;
+          exportPopover.showIncludeMap = true;
           exportPopover.addEventListener('exportOutputUpdated', e => {
             console.log('exportOutputUpdated: ', e.target.output);
           });
