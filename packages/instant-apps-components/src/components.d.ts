@@ -49,10 +49,6 @@ export namespace Components {
          */
         "beforeExport": () => Promise<void>;
         /**
-          * Show dual scale bar in scale bar widget when true or default to using the portal org's unit.
-         */
-        "dualScaleBar"?: boolean;
-        /**
           * Extra content that will be added below the view.
          */
         "extraContent"?: HTMLElement;
@@ -129,7 +125,7 @@ export namespace Components {
          */
         "showIncludePopup"?: boolean;
         /**
-          * Show scale bar widget in map.
+          * Show scale bar widget in map if view has it.
          */
         "showScaleBar"?: boolean;
         /**
@@ -162,6 +158,10 @@ export namespace Components {
           * Limits filtering options based on the view's extent geometry.
          */
         "extentSelectorConfig"?: ExtentSelector;
+        /**
+          * Number of active filters
+         */
+        "filterCount"?: number;
         /**
           * Use this to create filters that update a layer's definitionExpression.
          */
@@ -1165,10 +1165,6 @@ declare namespace LocalJSX {
          */
         "beforeExport"?: () => Promise<void>;
         /**
-          * Show dual scale bar in scale bar widget when true or default to using the portal org's unit.
-         */
-        "dualScaleBar"?: boolean;
-        /**
           * Extra content that will be added below the view.
          */
         "extraContent"?: HTMLElement;
@@ -1249,7 +1245,7 @@ declare namespace LocalJSX {
          */
         "showIncludePopup"?: boolean;
         /**
-          * Show scale bar widget in map.
+          * Show scale bar widget in map if view has it.
          */
         "showScaleBar"?: boolean;
         /**
@@ -1282,6 +1278,10 @@ declare namespace LocalJSX {
           * Limits filtering options based on the view's extent geometry.
          */
         "extentSelectorConfig"?: ExtentSelector;
+        /**
+          * Number of active filters
+         */
+        "filterCount"?: number;
         /**
           * Use this to create filters that update a layer's definitionExpression.
          */

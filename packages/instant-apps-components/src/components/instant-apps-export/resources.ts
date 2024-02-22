@@ -183,14 +183,20 @@ export const printStyling = `
   .instant-apps-export-print__scale-bar-container .esri-scale-bar__label {
     color: #323232;
     font-size: 10px;
-    padding: 0 1px;
+    padding: 0 4px;
+  }
+  
+  .instant-apps-export-print__scale-bar-container--position .esri-scale-bar__label {
+    height: 10px;
+    padding: 0 2px;
+    line-height: 11px;
   }
 
   .instant-apps-export-print__scale-bar-container .esri-scale-bar__bar-container:nth-child(1n+3) {
     display: none;
   }
 
-  .instant-apps-export-print__scale-bar-container .esri-scale-bar__bar-container.esri-scale-bar__bar-container--line {
+  .instant-apps-export-print__scale-bar-container--position .esri-scale-bar__bar-container.esri-scale-bar__bar-container--line {
     align-items: center;
   }
 
@@ -208,7 +214,7 @@ export const printStyling = `
     border-top: 2px solid #323232;
   }
 
-  .instant-apps-export-print__scale-bar-container .esri-scale-bar__label-container--line {
+  .instant-apps-export-print__scale-bar-container--position .esri-scale-bar__label-container--line {
     position: unset;
     margin: 0 2px;
     background-color: rgba(255, 255, 255, 0.66);

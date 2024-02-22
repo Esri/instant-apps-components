@@ -12,10 +12,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - fix: issue regarding legend not interacting with a layer with a visibility range when the map extent of the web map is saved with the features hidden
 - fix: legend not loading if measing dot value title
 
+### instant-apps-filter-list
+
+- Add `filterCount` param to get the number of active filters
+
 ### instant-apps-export
 
 - fix: Move units to side of scale bar due to spacing issue, update scale bar CSS for rtl
-- Add `dualScaleBar` prop to use dual units or portal org's unit
 
 ## v1.0.0-beta.195
 

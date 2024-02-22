@@ -94,6 +94,11 @@ export class InstantAppsFilterList {
   @Prop({ mutable: true }) urlParams?: URLSearchParams;
 
   /**
+   * Number of active filters
+   */
+  @Prop({ mutable: true }) filterCount?: number = 0;
+
+  /**
    * A reference to the MapView or SceneView.
    */
   @Prop() view: __esri.MapView | __esri.SceneView;
@@ -838,7 +843,7 @@ export class InstantAppsFilterList {
     if ('URLSearchParams' in window) {
       const params = new URLSearchParams(document.location.search);
       const filters = params.get('filter')?.split(';');
-
+      let filterCount = 0;
       filters?.forEach(filter => {
         const tmpFilter = JSON.parse(filter) as FilterParam;
         this.filterLayerExpressions?.forEach(layerExpression => {
@@ -846,6 +851,7 @@ export class InstantAppsFilterList {
             layerExpression.expressions?.forEach(expression => {
               if (expression.id?.toString() === tmpFilter?.expressionId?.toString()) {
                 expression.active = true;
+                filterCount++;
                 if (tmpFilter.type === 'range') {
                   expression.range = tmpFilter.range;
                 } else if (tmpFilter.type === 'select') {
@@ -856,6 +862,7 @@ export class InstantAppsFilterList {
           }
         });
       });
+      this.filterCount = filterCount;
     }
   }
 
@@ -897,14 +904,17 @@ export class InstantAppsFilterList {
     if ('URLSearchParams' in window) {
       const params = new URLSearchParams(window.location.search);
       const expressions: string[] = [];
+      let filterCount = 0;
       this.filterLayerExpressions?.forEach(layerExpr => {
         layerExpr?.expressions?.forEach(expression => {
           if (expression.active) {
+            filterCount++;
             const paramExpression = this.createURLParamExpression(layerExpr, expression);
             expressions.push(JSON.stringify(paramExpression));
           }
         });
       });
+      this.filterCount = filterCount;
       if (expressions.length > 0) {
         params.set('filter', expressions.join(';'));
       } else {
