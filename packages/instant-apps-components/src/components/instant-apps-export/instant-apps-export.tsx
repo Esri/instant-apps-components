@@ -137,6 +137,11 @@ export class InstantAppsExport {
   @Prop() showScaleBar?: boolean = true;
 
   /**
+   * Show dual scale bar in scale bar widget when true or default to using the portal org's unit.
+   */
+  @Prop() dualScaleBar?: boolean = true;
+
+  /**
    * A reference to the MapView or SceneView.
    */
   @Prop() view: __esri.MapView | __esri.SceneView | undefined;
@@ -161,9 +166,25 @@ export class InstantAppsExport {
   @Event() exportOutputUpdated: EventEmitter<void>;
 
   @Watch('includeMap')
-  watchIncludeMap(newValue: boolean): void {
-    if (newValue) {
+  watchIncludeMap(includeMap: boolean): void {
+    if (includeMap) {
       this.updateLegend();
+    }
+  }
+
+  @Watch('dualScaleBar')
+  watchDualScaleBar(): void {
+    this.updateScaleBarUnit();
+  }
+
+  @Watch('showScaleBar')
+  watchShowScaleBar(showScaleBar: boolean): void {
+    if (showScaleBar) {
+      this.updateScaleBar();
+    } else {
+      if (this.scaleBarContainerEl != null) {
+        this.scaleBarContainerEl.innerHTML = '';
+      }
     }
   }
 
@@ -183,7 +204,7 @@ export class InstantAppsExport {
   printEl: HTMLDivElement;
   printStyleEl: HTMLStyleElement | undefined;
   scaleBar: __esri.ScaleBar | null;
-  scaleBarContainerEl: HTMLDivElement;
+  scaleBarContainerEl: HTMLDivElement | null;
   screenshot: __esri.Screenshot | null;
   screenshotPreview: HTMLDivElement;
   screenshotImgContainer: HTMLDivElement;
@@ -564,8 +585,25 @@ export class InstantAppsExport {
       this.scaleBar?.destroy();
       this.scaleBar = null;
       const [ScaleBar] = await loadModules(['esri/widgets/ScaleBar']);
-      this.scaleBar = new ScaleBar({ container: this.scaleBarContainerEl, unit: 'dual', view });
+      const map = view.map as __esri.WebMap;
+      const portal = map.portalItem?.portal;
+      const unit = this.dualScaleBar ? 'dual' : portal?.units === 'metric' ? 'metric' : 'imperial';
+      if (this.scaleBarContainerEl) {
+        this.scaleBarContainerEl.innerHTML = '';
+      }
+      const container = document.createElement('div');
+      this.scaleBarContainerEl?.append(container);
+      this.scaleBar = new ScaleBar({ container, unit, view });
     });
+  }
+
+  updateScaleBarUnit(): void {
+    if (this.view != null && this.scaleBar != null) {
+      const map = this.view.map as __esri.WebMap;
+      const portal = map.portalItem?.portal;
+      const unit = this.dualScaleBar ? 'dual' : portal?.units === 'metric' ? 'metric' : 'imperial';
+      this.scaleBar.unit = unit;
+    }
   }
 
   async viewScreenshot(): Promise<void> {
@@ -766,7 +804,7 @@ export class InstantAppsExport {
       const width = this.screenshot.data.width / 2;
       const barWidth = Number(bar.style.width.replace('px', ''));
       const widthPercentage = (barWidth / width) * 100;
-      bar.style.setProperty(`--instant-apps-scale-bar-${position}`, `${widthPercentage}%`);
+      this.scaleBarContainerEl?.style.setProperty(`--instant-apps-scale-bar-${position}`, `${widthPercentage}%`);
     }
   }
 
