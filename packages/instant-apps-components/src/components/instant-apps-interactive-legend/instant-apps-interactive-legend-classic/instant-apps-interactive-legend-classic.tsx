@@ -159,18 +159,29 @@ export class InstantAppsInteractiveLegendClassic {
   }
 
   async componentDidLoad() {
+    this.initLegend();
+  }
+
+  async initLegend() {
     try {
       await this.reactiveUtils.whenOnce(() => this.legendvm?.view);
       this.legendvm.view.when(async () => {
         try {
-          await (this.legendvm?.view?.map as __esri.WebMap).loadAll();
-          await this.reactiveUtils.whenOnce(() => this.legendvm?.view?.updating === false);
+          // await (this.legendvm?.view?.map as __esri.WebMap).loadAll();
+          // await this.reactiveUtils.whenOnce(() => this.legendvm?.view?.updating === false);
           // Initial data setup
+
+          const map = await (this.legendvm.view.map as __esri.WebMap).load();
+          await map.basemap.load();
+          const allLayers = map.allLayers;
+          const promises = allLayers.map(layer => layer.load());
+          await Promise.allSettled(promises);
           const data = await generateData(this.legendvm, this.reactiveUtils);
           store.set('data', { ...interactiveLegendState.data, ...data });
           this.isLoading = false;
           this.setupWatchersAndListeners();
-        } catch {
+        } catch (err) {
+          console.error(err);
           this.isLoading = false;
         }
       });
@@ -675,7 +686,7 @@ export class InstantAppsInteractiveLegendClassic {
     }
 
     if ('value' in titleInfo || 'unit' in titleInfo) {
-      return this.intl.substitute(messages.dotValue, titleInfo);
+      return this.intl.substitute(messages?.dotValue ?? '', titleInfo);
     }
 
     if ('colorName' in titleInfo || 'bandName' in titleInfo) {

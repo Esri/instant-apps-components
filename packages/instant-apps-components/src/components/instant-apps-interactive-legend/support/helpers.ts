@@ -76,7 +76,7 @@ export async function createInteractiveLegendDataForLayer(
     // Get Feature Layer View to query
     const fLayerView = await legendViewModel.view.whenLayerView(fLayer);
     await reactiveUtils.whenOnce(() => fLayerView?.updating === false);
-    const field = fLayer.renderer?.get('field') as string;
+    const field = (fLayer.renderer as __esri.UniqueValueRenderer)?.field as string;
 
     if (legendElement !== undefined) {
       legendElement?.infos?.forEach(legendElementInfo => {
@@ -137,6 +137,7 @@ export async function generateData(legendViewModel: __esri.LegendViewModel, reac
   const intLegendDataPromises = [] as Promise<IIntLegendLayerData>[];
 
   // Iterate through each Active Layer Info and create data bucket for each layer
+
   legendViewModel.activeLayerInfos.forEach(activeLayerInfoCallback(intLegendDataPromises, legendViewModel, reactiveUtils));
 
   // Store resolved data
@@ -303,9 +304,11 @@ function generateQueryExpressions(data: IIntLegendLayerData, info: any, infoInde
   let queryExpression = isPredominance
     ? (handlePredominanceExpression(info, fLayerView) as string)
     : generateQueryExpression(info, field, infoIndex, legendElement, legendElementInfos, '');
-  const category = parentLegendElementInfo
-    ? (categories.get(parentLegendElementInfo.title)?.nestedInfos?.[infoIndex] as ICategory)
-    : (categories.get(info.label ?? fLayerView?.layer?.id) as ICategory);
+  const category = categories
+    ? parentLegendElementInfo
+      ? (categories.get(parentLegendElementInfo.title)?.nestedInfos?.[infoIndex] as ICategory)
+      : (categories.get(info.label ?? fLayerView?.layer?.id) as ICategory)
+    : null;
 
   if (category) category.selected = !category?.selected;
 
@@ -374,7 +377,7 @@ function generateQueryExpressions(data: IIntLegendLayerData, info: any, infoInde
 
 function generateQueryExpression(info: any, field: string, infoIndex: number, legendElement: __esri.LegendElement, legendElementInfos: any, normalizationField?: string): string {
   const { value } = info;
-  if (legendElement.type === 'symbol-table') {
+  if (legendElement?.type === 'symbol-table') {
     // Classify data size/color ramp
     if (!info.hasOwnProperty('value') || (Array.isArray(info.value) && legendElementInfos?.length === 1)) {
       // Classify data size/color ramp - 'Other' category
@@ -456,7 +459,7 @@ export function checkNoneSelected(data: IIntLegendLayerData): boolean {
 }
 
 export function checkPredominance(fLayerView: __esri.FeatureLayerView): boolean {
-  const authoringInfoType = fLayerView?.get('layer.renderer.authoringInfo.type');
+  const authoringInfoType = fLayerView?.layer?.renderer?.authoringInfo?.type;
   return authoringInfoType === 'predominance';
 }
 
@@ -468,9 +471,9 @@ export function validateInteractivity(activeLayerInfo: __esri.ActiveLayerInfo, l
   const fLayer = activeLayerInfo.layer as __esri.FeatureLayer;
   const field = (fLayer?.renderer as any)?.field;
   const type = legendElement?.type;
-  const layerView = activeLayerInfo.get('layerView') as __esri.LayerView;
-  const classBreakInfos = layerView?.get('layer.renderer.classBreakInfos') as __esri.ClassBreak[];
-  const uniqueValueInfos = layerView?.get('layer.renderer.uniqueValueInfos') && field;
+  const layerView = activeLayerInfo?.layerView as __esri.FeatureLayerView;
+  const classBreakInfos = (layerView?.layer?.renderer as __esri.ClassBreaksRenderer)?.classBreakInfos;
+  const uniqueValueInfos = (layerView?.layer?.renderer as __esri.UniqueValueRenderer)?.uniqueValueInfos && field;
   const isSizeRamp = type === 'size-ramp';
   const isColorRamp = type === 'color-ramp';
   const opacityRamp = type === 'opacity-ramp';
@@ -478,7 +481,7 @@ export function validateInteractivity(activeLayerInfo: __esri.ActiveLayerInfo, l
 
   const hasMoreThanOneClassBreak = layerView && classBreakInfos && classBreakInfos.length > 1;
 
-  const authoringInfoType = layerView?.get('layer.renderer.authoringInfo.type');
+  const authoringInfoType = layerView?.layer?.renderer?.authoringInfo?.type as string;
   const classifyDataCheckedColorRamp = authoringInfoType === 'class-breaks-color';
   const classifyDataCheckedSizeRamp = authoringInfoType === 'class-breaks-size';
 
@@ -486,7 +489,7 @@ export function validateInteractivity(activeLayerInfo: __esri.ActiveLayerInfo, l
 
   const isRelationshipRamp = authoringInfoType === 'relationship' && legendElement?.type !== 'size-ramp' && legendElement?.type !== 'symbol-table';
 
-  const isFeatureLayer = activeLayerInfo?.get('layer.type') === 'feature';
+  const isFeatureLayer = activeLayerInfo?.layer?.type === 'feature';
 
   const moreThanOneClassBreak = isFeatureLayer && field && !isColorRamp && !isSizeRamp && hasMoreThanOneClassBreak;
 
@@ -503,7 +506,7 @@ export function validateInteractivity(activeLayerInfo: __esri.ActiveLayerInfo, l
       ? true
       : false;
 
-  const hasClustering = activeLayerInfo?.get('layer.featureReduction') && activeLayerInfo?.legendElements[legendElementIndex as number]?.type === 'size-ramp';
+  const hasClustering = (activeLayerInfo?.layer as __esri.FeatureLayer)?.featureReduction && activeLayerInfo?.legendElements?.[legendElementIndex as number]?.type === 'size-ramp';
 
   const isSingleSymbol = legendElement?.type === 'symbol-table' && legendElement?.infos?.length === 1;
 
@@ -673,7 +676,7 @@ export async function handleFeatureCount(legendViewModel: __esri.LegendViewModel
     const legendElement = activeLayerInfo.legendElements[0] as __esri.LegendElement;
     const fLayer = activeLayerInfo.layer as __esri.FeatureLayer;
     const fLayerView = data[activeLayerInfo?.layer?.id]?.fLayerView;
-    const field = fLayer.renderer?.get('field') as string;
+    const field = (fLayer.renderer as __esri.UniqueValueRenderer)?.field as string;
     const counts: Promise<{ [categoryId: string]: number | null } | null | undefined>[] = [];
 
     countPromises[activeLayerInfo.layer.id] = [];
@@ -698,7 +701,7 @@ export async function handleFeatureCount(legendViewModel: __esri.LegendViewModel
       const legendElement = aliChild.legendElements[0] as __esri.LegendElement;
       const fLayer = aliChild.layer as __esri.FeatureLayer;
       const fLayerView = data[aliChild?.layer?.id]?.fLayerView;
-      const field = fLayer.renderer?.get('field') as string;
+      const field = (fLayer.renderer as __esri.UniqueValueRenderer)?.field;
 
       legendElement?.infos?.forEach((info, infoIndex) => childCounts.push(getInfoCount(legendViewModel.view.extent, fLayerView, field, info, infoIndex, legendElement)));
 

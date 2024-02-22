@@ -5,6 +5,13 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## v1.0.0-beta.196
+
+### instant-apps-interactive-legend
+
+- fix: issue regarding legend not interacting with a layer with a visibility range when the map extent of the web map is saved with the features hidden
+- fix: legend not loading if measing dot value title
+
 ## v1.0.0-beta.195
 
 - Update package version numbers
