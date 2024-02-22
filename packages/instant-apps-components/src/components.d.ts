@@ -49,6 +49,10 @@ export namespace Components {
          */
         "beforeExport": () => Promise<void>;
         /**
+          * Show dual scale bar in scale bar widget when true or default to using the portal org's unit.
+         */
+        "dualScaleBar"?: boolean;
+        /**
           * Extra content that will be added below the view.
          */
         "extraContent"?: HTMLElement;
@@ -1160,6 +1164,10 @@ declare namespace LocalJSX {
           * Passes the initial function to run when the Export button is clicked.
          */
         "beforeExport"?: () => Promise<void>;
+        /**
+          * Show dual scale bar in scale bar widget when true or default to using the portal org's unit.
+         */
+        "dualScaleBar"?: boolean;
         /**
           * Extra content that will be added below the view.
          */
