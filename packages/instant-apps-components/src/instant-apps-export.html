@@ -53,6 +53,17 @@
         color: #fff;
         padding: 12px;
       }
+
+      /* calcite-shell {
+        position: relative;
+        top: 200px;
+      }
+
+      .instant-apps-export-print {
+        width: 8.5in !important;
+        position: relative !important;
+        z-index: unset !important;
+      } */
     </style>
   </head>
 
@@ -70,8 +81,8 @@
       <calcite-shell-panel slot="panel-start">
         <calcite-panel>
           <div class="panel-content">
-            <instant-apps-export id="export-inline" mode="inline"> </instant-apps-export>
-            <instant-apps-export id="export-popover" mode="popover" show-scale-bar="false"></instant-apps-export>
+            <instant-apps-export id="export-inline" mode="inline" show-scale-bar="true"> </instant-apps-export>
+            <instant-apps-export id="export-popover" mode="popover"></instant-apps-export>
           </div>
         </calcite-panel>
       </calcite-shell-panel>
@@ -85,7 +96,8 @@
 
         const map = new WebMap({
           portalItem: {
-            id: 'c0c59986e2e74d98be80ed493f91de10',
+            // id: 'c0c59986e2e74d98be80ed493f91de10', // light map
+            id: '6ec2d5eeb8e84d1ebbcca28317d3cec4', // dark map
           },
         });
 
