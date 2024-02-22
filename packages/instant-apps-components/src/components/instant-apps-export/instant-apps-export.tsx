@@ -132,9 +132,9 @@ export class InstantAppsExport {
   @Prop() showIncludePopup?: boolean = true;
 
   /**
-   * Show scale bar widget in map.
+   * Show scale bar widget in map if view has it.
    */
-  @Prop() showScaleBar?: boolean = true;
+  @Prop() showScaleBar?: boolean = false;
 
   /**
    * A reference to the MapView or SceneView.
@@ -161,8 +161,8 @@ export class InstantAppsExport {
   @Event() exportOutputUpdated: EventEmitter<void>;
 
   @Watch('includeMap')
-  watchIncludeMap(newValue: boolean): void {
-    if (newValue) {
+  watchIncludeMap(includeMap: boolean): void {
+    if (includeMap) {
       this.updateLegend();
     }
   }
@@ -182,8 +182,7 @@ export class InstantAppsExport {
   printContainerEl: HTMLDivElement;
   printEl: HTMLDivElement;
   printStyleEl: HTMLStyleElement | undefined;
-  scaleBar: __esri.ScaleBar | null;
-  scaleBarContainerEl: HTMLDivElement;
+  scaleBarContainerEl: HTMLDivElement | null;
   screenshot: __esri.Screenshot | null;
   screenshotPreview: HTMLDivElement;
   screenshotImgContainer: HTMLDivElement;
@@ -335,7 +334,7 @@ export class InstantAppsExport {
         <div class={CSS.print.viewWrapper} ref={(el: HTMLDivElement) => (this.viewWrapperEl = el)}>
           {this.headerTitle ? <instant-apps-header titleText={this.headerTitle} backgroundColor="#fff" textColor="#323232"></instant-apps-header> : null}
           <img class={CSS.print.view} ref={(el: HTMLImageElement) => (this.viewEl = el)}></img>
-          <div class={CSS.print.scaleBarContainer} ref={this.handleScaleBarContainerEl.bind(this)}></div>
+          <div class={CSS.print.scaleBarContainer} ref={(el: HTMLDivElement) => (this.scaleBarContainerEl = el)}></div>
         </div>
       </div>
     );
@@ -391,6 +390,7 @@ export class InstantAppsExport {
       document.body.prepend(this.printEl);
       this.handleExtraContent();
       if (this.includeMap) {
+        this.updateScaleBar();
         this.updatePopupToPrint();
         this.viewScreenshot();
         this.handleImgLoaded();
@@ -512,7 +512,7 @@ export class InstantAppsExport {
     if (this.includeMap && this.view != null && this.showIncludeLegend && this.legendContainerEl != null) {
       const map = this.view.map as __esri.WebMap | __esri.WebScene;
       const legendMap = this.legend?.view?.map as __esri.WebMap | __esri.WebScene;
-      const checkId = map?.portalItem.id === legendMap?.portalItem.id;
+      const checkId = map?.portalItem?.id === legendMap?.portalItem?.id;
       if (!checkId) {
         this.updateLegend();
       }
@@ -541,7 +541,7 @@ export class InstantAppsExport {
     if (this.includeMap && this.view != null && this.compassContainerEl != null) {
       const map = this.view.map as __esri.WebMap | __esri.WebScene;
       const compassMap = this.compass?.view?.map as __esri.WebMap | __esri.WebScene;
-      const checkId = map?.portalItem.id === compassMap?.portalItem.id;
+      const checkId = map?.portalItem?.id === compassMap?.portalItem?.id;
       if (!checkId) {
         this.updateCompass();
       }
@@ -560,17 +560,21 @@ export class InstantAppsExport {
   }
 
   updateScaleBar(): void {
-    this.view?.when(async (view: __esri.MapView) => {
-      this.scaleBar?.destroy();
-      this.scaleBar = null;
-      const [ScaleBar] = await loadModules(['esri/widgets/ScaleBar']);
-      this.scaleBar = new ScaleBar({ container: this.scaleBarContainerEl, unit: 'dual', view });
-    });
+    if (this.scaleBarContainerEl) {
+      this.scaleBarContainerEl.innerHTML = '';
+      if (this.showScaleBar) {
+        const scaleBar = this.view?.container?.querySelector('.esri-scale-bar.esri-widget')?.cloneNode(true);
+        if (scaleBar != null) {
+          this.scaleBarContainerEl.append(scaleBar);
+        }
+      }
+    }
   }
 
   async viewScreenshot(): Promise<void> {
     if (this.view != null && this.includeMap) {
       if (this.screenshot == null) {
+        this.scaleBarContainerEl?.classList.toggle('instant-apps-export-print__scale-bar-container--position', this.view.width > 1200);
         this.screenshot = await this.view.takeScreenshot({
           width: this.view.width * 2,
           height: this.view.height * 2,
@@ -718,6 +722,10 @@ export class InstantAppsExport {
       this.view.removeHandles(dragHandlerName);
       const height = this.area.height!;
       const width = this.area.width!;
+      if (this.showScaleBar) {
+        const moveSBUnit = this.view.width > 1200 && this.view.width * 0.75 < width;
+        this.scaleBarContainerEl?.classList.toggle('instant-apps-export-print__scale-bar-container--position', moveSBUnit);
+      }
       this.view.takeScreenshot({ area: this.area, width: width * 2, height: height * 2, format: 'jpg' }).then(screenshot => {
         this.screenshot = screenshot;
         this.showPreview();
@@ -766,24 +774,12 @@ export class InstantAppsExport {
       const width = this.screenshot.data.width / 2;
       const barWidth = Number(bar.style.width.replace('px', ''));
       const widthPercentage = (barWidth / width) * 100;
-      bar.style.setProperty(`--instant-apps-scale-bar-${position}`, `${widthPercentage}%`);
+      this.scaleBarContainerEl?.style.setProperty(`--instant-apps-scale-bar-${position}`, `${widthPercentage}%`);
     }
   }
 
   removeScreenshotElements(): void {
     this.screenshotPreview?.remove();
     this.screenshotStyle?.remove();
-  }
-
-  handleScaleBarContainerEl(el: HTMLDivElement): void {
-    if (this.showScaleBar && this.view?.type === '2d') {
-      const map = this.view.map as __esri.WebMap;
-      const scaleBarMap = this.scaleBar?.view?.map as __esri.WebMap;
-      this.scaleBarContainerEl = el;
-      const checkId = map?.portalItem.id === scaleBarMap?.portalItem.id;
-      if (!checkId) {
-        this.updateScaleBar();
-      }
-    }
   }
 }

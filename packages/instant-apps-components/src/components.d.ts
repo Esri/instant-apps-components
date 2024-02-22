@@ -125,7 +125,7 @@ export namespace Components {
          */
         "showIncludePopup"?: boolean;
         /**
-          * Show scale bar widget in map.
+          * Show scale bar widget in map if view has it.
          */
         "showScaleBar"?: boolean;
         /**
@@ -158,6 +158,10 @@ export namespace Components {
           * Limits filtering options based on the view's extent geometry.
          */
         "extentSelectorConfig"?: ExtentSelector;
+        /**
+          * Number of active filters
+         */
+        "filterCount"?: number;
         /**
           * Use this to create filters that update a layer's definitionExpression.
          */
@@ -1241,7 +1245,7 @@ declare namespace LocalJSX {
          */
         "showIncludePopup"?: boolean;
         /**
-          * Show scale bar widget in map.
+          * Show scale bar widget in map if view has it.
          */
         "showScaleBar"?: boolean;
         /**
@@ -1274,6 +1278,10 @@ declare namespace LocalJSX {
           * Limits filtering options based on the view's extent geometry.
          */
         "extentSelectorConfig"?: ExtentSelector;
+        /**
+          * Number of active filters
+         */
+        "filterCount"?: number;
         /**
           * Use this to create filters that update a layer's definitionExpression.
          */

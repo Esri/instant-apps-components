@@ -5,6 +5,16 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## v1.0.0-beta.196
+
+### instant-apps-filter-list
+
+- Add `filterCount` param to get the number of active filters
+
+### instant-apps-export
+
+- fix: Move units to side of scale bar due to spacing issue, update scale bar CSS for rtl
+
 ## v1.0.0-beta.195
 
 - Update package version numbers

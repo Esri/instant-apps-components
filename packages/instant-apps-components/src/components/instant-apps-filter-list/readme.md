@@ -117,6 +117,7 @@ const layerExpressions = [
 | `closeBtnText`         | `close-btn-text`  | Close button text.                                                     | `string \| undefined`          | `undefined` |
 | `extentSelector`       | `extent-selector` | Turn on the ability to filter by extent.                               | `boolean \| undefined`         | `false`     |
 | `extentSelectorConfig` | --                | Limits filtering options based on the view's extent geometry.          | `ExtentSelector \| undefined`  | `undefined` |
+| `filterCount`          | `filter-count`    | Number of active filters                                               | `number \| undefined`          | `0`         |
 | `layerExpressions`     | --                | Use this to create filters that update a layer's definitionExpression. | `LayerExpression[]`            | `undefined` |
 | `openFilters`          | `open-filters`    | When `true`, the layer filter block is expanded.                       | `boolean \| undefined`         | `false`     |
 | `urlParams`            | --                | URL params set by using filters.                                       | `URLSearchParams \| undefined` | `undefined` |
