@@ -533,7 +533,7 @@ export class InstantAppsExport {
     if (this.includeMap && this.view != null && this.showIncludeLegend && this.legendContainerEl != null) {
       const map = this.view.map as __esri.WebMap | __esri.WebScene;
       const legendMap = this.legend?.view?.map as __esri.WebMap | __esri.WebScene;
-      const checkId = map?.portalItem.id === legendMap?.portalItem.id;
+      const checkId = map?.portalItem?.id === legendMap?.portalItem?.id;
       if (!checkId) {
         this.updateLegend();
       }
@@ -562,7 +562,7 @@ export class InstantAppsExport {
     if (this.includeMap && this.view != null && this.compassContainerEl != null) {
       const map = this.view.map as __esri.WebMap | __esri.WebScene;
       const compassMap = this.compass?.view?.map as __esri.WebMap | __esri.WebScene;
-      const checkId = map?.portalItem.id === compassMap?.portalItem.id;
+      const checkId = map?.portalItem?.id === compassMap?.portalItem?.id;
       if (!checkId) {
         this.updateCompass();
       }
@@ -586,7 +586,7 @@ export class InstantAppsExport {
       this.scaleBar = null;
       const [ScaleBar] = await loadModules(['esri/widgets/ScaleBar']);
       const map = view.map as __esri.WebMap;
-      const portal = map.portalItem?.portal;
+      const portal = map?.portalItem?.portal;
       const unit = this.dualScaleBar ? 'dual' : portal?.units === 'metric' ? 'metric' : 'imperial';
       if (this.scaleBarContainerEl) {
         this.scaleBarContainerEl.innerHTML = '';
@@ -600,7 +600,7 @@ export class InstantAppsExport {
   updateScaleBarUnit(): void {
     if (this.view != null && this.scaleBar != null) {
       const map = this.view.map as __esri.WebMap;
-      const portal = map.portalItem?.portal;
+      const portal = map?.portalItem?.portal;
       const unit = this.dualScaleBar ? 'dual' : portal?.units === 'metric' ? 'metric' : 'imperial';
       this.scaleBar.unit = unit;
     }
@@ -818,7 +818,7 @@ export class InstantAppsExport {
       const map = this.view.map as __esri.WebMap;
       const scaleBarMap = this.scaleBar?.view?.map as __esri.WebMap;
       this.scaleBarContainerEl = el;
-      const checkId = map?.portalItem.id === scaleBarMap?.portalItem.id;
+      const checkId = map?.portalItem?.id === scaleBarMap?.portalItem?.id;
       if (!checkId) {
         this.updateScaleBar();
       }
