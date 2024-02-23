@@ -39,7 +39,7 @@
     "@stencil/core": "4.7.2",
     "@stencil/react-output-target": "^0.5.3",
     "@stencil/store": "^2.0.8",
-    "arcgis-js-api": "^4.29.0-next.20231205",
+    "arcgis-js-api": "^4.29.0-next.20240118",
     "esri-loader": "^3.7.0",
     "maquette": "^3.5.3",
     "templates-common-library": "0.0.349-esm"

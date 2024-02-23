@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## v1.0.0-beta.196
 
+### instant-apps-interactive-legend
+
+- fix: issue regarding legend not interacting with a layer with a visibility range when the map extent of the web map is saved with the features hidden
+- fix: legend not loading if measing dot value title
+
 ### instant-apps-filter-list
 
 - Add `filterCount` param to get the number of active filters
