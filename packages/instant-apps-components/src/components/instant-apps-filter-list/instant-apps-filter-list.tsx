@@ -69,7 +69,7 @@ export class InstantAppsFilterList {
   @Prop() closeBtnOnClick?: () => void;
 
   /**
-   * Determines the type of positioning to use for the overlaid content.
+   * Determines the type of positioning to use for the overlaid content. Absolute is the default.
    */
   @Prop() comboboxOverlayPositioning?: "absolute" | "fixed" = "absolute";
 
