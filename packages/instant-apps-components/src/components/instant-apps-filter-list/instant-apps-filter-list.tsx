@@ -69,6 +69,11 @@ export class InstantAppsFilterList {
   @Prop() closeBtnOnClick?: () => void;
 
   /**
+   * Determines the type of positioning to use for the overlaid content.
+   */
+  @Prop() comboboxOverlayPositioning?: "absolute" | "fixed" = "absolute";
+
+  /**
    * Close button text.
    */
   @Prop() closeBtnText?: string;
@@ -271,6 +276,7 @@ export class InstantAppsFilterList {
           placeholder={expression.placeholder}
           selectionMode="multiple"
           max-items="6"
+          overlayPositioning={this.comboboxOverlayPositioning}
         >
           {expression.fields?.map((value, index) => this.renderComboboxItem(expression, value, index))}
         </calcite-combobox>
