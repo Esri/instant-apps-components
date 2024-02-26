@@ -574,7 +574,7 @@ export class InstantAppsExport {
   async viewScreenshot(): Promise<void> {
     if (this.view != null && this.includeMap) {
       if (this.screenshot == null) {
-        this.scaleBarContainerEl?.classList.toggle('instant-apps-export-print__scale-bar-container--position', this.view.width > 1200);
+        this.scaleBarContainerEl?.classList.toggle('instant-apps-export-print__scale-bar-container--position', this.view.width > 1000);
         this.screenshot = await this.view.takeScreenshot({
           width: this.view.width * 2,
           height: this.view.height * 2,
@@ -723,7 +723,7 @@ export class InstantAppsExport {
       const height = this.area.height!;
       const width = this.area.width!;
       if (this.showScaleBar) {
-        const moveSBUnit = this.view.width > 1200 && this.view.width * 0.75 < width;
+        const moveSBUnit = this.view.width > 1000 && this.view.width * 0.75 < width;
         this.scaleBarContainerEl?.classList.toggle('instant-apps-export-print__scale-bar-container--position', moveSBUnit);
       }
       this.view.takeScreenshot({ area: this.area, width: width * 2, height: height * 2, format: 'jpg' }).then(screenshot => {
