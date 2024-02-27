@@ -169,11 +169,28 @@ export class InstantAppsInteractiveLegendClassic {
         try {
           // Initial data setup
 
+          // Loads map/basemap
           const map = await (this.legendvm?.view?.map as __esri.WebMap)?.load();
           await map?.basemap?.load();
+
+          // Loads all layers in webmap and waits until all settled promises
           const allLayers = map?.allLayers;
           const promises = allLayers?.map(layer => layer.load());
-          await Promise.allSettled(promises);
+          const settled = await Promise.allSettled(promises);
+          const settledLayerPromises = settled
+            .map(settledLayer => (settledLayer?.status === 'fulfilled' && settledLayer?.value ? settledLayer.value : null))
+            .filter(layer => !!layer);
+
+          // Wait until all layer views are settled/available
+          const lvPromises: any = [];
+          settledLayerPromises.forEach(layer => {
+            if (this.legendvm?.view) {
+              lvPromises.push(this.legendvm.view.whenLayerView(layer));
+            }
+          });
+          await Promise.allSettled(lvPromises);
+
+          // Generate data once all layers/layer views are complete
           const data = await generateData(this.legendvm, this.reactiveUtils);
           store.set('data', { ...interactiveLegendState.data, ...data });
           this.isLoading = false;
