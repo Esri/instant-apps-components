@@ -411,6 +411,7 @@ export class InstantAppsSocialShare {
         title={this.messages?.share?.label}
         scale={scale}
         text=""
+        alignment="center"
       >
         <div class={CSS.iconContainer}>
           <calcite-icon icon="share" scale={this.popoverButtonIconScale} />

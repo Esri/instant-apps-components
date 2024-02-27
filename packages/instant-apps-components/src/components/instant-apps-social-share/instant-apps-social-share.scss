@@ -14,6 +14,7 @@ $hoverDark: #262626;
 :host {
   display: block;
   /**
+ * @prop --instant-apps-social-share-action-width: Width of action button
  * @prop --instant-apps-social-share-width--s: Width of component when scale is set to `s`
  * @prop --instant-apps-social-share-width--m: Width of component when scale is set to `m`
  * @prop --instant-apps-social-share-width--l: Width of component when scale is set to `l`
@@ -21,6 +22,7 @@ $hoverDark: #262626;
  * @prop --instant-apps-social-share-width-horizontal--m: Width of component when `share-icons-layout` is set to `horizontal` and scale is set to 'm'
  * @prop --instant-apps-social-share-width-horizontal--l: Width of component when `share-icons-layout` is set to `horizontal` and scale is set to 'l'
  */
+  --instant-apps-social-share-action-width: initial;
   --instant-apps-social-share-width--s: 200px;
   --instant-apps-social-share-width--m: 280px;
   --instant-apps-social-share-width--l: 320px;
@@ -253,9 +255,13 @@ $hoverDark: #262626;
       align-items: center;
     }
   }
+
+  calcite-action {
+    width: var(--instant-apps-social-share-action-width);
+  }
 }
 
-:host([scale="s"]) {
+:host([scale='s']) {
   .instant-apps-social-share {
     &__dialog {
       width: var(--instant-apps-social-share-width--s);
@@ -281,7 +287,7 @@ $hoverDark: #262626;
   }
 }
 
-:host([scale="m"]) {
+:host([scale='m']) {
   .instant-apps-social-share {
     &__dialog {
       width: var(--instant-apps-social-share-width--m);
@@ -307,7 +313,7 @@ $hoverDark: #262626;
   }
 }
 
-:host([scale="l"]) {
+:host([scale='l']) {
   .instant-apps-social-share {
     &__dialog {
       width: var(--instant-apps-social-share-width--l);

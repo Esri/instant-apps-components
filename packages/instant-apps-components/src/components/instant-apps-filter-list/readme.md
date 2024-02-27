@@ -109,20 +109,21 @@ const layerExpressions = [
 
 ## Properties
 
-| Property               | Attribute         | Description                                                            | Type                           | Default     |
-| ---------------------- | ----------------- | ---------------------------------------------------------------------- | ------------------------------ | ----------- |
-| `autoUpdateUrl`        | `auto-update-url` | Auto update URL with filter params.                                    | `boolean \| undefined`         | `false`     |
-| `closeBtn`             | `close-btn`       | Display close button in footer.                                        | `boolean \| undefined`         | `false`     |
-| `closeBtnOnClick`      | --                | Close button onClick function.                                         | `(() => void) \| undefined`    | `undefined` |
-| `closeBtnText`         | `close-btn-text`  | Close button text.                                                     | `string \| undefined`          | `undefined` |
-| `extentSelector`       | `extent-selector` | Turn on the ability to filter by extent.                               | `boolean \| undefined`         | `false`     |
-| `extentSelectorConfig` | --                | Limits filtering options based on the view's extent geometry.          | `ExtentSelector \| undefined`  | `undefined` |
-| `filterCount`          | `filter-count`    | Number of active filters                                               | `number \| undefined`          | `0`         |
-| `layerExpressions`     | --                | Use this to create filters that update a layer's definitionExpression. | `LayerExpression[]`            | `undefined` |
-| `openFilters`          | `open-filters`    | When `true`, the layer filter block is expanded.                       | `boolean \| undefined`         | `false`     |
-| `urlParams`            | --                | URL params set by using filters.                                       | `URLSearchParams \| undefined` | `undefined` |
-| `view`                 | --                | A reference to the MapView or SceneView.                               | `MapView \| SceneView`         | `undefined` |
-| `zoomBtn`              | `zoom-btn`        | Display zoom button.                                                   | `boolean \| undefined`         | `true`      |
+| Property                     | Attribute                      | Description                                                            | Type                                 | Default      |
+| ---------------------------- | ------------------------------ | ---------------------------------------------------------------------- | ------------------------------------ | ------------ |
+| `autoUpdateUrl`              | `auto-update-url`              | Auto update URL with filter params.                                    | `boolean \| undefined`               | `false`      |
+| `closeBtn`                   | `close-btn`                    | Display close button in footer.                                        | `boolean \| undefined`               | `false`      |
+| `closeBtnOnClick`            | --                             | Close button onClick function.                                         | `(() => void) \| undefined`          | `undefined`  |
+| `closeBtnText`               | `close-btn-text`               | Close button text.                                                     | `string \| undefined`                | `undefined`  |
+| `comboboxOverlayPositioning` | `combobox-overlay-positioning` | Determines the type of positioning to use for the overlaid content.    | `"absolute" \| "fixed" \| undefined` | `"absolute"` |
+| `extentSelector`             | `extent-selector`              | Turn on the ability to filter by extent.                               | `boolean \| undefined`               | `false`      |
+| `extentSelectorConfig`       | --                             | Limits filtering options based on the view's extent geometry.          | `ExtentSelector \| undefined`        | `undefined`  |
+| `filterCount`                | `filter-count`                 | Number of active filters                                               | `number \| undefined`                | `0`          |
+| `layerExpressions`           | --                             | Use this to create filters that update a layer's definitionExpression. | `LayerExpression[]`                  | `undefined`  |
+| `openFilters`                | `open-filters`                 | When `true`, the layer filter block is expanded.                       | `boolean \| undefined`               | `false`      |
+| `urlParams`                  | --                             | URL params set by using filters.                                       | `URLSearchParams \| undefined`       | `undefined`  |
+| `view`                       | --                             | A reference to the MapView or SceneView.                               | `MapView \| SceneView`               | `undefined`  |
+| `zoomBtn`                    | `zoom-btn`                     | Display zoom button.                                                   | `boolean \| undefined`               | `true`       |
 
 
 ## Events

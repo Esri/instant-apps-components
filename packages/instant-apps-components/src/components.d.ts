@@ -151,6 +151,10 @@ export namespace Components {
          */
         "closeBtnText"?: string;
         /**
+          * Determines the type of positioning to use for the overlaid content.
+         */
+        "comboboxOverlayPositioning"?: "absolute" | "fixed";
+        /**
           * Turn on the ability to filter by extent.
          */
         "extentSelector"?: boolean;
@@ -1270,6 +1274,10 @@ declare namespace LocalJSX {
           * Close button text.
          */
         "closeBtnText"?: string;
+        /**
+          * Determines the type of positioning to use for the overlaid content.
+         */
+        "comboboxOverlayPositioning"?: "absolute" | "fixed";
         /**
           * Turn on the ability to filter by extent.
          */

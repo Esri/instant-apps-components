@@ -5,6 +5,16 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## v1.0.0-beta.199
+
+### instant-apps-social-share
+
+- Add `--instant-apps-social-share-action-width` CSS variable to be able to set the width of action button
+
+### instant-apps-export
+
+- fix: use view.ui.getComponents() to retrieve scale bar
+
 ## v1.0.0-beta.198
 
 ### instant-apps-filter-list
