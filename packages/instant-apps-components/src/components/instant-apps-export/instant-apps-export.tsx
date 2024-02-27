@@ -560,12 +560,13 @@ export class InstantAppsExport {
   }
 
   updateScaleBar(): void {
-    if (this.scaleBarContainerEl) {
+    if (this.scaleBarContainerEl && this.view != null) {
       this.scaleBarContainerEl.innerHTML = '';
       if (this.showScaleBar) {
-        const scaleBar = this.view?.container?.querySelector('.esri-scale-bar.esri-widget')?.cloneNode(true);
-        if (scaleBar != null) {
-          this.scaleBarContainerEl.append(scaleBar);
+        const widgets = this.view.ui.getComponents() as __esri.Widget[];
+        const scaleBar = widgets?.find(({ container }) => (container as HTMLElement)?.className?.includes('esri-scale-bar'));
+        if (scaleBar?.container != null && typeof scaleBar.container !== 'string') {
+          this.scaleBarContainerEl.append(scaleBar.container.cloneNode(true));
         }
       }
     }

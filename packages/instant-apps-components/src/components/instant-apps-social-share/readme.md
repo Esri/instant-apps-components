@@ -45,6 +45,7 @@ The URL that is generated from the tool can be set up to preserve certain charac
 
 | Name                                              | Description                                                                                 |
 | ------------------------------------------------- | ------------------------------------------------------------------------------------------- |
+| `--instant-apps-social-share-action-width`        | Width of action button                                                                      |
 | `--instant-apps-social-share-width--l`            | Width of component when scale is set to `l`                                                 |
 | `--instant-apps-social-share-width--m`            | Width of component when scale is set to `m`                                                 |
 | `--instant-apps-social-share-width--s`            | Width of component when scale is set to `s`                                                 |
