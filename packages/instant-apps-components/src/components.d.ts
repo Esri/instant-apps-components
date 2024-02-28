@@ -153,7 +153,7 @@ export namespace Components {
         /**
           * Determines the type of positioning to use for the overlaid content.
          */
-        "comboboxOverlayPositioning"?: "absolute" | "fixed";
+        "comboboxOverlayPositioning"?: 'absolute' | 'fixed';
         /**
           * Turn on the ability to filter by extent.
          */
@@ -1277,7 +1277,7 @@ declare namespace LocalJSX {
         /**
           * Determines the type of positioning to use for the overlaid content.
          */
-        "comboboxOverlayPositioning"?: "absolute" | "fixed";
+        "comboboxOverlayPositioning"?: 'absolute' | 'fixed';
         /**
           * Turn on the ability to filter by extent.
          */

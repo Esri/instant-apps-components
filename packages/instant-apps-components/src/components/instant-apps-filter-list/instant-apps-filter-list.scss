@@ -50,11 +50,8 @@
 
     calcite-combobox {
       width: 100%;
-      --calcite-font-size--1: 16px;
-    }
-
-    calcite-combobox-item {
-      --calcite-font-size--1: 12px;
+      font-size: 16px;
+      --calcite-combobox-input-height: 24px;
     }
   }
 
