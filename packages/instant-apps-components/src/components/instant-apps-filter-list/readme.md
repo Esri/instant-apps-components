@@ -115,7 +115,7 @@ const layerExpressions = [
 | `closeBtn`                   | `close-btn`                    | Display close button in footer.                                        | `boolean \| undefined`               | `false`      |
 | `closeBtnOnClick`            | --                             | Close button onClick function.                                         | `(() => void) \| undefined`          | `undefined`  |
 | `closeBtnText`               | `close-btn-text`               | Close button text.                                                     | `string \| undefined`                | `undefined`  |
-| `comboboxOverlayPositioning` | `combobox-overlay-positioning` | Determines the type of positioning to use for the overlaid content.    | `"absolute" \| "fixed" \| undefined` | `"absolute"` |
+| `comboboxOverlayPositioning` | `combobox-overlay-positioning` | Determines the type of positioning to use for the overlaid content.    | `"absolute" \| "fixed" \| undefined` | `'absolute'` |
 | `extentSelector`             | `extent-selector`              | Turn on the ability to filter by extent.                               | `boolean \| undefined`               | `false`      |
 | `extentSelectorConfig`       | --                             | Limits filtering options based on the view's extent geometry.          | `ExtentSelector \| undefined`        | `undefined`  |
 | `filterCount`                | `filter-count`                 | Number of active filters                                               | `number \| undefined`                | `0`          |
