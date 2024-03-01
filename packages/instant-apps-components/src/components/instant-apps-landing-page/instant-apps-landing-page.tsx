@@ -155,6 +155,7 @@ export class InstantAppsLandingPage {
                 backgroundSize: 'cover',
                 backgroundImage: `url("${this.backgroundImageSrc}")`,
                 backgroundRepeat: 'no-repeat',
+                backgroundPosition: 'center',
               }
             : style
         }
