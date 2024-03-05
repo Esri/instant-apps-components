@@ -5,6 +5,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## v1.0.0-beta.203
+
+### instant-apps-export
+
+fix: make sure map's portalItem.id isn't undefined in legend's id check and check for legend.activeLayerInfos to hide the legend when there isn't one.
+
 ## v1.0.0-beta.202
 
 ### instant-apps-landing-page

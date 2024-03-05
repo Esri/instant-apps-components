@@ -147,7 +147,7 @@ export const printStyling = `
   }
 
   .instant-apps-export-print .esri-legend--card__service-caption-text {
-    padding-bottom: 0;
+    padding-bottom: 4px;
   }
 
   .instant-apps-export-print__compass-container {
