@@ -172,7 +172,7 @@ export class InstantAppsExport {
   compassContainerEl: HTMLDivElement;
   extraContainerEl: HTMLDivElement;
   handles: __esri.Handles | null;
-  legend: __esri.Legend;
+  legend: __esri.Legend | null;
   legendContainerEl: HTMLDivElement;
   maskDivEl: HTMLDivElement;
   popoverEl: HTMLCalcitePopoverElement;
@@ -499,7 +499,8 @@ export class InstantAppsExport {
 
   handleLegendSetup(): void {
     if (this.showIncludeLegend && this.view != null && this.includeMap && this.legendContainerEl != null) {
-      this.legendContainerEl.style.display = this.includeLegend ? 'block' : 'none';
+      const hasActiveLayers = this.legend != null && this.legend.activeLayerInfos?.length > 0;
+      this.legendContainerEl.style.display = this.includeLegend && hasActiveLayers ? 'block' : 'none';
     }
   }
 
@@ -512,7 +513,7 @@ export class InstantAppsExport {
     if (this.includeMap && this.view != null && this.showIncludeLegend && this.legendContainerEl != null) {
       const map = this.view.map as __esri.WebMap | __esri.WebScene;
       const legendMap = this.legend?.view?.map as __esri.WebMap | __esri.WebScene;
-      const checkId = map?.portalItem?.id === legendMap?.portalItem?.id;
+      const checkId = map?.portalItem?.id != null && map?.portalItem?.id === legendMap?.portalItem?.id;
       if (!checkId) {
         this.updateLegend();
       }
@@ -521,12 +522,17 @@ export class InstantAppsExport {
 
   updateLegend(): void {
     this.view?.when(async (view: __esri.MapView | __esri.SceneView) => {
-      this.legend?.destroy();
+      if (this.legend != null) {
+        this.legend.destroy();
+        this.legend = null;
+      }
       if (this.legendContainerEl != null) {
         this.legendContainerEl.innerHTML = '';
+        const legendCont = document.createElement('div');
+        this.legendContainerEl.append(legendCont);
         const [Legend] = await loadModules(['esri/widgets/Legend']);
         this.legend = new Legend({
-          container: this.legendContainerEl,
+          container: legendCont,
           view,
           style: {
             type: 'card',
