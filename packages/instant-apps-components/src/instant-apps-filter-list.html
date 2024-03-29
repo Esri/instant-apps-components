@@ -1,5 +1,5 @@
 <!-- /*
- *   Copyright (c) 2023 Esri
+ *   Copyright (c) 2024 Esri
  *   All rights reserved under the copyright laws of the United States and applicable international laws, treaties, and conventions.
  *   This material is licensed for use under the Esri Master License Agreement (MLA), and is bound by the terms of that agreement.
  *   You may redistribute and use this code without modification, provided you adhere to the terms of the MLA and include this copyright notice.
@@ -8,198 +8,199 @@
 
 <!DOCTYPE html>
 <html dir="ltr" lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=5.0" />
+    <title>ArcGIS Instant Apps Components</title>
 
-<head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=5.0" />
-  <title>ArcGIS Instant Apps Components</title>
+    <link rel="stylesheet" href="https://jsdev.arcgis.com/4.29/esri/themes/dark/main.css" />
+    <script src="https://jsdev.arcgis.com/4.29/"></script>
+    <script type="module" src="https://js.arcgis.com/calcite-components/2.4.0/calcite.esm.js"></script>
+    <link rel="stylesheet" type="text/css" href="https://js.arcgis.com/calcite-components/2.4.0/calcite.css" />
+    <script type="module" src="/build/instant-apps-components.esm.js"></script>
+    <script nomodule src="/build/instant-apps-components.js"></script>
 
-  <link rel="stylesheet" href="https://jsdev.arcgis.com/4.29/esri/themes/dark/main.css" />
-  <script src="https://jsdev.arcgis.com/4.29/"></script>
-  <script type="module" src="https://js.arcgis.com/calcite-components/2.4.0/calcite.esm.js"></script>
-  <link rel="stylesheet" type="text/css" href="https://js.arcgis.com/calcite-components/2.4.0/calcite.css" />
-  <script type="module" src="/build/instant-apps-components.esm.js"></script>
-  <script nomodule src="/build/instant-apps-components.js"></script>
+    <style>
+      html,
+      body,
+      #viewDiv {
+        box-sizing: border-box;
+        width: 100%;
+        height: 100%;
+        margin: 0;
+        padding: 0;
+      }
 
-  <style>
-    html,
-    body,
-    #viewDiv {
-      box-sizing: border-box;
-      width: 100%;
-      height: 100%;
-      margin: 0;
-      padding: 0;
-    }
+      .panel-content {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        padding: 5%;
+        font-size: 1rem;
+        font-weight: 400;
+        margin: 0;
+      }
 
-    .panel-content {
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      padding: 5%;
-      font-size: 1rem;
-      font-weight: 400;
-      margin: 0;
-    }
+      .filter-header {
+        display: flex;
+        align-items: center;
+      }
 
-    .filter-header {
-      display: flex;
-      align-items: center;
-    }
+      .filter-header calcite-icon {
+        margin-inline-end: 8px;
+      }
+    </style>
+  </head>
 
-    .filter-header calcite-icon {
-      margin-inline-end: 8px;
-    }
-  </style>
-</head>
+  <body>
+    <calcite-shell class="calcite-mode-light">
+      <instant-apps-header
+        id="instant-apps-header"
+        slot="header"
+        title-text="Filter List"
+        logo-image="https://www.esri.com/content/dam/esrisites/en-us/common/icons/product-logos/arcgis-instant-apps-64.svg"
+        logo-image-alt-text="ArcGIS Instant Apps logo"
+        logo-link="https://www.esri.com/en-us/arcgis/products/arcgis-instant-apps/overview"
+      >
+      </instant-apps-header>
+      <calcite-shell-panel slot="panel-start">
+        <calcite-panel>
+          <instant-apps-filter-list id="filter-list">
+            <div class="filter-header" slot="filter-header-content"><calcite-icon scale="s" icon="filter"></calcite-icon>Filter List</div>
+          </instant-apps-filter-list>
+        </calcite-panel>
+      </calcite-shell-panel>
+      <div id="viewDiv"></div>
+    </calcite-shell>
+    <script>
+      require(['esri/WebMap', 'esri/widgets/Expand', 'esri/views/MapView', 'esri/layers/FeatureLayer', 'esri/widgets/FeatureTable', 'esri/core/reactiveUtils', 'esri/config'], (
+        WebMap,
+        Expand,
+        MapView,
+        FeatureLayer,
+        FeatureTable,
+        reactiveUtils,
+        esriConfig,
+      ) => {
+        const layerExpressions = [
+          {
+            id: '178ff98e33c-layer-2',
+            title: 'LA Crime Subset',
+            operator: ' AND ',
+            expressions: [
+              {
+                id: 1705514539070,
+                name: 'Date_Reported',
+                type: 'date',
+                field: 'Date_Reported',
+                displayOption: 'drop-down',
+                index: 0,
+                _uid: 'c43644cec6f',
+              },
+              {
+                id: 1705515198267,
+                name: 'Date_Reported',
+                type: 'date',
+                field: 'Date_Reported',
+                displayOption: 'range',
+                index: 1,
+                _uid: '43644cec6f7',
+              },
+              {
+                id: 1705514545727,
+                name: 'Date_Occurred',
+                type: 'date',
+                field: 'Date_Occurred',
+                displayOption: 'range',
+                index: 2,
+                _uid: '3644cec6f70',
+              },
+              {
+                id: 1705514555800,
+                name: 'Time_Occurred',
+                type: 'number',
+                field: 'Time_Occurred',
+                displayOption: 'range',
+                index: 3,
+                _uid: '644cec6f70f',
+              },
+              {
+                id: 1705514562513,
+                name: 'Area_Name',
+                type: 'string',
+                field: 'Area_Name',
+                index: 4,
+                _uid: '44cec6f70fc',
+              },
+              {
+                id: 1705514572434,
+                name: 'Reporting_District',
+                type: 'number',
+                field: 'Reporting_District',
+                displayOption: 'range',
+                index: 5,
+                _uid: '4cec6f70fce',
+              },
+              {
+                id: 1705514586888,
+                name: 'Victim_Age',
+                type: 'number',
+                field: 'Victim_Age',
+                displayOption: 'range',
+                index: 6,
+                _uid: 'cec6f70fcec',
+              },
+              {
+                id: 1705515230034,
+                name: 'Date_Occurred',
+                type: 'date',
+                field: 'Date_Occurred',
+                displayOption: 'drop-down',
+                index: 7,
+                _uid: 'ec6f70fcec1',
+              },
+              {
+                id: 1707503823677,
+                name: 'dateonly',
+                type: 'date',
+                field: 'dateonly',
+                displayOption: 'drop-down',
+                index: 8,
+                _uid: '7f80e5912d6',
+              },
+            ],
+            _uid: '47f80e5912d',
+          },
+        ];
+        esriConfig.portalUrl = 'https://nw-brews.mapsdevext.arcgis.com';
 
-<body>
-  <calcite-shell class="calcite-mode-light">
-    <instant-apps-header id="instant-apps-header" slot="header" title-text="Filter List"
-      logo-image="https://www.esri.com/content/dam/esrisites/en-us/common/icons/product-logos/arcgis-instant-apps-64.svg"
-      logo-image-alt-text="ArcGIS Instant Apps logo"
-      logo-link="https://www.esri.com/en-us/arcgis/products/arcgis-instant-apps/overview">
-    </instant-apps-header>
-    <calcite-shell-panel slot="panel-start">
-      <calcite-panel>
-        <instant-apps-filter-list id="filter-list">
-          <div class="filter-header" slot="filter-header-content"><calcite-icon scale="s"
-              icon="filter"></calcite-icon>Filter List</div>
-        </instant-apps-filter-list>
-      </calcite-panel>
-    </calcite-shell-panel>
-    <div id="viewDiv"></div>
-  </calcite-shell>
-  <script>
-    require(['esri/WebMap', 'esri/widgets/Expand', 'esri/views/MapView', 'esri/layers/FeatureLayer', 'esri/widgets/FeatureTable', 'esri/core/reactiveUtils', 'esri/config'], (
-      WebMap,
-      Expand,
-      MapView,
-      FeatureLayer,
-      FeatureTable,
-      reactiveUtils,
-      esriConfig,
-    ) => {
-      const layerExpressions = [
-        {
-          "id": "178ff98e33c-layer-2",
-          "title": "LA Crime Subset",
-          "operator": " AND ",
-          "expressions": [
-            {
-              "id": 1705514539070,
-              "name": "Date_Reported",
-              "type": "date",
-              "field": "Date_Reported",
-              "displayOption": "drop-down",
-              "index": 0,
-              "_uid": "c43644cec6f"
-            },
-            {
-              "id": 1705515198267,
-              "name": "Date_Reported",
-              "type": "date",
-              "field": "Date_Reported",
-              "displayOption": "range",
-              "index": 1,
-              "_uid": "43644cec6f7"
-            },
-            {
-              "id": 1705514545727,
-              "name": "Date_Occurred",
-              "type": "date",
-              "field": "Date_Occurred",
-              "displayOption": "range",
-              "index": 2,
-              "_uid": "3644cec6f70"
-            },
-            {
-              "id": 1705514555800,
-              "name": "Time_Occurred",
-              "type": "number",
-              "field": "Time_Occurred",
-              "displayOption": "range",
-              "index": 3,
-              "_uid": "644cec6f70f"
-            },
-            {
-              "id": 1705514562513,
-              "name": "Area_Name",
-              "type": "string",
-              "field": "Area_Name",
-              "index": 4,
-              "_uid": "44cec6f70fc"
-            },
-            {
-              "id": 1705514572434,
-              "name": "Reporting_District",
-              "type": "number",
-              "field": "Reporting_District",
-              "displayOption": "range",
-              "index": 5,
-              "_uid": "4cec6f70fce"
-            },
-            {
-              "id": 1705514586888,
-              "name": "Victim_Age",
-              "type": "number",
-              "field": "Victim_Age",
-              "displayOption": "range",
-              "index": 6,
-              "_uid": "cec6f70fcec"
-            },
-            {
-              "id": 1705515230034,
-              "name": "Date_Occurred",
-              "type": "date",
-              "field": "Date_Occurred",
-              "displayOption": "drop-down",
-              "index": 7,
-              "_uid": "ec6f70fcec1"
-            },
-            {
-              "id": 1707503823677,
-              "name": "dateonly",
-              "type": "date",
-              "field": "dateonly",
-              "displayOption": "drop-down",
-              "index": 8,
-              "_uid": "7f80e5912d6"
-            }
-          ],
-          "_uid": "47f80e5912d"
-        }
-      ]
-      esriConfig.portalUrl = 'https://nw-brews.mapsdevext.arcgis.com';
-
-      const map = new WebMap({
-        portalItem: {
-          id: '4dbf07d326134327813941b4ee09f4da',
-        },
-      });
-
-      const view = new MapView({
-        map,
-        container: 'viewDiv',
-      });
-
-      view.when(async () => {
-        await view.map.loadAll();
-        const filterList = document.getElementById('filter-list');
-        filterList.layerExpressions = layerExpressions;
-        filterList.view = view;
-        filterList.closeBtnOnClick = () => console.log('close');
-        filterList.openFilters = true;
-        filterList.addEventListener('filterListReset', e => {
-          console.log('filterListReset e', e);
+        const map = new WebMap({
+          portalItem: {
+            id: '4dbf07d326134327813941b4ee09f4da',
+          },
         });
-        filterList.addEventListener('filterUpdate', e => {
-          console.log('filterUpdate e', e);
-          console.log('urlParams: ', filterList.urlParams.getAll('filter'));
+
+        const view = new MapView({
+          map,
+          container: 'viewDiv',
+        });
+
+        view.when(async () => {
+          await view.map.loadAll();
+          const filterList = document.getElementById('filter-list');
+          filterList.layerExpressions = layerExpressions;
+          filterList.view = view;
+          filterList.closeBtnOnClick = () => console.log('close');
+          filterList.openFilters = true;
+          filterList.addEventListener('filterListReset', e => {
+            console.log('filterListReset e', e);
+          });
+          filterList.addEventListener('filterUpdate', e => {
+            console.log('filterUpdate e', e);
+            console.log('urlParams: ', filterList.urlParams.getAll('filter'));
+          });
         });
       });
-    });
-  </script>
-</body>
-
+    </script>
+  </body>
 </html>

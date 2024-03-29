@@ -2,7 +2,6 @@
 
 <!-- Auto Generated Below -->
 
-
 ## Properties
 
 | Property          | Attribute       | Description | Type              | Default     |
@@ -14,26 +13,25 @@
 | `legendvm`        | --              |             | `LegendViewModel` | `undefined` |
 | `messages`        | `messages`      |             | `any`             | `undefined` |
 
-
 ## Events
 
 | Event                              | Description | Type                   |
 | ---------------------------------- | ----------- | ---------------------- |
 | `layerCaptionElementExpandUpdated` |             | `CustomEvent<boolean>` |
 
-
 ## Dependencies
 
 ### Used by
 
- - [instant-apps-interactive-legend-group-legend-element](../instant-apps-interactive-legend-group-legend-element)
- - [instant-apps-interactive-legend-layer-element](../instant-apps-interactive-legend-layer-element)
+- [instant-apps-interactive-legend-group-legend-element](../instant-apps-interactive-legend-group-legend-element)
+- [instant-apps-interactive-legend-layer-element](../instant-apps-interactive-legend-layer-element)
 
 ### Depends on
 
 - [instant-apps-interactive-legend-count](../instant-apps-interactive-legend-count)
 
 ### Graph
+
 ```mermaid
 graph TD;
   instant-apps-interactive-legend-layer-element-caption --> instant-apps-interactive-legend-count
@@ -42,10 +40,11 @@ graph TD;
   style instant-apps-interactive-legend-layer-element-caption fill:#f9f,stroke:#333,stroke-width:4px
 ```
 
-----------------------------------------------
+---
 
 ## License
-COPYRIGHT © 2023 Esri
+
+COPYRIGHT © 2024 Esri
 
 All rights reserved under the copyright laws of the United States and applicable international laws, treaties, and conventions.
 
@@ -56,4 +55,3 @@ See use restrictions at http://www.esri.com/legal/pdfs/mla_e204_e300/english
 For additional information, contact: Environmental Systems Research Institute, Inc. Attn: Contracts and Legal Services Department 380 New York Street Redlands, California, USA 92373 USA
 
 email: contracts@esri.com
-

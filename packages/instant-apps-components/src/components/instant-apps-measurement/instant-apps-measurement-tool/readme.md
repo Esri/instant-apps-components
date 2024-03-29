@@ -1,9 +1,6 @@
 # instant-apps-measurement-tool
 
-
-
 <!-- Auto Generated Below -->
-
 
 ## Properties
 
@@ -13,24 +10,25 @@
 | `measureConfiguration` | --            |             | `IMeasureConfiguration`                      | `undefined` |
 | `view`                 | --            |             | `MapView \| SceneView`                       | `undefined` |
 
-
 ## Dependencies
 
 ### Used by
 
- - [instant-apps-measurement](..)
+- [instant-apps-measurement](..)
 
 ### Graph
+
 ```mermaid
 graph TD;
   instant-apps-measurement --> instant-apps-measurement-tool
   style instant-apps-measurement-tool fill:#f9f,stroke:#333,stroke-width:4px
 ```
 
-----------------------------------------------
+---
 
 ## License
-COPYRIGHT © 2023 Esri
+
+COPYRIGHT © 2024 Esri
 
 All rights reserved under the copyright laws of the United States and applicable international laws, treaties, and conventions.
 
@@ -41,4 +39,3 @@ See use restrictions at http://www.esri.com/legal/pdfs/mla_e204_e300/english
 For additional information, contact: Environmental Systems Research Institute, Inc. Attn: Contracts and Legal Services Department 380 New York Street Redlands, California, USA 92373 USA
 
 email: contracts@esri.com
-

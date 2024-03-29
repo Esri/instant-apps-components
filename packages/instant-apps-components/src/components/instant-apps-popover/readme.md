@@ -1,19 +1,18 @@
 # instant-apps-popover
 
-## Description 
+## Description
 
-The `instant-apps-popover` component is a tool that can be used to display a small window with additional information above or next to an element in an app when it first opens. 
+The `instant-apps-popover` component is a tool that can be used to display a small window with additional information above or next to an element in an app when it first opens.
 
-This can be useful to provide an additional description about a tool or to call attention to an element in an app. In the popover message a title, subtitle or image can be included. 
+This can be useful to provide an additional description about a tool or to call attention to an element in an app. In the popover message a title, subtitle or image can be included.
 
-Utilize [instant-apps-popovers](https://github.com/Esri/instant-apps-components/tree/master/packages/instant-apps-components/src/components/instant-apps-popovers) and use pagination to navigate through multiple popover messages using next and back buttons. 
+Utilize [instant-apps-popovers](https://github.com/Esri/instant-apps-components/tree/master/packages/instant-apps-components/src/components/instant-apps-popovers) and use pagination to navigate through multiple popover messages using next and back buttons.
 
 <p align="center">
 <img alt="Image of popover message in sample app" img src="https://i.imgur.com/pNdAIMw.jpg"/>
 </p>
 
 <!-- Auto Generated Below -->
-
 
 ## Properties
 
@@ -35,11 +34,11 @@ Utilize [instant-apps-popovers](https://github.com/Esri/instant-apps-components/
 | `referenceElement` | `reference-element` |             | `HTMLElement \| string`                                                                                                                                                                                                                                                                                           | `undefined`        |
 | `subtitle`         | `subtitle`          |             | `string`                                                                                                                                                                                                                                                                                                          | `undefined`        |
 
-
-----------------------------------------------
+---
 
 ## License
-COPYRIGHT © 2023 Esri
+
+COPYRIGHT © 2024 Esri
 
 All rights reserved under the copyright laws of the United States and applicable international laws, treaties, and conventions.
 
@@ -50,4 +49,3 @@ See use restrictions at http://www.esri.com/legal/pdfs/mla_e204_e300/english
 For additional information, contact: Environmental Systems Research Institute, Inc. Attn: Contracts and Legal Services Department 380 New York Street Redlands, California, USA 92373 USA
 
 email: contracts@esri.com
-

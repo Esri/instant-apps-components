@@ -1,15 +1,14 @@
 # instant-apps-splash
 
-## Description 
-The `instant-app-splash` component is a tool that is used to provide pertinent information about the content in an app. The splash component opens as a window over the app when it first opens. 
+## Description
 
-Typically, the splash tool is used to provide a description of the map and data that is in the app, as well to present instructions on how to use the app or other tools available in the app. 
+The `instant-app-splash` component is a tool that is used to provide pertinent information about the content in an app. The splash component opens as a window over the app when it first opens.
 
-In the splash tool there is a check box that allows users to “Don’t show this again”. When the box is checked the splash tool will no longer appear when that user accesses the app, the preference is stored in the browser’s local storage. 
+Typically, the splash tool is used to provide a description of the map and data that is in the app, as well to present instructions on how to use the app or other tools available in the app.
 
+In the splash tool there is a check box that allows users to “Don’t show this again”. When the box is checked the splash tool will no longer appear when that user accesses the app, the preference is stored in the browser’s local storage.
 
 <!-- Auto Generated Below -->
-
 
 ## Properties
 
@@ -22,18 +21,17 @@ In the splash tool there is a check box that allows users to “Don’t show thi
 | `primaryButtonText`            | `primary-button-text`   | Primary button text.                                                                                     | `string`  | `''`        |
 | `titleText`                    | `title-text`            | Title of splash screen.                                                                                  | `string`  | `''`        |
 
-
 ## Events
 
 | Event         | Description                            | Type                |
 | ------------- | -------------------------------------- | ------------------- |
 | `splashClose` | Emits when the splash modal is closed. | `CustomEvent<void>` |
 
-
-----------------------------------------------
+---
 
 ## License
-COPYRIGHT © 2023 Esri
+
+COPYRIGHT © 2024 Esri
 
 All rights reserved under the copyright laws of the United States and applicable international laws, treaties, and conventions.
 
@@ -44,4 +42,3 @@ See use restrictions at http://www.esri.com/legal/pdfs/mla_e204_e300/english
 For additional information, contact: Environmental Systems Research Institute, Inc. Attn: Contracts and Legal Services Department 380 New York Street Redlands, California, USA 92373 USA
 
 email: contracts@esri.com
-

@@ -1,6 +1,6 @@
 # instant-apps-language-switcher
 
-Language switcher provides end users with the ability to translate a web app's UI by selecting a language from a dropdown. 
+Language switcher provides end users with the ability to translate a web app's UI by selecting a language from a dropdown.
 
 ## Typings
 
@@ -42,15 +42,15 @@ Language switcher provides end users with the ability to translate a web app's U
 ```
 
 ### Events
- ```
+
+```
 document.addEventListener("selectedLanguageUpdated", (e: CustomEvent) => {
-  const data = e.detail;
-  // Write logic to apply strings throughout your app here.
+ const data = e.detail;
+ // Write logic to apply strings throughout your app here.
 });
- ```
+```
 
 <!-- Auto Generated Below -->
-
 
 ## Properties
 
@@ -62,13 +62,11 @@ document.addEventListener("selectedLanguageUpdated", (e: CustomEvent) => {
 | `portalItem` _(required)_ | --               | Instant App portal item - used to fetch it's associated portal item resource. The portal item resource will contain the user defined translated strings. | `PortalItem`                                          | `undefined`  |
 | `view`                    | --               | Reference to map view to switch web maps if present in locales.                                                                                          | `MapView \| SceneView \| undefined`                   | `undefined`  |
 
-
 ## Events
 
 | Event                     | Description                                                                                                                                                                                                  | Type                                                                               |
 | ------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ---------------------------------------------------------------------------------- |
 | `selectedLanguageUpdated` | Fires when a language is selected from the dropdown. This event will emit an object containing the information on the selected language and a flat object of unique identifiers and their associated values. | `CustomEvent<{ locale: string; data?: { [key: string]: string; } \| undefined; }>` |
-
 
 ## Methods
 
@@ -80,9 +78,6 @@ Refreshes the component by fetching the latest translation data from the portal 
 
 Type: `Promise<void>`
 
-
-
-
 ## Dependencies
 
 ### Depends on
@@ -90,6 +85,7 @@ Type: `Promise<void>`
 - [instant-apps-language-translator](../instant-apps-language-translator)
 
 ### Graph
+
 ```mermaid
 graph TD;
   instant-apps-language-switcher --> instant-apps-language-translator
@@ -99,10 +95,11 @@ graph TD;
   style instant-apps-language-switcher fill:#f9f,stroke:#333,stroke-width:4px
 ```
 
-----------------------------------------------
+---
 
 ## License
-COPYRIGHT © 2023 Esri
+
+COPYRIGHT © 2024 Esri
 
 All rights reserved under the copyright laws of the United States and applicable international laws, treaties, and conventions.
 
@@ -113,4 +110,3 @@ See use restrictions at http://www.esri.com/legal/pdfs/mla_e204_e300/english
 For additional information, contact: Environmental Systems Research Institute, Inc. Attn: Contracts and Legal Services Department 380 New York Street Redlands, California, USA 92373 USA
 
 email: contracts@esri.com
-

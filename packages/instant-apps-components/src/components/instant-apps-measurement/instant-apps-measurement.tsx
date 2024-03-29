@@ -1,5 +1,5 @@
 /*
- *   Copyright (c) 2023 Esri
+ *   Copyright (c) 2024 Esri
  *   All rights reserved under the copyright laws of the United States and applicable international laws, treaties, and conventions.
  *   This material is licensed for use under the Esri Master License Agreement (MLA), and is bound by the terms of that agreement.
  *   You may redistribute and use this code without modification, provided you adhere to the terms of the MLA and include this copyright notice.
@@ -95,7 +95,7 @@ export class InstantAppsMeasurement {
     return (
       <calcite-action-pad expand-disabled={true} layout="horizontal" position="end">
         <calcite-action
-          class={activeToolType === 'distance' ? 'active-tool' : ""}
+          class={activeToolType === 'distance' ? 'active-tool' : ''}
           text={messages?.line}
           icon="measure"
           scale="m"
@@ -107,7 +107,7 @@ export class InstantAppsMeasurement {
           </calcite-tooltip>
         </calcite-action>
         <calcite-action
-          class={activeToolType === 'area' ? 'active-tool' : ""}
+          class={activeToolType === 'area' ? 'active-tool' : ''}
           text={messages?.area}
           scale="m"
           icon="measure-area"
@@ -119,7 +119,7 @@ export class InstantAppsMeasurement {
           </calcite-tooltip>
         </calcite-action>
         <calcite-action
-          class={activeToolType === 'point' ? 'active-tool' : ""}
+          class={activeToolType === 'point' ? 'active-tool' : ''}
           text={messages?.point}
           scale="m"
           icon="pin-plus"

@@ -2,22 +2,21 @@
 
 ## Description
 
-The `instant-apps-header` component is an element that can be used to provide context for the content in an app. 
+The `instant-apps-header` component is an element that can be used to provide context for the content in an app.
 
-This component appears as a page header that can include a title, logo, info button and additional actions like social sharing or a hyperlink. A slot at the end of the header to include actions like a link to a site or tool like the instant-apps-social-share tool. 
+This component appears as a page header that can include a title, logo, info button and additional actions like social sharing or a hyperlink. A slot at the end of the header to include actions like a link to a site or tool like the instant-apps-social-share tool.
 
 The header component includes custom CSS properties to adjust the style of the header. The custom properties include ways to:
--	Change the height or size of the header
--	Update the logo height and width scale: `small`, `medium` or `large`
--	Style header text as a hyperlink
 
+- Change the height or size of the header
+- Update the logo height and width scale: `small`, `medium` or `large`
+- Style header text as a hyperlink
 
 <p align="center">
 <img alt="Screenshot of header in sample app" img src="https://i.imgur.com/Ds1BJNK.jpg"/>
 </p>
 
 <!-- Auto Generated Below -->
-
 
 ## Properties
 
@@ -40,20 +39,17 @@ The header component includes custom CSS properties to adjust the style of the h
 | `titleText`             | `title-text`              | Main text to display in header.                                                     | `string`                        | `undefined`                     |
 | `titleTextLink`         | `title-text-link`         | Url to link out to from title text                                                  | `string`                        | `undefined`                     |
 
-
 ## Events
 
 | Event               | Description                            | Type                   |
 | ------------------- | -------------------------------------- | ---------------------- |
 | `infoIsOpenChanged` | Fires when the info button is clicked. | `CustomEvent<boolean>` |
 
-
 ## Slots
 
 | Slot            | Description                                                                                        |
 | --------------- | -------------------------------------------------------------------------------------------------- |
 | `"actions-end"` | Used to slot an action at the end of the header i.e. `calcite-action`, `instant-apps-social-share` |
-
 
 ## CSS Custom Properties
 
@@ -72,24 +68,25 @@ The header component includes custom CSS properties to adjust the style of the h
 | `--instant-apps-header-min-height`                 | Minimum height for header. Default: 50px;                                         |
 | `--instant-apps-header-title-text-link-decoration` | Text decoration for hyperlinks for `titleTextLink`. Default value is 'underline'. |
 
-
 ## Dependencies
 
 ### Used by
 
- - [instant-apps-export](../instant-apps-export)
+- [instant-apps-export](../instant-apps-export)
 
 ### Graph
+
 ```mermaid
 graph TD;
   instant-apps-export --> instant-apps-header
   style instant-apps-header fill:#f9f,stroke:#333,stroke-width:4px
 ```
 
-----------------------------------------------
+---
 
 ## License
-COPYRIGHT © 2023 Esri
+
+COPYRIGHT © 2024 Esri
 
 All rights reserved under the copyright laws of the United States and applicable international laws, treaties, and conventions.
 
@@ -100,4 +97,3 @@ See use restrictions at http://www.esri.com/legal/pdfs/mla_e204_e300/english
 For additional information, contact: Environmental Systems Research Institute, Inc. Attn: Contracts and Legal Services Department 380 New York Street Redlands, California, USA 92373 USA
 
 email: contracts@esri.com
-

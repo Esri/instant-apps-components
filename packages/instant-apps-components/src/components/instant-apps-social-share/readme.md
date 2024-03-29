@@ -1,20 +1,20 @@
 # instant-apps-social-share
 
 ## Description
-The `instant-apps-social-share` component is a tool that can be used to share an app using social media or a link. 
 
-The URL that is generated from the tool can be set up to preserve certain characteristics of the view using parameters. Parameters added to the URL can be useful to preserve things like: 
--	**Selected feature**: If there is a feature selected in the view, that will be added to the generated URL as a parameter *(Note: This is only supported in map views)*
--	**Layer visibility**: If there are layers that have been turned off/on using a widget like the layer list, the layer visibility will be added to the URL as a parameter
--	**Viewpoint of the map or scene view**: The center, scale level and view point of the current visible extent can be added as a URL. By doing this the view will open to where the view was when the link was generated. 
+The `instant-apps-social-share` component is a tool that can be used to share an app using social media or a link.
+
+The URL that is generated from the tool can be set up to preserve certain characteristics of the view using parameters. Parameters added to the URL can be useful to preserve things like:
+
+- **Selected feature**: If there is a feature selected in the view, that will be added to the generated URL as a parameter _(Note: This is only supported in map views)_
+- **Layer visibility**: If there are layers that have been turned off/on using a widget like the layer list, the layer visibility will be added to the URL as a parameter
+- **Viewpoint of the map or scene view**: The center, scale level and view point of the current visible extent can be added as a URL. By doing this the view will open to where the view was when the link was generated.
 
 <p align="center">
 <img alt="GIF of the social share tool being used in the sample app" img src="https://i.imgur.com/QLs5gVe.gif"/>
 </p>
 
-
 <!-- Auto Generated Below -->
-
 
 ## Properties
 
@@ -40,7 +40,6 @@ The URL that is generated from the tool can be set up to preserve certain charac
 | `successMessage`                | `success-message`                  | Provides an alternate to the success.url message "App URL copied to clipboard."                                                                                                              | `string`                                                                                                                                                                                                                                                                                                          | `''`                   |
 | `view`                          | --                                 | MapView or SceneView to reference when URL parameter values are generated, i.e. center, level, viewpoint, etc.                                                                               | `MapView \| SceneView`                                                                                                                                                                                                                                                                                            | `undefined`            |
 
-
 ## CSS Custom Properties
 
 | Name                                              | Description                                                                                 |
@@ -53,11 +52,11 @@ The URL that is generated from the tool can be set up to preserve certain charac
 | `--instant-apps-social-share-width-horizontal--m` | Width of component when `share-icons-layout` is set to `horizontal` and scale is set to 'm' |
 | `--instant-apps-social-share-width-horizontal--s` | Width of component when `share-icons-layout` is set to `horizontal` and scale is set to 's' |
 
-
-----------------------------------------------
+---
 
 ## License
-COPYRIGHT © 2023 Esri
+
+COPYRIGHT © 2024 Esri
 
 All rights reserved under the copyright laws of the United States and applicable international laws, treaties, and conventions.
 
@@ -68,4 +67,3 @@ See use restrictions at http://www.esri.com/legal/pdfs/mla_e204_e300/english
 For additional information, contact: Environmental Systems Research Institute, Inc. Attn: Contracts and Legal Services Department 380 New York Street Redlands, California, USA 92373 USA
 
 email: contracts@esri.com
-

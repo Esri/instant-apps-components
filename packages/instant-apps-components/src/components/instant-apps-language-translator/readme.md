@@ -137,7 +137,6 @@ interface LocaleItem {
 
 <!-- Auto Generated Below -->
 
-
 ## Properties
 
 | Property                                | Attribute | Description                                                                                                                                                                                                                                                                                                               | Type                                                                                                | Default     |
@@ -149,13 +148,11 @@ interface LocaleItem {
 | `translatedLocaleInputOnChangeCallback` | --        | Function that is called when the value in a translated locale's input has changed. This function will have 4 arguments - fieldName, value, locale, and resource - and will return a promise. The callback function can be used to construct the data of key-value pairs that will be written to the portal item resource. | `(fieldName: string, value: string, locale: string, resource: PortalItemResource) => Promise<void>` | `undefined` |
 | `userLocaleInputOnChangeCallback`       | --        | Function to be called when the value in a user locale input has changed. This function will have 2 arguments - fieldName and value - and will return a promise.                                                                                                                                                           | `(fieldName: string, value: string) => Promise<void>`                                               | `undefined` |
 
-
 ## Events
 
 | Event                   | Description                                         | Type                  |
 | ----------------------- | --------------------------------------------------- | --------------------- |
 | `translatorDataUpdated` | Fires when a translation input's value has changed. | `CustomEvent<string>` |
-
 
 ## Methods
 
@@ -167,8 +164,6 @@ Batch write data to associated portal item resource.
 
 Type: `Promise<void>`
 
-
-
 ### `getPortalItemResource() => Promise<__esri.PortalItemResource>`
 
 Gets portal item resource containing the translation data.
@@ -176,8 +171,6 @@ Gets portal item resource containing the translation data.
 #### Returns
 
 Type: `Promise<PortalItemResource>`
-
-
 
 ### `getTranslationData() => Promise<any>`
 
@@ -187,8 +180,6 @@ Gets translation data for all languages and fields.
 
 Type: `Promise<any>`
 
-
-
 ### `setTranslationData(data: any) => Promise<void>`
 
 Updates translation data for all languages and fields.
@@ -196,9 +187,6 @@ Updates translation data for all languages and fields.
 #### Returns
 
 Type: `Promise<void>`
-
-
-
 
 ## Slots
 
@@ -208,12 +196,11 @@ Type: `Promise<void>`
 | `"secondary-custom-action"`   | A slot for adding a secondary action.                                          |
 | `"translation-custom-action"` | A slot for adding a custom action in the translation header section of the UI. |
 
-
 ## Dependencies
 
 ### Used by
 
- - [instant-apps-language-switcher](../instant-apps-language-switcher)
+- [instant-apps-language-switcher](../instant-apps-language-switcher)
 
 ### Depends on
 
@@ -221,6 +208,7 @@ Type: `Promise<void>`
 - [instant-apps-language-translator-item](instant-apps-language-translator-item)
 
 ### Graph
+
 ```mermaid
 graph TD;
   instant-apps-language-translator --> instant-apps-language-translator-search
@@ -230,10 +218,11 @@ graph TD;
   style instant-apps-language-translator fill:#f9f,stroke:#333,stroke-width:4px
 ```
 
-----------------------------------------------
+---
 
 ## License
-COPYRIGHT © 2023 Esri
+
+COPYRIGHT © 2024 Esri
 
 All rights reserved under the copyright laws of the United States and applicable international laws, treaties, and conventions.
 
@@ -244,4 +233,3 @@ See use restrictions at http://www.esri.com/legal/pdfs/mla_e204_e300/english
 For additional information, contact: Environmental Systems Research Institute, Inc. Attn: Contracts and Legal Services Department 380 New York Street Redlands, California, USA 92373 USA
 
 email: contracts@esri.com
-
