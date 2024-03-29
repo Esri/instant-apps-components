@@ -16,9 +16,11 @@ import { getMessages } from '../../utils/locale';
 import { LogicalPlacement } from '@esri/calcite-components/dist/types/utils/floating-ui';
 // import { PopperPlacement } from '@esri/calcite-components/dist/types/utils/popper';
 
-type ShareItemOptions = 'link' | 'facebook' | 'twitter' | 'linkedIn';
+type ShareItemOptions = 'link' | 'facebook' | 'x' | 'linkedIn';
 
 const base = 'instant-apps-social-share';
+
+const CALCITE_MODE_DARK = '.calcite-mode-dark';
 
 const CSS = {
   base,
@@ -36,6 +38,10 @@ const CSS = {
   layout: {
     vertical: `${base}__layout--vertical`,
     horizontal: `${base}__layout--horizontal`,
+  },
+  xLogo: {
+    light: `${base}__x-logo--light`,
+    dark: `${base}__x-logo--dark`,
   },
   success: {
     container: `${base}__success`,
@@ -65,7 +71,7 @@ const CSS = {
 
 const SOCIAL_URL_TEMPLATES = {
   facebook: 'https://www.facebook.com/sharer/sharer.php?u={url}',
-  twitter: 'https://twitter.com/intent/tweet?text={text}&url={url}',
+  x: 'https://x.com/intent/post?url={url}',
   linkedIn: 'https://www.linkedin.com/sharing/share-offsite/?url={url}',
 };
 
@@ -467,9 +473,9 @@ export class InstantAppsSocialShare {
                 <span class={CSS.icon}>{this.renderFacebookIcon()}</span>
                 <span class={`${CSS.optionText}${optionText_RTL}`}>{options?.facebook?.label}</span>
               </li>,
-              <li onClick={this.handleShareItem.bind(this, 'twitter')} onKeyDown={this.handleOptionKeyDown('twitter')} role="menuitem" tabindex="0">
-                <span class={CSS.icon}>{this.renderTwitterIcon()}</span>
-                <span class={`${CSS.optionText}${optionText_RTL}`}>Twitter</span>
+              <li onClick={this.handleShareItem.bind(this, 'x')} onKeyDown={this.handleOptionKeyDown('x')} role="menuitem" tabindex="0">
+                <span class={CSS.icon}>{this.renderXIcon()}</span>
+                <span class={`${CSS.optionText}${optionText_RTL}`}>X</span>
               </li>,
               <li onClick={this.handleShareItem.bind(this, 'linkedIn')} onKeyDown={this.handleOptionKeyDown('linkedIn')} role="menuitem" tabindex="0">
                 <span class={CSS.icon}>{this.renderLinkedInIcon()}</span>
@@ -514,20 +520,14 @@ export class InstantAppsSocialShare {
     );
   }
 
-  renderTwitterIcon() {
+  renderXIcon() {
+    const isCalciteModeDark = !!this.el.closest(CALCITE_MODE_DARK);
     return (
-      <svg
-        height="100%"
-        style={{ fillRule: 'evenodd', clipRule: 'evenodd', strokeLinejoin: 'round', strokeMiterlimit: '2' }}
-        version="1.1"
-        viewBox="0 0 512 512"
-        width="100%"
-        xmlns="http://www.w3.org/2000/svg"
-      >
+      <svg class={isCalciteModeDark ? CSS.xLogo.dark : CSS.xLogo.light} width="1200" height="1227" viewBox="0 0 1200 1227" fill="none" xmlns="http://www.w3.org/2000/svg">
         <rect height="400" style={{ fill: 'none' }} width="400" x="56" y="56" />
         <path
-          d="M161.014,464.013c193.208,0 298.885,-160.071 298.885,-298.885c0,-4.546 0,-9.072 -0.307,-13.578c20.558,-14.871 38.305,-33.282 52.408,-54.374c-19.171,8.495 -39.51,14.065 -60.334,16.527c21.924,-13.124 38.343,-33.782 46.182,-58.102c-20.619,12.235 -43.18,20.859 -66.703,25.498c-19.862,-21.121 -47.602,-33.112 -76.593,-33.112c-57.682,0 -105.145,47.464 -105.145,105.144c0,8.002 0.914,15.979 2.722,23.773c-84.418,-4.231 -163.18,-44.161 -216.494,-109.752c-27.724,47.726 -13.379,109.576 32.522,140.226c-16.715,-0.495 -33.071,-5.005 -47.677,-13.148l0,1.331c0.014,49.814 35.447,93.111 84.275,102.974c-15.464,4.217 -31.693,4.833 -47.431,1.802c13.727,42.685 53.311,72.108 98.14,72.95c-37.19,29.227 -83.157,45.103 -130.458,45.056c-8.358,-0.016 -16.708,-0.522 -25.006,-1.516c48.034,30.825 103.94,47.18 161.014,47.104"
-          style={{ fill: '#1da1f2', fillRule: 'nonzero' }}
+          d="M714.163 519.284L1160.89 0H1055.03L667.137 450.887L357.328 0H0L468.492 681.821L0 1226.37H105.866L515.491 750.218L842.672 1226.37H1200L714.137 519.284H714.163ZM569.165 687.828L521.697 619.934L144.011 79.6944H306.615L611.412 515.685L658.88 583.579L1055.08 1150.3H892.476L569.165 687.854V687.828Z"
+          fill={isCalciteModeDark ? 'white' : 'black'}
         />
       </svg>
     );
@@ -682,7 +682,7 @@ export class InstantAppsSocialShare {
         if (this.mode === 'popover') setTimeout(() => this.closePopover(), 2000);
         return;
       case 'facebook':
-      case 'twitter':
+      case 'x':
       case 'linkedIn':
         let socialWin;
         if (isSafari) {
@@ -694,7 +694,7 @@ export class InstantAppsSocialShare {
         const urlData = {
           url: encodeURI(urlToUse),
         };
-        const data = type === 'twitter' ? { ...urlData, text: this.shareText } : urlData;
+        const data = type === 'x' ? { ...urlData, text: this.shareText } : urlData;
         const [intl] = await loadModules(['esri/intl']);
         const url = intl.substitute(SOCIAL_URL_TEMPLATES[type], data);
         if (this.mode === 'popover') {
