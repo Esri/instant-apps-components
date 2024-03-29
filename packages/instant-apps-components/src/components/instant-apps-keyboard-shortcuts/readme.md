@@ -2,9 +2,9 @@
 
 ## Description
 
-The `instant-apps-keyboard-shortcuts` component is a tool that displays a list of keyboard shortcuts that can be used for interacting with the map or scene view. 
+The `instant-apps-keyboard-shortcuts` component is a tool that displays a list of keyboard shortcuts that can be used for interacting with the map or scene view.
 
-This tool can helpful to make your app more accessible for users that are looking to explore the map using keyboard navigation. 
+This tool can helpful to make your app more accessible for users that are looking to explore the map using keyboard navigation.
 
 <p align="center">
 <img alt="Screenshot of keyboard shortcuts in sample app" img src="https://i.imgur.com/98jmml6.jpg"/>
@@ -22,7 +22,7 @@ This tool can helpful to make your app more accessible for users that are lookin
 ----------------------------------------------
 
 ## License
-COPYRIGHT © 2023 Esri
+COPYRIGHT © 2024 Esri
 
 All rights reserved under the copyright laws of the United States and applicable international laws, treaties, and conventions.
 

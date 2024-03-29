@@ -1,16 +1,16 @@
 # instant-apps-scoreboard
 
-## Description 
-The `instant-apps-scoreboard` component is a tool that calculates and displays a series of statistics based on field attributes from layers in a map or scene view. 
+## Description
 
-The scoreboard component can be useful to get an overview of statistics from a layer in the view. The `geometry` property determines which area of the view statistics should be calculated for like the current visible extent or a specific area of the view. 
+The `instant-apps-scoreboard` component is a tool that calculates and displays a series of statistics based on field attributes from layers in a map or scene view.
 
-The `items` property defines which statistics will appear in the scoreboard. Pick a layer and field that will provide the data for the statistic. An operator must be picked for the statistic, the operator types include: *sum*, *count*, *average*, *minimum value* and *maximum value*. A label for each statistic should also be added to describe what each statistic is representing in the view. 
+The scoreboard component can be useful to get an overview of statistics from a layer in the view. The `geometry` property determines which area of the view statistics should be calculated for like the current visible extent or a specific area of the view.
+
+The `items` property defines which statistics will appear in the scoreboard. Pick a layer and field that will provide the data for the statistic. An operator must be picked for the statistic, the operator types include: _sum_, _count_, _average_, _minimum value_ and _maximum value_. A label for each statistic should also be added to describe what each statistic is representing in the view.
 
 <p align="center">
 <img alt="Screenshot of the scorboard component in the sample app" img src="https://i.imgur.com/bvgVFno.jpg"/>
 </p>
-
 
 ## Interfaces and Enums
 
@@ -74,7 +74,7 @@ The `items` property defines which statistics will appear in the scoreboard. Pic
 ----------------------------------------------
 
 ## License
-COPYRIGHT © 2023 Esri
+COPYRIGHT © 2024 Esri
 
 All rights reserved under the copyright laws of the United States and applicable international laws, treaties, and conventions.
 

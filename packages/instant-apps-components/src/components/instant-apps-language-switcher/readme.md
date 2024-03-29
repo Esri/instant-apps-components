@@ -1,6 +1,6 @@
 # instant-apps-language-switcher
 
-Language switcher provides end users with the ability to translate a web app's UI by selecting a language from a dropdown. 
+Language switcher provides end users with the ability to translate a web app's UI by selecting a language from a dropdown.
 
 ## Typings
 
@@ -42,12 +42,13 @@ Language switcher provides end users with the ability to translate a web app's U
 ```
 
 ### Events
- ```
+
+```
 document.addEventListener("selectedLanguageUpdated", (e: CustomEvent) => {
-  const data = e.detail;
-  // Write logic to apply strings throughout your app here.
+ const data = e.detail;
+ // Write logic to apply strings throughout your app here.
 });
- ```
+```
 
 <!-- Auto Generated Below -->
 
@@ -102,7 +103,7 @@ graph TD;
 ----------------------------------------------
 
 ## License
-COPYRIGHT © 2023 Esri
+COPYRIGHT © 2024 Esri
 
 All rights reserved under the copyright laws of the United States and applicable international laws, treaties, and conventions.
 

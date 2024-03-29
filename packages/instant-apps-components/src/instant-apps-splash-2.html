@@ -19,18 +19,38 @@
     <link rel="stylesheet" type="text/css" href="https://js.arcgis.com/calcite-components/2.4.0/calcite.css" />
     <script type="module" src="/build/instant-apps-components.esm.js"></script>
     <script nomodule src="/build/instant-apps-components.js"></script>
-
-    <style></style>
   </head>
 
   <body>
-    <instant-apps-splash title-text="Title" content="<p>Content</p>" primary-button-text="Enter" local-storage-key="iac-splash-sample"></instant-apps-splash>
-    <calcite-button>Open</calcite-button>
+    <instant-apps-splash
+      title-text="Custom action"
+      content="<p>Content</p>"
+      primary-button-text="Enter"
+      secondary-button="true"
+      secondary-button-text="Custom action (secondary)"
+      secondary-button-icon="gps-on"
+    >
+      <div slot="custom-action">
+        <calcite-button id="customAction" icon-start="search">Custom action (in content)</calcite-button>
+      </div>
+    </instant-apps-splash>
+    <calcite-button id="openSplashButton">Open splash</calcite-button>
+
     <script>
-      const button = document.querySelector('calcite-button');
       const splash = document.querySelector('instant-apps-splash');
-      button.addEventListener('click', () => {
-        splash.open = true;
+
+      const openSplashButton = document.getElementById('openSplashButton');
+      openSplashButton.addEventListener('click', () => (splash.open = true));
+
+      splash.secondaryButtonCallback = () => {
+        console.log('Secondary action click');
+        splash.open = false;
+      };
+
+      const customAction = document.getElementById('customAction');
+      customAction.addEventListener('click', () => {
+        console.log('Custom action click');
+        splash.open = false;
       });
     </script>
   </body>
