@@ -16,6 +16,7 @@ The measurement tool consists of four tools in the component:
 </p>
 <!-- Auto Generated Below -->
 
+
 ## Properties
 
 | Property           | Attribute           | Description                                                             | Type                                                                                                                                                                                                                                                        | Default     |
@@ -27,11 +28,13 @@ The measurement tool consists of four tools in the component:
 | `linearUnit`       | `linear-unit`       | Choose which unit will be used for the distance tool by default         | `"centimeters" \| "decimeters" \| "feet" \| "inches" \| "kilometers" \| "meters" \| "miles" \| "millimeters" \| "nautical-miles" \| "us-feet" \| "yards" \| undefined`                                                                                      | `undefined` |
 | `view`             | --                  | A reference to the MapView or SceneView                                 | `MapView \| SceneView`                                                                                                                                                                                                                                      | `undefined` |
 
+
 ## Events
 
 | Event           | Description                                                                                                        | Type                   |
 | --------------- | ------------------------------------------------------------------------------------------------------------------ | ---------------------- |
 | `measureActive` | Emits when there is an active measure tool to allow app devs to disable other tools/popups when tools are active . | `CustomEvent<boolean>` |
+
 
 ## Dependencies
 
@@ -40,17 +43,15 @@ The measurement tool consists of four tools in the component:
 - [instant-apps-measurement-tool](instant-apps-measurement-tool)
 
 ### Graph
-
 ```mermaid
 graph TD;
   instant-apps-measurement --> instant-apps-measurement-tool
   style instant-apps-measurement fill:#f9f,stroke:#333,stroke-width:4px
 ```
 
----
+----------------------------------------------
 
 ## License
-
 COPYRIGHT © 2024 Esri
 
 All rights reserved under the copyright laws of the United States and applicable international laws, treaties, and conventions.
@@ -62,3 +63,4 @@ See use restrictions at http://www.esri.com/legal/pdfs/mla_e204_e300/english
 For additional information, contact: Environmental Systems Research Institute, Inc. Attn: Contracts and Legal Services Department 380 New York Street Redlands, California, USA 92373 USA
 
 email: contracts@esri.com
+

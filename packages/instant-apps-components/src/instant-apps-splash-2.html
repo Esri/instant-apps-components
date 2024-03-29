@@ -1,0 +1,57 @@
+<!-- /*
+ *   Copyright (c) 2024 Esri
+ *   All rights reserved under the copyright laws of the United States and applicable international laws, treaties, and conventions.
+ *   This material is licensed for use under the Esri Master License Agreement (MLA), and is bound by the terms of that agreement.
+ *   You may redistribute and use this code without modification, provided you adhere to the terms of the MLA and include this copyright notice.
+ *   See use restrictions at http://www.esri.com/legal/pdfs/mla_e204_e300/english
+ */ -->
+
+<!DOCTYPE html>
+<html dir="ltr" lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=5.0" />
+    <title>ArcGIS Instant Apps Components</title>
+
+    <link rel="stylesheet" href="https://jsdev.arcgis.com/4.29/esri/themes/light/main.css" />
+    <script src="https://jsdev.arcgis.com/4.29/"></script>
+    <script type="module" src="https://js.arcgis.com/calcite-components/2.4.0/calcite.esm.js"></script>
+    <link rel="stylesheet" type="text/css" href="https://js.arcgis.com/calcite-components/2.4.0/calcite.css" />
+    <script type="module" src="/build/instant-apps-components.esm.js"></script>
+    <script nomodule src="/build/instant-apps-components.js"></script>
+  </head>
+
+  <body>
+    <instant-apps-splash
+      title-text="Custom action"
+      content="<p>Content</p>"
+      primary-button-text="Enter"
+      secondary-button="true"
+      secondary-button-text="Custom action (secondary)"
+      secondary-button-icon="gps-on"
+    >
+      <div slot="custom-action">
+        <calcite-button id="customAction" icon-start="search">Custom action (in content)</calcite-button>
+      </div>
+    </instant-apps-splash>
+    <calcite-button id="openSplashButton">Open splash</calcite-button>
+
+    <script>
+      const splash = document.querySelector('instant-apps-splash');
+
+      const openSplashButton = document.getElementById('openSplashButton');
+      openSplashButton.addEventListener('click', () => (splash.open = true));
+
+      splash.secondaryButtonCallback = () => {
+        console.log('Secondary action click');
+        splash.open = false;
+      };
+
+      const customAction = document.getElementById('customAction');
+      customAction.addEventListener('click', () => {
+        console.log('Custom action click');
+        splash.open = false;
+      });
+    </script>
+  </body>
+</html>

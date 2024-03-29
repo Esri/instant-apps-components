@@ -58,6 +58,36 @@ export class InstantAppsSplash {
   @Prop()
   closeButtonDisabled = false;
 
+  /**
+   * When `true`, disables the closing of the component when clicked outside.
+   */
+  @Prop()
+  outsideCloseDisabled: boolean = false;
+
+  /**
+   * When `true`, enables a secondary button at the component's footer.
+   */
+  @Prop()
+  secondaryButton = false;
+
+  /**
+   * Secondary button text.
+   */
+  @Prop()
+  secondaryButtonText: string;
+
+  /**
+   * Secondary button icon.
+   */
+  @Prop()
+  secondaryButtonIcon: string;
+
+  /**
+   * Callback function when secondary button is clicked.
+   */
+  @Prop()
+  secondaryButtonCallback: () => Promise<void>;
+
   @State()
   messages: typeof Splash_T9n;
 
@@ -89,11 +119,12 @@ export class InstantAppsSplash {
 
   render(): HTMLCalciteModalElement {
     return (
-      <calcite-modal onCalciteModalClose={this.close.bind(this)} open={this.open} closeButtonDisabled={this.closeButtonDisabled}>
+      <calcite-modal onCalciteModalClose={this.close.bind(this)} open={this.open} closeButtonDisabled={this.closeButtonDisabled} outsideCloseDisabled={this.outsideCloseDisabled}>
         {this.renderHeader()}
         {this.renderContent()}
         {this.localStorageKey ? this.renderDontShowThisAgainCheckbox() : null}
         {this.renderPrimaryButton()}
+        {this.secondaryButton ? this.renderSecondaryButton() : null}
       </calcite-modal>
     );
   }
@@ -105,7 +136,11 @@ export class InstantAppsSplash {
 
   renderContent(): HTMLElement {
     const { content } = this;
-    return <div slot="content" innerHTML={content}></div>;
+    return (
+      <div slot="content" innerHTML={content}>
+        <slot name="custom-action"></slot>
+      </div>
+    );
   }
 
   renderDontShowThisAgainCheckbox(): HTMLDivElement {
@@ -126,6 +161,14 @@ export class InstantAppsSplash {
     return (
       <calcite-button onClick={this.close.bind(this)} slot="primary">
         {primaryButtonText ? primaryButtonText : 'Enter'}
+      </calcite-button>
+    );
+  }
+
+  renderSecondaryButton() {
+    return (
+      <calcite-button onClick={this.secondaryButtonCallback?.bind(this)} slot="secondary" icon-start={this.secondaryButtonIcon} appearance="outline">
+        {this.secondaryButtonText}
       </calcite-button>
     );
   }

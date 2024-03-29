@@ -696,9 +696,29 @@ export namespace Components {
          */
         "open": boolean;
         /**
+          * When `true`, disables the closing of the component when clicked outside.
+         */
+        "outsideCloseDisabled": boolean;
+        /**
           * Primary button text.
          */
         "primaryButtonText": string;
+        /**
+          * When `true`, enables a secondary button at the component's footer.
+         */
+        "secondaryButton": boolean;
+        /**
+          * Callback function when secondary button is clicked.
+         */
+        "secondaryButtonCallback": () => Promise<void>;
+        /**
+          * Secondary button icon.
+         */
+        "secondaryButtonIcon": string;
+        /**
+          * Secondary button text.
+         */
+        "secondaryButtonText": string;
         /**
           * Title of splash screen.
          */
@@ -1850,9 +1870,29 @@ declare namespace LocalJSX {
          */
         "open"?: boolean;
         /**
+          * When `true`, disables the closing of the component when clicked outside.
+         */
+        "outsideCloseDisabled"?: boolean;
+        /**
           * Primary button text.
          */
         "primaryButtonText"?: string;
+        /**
+          * When `true`, enables a secondary button at the component's footer.
+         */
+        "secondaryButton"?: boolean;
+        /**
+          * Callback function when secondary button is clicked.
+         */
+        "secondaryButtonCallback"?: () => Promise<void>;
+        /**
+          * Secondary button icon.
+         */
+        "secondaryButtonIcon"?: string;
+        /**
+          * Secondary button text.
+         */
+        "secondaryButtonText"?: string;
         /**
           * Title of splash screen.
          */

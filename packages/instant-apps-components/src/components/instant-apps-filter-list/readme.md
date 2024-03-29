@@ -106,6 +106,7 @@ const layerExpressions = [
 
 <!-- Auto Generated Below -->
 
+
 ## Properties
 
 | Property                     | Attribute                      | Description                                                            | Type                                 | Default      |
@@ -124,12 +125,14 @@ const layerExpressions = [
 | `view`                       | --                             | A reference to the MapView or SceneView.                               | `MapView \| SceneView`               | `undefined`  |
 | `zoomBtn`                    | `zoom-btn`                     | Display zoom button.                                                   | `boolean \| undefined`               | `true`       |
 
+
 ## Events
 
 | Event             | Description                            | Type                |
 | ----------------- | -------------------------------------- | ------------------- |
 | `filterListReset` | Emits when the reset button is pushed. | `CustomEvent<void>` |
 | `filterUpdate`    | Emits when the filter is updated.      | `CustomEvent<void>` |
+
 
 ## Slots
 
@@ -138,10 +141,10 @@ const layerExpressions = [
 | `"filter-header-actions-end"` | A slot for adding actions or content to the end side of the header. |
 | `"filter-header-content"`     | A slot for adding custom content to the header.                     |
 
----
+
+----------------------------------------------
 
 ## License
-
 COPYRIGHT © 2024 Esri
 
 All rights reserved under the copyright laws of the United States and applicable international laws, treaties, and conventions.
@@ -153,3 +156,4 @@ See use restrictions at http://www.esri.com/legal/pdfs/mla_e204_e300/english
 For additional information, contact: Environmental Systems Research Institute, Inc. Attn: Contracts and Legal Services Department 380 New York Street Redlands, California, USA 92373 USA
 
 email: contracts@esri.com
+

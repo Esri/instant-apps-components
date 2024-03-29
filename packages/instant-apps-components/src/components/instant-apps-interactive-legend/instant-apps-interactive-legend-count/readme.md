@@ -2,6 +2,7 @@
 
 <!-- Auto Generated Below -->
 
+
 ## Properties
 
 | Property          | Attribute     | Description | Type                                                                                                                               | Default     |
@@ -15,16 +16,16 @@
 | `selected`        | `selected`    |             | `boolean`                                                                                                                          | `undefined` |
 | `showTotal`       | `show-total`  |             | `boolean`                                                                                                                          | `false`     |
 
+
 ## Dependencies
 
 ### Used by
 
-- [instant-apps-interactive-legend-classic](../instant-apps-interactive-legend-classic)
-- [instant-apps-interactive-legend-group-legend-element-caption](../instant-apps-interactive-legend-group-legend-element-caption)
-- [instant-apps-interactive-legend-layer-element-caption](../instant-apps-interactive-legend-layer-element-caption)
+ - [instant-apps-interactive-legend-classic](../instant-apps-interactive-legend-classic)
+ - [instant-apps-interactive-legend-group-legend-element-caption](../instant-apps-interactive-legend-group-legend-element-caption)
+ - [instant-apps-interactive-legend-layer-element-caption](../instant-apps-interactive-legend-layer-element-caption)
 
 ### Graph
-
 ```mermaid
 graph TD;
   instant-apps-interactive-legend-classic --> instant-apps-interactive-legend-count
@@ -33,10 +34,9 @@ graph TD;
   style instant-apps-interactive-legend-count fill:#f9f,stroke:#333,stroke-width:4px
 ```
 
----
+----------------------------------------------
 
 ## License
-
 COPYRIGHT © 2024 Esri
 
 All rights reserved under the copyright laws of the United States and applicable international laws, treaties, and conventions.
@@ -48,3 +48,4 @@ See use restrictions at http://www.esri.com/legal/pdfs/mla_e204_e300/english
 For additional information, contact: Environmental Systems Research Institute, Inc. Attn: Contracts and Legal Services Department 380 New York Street Redlands, California, USA 92373 USA
 
 email: contracts@esri.com
+

@@ -18,6 +18,7 @@ The export tool is configurable and can include additional elements in the outpu
 
 <!-- Auto Generated Below -->
 
+
 ## Properties
 
 | Property              | Attribute               | Description                                                                                                                                                                                                                                                                                                                                                                     | Type                                 | Default                        |
@@ -45,11 +46,13 @@ The export tool is configurable and can include additional elements in the outpu
 | `showScaleBar`        | `show-scale-bar`        | Show scale bar widget in map if view has it.                                                                                                                                                                                                                                                                                                                                    | `boolean \| undefined`               | `false`                        |
 | `view`                | --                      | A reference to the MapView or SceneView.                                                                                                                                                                                                                                                                                                                                        | `MapView \| SceneView \| undefined`  | `undefined`                    |
 
+
 ## Events
 
 | Event                 | Description                                                                                       | Type                |
 | --------------------- | ------------------------------------------------------------------------------------------------- | ------------------- |
 | `exportOutputUpdated` | Emits when the instant-apps-export's output prop is updated after the "Export" button is clicked. | `CustomEvent<void>` |
+
 
 ## CSS Custom Properties
 
@@ -66,6 +69,7 @@ The export tool is configurable and can include additional elements in the outpu
 | `--instant-apps-export-popover-width`           | Export's popover container width.                      |
 | `--instant-apps-export-text-color`              | Export's container text color.                         |
 
+
 ## Dependencies
 
 ### Depends on
@@ -73,17 +77,15 @@ The export tool is configurable and can include additional elements in the outpu
 - [instant-apps-header](../instant-apps-header)
 
 ### Graph
-
 ```mermaid
 graph TD;
   instant-apps-export --> instant-apps-header
   style instant-apps-export fill:#f9f,stroke:#333,stroke-width:4px
 ```
 
----
+----------------------------------------------
 
 ## License
-
 COPYRIGHT © 2024 Esri
 
 All rights reserved under the copyright laws of the United States and applicable international laws, treaties, and conventions.
@@ -95,3 +97,4 @@ See use restrictions at http://www.esri.com/legal/pdfs/mla_e204_e300/english
 For additional information, contact: Environmental Systems Research Institute, Inc. Attn: Contracts and Legal Services Department 380 New York Street Redlands, California, USA 92373 USA
 
 email: contracts@esri.com
+

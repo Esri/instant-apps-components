@@ -28,6 +28,7 @@ enum AlignmentPositions {
 
 <!-- Auto Generated Below -->
 
+
 ## Properties
 
 | Property                 | Attribute              | Description                                                                                                                                                                                                                                | Type                                                                                                                                                                                                                                                                                              | Default                         |
@@ -46,12 +47,14 @@ enum AlignmentPositions {
 | `subtitleText`           | `subtitle-text`        | Subtitle text.                                                                                                                                                                                                                             | `string`                                                                                                                                                                                                                                                                                          | `undefined`                     |
 | `titleText` _(required)_ | `title-text`           | Title text.                                                                                                                                                                                                                                | `string`                                                                                                                                                                                                                                                                                          | `undefined`                     |
 
+
 ## Events
 
 | Event              | Description                            | Type                |
 | ------------------ | -------------------------------------- | ------------------- |
 | `landingPageClose` | Emits when the landing page is closed. | `CustomEvent<void>` |
 | `landingPageOpen`  | Emits when the landing page is opened. | `CustomEvent<void>` |
+
 
 ## CSS Custom Properties
 
@@ -68,10 +71,10 @@ enum AlignmentPositions {
 | `--instant-apps-landing-page-text-color`                 | Text color of landing page.                                                                                       |
 | `--instant-apps-landing-page-title-text-font-size`       | Font size of title text.                                                                                          |
 
----
+
+----------------------------------------------
 
 ## License
-
 COPYRIGHT © 2024 Esri
 
 All rights reserved under the copyright laws of the United States and applicable international laws, treaties, and conventions.
@@ -83,3 +86,4 @@ See use restrictions at http://www.esri.com/legal/pdfs/mla_e204_e300/english
 For additional information, contact: Environmental Systems Research Institute, Inc. Attn: Contracts and Legal Services Department 380 New York Street Redlands, California, USA 92373 USA
 
 email: contracts@esri.com
+

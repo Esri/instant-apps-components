@@ -14,6 +14,7 @@ Utilize [instant-apps-popovers](https://github.com/Esri/instant-apps-components/
 
 <!-- Auto Generated Below -->
 
+
 ## Properties
 
 | Property           | Attribute           | Description | Type                                                                                                                                                                                                                                                                                                              | Default            |
@@ -34,10 +35,10 @@ Utilize [instant-apps-popovers](https://github.com/Esri/instant-apps-components/
 | `referenceElement` | `reference-element` |             | `HTMLElement \| string`                                                                                                                                                                                                                                                                                           | `undefined`        |
 | `subtitle`         | `subtitle`          |             | `string`                                                                                                                                                                                                                                                                                                          | `undefined`        |
 
----
+
+----------------------------------------------
 
 ## License
-
 COPYRIGHT © 2024 Esri
 
 All rights reserved under the copyright laws of the United States and applicable international laws, treaties, and conventions.
@@ -49,3 +50,4 @@ See use restrictions at http://www.esri.com/legal/pdfs/mla_e204_e300/english
 For additional information, contact: Environmental Systems Research Institute, Inc. Attn: Contracts and Legal Services Department 380 New York Street Redlands, California, USA 92373 USA
 
 email: contracts@esri.com
+

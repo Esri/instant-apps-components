@@ -18,6 +18,7 @@ The header component includes custom CSS properties to adjust the style of the h
 
 <!-- Auto Generated Below -->
 
+
 ## Properties
 
 | Property                | Attribute                 | Description                                                                         | Type                            | Default                         |
@@ -39,17 +40,20 @@ The header component includes custom CSS properties to adjust the style of the h
 | `titleText`             | `title-text`              | Main text to display in header.                                                     | `string`                        | `undefined`                     |
 | `titleTextLink`         | `title-text-link`         | Url to link out to from title text                                                  | `string`                        | `undefined`                     |
 
+
 ## Events
 
 | Event               | Description                            | Type                   |
 | ------------------- | -------------------------------------- | ---------------------- |
 | `infoIsOpenChanged` | Fires when the info button is clicked. | `CustomEvent<boolean>` |
 
+
 ## Slots
 
 | Slot            | Description                                                                                        |
 | --------------- | -------------------------------------------------------------------------------------------------- |
 | `"actions-end"` | Used to slot an action at the end of the header i.e. `calcite-action`, `instant-apps-social-share` |
+
 
 ## CSS Custom Properties
 
@@ -68,24 +72,23 @@ The header component includes custom CSS properties to adjust the style of the h
 | `--instant-apps-header-min-height`                 | Minimum height for header. Default: 50px;                                         |
 | `--instant-apps-header-title-text-link-decoration` | Text decoration for hyperlinks for `titleTextLink`. Default value is 'underline'. |
 
+
 ## Dependencies
 
 ### Used by
 
-- [instant-apps-export](../instant-apps-export)
+ - [instant-apps-export](../instant-apps-export)
 
 ### Graph
-
 ```mermaid
 graph TD;
   instant-apps-export --> instant-apps-header
   style instant-apps-header fill:#f9f,stroke:#333,stroke-width:4px
 ```
 
----
+----------------------------------------------
 
 ## License
-
 COPYRIGHT © 2024 Esri
 
 All rights reserved under the copyright laws of the United States and applicable international laws, treaties, and conventions.
@@ -97,3 +100,4 @@ See use restrictions at http://www.esri.com/legal/pdfs/mla_e204_e300/english
 For additional information, contact: Environmental Systems Research Institute, Inc. Attn: Contracts and Legal Services Department 380 New York Street Redlands, California, USA 92373 USA
 
 email: contracts@esri.com
+

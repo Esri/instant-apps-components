@@ -2,6 +2,7 @@
 
 <!-- Auto Generated Below -->
 
+
 ## Properties
 
 | Property          | Attribute  | Description | Type                      | Default     |
@@ -11,24 +12,23 @@
 | `legendElement`   | --         |             | `RelationshipRampElement` | `undefined` |
 | `messages`        | `messages` |             | `any`                     | `undefined` |
 
+
 ## Dependencies
 
 ### Used by
 
-- [instant-apps-interactive-legend-classic](../instant-apps-interactive-legend-classic)
+ - [instant-apps-interactive-legend-classic](../instant-apps-interactive-legend-classic)
 
 ### Graph
-
 ```mermaid
 graph TD;
   instant-apps-interactive-legend-classic --> instant-apps-interactive-legend-relationship
   style instant-apps-interactive-legend-relationship fill:#f9f,stroke:#333,stroke-width:4px
 ```
 
----
+----------------------------------------------
 
 ## License
-
 COPYRIGHT © 2024 Esri
 
 All rights reserved under the copyright laws of the United States and applicable international laws, treaties, and conventions.
@@ -40,3 +40,4 @@ See use restrictions at http://www.esri.com/legal/pdfs/mla_e204_e300/english
 For additional information, contact: Environmental Systems Research Institute, Inc. Attn: Contracts and Legal Services Department 380 New York Street Redlands, California, USA 92373 USA
 
 email: contracts@esri.com
+

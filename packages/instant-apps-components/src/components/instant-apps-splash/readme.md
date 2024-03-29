@@ -10,16 +10,23 @@ In the splash tool there is a check box that allows users to “Don’t show thi
 
 <!-- Auto Generated Below -->
 
+
 ## Properties
 
-| Property                       | Attribute               | Description                                                                                              | Type      | Default     |
-| ------------------------------ | ----------------------- | -------------------------------------------------------------------------------------------------------- | --------- | ----------- |
-| `closeButtonDisabled`          | `close-button-disabled` | When `true`, disables the component's close button.                                                      | `boolean` | `false`     |
-| `content`                      | `content`               | Content of splash screen.                                                                                | `string`  | `''`        |
-| `localStorageKey` _(required)_ | `local-storage-key`     | Local storage key used to determine whether or not user has opted into "Don't show this again" checkbox. | `string`  | `undefined` |
-| `open`                         | `open`                  | Controls the 'open' state of the modal element.                                                          | `boolean` | `true`      |
-| `primaryButtonText`            | `primary-button-text`   | Primary button text.                                                                                     | `string`  | `''`        |
-| `titleText`                    | `title-text`            | Title of splash screen.                                                                                  | `string`  | `''`        |
+| Property                       | Attribute                | Description                                                                                              | Type                  | Default     |
+| ------------------------------ | ------------------------ | -------------------------------------------------------------------------------------------------------- | --------------------- | ----------- |
+| `closeButtonDisabled`          | `close-button-disabled`  | When `true`, disables the component's close button.                                                      | `boolean`             | `false`     |
+| `content`                      | `content`                | Content of splash screen.                                                                                | `string`              | `''`        |
+| `localStorageKey` _(required)_ | `local-storage-key`      | Local storage key used to determine whether or not user has opted into "Don't show this again" checkbox. | `string`              | `undefined` |
+| `open`                         | `open`                   | Controls the 'open' state of the modal element.                                                          | `boolean`             | `true`      |
+| `outsideCloseDisabled`         | `outside-close-disabled` | When `true`, disables the closing of the component when clicked outside.                                 | `boolean`             | `false`     |
+| `primaryButtonText`            | `primary-button-text`    | Primary button text.                                                                                     | `string`              | `''`        |
+| `secondaryButton`              | `secondary-button`       | When `true`, enables a secondary button at the component's footer.                                       | `boolean`             | `false`     |
+| `secondaryButtonCallback`      | --                       | Callback function when secondary button is clicked.                                                      | `() => Promise<void>` | `undefined` |
+| `secondaryButtonIcon`          | `secondary-button-icon`  | Secondary button icon.                                                                                   | `string`              | `undefined` |
+| `secondaryButtonText`          | `secondary-button-text`  | Secondary button text.                                                                                   | `string`              | `undefined` |
+| `titleText`                    | `title-text`             | Title of splash screen.                                                                                  | `string`              | `''`        |
+
 
 ## Events
 
@@ -27,10 +34,10 @@ In the splash tool there is a check box that allows users to “Don’t show thi
 | ------------- | -------------------------------------- | ------------------- |
 | `splashClose` | Emits when the splash modal is closed. | `CustomEvent<void>` |
 
----
+
+----------------------------------------------
 
 ## License
-
 COPYRIGHT © 2024 Esri
 
 All rights reserved under the copyright laws of the United States and applicable international laws, treaties, and conventions.
@@ -42,3 +49,4 @@ See use restrictions at http://www.esri.com/legal/pdfs/mla_e204_e300/english
 For additional information, contact: Environmental Systems Research Institute, Inc. Attn: Contracts and Legal Services Department 380 New York Street Redlands, California, USA 92373 USA
 
 email: contracts@esri.com
+
