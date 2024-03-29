@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## v1.0.0-beta.204
 
+### instant-apps-social-share
+
+- Update 'Twitter' to 'X'
+
+## v1.0.0-beta.204
+
 ### instant-apps-splash
 
 - Add support for `outsideCloseDisabled`: When `true`, disables the closing of the component when clicked outside.
