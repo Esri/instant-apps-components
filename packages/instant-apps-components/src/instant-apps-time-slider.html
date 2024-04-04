@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=5.0" />
+    <title>Instant Apps Components: Control Panel</title>
+
+    <link rel="stylesheet" href="https://jsdev.arcgis.com/4.29/esri/themes/light/main.css" />
+    <script src="https://jsdev.arcgis.com/4.29/"></script>
+    <script type="module" src="https://js.arcgis.com/calcite-components/2.4.0/calcite.esm.js"></script>
+    <link rel="stylesheet" type="text/css" href="https://js.arcgis.com/calcite-components/2.4.0/calcite.css" />
+    <script type="module" src="/build/instant-apps-components.esm.js"></script>
+    <script nomodule src="/build/instant-apps-components.js"></script>
+
+    <style>
+      html,
+      body,
+      #webmap,
+      #webscene,
+      calcite-tabs {
+        box-sizing: border-box;
+        width: 100%;
+        height: 100%;
+        margin: 0;
+        padding: 0;
+      }
+    </style>
+  </head>
+
+  <body>
+    <calcite-shell class="calcite-mode-dark">
+      <instant-apps-header
+        id="instant-apps-header"
+        slot="header"
+        title-text="Instant Apps: Time Slider"
+        text-color="#fff"
+        background-color="#151515"
+        logo-image="https://www.esri.com/content/dam/esrisites/en-us/common/icons/product-logos/arcgis-instant-apps-64.svg"
+        logo-image-alt-text="ArcGIS Instant Apps logo"
+        logo-link="https://www.esri.com/en-us/arcgis/products/arcgis-instant-apps/overview"
+      >
+      </instant-apps-header>
+      <calcite-tabs>
+        <calcite-tab-nav slot="title-group">
+          <calcite-tab-title selected>Map (2D)</calcite-tab-title>
+          <calcite-tab-title>Scene (3D)</calcite-tab-title>
+        </calcite-tab-nav>
+        <calcite-tab selected>
+          <!-- Webmap -->
+          <div id="webmap"></div>
+        </calcite-tab>
+        <calcite-tab>
+          <div id="webscene"></div>
+          <!-- Webscene -->
+        </calcite-tab>
+      </calcite-tabs>
+    </calcite-shell>
+    <script>
+      require(['esri/WebMap', 'esri/views/MapView', 'esri/WebScene', 'esri/views/SceneView', 'esri/core/reactiveUtils', 'esri/config', 'esri/widgets/Expand'], (
+        WebMap,
+        MapView,
+        WebScene,
+        SceneView,
+        reactiveUtils,
+        esriConfig,
+        Expand,
+      ) => {
+        esriConfig.portalUrl = 'https://holistic.mapsdevext.arcgis.com';
+
+        class App {
+          create(id, container, type) {
+            const view = type === '3d' ? this.initScene(id, container) : this.initMap(id, container);
+            const timeSlider = document.createElement('instant-apps-time-slider');
+            timeSlider.view = view;
+            const expand = new Expand({
+              content: timeSlider,
+              view,
+              expanded: true,
+              expandIcon: 'clock',
+            });
+            view.ui.add(expand, 'bottom-left');
+          }
+
+          initScene(id, container) {
+            const map = new WebScene({
+              portalItem: {
+                id,
+              },
+            });
+
+            return new SceneView({
+              container,
+              map,
+            });
+          }
+
+          initMap(id, container) {
+            const map = new WebMap({
+              portalItem: {
+                id,
+              },
+            });
+
+            return new MapView({
+              container,
+              map,
+            });
+          }
+        }
+
+        const app = new App();
+        app.create('d1f5dcb59a624d4d834f09252cc4e77c', 'webmap', '2d');
+        app.create('daab29aca87e4eb3bdafd11ebf6167ec', 'webscene', '3d');
+      });
+    </script>
+  </body>
+</html>
