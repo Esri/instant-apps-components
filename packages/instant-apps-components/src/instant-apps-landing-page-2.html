@@ -40,7 +40,7 @@
         display: inline-block;
         height: 100%;
         width: 100%;
-        --calcite-ui-brand: #447f0c;
+        --calcite-ui-brand: red;
         --calcite-ui-brand-hover: #447f0c;
         --calcite-ui-brand-press: #447f0c;
       }
@@ -49,16 +49,16 @@
 
   <body class="calcite-mode-light">
     <instant-apps-landing-page
+      id="landingPage"
       title-text="ArcGIS Instant Apps"
-      subtitle-text="Quickly create web apps that make it easy to interact with your maps and data"
       description-text="Lorem ipsum dolor sit amet consectetur adipisicing elit. Architecto blanditiis nesciunt voluptates dignissimos dolorem, aperiam necessitatibus. Deserunt velit eum labore."
-      entry-button-text="Get started"
-      icon-image="https://www.esri.com/content/dam/esrisites/en-us/arcgis/products/arcgis-instant-apps/assets/instant-apps-banner-fg.png"
+      sign-in-button-text="Sign in"
+      guest-continue-button-text="Continue as guest"
+      icon-image="https://s3-alpha-sig.figma.com/img/c4c4/883c/1a94cf69b102f6af378003eb9db95542?Expires=1713139200&Key-Pair-Id=APKAQ4GOSFWCVNEHN3O4&Signature=gTw61T~NtFFZKpT-89P-x0XTyjoDd0zjMh0~XOGsg-ZKtJT~t5NvnQ0yUN35ASKvLxkns3~rxZFjSL~YeLbOI6g13lrYIrSFewAoF2TtETUsfDIi1UeUttG7YhcExoKod2u9pJhE5~LkMQWcGOpCZLSelmzBRgLKqxbZimJ9t5HeTtYODgOQjvjvbhgS~GdrrEFi-~ougWQIczwb7M4QXxDWzYQxP50a1XPBqNu9CsTQc5z4XfGLytqRK6ainZb84wFBeh9q1~~JAZ9LGX3tXo2qcQp0SdSQ9kDKxm4~976fO6~GZo3qEN36bZL-ktgxoQH1ETVIZhvw1VGWQM9oTg__"
       icon-image-scale="l"
+      sign-in="true"
+      background-image-src="https://s3-alpha-sig.figma.com/img/c4c4/883c/1a94cf69b102f6af378003eb9db95542?Expires=1713744000&Key-Pair-Id=APKAQ4GOSFWCVNEHN3O4&Signature=VWHID37BDiKPKteR9JkX5x7FVGFY8r85wpeMTWY10lbHl9wWXEwqpizGDQkxz7jOOS3EeY9w7G0VzuKBsBMJsVTLSr90bTlmm8z9G-MiePDXgzMQk4Pc9jJN-RO85EaXTAiaw2eqvEaOFJhm6IGsAIEFu56hBu5~EI0eMZRHblGZFztpLtgpnXpCp3s8i2K~zCGb9WWTPfhL5m4F53k5vywF7q6WYFRkvvrtTHcWElRhh-HV~vamAfo3Fed53yaPCG52y5s67qIACrUe-9KmzW8nxDcIJdbAwUjp1CXEQ-WCLiv~Jht3xWU3VGOsqKq8ColalSvEr~iwpkx5i~DlaQ__"
     >
-      <a href="https://www.esri.com/en-us/arcgis/products/arcgis-instant-apps/overview" slot="secondary-action" target="_blank">
-        <calcite-button id="secondary">Learn more</calcite-button>
-      </a>
     </instant-apps-landing-page>
     <calcite-shell class="calcite-mode-light">
       <instant-apps-header
@@ -90,11 +90,11 @@
     </calcite-shell>
     <script>
       require(['esri/WebMap', 'esri/views/MapView', 'esri/widgets/Legend', 'esri/core/reactiveUtils', 'esri/config'], (WebMap, MapView, Legend, reactiveUtils, esriConfig) => {
-        esriConfig.portalUrl = 'https://nw-brews.mapsdevext.arcgis.com';
+        esriConfig.portalUrl = 'https://prodtesting.maps.arcgis.com/';
 
         const map = new WebMap({
           portalItem: {
-            id: '8891ee1d2e0e428bb96c58b8ecf8c408',
+            id: 'a235bfc2d24b4568a3b2832b3336d0cc',
           },
         });
 
@@ -106,6 +106,12 @@
         new Legend({
           view,
           container: 'legend',
+        });
+
+        const landingPage = document.querySelector('instant-apps-landing-page');
+        view.when(() => {
+          landingPage.portal = view.map.portalItem.portal;
+          landingPage.oauthappid = 'wfblKnj2mvxLOiCx';
         });
       });
     </script>

@@ -91,10 +91,22 @@
       --calcite-color-brand-hover: var(--instant-apps-landing-page-entry-button-color);
       --calcite-color-brand-press: var(--instant-apps-landing-page-entry-button-color);
     }
+
+    instant-apps-sign-in {
+      height: 100%;
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
   }
 
   .instant-apps-landing-page__remove-transition {
     transition: none;
+  }
+
+  .instant-apps-landing-page__remove-padding {
+    padding: 0;
   }
 
   .instant-apps-landing-page--closed-no-transition {
@@ -222,6 +234,15 @@
       text-align: right;
     }
   }
+}
+
+.instant-apps-landing-page__sign-in {
+  width: 100%;
+  height: 100%;
+}
+
+.instant-apps-landing-page__sign-in--overlay {
+  background: rgba(0, 0, 0, 0.6);
 }
 
 @media only screen and (max-width: 768px) {

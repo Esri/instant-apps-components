@@ -189,16 +189,26 @@
     height: var(--instant-apps-header-logo-height--logo-scale--l);
   }
 
-  .instant-apps-header__logo-height--s,
-  .instant-apps-header__logo-height--m,
-  .instant-apps-header__logo-height--l {
-    padding-right: 10px;
+  .instant-apps-header__actions-end-container {
+    display: flex;
   }
 
-  .instant-apps-header--rtl.instant-apps-header__logo-height--s,
-  .instant-apps-header--rtl.instant-apps-header__logo-height--m,
-  .instant-apps-header--rtl.instant-apps-header__logo-height--l {
-    padding-right: 0;
-    padding-left: 10px;
+  .instant-apps-header__sign-in-container {
+    height: inherit;
+    display: flex;
+    align-items: center;
+
+    calcite-dropdown,
+    calcite-navigation-user {
+      height: 100%;
+    }
+
+    calcite-button {
+      margin: 0 10px;
+    }
+
+    calcite-dropdown-group {
+      min-width: 140px;
+    }
   }
 }

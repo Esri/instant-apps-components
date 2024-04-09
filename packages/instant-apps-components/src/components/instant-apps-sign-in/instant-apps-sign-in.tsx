@@ -1,0 +1,244 @@
+import { Component, Element, Host, Prop, State, Watch, h } from '@stencil/core';
+
+import { loadModules } from '../../utils/loadModules';
+import { IPortal } from '../../interfaces/interfaces';
+import { getMessages } from '../../utils/locale';
+import SignIn_T9n from '../../assets/t9n/instant-apps-sign-in/resources.json';
+
+const CSS = {
+  base: 'instant-apps-sign-in__container',
+  landing: 'instant-apps-sign-in__landing-page',
+  landingBtn: 'instant-apps-sign-in__landing-page-btns',
+  SignInBtn: 'instant-apps-sign-in__sign-in-btn',
+};
+
+@Component({
+  tag: 'instant-apps-sign-in',
+  styleUrl: 'instant-apps-sign-in.scss',
+  shadow: true,
+})
+export class InstantAppsSignIn {
+  @Element() el: HTMLElement;
+
+  /**
+   * The apps Portal, used to setup sign in capabilities.
+   */
+  @Prop()
+  portal!: IPortal;
+
+  /**
+   * The registered application id, used to setup sign in capabilities.
+   */
+  @Prop()
+  oauthappid!: string;
+
+  /**
+   * Set to true to show the OAuth sign-in page in a popup window.
+   */
+  @Prop()
+  openInPopup: boolean;
+
+  /**
+   * Show sign out dropdown trigger as a calcite-navigation-user when `true`, otherwise use the calcite-avatar as the dropdown trigger.
+   */
+  @Prop()
+  navUserBtn = true;
+
+  /**
+   * Show sign out dropdown trigger as a calcite-navigation-user when `true`, otherwise use the calcite-avatar as the dropdown trigger.
+   */
+  @Prop()
+  landingPage: boolean;
+
+  @State()
+  isSignedIn: boolean;
+
+  @State()
+  user: __esri.PortalUser;
+
+  /**
+   * Title text.
+   */
+  @Prop()
+  titleText: string;
+
+  /**
+   * Description text.
+   */
+  @Prop()
+  descriptionText: string;
+
+  @Prop()
+  closeLandingPage: Function;
+
+  @State()
+  ready = false;
+
+  @State()
+  messages: typeof SignIn_T9n;
+
+  idManager: __esri.IdentityManager;
+  info: __esri.OAuthInfo;
+
+  @Watch('portal')
+  async watchPortal() {
+    await this.initSignIn();
+  }
+
+  @Watch('oauthappid')
+  async watchOauthappid() {
+    await this.initSignIn();
+  }
+
+  async componentWillLoad() {
+    getMessages(this);
+    await this.initSignIn();
+  }
+
+  render() {
+    const signIn = this.ready ? this.renderContent() : null;
+    return <Host>{signIn}</Host>;
+  }
+
+  renderContent() {
+    return this.landingPage ? this.renderLandingPageSignIn() : this.renderSignInContainer();
+  }
+
+  renderSignInContainer() {
+    return <div class={CSS.base}>{this.isSignedIn ? this.renderSignInDropdown() : this.renderSignInButton()}</div>;
+  }
+
+  renderSignInDropdown() {
+    const dropdownScale = this.navUserBtn ? 'm' : 's';
+    return (
+      <calcite-dropdown placement="bottom-end" scale={dropdownScale}>
+        {this.navUserBtn ? (
+          <calcite-navigation-user
+            slot="trigger"
+            thumbnail={this.user?.thumbnailUrl}
+            full-name={this.user?.fullName}
+            username={this.user?.username}
+            textDisabled
+          ></calcite-navigation-user>
+        ) : (
+          <button slot="trigger">
+            <calcite-avatar thumbnail={this.user?.thumbnailUrl} full-name={this.user?.fullName} username={this.user?.username}></calcite-avatar>
+          </button>
+        )}
+        <calcite-dropdown-group selection-mode="none">
+          <calcite-dropdown-item onClick={this.signOut.bind(this)}>{this.messages?.signOut}</calcite-dropdown-item>
+        </calcite-dropdown-group>
+      </calcite-dropdown>
+    );
+  }
+
+  renderSignInButton() {
+    const appearance = this.navUserBtn ? 'transparent' : 'brand';
+    const className = this.navUserBtn ? CSS.SignInBtn : '';
+    return (
+      <calcite-button class={className} onClick={this.signIn.bind(this)} scale="s" icon-start="sign-in" appearance={appearance}>
+        {this.messages?.signIn}
+      </calcite-button>
+    );
+  }
+
+  renderLandingPageSignIn() {
+    return (
+      <div class={CSS.landing}>
+        <h1>{this.titleText}</h1>
+        <h2>{this.titleText}</h2>
+        <p>{this.descriptionText}</p>
+        <div class={CSS.landingBtn}>
+          <calcite-button onClick={this.landingPageSignIn.bind(this)} icon-start="sign-in">
+            {this.messages?.signIn}
+          </calcite-button>
+          <calcite-button onClick={this.guestOnClick.bind(this)} icon-start="sign-in" appearance="outline">
+            {this.messages?.continueAsGuest}
+          </calcite-button>
+        </div>
+      </div>
+    );
+  }
+
+  async initSignIn(): Promise<void> {
+    if (this.portal == null || this.oauthappid == null) return;
+    const [OAuthInfo, esriId, reactiveUtils] = await loadModules(['esri/identity/OAuthInfo', 'esri/identity/IdentityManager', 'esri/core/reactiveUtils']);
+
+    this.idManager = esriId;
+    this.info = new OAuthInfo({
+      appId: this.oauthappid,
+      portalUrl: this.portal.url,
+      flowType: 'authorization-code',
+      popup: this.openInPopup,
+    });
+    this.idManager.registerOAuthInfos([this.info]);
+    this.isSignedIn = await this.checkSignInStatus();
+    this.ready = true;
+    this.watchCredential();
+    await reactiveUtils.whenOnce(() => this.portal.user);
+    this.user = this.portal.user;
+    this.ready = true;
+  }
+
+  signIn() {
+    if (this.landingPage) {
+      const date = new Date();
+      localStorage.setItem('signing-in', date.getTime().toString());
+    }
+    this.idManager
+      .getCredential(this.info.portalUrl + '/sharing', {
+        oAuthPopupConfirmation: false,
+      })
+      .then(async () => {
+        await this.checkSignInStatus();
+      });
+  }
+
+  signOut() {
+    this.idManager.destroyCredentials();
+    this.portal.authMode = 'anonymous';
+    localStorage.removeItem('_AGO_SESSION_');
+    this.isSignedIn = false;
+    this.portal.credential = null;
+  }
+
+  landingPageSignIn() {
+    if (!this.isSignedIn) {
+      const date = new Date();
+      localStorage.setItem('signing-in', date.getTime().toString());
+      this.signIn();
+    } else if (this.closeLandingPage != null) {
+      this.closeLandingPage();
+    }
+  }
+
+  guestOnClick() {
+    this.signOut();
+    if (this.closeLandingPage != null) {
+      this.closeLandingPage();
+    }
+  }
+
+  checkSignInStatus(): Promise<boolean> {
+    return new Promise<boolean>(resolve => {
+      this.idManager
+        .checkSignInStatus(this.info.portalUrl + '/sharing')
+        .then(async credential => {
+          this.portal.credential = credential;
+          resolve(true);
+        })
+        .catch(() => {
+          this.portal.credential = null;
+          resolve(false);
+        });
+    });
+  }
+
+  watchCredential() {
+    this.portal.addHandles(
+      this.portal.watch('credential', credential => {
+        this.isSignedIn = credential != null;
+      }),
+    );
+  }
+}

@@ -22,6 +22,7 @@ const CSS = {
   logoScale: 'instant-apps-header__logo-scale--',
   logoHeight: 'instant-apps-header__logo-height--',
   standardHeight: 'instant-apps-header__standard-height',
+  actionsEndContainer: 'instant-apps-header__actions-end-container',
   alignment: {
     center: 'instant-apps-header__header-content--center',
     right: 'instant-apps-header__header-content--right',
@@ -221,7 +222,9 @@ export class InstantAppsHeader {
                   ></calcite-button>
                 ) : null}
               </span>
-              <slot name="actions-end" />
+              <div class={CSS.actionsEndContainer}>
+                <slot name="actions-end" />
+              </div>
             </div>
           </header>
         )}
@@ -242,6 +245,7 @@ export class InstantAppsHeader {
       ''
     );
   }
+
   renderTitle() {
     return this.titleText && this.titleTextLink ? (
       <a style={{ color: this.textColor }} href={`${this.titleTextLink}`} rel="noopener noreferrer" target="_blank">
