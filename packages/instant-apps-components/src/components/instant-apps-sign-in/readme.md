@@ -7,16 +7,16 @@
 
 ## Properties
 
-| Property                  | Attribute          | Description                                                                                                            | Type       | Default     |
-| ------------------------- | ------------------ | ---------------------------------------------------------------------------------------------------------------------- | ---------- | ----------- |
-| `closeLandingPage`        | --                 |                                                                                                                        | `Function` | `undefined` |
-| `descriptionText`         | `description-text` | Description text.                                                                                                      | `string`   | `undefined` |
-| `landingPage`             | `landing-page`     |                                                                                                                        | `boolean`  | `undefined` |
-| `navUserBtn`              | `nav-user-btn`     | Show sign out dropdown trigger as a calcite-navigation-user, otherwise use the calcite-avatar as the dropdown trigger. | `boolean`  | `true`      |
-| `oauthappid` _(required)_ | `oauthappid`       | The registered application id, used to setup sign in capabilities.                                                     | `string`   | `undefined` |
-| `openInPopup`             | `open-in-popup`    | Set to true to show the OAuth sign-in page in a popup window.                                                          | `boolean`  | `undefined` |
-| `portal` _(required)_     | --                 | The apps Portal, used to setup sign in capabilities                                                                    | `IPortal`  | `undefined` |
-| `titleText`               | `title-text`       | Title text.                                                                                                            | `string`   | `undefined` |
+| Property                  | Attribute          | Description                                                                                                                        | Type       | Default     |
+| ------------------------- | ------------------ | ---------------------------------------------------------------------------------------------------------------------------------- | ---------- | ----------- |
+| `closeLandingPage`        | --                 |                                                                                                                                    | `Function` | `undefined` |
+| `descriptionText`         | `description-text` | Description text.                                                                                                                  | `string`   | `undefined` |
+| `landingPage`             | `landing-page`     | Show sign out dropdown trigger as a calcite-navigation-user when `true`, otherwise use the calcite-avatar as the dropdown trigger. | `boolean`  | `undefined` |
+| `navUserBtn`              | `nav-user-btn`     | Show sign out dropdown trigger as a calcite-navigation-user when `true`, otherwise use the calcite-avatar as the dropdown trigger. | `boolean`  | `true`      |
+| `oauthappid` _(required)_ | `oauthappid`       | The registered application id, used to setup sign in capabilities.                                                                 | `string`   | `undefined` |
+| `openInPopup`             | `open-in-popup`    | Set to true to show the OAuth sign-in page in a popup window.                                                                      | `boolean`  | `undefined` |
+| `portal` _(required)_     | --                 | The apps Portal, used to setup sign in capabilities.                                                                               | `IPortal`  | `undefined` |
+| `titleText`               | `title-text`       | Title text.                                                                                                                        | `string`   | `undefined` |
 
 
 ## Dependencies
