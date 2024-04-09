@@ -1,0 +1,89 @@
+:host {
+  display: block;
+
+  .instant-apps-sign-in__container {
+    height: inherit;
+    display: flex;
+    align-items: center;
+
+    calcite-dropdown,
+    calcite-navigation-user {
+      height: 100%;
+    }
+
+    .instant-apps-sign-in__sign-in-btn {
+      margin: 10px;
+    }
+
+    calcite-dropdown[scale='m'] calcite-dropdown-group {
+      min-width: 140px;
+    }
+
+    calcite-dropdown[scale='s'] calcite-dropdown-group {
+      min-width: 100px;
+    }
+
+    calcite-dropdown-item {
+      --calcite-color-text-1: #d83020;
+      --calcite-color-text-3: #d83020;
+    }
+
+    button {
+      height: 32px;
+      width: 32px;
+      padding: 0;
+      box-sizing: border-box;
+      display: flex;
+      cursor: pointer;
+      -webkit-user-select: none;
+      user-select: none;
+      appearance: none;
+      -moz-appearance: none;
+      -webkit-appearance: none;
+      text-decoration-line: none;
+      transition: color var(--calcite-animation-timing) ease-in-out, background-color var(--calcite-animation-timing) ease-in-out,
+        box-shadow var(--calcite-animation-timing) ease-in-out, outline-color var(--calcite-internal-animation-timing-fast) ease-in-out;
+      border: none;
+      border-radius: 50%;
+      background: #000;
+    }
+
+    button:hover calcite-avatar {
+      opacity: 0.7;
+      transition: 0.3s;
+    }
+  }
+
+  .instant-apps-sign-in__landing-page {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 40px;
+    width: 50%;
+    min-height: 30%;
+    background: rgba(255, 255, 255, 0.8);
+    color: #151515;
+    text-align: center;
+
+    h1,
+    h2,
+    p {
+      font-size: 16px;
+    }
+
+    h2,
+    p {
+      margin: 0;
+    }
+  }
+
+  .instant-apps-sign-in__landing-page-btns {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 40px;
+
+    calcite-button {
+      width: calc(50% - 5px);
+    }
+  }
+}

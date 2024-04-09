@@ -268,3 +268,7 @@ export interface ControlPanelComponent {
   expandTooltip?: string;
   collapseTooltip?: string;
 }
+
+export interface IPortal extends __esri.Portal {
+  credential: __esri.Credential | null;
+}

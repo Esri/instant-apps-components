@@ -5,7 +5,7 @@
  * It contains typing information for all components that exist in this project.
  */
 import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
-import { ActiveTool, ControlPanelComponent, ExportOutput, ExtentSelector, IClassicEditor, IMeasureConfiguration, InstantAppsPopoverMessageOverrides, LayerExpression, PopoverPlacement } from "./interfaces/interfaces";
+import { ActiveTool, ControlPanelComponent, ExportOutput, ExtentSelector, IClassicEditor, IMeasureConfiguration, InstantAppsPopoverMessageOverrides, IPortal, LayerExpression, PopoverPlacement } from "./interfaces/interfaces";
 import { EditorConfig } from "@ckeditor/ckeditor5-core/src/editor/editorconfig";
 import { FilterMode } from "./components/instant-apps-interactive-legend/instant-apps-interactive-legend-classic/interfaces/interfaces";
 import { AlignmentPositions } from "./components/instant-apps-landing-page/support/enum";
@@ -13,7 +13,7 @@ import { AppSettings, LocaleItem, LocaleSettingData } from "./components/instant
 import { InstantAppsPopovers } from "./components/instant-apps-popovers/instant-apps-popovers";
 import { LogicalPlacement } from "@esri/calcite-components/dist/types/utils/floating-ui";
 import { ScoreboardItem, ScoreboardMode, ScoreboardPosition } from "./components/instant-apps-scoreboard/types/interfaces";
-export { ActiveTool, ControlPanelComponent, ExportOutput, ExtentSelector, IClassicEditor, IMeasureConfiguration, InstantAppsPopoverMessageOverrides, LayerExpression, PopoverPlacement } from "./interfaces/interfaces";
+export { ActiveTool, ControlPanelComponent, ExportOutput, ExtentSelector, IClassicEditor, IMeasureConfiguration, InstantAppsPopoverMessageOverrides, IPortal, LayerExpression, PopoverPlacement } from "./interfaces/interfaces";
 export { EditorConfig } from "@ckeditor/ckeditor5-core/src/editor/editorconfig";
 export { FilterMode } from "./components/instant-apps-interactive-legend/instant-apps-interactive-legend-classic/interfaces/interfaces";
 export { AlignmentPositions } from "./components/instant-apps-landing-page/support/enum";
@@ -410,9 +410,21 @@ export namespace Components {
          */
         "iconImageScale": 's' | 'm' | 'l';
         /**
+          * The registered application id, used to setup sign in capabilities.
+         */
+        "oauthappid": string;
+        /**
           * Controls the open/close state of the landing page.
          */
         "open": boolean;
+        /**
+          * The apps Portal, used to setup sign in capabilities.
+         */
+        "portal": IPortal;
+        /**
+          * Add sign in functionality. Requires portal and oauthappid props.
+         */
+        "signIn": boolean;
         /**
           * Subtitle text.
          */
@@ -605,6 +617,37 @@ export namespace Components {
           * MapView or SceneView to reference extent, viewpoint, and layers in map to perform calculations.
          */
         "view": __esri.MapView | __esri.SceneView;
+    }
+    interface InstantAppsSignIn {
+        "closeLandingPage": Function;
+        /**
+          * Description text.
+         */
+        "descriptionText": string;
+        /**
+          * Show sign out dropdown trigger as a calcite-navigation-user when `true`, otherwise use the calcite-avatar as the dropdown trigger.
+         */
+        "landingPage": boolean;
+        /**
+          * Show sign out dropdown trigger as a calcite-navigation-user when `true`, otherwise use the calcite-avatar as the dropdown trigger.
+         */
+        "navUserBtn": boolean;
+        /**
+          * The registered application id, used to setup sign in capabilities.
+         */
+        "oauthappid": string;
+        /**
+          * Set to true to show the OAuth sign-in page in a popup window.
+         */
+        "openInPopup": boolean;
+        /**
+          * The apps Portal, used to setup sign in capabilities.
+         */
+        "portal": IPortal;
+        /**
+          * Title text.
+         */
+        "titleText": string;
     }
     interface InstantAppsSocialShare {
         /**
@@ -1105,6 +1148,12 @@ declare global {
         prototype: HTMLInstantAppsScoreboardElement;
         new (): HTMLInstantAppsScoreboardElement;
     };
+    interface HTMLInstantAppsSignInElement extends Components.InstantAppsSignIn, HTMLStencilElement {
+    }
+    var HTMLInstantAppsSignInElement: {
+        prototype: HTMLInstantAppsSignInElement;
+        new (): HTMLInstantAppsSignInElement;
+    };
     interface HTMLInstantAppsSocialShareElement extends Components.InstantAppsSocialShare, HTMLStencilElement {
     }
     var HTMLInstantAppsSocialShareElement: {
@@ -1155,6 +1204,7 @@ declare global {
         "instant-apps-popover": HTMLInstantAppsPopoverElement;
         "instant-apps-popovers": HTMLInstantAppsPopoversElement;
         "instant-apps-scoreboard": HTMLInstantAppsScoreboardElement;
+        "instant-apps-sign-in": HTMLInstantAppsSignInElement;
         "instant-apps-social-share": HTMLInstantAppsSocialShareElement;
         "instant-apps-splash": HTMLInstantAppsSplashElement;
     }
@@ -1570,6 +1620,10 @@ declare namespace LocalJSX {
          */
         "iconImageScale"?: 's' | 'm' | 'l';
         /**
+          * The registered application id, used to setup sign in capabilities.
+         */
+        "oauthappid": string;
+        /**
           * Emits when the landing page is closed.
          */
         "onLandingPageClose"?: (event: InstantAppsLandingPageCustomEvent<void>) => void;
@@ -1581,6 +1635,14 @@ declare namespace LocalJSX {
           * Controls the open/close state of the landing page.
          */
         "open"?: boolean;
+        /**
+          * The apps Portal, used to setup sign in capabilities.
+         */
+        "portal"?: IPortal;
+        /**
+          * Add sign in functionality. Requires portal and oauthappid props.
+         */
+        "signIn"?: boolean;
         /**
           * Subtitle text.
          */
@@ -1776,6 +1838,37 @@ declare namespace LocalJSX {
          */
         "view"?: __esri.MapView | __esri.SceneView;
     }
+    interface InstantAppsSignIn {
+        "closeLandingPage"?: Function;
+        /**
+          * Description text.
+         */
+        "descriptionText"?: string;
+        /**
+          * Show sign out dropdown trigger as a calcite-navigation-user when `true`, otherwise use the calcite-avatar as the dropdown trigger.
+         */
+        "landingPage"?: boolean;
+        /**
+          * Show sign out dropdown trigger as a calcite-navigation-user when `true`, otherwise use the calcite-avatar as the dropdown trigger.
+         */
+        "navUserBtn"?: boolean;
+        /**
+          * The registered application id, used to setup sign in capabilities.
+         */
+        "oauthappid": string;
+        /**
+          * Set to true to show the OAuth sign-in page in a popup window.
+         */
+        "openInPopup"?: boolean;
+        /**
+          * The apps Portal, used to setup sign in capabilities.
+         */
+        "portal": IPortal;
+        /**
+          * Title text.
+         */
+        "titleText"?: string;
+    }
     interface InstantAppsSocialShare {
         /**
           * Auto update share URL.
@@ -1925,6 +2018,7 @@ declare namespace LocalJSX {
         "instant-apps-popover": InstantAppsPopover;
         "instant-apps-popovers": InstantAppsPopovers;
         "instant-apps-scoreboard": InstantAppsScoreboard;
+        "instant-apps-sign-in": InstantAppsSignIn;
         "instant-apps-social-share": InstantAppsSocialShare;
         "instant-apps-splash": InstantAppsSplash;
     }
@@ -1959,6 +2053,7 @@ declare module "@stencil/core" {
             "instant-apps-popover": LocalJSX.InstantAppsPopover & JSXBase.HTMLAttributes<HTMLInstantAppsPopoverElement>;
             "instant-apps-popovers": LocalJSX.InstantAppsPopovers & JSXBase.HTMLAttributes<HTMLInstantAppsPopoversElement>;
             "instant-apps-scoreboard": LocalJSX.InstantAppsScoreboard & JSXBase.HTMLAttributes<HTMLInstantAppsScoreboardElement>;
+            "instant-apps-sign-in": LocalJSX.InstantAppsSignIn & JSXBase.HTMLAttributes<HTMLInstantAppsSignInElement>;
             "instant-apps-social-share": LocalJSX.InstantAppsSocialShare & JSXBase.HTMLAttributes<HTMLInstantAppsSocialShareElement>;
             "instant-apps-splash": LocalJSX.InstantAppsSplash & JSXBase.HTMLAttributes<HTMLInstantAppsSplashElement>;
         }

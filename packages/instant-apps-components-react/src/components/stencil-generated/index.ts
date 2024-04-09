@@ -33,5 +33,6 @@ export const InstantAppsMeasurementTool = /*@__PURE__*/createReactComponent<JSX.
 export const InstantAppsPopover = /*@__PURE__*/createReactComponent<JSX.InstantAppsPopover, HTMLInstantAppsPopoverElement>('instant-apps-popover');
 export const InstantAppsPopovers = /*@__PURE__*/createReactComponent<JSX.InstantAppsPopovers, HTMLInstantAppsPopoversElement>('instant-apps-popovers');
 export const InstantAppsScoreboard = /*@__PURE__*/createReactComponent<JSX.InstantAppsScoreboard, HTMLInstantAppsScoreboardElement>('instant-apps-scoreboard');
+export const InstantAppsSignIn = /*@__PURE__*/createReactComponent<JSX.InstantAppsSignIn, HTMLInstantAppsSignInElement>('instant-apps-sign-in');
 export const InstantAppsSocialShare = /*@__PURE__*/createReactComponent<JSX.InstantAppsSocialShare, HTMLInstantAppsSocialShareElement>('instant-apps-social-share');
 export const InstantAppsSplash = /*@__PURE__*/createReactComponent<JSX.InstantAppsSplash, HTMLInstantAppsSplashElement>('instant-apps-splash');
