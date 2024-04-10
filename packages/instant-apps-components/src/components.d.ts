@@ -625,13 +625,9 @@ export namespace Components {
          */
         "descriptionText": string;
         /**
-          * Show sign out dropdown trigger as a calcite-navigation-user when `true`, otherwise use the calcite-avatar as the dropdown trigger.
+          * Set to `true` if app has landing page
          */
         "landingPage": boolean;
-        /**
-          * Show sign out dropdown trigger as a calcite-navigation-user when `true`, otherwise use the calcite-avatar as the dropdown trigger.
-         */
-        "navUserBtn": boolean;
         /**
           * The registered application id, used to setup sign in capabilities.
          */
@@ -648,6 +644,10 @@ export namespace Components {
           * Title text.
          */
         "titleText": string;
+        /**
+          * Pick the look of the sign in/out component. `navigation` will put sign out in calcite-navigation-user. `avatar` will put sign out in calcite-avatar. `landingPage` is used for instant-apps-landing-page.
+         */
+        "type": 'navigation' | 'avatar' | 'landingPage';
     }
     interface InstantAppsSocialShare {
         /**
@@ -1845,13 +1845,9 @@ declare namespace LocalJSX {
          */
         "descriptionText"?: string;
         /**
-          * Show sign out dropdown trigger as a calcite-navigation-user when `true`, otherwise use the calcite-avatar as the dropdown trigger.
+          * Set to `true` if app has landing page
          */
         "landingPage"?: boolean;
-        /**
-          * Show sign out dropdown trigger as a calcite-navigation-user when `true`, otherwise use the calcite-avatar as the dropdown trigger.
-         */
-        "navUserBtn"?: boolean;
         /**
           * The registered application id, used to setup sign in capabilities.
          */
@@ -1868,6 +1864,10 @@ declare namespace LocalJSX {
           * Title text.
          */
         "titleText"?: string;
+        /**
+          * Pick the look of the sign in/out component. `navigation` will put sign out in calcite-navigation-user. `avatar` will put sign out in calcite-avatar. `landingPage` is used for instant-apps-landing-page.
+         */
+        "type"?: 'navigation' | 'avatar' | 'landingPage';
     }
     interface InstantAppsSocialShare {
         /**

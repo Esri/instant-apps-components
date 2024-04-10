@@ -203,6 +203,7 @@ export class InstantAppsLandingPage {
       <div style={style} class={`${CSS.BASE}${closed} ${CSS.removePadding}`}>
         <div class={signInClass}>
           <instant-apps-sign-in
+            type="landingPage"
             landingPage={true}
             portal={this.portal}
             oauthappid={this.oauthappid}
