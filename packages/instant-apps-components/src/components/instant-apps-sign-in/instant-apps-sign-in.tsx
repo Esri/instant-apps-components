@@ -21,6 +21,13 @@ export class InstantAppsSignIn {
   @Element() el: HTMLElement;
 
   /**
+   * Pick the look of the sign in/out component. `navigation` will put sign out in calcite-navigation-user.
+   * `avatar` will put sign out in calcite-avatar. `landingPage` is used for instant-apps-landing-page.
+   */
+  @Prop()
+  type: 'navigation' | 'avatar' | 'landingPage' = 'navigation';
+
+  /**
    * The apps Portal, used to setup sign in capabilities.
    */
   @Prop()
@@ -39,13 +46,7 @@ export class InstantAppsSignIn {
   openInPopup: boolean;
 
   /**
-   * Show sign out dropdown trigger as a calcite-navigation-user when `true`, otherwise use the calcite-avatar as the dropdown trigger.
-   */
-  @Prop()
-  navUserBtn = true;
-
-  /**
-   * Show sign out dropdown trigger as a calcite-navigation-user when `true`, otherwise use the calcite-avatar as the dropdown trigger.
+   * Set to `true` if app has landing page
    */
   @Prop()
   landingPage: boolean;
@@ -101,7 +102,7 @@ export class InstantAppsSignIn {
   }
 
   renderContent() {
-    return this.landingPage ? this.renderLandingPageSignIn() : this.renderSignInContainer();
+    return this.type === 'landingPage' ? this.renderLandingPageSignIn() : this.renderSignInContainer();
   }
 
   renderSignInContainer() {
@@ -109,10 +110,10 @@ export class InstantAppsSignIn {
   }
 
   renderSignInDropdown() {
-    const dropdownScale = this.navUserBtn ? 'm' : 's';
+    const dropdownScale = this.type === 'navigation' ? 'm' : 's';
     return (
       <calcite-dropdown placement="bottom-end" scale={dropdownScale}>
-        {this.navUserBtn ? (
+        {this.type === 'navigation' ? (
           <calcite-navigation-user
             slot="trigger"
             thumbnail={this.user?.thumbnailUrl}
@@ -133,8 +134,8 @@ export class InstantAppsSignIn {
   }
 
   renderSignInButton() {
-    const appearance = this.navUserBtn ? 'transparent' : 'brand';
-    const className = this.navUserBtn ? CSS.SignInBtn : '';
+    const appearance = this.type === 'navigation' ? 'transparent' : 'brand';
+    const className = this.type === 'navigation' ? CSS.SignInBtn : '';
     return (
       <calcite-button class={className} onClick={this.signIn.bind(this)} scale="s" icon-start="sign-in" appearance={appearance}>
         {this.messages?.signIn}
@@ -175,9 +176,12 @@ export class InstantAppsSignIn {
     this.isSignedIn = await this.checkSignInStatus();
     this.ready = true;
     this.watchCredential();
-    await reactiveUtils.whenOnce(() => this.portal.user);
-    this.user = this.portal.user;
-    this.ready = true;
+    reactiveUtils
+      .whenOnce(() => this.portal.user)
+      .then(() => {
+        this.user = this.portal.user;
+        this.ready = true;
+      });
   }
 
   signIn() {
