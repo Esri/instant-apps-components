@@ -18,7 +18,9 @@ export async function fetchResourceData(request, resource: __esri.PortalItemReso
 export async function getPortalItemResource(portalItem: __esri.PortalItem): Promise<__esri.PortalItemResource | null> {
   if (!portalItem) return null;
   const [PortalItemResource] = await loadModules(['esri/portal/PortalItemResource']);
-  const existingResourcesRes = await portalItem.fetchResources();
+  const existingResourcesRes = await portalItem.fetchResources({
+    num: 100,
+  });
   const path = `t9n/${portalItem?.id}.json`;
   const resource = new PortalItemResource({ path, portalItem });
   const existingResourceArr = existingResourcesRes.resources.filter(resourceItem => resourceItem.resource.path === path);
