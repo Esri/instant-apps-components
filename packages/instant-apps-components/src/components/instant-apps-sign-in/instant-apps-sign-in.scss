@@ -85,6 +85,13 @@
 
     calcite-button {
       width: calc(50% - 5px);
+      --calcite-color-brand: var(--instant-apps-landing-page-entry-button-color);
+      --calcite-color-brand-hover: var(--instant-apps-landing-page-entry-button-color);
+      --calcite-color-brand-press: var(--instant-apps-landing-page-entry-button-color);
+    }
+
+    calcite-button:hover {
+      filter: contrast(0.8);
     }
   }
 }
