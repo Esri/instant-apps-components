@@ -386,6 +386,10 @@ export namespace Components {
          */
         "disableTransition": boolean;
         /**
+          * Add sign in functionality. Requires portal and oauthappid props.
+         */
+        "enableSignIn": boolean;
+        /**
           * Scale of the entry button.
          */
         "entryButtonScale": 's' | 'm' | 'l';
@@ -421,10 +425,6 @@ export namespace Components {
           * The apps Portal, used to setup sign in capabilities.
          */
         "portal": IPortal;
-        /**
-          * Add sign in functionality. Requires portal and oauthappid props.
-         */
-        "signIn": boolean;
         /**
           * Subtitle text.
          */
@@ -621,7 +621,7 @@ export namespace Components {
     interface InstantAppsSignIn {
         "closeLandingPage": Function;
         /**
-          * Description text.
+          * Landing page description text.
          */
         "descriptionText": string;
         /**
@@ -641,7 +641,11 @@ export namespace Components {
          */
         "portal": IPortal;
         /**
-          * Title text.
+          * Landing page subtitle text.
+         */
+        "subtitleText": string;
+        /**
+          * Landing page title text.
          */
         "titleText": string;
         /**
@@ -1596,6 +1600,10 @@ declare namespace LocalJSX {
          */
         "disableTransition"?: boolean;
         /**
+          * Add sign in functionality. Requires portal and oauthappid props.
+         */
+        "enableSignIn"?: boolean;
+        /**
           * Scale of the entry button.
          */
         "entryButtonScale"?: 's' | 'm' | 'l';
@@ -1639,10 +1647,6 @@ declare namespace LocalJSX {
           * The apps Portal, used to setup sign in capabilities.
          */
         "portal"?: IPortal;
-        /**
-          * Add sign in functionality. Requires portal and oauthappid props.
-         */
-        "signIn"?: boolean;
         /**
           * Subtitle text.
          */
@@ -1841,7 +1845,7 @@ declare namespace LocalJSX {
     interface InstantAppsSignIn {
         "closeLandingPage"?: Function;
         /**
-          * Description text.
+          * Landing page description text.
          */
         "descriptionText"?: string;
         /**
@@ -1861,7 +1865,11 @@ declare namespace LocalJSX {
          */
         "portal": IPortal;
         /**
-          * Title text.
+          * Landing page subtitle text.
+         */
+        "subtitleText"?: string;
+        /**
+          * Landing page title text.
          */
         "titleText"?: string;
         /**

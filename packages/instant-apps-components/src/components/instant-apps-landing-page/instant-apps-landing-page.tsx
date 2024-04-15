@@ -121,7 +121,7 @@ export class InstantAppsLandingPage {
    * Add sign in functionality. Requires portal and oauthappid props.
    */
   @Prop()
-  signIn: boolean;
+  enableSignIn: boolean;
 
   /**
    * The apps Portal, used to setup sign in capabilities.
@@ -157,7 +157,7 @@ export class InstantAppsLandingPage {
   }
 
   componentWillLoad() {
-    if (this.signIn) {
+    if (this.enableSignIn) {
       const signInTime = localStorage.getItem('signing-in') ? new Date(Number(localStorage.getItem('signing-in'))) : null;
       if (signInTime != null) {
         const minuteLimit = 2;
@@ -170,7 +170,7 @@ export class InstantAppsLandingPage {
   }
 
   render() {
-    const content = this.signIn ? this.renderLandingPageSignIn() : this.renderLandingPageContent();
+    const content = this.enableSignIn ? this.renderLandingPageSignIn() : this.renderLandingPageContent();
     return <Host>{content}</Host>;
   }
 
@@ -208,6 +208,7 @@ export class InstantAppsLandingPage {
             portal={this.portal}
             oauthappid={this.oauthappid}
             titleText={this.titleText}
+            subtitleText={this.subtitleText}
             descriptionText={this.descriptionText}
             closeLandingPage={this.closeLandingPage.bind(this)}
           ></instant-apps-sign-in>

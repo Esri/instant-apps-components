@@ -58,13 +58,19 @@ export class InstantAppsSignIn {
   user: __esri.PortalUser;
 
   /**
-   * Title text.
+   * Landing page title text.
    */
   @Prop()
   titleText: string;
 
   /**
-   * Description text.
+   * Landing page subtitle text.
+   */
+  @Prop()
+  subtitleText: string;
+
+  /**
+   * Landing page description text.
    */
   @Prop()
   descriptionText: string;
@@ -147,7 +153,7 @@ export class InstantAppsSignIn {
     return (
       <div class={CSS.landing}>
         <h1>{this.titleText}</h1>
-        <h2>{this.titleText}</h2>
+        <h2>{this.subtitleText}</h2>
         <p>{this.descriptionText}</p>
         <div class={CSS.landingBtn}>
           <calcite-button onClick={this.landingPageSignIn.bind(this)} icon-start="sign-in">
