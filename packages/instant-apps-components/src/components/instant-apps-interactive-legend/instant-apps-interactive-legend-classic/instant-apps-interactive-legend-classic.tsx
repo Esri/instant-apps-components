@@ -165,7 +165,7 @@ export class InstantAppsInteractiveLegendClassic {
   async initLegend() {
     try {
       await this.reactiveUtils.whenOnce(() => this.legendvm?.view);
-      this.legendvm.view.when(async () => {
+      const initLegendCallback = async () => {
         try {
           // Initial data setup
 
@@ -199,7 +199,9 @@ export class InstantAppsInteractiveLegendClassic {
           console.error(err);
           this.isLoading = false;
         }
-      });
+      };
+      this.legendvm.view.when(initLegendCallback);
+      this.legendvm.view.map.layers.on('after-changes', initLegendCallback);
     } catch {
       this.isLoading = false;
     }
@@ -825,6 +827,18 @@ export class InstantAppsInteractiveLegendClassic {
               },
             ),
           );
+        },
+      ),
+    );
+
+    this.handles?.add(
+      this.reactiveUtils.on(
+        () => this.legendvm?.view?.map?.layers,
+        'after-changes',
+        async () => {
+          const data = await handleFeatureCount(this.legendvm, interactiveLegendState.data);
+          store.set('data', { ...interactiveLegendState.data, ...data });
+          this.calculatingFeatureCount = false;
         },
       ),
     );
