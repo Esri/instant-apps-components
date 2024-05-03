@@ -852,6 +852,15 @@ export function handleFilterChange(filterMode: FilterMode, view: __esri.MapView 
   }
 }
 
+export function clearFilters(view: __esri.MapView | __esri.SceneView): void {
+  view?.allLayerViews
+    ?.filter((layerView: __esri.LayerView) => layerView?.layer?.type === 'feature')
+    ?.forEach((fLayerView: __esri.FeatureLayerView) => {
+      fLayerView.set('filter', null);
+      fLayerView.set('featureEffect', null);
+    });
+}
+
 function updateExistingFilterToFeatureFilter(view: __esri.MapView | __esri.SceneView): void {
   view?.allLayerViews
     ?.filter((layerView: __esri.LayerView) => layerView?.layer?.type === 'feature')

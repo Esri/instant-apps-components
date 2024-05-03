@@ -37,6 +37,10 @@
       #addLayerForm {
         padding: 10px;
       }
+
+      #toggleBtn {
+        margin-top: 10px;
+      }
     </style>
   </head>
 
@@ -50,6 +54,7 @@
             <calcite-input id="layerInput" placeholder="Enter layer URL" />
           </calcite-label>
           <calcite-button id="submitBtn" icon-start="plus" width="full">Add</calcite-button>
+          <calcite-button id="toggleBtn" icon-start="toggle" width="full" appearance="outline-fill">Toggle Widget</calcite-button>
         </div>
       </calcite-shell-panel>
       <div id="viewDiv"></div>
@@ -78,6 +83,7 @@
         view.ui.add(legend, 'top-left');
 
         const intLegend = document.createElement('instant-apps-interactive-legend');
+        intLegend.id = 'intLegend';
         intLegend.featureCount = true;
         intLegend.view = view;
 
@@ -98,6 +104,21 @@
             const index = view.map.layers.length;
             console.log(index);
             view.map.add(loadedFlayer, index);
+          }
+        });
+
+        const toggleBtn = document.getElementById('toggleBtn');
+
+        toggleBtn.addEventListener('click', () => {
+          const intLegend = document.getElementById('intLegend');
+          if (intLegend != null) {
+            intLegend.remove();
+          } else {
+            const intLegend = document.createElement('instant-apps-interactive-legend');
+            intLegend.id = 'intLegend';
+            intLegend.featureCount = true;
+            intLegend.view = view;
+            panel.appendChild(intLegend);
           }
         });
       });

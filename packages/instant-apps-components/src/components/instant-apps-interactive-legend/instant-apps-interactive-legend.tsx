@@ -5,7 +5,7 @@ import { loadModules } from '../../utils/loadModules';
 import { FilterMode } from './instant-apps-interactive-legend-classic/interfaces/interfaces';
 
 import { getMessages } from '../../utils/locale';
-import { getTheme } from './support/helpers';
+import { clearFilters, getTheme } from './support/helpers';
 
 const CSS = {
   esri: {
@@ -59,7 +59,7 @@ export class InstantAppsInteractiveLegend {
   featureCount: boolean = false;
 
   /**
-   * Use effects to differentiate between features that are included and excluded from legend filter results 
+   * Use effects to differentiate between features that are included and excluded from legend filter results
    */
   @Prop()
   filterMode: FilterMode = {
@@ -81,6 +81,11 @@ export class InstantAppsInteractiveLegend {
 
   async componentDidLoad() {
     getMessages(this);
+  }
+
+  async disconnectedCallback() {
+    this.handles?.removeAll();
+    clearFilters(this.view);
   }
 
   async initializeModules() {
