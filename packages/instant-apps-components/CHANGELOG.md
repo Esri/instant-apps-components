@@ -9,6 +9,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### instant-apps-interactive-legend
 
+- Clear filters on component disconnect
+
+## v1.0.0-beta.211
+
+### instant-apps-interactive-legend
+
 - Updates to dynamically add/remove/reorder layers
 
 ## v1.0.0-beta.210
