@@ -1,0 +1,14 @@
+{
+    "create": "Create",
+    "createSubheading": "Create an app with your map",
+    "mapViewer": "Map Viewer",
+    "mapViewerDesc": "An interactive web mapping application for creating, exploring, and saving web maps.",
+    "storyMaps": "Story Maps",
+    "storyMapsDesc": "Tell a story by combining maps with narrative text and media.",
+    "instantApps": "Instant Apps",
+    "instantAppsDesc": "Choose and app to provide a focused experience using your map.",
+    "dashboards": "Dashboards",
+    "dashboardsDesc": "Create a dashboard with data visualizations that provide key insights.",
+    "experienceBuilder": "Experience Builder",
+    "experienceBuilderDesc": "Use a template or start from scratch to create the exact web experience you want."
+}
