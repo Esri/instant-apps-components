@@ -42,7 +42,7 @@
     "arcgis-js-api": "^4.29.0-next.20240118",
     "esri-loader": "^3.7.0",
     "maquette": "^3.5.3",
-    "templates-common-library": "0.0.349-esm"
+    "templates-common-library": "0.0.464-esm"
   },
   "devDependencies": {
     "@babel/core": "7.16.5",

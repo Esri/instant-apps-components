@@ -51,6 +51,26 @@
     margin-top: 0.5rem;
   }
 
+  &__header{
+    h2{
+      margin: 0.25rem 0;
+      font-family: Avenir;
+      font-size: 16px;
+      font-weight: 500;
+      line-height: 11px;
+      text-align: left;
+    }
+
+    p{
+      margin: 0 0 0.25rem 0;
+      font-family: Avenir;
+      font-size: 13px;
+      font-weight: 500;
+      line-height: 18px;
+      text-align: left;
+    }
+  }
+
   &__options {
     display: flex;
     justify-content: space-between;
@@ -74,6 +94,12 @@
     outline-offset: 0;
     outline-color: transparent;
     transition: outline-offset 100ms ease-in-out, outline-color 100ms ease-in-out;
+
+    &:hover {
+      --calcite-color-text-link: var(--calcite-color-text-1);
+      // add outline
+      outline: 2px solid var(--calcite-color-text-1);
+    }
   }
 
   &__option-icon {
@@ -84,7 +110,6 @@
     background: var(--calcite-color-foreground-2);
     color: var(--calcite-color-text-1);
     font-size: 1.25rem;
-    margin-bottom: 0.5rem;
     background-color: var(--calcite-color-background);
 
     justify-content: center;
@@ -100,7 +125,6 @@
 
     svg {
       display: block;
-      vertical-align: middle;
       overflow-clip-margin: content-box;
       overflow: hidden;
     }
@@ -109,6 +133,16 @@
   &__option-text {
     font-size: 0.75rem;
     color: var(--calcite-color-text-2);
-    margin-bottom: 0.25rem;
+    padding: 0.75rem;
+    
+    h3{
+      font-size: var(--calcite-font-size-0);
+    }
+
+    p{
+      font-size: var(--calcite-font-size--1);
+      color: var(--calcite-color-text-3);
+      line-height: 1.35;
+    }
   }
 }

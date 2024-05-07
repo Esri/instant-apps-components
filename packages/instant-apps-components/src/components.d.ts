@@ -51,10 +51,6 @@ export namespace Components {
          */
         "content": __esri.WebMap | __esri.WebScene | __esri.PortalGroup | undefined;
         /**
-          * Export header name, updated in input.
-         */
-        "headerTitle"?: string;
-        /**
           * Renders tool as a popover with a trigger button, or inline to place in a custom container.
          */
         "mode": 'popover' | 'inline';
@@ -71,10 +67,7 @@ export namespace Components {
           * Determines the type of positioning to use for the overlaid content. Using `"absolute"` will work for most cases. The component will be positioned inside of overflowing parent containers and will affect the container's layout. `"fixed"` value should be used to escape an overflowing parent container, or when the reference element's position CSS property is `"fixed"`.
          */
         "popoverPositioning"?: 'absolute' | 'fixed';
-        /**
-          * Adjusts the scale of the action button.
-         */
-        "scale"?: 's' | 'm' | 'l';
+        "portal": __esri.Portal;
         /**
           * Show header input in export tool.
          */
@@ -1302,10 +1295,6 @@ declare namespace LocalJSX {
          */
         "content"?: __esri.WebMap | __esri.WebScene | __esri.PortalGroup | undefined;
         /**
-          * Export header name, updated in input.
-         */
-        "headerTitle"?: string;
-        /**
           * Renders tool as a popover with a trigger button, or inline to place in a custom container.
          */
         "mode"?: 'popover' | 'inline';
@@ -1326,10 +1315,7 @@ declare namespace LocalJSX {
           * Determines the type of positioning to use for the overlaid content. Using `"absolute"` will work for most cases. The component will be positioned inside of overflowing parent containers and will affect the container's layout. `"fixed"` value should be used to escape an overflowing parent container, or when the reference element's position CSS property is `"fixed"`.
          */
         "popoverPositioning"?: 'absolute' | 'fixed';
-        /**
-          * Adjusts the scale of the action button.
-         */
-        "scale"?: 's' | 'm' | 'l';
+        "portal"?: __esri.Portal;
         /**
           * Show header input in export tool.
          */

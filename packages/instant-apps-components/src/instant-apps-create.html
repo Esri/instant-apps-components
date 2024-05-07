@@ -67,12 +67,17 @@
     </div>
   </calcite-shell>
   <script>
-    require(['esri/WebMap','esri/views/MapView','esri/config','esri/widgets/ScaleBar','esri/widgets/Home'],(WebMap,MapView,esriConfig,ScaleBar,Home) => {
-      esriConfig.portalUrl='https://nw-brews.mapsdevext.arcgis.com';
+    require(['esri/WebMap','esri/views/MapView','esri/config','esri/widgets/ScaleBar','esri/widgets/Home', 
+    'esri/portal/Portal'
+  ],(WebMap,MapView,esriConfig,ScaleBar,Home, Portal) => {
+      let portal = new Portal({
+        url: "https://nw-brews.mapsdevext.arcgis.com" 
+      });
 
-      const map=new WebMap({
+      const map = new WebMap({
         portalItem: {
-          id: 'c0c59986e2e74d98be80ed493f91de10'
+          id: 'c0c59986e2e74d98be80ed493f91de10',
+          portal
         },
       });
 
@@ -97,12 +102,15 @@
 
       view.when(async () => {
         await view.map.loadAll();
+        await map.load();
         const createPopover=document.getElementById('create-popover');
         createPopover.headerTitle='Instant Apps: Header (Shared Theme)';
-        createPopover.view=view;
+        createPopover.content = map;
+        createPopover.portal = portal;
 
         const createInline=document.getElementById('create-inline');
-        createInline.view=view;
+        createInline.content = map;
+        createInline.portal = portal;
       });
     });
   </script>
