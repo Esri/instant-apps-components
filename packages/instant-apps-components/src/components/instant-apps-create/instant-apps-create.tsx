@@ -92,8 +92,6 @@ export class InstantAppsCreate {
     });
   }
 
-  componentDidLoad(): void {}
-
   disconnectedCallback(): void {
     this.handles?.removeAll();
     this.handles?.destroy();
