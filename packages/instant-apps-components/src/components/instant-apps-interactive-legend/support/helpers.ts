@@ -175,7 +175,8 @@ export async function handleFilter(data: IIntLegendLayerData, info: any, infoInd
   const [FeatureFilter, FeatureEffect] = await loadModules(['esri/layers/support/FeatureFilter', 'esri/layers/support/FeatureEffect']);
   const { queryExpressions, fLayerView } = data;
   generateQueryExpressions(data, info, infoIndex, parentLegendElementInfo);
-  const where = queryExpressions.join(' OR ');
+  const sep = queryExpressions.every(expression => expression && expression.includes('<>')) ? ' AND ' : ' OR ';
+  const where = queryExpressions.join(sep);
   const timeExtent = fLayerView?.filter?.timeExtent ?? null;
 
   const { type } = filterMode;
