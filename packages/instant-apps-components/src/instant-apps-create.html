@@ -1,0 +1,132 @@
+<!-- /*
+ *   Copyright (c) 2024 Esri
+ *   All rights reserved under the copyright laws of the United States and applicable international laws, treaties, and conventions.
+ *   This material is licensed for use under the Esri Master License Agreement (MLA), and is bound by the terms of that agreement.
+ *   You may redistribute and use this code without modification, provided you adhere to the terms of the MLA and include this copyright notice.
+ *   See use restrictions at http://www.esri.com/legal/pdfs/mla_e204_e300/english
+ */ -->
+
+<!DOCTYPE html>
+<html dir="ltr" lang="en">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=5.0" />
+  <title>ArcGIS Instant Apps Components</title>
+
+  <link rel="stylesheet" href="https://jsdev.arcgis.com/4.29/esri/themes/light/main.css" />
+  <script src="https://jsdev.arcgis.com/4.29/"></script>
+  <script type="module" src="https://js.arcgis.com/calcite-components/2.4.0/calcite.esm.js"></script>
+  <link rel="stylesheet" type="text/css" href="https://js.arcgis.com/calcite-components/2.4.0/calcite.css" />
+  <script type="module" src="/build/instant-apps-components.esm.js"></script>
+  <script nomodule src="/build/instant-apps-components.js"></script>
+
+  <style>
+    html,
+    body,
+    #viewDiv {
+      box-sizing: border-box;
+      width: 100%;
+      height: 100%;
+      margin: 0;
+      padding: 0;
+    }
+
+    .panel-content {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: 5%;
+      font-size: 1rem;
+      font-weight: 400;
+      margin: 0;
+    }
+
+    instant-apps-create:first-of-type {
+      margin-bottom: 20px;
+    }
+  </style>
+</head>
+
+<body>
+  <calcite-shell class="calcite-mode-light">
+    <instant-apps-header id="instant-apps-header" slot="header" title-text="Create"
+      logo-image="https://www.esri.com/content/dam/esrisites/en-us/common/icons/product-logos/arcgis-instant-apps-64.svg"
+      logo-image-alt-text="ArcGIS Instant Apps logo"
+      logo-link="https://www.esri.com/en-us/arcgis/products/arcgis-instant-apps/overview">
+    </instant-apps-header>
+    <calcite-shell-panel slot="panel-start" width-scale="l">
+      <calcite-panel>
+        <div class="panel-content">
+          <instant-apps-create id="create-inline" mode="inline" show-scale-bar="true"> </instant-apps-create>
+          <instant-apps-create id="create-popover" mode="popover"></instant-apps-create>
+        </div>
+      </calcite-panel>
+    </calcite-shell-panel>
+    <div id="viewDiv">
+    </div>
+  </calcite-shell>
+  <script>
+    require(['esri/WebMap','esri/views/MapView','esri/portal/Portal','esri/WebScene','esri/views/SceneView'
+    ],(WebMap,MapView,Portal,WebScene,SceneView) => {
+
+      let portal=new Portal({
+        url: "https://nw-brews.mapsdevext.arcgis.com" // dev test
+      });
+      const map=new WebMap({
+        portalItem: {
+          id: 'c0c59986e2e74d98be80ed493f91de10', // dev test - webmap
+          portal
+        },
+      });
+      const scene=new WebScene({
+        portalItem: {
+          id: 'd8881fc5e49d4bbcbd62ed23a620b89e', // dev test - scene
+          portal
+        }
+      });
+
+      // let portal=new Portal({
+      //   url: "https://webapps.maps.arcgis.com" // prod test
+      // });
+
+      // const map=new WebMap({
+      //   portalItem: {
+      //     id: '5e18b96373f5449f8ec55cb62e9cacc4', // prod test - webmap
+      //     portal
+      //   },
+      // });
+      // const scene=new WebScene({
+      //   portalItem: {
+      //     id: '390dcc3c566d4b03b4583abc9f11c185', // prod test - scene
+      //     portal
+      //   }
+      // });
+
+      // const view=new MapView({
+      //   map: map,
+      //   container: 'viewDiv',
+      // });
+
+      const view=new SceneView({
+        map: scene,
+        container: 'viewDiv',
+      });
+
+      view.when(async () => {
+        await view.map.loadAll();
+        map.load();
+
+        const createPopover=document.getElementById('create-popover');
+        createPopover.portal=portal;
+        createPopover.content=scene;
+
+        const createInline=document.getElementById('create-inline');
+        createInline.portal=portal;
+        createInline.content=scene;
+      });
+    });
+  </script>
+</body>
+
+</html>

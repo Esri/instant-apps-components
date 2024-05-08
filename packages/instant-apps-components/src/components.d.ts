@@ -5,16 +5,18 @@
  * It contains typing information for all components that exist in this project.
  */
 import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
-import { ActiveTool, ControlPanelComponent, ExportOutput, ExtentSelector, IClassicEditor, IMeasureConfiguration, InstantAppsPopoverMessageOverrides, IPortal, LayerExpression, PopoverPlacement } from "./interfaces/interfaces";
+import { ActiveTool, ControlPanelComponent, CreateOption, ExportOutput, ExtentSelector, IClassicEditor, IMeasureConfiguration, InstantAppsPopoverMessageOverrides, IPortal, LayerExpression, PopoverPlacement } from "./interfaces/interfaces";
 import { EditorConfig } from "@ckeditor/ckeditor5-core/src/editor/editorconfig";
+import { PredefinedOptions } from "./components/instant-apps-create/instant-apps-create";
 import { FilterMode } from "./components/instant-apps-interactive-legend/instant-apps-interactive-legend-classic/interfaces/interfaces";
 import { AlignmentPositions } from "./components/instant-apps-landing-page/support/enum";
 import { AppSettings, LocaleItem, LocaleSettingData } from "./components/instant-apps-language-translator/support/interfaces";
 import { InstantAppsPopovers } from "./components/instant-apps-popovers/instant-apps-popovers";
 import { LogicalPlacement } from "@esri/calcite-components/dist/types/utils/floating-ui";
 import { ScoreboardItem, ScoreboardMode, ScoreboardPosition } from "./components/instant-apps-scoreboard/types/interfaces";
-export { ActiveTool, ControlPanelComponent, ExportOutput, ExtentSelector, IClassicEditor, IMeasureConfiguration, InstantAppsPopoverMessageOverrides, IPortal, LayerExpression, PopoverPlacement } from "./interfaces/interfaces";
+export { ActiveTool, ControlPanelComponent, CreateOption, ExportOutput, ExtentSelector, IClassicEditor, IMeasureConfiguration, InstantAppsPopoverMessageOverrides, IPortal, LayerExpression, PopoverPlacement } from "./interfaces/interfaces";
 export { EditorConfig } from "@ckeditor/ckeditor5-core/src/editor/editorconfig";
+export { PredefinedOptions } from "./components/instant-apps-create/instant-apps-create";
 export { FilterMode } from "./components/instant-apps-interactive-legend/instant-apps-interactive-legend-classic/interfaces/interfaces";
 export { AlignmentPositions } from "./components/instant-apps-landing-page/support/enum";
 export { AppSettings, LocaleItem, LocaleSettingData } from "./components/instant-apps-language-translator/support/interfaces";
@@ -42,6 +44,34 @@ export namespace Components {
           * A reference to the MapView or SceneView
          */
         "view": __esri.MapView | __esri.SceneView;
+    }
+    interface InstantAppsCreate {
+        /**
+          * Content item to create with
+         */
+        "content": __esri.WebMap | __esri.WebScene | __esri.PortalGroup | undefined;
+        /**
+          * Renders tool as a popover with a trigger button, or inline to place in a custom container.
+         */
+        "mode": 'popover' | 'inline';
+        "options": (PredefinedOptions | CreateOption)[];
+        /**
+          * Update popover button icon.
+         */
+        "popoverIcon"?: string;
+        /**
+          * Determines where the component will be positioned relative to the `referenceElement`.
+         */
+        "popoverPlacement"?: PopoverPlacement;
+        /**
+          * Determines the type of positioning to use for the overlaid content. Using `"absolute"` will work for most cases. The component will be positioned inside of overflowing parent containers and will affect the container's layout. `"fixed"` value should be used to escape an overflowing parent container, or when the reference element's position CSS property is `"fixed"`.
+         */
+        "popoverPositioning"?: 'absolute' | 'fixed';
+        "portal": __esri.Portal;
+        /**
+          * Show header with title and subtitle
+         */
+        "showHeader"?: boolean;
     }
     interface InstantAppsExport {
         /**
@@ -857,6 +887,12 @@ declare global {
         prototype: HTMLInstantAppsControlPanelElement;
         new (): HTMLInstantAppsControlPanelElement;
     };
+    interface HTMLInstantAppsCreateElement extends Components.InstantAppsCreate, HTMLStencilElement {
+    }
+    var HTMLInstantAppsCreateElement: {
+        prototype: HTMLInstantAppsCreateElement;
+        new (): HTMLInstantAppsCreateElement;
+    };
     interface HTMLInstantAppsExportElementEventMap {
         "exportOutputUpdated": void;
     }
@@ -1184,6 +1220,7 @@ declare global {
     interface HTMLElementTagNameMap {
         "instant-apps-ckeditor-wrapper": HTMLInstantAppsCkeditorWrapperElement;
         "instant-apps-control-panel": HTMLInstantAppsControlPanelElement;
+        "instant-apps-create": HTMLInstantAppsCreateElement;
         "instant-apps-export": HTMLInstantAppsExportElement;
         "instant-apps-filter-list": HTMLInstantAppsFilterListElement;
         "instant-apps-header": HTMLInstantAppsHeaderElement;
@@ -1236,6 +1273,34 @@ declare namespace LocalJSX {
           * A reference to the MapView or SceneView
          */
         "view"?: __esri.MapView | __esri.SceneView;
+    }
+    interface InstantAppsCreate {
+        /**
+          * Content item to create with
+         */
+        "content"?: __esri.WebMap | __esri.WebScene | __esri.PortalGroup | undefined;
+        /**
+          * Renders tool as a popover with a trigger button, or inline to place in a custom container.
+         */
+        "mode"?: 'popover' | 'inline';
+        "options"?: (PredefinedOptions | CreateOption)[];
+        /**
+          * Update popover button icon.
+         */
+        "popoverIcon"?: string;
+        /**
+          * Determines where the component will be positioned relative to the `referenceElement`.
+         */
+        "popoverPlacement"?: PopoverPlacement;
+        /**
+          * Determines the type of positioning to use for the overlaid content. Using `"absolute"` will work for most cases. The component will be positioned inside of overflowing parent containers and will affect the container's layout. `"fixed"` value should be used to escape an overflowing parent container, or when the reference element's position CSS property is `"fixed"`.
+         */
+        "popoverPositioning"?: 'absolute' | 'fixed';
+        "portal"?: __esri.Portal;
+        /**
+          * Show header with title and subtitle
+         */
+        "showHeader"?: boolean;
     }
     interface InstantAppsExport {
         /**
@@ -2002,6 +2067,7 @@ declare namespace LocalJSX {
     interface IntrinsicElements {
         "instant-apps-ckeditor-wrapper": InstantAppsCkeditorWrapper;
         "instant-apps-control-panel": InstantAppsControlPanel;
+        "instant-apps-create": InstantAppsCreate;
         "instant-apps-export": InstantAppsExport;
         "instant-apps-filter-list": InstantAppsFilterList;
         "instant-apps-header": InstantAppsHeader;
@@ -2037,6 +2103,7 @@ declare module "@stencil/core" {
         interface IntrinsicElements {
             "instant-apps-ckeditor-wrapper": LocalJSX.InstantAppsCkeditorWrapper & JSXBase.HTMLAttributes<HTMLInstantAppsCkeditorWrapperElement>;
             "instant-apps-control-panel": LocalJSX.InstantAppsControlPanel & JSXBase.HTMLAttributes<HTMLInstantAppsControlPanelElement>;
+            "instant-apps-create": LocalJSX.InstantAppsCreate & JSXBase.HTMLAttributes<HTMLInstantAppsCreateElement>;
             "instant-apps-export": LocalJSX.InstantAppsExport & JSXBase.HTMLAttributes<HTMLInstantAppsExportElement>;
             "instant-apps-filter-list": LocalJSX.InstantAppsFilterList & JSXBase.HTMLAttributes<HTMLInstantAppsFilterListElement>;
             "instant-apps-header": LocalJSX.InstantAppsHeader & JSXBase.HTMLAttributes<HTMLInstantAppsHeaderElement>;

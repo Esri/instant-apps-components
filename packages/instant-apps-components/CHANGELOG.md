@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## v1.0.0-beta.211
 
+### instant-apps-create
+
+- Instant Apps Create Component
+
+## v1.0.0-beta.211
+
 ### instant-apps-interactive-legend
 
 - Updates to dynamically add/remove/reorder layers

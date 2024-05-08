@@ -272,3 +272,11 @@ export interface ControlPanelComponent {
 export interface IPortal extends __esri.Portal {
   credential: __esri.Credential | null;
 }
+
+// Create
+export interface CreateOption {
+  title: string;
+  img: string;
+  subtitle?: string;
+  href?: string;
+}

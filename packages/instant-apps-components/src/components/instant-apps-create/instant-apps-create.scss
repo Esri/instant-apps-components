@@ -1,0 +1,181 @@
+/**
+* @prop --instant-apps-create-action-background: Popup's trigger button's background color.
+* @prop --instant-apps-create-action-background-hover: Popup's trigger button's background color on hover.
+* @prop --instant-apps-create-action-background-press: Popup's trigger button's background color on press.
+* @prop --instant-apps-create-action-width: Popup's trigger button's width.
+* @prop --instant-apps-create-action-height: Popup's trigger button's height.
+* @prop  --instant-apps-create-action-icon-color: Popup's trigger button's icon color.
+* @prop --instant-apps-create-action-icon-hover-color: Popup's trigger button's icon color when hovered over.
+* @prop --instant-apps-create-background: Create's container background color.
+* @prop --instant-apps-create-text-color: Create's container text color.
+* @prop --instant-apps-create-popover-width: Create's popover container width.
+*/
+
+:host {
+  display: block;
+  --instant-apps-create-action-background: var(--calcite-color-foreground-1);
+  --instant-apps-create-action-background-hover: var(--calcite-color-foreground-2);
+  --instant-apps-create-action-background-press: var(--calcite-color-foreground-3);
+  --instant-apps-create-action-height: 100%;
+  --instant-apps-create-action-width: fit-content;
+  --instant-apps-create-action-icon-color: var(--calcite-color-text-3);
+  --instant-apps-create-action-icon-hover-color: var(--calcite-color-text-1);
+  --instant-apps-create-background: var(--calcite-color-foreground-1);
+  --instant-apps-create-text-color: var(--calcite-color-text-1);
+  --instant-apps-create-popover-width: 450px;
+}
+
+.instant-apps-create {
+  height: 100%;
+
+  * {
+    box-sizing: border-box;
+  }
+
+  &__popover-container,
+  &__inline-container {
+    padding: 1rem 1.5rem;
+    background: var(--instant-apps-create-background);
+    --calcite-color-text-1: var(--instant-apps-create-text-color);
+  }
+
+  &__popover-container {
+    width: var(--instant-apps-create-popover-width);
+  }
+
+  calcite-popover {
+    --calcite-color-foreground-1: var(--instant-apps-create-background);
+  }
+
+  calcite-button:last-of-type {
+    margin-top: 0.5rem;
+  }
+
+  &__header {
+    h3 {
+      margin: 0;
+      font-weight: var(--calcite-font-weight-medium);
+    }
+
+    p {
+      margin: 0;
+      padding: 0 0 0.5rem 0;
+      font-weight: var(--calcite-font-weight-normal);
+    }
+  }
+
+  &__options {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-direction: column;
+  }
+
+  &__option {
+    display: flex;
+
+    color: inherit;
+    text-decoration: inherit;
+    height: fit-content;
+    margin-bottom: 0.5rem;
+
+    &:first-of-type {
+      margin-top: 0.5rem;
+    }
+    &:last-of-type {
+      margin-bottom: 0;
+    }
+
+    cursor: pointer;
+    --calcite-color-text-link: var(--calcite-color-text-1);
+    align-items: stretch;
+    --tw-shadow: 0 0 #0000;
+    --tw-shadow-colored: 0 0 #0000;
+    box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow);
+    outline-offset: 0;
+    outline-color: transparent;
+    transition: outline-offset 100ms ease-in-out, outline-color 100ms ease-in-out;
+
+    &:hover {
+      outline: 1px solid var(--calcite-color-border-1);
+      outline-offset: 2px;
+    }
+  }
+
+  &__option-icon {
+    display: flex;
+
+    background: var(--calcite-color-foreground-2);
+    color: var(--calcite-color-text-1);
+    font-size: 1.25rem;
+    background-color: var(--calcite-color-background);
+
+    justify-content: center;
+    align-items: center;
+
+    flex: 1 1 auto;
+
+    max-width: 5rem;
+    min-width: 5rem;
+    height: auto;
+
+    svg {
+      display: block;
+      overflow-clip-margin: content-box;
+      overflow: hidden;
+    }
+  }
+
+  &__option-text {
+    min-height: 2rem;
+    font-size: 0.75rem;
+    color: var(--calcite-color-text-2);
+    padding: 0.75rem 0 0 0.75rem;
+
+    &-wrapper {
+      display: flex;
+      align-items: center;
+    }
+
+    h3 {
+      margin: 0;
+      font-size: var(--calcite-font-size-0);
+      font-weight: var(--calcite-font-weight-medium);
+    }
+
+    calcite-icon {
+      margin-left: 0.25rem;
+      color: rgb(126, 126, 126);
+
+      --tw-translate-x: 0px;
+      --tw-translate-y: 0;
+      --tw-rotate: 0;
+      --tw-skew-x: 0;
+      --tw-skew-y: 0;
+      --tw-scale-x: 1;
+      --tw-scale-y: 1;
+      transform: translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x))
+        scaleY(var(--tw-scale-y));
+      opacity: 0;
+      transition-property: all;
+      transition-duration: 150ms;
+      transition-timing-function: ease-in-out;
+      transition-delay: 0s;
+    }
+
+    &:hover calcite-icon {
+      opacity: 1;
+      --tw-translate-x: 0.5rem;
+      transform: translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x))
+        scaleY(var(--tw-scale-y));
+    }
+
+    p {
+      margin: 0;
+      font-size: var(--calcite-font-size--1);
+      color: var(--calcite-color-text-3);
+      line-height: 1.35;
+      min-height: 3rem;
+    }
+  }
+}
