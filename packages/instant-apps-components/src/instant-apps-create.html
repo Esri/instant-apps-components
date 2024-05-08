@@ -67,50 +67,63 @@
     </div>
   </calcite-shell>
   <script>
-    require(['esri/WebMap','esri/views/MapView','esri/config','esri/widgets/ScaleBar','esri/widgets/Home', 
-    'esri/portal/Portal'
-  ],(WebMap,MapView,esriConfig,ScaleBar,Home, Portal) => {
-      let portal = new Portal({
-        url: "https://nw-brews.mapsdevext.arcgis.com" 
-      });
+    require(['esri/WebMap','esri/views/MapView','esri/portal/Portal','esri/WebScene','esri/views/SceneView'
+    ],(WebMap,MapView,Portal,WebScene,SceneView) => {
 
-      const map = new WebMap({
+      let portal=new Portal({
+        url: "https://nw-brews.mapsdevext.arcgis.com" // dev test
+      });
+      const map=new WebMap({
         portalItem: {
-          id: 'c0c59986e2e74d98be80ed493f91de10',
+          id: 'c0c59986e2e74d98be80ed493f91de10', // dev test - webmap
           portal
         },
       });
-
-      const url=new URL(window.location.href);
-      const searchParams=url.searchParams;
-      let center=searchParams.get('center');
-      let zoom=searchParams.get('level');
-      if(center) center=center.split(';').map(item => parseFloat(item));
-      if(zoom) zoom=parseInt(zoom);
-
-      const view=new MapView({
-        map,
-        container: 'viewDiv',
-        zoom,
-        center,
+      const scene=new WebScene({
+        portalItem: {
+          id: 'd8881fc5e49d4bbcbd62ed23a620b89e', // dev test - scene
+          portal
+        }
       });
 
-      const sb=new ScaleBar({view,unit: 'dual'});
-      const home=new Home({view});
-      view.ui.add(sb,'bottom-left');
-      view.ui.add(home,'top-left');
+      // let portal=new Portal({
+      //   url: "https://webapps.maps.arcgis.com" // prod test
+      // });
+
+      // const map=new WebMap({
+      //   portalItem: {
+      //     id: '5e18b96373f5449f8ec55cb62e9cacc4', // prod test - webmap
+      //     portal
+      //   },
+      // });
+      // const scene=new WebScene({
+      //   portalItem: {
+      //     id: '390dcc3c566d4b03b4583abc9f11c185', // prod test - scene
+      //     portal
+      //   }
+      // });
+
+      // const view=new MapView({
+      //   map: map,
+      //   container: 'viewDiv',
+      // });
+
+      const view=new SceneView({
+        map: scene,
+        container: 'viewDiv',
+      });
 
       view.when(async () => {
         await view.map.loadAll();
-        await map.load();
+        map.load();
+
         const createPopover=document.getElementById('create-popover');
-        createPopover.headerTitle='Instant Apps: Header (Shared Theme)';
-        createPopover.content = map;
-        createPopover.portal = portal;
+        createPopover.portal=portal;
+        createPopover.content=scene;
 
         const createInline=document.getElementById('create-inline');
-        createInline.content = map;
-        createInline.portal = portal;
+        createInline.portal=portal;
+        createInline.content=scene;
       });
     });
   </script>

@@ -69,7 +69,7 @@ export namespace Components {
         "popoverPositioning"?: 'absolute' | 'fixed';
         "portal": __esri.Portal;
         /**
-          * Show header input in export tool.
+          * Show header with title and subtitle
          */
         "showHeader"?: boolean;
     }
@@ -806,10 +806,6 @@ export interface InstantAppsCkeditorWrapperCustomEvent<T> extends CustomEvent<T>
     detail: T;
     target: HTMLInstantAppsCkeditorWrapperElement;
 }
-export interface InstantAppsCreateCustomEvent<T> extends CustomEvent<T> {
-    detail: T;
-    target: HTMLInstantAppsCreateElement;
-}
 export interface InstantAppsExportCustomEvent<T> extends CustomEvent<T> {
     detail: T;
     target: HTMLInstantAppsExportElement;
@@ -891,18 +887,7 @@ declare global {
         prototype: HTMLInstantAppsControlPanelElement;
         new (): HTMLInstantAppsControlPanelElement;
     };
-    interface HTMLInstantAppsCreateElementEventMap {
-        "exportOutputUpdated": void;
-    }
     interface HTMLInstantAppsCreateElement extends Components.InstantAppsCreate, HTMLStencilElement {
-        addEventListener<K extends keyof HTMLInstantAppsCreateElementEventMap>(type: K, listener: (this: HTMLInstantAppsCreateElement, ev: InstantAppsCreateCustomEvent<HTMLInstantAppsCreateElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
-        addEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
-        addEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
-        addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
-        removeEventListener<K extends keyof HTMLInstantAppsCreateElementEventMap>(type: K, listener: (this: HTMLInstantAppsCreateElement, ev: InstantAppsCreateCustomEvent<HTMLInstantAppsCreateElementEventMap[K]>) => any, options?: boolean | EventListenerOptions): void;
-        removeEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
-        removeEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
-        removeEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
     }
     var HTMLInstantAppsCreateElement: {
         prototype: HTMLInstantAppsCreateElement;
@@ -1298,10 +1283,6 @@ declare namespace LocalJSX {
           * Renders tool as a popover with a trigger button, or inline to place in a custom container.
          */
         "mode"?: 'popover' | 'inline';
-        /**
-          * Emits when the instant-apps-create's output prop is updated after the "Export" button is clicked.
-         */
-        "onExportOutputUpdated"?: (event: InstantAppsCreateCustomEvent<void>) => void;
         "options"?: (PredefinedOptions | CreateOption)[];
         /**
           * Update popover button icon.
@@ -1317,7 +1298,7 @@ declare namespace LocalJSX {
         "popoverPositioning"?: 'absolute' | 'fixed';
         "portal"?: __esri.Portal;
         /**
-          * Show header input in export tool.
+          * Show header with title and subtitle
          */
         "showHeader"?: boolean;
     }

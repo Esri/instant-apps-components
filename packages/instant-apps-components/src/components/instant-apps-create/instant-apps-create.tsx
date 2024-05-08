@@ -1,4 +1,4 @@
-import { Component, Element, Event, EventEmitter, h, Host, Prop, State, VNode } from '@stencil/core';
+import { Component, Element, h, Host, Prop, State, VNode, Watch } from '@stencil/core';
 
 import Create_T9N from '../../assets/t9n/instant-apps-create/resources.json';
 import { CreateOption, PopoverPlacement } from '../../interfaces/interfaces';
@@ -20,6 +20,7 @@ const CSS = {
   option: 'instant-apps-create__option',
   optionIcon: 'instant-apps-create__option-icon',
   optionText: 'instant-apps-create__option-text',
+  optionTextWrapper: 'instant-apps-create__option-text-wrapper',
   optionTitle: 'instant-apps-create__option-title',
   optionSubtitle: 'instant-apps-create__option-subtitle',
   optionLink: 'instant-apps-create__option-link',
@@ -56,7 +57,7 @@ export class InstantAppsCreate {
   @Prop() popoverPlacement?: PopoverPlacement = 'auto';
 
   /**
-   * Show header input in export tool.
+   * Show header with title and subtitle
    */
   @Prop() showHeader?: boolean = true;
 
@@ -65,6 +66,13 @@ export class InstantAppsCreate {
    */
   @Prop() content: __esri.WebMap | __esri.WebScene | __esri.PortalGroup | undefined;
 
+  @Watch('content')
+  contentChanged() {
+    Object.keys(this.CreateOptionsLookup).forEach(key => {
+      this.CreateOptionsLookup[key].href = this.hrefLookup(key as PredefinedOptions);
+    });
+  }
+
   @Prop() options: (PredefinedOptions | CreateOption)[] = ['instant-apps', 'map-viewer', 'story-maps', 'experience-builder', 'dashboards'];
 
   @Prop() portal: __esri.Portal;
@@ -72,11 +80,6 @@ export class InstantAppsCreate {
   @State() baseClass = CSS.baseLight;
   @State() messages: typeof Create_T9N = {} as any;
   @State() CreateOptionsLookup: Record<PredefinedOptions, CreateOption>;
-
-  /**
-   * Emits when the instant-apps-create's output prop is updated after the "Export" button is clicked.
-   */
-  @Event() exportOutputUpdated: EventEmitter<void>;
 
   handles: __esri.Handles | null;
   popoverEl: HTMLCalcitePopoverElement;
@@ -152,8 +155,8 @@ export class InstantAppsCreate {
   }
 
   hrefLookup(predefined?: PredefinedOptions): string | undefined {
-    const env = this._getEnvironment(document.location.hostname);
     const portalUrl = this.getBaseUrl(this.portal);
+    const env = this._getEnvironment(portalUrl);
     const contentParam = this.contentHref();
 
     switch (predefined) {
@@ -164,46 +167,45 @@ export class InstantAppsCreate {
       case 'map-viewer':
         return `${portalUrl}/apps/mapviewer/index.html?${contentParam}`;
       case 'story-maps':
-        return `https://storymaps${env === "prod" ? "" : env}.arcgis.com/stories/new?${contentParam}`;
+        return `https://storymaps${env === 'prod' ? '' : env}.arcgis.com/stories/new?${contentParam}`;
       case 'experience-builder':
-        return `https://experience${env === "prod" ? "" : env}.arcgis.com/builder/page/template/?${contentParam}`;
+        return `https://experience${env === 'prod' ? '' : env}.arcgis.com/builder/page/template/?${contentParam}`;
     }
     return '';
   }
 
-  contentHref(){
-    if((this?.content as __esri.WebMap)?.portalItem?.type === "Webmap"){
-      return `?webmap=${(this.content as __esri.WebMap).portalItem.id}`;
-    }else if((this?.content as __esri.WebScene)?.portalItem?.type==="WebScene"){
-      return `?webscene=${(this.content as __esri.WebScene).portalItem.id}`;
-    }else if(typeof(this?.content as __esri.PortalGroup)?.fetchMembers === "function"){
-      return `?group=${(this.content as __esri.PortalGroup).id}`;
-    }else{
-      return "";
+  contentHref() {
+    if ((this?.content as __esri.WebMap)?.portalItem?.type === 'Web Map') {
+      return `webmap=${(this.content as __esri.WebMap).portalItem.id}`;
+    } else if ((this?.content as __esri.WebScene)?.portalItem?.type === 'Web Scene') {
+      return `webscene=${(this.content as __esri.WebScene).portalItem.id}`;
+    } else if (typeof (this?.content as __esri.PortalGroup)?.fetchMembers === 'function') {
+      return `group=${(this.content as __esri.PortalGroup).id}`;
+    } else {
+      return '';
     }
   }
 
   // getBaseUrl
   private getBaseUrl(portal?: __esri.Portal): string {
-  if (!portal) {
-    return "";
+    if (!portal) {
+      return '';
+    }
+    const { customBaseUrl, portalHostname, urlKey } = portal;
+    const { protocol } = location;
+    const url = urlKey ? `${urlKey}.${customBaseUrl}` : portalHostname;
+    return `${protocol}//${url}`;
   }
-  const { customBaseUrl, portalHostname, urlKey } = portal;
-  const { protocol } = location;
-  const url = urlKey ? `${urlKey}.${customBaseUrl}` : portalHostname;
-  return `${protocol}//${url}`;
-}
 
-  private _getEnvironment(hostname: string): "dev" | "qa" | "prod" {
-    const h = hostname.replace("www.", "");
-    if (document.location.hostname.indexOf("arcgis.com") === -1) {
-      return "dev";
+  private _getEnvironment(url: string): 'dev' | 'qa' | 'prod' {
+    let hostname: any = null;
+    try {
+      hostname = new URL(url)?.hostname;
+    } catch (e) {}
+    if (hostname == null || hostname.indexOf('arcgis.com') === -1) {
+      return 'dev';
     } else {
-      return (
-        (h === "arcgis.com" && "prod") ||
-        (h === "qaext.arcgis.com" && "qa") ||
-        "dev"
-      );
+      return (hostname.indexOf('devext') !== -1 && 'dev') || (hostname.indexOf('qaext') !== -1 && 'qa') || 'prod';
     }
   }
 
@@ -219,13 +221,7 @@ export class InstantAppsCreate {
       >
         {panel}
       </calcite-popover>,
-      <calcite-action
-        id="create-popover-btn"
-        alignment="center"
-        icon={this.popoverIcon}
-        title={this.messages?.create}
-        text={this.messages?.create}
-      ></calcite-action>,
+      <calcite-action id="create-popover-btn" alignment="center" icon={this.popoverIcon} title={this.messages?.create} text={this.messages?.create}></calcite-action>,
     ];
   }
 
@@ -245,7 +241,7 @@ export class InstantAppsCreate {
     const { create, createSubheading } = this.messages;
     return (
       <div class={CSS.header}>
-        <h2>{create}</h2>
+        <h3>{create}</h3>
         <p>{createSubheading}</p>
       </div>
     );
@@ -264,7 +260,10 @@ export class InstantAppsCreate {
       <a class={CSS.option} href={href} target="_blank">
         <span class={CSS.optionIcon} innerHTML={img}></span>
         <span class={CSS.optionText}>
-          <h3 class={CSS.optionTitle}>{title}</h3>
+          <span class={CSS.optionTextWrapper}>
+            <h3 class={CSS.optionTitle}>{title}</h3>
+            <calcite-icon scale="s" icon="launch"></calcite-icon>
+          </span>
           <p class={CSS.optionSubtitle}>{subtitle}</p>
         </span>
       </a>
