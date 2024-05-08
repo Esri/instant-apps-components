@@ -9,6 +9,7 @@ import type { JSX } from '@esri/instant-apps-components';
 
 export const InstantAppsCkeditorWrapper = /*@__PURE__*/createReactComponent<JSX.InstantAppsCkeditorWrapper, HTMLInstantAppsCkeditorWrapperElement>('instant-apps-ckeditor-wrapper');
 export const InstantAppsControlPanel = /*@__PURE__*/createReactComponent<JSX.InstantAppsControlPanel, HTMLInstantAppsControlPanelElement>('instant-apps-control-panel');
+export const InstantAppsCreate = /*@__PURE__*/createReactComponent<JSX.InstantAppsCreate, HTMLInstantAppsCreateElement>('instant-apps-create');
 export const InstantAppsExport = /*@__PURE__*/createReactComponent<JSX.InstantAppsExport, HTMLInstantAppsExportElement>('instant-apps-export');
 export const InstantAppsFilterList = /*@__PURE__*/createReactComponent<JSX.InstantAppsFilterList, HTMLInstantAppsFilterListElement>('instant-apps-filter-list');
 export const InstantAppsHeader = /*@__PURE__*/createReactComponent<JSX.InstantAppsHeader, HTMLInstantAppsHeaderElement>('instant-apps-header');
