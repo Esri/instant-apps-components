@@ -8,7 +8,7 @@
 
 import { Component, Element, h, Host, Prop, State, VNode, Watch } from '@stencil/core';
 
-import Create_T9N from '../../assets/t9n/instant-apps-create/resources.json';
+// import Create_T9N from '../../assets/t9n/instant-apps-create/resources.json';
 import { CreateOption, PopoverPlacement } from '../../interfaces/interfaces';
 import { getMessages } from '../../utils/locale';
 import { loadModules } from '../../utils/loadModules';
@@ -86,11 +86,11 @@ export class InstantAppsCreate {
   @Prop() portal: __esri.Portal;
 
   @State() baseClass = CSS.baseLight;
-  @State() messages: typeof Create_T9N = {} as any;
+  @State() messages: any = {} as any;
   @State() CreateOptionsLookup: Record<PredefinedOptions, CreateOption>;
 
   handles: __esri.Handles | null;
-  popoverEl: HTMLCalcitePopoverElement;
+  popoverEl: any;
 
   componentWillLoad() {
     this.baseClass = getMode(this.el) === 'dark' ? CSS.baseDark : CSS.baseLight;
