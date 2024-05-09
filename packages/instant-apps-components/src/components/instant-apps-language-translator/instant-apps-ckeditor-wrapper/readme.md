@@ -5,11 +5,11 @@
 
 ## Properties
 
-| Property         | Attribute | Description                            | Type             | Default     |
-| ---------------- | --------- | -------------------------------------- | ---------------- | ----------- |
-| `config`         | --        |                                        | `EditorConfig`   | `undefined` |
-| `editorInstance` | --        | Instance of text editor                | `IClassicEditor` | `undefined` |
-| `value`          | `value`   | Current value of text editor instance. | `string`         | `undefined` |
+| Property         | Attribute         | Description                            | Type           | Default     |
+| ---------------- | ----------------- | -------------------------------------- | -------------- | ----------- |
+| `config`         | --                |                                        | `EditorConfig` | `undefined` |
+| `editorInstance` | `editor-instance` | Instance of text editor                | `any`          | `undefined` |
+| `value`          | `value`           | Current value of text editor instance. | `string`       | `undefined` |
 
 
 ## Events
