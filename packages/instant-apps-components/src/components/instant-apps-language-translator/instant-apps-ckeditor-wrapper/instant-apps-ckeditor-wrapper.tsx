@@ -33,7 +33,7 @@ export class InstantAppsCkeditorWrapper {
   @Prop({
     mutable: true,
   })
-  editorInstance: IClassicEditor;
+  editorInstance: any;
 
   @Prop()
   config: EditorConfig;
@@ -91,7 +91,7 @@ export class InstantAppsCkeditorWrapper {
     }
   }
 
-  async createEditor(): Promise<IClassicEditor | null> {
+  async createEditor(): Promise<any> {
     try {
       let editor: IClassicEditor;
       if (this.config) {
@@ -107,7 +107,7 @@ export class InstantAppsCkeditorWrapper {
     }
   }
 
-  getEditorFocusedCallback(editor: IClassicEditor): GetCallback<BaseEvent> {
+  getEditorFocusedCallback(editor: any): GetCallback<BaseEvent> {
     return (_event, _name, _isFocused) => {
       if (!_isFocused) {
         const editorData = editor.getData();

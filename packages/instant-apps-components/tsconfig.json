@@ -23,5 +23,5 @@
     "skipLibCheck": true
   },
   "files": ["node_modules/@esri/calcite-components/dist/types/components.d.ts", "node_modules/arcgis-js-api/index.d.ts"],
-  "include": ["src", "src/**/*.d.ts"]
+  "include": ["src", "src/**/*.d.ts", "dist/**/*.d.ts"],
 }

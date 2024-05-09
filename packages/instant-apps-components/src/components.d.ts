@@ -5,8 +5,8 @@
  * It contains typing information for all components that exist in this project.
  */
 import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
-import { ActiveTool, ControlPanelComponent, CreateOption, ExportOutput, ExtentSelector, IClassicEditor, IMeasureConfiguration, InstantAppsPopoverMessageOverrides, IPortal, LayerExpression, PopoverPlacement } from "./interfaces/interfaces";
 import { EditorConfig } from "@ckeditor/ckeditor5-core/src/editor/editorconfig";
+import { ActiveTool, ControlPanelComponent, CreateOption, ExportOutput, ExtentSelector, IMeasureConfiguration, InstantAppsPopoverMessageOverrides, IPortal, LayerExpression, PopoverPlacement } from "./interfaces/interfaces";
 import { PredefinedOptions } from "./components/instant-apps-create/instant-apps-create";
 import { FilterMode } from "./components/instant-apps-interactive-legend/instant-apps-interactive-legend-classic/interfaces/interfaces";
 import { AlignmentPositions } from "./components/instant-apps-landing-page/support/enum";
@@ -14,8 +14,8 @@ import { AppSettings, LocaleItem, LocaleSettingData } from "./components/instant
 import { InstantAppsPopovers } from "./components/instant-apps-popovers/instant-apps-popovers";
 import { LogicalPlacement } from "@esri/calcite-components/dist/types/utils/floating-ui";
 import { ScoreboardItem, ScoreboardMode, ScoreboardPosition } from "./components/instant-apps-scoreboard/types/interfaces";
-export { ActiveTool, ControlPanelComponent, CreateOption, ExportOutput, ExtentSelector, IClassicEditor, IMeasureConfiguration, InstantAppsPopoverMessageOverrides, IPortal, LayerExpression, PopoverPlacement } from "./interfaces/interfaces";
 export { EditorConfig } from "@ckeditor/ckeditor5-core/src/editor/editorconfig";
+export { ActiveTool, ControlPanelComponent, CreateOption, ExportOutput, ExtentSelector, IMeasureConfiguration, InstantAppsPopoverMessageOverrides, IPortal, LayerExpression, PopoverPlacement } from "./interfaces/interfaces";
 export { PredefinedOptions } from "./components/instant-apps-create/instant-apps-create";
 export { FilterMode } from "./components/instant-apps-interactive-legend/instant-apps-interactive-legend-classic/interfaces/interfaces";
 export { AlignmentPositions } from "./components/instant-apps-landing-page/support/enum";
@@ -29,7 +29,7 @@ export namespace Components {
         /**
           * Instance of text editor
          */
-        "editorInstance": IClassicEditor;
+        "editorInstance": any;
         /**
           * Current value of text editor instance.
          */
@@ -1256,7 +1256,7 @@ declare namespace LocalJSX {
         /**
           * Instance of text editor
          */
-        "editorInstance"?: IClassicEditor;
+        "editorInstance"?: any;
         "onDataChanged"?: (event: InstantAppsCkeditorWrapperCustomEvent<string>) => void;
         "onIsFocused"?: (event: InstantAppsCkeditorWrapperCustomEvent<{ fieldName: string; isFocused: boolean }>) => void;
         /**
