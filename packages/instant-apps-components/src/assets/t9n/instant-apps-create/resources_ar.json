@@ -1,0 +1,16 @@
+{
+  "create": "بيت_Create_____________لاحقة",
+  "createSubheading": "بيت_Create an app with your map____________________________لاحقة",
+  "mapViewer": "بيت_Map Viewer_____________________لاحقة",
+  "mapViewerDesc": "بيت_Explore and transform data into interactive and impactful web maps___________________________________لاحقة.",
+  "mapViewerDesc_archive": "بيت_An interactive web mapping application for creating, exploring, and saving web maps___________________________________________لاحقة.",
+  "arcgisStoryMaps": "بيت_ArcGIS StoryMaps_________________لاحقة",
+  "storyMaps": "بيت_Story Maps_____________________لاحقة",
+  "storyMapsDesc": "بيت_Tell a story by combining maps with narrative text and media________________________________لاحقة.",
+  "instantApps": "بيت_Instant Apps_____________لاحقة",
+  "instantAppsDesc": "بيت_Choose an app to provide a focused experience using your map________________________________لاحقة.",
+  "dashboards": "بيت_Dashboards_____________________لاحقة",
+  "dashboardsDesc": "بيت_Create a dashboard with data visualizations that provide key insights____________________________________لاحقة.",
+  "experienceBuilder": "بيت_Experience Builder___________________لاحقة",
+  "experienceBuilderDesc": "بيت_Use a template or start from scratch to create the exact web experience you want__________________________________________لاحقة."
+}

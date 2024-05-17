@@ -1,0 +1,16 @@
+{
+  "create": "ng_Create_____________ny",
+  "createSubheading": "ng_Create an app with your map____________________________ny",
+  "mapViewer": "ng_Map Viewer_____________________ny",
+  "mapViewerDesc": "ng_Explore and transform data into interactive and impactful web maps___________________________________ny.",
+  "mapViewerDesc_archive": "ng_An interactive web mapping application for creating, exploring, and saving web maps___________________________________________ny.",
+  "arcgisStoryMaps": "ng_ArcGIS StoryMaps_________________ny",
+  "storyMaps": "ng_Story Maps_____________________ny",
+  "storyMapsDesc": "ng_Tell a story by combining maps with narrative text and media________________________________ny.",
+  "instantApps": "ng_Instant Apps_____________ny",
+  "instantAppsDesc": "ng_Choose an app to provide a focused experience using your map________________________________ny.",
+  "dashboards": "ng_Dashboards_____________________ny",
+  "dashboardsDesc": "ng_Create a dashboard with data visualizations that provide key insights____________________________________ny.",
+  "experienceBuilder": "ng_Experience Builder___________________ny",
+  "experienceBuilderDesc": "ng_Use a template or start from scratch to create the exact web experience you want__________________________________________ny."
+}
