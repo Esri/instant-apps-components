@@ -1,0 +1,16 @@
+{
+  "create": "試_Create_____________驗",
+  "createSubheading": "試_Create an app with your map____________________________驗",
+  "mapViewer": "試_Map Viewer_____________________驗",
+  "mapViewerDesc": "試_Explore and transform data into interactive and impactful web maps___________________________________驗.",
+  "mapViewerDesc_archive": "試_An interactive web mapping application for creating, exploring, and saving web maps___________________________________________驗.",
+  "arcgisStoryMaps": "試_ArcGIS StoryMaps_________________驗",
+  "storyMaps": "試_Story Maps_____________________驗",
+  "storyMapsDesc": "試_Tell a story by combining maps with narrative text and media________________________________驗.",
+  "instantApps": "試_Instant Apps_____________驗",
+  "instantAppsDesc": "試_Choose an app to provide a focused experience using your map________________________________驗.",
+  "dashboards": "試_Dashboards_____________________驗",
+  "dashboardsDesc": "試_Create a dashboard with data visualizations that provide key insights____________________________________驗.",
+  "experienceBuilder": "試_Experience Builder___________________驗",
+  "experienceBuilderDesc": "試_Use a template or start from scratch to create the exact web experience you want__________________________________________驗."
+}

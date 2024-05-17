@@ -123,7 +123,7 @@ export class InstantAppsCreate {
   }
 
   initializePredefinedOptions() {
-    const { instantApps, instantAppsDesc, mapViewer, mapViewerDesc, storyMaps, storyMapsDesc, experienceBuilder, experienceBuilderDesc, dashboards, dashboardsDesc } =
+    const { instantApps, instantAppsDesc, mapViewer, mapViewerDesc, arcgisStoryMaps, storyMapsDesc, experienceBuilder, experienceBuilderDesc, dashboards, dashboardsDesc } =
       this.messages;
 
     this.CreateOptionsLookup = {
@@ -140,7 +140,7 @@ export class InstantAppsCreate {
         href: this.hrefLookup('map-viewer'),
       },
       'story-maps': {
-        title: storyMaps,
+        title: arcgisStoryMaps,
         subtitle: storyMapsDesc,
         img: getProductGlyph('story-maps'),
         href: this.hrefLookup('story-maps'),

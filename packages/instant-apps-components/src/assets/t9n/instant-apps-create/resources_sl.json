@@ -1,0 +1,16 @@
+{
+  "create": "Š_Create_____________č",
+  "createSubheading": "Š_Create an app with your map____________________________č",
+  "mapViewer": "Š_Map Viewer_____________________č",
+  "mapViewerDesc": "Š_Explore and transform data into interactive and impactful web maps___________________________________č.",
+  "mapViewerDesc_archive": "Š_An interactive web mapping application for creating, exploring, and saving web maps___________________________________________č.",
+  "arcgisStoryMaps": "Š_ArcGIS StoryMaps_________________č",
+  "storyMaps": "Š_Story Maps_____________________č",
+  "storyMapsDesc": "Š_Tell a story by combining maps with narrative text and media________________________________č.",
+  "instantApps": "Š_Instant Apps_____________č",
+  "instantAppsDesc": "Š_Choose an app to provide a focused experience using your map________________________________č.",
+  "dashboards": "Š_Dashboards_____________________č",
+  "dashboardsDesc": "Š_Create a dashboard with data visualizations that provide key insights____________________________________č.",
+  "experienceBuilder": "Š_Experience Builder___________________č",
+  "experienceBuilderDesc": "Š_Use a template or start from scratch to create the exact web experience you want__________________________________________č."
+}

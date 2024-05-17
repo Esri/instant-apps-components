@@ -1,0 +1,16 @@
+{
+  "create": "須_Create_____________鷗",
+  "createSubheading": "須_Create an app with your map____________________________鷗",
+  "mapViewer": "須_Map Viewer_____________________鷗",
+  "mapViewerDesc": "須_Explore and transform data into interactive and impactful web maps___________________________________鷗.",
+  "mapViewerDesc_archive": "須_An interactive web mapping application for creating, exploring, and saving web maps___________________________________________鷗.",
+  "arcgisStoryMaps": "須_ArcGIS StoryMaps_________________鷗",
+  "storyMaps": "須_Story Maps_____________________鷗",
+  "storyMapsDesc": "須_Tell a story by combining maps with narrative text and media________________________________鷗.",
+  "instantApps": "須_Instant Apps_____________鷗",
+  "instantAppsDesc": "須_Choose an app to provide a focused experience using your map________________________________鷗.",
+  "dashboards": "須_Dashboards_____________________鷗",
+  "dashboardsDesc": "須_Create a dashboard with data visualizations that provide key insights____________________________________鷗.",
+  "experienceBuilder": "須_Experience Builder___________________鷗",
+  "experienceBuilderDesc": "須_Use a template or start from scratch to create the exact web experience you want__________________________________________鷗."
+}
