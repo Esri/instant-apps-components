@@ -1,12 +1,12 @@
-import { Component, Element, Event, EventEmitter, h, Host, Prop, State, VNode, Watch } from '@stencil/core';
 import { CalciteCheckboxCustomEvent, CalciteInputCustomEvent } from '@esri/calcite-components';
+import { Component, Element, Event, EventEmitter, Host, Prop, State, VNode, Watch, h } from '@stencil/core';
 
 import Export_T9n from '../../assets/t9n/instant-apps-export/resources.json';
 import { ExportOutput, PopoverPlacement } from '../../interfaces/interfaces';
-import { getMessages } from '../../utils/locale';
-import { screenshotStyling, printStyling } from './resources';
 import { loadModules } from '../../utils/loadModules';
+import { getMessages } from '../../utils/locale';
 import { getMode } from '../../utils/mode';
+import { printStyling, screenshotStyling } from './resources';
 
 const CSS = {
   baseDark: 'instant-apps-export calcite-mode-dark',
@@ -167,6 +167,11 @@ export class InstantAppsExport {
     }
   }
 
+  @Watch('view')
+  watchView(): void {
+    this.handleIncludePopup();
+  }
+
   area: __esri.MapViewTakeScreenshotOptionsArea | __esri.MapViewTakeScreenshotOptionsArea | undefined;
   compass: __esri.Compass | null;
   compassContainerEl: HTMLDivElement;
@@ -182,6 +187,7 @@ export class InstantAppsExport {
   printContainerEl: HTMLDivElement;
   printEl: HTMLDivElement;
   printStyleEl: HTMLStyleElement | undefined;
+  reactiveUtils: __esri.reactiveUtils;
   scaleBarContainerEl: HTMLDivElement | null;
   screenshot: __esri.Screenshot | null;
   screenshotPreview: HTMLDivElement;
@@ -192,25 +198,21 @@ export class InstantAppsExport {
   viewContainerEl: HTMLDivElement;
   viewEl: HTMLImageElement;
 
-  componentWillLoad(): void {
+  async componentWillLoad(): Promise<void> {
     this.baseClass = getMode(this.el) === 'dark' ? CSS.baseDark : CSS.baseLight;
     getMessages(this);
-    this.initializeModules();
+    await this.initializeModules();
   }
 
   componentDidLoad(): void {
     this.printContainerEl.prepend(this.printEl);
-  }
-
-  disconnectedCallback(): void {
-    this.handles?.removeAll();
-    this.handles?.destroy();
-    this.handles = null;
+    this.handleIncludePopup();
   }
 
   async initializeModules() {
-    const [Handles] = await loadModules(['esri/core/Handles']);
+    const [Handles, reactiveUtils] = await loadModules(['esri/core/Handles', 'esri/core/reactiveUtils']);
     this.handles = new Handles();
+    this.reactiveUtils = reactiveUtils;
 
     return Promise.resolve();
   }
@@ -505,12 +507,34 @@ export class InstantAppsExport {
   }
 
   handleWidgetCreation(): void {
-    this.handleLegendCreation();
-    this.handleCompassCreation();
+    if (this.includeMap) {
+      this.handleLegendCreation();
+      this.handleCompassCreation();
+    }
+  }
+
+  handleIncludePopup(): void {
+    if (this.showIncludePopup) {
+      const handleId = 'includePopup';
+      this.handles?.remove(handleId);
+      this.reactiveUtils
+        ?.whenOnce(() => this.view?.ready)
+        .then(() => {
+          this.handles?.add(
+            this.reactiveUtils.watch(
+              () => this.view?.popup?.visible,
+              (visible: boolean) => {
+                this.includePopup = visible;
+              },
+            ),
+            handleId,
+          );
+        });
+    }
   }
 
   handleLegendCreation(): void {
-    if (this.includeMap && this.view != null && this.showIncludeLegend && this.legendContainerEl != null) {
+    if (this.view != null && this.showIncludeLegend && this.legendContainerEl != null) {
       const map = this.view.map as __esri.WebMap | __esri.WebScene;
       const legendMap = this.legend?.view?.map as __esri.WebMap | __esri.WebScene;
       const checkId = map?.portalItem?.id != null && map?.portalItem?.id === legendMap?.portalItem?.id;
@@ -544,7 +568,7 @@ export class InstantAppsExport {
   }
 
   handleCompassCreation(): void {
-    if (this.includeMap && this.view != null && this.compassContainerEl != null) {
+    if (this.view != null && this.compassContainerEl != null) {
       const map = this.view.map as __esri.WebMap | __esri.WebScene;
       const compassMap = this.compass?.view?.map as __esri.WebMap | __esri.WebScene;
       const checkId = map?.portalItem?.id === compassMap?.portalItem?.id;

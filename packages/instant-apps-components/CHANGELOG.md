@@ -5,6 +5,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## v1.0.0-beta.220
+
+### instant-apps-export
+
+- Add check for popup and turn includePopover switch on when there is one visible
+
 ## v1.0.0-beta.219
 
 ### instant-apps-create
@@ -21,7 +27,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### instant-apps-social-share
 
-- Remove width and height attributes from 'X' svg. 
+- Remove width and height attributes from 'X' svg.
 
 ## v1.0.0-beta.216
 
