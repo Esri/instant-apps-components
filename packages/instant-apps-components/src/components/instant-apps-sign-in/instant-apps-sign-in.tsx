@@ -1,9 +1,9 @@
 import { Component, Element, Host, Prop, State, Watch, h } from '@stencil/core';
 
-import { loadModules } from '../../utils/loadModules';
-import { IPortal } from '../../interfaces/interfaces';
-import { getMessages } from '../../utils/locale';
 import SignIn_T9n from '../../assets/t9n/instant-apps-sign-in/resources.json';
+import { IPortal } from '../../interfaces/interfaces';
+import { loadModules } from '../../utils/loadModules';
+import { getMessages } from '../../utils/locale';
 
 const CSS = {
   base: 'instant-apps-sign-in__container',
@@ -156,10 +156,8 @@ export class InstantAppsSignIn {
         <h2>{this.subtitleText}</h2>
         <p>{this.descriptionText}</p>
         <div class={CSS.landingBtn}>
-          <calcite-button onClick={this.landingPageSignIn.bind(this)} icon-start="sign-in">
-            {this.messages?.signIn}
-          </calcite-button>
-          <calcite-button onClick={this.guestOnClick.bind(this)} icon-start="sign-in" appearance="outline">
+          <calcite-button onClick={this.landingPageSignIn.bind(this)}>{this.messages?.signIn}</calcite-button>
+          <calcite-button onClick={this.guestOnClick.bind(this)} appearance="outline">
             {this.messages?.continueAsGuest}
           </calcite-button>
         </div>
@@ -192,8 +190,7 @@ export class InstantAppsSignIn {
 
   signIn() {
     if (this.landingPage) {
-      const date = new Date();
-      localStorage.setItem('signing-in', date.getTime().toString());
+      this.setSignInLocalStorage();
     }
     this.idManager
       .getCredential(this.info.portalUrl + '/sharing', {
@@ -214,8 +211,7 @@ export class InstantAppsSignIn {
 
   landingPageSignIn() {
     if (!this.isSignedIn) {
-      const date = new Date();
-      localStorage.setItem('signing-in', date.getTime().toString());
+      this.setSignInLocalStorage();
       this.signIn();
     } else if (this.closeLandingPage != null) {
       this.closeLandingPage();
@@ -250,5 +246,14 @@ export class InstantAppsSignIn {
         this.isSignedIn = credential != null;
       }),
     );
+  }
+
+  setSignInLocalStorage() {
+    const date = new Date();
+    localStorage.setItem('signing-in', date.getTime().toString());
+    // remove from local storage if page doens't immediately redirect to sign in
+    setTimeout(() => {
+      localStorage.removeItem('signing-in');
+    }, 2000);
   }
 }

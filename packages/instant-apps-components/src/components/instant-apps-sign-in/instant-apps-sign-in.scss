@@ -66,14 +66,18 @@
     color: #151515;
     text-align: center;
 
-    h1,
-    h2,
-    p {
-      font-size: 16px;
+    h1 {
+      font-size: 22px;
+      margin: 10px 0;
     }
 
-    h2,
+    h2 {
+      font-size: 16px;
+      margin: 0 0 10px;
+    }
+
     p {
+      font-size: 16px;
       margin: 0;
     }
   }
@@ -92,6 +96,17 @@
 
     calcite-button:hover {
       filter: contrast(0.8);
+    }
+
+    @media screen and (max-width: 767px) {
+      flex-direction: column;
+      width: 100%;
+      align-items: center;
+      height: 76px;
+
+      calcite-button {
+        width: 100%;
+      }
     }
   }
 }
