@@ -1,7 +1,7 @@
-import { Component, Element, Prop, h, Host, Event, EventEmitter, Watch } from '@stencil/core';
-import { AlignmentPositions } from './support/enum';
-import { getFontFamily } from '../../utils/styles';
+import { Component, Element, Event, EventEmitter, Host, Prop, Watch, h } from '@stencil/core';
 import { IPortal } from '../../interfaces/interfaces';
+import { getFontFamily } from '../../utils/styles';
+import { AlignmentPositions } from './support/enum';
 
 const CSS = {
   BASE: 'instant-apps-landing-page',
@@ -133,7 +133,7 @@ export class InstantAppsLandingPage {
    * The registered application id, used to setup sign in capabilities.
    */
   @Prop()
-  oauthappid!: string;
+  oauthappid: string;
 
   /**
    * Emits when the landing page is opened.
