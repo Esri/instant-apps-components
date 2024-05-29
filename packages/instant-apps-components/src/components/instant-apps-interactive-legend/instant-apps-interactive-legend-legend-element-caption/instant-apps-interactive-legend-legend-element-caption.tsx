@@ -93,7 +93,7 @@ export class InstantAppsInteractiveLegendLegendElementCaption {
           scale="s"
         ></calcite-action>
         {this.isInteractive || isRelationship ? this.renderLegendElementCaptionControls() : null}
-        {this.titleText ? <span class={CSS.layerCaptionText}>{this.titleText}</span> : null}
+        {this.titleText ? <span class={CSS.layerCaptionText} title={this.titleText}>{this.titleText}</span> : null}
       </div>
     );
   }
