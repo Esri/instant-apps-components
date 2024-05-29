@@ -1695,7 +1695,7 @@ declare namespace LocalJSX {
         /**
           * The registered application id, used to setup sign in capabilities.
          */
-        "oauthappid": string;
+        "oauthappid"?: string;
         /**
           * Emits when the landing page is closed.
          */
