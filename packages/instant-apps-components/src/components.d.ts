@@ -717,6 +717,14 @@ export namespace Components {
          */
         "popoverButtonIconScale": 's' | 'm' | 'l';
         /**
+          * Adjusts the overlay-positioning of the popover.
+         */
+        "popoverPositioning": 'absolute' | 'fixed';
+        /**
+          * Remove the pointer and set the vertical offset to 0 for the popover.
+         */
+        "removePopoverOffset": boolean;
+        /**
           * Adjusts the scale of the component.
          */
         "scale": 's' | 'm' | 'l';
@@ -1975,6 +1983,14 @@ declare namespace LocalJSX {
           * Adjusts the scale of the popover button icon.
          */
         "popoverButtonIconScale"?: 's' | 'm' | 'l';
+        /**
+          * Adjusts the overlay-positioning of the popover.
+         */
+        "popoverPositioning"?: 'absolute' | 'fixed';
+        /**
+          * Remove the pointer and set the vertical offset to 0 for the popover.
+         */
+        "removePopoverOffset"?: boolean;
         /**
           * Adjusts the scale of the component.
          */
