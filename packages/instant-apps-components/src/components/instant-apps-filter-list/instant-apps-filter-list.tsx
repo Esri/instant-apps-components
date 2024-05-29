@@ -1,5 +1,5 @@
 import { CalciteCheckboxCustomEvent, CalciteInputDatePickerCustomEvent } from '@esri/calcite-components';
-import { Component, Element, Event, EventEmitter, Host, h, State, Prop, VNode, Watch } from '@stencil/core';
+import { Component, Element, Event, EventEmitter, Host, Prop, State, VNode, Watch, h } from '@stencil/core';
 
 import FilterList_T9n from '../../assets/t9n/instant-apps-filter-list/resources.json';
 
@@ -770,7 +770,11 @@ export class InstantAppsFilterList {
     } else if (type === 'coded-value') {
       update = this.updateCodedValueExpression(expression, layerField);
     } else if (type === 'range') {
-      update = this.updateRangeExpression(expression, layerField);
+      if (expression.displayOption === 'drop-down') {
+        update = await this.updateStringExpression(layerExpression, expression);
+      } else {
+        update = this.updateRangeExpression(expression, layerField);
+      }
     } else if (expression.active && (type === 'checkbox' || type == null)) {
       update = true;
     }

@@ -6,14 +6,14 @@
  *   See use restrictions at http://www.esri.com/legal/pdfs/mla_e204_e300/english
  */
 
-import { Component, h, Prop, State, Element, Host } from '@stencil/core';
+import { Component, Element, Host, Prop, State, h } from '@stencil/core';
 
 import { loadModules } from '../../utils/loadModules';
 
 import SocialShare_T9n from '../../assets/t9n/instant-apps-social-share/resources.json';
 
-import { getMessages } from '../../utils/locale';
 import { LogicalPlacement } from '@esri/calcite-components/dist/types/utils/floating-ui';
+import { getMessages } from '../../utils/locale';
 // import { PopperPlacement } from '@esri/calcite-components/dist/types/utils/popper';
 
 type ShareItemOptions = 'link' | 'facebook' | 'x' | 'linkedIn';
@@ -219,6 +219,22 @@ export class InstantAppsSocialShare {
   @Prop({ reflect: true })
   inlineSuccessPopoverPlacement: LogicalPlacement = 'trailing';
 
+  /**
+   * Adjusts the overlay-positioning of the popover.
+   */
+  @Prop({
+    reflect: true,
+  })
+  popoverPositioning: 'absolute' | 'fixed' = 'absolute';
+
+  /**
+   * Remove the pointer and set the vertical offset to 0 for the popover.
+   */
+  @Prop({
+    reflect: true,
+  })
+  removePopoverOffset: boolean = false;
+
   // INTERNAL STATE
   // T9N
   @State() messages: typeof SocialShare_T9n;
@@ -347,7 +363,8 @@ export class InstantAppsSocialShare {
         {content}
       </div>
     );
-
+    const defaultOffset = 6;
+    const offsetDistance = this.removePopoverOffset ? 0 : defaultOffset;
     return (
       <Host>
         {this.mode === 'popover'
@@ -358,6 +375,9 @@ export class InstantAppsSocialShare {
                 referenceElement="shareButton"
                 placement="bottom-start"
                 scale={this.scale}
+                overlay-positioning={this.popoverPositioning}
+                offset-distance={offsetDistance}
+                pointer-disabled={this.removePopoverOffset}
               >
                 {dialogContent}
               </calcite-popover>,
