@@ -67,6 +67,11 @@
  */
   --instant-apps-header-logo-height--logo-scale--l: 60px;
 
+  /**
+ * @prop --instant-apps-header-actions-end-height: Height for actions-end-container. Default: auto;
+ */
+  --instant-apps-header-actions-end-height: auto;
+
   width: 100%;
 
   .image.image_resized {
@@ -190,6 +195,7 @@
   }
 
   .instant-apps-header__actions-end-container {
+    height: var(--instant-apps-header-actions-end-height);
     display: flex;
   }
 
