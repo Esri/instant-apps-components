@@ -59,6 +59,7 @@ The header component includes custom CSS properties to adjust the style of the h
 
 | Name                                               | Description                                                                       |
 | -------------------------------------------------- | --------------------------------------------------------------------------------- |
+| `--instant-apps-header-actions-end-height`         | Height for actions-end-container. Default: auto;                                  |
 | `--instant-apps-header-height`                     | Height for header. Default: auto;                                                 |
 | `--instant-apps-header-height--logo-scale--l`      | Header height when logo scale is set to 'l'. Default value is 80px.               |
 | `--instant-apps-header-height--logo-scale--m`      | Header height when logo scale is set to 'm'. Default value is 70px.               |
