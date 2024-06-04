@@ -356,8 +356,8 @@ export class InstantAppsFilterList {
           <calcite-input-date-picker
             id={expression?.id.toString()}
             onCalciteInputDatePickerChange={this.handleDatePickerRangeChange.bind(this, expression, layerExpression)}
-            min={min}
-            max={max}
+            min={min as string}
+            max={max as string}
             overlay-positioning="fixed"
             lang={this.locale ?? 'en'}
             layout="vertical"
