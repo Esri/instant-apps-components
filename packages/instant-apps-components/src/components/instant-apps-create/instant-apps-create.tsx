@@ -224,6 +224,8 @@ export class InstantAppsCreate {
         placement={this.popoverPlacement}
         autoClose
         ref={(el: HTMLCalcitePopoverElement) => (this.popoverEl = el)}
+        // HARDCODED IN EN
+        label="Create panel"
       >
         {panel}
       </calcite-popover>,

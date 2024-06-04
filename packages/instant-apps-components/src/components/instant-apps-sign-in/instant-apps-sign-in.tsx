@@ -140,7 +140,7 @@ export class InstantAppsSignIn {
   }
 
   renderSignInButton() {
-    const appearance = this.type === 'navigation' ? 'transparent' : 'brand';
+    const appearance = this.type === 'navigation' ? 'transparent' : 'solid';
     const className = this.type === 'navigation' ? CSS.SignInBtn : '';
     return (
       <calcite-button class={className} onClick={this.signIn.bind(this)} scale="s" icon-start="sign-in" appearance={appearance}>
