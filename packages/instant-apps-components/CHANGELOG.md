@@ -9,7 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### instant-apps-interactive-legend
 
-- Create helper function to flatten ACLs to properly generate data
+- Create helper function to flatten active layer infos to properly generate data
 - Correctly pass in extent object for zoomTo button.
 
 ### General

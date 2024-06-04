@@ -849,11 +849,11 @@ export class InstantAppsInteractiveLegendClassic {
     const data = store.get('data');
     const dataForLayer = data?.[fLayer?.id];
 
-    const ACLs = getAllActiveLayerInfos(this.legendvm?.activeLayerInfos);
-    const acl = ACLs?.find(acl => acl?.layer?.id === fLayer?.id);
+    const ALIs = getAllActiveLayerInfos(this.legendvm?.activeLayerInfos);
+    const ali = ALIs?.find(ali => ali?.layer?.id === fLayer?.id);
 
-    if (!dataForLayer && acl) {
-      const dataForLayer = (await createInteractiveLegendDataForLayer(this.legendvm, acl, this.reactiveUtils)) as IIntLegendLayerData;
+    if (!dataForLayer && ali) {
+      const dataForLayer = (await createInteractiveLegendDataForLayer(this.legendvm, ali, this.reactiveUtils)) as IIntLegendLayerData;
       updateStore({ intLegendLayerData: dataForLayer, layerId: fLayer?.id });
       if (this.featureCount) {
         const data = await handleFeatureCount(this.legendvm, interactiveLegendState.data);
