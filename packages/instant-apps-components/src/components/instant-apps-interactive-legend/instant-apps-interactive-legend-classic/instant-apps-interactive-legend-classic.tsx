@@ -24,6 +24,7 @@ import {
   getTheme,
   updateStore,
   handleFilterChange,
+  getAllActiveLayerInfos,
 } from '../support/helpers';
 
 import { loadModules } from '../../../utils/loadModules';
@@ -847,7 +848,10 @@ export class InstantAppsInteractiveLegendClassic {
   async createDataForLayer(fLayer): Promise<void> {
     const data = store.get('data');
     const dataForLayer = data?.[fLayer?.id];
-    const acl = this.legendvm?.activeLayerInfos?.find(acl => acl?.layer?.id === fLayer?.id);
+
+    const ACLs = getAllActiveLayerInfos(this.legendvm?.activeLayerInfos);
+    const acl = ACLs?.find(acl => acl?.layer?.id === fLayer?.id);
+
     if (!dataForLayer && acl) {
       const dataForLayer = (await createInteractiveLegendDataForLayer(this.legendvm, acl, this.reactiveUtils)) as IIntLegendLayerData;
       updateStore({ intLegendLayerData: dataForLayer, layerId: fLayer?.id });

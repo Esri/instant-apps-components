@@ -525,8 +525,19 @@ export function validateInteractivity(activeLayerInfo: __esri.ActiveLayerInfo, l
 
   const isDotDensity = authoringInfoType === 'dot-density';
 
+  const fieldExists = checkIfFieldExists(activeLayerInfo?.layer as __esri.FeatureLayer, field);
+
   const isValidated =
-    isFeatureLayer && !hasClustering && !opacityRamp && !heatmapRamp && !singleSymbolColor && !singleSymbolSize && !isUnclassifiedSizeRamp && !isBinning && !isDotDensity
+    isFeatureLayer &&
+    !hasClustering &&
+    !opacityRamp &&
+    !heatmapRamp &&
+    !singleSymbolColor &&
+    !singleSymbolSize &&
+    !isUnclassifiedSizeRamp &&
+    !isBinning &&
+    !isDotDensity &&
+    fieldExists
       ? classBreakInfos
         ? moreThanOneClassBreak || validate
         : oneClassBreak || validate
@@ -614,8 +625,8 @@ export async function zoomTo(data: IIntLegendLayerData, view: __esri.MapView, ne
   }
 
   try {
-    const geometry = await data?.fLayerView?.layer?.queryExtent(query);
-    await view.goTo(geometry);
+    const { extent } = await data?.fLayerView?.layer?.queryExtent(query);
+    await view.goTo(extent);
   } catch {}
 }
 
@@ -642,6 +653,10 @@ export async function getInfoCount(
   nestedUniqueSymbolInfoIndex?: number,
 ): Promise<{ [categoryId: string]: number | null } | null | undefined> {
   if (!fLayerView) return;
+
+  const fieldExists = checkIfFieldExists(fLayerView?.layer, field);
+  if (!fieldExists) return;
+
   const query = fLayerView?.layer?.type === 'feature' ? fLayerView.createQuery() : null;
 
   const where = checkPredominance(fLayerView)
@@ -839,7 +854,8 @@ export function updateStore(layerData: { intLegendLayerData: IIntLegendLayerData
   if (layerData.layerId && layerData.intLegendLayerData) {
     const layerId = layerData.layerId;
     const layerDataToSet = layerData.intLegendLayerData;
-    store.set('data', { ...interactiveLegendState.data, [layerId]: layerDataToSet });
+    const data = { ...interactiveLegendState.data, [layerId]: layerDataToSet };
+    store.set('data', data);
   }
 }
 
@@ -887,4 +903,25 @@ function updateExistingFilterToFeatureEffect(filterMode: FilterMode, view: __esr
 
 function getExistingFilter(fLayerView: __esri.FeatureLayerView): __esri.FeatureFilter {
   return fLayerView?.filter || fLayerView?.featureEffect?.filter;
+}
+
+function checkIfFieldExists(fLayer: __esri.FeatureLayer, field: string) {
+  const fields = fLayer?.fields;
+  const fieldNames = fields && fields.map(field => field.name);
+  return fieldNames && fieldNames.includes(field);
+}
+
+export function getAllActiveLayerInfos(activeLayerInfos: __esri.Collection<__esri.ActiveLayerInfo>) {
+  const arr: __esri.ActiveLayerInfo[] = [];
+  activeLayerInfos.forEach(acl => flattenActiveLayerInfos(acl, arr));
+  return arr;
+}
+
+function flattenActiveLayerInfos(activeLayerInfo: __esri.ActiveLayerInfo, arr: __esri.ActiveLayerInfo[]) {
+  arr.push(activeLayerInfo);
+  if (activeLayerInfo.children && activeLayerInfo.children.length > 0) {
+    activeLayerInfo.children.forEach(child => {
+      flattenActiveLayerInfos(child, arr);
+    });
+  }
 }
