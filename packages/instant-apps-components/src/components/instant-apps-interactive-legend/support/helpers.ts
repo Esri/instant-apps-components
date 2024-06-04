@@ -614,8 +614,8 @@ export async function zoomTo(data: IIntLegendLayerData, view: __esri.MapView, ne
   }
 
   try {
-    const geometry = await data?.fLayerView?.layer?.queryExtent(query);
-    await view.goTo(geometry);
+    const { extent } = await data?.fLayerView?.layer?.queryExtent(query);
+    await view.goTo(extent);
   } catch {}
 }
 
