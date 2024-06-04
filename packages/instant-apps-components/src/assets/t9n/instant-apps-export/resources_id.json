@@ -7,6 +7,8 @@
   "includeLegend": "Sertakan legenda",
   "includeMap": "Sertakan peta",
   "includePopup": "Sertakan popup",
+  "returnToMap": "Kembali ke peta",
+  "setMapArea": "Atur area peta",
   "title": "Judul",
   "toggleExport": "Aktifkan/Nonaktifkan Ekspor"
 }

@@ -7,6 +7,8 @@
   "includeLegend": "Inclou la llegenda",
   "includeMap": "Inclou un mapa",
   "includePopup": "Inclou un element emergent",
+  "returnToMap": "Torna al mapa",
+  "setMapArea": "Defineix l'àrea del mapa",
   "title": "Títol",
   "toggleExport": "Activa o desactiva l'exportació"
 }

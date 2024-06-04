@@ -7,6 +7,8 @@
   "includeLegend": "Vključi legendo",
   "includeMap": "Vključi karto",
   "includePopup": "Vključi pojavno okno",
+  "returnToMap": "Nazaj na karto",
+  "setMapArea": "Nastavi območje karte",
   "title": "Naslov",
   "toggleExport": "Preklopi izvoz"
 }

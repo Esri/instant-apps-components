@@ -7,6 +7,8 @@
   "includeLegend": "Incluir legenda",
   "includeMap": "Incluir mapa",
   "includePopup": "Incluir pop-up",
+  "returnToMap": "Retornar ao mapa",
+  "setMapArea": "Definir área do mapa",
   "title": "Título",
   "toggleExport": "Alternar Exportação"
 }

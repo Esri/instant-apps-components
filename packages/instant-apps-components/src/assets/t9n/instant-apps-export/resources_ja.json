@@ -7,6 +7,8 @@
   "includeLegend": "凡例を含める",
   "includeMap": "マップを含める",
   "includePopup": "ポップアップを含める",
+  "returnToMap": "マップに戻る",
+  "setMapArea": "マップ エリアの設定",
   "title": "タイトル",
   "toggleExport": "エクスポートの切り替え"
 }

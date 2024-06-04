@@ -7,6 +7,8 @@
   "includeLegend": "כלול מקרא",
   "includeMap": "כלול מפה",
   "includePopup": "כלול חלון קופץ",
+  "returnToMap": "חזור למפה",
+  "setMapArea": "הגדר אזור מפה",
   "title": "כותרת",
   "toggleExport": "שנה מצב ייצוא"
 }

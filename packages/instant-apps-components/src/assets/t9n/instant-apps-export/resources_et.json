@@ -7,6 +7,8 @@
   "includeLegend": "Kaasa legend",
   "includeMap": "Kaasa kaart",
   "includePopup": "Kaasa hüpikaken",
+  "returnToMap": "Naase kaardile",
+  "setMapArea": "Määra kaardiala",
   "title": "Pealkiri",
   "toggleExport": "Lülita eksport sisse/välja"
 }

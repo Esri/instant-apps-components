@@ -7,6 +7,8 @@
   "includeLegend": "包含图例",
   "includeMap": "包含地图",
   "includePopup": "包含弹出窗口",
+  "returnToMap": "返回到地图",
+  "setMapArea": "设置地图区域",
   "title": "标题",
   "toggleExport": "切换导出"
 }
