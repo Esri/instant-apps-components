@@ -7,6 +7,8 @@
   "includeLegend": "Įtraukti legendą",
   "includeMap": "Įtraukti žemėlapį",
   "includePopup": "Įtraukti iškylantįjį langą",
+  "returnToMap": "Grįžti į žemėlapį",
+  "setMapArea": "Nustatyti žemėlapio sritį",
   "title": "Pavadinimas",
   "toggleExport": "Perjungti eksportavimą"
 }
