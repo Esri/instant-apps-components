@@ -7,6 +7,8 @@
   "includeLegend": "Legende einbeziehen",
   "includeMap": "Karte einbeziehen",
   "includePopup": "Pop-up einbeziehen",
+  "returnToMap": "Zurück zur Karte",
+  "setMapArea": "Kartenbereich festlegen",
   "title": "Titel",
   "toggleExport": "Export ein/aus"
 }

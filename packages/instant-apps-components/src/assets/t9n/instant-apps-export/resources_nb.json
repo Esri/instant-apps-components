@@ -7,6 +7,8 @@
   "includeLegend": "Inkluder tegnforklaring",
   "includeMap": "Inkluder kart",
   "includePopup": "Inkluder popup",
+  "returnToMap": "Gå tilbake til kart",
+  "setMapArea": "Angi kartområde",
   "title": "Tittel",
   "toggleExport": "Aktiver/deaktiver eksport"
 }

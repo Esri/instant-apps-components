@@ -7,6 +7,8 @@
   "includeLegend": "Zahrnout legendu",
   "includeMap": "Zahrnout mapu",
   "includePopup": "Zahrnout vyskakovací okno",
+  "returnToMap": "Zpět na mapu",
+  "setMapArea": "Nastavit oblast mapy",
   "title": "Nadpis",
   "toggleExport": "Přepnout export"
 }

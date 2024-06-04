@@ -7,6 +7,8 @@
   "includeLegend": "Jelmagyarázattal együtt",
   "includeMap": "Térkép belefoglalása",
   "includePopup": "Felugró ablak belefoglalása",
+  "returnToMap": "Vissza a térképhez",
+  "setMapArea": "Térképen ábrázolt terület beállítása",
   "title": "Cím",
   "toggleExport": "Exportálás választókapcsoló"
 }
