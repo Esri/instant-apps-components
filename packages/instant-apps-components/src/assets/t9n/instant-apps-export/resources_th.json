@@ -7,6 +7,8 @@
   "includeLegend": "รวมคำอธิบายสัญลักษณ์",
   "includeMap": "รวมแผนที่",
   "includePopup": "รวมป็อปอัพ",
+  "returnToMap": "กลับไปยังแผนที่",
+  "setMapArea": "ตั้งค่าพื้นที่แผนที่",
   "title": "คำนำหน้า",
   "toggleExport": "สลับการส่งออก"
 }

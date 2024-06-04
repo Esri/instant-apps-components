@@ -7,6 +7,8 @@
   "includeLegend": "Uwzględnij legendę",
   "includeMap": "Dołącz mapę",
   "includePopup": "Dołącz okno podręczne",
+  "returnToMap": "Wróć do mapy",
+  "setMapArea": "Ustaw obszar mapy",
   "title": "Tytuł",
   "toggleExport": "Przełącz eksport"
 }

@@ -7,6 +7,8 @@
   "includeLegend": "Включать легенду",
   "includeMap": "Включить карту",
   "includePopup": "Включить всплывающие окна",
+  "returnToMap": "Вернуться к карте",
+  "setMapArea": "Задать область карты",
   "title": "Заголовок",
   "toggleExport": "Переключить Экспорт"
 }
