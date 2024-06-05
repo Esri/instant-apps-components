@@ -39,6 +39,12 @@ Type: `Promise<void>`
 
 
 
+#### Parameters
+
+| Name  | Type     | Description |
+| ----- | -------- | ----------- |
+| `key` | `string` |             |
+
 #### Returns
 
 Type: `Promise<void>`
@@ -58,6 +64,12 @@ Type: `Promise<void>`
 ### `open(key: string) => Promise<void>`
 
 
+
+#### Parameters
+
+| Name  | Type     | Description |
+| ----- | -------- | ----------- |
+| `key` | `string` |             |
 
 #### Returns
 

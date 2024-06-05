@@ -59,7 +59,7 @@ export class InstantAppsInteractiveLegend {
   featureCount: boolean = false;
 
   /**
-   * Use effects to differentiate between features that are included and excluded from legend filter results 
+   * Use effects to differentiate between features that are included and excluded from legend filter results
    */
   @Prop()
   filterMode: FilterMode = {
