@@ -908,7 +908,7 @@ function getExistingFilter(fLayerView: __esri.FeatureLayerView): __esri.FeatureF
 function checkIfFieldExists(fLayer: __esri.FeatureLayer, field: string) {
   const fields = fLayer?.fields;
   const fieldNames = fields && fields.map(field => field.name);
-  return fieldNames && fieldNames.includes(field);
+  return field ? fieldNames && fieldNames.includes(field) : true;
 }
 
 export function getAllActiveLayerInfos(activeLayerInfos: __esri.Collection<__esri.ActiveLayerInfo>) {
