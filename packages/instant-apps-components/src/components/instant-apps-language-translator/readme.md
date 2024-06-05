@@ -163,6 +163,12 @@ interface LocaleItem {
 
 Batch write data to associated portal item resource.
 
+#### Parameters
+
+| Name   | Type  | Description |
+| ------ | ----- | ----------- |
+| `data` | `any` |             |
+
 #### Returns
 
 Type: `Promise<void>`
@@ -192,6 +198,12 @@ Type: `Promise<any>`
 ### `setTranslationData(data: any) => Promise<void>`
 
 Updates translation data for all languages and fields.
+
+#### Parameters
+
+| Name   | Type  | Description |
+| ------ | ----- | ----------- |
+| `data` | `any` |             |
 
 #### Returns
 

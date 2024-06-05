@@ -8,62 +8,60 @@
 
 <!DOCTYPE html>
 <html dir="ltr" lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=5.0" />
+    <title>ArcGIS Instant Apps Components</title>
 
-<head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=5.0" />
-  <title>ArcGIS Instant Apps Components</title>
+    <link rel="stylesheet" href="https://js.arcgis.com/4.30/esri/themes/light/main.css" />
+    <script src="https://js.arcgis.com/4.30/"></script>
+    <script type="module" src="https://js.arcgis.com/calcite-components/2.8.6/calcite.esm.js"></script>
+    <link rel="stylesheet" type="text/css" href="https://js.arcgis.com/calcite-components/2.8.6/calcite.css" />
+    <script type="module" src="/build/instant-apps-components.esm.js"></script>
+    <script nomodule src="/build/instant-apps-components.js"></script>
 
-  <link rel="stylesheet" href="https://jsdev.arcgis.com/4.29/esri/themes/light/main.css" />
-  <script src="https://jsdev.arcgis.com/4.29/"></script>
-  <script type="module" src="https://js.arcgis.com/calcite-components/2.4.0/calcite.esm.js"></script>
-  <link rel="stylesheet" type="text/css" href="https://js.arcgis.com/calcite-components/2.4.0/calcite.css" />
-  <script type="module" src="/build/instant-apps-components.esm.js"></script>
-  <script nomodule src="/build/instant-apps-components.js"></script>
+    <style>
+      html,
+      body {
+        width: 100%;
+        height: 100%;
+        margin: 1em;
+        padding: 1em;
+      }
 
-  <style>
-    html,
-    body {
-      width: 100%;
-      height: 100%;
-      margin: 1em;
-      padding: 1em;
-    }
+      .demos {
+        display: flex;
+        flex-direction: column;
+      }
 
-    .demos {
-      display: flex;
-      flex-direction: column;
-    }
+      calcite-link {
+        margin: 0.5em 0;
+      }
+    </style>
+  </head>
 
-    calcite-link {
-      margin: 0.5em 0;
-    }
-  </style>
-</head>
-
-<body>
-  <h3>Instant App Component Demo Apps</h3>
-  <div class="demos">
-    <calcite-link href="./instant-apps-control-panel.html">Control Panel</calcite-link>
-    <calcite-link href="./instant-apps-create.html">Create</calcite-link>
-    <calcite-link href="./instant-apps-export.html">Export to PDF</calcite-link>
-    <calcite-link href="./instant-apps-filter-list.html">Filter List</calcite-link>
-    <calcite-link href="./instant-apps-header.html">Header</calcite-link>
-    <calcite-link href="./instant-apps-interactive-legend.html">Interactive Legend</calcite-link>
-    <calcite-link href="./instant-apps-interactive-legend-2.html">Interactive Legend 2</calcite-link>
-    <calcite-link href="./instant-apps-keyboard-shortcuts.html">Keyboard Shortcuts</calcite-link>
-    <calcite-link href="./instant-apps-landing-page.html">Landing Page</calcite-link>
-    <calcite-link href="./instant-apps-landing-page-2.html">Landing Page: Sign in</calcite-link>
-    <calcite-link href="./instant-apps-language-translator.html">Language Translator</calcite-link>
-    <calcite-link href="./instant-apps-measurement.html">Measurement</calcite-link>
-    <calcite-link href="./instant-apps-popovers.html">Popover</calcite-link>
-    <calcite-link href="./instant-apps-scoreboard.html">Scoreboard</calcite-link>
-    <calcite-link href="./instant-apps-scoreboard-2.html">Scoreboard 2</calcite-link>
-    <calcite-link href="./instant-apps-sign-in.html">Sign in</calcite-link>
-    <calcite-link href="./instant-apps-social-share.html">Social Share</calcite-link>
-    <calcite-link href="./instant-apps-splash.html">Splash</calcite-link>
-    <calcite-link href="./instant-apps-splash-2.html">Splash 2 (Custom actions)</calcite-link>
-  </div>
-</body>
-
+  <body>
+    <h3>Instant App Component Demo Apps</h3>
+    <div class="demos">
+      <calcite-link href="./instant-apps-control-panel.html">Control Panel</calcite-link>
+      <calcite-link href="./instant-apps-create.html">Create</calcite-link>
+      <calcite-link href="./instant-apps-export.html">Export to PDF</calcite-link>
+      <calcite-link href="./instant-apps-filter-list.html">Filter List</calcite-link>
+      <calcite-link href="./instant-apps-header.html">Header</calcite-link>
+      <calcite-link href="./instant-apps-interactive-legend.html">Interactive Legend</calcite-link>
+      <calcite-link href="./instant-apps-interactive-legend-2.html">Interactive Legend 2</calcite-link>
+      <calcite-link href="./instant-apps-keyboard-shortcuts.html">Keyboard Shortcuts</calcite-link>
+      <calcite-link href="./instant-apps-landing-page.html">Landing Page</calcite-link>
+      <calcite-link href="./instant-apps-landing-page-2.html">Landing Page: Sign in</calcite-link>
+      <calcite-link href="./instant-apps-language-translator.html">Language Translator</calcite-link>
+      <calcite-link href="./instant-apps-measurement.html">Measurement</calcite-link>
+      <calcite-link href="./instant-apps-popovers.html">Popover</calcite-link>
+      <calcite-link href="./instant-apps-scoreboard.html">Scoreboard</calcite-link>
+      <calcite-link href="./instant-apps-scoreboard-2.html">Scoreboard 2</calcite-link>
+      <calcite-link href="./instant-apps-sign-in.html">Sign in</calcite-link>
+      <calcite-link href="./instant-apps-social-share.html">Social Share</calcite-link>
+      <calcite-link href="./instant-apps-splash.html">Splash</calcite-link>
+      <calcite-link href="./instant-apps-splash-2.html">Splash 2 (Custom actions)</calcite-link>
+    </div>
+  </body>
 </html>
