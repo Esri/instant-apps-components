@@ -822,19 +822,20 @@ export class InstantAppsSocialShare {
     const visible = this.view?.popup?.visible;
     let layerId;
     let oid;
-    if (graphic && visible) {
+    let hiddenLayers;
+    if (graphic && visible && graphic?.layer?.type === 'feature') {
       const featureLayer = graphic?.layer as __esri.FeatureLayer;
-      layerId = featureLayer.id;
+
+      layerId = featureLayer?.id;
       oid = graphic.attributes[featureLayer.objectIdField];
+
+      hiddenLayers = this.view.map.allLayers
+        .filter(layer => !layer.visible)
+        .toArray()
+        .map(featureLayer => featureLayer.id)
+        .toString()
+        .replaceAll(',', ';');
     }
-
-    const hiddenLayers = this.view.map.allLayers
-      .filter(layer => !layer.visible)
-      .toArray()
-      .map(featureLayer => featureLayer.id)
-      .toString()
-      .replaceAll(',', ';');
-
     const { type } = this.view;
     const { defaultUrlParams } = this;
 
