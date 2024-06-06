@@ -71,7 +71,9 @@ export class InstantAppsInteractiveLegendGroupLegendElementCaption {
               label={expandCollapseText}
               scale="s"
             />
-            <h3 class={`${CSS.header} ${CSS.label}${isChild}`}>{this.activeLayerInfo?.title}</h3>
+            <h3 class={`${CSS.header} ${CSS.label}${isChild}`} title={this.activeLayerInfo?.title}>
+              {this.activeLayerInfo?.title}
+            </h3>
           </span>
           {this.featureCount && isInteractive ? (
             <instant-apps-interactive-legend-count activeLayerInfo={this.activeLayerInfo} show-total={true} messages={this.messages} legendvm={this.legendvm} />
