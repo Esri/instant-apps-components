@@ -828,14 +828,15 @@ export class InstantAppsSocialShare {
 
       layerId = featureLayer?.id;
       oid = graphic.attributes[featureLayer.objectIdField];
-
-      hiddenLayers = this.view.map.allLayers
-        .filter(layer => !layer.visible)
-        .toArray()
-        .map(featureLayer => featureLayer.id)
-        .toString()
-        .replaceAll(',', ';');
     }
+
+    hiddenLayers = this.view.map.allLayers
+      .filter(layer => !layer.visible)
+      .toArray()
+      .map(featureLayer => featureLayer.id)
+      .toString()
+      .replaceAll(',', ';');
+
     const { type } = this.view;
     const { defaultUrlParams } = this;
 
