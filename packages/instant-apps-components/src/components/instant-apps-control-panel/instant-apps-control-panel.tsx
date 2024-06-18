@@ -69,7 +69,6 @@ export class InstantAppsControlPanel {
       // Check if component isExpand widget, if so, create expande widget
       if (component.isExpand) {
         content = this._getExpand(component);
-        if (component.expandIconClass) content.expandIconClass = component.expandIconClass;
         if (component.expandIcon) content.expandIcon = component.expandIcon;
         if (component.collapseTooltip) content.collapseTooltip = component.collapseTooltip;
         if (component.expandTooltip) content.expandTooltip = component.expandTooltip;

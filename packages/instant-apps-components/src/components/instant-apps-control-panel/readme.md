@@ -23,7 +23,7 @@ Widgets or components that can be added in the control panel:
 interface ControlPanelComponent {
     content: any;
     isExpand?: boolean;
-    expandIconClass?: string;
+    expandIcon?: string;
 }
 ```
 
@@ -53,7 +53,7 @@ controlPanel.components = [
     {
         content: socialShare,
         isExpand: true,
-        expandIconClass: 'esri-icon-share2'
+        expandIcon: 'share'
     },
 ];
 
