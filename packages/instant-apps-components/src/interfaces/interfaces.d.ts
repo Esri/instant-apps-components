@@ -263,7 +263,6 @@ export interface IMeasureConfiguration {
 export interface ControlPanelComponent {
   content: any;
   isExpand?: boolean;
-  expandIconClass?: string;
   expandIcon?: string;
   expandTooltip?: string;
   collapseTooltip?: string;
