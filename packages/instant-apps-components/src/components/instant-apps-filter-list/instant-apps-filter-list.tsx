@@ -669,7 +669,11 @@ export class InstantAppsFilterList {
           query.spatialRelationship = 'intersects';
         }
 
-        return (await this.queryForFeatures(layer, query, field))?.sort();
+        const features = (await this.queryForFeatures(layer, query, field)) as string[];
+
+        if (features?.length) {
+          return [...new Set(features)].sort();
+        }
       }
     }
 
