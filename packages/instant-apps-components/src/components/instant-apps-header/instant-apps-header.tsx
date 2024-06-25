@@ -7,7 +7,7 @@
  */
 
 import { Component, Host, h, Prop, Element, State } from '@stencil/core';
-import { Event, EventEmitter, HostElement, Watch } from '@stencil/core/internal';
+import { Event, EventEmitter, HostElement, Method, Watch } from '@stencil/core/internal';
 import { getElementDir } from '../../utils/languageUtil';
 import Sanitizer from '@esri/arcgis-html-sanitizer';
 
@@ -256,9 +256,11 @@ export class InstantAppsHeader {
     );
   }
 
-  toggleInfo(): void {
+  @Method()
+  toggleInfo(): Promise<void> {
     this.infoIsOpen = !this.infoIsOpen;
     this.infoIsOpenChanged.emit(this.infoIsOpen);
+    return Promise.resolve();
   }
 
   mqlCallback(): (event: MediaQueryListEvent) => void {

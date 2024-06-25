@@ -22,8 +22,7 @@
   "scripts": {
     "build": "stencil build --docs",
     "start": "stencil build --dev --watch --serve",
-    "test": "stencil test --spec --e2e",
-    "test.watch": "stencil test --spec --e2e --watchAll",
+    "test": "vitest --run",
     "generate": "stencil generate",
     "storybook": "start-storybook -p 6007 --quiet -s ./www",
     "predeploy": "npm run build-storybook",
@@ -57,6 +56,8 @@
     "@storybook/web-components": "^7.6.15",
     "@types/jest": "^26.0.24",
     "@types/sortablejs": "^1.10.7",
+    "@vitest/browser": "^1.6.0",
+    "@vitest/utils": "^1.6.0",
     "@whitespace/storybook-addon-html": "^5.0.0",
     "babel-loader": "^8.2.3",
     "cpy-cli": "^4.1.0",
@@ -69,6 +70,10 @@
     "sortablejs": "^1.14.0",
     "storybook-addon-themes": "^6.1.0",
     "storybook-color-picker": "^2.2.1",
-    "storybook-rtl-addon": "^0.3.3"
+    "storybook-rtl-addon": "^0.3.3",
+    "unplugin-stencil": "^0.1.1",
+    "vite-tsconfig-paths": "^4.3.2",
+    "vitest": "^1.6.0",
+    "webdriverio": "^8.39.0"
   }
 }

@@ -992,7 +992,7 @@ export class InstantAppsFilterList {
       if (supportedTypes.includes(layer.type)) {
         const fl = layer as FilterLayer;
         if (fl.type === 'point-cloud') {
-          this.initPointCloudFilters[fl.id] = fl.filters;
+          (this.initPointCloudFilters as any)[fl.id] = fl.filters;
         } else if (fl.type === 'map-image') {
           this.initMapImageExpressions[fl.id] = {};
           fl.allSublayers.forEach(sublayer => {
