@@ -1,0 +1,14 @@
+{
+  "export": "Dışa Aktar",
+  "exportBtn": "Yazdır veya PDF olarak Dışa Aktar",
+  "exportPopover": "Açılır pencereyi dışarı aktar",
+  "includeExtraContent": "Sonuçları dahil et",
+  "includeHeaderTheme": "Üst bilgi temasını dahil et",
+  "includeLegend": "Lejant ekle",
+  "includeMap": "Haritayı dahil et",
+  "includePopup": "Açılır menüyü dahil et",
+  "returnToMap": "Haritaya dön",
+  "setMapArea": "Harita alanını ayarla",
+  "title": "Başlık",
+  "toggleExport": "Dış Aktarmayı Değiştir"
+}

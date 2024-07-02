@@ -1,0 +1,14 @@
+{
+  "export": "ส่งออก",
+  "exportBtn": "พิมพ์หรือส่งออกในรูปแบบ PDF",
+  "exportPopover": "ส่งออกป็อปโอเวอร์",
+  "includeExtraContent": "รวมผลลัพธ์",
+  "includeHeaderTheme": "รวมธีมส่วนหัว",
+  "includeLegend": "รวมคำอธิบายสัญลักษณ์",
+  "includeMap": "รวมแผนที่",
+  "includePopup": "รวมป็อปอัพ",
+  "returnToMap": "กลับไปยังแผนที่",
+  "setMapArea": "ตั้งค่าพื้นที่แผนที่",
+  "title": "คำนำหน้า",
+  "toggleExport": "สลับการส่งออก"
+}

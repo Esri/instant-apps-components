@@ -1,0 +1,14 @@
+{
+  "export": "エクスポート",
+  "exportBtn": "印刷または PDF としてエクスポート",
+  "exportPopover": "エクスポート ポップオーバー",
+  "includeExtraContent": "結果を含める",
+  "includeHeaderTheme": "ヘッダー テーマを含める",
+  "includeLegend": "凡例を含める",
+  "includeMap": "マップを含める",
+  "includePopup": "ポップアップを含める",
+  "returnToMap": "マップに戻る",
+  "setMapArea": "マップ エリアの設定",
+  "title": "タイトル",
+  "toggleExport": "エクスポートの切り替え"
+}

@@ -1,0 +1,14 @@
+{
+  "export": "Export",
+  "exportBtn": "Tlačiť alebo exportovať ako PDF",
+  "exportPopover": "Vyskakovacie okno Export",
+  "includeExtraContent": "Zahrnúť výsledky",
+  "includeHeaderTheme": "Zahrnúť motív záhlavia",
+  "includeLegend": "Zahrnúť legendu",
+  "includeMap": "Zahrnúť mapu",
+  "includePopup": "Zahrnúť vyskakovacie okno",
+  "returnToMap": "Vrátiť sa do mapy",
+  "setMapArea": "Nastaviť mapovú oblasť",
+  "title": "Názov",
+  "toggleExport": "Prepnúť Export"
+}
