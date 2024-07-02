@@ -13,6 +13,7 @@ The export tool is configurable and can include additional elements in the outpu
 
 <!-- Auto Generated Below -->
 
+
 ## Properties
 
 | Property             | Attribute             | Description                                                                                                                                                                                                                                                                                                                                                                     | Type                                 | Default                   |
@@ -33,11 +34,29 @@ The export tool is configurable and can include additional elements in the outpu
 | `showIncludePopup`   | `show-include-popup`  | Show popup checkbox in export tool.                                                                                                                                                                                                                                                                                                                                             | `boolean \| undefined`               | `true`                    |
 | `showScaleBar`       | `show-scale-bar`      | Show scale bar widget in map if view has it.                                                                                                                                                                                                                                                                                                                                    | `boolean \| undefined`               | `false`                   |
 
+
 ## Events
 
 | Event                 | Description                                                                                       | Type                |
 | --------------------- | ------------------------------------------------------------------------------------------------- | ------------------- |
 | `exportOutputUpdated` | Emits when the instant-apps-export's output prop is updated after the "Export" button is clicked. | `CustomEvent<void>` |
+
+
+## CSS Custom Properties
+
+| Name                                            | Description                                            |
+| ----------------------------------------------- | ------------------------------------------------------ |
+| `--instant-apps-export-action-background`       | Popup's trigger button's background color.             |
+| `--instant-apps-export-action-background-hover` | Popup's trigger button's background color on hover.    |
+| `--instant-apps-export-action-background-press` | Popup's trigger button's background color on press.    |
+| `--instant-apps-export-action-height`           | Popup's trigger button's height.                       |
+| `--instant-apps-export-action-icon-color`       | Popup's trigger button's icon color.                   |
+| `--instant-apps-export-action-icon-hover-color` | Popup's trigger button's icon color when hovered over. |
+| `--instant-apps-export-action-width`            | Popup's trigger button's width.                        |
+| `--instant-apps-export-background`              | Export's container background color.                   |
+| `--instant-apps-export-popover-width`           | Export's popover container width.                      |
+| `--instant-apps-export-text-color`              | Export's container text color.                         |
+
 
 ## Dependencies
 
@@ -46,17 +65,15 @@ The export tool is configurable and can include additional elements in the outpu
 - [instant-apps-header](../instant-apps-header)
 
 ### Graph
-
 ```mermaid
 graph TD;
   instant-apps-export-views --> instant-apps-header
   style instant-apps-export-views fill:#f9f,stroke:#333,stroke-width:4px
 ```
 
----
+----------------------------------------------
 
 ## License
-
 COPYRIGHT © 2024 Esri
 
 All rights reserved under the copyright laws of the United States and applicable international laws, treaties, and conventions.
@@ -68,3 +85,4 @@ See use restrictions at http://www.esri.com/legal/pdfs/mla_e204_e300/english
 For additional information, contact: Environmental Systems Research Institute, Inc. Attn: Contracts and Legal Services Department 380 New York Street Redlands, California, USA 92373 USA
 
 email: contracts@esri.com
+
