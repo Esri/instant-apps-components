@@ -234,6 +234,11 @@ export interface ExportView {
   view: __esri.MapView | __esri.SceneView;
 }
 
+export interface ExportView {
+  title: string;
+  view: __esri.MapView | __esri.SceneView;
+}
+
 export type PopoverPlacement =
   | 'auto'
   | 'top'

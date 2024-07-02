@@ -13,7 +13,6 @@ The export tool is configurable and can include additional elements in the outpu
 
 <!-- Auto Generated Below -->
 
-
 ## Properties
 
 | Property             | Attribute             | Description                                                                                                                                                                                                                                                                                                                                                                     | Type                                 | Default                   |
@@ -35,7 +34,6 @@ The export tool is configurable and can include additional elements in the outpu
 | `showIncludeMap`     | `show-include-map`    | Show include map checkbox in export tool.                                                                                                                                                                                                                                                                                                                                       | `boolean \| undefined`               | `false`                   |
 | `showIncludePopup`   | `show-include-popup`  | Show popup checkbox in export tool.                                                                                                                                                                                                                                                                                                                                             | `boolean \| undefined`               | `true`                    |
 | `showScaleBar`       | `show-scale-bar`      | Show scale bar widget in map if view has it.                                                                                                                                                                                                                                                                                                                                    | `boolean \| undefined`               | `false`                   |
-
 
 ## Events
 
@@ -74,4 +72,3 @@ See use restrictions at http://www.esri.com/legal/pdfs/mla_e204_e300/english
 For additional information, contact: Environmental Systems Research Institute, Inc. Attn: Contracts and Legal Services Department 380 New York Street Redlands, California, USA 92373 USA
 
 email: contracts@esri.com
-
