@@ -1,0 +1,14 @@
+{
+  "export": "Exporter",
+  "exportBtn": "Imprimer ou exporter au format PDF",
+  "exportPopover": "Fenêtre contextuelle Exporter",
+  "includeExtraContent": "Inclure les résultats",
+  "includeHeaderTheme": "Inclure le thème d’en-tête",
+  "includeLegend": "Inclure la légende",
+  "includeMap": "Inclure la carte",
+  "includePopup": "Inclure la fenêtre contextuelle",
+  "returnToMap": "Revenir à la carte",
+  "setMapArea": "Définir la zone cartographique",
+  "title": "Titre",
+  "toggleExport": "Activer/désactiver Exporter"
+}

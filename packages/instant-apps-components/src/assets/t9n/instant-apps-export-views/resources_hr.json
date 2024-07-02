@@ -1,0 +1,14 @@
+{
+  "export": "Izvezi",
+  "exportBtn": "Ispiši ili izvezi kao PDF",
+  "exportPopover": "Izvezi popover",
+  "includeExtraContent": "Uključi rezultate",
+  "includeHeaderTheme": "Uključi temu zaglavlja",
+  "includeLegend": "Uključi legendu",
+  "includeMap": "Uključi kartu",
+  "includePopup": "Uključi skočni prozor",
+  "returnToMap": "Povratak na kartu",
+  "setMapArea": "Postavi područje karte",
+  "title": "Naziv",
+  "toggleExport": "Uključi/isključi izvoz"
+}

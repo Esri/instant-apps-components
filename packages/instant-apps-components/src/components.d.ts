@@ -6,7 +6,7 @@
  */
 import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
 import { EditorConfig } from "@ckeditor/ckeditor5-core/src/editor/editorconfig";
-import { ActiveTool, ControlPanelComponent, CreateOption, ExportOutput, ExtentSelector, IMeasureConfiguration, InstantAppsPopoverMessageOverrides, IPortal, LayerExpression, PopoverPlacement } from "./interfaces/interfaces";
+import { ActiveTool, ControlPanelComponent, CreateOption, ExportOutput, ExportView, ExtentSelector, IMeasureConfiguration, InstantAppsPopoverMessageOverrides, IPortal, LayerExpression, PopoverPlacement } from "./interfaces/interfaces";
 import { PredefinedOptions } from "./components/instant-apps-create/instant-apps-create";
 import { FilterMode } from "./components/instant-apps-interactive-legend/instant-apps-interactive-legend-classic/interfaces/interfaces";
 import { AlignmentPositions } from "./components/instant-apps-landing-page/support/enum";
@@ -15,7 +15,7 @@ import { InstantAppsPopovers } from "./components/instant-apps-popovers/instant-
 import { LogicalPlacement } from "@esri/calcite-components/dist/types/utils/floating-ui";
 import { ScoreboardItem, ScoreboardMode, ScoreboardPosition } from "./components/instant-apps-scoreboard/types/interfaces";
 export { EditorConfig } from "@ckeditor/ckeditor5-core/src/editor/editorconfig";
-export { ActiveTool, ControlPanelComponent, CreateOption, ExportOutput, ExtentSelector, IMeasureConfiguration, InstantAppsPopoverMessageOverrides, IPortal, LayerExpression, PopoverPlacement } from "./interfaces/interfaces";
+export { ActiveTool, ControlPanelComponent, CreateOption, ExportOutput, ExportView, ExtentSelector, IMeasureConfiguration, InstantAppsPopoverMessageOverrides, IPortal, LayerExpression, PopoverPlacement } from "./interfaces/interfaces";
 export { PredefinedOptions } from "./components/instant-apps-create/instant-apps-create";
 export { FilterMode } from "./components/instant-apps-interactive-legend/instant-apps-interactive-legend-classic/interfaces/interfaces";
 export { AlignmentPositions } from "./components/instant-apps-landing-page/support/enum";
@@ -162,6 +162,68 @@ export namespace Components {
           * A reference to the MapView or SceneView.
          */
         "view": __esri.MapView | __esri.SceneView | undefined;
+    }
+    interface InstantAppsExportViews {
+        /**
+          * Passes the initial function to run when the Export button is clicked.
+         */
+        "beforeExport": () => Promise<void>;
+        /**
+          * A reference to an array of MapViews or SceneViews.
+         */
+        "exportViews": ExportView[] | undefined;
+        /**
+          * When `true`, legend is included in the export.
+         */
+        "includeLegend"?: boolean;
+        /**
+          * When `true`, map is included in the export.
+         */
+        "includeMap"?: boolean;
+        /**
+          * When `true`, popup is included in the export.
+         */
+        "includePopup"?: boolean;
+        /**
+          * Renders tool as a popover with a trigger button, or inline to place in a custom container.
+         */
+        "mode": 'popover' | 'inline';
+        /**
+          * Output to use to set up export.
+         */
+        "output"?: ExportOutput;
+        /**
+          * Update popover button icon.
+         */
+        "popoverIcon"?: string;
+        /**
+          * Determines where the component will be positioned relative to the `referenceElement`.
+         */
+        "popoverPlacement"?: PopoverPlacement;
+        /**
+          * Determines the type of positioning to use for the overlaid content. Using `"absolute"` will work for most cases. The component will be positioned inside of overflowing parent containers and will affect the container's layout. `"fixed"` value should be used to escape an overflowing parent container, or when the reference element's position CSS property is `"fixed"`.
+         */
+        "popoverPositioning"?: 'absolute' | 'fixed';
+        /**
+          * Adjusts the scale of the action button.
+         */
+        "scale"?: 's' | 'm' | 'l';
+        /**
+          * Show include legend checkbox in export tool.
+         */
+        "showIncludeLegend"?: boolean;
+        /**
+          * Show include map checkbox in export tool.
+         */
+        "showIncludeMap"?: boolean;
+        /**
+          * Show popup checkbox in export tool.
+         */
+        "showIncludePopup"?: boolean;
+        /**
+          * Show scale bar widget in map if view has it.
+         */
+        "showScaleBar"?: boolean;
     }
     interface InstantAppsFilterList {
         /**
@@ -819,6 +881,10 @@ export interface InstantAppsExportCustomEvent<T> extends CustomEvent<T> {
     detail: T;
     target: HTMLInstantAppsExportElement;
 }
+export interface InstantAppsExportViewsCustomEvent<T> extends CustomEvent<T> {
+    detail: T;
+    target: HTMLInstantAppsExportViewsElement;
+}
 export interface InstantAppsFilterListCustomEvent<T> extends CustomEvent<T> {
     detail: T;
     target: HTMLInstantAppsFilterListElement;
@@ -918,6 +984,23 @@ declare global {
     var HTMLInstantAppsExportElement: {
         prototype: HTMLInstantAppsExportElement;
         new (): HTMLInstantAppsExportElement;
+    };
+    interface HTMLInstantAppsExportViewsElementEventMap {
+        "exportOutputUpdated": void;
+    }
+    interface HTMLInstantAppsExportViewsElement extends Components.InstantAppsExportViews, HTMLStencilElement {
+        addEventListener<K extends keyof HTMLInstantAppsExportViewsElementEventMap>(type: K, listener: (this: HTMLInstantAppsExportViewsElement, ev: InstantAppsExportViewsCustomEvent<HTMLInstantAppsExportViewsElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLInstantAppsExportViewsElementEventMap>(type: K, listener: (this: HTMLInstantAppsExportViewsElement, ev: InstantAppsExportViewsCustomEvent<HTMLInstantAppsExportViewsElementEventMap[K]>) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
+    }
+    var HTMLInstantAppsExportViewsElement: {
+        prototype: HTMLInstantAppsExportViewsElement;
+        new (): HTMLInstantAppsExportViewsElement;
     };
     interface HTMLInstantAppsFilterListElementEventMap {
         "filterListReset": void;
@@ -1231,6 +1314,7 @@ declare global {
         "instant-apps-control-panel": HTMLInstantAppsControlPanelElement;
         "instant-apps-create": HTMLInstantAppsCreateElement;
         "instant-apps-export": HTMLInstantAppsExportElement;
+        "instant-apps-export-views": HTMLInstantAppsExportViewsElement;
         "instant-apps-filter-list": HTMLInstantAppsFilterListElement;
         "instant-apps-header": HTMLInstantAppsHeaderElement;
         "instant-apps-interactive-legend": HTMLInstantAppsInteractiveLegendElement;
@@ -1404,6 +1488,72 @@ declare namespace LocalJSX {
           * A reference to the MapView or SceneView.
          */
         "view"?: __esri.MapView | __esri.SceneView | undefined;
+    }
+    interface InstantAppsExportViews {
+        /**
+          * Passes the initial function to run when the Export button is clicked.
+         */
+        "beforeExport"?: () => Promise<void>;
+        /**
+          * A reference to an array of MapViews or SceneViews.
+         */
+        "exportViews"?: ExportView[] | undefined;
+        /**
+          * When `true`, legend is included in the export.
+         */
+        "includeLegend"?: boolean;
+        /**
+          * When `true`, map is included in the export.
+         */
+        "includeMap"?: boolean;
+        /**
+          * When `true`, popup is included in the export.
+         */
+        "includePopup"?: boolean;
+        /**
+          * Renders tool as a popover with a trigger button, or inline to place in a custom container.
+         */
+        "mode"?: 'popover' | 'inline';
+        /**
+          * Emits when the instant-apps-export's output prop is updated after the "Export" button is clicked.
+         */
+        "onExportOutputUpdated"?: (event: InstantAppsExportViewsCustomEvent<void>) => void;
+        /**
+          * Output to use to set up export.
+         */
+        "output"?: ExportOutput;
+        /**
+          * Update popover button icon.
+         */
+        "popoverIcon"?: string;
+        /**
+          * Determines where the component will be positioned relative to the `referenceElement`.
+         */
+        "popoverPlacement"?: PopoverPlacement;
+        /**
+          * Determines the type of positioning to use for the overlaid content. Using `"absolute"` will work for most cases. The component will be positioned inside of overflowing parent containers and will affect the container's layout. `"fixed"` value should be used to escape an overflowing parent container, or when the reference element's position CSS property is `"fixed"`.
+         */
+        "popoverPositioning"?: 'absolute' | 'fixed';
+        /**
+          * Adjusts the scale of the action button.
+         */
+        "scale"?: 's' | 'm' | 'l';
+        /**
+          * Show include legend checkbox in export tool.
+         */
+        "showIncludeLegend"?: boolean;
+        /**
+          * Show include map checkbox in export tool.
+         */
+        "showIncludeMap"?: boolean;
+        /**
+          * Show popup checkbox in export tool.
+         */
+        "showIncludePopup"?: boolean;
+        /**
+          * Show scale bar widget in map if view has it.
+         */
+        "showScaleBar"?: boolean;
     }
     interface InstantAppsFilterList {
         /**
@@ -2086,6 +2236,7 @@ declare namespace LocalJSX {
         "instant-apps-control-panel": InstantAppsControlPanel;
         "instant-apps-create": InstantAppsCreate;
         "instant-apps-export": InstantAppsExport;
+        "instant-apps-export-views": InstantAppsExportViews;
         "instant-apps-filter-list": InstantAppsFilterList;
         "instant-apps-header": InstantAppsHeader;
         "instant-apps-interactive-legend": InstantAppsInteractiveLegend;
@@ -2122,6 +2273,7 @@ declare module "@stencil/core" {
             "instant-apps-control-panel": LocalJSX.InstantAppsControlPanel & JSXBase.HTMLAttributes<HTMLInstantAppsControlPanelElement>;
             "instant-apps-create": LocalJSX.InstantAppsCreate & JSXBase.HTMLAttributes<HTMLInstantAppsCreateElement>;
             "instant-apps-export": LocalJSX.InstantAppsExport & JSXBase.HTMLAttributes<HTMLInstantAppsExportElement>;
+            "instant-apps-export-views": LocalJSX.InstantAppsExportViews & JSXBase.HTMLAttributes<HTMLInstantAppsExportViewsElement>;
             "instant-apps-filter-list": LocalJSX.InstantAppsFilterList & JSXBase.HTMLAttributes<HTMLInstantAppsFilterListElement>;
             "instant-apps-header": LocalJSX.InstantAppsHeader & JSXBase.HTMLAttributes<HTMLInstantAppsHeaderElement>;
             "instant-apps-interactive-legend": LocalJSX.InstantAppsInteractiveLegend & JSXBase.HTMLAttributes<HTMLInstantAppsInteractiveLegendElement>;
