@@ -1,0 +1,14 @@
+{
+  "export": "Exportar",
+  "exportBtn": "Imprimir o exportar como PDF",
+  "exportPopover": "Ventana emergente de exportación",
+  "includeExtraContent": "Incluir resultados",
+  "includeHeaderTheme": "Incluir tema de encabezado",
+  "includeLegend": "Incluir leyenda",
+  "includeMap": "Incluir mapa",
+  "includePopup": "Incluir elemento emergente",
+  "returnToMap": "Volver al mapa",
+  "setMapArea": "Definir área de mapa",
+  "title": "Título",
+  "toggleExport": "Alternar Exportar"
+}

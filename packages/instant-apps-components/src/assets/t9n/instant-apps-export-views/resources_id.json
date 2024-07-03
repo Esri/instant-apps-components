@@ -1,0 +1,14 @@
+{
+  "export": "Ekspor",
+  "exportBtn": "Cetak atau Ekspor sebagai PDF",
+  "exportPopover": "Ekspor popover",
+  "includeExtraContent": "Sertakan hasil",
+  "includeHeaderTheme": "Sertakan tema header",
+  "includeLegend": "Sertakan legenda",
+  "includeMap": "Sertakan peta",
+  "includePopup": "Sertakan popup",
+  "returnToMap": "Kembali ke peta",
+  "setMapArea": "Atur area peta",
+  "title": "Judul",
+  "toggleExport": "Aktifkan/Nonaktifkan Ekspor"
+}

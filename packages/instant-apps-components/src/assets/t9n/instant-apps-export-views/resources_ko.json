@@ -1,0 +1,14 @@
+{
+  "export": "내보내기",
+  "exportBtn": "PDF로 내보내기 또는 인쇄",
+  "exportPopover": "팝오버 내보내기",
+  "includeExtraContent": "결과 포함",
+  "includeHeaderTheme": "헤더 테마 포함",
+  "includeLegend": "범례 포함",
+  "includeMap": "맵 포함",
+  "includePopup": "팝업 포함",
+  "returnToMap": "맵으로 돌아가기",
+  "setMapArea": "맵 영역 설정",
+  "title": "제목",
+  "toggleExport": "내보내기 전환"
+}

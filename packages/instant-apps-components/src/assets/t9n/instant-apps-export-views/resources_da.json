@@ -1,0 +1,14 @@
+{
+  "export": "Eksportér",
+  "exportBtn": "Udskriv eller eksportér som PDF",
+  "exportPopover": "Eksport-popover",
+  "includeExtraContent": "Medtag resultater",
+  "includeHeaderTheme": "Medtag overskriftstema",
+  "includeLegend": "Medtag signaturforklaring",
+  "includeMap": "Medtag kort",
+  "includePopup": "Medtag popup",
+  "returnToMap": "Vend tilbage til kort",
+  "setMapArea": "Indstil kortområde",
+  "title": "Titel",
+  "toggleExport": "Slå eksport til/fra"
+}

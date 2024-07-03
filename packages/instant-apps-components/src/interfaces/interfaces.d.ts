@@ -226,6 +226,12 @@ export interface ExportOutput {
   includeLegend?: boolean;
   includeMap?: boolean;
   includePopup?: boolean;
+  includeHeader?: boolean;
+}
+
+export interface ExportView {
+  title: string;
+  view: __esri.MapView | __esri.SceneView;
 }
 
 export type PopoverPlacement =

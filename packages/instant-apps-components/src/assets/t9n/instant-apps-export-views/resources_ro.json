@@ -1,0 +1,14 @@
+{
+  "export": "Export",
+  "exportBtn": "Imprimați sau exportați ca PDF",
+  "exportPopover": "Export semn de carte",
+  "includeExtraContent": "Includeți rezultate",
+  "includeHeaderTheme": "Includere temă antet",
+  "includeLegend": "Includere legendă",
+  "includeMap": "Includere hartă",
+  "includePopup": "Includere fereastră pop-up",
+  "returnToMap": "Revenire la hartă",
+  "setMapArea": "Setare suprafață hartă",
+  "title": "Titlu",
+  "toggleExport": "Comutare export"
+}

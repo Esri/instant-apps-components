@@ -1,0 +1,148 @@
+<!-- /*
+ *   Copyright (c) 2024 Esri
+ *   All rights reserved under the copyright laws of the United States and applicable international laws, treaties, and conventions.
+ *   This material is licensed for use under the Esri Master License Agreement (MLA), and is bound by the terms of that agreement.
+ *   You may redistribute and use this code without modification, provided you adhere to the terms of the MLA and include this copyright notice.
+ *   See use restrictions at http://www.esri.com/legal/pdfs/mla_e204_e300/english
+ */ -->
+
+<!DOCTYPE html>
+<html dir="ltr" lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=5.0" />
+    <title>ArcGIS Instant Apps Components</title>
+
+    <link rel="stylesheet" href="https://js.arcgis.com/4.30/esri/themes/light/main.css" />
+    <script src="https://js.arcgis.com/4.30/"></script>
+    <script type="module" src="https://js.arcgis.com/calcite-components/2.8.5/calcite.esm.js"></script>
+    <link rel="stylesheet" type="text/css" href="https://js.arcgis.com/calcite-components/2.8.5/calcite.css" />
+    <script type="module" src="/build/instant-apps-components.esm.js"></script>
+    <script nomodule src="/build/instant-apps-components.js"></script>
+    <style>
+      html,
+      body {
+        width: 100%;
+
+        margin: 0;
+        padding: 0;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      #viewDiv,
+      #viewDiv2 {
+        width: 50%;
+        height: 100%;
+      }
+
+      .panel-content {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        padding: 5%;
+        font-size: 1rem;
+        font-weight: 400;
+        margin: 0;
+      }
+
+      instant-apps-export:first-of-type {
+        margin-bottom: 20px;
+      }
+
+      .view-container {
+        display: flex;
+        width: 100%;
+        height: 100%;
+      }
+
+      calcite-shell {
+        position: relative;
+        height: 800px;
+      }
+
+      .instant-apps-export-print {
+        position: relative !important;
+        z-index: unset !important;
+      }
+    </style>
+  </head>
+
+  <body>
+    <calcite-shell class="calcite-mode-light">
+      <instant-apps-header
+        id="instant-apps-header"
+        slot="header"
+        title-text="Filter List"
+        logo-image="https://www.esri.com/content/dam/esrisites/en-us/common/icons/product-logos/arcgis-instant-apps-64.svg"
+        logo-image-alt-text="ArcGIS Instant Apps logo"
+        logo-link="https://www.esri.com/en-us/arcgis/products/arcgis-instant-apps/overview"
+      >
+      </instant-apps-header>
+      <calcite-shell-panel slot="panel-start">
+        <calcite-panel>
+          <div class="panel-content">
+            <instant-apps-export-views id="export-inline" mode="inline" show-scale-bar="true"> </instant-apps-export-views>
+          </div>
+        </calcite-panel>
+      </calcite-shell-panel>
+      <div class="view-container">
+        <div id="viewDiv"></div>
+        <div id="viewDiv2"></div>
+      </div>
+    </calcite-shell>
+    <script>
+      require(['esri/WebMap', 'esri/views/MapView', 'esri/config', 'esri/widgets/ScaleBar', 'esri/widgets/Home'], (WebMap, MapView, esriConfig, ScaleBar, Home) => {
+        esriConfig.portalUrl = 'https://nw-brews.mapsdevext.arcgis.com';
+
+        const map = new WebMap({
+          portalItem: {
+            id: '6ec2d5eeb8e84d1ebbcca28317d3cec4',
+          },
+        });
+
+        const view = new MapView({
+          map,
+          container: 'viewDiv',
+        });
+
+        const sb = new ScaleBar({ view, unit: 'dual' });
+        const home = new Home({ view });
+        view.ui.add(sb, 'bottom-left');
+        view.ui.add(home, 'top-left');
+
+        const map2 = new WebMap({
+          portalItem: {
+            id: 'c0c59986e2e74d98be80ed493f91de10',
+          },
+        });
+
+        const view2 = new MapView({
+          map: map2,
+          container: 'viewDiv2',
+        });
+
+        const sb2 = new ScaleBar({ view: view2, unit: 'dual' });
+        const home2 = new Home({ view: view2 });
+        view2.ui.add(sb2, 'bottom-left');
+        view2.ui.add(home2, 'top-left');
+
+        view2.when(async () => {
+          await view2.map.loadAll();
+
+          const exportInline = document.getElementById('export-inline');
+          exportInline.exportViews = [
+            { title: view.map.portalItem.title, view: view },
+            { title: view2.map.portalItem.title, view: view2 },
+          ];
+          exportInline.showScaleBar = true;
+          exportInline.addEventListener('exportOutputUpdated', e => {
+            console.log('exportOutputUpdated: ', e.target.output);
+          });
+        });
+      });
+    </script>
+  </body>
+</html>
