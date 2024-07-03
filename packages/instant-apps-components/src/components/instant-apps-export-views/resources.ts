@@ -35,6 +35,17 @@ export const printStyling = `
     position: absolute;
   }
 
+  .instant-apps-export-print__view-header {
+    background: #fff;
+  }
+
+  .instant-apps-export-print__view-header h1 {
+    font-size: 16px;
+    font-weight: 500;
+    color: #323232;
+    margin: 6px;
+  }
+
   .instant-apps-export-print__views-container {
     height: 100%;
     width: 100%;
@@ -70,7 +81,7 @@ export const printStyling = `
 
   .instant-apps-export-print__view-wrapper {
     height: fit-content;
-    width: fit-content;
+    width: min-content;
     position: relative;
     display: flex;
     flex-direction: column;
@@ -81,6 +92,7 @@ export const printStyling = `
   .instant-apps-export-print__view {
     max-height: 60vh;
     max-width: calc(100vw - .25in);
+    object-fit: contain;
   }
 
   .instant-apps-export-print__popup-container {
@@ -202,7 +214,6 @@ export const printStyling = `
   }
 
   .instant-apps-export-print__scale-bar-container .esri-scale-bar__label {
-    background-color: rgba(255, 255, 255, 0.66);
     color: #323232;
     font-size: 10px;
     padding: 0 4px;
