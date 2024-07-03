@@ -226,6 +226,7 @@ export interface ExportOutput {
   includeLegend?: boolean;
   includeMap?: boolean;
   includePopup?: boolean;
+  includeHeader?: boolean;
 }
 
 export interface ExportView {

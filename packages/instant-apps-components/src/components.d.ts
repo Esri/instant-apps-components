@@ -173,6 +173,10 @@ export namespace Components {
          */
         "exportViews": ExportView[] | undefined;
         /**
+          * When `true`, header is included in the export.
+         */
+        "includeHeader"?: boolean;
+        /**
           * When `true`, legend is included in the export.
          */
         "includeLegend"?: boolean;
@@ -208,6 +212,10 @@ export namespace Components {
           * Adjusts the scale of the action button.
          */
         "scale"?: 's' | 'm' | 'l';
+        /**
+          * Show header checkbox in export tool.
+         */
+        "showIncludeHeader"?: boolean;
         /**
           * Show include legend checkbox in export tool.
          */
@@ -1499,6 +1507,10 @@ declare namespace LocalJSX {
          */
         "exportViews"?: ExportView[] | undefined;
         /**
+          * When `true`, header is included in the export.
+         */
+        "includeHeader"?: boolean;
+        /**
           * When `true`, legend is included in the export.
          */
         "includeLegend"?: boolean;
@@ -1538,6 +1550,10 @@ declare namespace LocalJSX {
           * Adjusts the scale of the action button.
          */
         "scale"?: 's' | 'm' | 'l';
+        /**
+          * Show header checkbox in export tool.
+         */
+        "showIncludeHeader"?: boolean;
         /**
           * Show include legend checkbox in export tool.
          */
