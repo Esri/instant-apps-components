@@ -28,6 +28,7 @@ const CSS = {
     viewSection: 'instant-apps-export-print__view-section',
     viewWrapper: 'instant-apps-export-print__view-wrapper',
     viewContent: 'instant-apps-export-print__view-content',
+    viewHeader: 'instant-apps-export-print__view-header',
   },
 };
 
@@ -185,9 +186,6 @@ export class InstantAppsExportViews {
       <Host>
         <div class={this.baseClass} onMouseEnter={this.handleWidgetCreation.bind(this)} onFocusin={this.handleWidgetCreation.bind(this)}>
           {mode}
-          <div class={CSS.hidden} ref={(el: HTMLDivElement) => (this.compassContainerEl = el)}>
-            {this.exportViews?.map((_, index) => this.renderCompass(index))}
-          </div>
         </div>
       </Host>
     );
@@ -284,7 +282,11 @@ export class InstantAppsExportViews {
     return (
       <div id={`view-container-${index}`} class={CSS.print.viewContainer}>
         <div id={`view-wrapper-${index}`} class={CSS.print.viewWrapper}>
-          {title ? <instant-apps-header titleText={title} backgroundColor="#fff" textColor="#323232"></instant-apps-header> : null}
+          {title ? (
+            <div class={CSS.print.viewHeader}>
+              <h1>{title}</h1>
+            </div>
+          ) : null}
           <img id={`view-${index}`} class={CSS.print.view}></img>
           <div id={`scalebar-container-${index}`} class={CSS.print.scaleBarContainer}></div>
         </div>
@@ -320,13 +322,15 @@ export class InstantAppsExportViews {
     if (this.exportViews?.length) {
       this.addPrintStyling();
       document.body.prepend(this.printEl);
-      this.exportViews.forEach(({ view, title }, index) => {
-        const viewWrapperEl = this.printEl.querySelector(`#view-wrapper-${index}`);
-        const compassContainerEl = this.compassContainerEl.querySelector(`#compass-${index}`) as HTMLElement;
-        if (viewWrapperEl != null && compassContainerEl != null && !viewWrapperEl.contains(compassContainerEl)) {
-          if (!title) compassContainerEl.style.top = '15px';
-          viewWrapperEl.append(compassContainerEl);
-        }
+      this.exportViews.forEach(({ view }, index) => {
+        // Hide compass this release
+
+        // const viewWrapperEl = this.printEl.querySelector(`#view-wrapper-${index}`);
+        // const compassContainerEl = this.compassContainerEl.querySelector(`#compass-${index}`) as HTMLElement;
+        // if (viewWrapperEl != null && compassContainerEl != null && !viewWrapperEl.contains(compassContainerEl)) {
+        //   if (!title) compassContainerEl.style.top = '15px';
+        //   viewWrapperEl.append(compassContainerEl);
+        // }
         this.handleViewExportOnClick(view, index);
       });
       this.handleImgLoaded();
@@ -363,9 +367,9 @@ export class InstantAppsExportViews {
   }
 
   resetPrintContent(): void {
-    this.printContainerEl?.prepend(this.printEl);
-    this.printStyleEl?.remove();
-    this.printStyleEl = undefined;
+    // this.printContainerEl?.prepend(this.printEl);
+    // this.printStyleEl?.remove();
+    // this.printStyleEl = undefined;
   }
 
   async updatePopupToPrint(view: __esri.MapView | __esri.SceneView, index: number): Promise<void> {
@@ -412,16 +416,10 @@ export class InstantAppsExportViews {
 
   handleLegendSetup(index: number): void {
     const legendContainerEl = this.printEl.querySelector(`#legend-${index}`) as HTMLElement;
-    console.log('handleLegendSetup legendContainerEl', legendContainerEl);
-
     if (this.showIncludeLegend && this.includeMap && legendContainerEl) {
       const legend = this.legends[index];
-      console.log('legend', legend);
-
       const hasActiveLayers = legend != null && legend.activeLayerInfos?.length > 0;
-      console.log('hasActiveLayers', hasActiveLayers);
-
-      legendContainerEl.style.display = this.includeLegend ? 'block' : 'none';
+      legendContainerEl.style.display = this.includeLegend && hasActiveLayers ? 'block' : 'none';
     }
   }
 
@@ -429,7 +427,9 @@ export class InstantAppsExportViews {
     if (this.includeMap) {
       this.exportViews?.forEach(({ view }, index) => {
         this.handleLegendCreation(view, index);
-        this.handleCompassCreation(view, index);
+        // Hide compass this release
+
+        // this.handleCompassCreation(view, index);
       });
     }
   }
@@ -483,7 +483,6 @@ export class InstantAppsExportViews {
             layout: 'side-by-side',
           },
         });
-        console.log('legends', this.legends[index]);
       }
     });
   }
