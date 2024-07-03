@@ -79,13 +79,11 @@ The header component includes custom CSS properties to adjust the style of the h
 ### Used by
 
  - [instant-apps-export](../instant-apps-export)
- - [instant-apps-export-views](../instant-apps-export-views)
 
 ### Graph
 ```mermaid
 graph TD;
   instant-apps-export --> instant-apps-header
-  instant-apps-export-views --> instant-apps-header
   style instant-apps-header fill:#f9f,stroke:#333,stroke-width:4px
 ```
 

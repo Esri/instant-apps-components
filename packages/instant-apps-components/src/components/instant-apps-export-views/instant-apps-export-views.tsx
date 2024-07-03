@@ -70,6 +70,11 @@ export class InstantAppsExportViews {
   @Prop({ mutable: true }) includePopup?: boolean = false;
 
   /**
+   * When `true`, header is included in the export.
+   */
+  @Prop({ mutable: true }) includeHeader?: boolean = false;
+
+  /**
    * Renders tool as a popover with a trigger button, or inline to place in a custom container.
    */
   @Prop({ reflect: true }) mode: 'popover' | 'inline' = 'popover';
@@ -103,6 +108,11 @@ export class InstantAppsExportViews {
    * Show popup checkbox in export tool.
    */
   @Prop() showIncludePopup?: boolean = true;
+
+  /**
+   * Show header checkbox in export tool.
+   */
+  @Prop() showIncludeHeader?: boolean = true;
 
   /**
    * Show scale bar widget in map if view has it.
@@ -244,10 +254,13 @@ export class InstantAppsExportViews {
   }
 
   renderMapOptions(): VNode {
+    // HARDCODED_IN_EN
+    const includeHeader = this.showIncludeHeader ? this.renderSwitch('includeHeader', 'Include header') : null;
     const includeLegend = this.showIncludeLegend ? this.renderSwitch('includeLegend') : null;
     const includePopup = this.showIncludePopup ? this.renderSwitch('includePopup') : null;
     return (
       <div>
+        {includeHeader}
         {includeLegend}
         {includePopup}
       </div>
@@ -282,7 +295,7 @@ export class InstantAppsExportViews {
     return (
       <div id={`view-container-${index}`} class={CSS.print.viewContainer}>
         <div id={`view-wrapper-${index}`} class={CSS.print.viewWrapper}>
-          {title ? (
+          {this.includeHeader && title ? (
             <div class={CSS.print.viewHeader}>
               <h1>{title}</h1>
             </div>
@@ -401,6 +414,9 @@ export class InstantAppsExportViews {
     }
     if (this.showIncludePopup) {
       this.output.includePopup = this.includePopup;
+    }
+    if (this.showIncludeHeader) {
+      this.output.includeHeader = this.includeHeader;
     }
     this.exportOutputUpdated.emit();
   }
