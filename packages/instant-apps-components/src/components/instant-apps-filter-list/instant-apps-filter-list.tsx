@@ -659,10 +659,10 @@ export class InstantAppsFilterList {
         const initDefExpr = this.getInitDefExprFromLayer(layer);
         query.where = initDefExpr || '1=1';
         query.outFields = [field];
-        query.orderByFields = [`${field} DESC`];
+        query.orderByFields = [`${field} ASC`];
         query.returnDistinctValues = true;
         query.returnGeometry = false;
-        query.maxRecordCountFactor = 3;
+        query.maxRecordCountFactor = 5;
         if (this.extentSelector && this.extentSelectorConfig) {
           const geo = this.getExtent(this.extentSelector, this.extentSelectorConfig);
           if (geo != null) query.geometry = geo;
@@ -1045,7 +1045,7 @@ export class InstantAppsFilterList {
       query.where = queryLayer.definitionExpression ?? '1=1';
       query.returnGeometry = true;
       query.returnDistinctValues = true;
-      query.maxRecordCountFactor = 3;
+      query.maxRecordCountFactor = 5;
       query.returnExceededLimitFeatures = true;
       query.outFields = [];
       if (this.extentSelector && this.extentSelectorConfig) {
