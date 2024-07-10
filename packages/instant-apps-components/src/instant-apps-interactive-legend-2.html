@@ -8,99 +8,71 @@
 
 <!DOCTYPE html>
 <html dir="ltr" lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=5.0" />
-    <title>ArcGIS Instant Apps Components</title>
 
-    <link rel="stylesheet" href="https://js.arcgis.com/4.30/esri/themes/light/main.css" />
-    <script src="https://js.arcgis.com/4.30/"></script>
-    <script type="module" src="https://js.arcgis.com/calcite-components/2.8.5/calcite.esm.js"></script>
-    <link rel="stylesheet" type="text/css" href="https://js.arcgis.com/calcite-components/2.8.5/calcite.css" />
-    <script type="module" src="/build/instant-apps-components.esm.js"></script>
-    <script nomodule src="/build/instant-apps-components.js"></script>
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=5.0" />
+  <title>ArcGIS Instant Apps Components</title>
 
-    <style>
-      html,
-      body,
-      #viewDiv {
-        width: 100%;
-        height: 100%;
-        margin: 0;
-        padding: 0;
-      }
+  <link rel="stylesheet" href="https://jsdev.arcgis.com/4.29/esri/themes/light/main.css" />
+  <script src="https://jsdev.arcgis.com/4.29/"></script>
+  <script type="module" src="https://js.arcgis.com/calcite-components/2.4.0/calcite.esm.js"></script>
+  <link rel="stylesheet" type="text/css" href="https://js.arcgis.com/calcite-components/2.4.0/calcite.css" />
 
-      calcite-panel {
-        padding: 10px;
-      }
+  <!-- Load Instant Apps Components -->
+  <script type="module" src="../dist/instant-apps-components/instant-apps-components.esm.js"></script>
+  <script nomodule src="/build/instant-apps-components.js"></script>
 
-      #addLayerForm {
-        padding: 10px;
-      }
-    </style>
-  </head>
+  <style>
+    html,
+    body,
+    #viewDiv {
+      width: 100%;
+      height: 100%;
+      margin: 0;
+      padding: 0;
+    }
 
-  <body class="calcite-mode-light">
-    <calcite-shell>
-      <calcite-shell-panel id="legend" slot="panel-start"></calcite-shell-panel>
-      <calcite-shell-panel id="addLayer" slot="panel-end">
-        <div id="addLayerForm">
-          <calcite-label>
-            Layer URL
-            <calcite-input id="layerInput" placeholder="Enter layer URL" />
-          </calcite-label>
-          <calcite-button id="submitBtn" icon-start="plus" width="full">Add</calcite-button>
-        </div>
-      </calcite-shell-panel>
-      <div id="viewDiv"></div>
-    </calcite-shell>
-    <script>
-      require(['esri/WebMap', 'esri/widgets/Expand', 'esri/views/MapView', 'esri/core/reactiveUtils', 'esri/layers/FeatureLayer', 'esri/widgets/Legend'], (
-        WebMap,
-        Expand,
-        MapView,
-        reactiveUtils,
-        FeatureLayer,
-        Legend,
-      ) => {
-        const map = new WebMap({
-          portalItem: {
-            id: 'ddf28dc057b8400dbfa148ef403f7c57',
-          },
-        });
+    calcite-panel {
+      padding: 10px;
+    }
 
-        const view = new MapView({
-          map,
-          container: 'viewDiv',
-        });
+    #addLayerForm {
+      padding: 10px;
+    }
+  </style>
+</head>
 
-        const legend = new Legend({ view });
-        view.ui.add(legend, 'top-left');
-
-        const intLegend = document.createElement('instant-apps-interactive-legend');
-        intLegend.featureCount = true;
-        intLegend.view = view;
-
-        const panel = document.getElementById('legend');
-        panel.appendChild(intLegend);
-
-        const input = document.getElementById('layerInput');
-        const submitBtn = document.getElementById('submitBtn');
-
-        submitBtn.addEventListener('click', async () => {
-          const value = input.value;
-          if (value) {
-            console.log('Value: ', value);
-            const fLayer = new FeatureLayer({
-              url: value,
-            });
-            const loadedFlayer = await fLayer.load();
-            const index = view.map.layers.length;
-            console.log(index);
-            view.map.add(loadedFlayer, index);
-          }
-        });
+<body class="calcite-mode-light">
+  <calcite-shell>
+    <calcite-shell-panel id="legend" slot="panel-start">
+      <h1 style="display: flex; justify-content: center;">TODO: Interactive Legend</h1>
+      <!-- <instant-apps-interactive-legend id="interactive-legend"></instant-apps-interactive-legend> -->
+    </calcite-shell-panel>
+    <div id="viewDiv"></div>
+  </calcite-shell>
+  <script>
+    require(['esri/WebMap','esri/views/MapView'],(
+      WebMap,
+      MapView
+    ) => {
+      const map=new WebMap({
+        portalItem: {
+          id: 'ddf28dc057b8400dbfa148ef403f7c57',
+        },
       });
-    </script>
-  </body>
+
+      const view=new MapView({
+        map,
+        container: 'viewDiv',
+      });
+
+      /* Interactive Legend */
+      const intLegend=document.getElementById('interactive-legend');
+      intLegend.featureCount=true;
+      intLegend.view=view;
+    });
+  </script>
+</body>
+
 </html>
