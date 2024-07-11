@@ -61,5 +61,4 @@ test('set title text link', async () => {
   await new Promise(resolve => requestIdleCallback(resolve));
   expect(header.titleTextLink).toBe(newLink);
 })
-//const verifyClick = await wrapper.get("button").trigger("click");
 
