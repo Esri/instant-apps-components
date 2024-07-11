@@ -101,5 +101,8 @@
   "packageManager": "npm@8.19.4",
   "volta": {
     "node": "16.20.0"
+  },
+  "dependencies": {
+    "@arcgis/core": "^4.30.4"
   }
 }
