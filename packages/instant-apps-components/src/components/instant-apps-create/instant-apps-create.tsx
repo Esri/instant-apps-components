@@ -95,9 +95,15 @@ export class InstantAppsCreate {
   componentWillLoad() {
     this.baseClass = getMode(this.el) === 'dark' ? CSS.baseDark : CSS.baseLight;
     this.initializeModules();
-    return getMessages(this).then(() => {
+  }
+
+  async componentDidLoad() {
+    try {
+      await getMessages(this);
+    } catch {
+    } finally {
       this.initializePredefinedOptions();
-    });
+    }
   }
 
   disconnectedCallback(): void {

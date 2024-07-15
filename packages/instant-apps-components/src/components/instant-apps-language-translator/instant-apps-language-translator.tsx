@@ -263,7 +263,7 @@ export class InstantAppsLanguageTranslator {
 
   renderUserLocale(): HTMLDivElement {
     const languages = this.messages?.languages;
-    const localeFlag = getComponentClosestLanguage(this.el) as string;
+    const localeFlag = getComponentClosestLanguage() as string;
     const langText = languages?.[localeFlag];
     return <div class={CSS.userLangText}>{langText}</div>;
   }

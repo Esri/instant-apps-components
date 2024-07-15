@@ -1,5 +1,3 @@
-import tsconfigPaths from 'vite-tsconfig-paths';
-import stencil from 'unplugin-stencil/vite';
 import { defineConfig } from 'vitest/config';
 
 export default defineConfig({
@@ -10,5 +8,4 @@ export default defineConfig({
       name: 'chrome',
     },
   },
-  plugins: [stencil(), tsconfigPaths()],
 });
