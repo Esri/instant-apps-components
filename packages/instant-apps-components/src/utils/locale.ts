@@ -25,8 +25,9 @@ interface StringBundle {
 }
 
 async function fetchLocaleStringsForComponent<T extends StringBundle = StringBundle>(componentName: string, locale: string): Promise<T> {
-  const primaryURL = new URL(`./assets/t9n/${componentName}/resources_${locale}.json`, window.location.href).href;
-  const fallbackURL = `http://localhost:5173/dist/assets/t9n/${componentName}/resources_${locale}.json`;
+  const localePath = `assets/t9n/${componentName}/resources_${locale}.json`;
+  const primaryURL = new URL(`./${localePath}`, window.location.href).href;
+  const fallbackURL = `${getFallbackUrl()}/dist/${localePath}`;
 
   async function fetchJson(url: string): Promise<T> {
     const response = await fetch(url);
@@ -108,3 +109,7 @@ function updateMessages(component, messages: unknown[], messageOverrides: unknow
 //     updateMessages(component, messages, messageOverrides);
 //   };
 // }
+
+export function getFallbackUrl() {
+  return new URL(window.location.href).origin;
+}
