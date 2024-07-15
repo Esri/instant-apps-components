@@ -6,7 +6,7 @@ import '../../../dist/components/instant-apps-create.js';
 import Portal from "@arcgis/core/portal/Portal.js";
 import WebScene from '@arcgis/core/WebScene';
 import config from '@arcgis/core/config'
-import SceneView from '@arcgis/core/views/SceneView';
+// import SceneView from '@arcgis/core/views/SceneView';
 
 
 
