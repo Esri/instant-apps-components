@@ -2,10 +2,9 @@
 import { loadModules } from '../utils/loadModules';
 import { languageMap } from './languageUtil';
 
-export function getComponentClosestLanguage(element: HTMLElement): string | undefined {
-  const closestElement = (element.closest('[lang]') as HTMLElement) ?? element.shadowRoot?.ownerDocument?.documentElement;
+export function getComponentClosestLanguage(): string | undefined {
   // language set by the calling application or browser. defaults to english.
-  const lang = (closestElement?.lang || navigator?.language || 'en').toLowerCase() as string;
+  const lang = (document.documentElement.lang || navigator?.language || 'en').toLowerCase() as string;
   if (languageMap.has(lang)) {
     return languageMap.get(lang);
   } else {
@@ -69,7 +68,7 @@ export function getDefaultLanguage(intl: __esri.intl, portal: __esri.Portal): st
 
 export async function getLocaleComponentStrings<T extends StringBundle = StringBundle>(element: HTMLElement, locale?: string): Promise<[T, string]> {
   const componentName = element.tagName.toLowerCase();
-  const componentLanguage = locale ?? (getComponentClosestLanguage(element) as string);
+  const componentLanguage = locale ?? (getComponentClosestLanguage() as string);
   let strings: T;
   try {
     strings = await fetchLocaleStringsForComponent(componentName, componentLanguage);
