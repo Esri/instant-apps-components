@@ -1,5 +1,5 @@
 // https://medium.com/stencil-tricks/implementing-internationalisation-i18n-with-stencil-5e6559554117
-// import { loadModules } from '../utils/loadModules';
+import { loadModules } from '../utils/loadModules';
 import { languageMap } from './languageUtil';
 
 export function getComponentClosestLanguage(element: HTMLElement): string | undefined {
@@ -81,16 +81,16 @@ export async function getLocaleComponentStrings<T extends StringBundle = StringB
 }
 
 export async function getMessages(component: any, messageOverrides?: unknown) {
-  // try {
-  const messages = await getLocaleComponentStrings(component.el);
-  updateMessages(component, messages, messageOverrides);
-  // } catch {
-  // } finally {
-  //   try {
-  //     const [intl] = await loadModules(['esri/intl']);
-  //     (intl as __esri.intl).onLocaleChange(handleOnLocaleChange(component, messageOverrides));
-  //   } catch {}
-  // }
+  try {
+    const messages = await getLocaleComponentStrings(component.el);
+    updateMessages(component, messages, messageOverrides);
+  } catch {
+  } finally {
+    try {
+      const [intl] = await loadModules(['esri/intl']);
+      (intl as __esri.intl).onLocaleChange(handleOnLocaleChange(component, messageOverrides));
+    } catch {}
+  }
 }
 
 function updateMessages(component, messages: unknown[], messageOverrides: unknown) {
@@ -103,12 +103,12 @@ function updateMessages(component, messages: unknown[], messageOverrides: unknow
   }
 }
 
-// function handleOnLocaleChange(component, messageOverrides: unknown) {
-//   return async (locale: string) => {
-//     const messages = await getLocaleComponentStrings(component.el, locale);
-//     updateMessages(component, messages, messageOverrides);
-//   };
-// }
+function handleOnLocaleChange(component, messageOverrides: unknown) {
+  return async (locale: string) => {
+    const messages = await getLocaleComponentStrings(component.el, locale);
+    updateMessages(component, messages, messageOverrides);
+  };
+}
 
 export function getFallbackUrl() {
   return new URL(window.location.href).origin;
