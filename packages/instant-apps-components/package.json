@@ -22,7 +22,7 @@
   "scripts": {
     "build": "stencil build --docs",
     "start": "stencil build --dev --watch --serve",
-    "test": "vitest --run",
+    "test": "vitest watch",
     "generate": "stencil generate",
     "storybook": "start-storybook -p 6007 --quiet -s ./www",
     "predeploy": "npm run build-storybook",

@@ -1,5 +1,5 @@
 // https://medium.com/stencil-tricks/implementing-internationalisation-i18n-with-stencil-5e6559554117
-import { loadModules } from '../utils/loadModules';
+// import { loadModules } from '../utils/loadModules';
 import { languageMap } from './languageUtil';
 
 export function getComponentClosestLanguage(element: HTMLElement): string | undefined {
@@ -24,20 +24,34 @@ interface StringBundle {
   [key: string]: StringValue;
 }
 
-function fetchLocaleStringsForComponent<T extends StringBundle = StringBundle>(componentName: string, locale: string): Promise<T> {
-  return new Promise((resolve, reject): void => {
-    const t9nDir = './assets/t9n';
-    const fileName = `resources_${locale}.json`;
-    const localeFilePath = `${t9nDir}/${componentName}/${fileName}`;
-    const { href } = new URL(localeFilePath, window.location.href);
-    fetch(href).then(
-      result => {
-        if (result.ok) resolve(result.json());
-        else reject();
-      },
-      () => reject(),
-    );
-  });
+async function fetchLocaleStringsForComponent<T extends StringBundle = StringBundle>(componentName: string, locale: string): Promise<T> {
+  const primaryURL = new URL(`./assets/t9n/${componentName}/resources_${locale}.json`, window.location.href).href;
+  const fallbackURL = `http://localhost:5173/dist/assets/t9n/${componentName}/resources_${locale}.json`;
+
+  async function fetchJson(url: string): Promise<T> {
+    const response = await fetch(url);
+    if (!response.ok) throw new Error(`Fetch failed with status ${response.status}: ${response.statusText}`);
+    const contentType = response.headers.get('content-type');
+    if (!contentType || !contentType.includes('application/json')) {
+      // Attempt to read response as text for debugging purposes
+      const responseBody = await response.text();
+      console.error(`Expected JSON, but received (${contentType}): ${responseBody}`);
+      throw new Error('Fetched content is not JSON');
+    }
+    return await response.json();
+  }
+
+  try {
+    return await fetchJson(primaryURL);
+  } catch (primaryError) {
+    console.error(`Primary fetch error: ${primaryError}`); // Log primary fetch error with more context
+    try {
+      return await fetchJson(fallbackURL);
+    } catch (fallbackError) {
+      console.error(`Fallback fetch error: ${fallbackError}`); // Log fallback fetch error with more context
+      throw new Error('Both primary and fallback fetches failed');
+    }
+  }
 }
 
 export function getDefaultLanguage(intl: __esri.intl, portal: __esri.Portal): string {
@@ -66,10 +80,16 @@ export async function getLocaleComponentStrings<T extends StringBundle = StringB
 }
 
 export async function getMessages(component: any, messageOverrides?: unknown) {
+  // try {
   const messages = await getLocaleComponentStrings(component.el);
   updateMessages(component, messages, messageOverrides);
-  const [intl] = await loadModules(['esri/intl']);
-  (intl as __esri.intl).onLocaleChange(handleOnLocaleChange(component, messageOverrides));
+  // } catch {
+  // } finally {
+  //   try {
+  //     const [intl] = await loadModules(['esri/intl']);
+  //     (intl as __esri.intl).onLocaleChange(handleOnLocaleChange(component, messageOverrides));
+  //   } catch {}
+  // }
 }
 
 function updateMessages(component, messages: unknown[], messageOverrides: unknown) {
@@ -82,9 +102,9 @@ function updateMessages(component, messages: unknown[], messageOverrides: unknow
   }
 }
 
-function handleOnLocaleChange(component, messageOverrides: unknown) {
-  return async (locale: string) => {
-    const messages = await getLocaleComponentStrings(component.el, locale);
-    updateMessages(component, messages, messageOverrides);
-  };
-}
+// function handleOnLocaleChange(component, messageOverrides: unknown) {
+//   return async (locale: string) => {
+//     const messages = await getLocaleComponentStrings(component.el, locale);
+//     updateMessages(component, messages, messageOverrides);
+//   };
+// }
