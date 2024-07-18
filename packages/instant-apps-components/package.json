@@ -25,14 +25,13 @@
     "test": "stencil test --spec --e2e",
     "test.watch": "stencil test --spec --e2e --watchAll",
     "generate": "stencil generate",
-    "storybook": "start-storybook -p 6007 --quiet -s ./www",
     "predeploy": "npm run build-storybook",
-    "deploy-storybook": "gh-pages -d storybook-static",
-    "build-storybook": "build-storybook",
-    "prep-storybook": "npm run build && npm run build-storybook && npx cpy ./dist ./storybook-static"
+    "storybook": "storybook dev -p 6006",
+    "build-storybook": "storybook build"
   },
   "dependencies": {
     "@a11y/focus-trap": "^1.0.5",
+    "@arcgis/core": "^4.30.8",
     "@ckeditor/ckeditor5-build-classic": "^39.0.1",
     "@esri/arcgis-html-sanitizer": "^3.0.1",
     "@esri/calcite-components": "2.8.5",
@@ -47,17 +46,15 @@
   "devDependencies": {
     "@babel/core": "7.16.5",
     "@stencil/sass": "^3.0.7",
-    "@storybook/addon-a11y": "^6.4.9",
-    "@storybook/addon-actions": "^6.4.9",
-    "@storybook/addon-controls": "^6.4.9",
-    "@storybook/addon-docs": "^6.4.9",
-    "@storybook/addon-essentials": "^6.4.9",
-    "@storybook/addon-knobs": "^6.4.0",
-    "@storybook/addon-links": "^6.4.9",
-    "@storybook/web-components": "^7.6.15",
+    "@storybook/addon-essentials": "^7.6.15",
+    "@storybook/addon-interactions": "^7.6.15",
+    "@storybook/addon-links": "^7.6.15",
+    "@storybook/blocks": "^7.6.15",
+    "@storybook/html": "^7.6.15",
+    "@storybook/html-vite": "^7.6.15",
+    "@storybook/test": "^7.6.15",
     "@types/jest": "^26.0.24",
     "@types/sortablejs": "^1.10.7",
-    "@whitespace/storybook-addon-html": "^5.0.0",
     "babel-loader": "^8.2.3",
     "cpy-cli": "^4.1.0",
     "gh-pages": "^4.0.0",
@@ -65,10 +62,10 @@
     "jest-cli": "^26.6.3",
     "lit-html": "^2.0.2",
     "puppeteer": "^22.0.0",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
     "rollup-plugin-node-polyfills": "^0.2.1",
     "sortablejs": "^1.14.0",
-    "storybook-addon-themes": "^6.1.0",
-    "storybook-color-picker": "^2.2.1",
-    "storybook-rtl-addon": "^0.3.3"
+    "storybook": "^7.6.15"
   }
 }
