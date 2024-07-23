@@ -879,6 +879,8 @@ export namespace Components {
          */
         "titleText": string;
     }
+    interface InstantAppsTimeSlider {
+    }
 }
 export interface InstantAppsCkeditorWrapperCustomEvent<T> extends CustomEvent<T> {
     detail: T;
@@ -1316,6 +1318,12 @@ declare global {
         prototype: HTMLInstantAppsSplashElement;
         new (): HTMLInstantAppsSplashElement;
     };
+    interface HTMLInstantAppsTimeSliderElement extends Components.InstantAppsTimeSlider, HTMLStencilElement {
+    }
+    var HTMLInstantAppsTimeSliderElement: {
+        prototype: HTMLInstantAppsTimeSliderElement;
+        new (): HTMLInstantAppsTimeSliderElement;
+    };
     interface HTMLElementTagNameMap {
         "instant-apps-ckeditor-wrapper": HTMLInstantAppsCkeditorWrapperElement;
         "instant-apps-control-panel": HTMLInstantAppsControlPanelElement;
@@ -1348,6 +1356,7 @@ declare global {
         "instant-apps-sign-in": HTMLInstantAppsSignInElement;
         "instant-apps-social-share": HTMLInstantAppsSocialShareElement;
         "instant-apps-splash": HTMLInstantAppsSplashElement;
+        "instant-apps-time-slider": HTMLInstantAppsTimeSliderElement;
     }
 }
 declare namespace LocalJSX {
@@ -2246,6 +2255,8 @@ declare namespace LocalJSX {
          */
         "titleText"?: string;
     }
+    interface InstantAppsTimeSlider {
+    }
     interface IntrinsicElements {
         "instant-apps-ckeditor-wrapper": InstantAppsCkeditorWrapper;
         "instant-apps-control-panel": InstantAppsControlPanel;
@@ -2278,6 +2289,7 @@ declare namespace LocalJSX {
         "instant-apps-sign-in": InstantAppsSignIn;
         "instant-apps-social-share": InstantAppsSocialShare;
         "instant-apps-splash": InstantAppsSplash;
+        "instant-apps-time-slider": InstantAppsTimeSlider;
     }
 }
 export { LocalJSX as JSX };
@@ -2315,6 +2327,7 @@ declare module "@stencil/core" {
             "instant-apps-sign-in": LocalJSX.InstantAppsSignIn & JSXBase.HTMLAttributes<HTMLInstantAppsSignInElement>;
             "instant-apps-social-share": LocalJSX.InstantAppsSocialShare & JSXBase.HTMLAttributes<HTMLInstantAppsSocialShareElement>;
             "instant-apps-splash": LocalJSX.InstantAppsSplash & JSXBase.HTMLAttributes<HTMLInstantAppsSplashElement>;
+            "instant-apps-time-slider": LocalJSX.InstantAppsTimeSlider & JSXBase.HTMLAttributes<HTMLInstantAppsTimeSliderElement>;
         }
     }
 }
