@@ -4,16 +4,17 @@ import { Component, Element, Event, EventEmitter, Host, Prop, State, VNode, Watc
 import FilterList_T9n from '../../assets/t9n/instant-apps-filter-list/resources.json';
 
 import {
+  BaseQueryableLayer,
   Expression,
   ExtentSelector,
   FilterLayer,
   FilterParam,
-  FilterQueryLayer,
-  FilterQueryLayerView,
   GenericObject,
   GenericStringObject,
   LayerExpression,
   PointCloudFilters,
+  QueryableLayer,
+  QueryableLayerView,
 } from '../../interfaces/interfaces';
 import { loadModules } from '../../utils/loadModules';
 import { getMessages } from '../../utils/locale';
@@ -152,7 +153,7 @@ export class InstantAppsFilterList {
   locale: string;
   panelEl: HTMLCalcitePanelElement;
   reactiveUtils: __esri.reactiveUtils;
-  zoomToGraphics: __esri.Graphic[];
+  zoomToExtent: { type: string; count: number; extent: __esri.Extent };
 
   async componentWillLoad(): Promise<void> {
     this.baseClass = getMode(this.el) === 'dark' ? baseClassDark : baseClassLight;
@@ -192,8 +193,6 @@ export class InstantAppsFilterList {
     this.reactiveUtils = reactiveUtils;
     this.locale = intl.getLocale();
     this.intl = intl;
-
-    return Promise.resolve();
   }
 
   render(): VNode {
@@ -415,18 +414,14 @@ export class InstantAppsFilterList {
   }
 
   initInput(layerExpression: LayerExpression, expression: Expression): VNode | undefined {
-    const { type } = expression;
-    if (type === 'string' || type == 'coded-value') {
+    const { type, numDisplayOption, displayOption } = expression;
+    const isDropdown = numDisplayOption === 'drop-down' || displayOption === 'drop-down';
+
+    if (type === 'string' || type === 'coded-value' || ((type === 'number' || type === 'range' || type === 'date') && isDropdown)) {
       return this.renderCombobox(layerExpression, expression);
-    } else if (type === 'number' || type == 'range') {
-      if (expression?.numDisplayOption === 'drop-down' || expression?.displayOption === 'drop-down') {
-        return this.renderCombobox(layerExpression, expression);
-      }
+    } else if (type === 'number' || type === 'range') {
       return this.renderNumberSlider(layerExpression, expression);
     } else if (type === 'date') {
-      if (expression?.displayOption === 'drop-down') {
-        return this.renderCombobox(layerExpression, expression);
-      }
       return this.renderDatePicker(layerExpression, expression);
     }
     return;
@@ -435,75 +430,83 @@ export class InstantAppsFilterList {
   async initExpressions(): Promise<void> {
     this.loading = true;
     if (this.filterLayerExpressions == null) return;
-    const tmpLE = this.filterLayerExpressions;
-    for (let i = 0; i < tmpLE?.length; i++) {
-      const expressions = tmpLE[i].expressions;
-      for (let j = 0; j < expressions?.length; j++) {
-        if (expressions[j].active == null && expressions[j].definitionExpression != null) {
-          expressions[j].active = false;
-        }
-        await this.setInitExpression(tmpLE[i], expressions[j]);
-      }
-    }
+    const tmpLE = await this.processExpressions();
     this.loading = false;
     this.filterLayerExpressions = [...tmpLE];
+  }
+
+  async processExpressions(): Promise<LayerExpression[]> {
+    if (!this.filterLayerExpressions) return [];
+
+    for (const layerExpression of this.filterLayerExpressions) {
+      for (const expression of layerExpression.expressions || []) {
+        expression.active = expression.active ?? expression.definitionExpression != null;
+        await this.setInitExpression(layerExpression, expression);
+      }
+    }
+
+    return this.filterLayerExpressions;
   }
 
   handleResetFilter(): void {
     this.filterLayerExpressions?.forEach(layerExpression => {
       layerExpression.expressions?.forEach(expression => {
-        const { type } = expression;
-        if (type === 'string' || type === 'coded-value') {
-          this.resetCombobox(expression);
+        const { type, numDisplayOption, displayOption } = expression;
+        let uiType = '';
+
+        if (
+          type === 'string' ||
+          type === 'coded-value' ||
+          (type === 'date' && (numDisplayOption === 'drop-down' || displayOption === 'drop-down')) ||
+          ((type === 'number' || type === 'range') && (numDisplayOption === 'drop-down' || displayOption === 'drop-down'))
+        ) {
+          uiType = 'combobox';
         } else if (type === 'date') {
-          if (expression?.numDisplayOption === 'drop-down' || expression?.displayOption === 'drop-down') {
-            this.resetCombobox(expression);
-          } else {
-            this.resetDatePicker(expression);
-          }
+          uiType = 'datePicker';
         } else if (type === 'number' || type === 'range') {
-          if (expression?.numDisplayOption === 'drop-down' || expression?.displayOption === 'drop-down') {
-            this.resetCombobox(expression);
-          } else {
-            this.resetNumberRange(expression);
-          }
+          uiType = 'numberRange';
+        }
+
+        if (uiType) {
+          this.resetExpressionUI(uiType, expression);
         } else {
           this.resetCheckbox(expression);
         }
+
         expression.active = false;
       });
     });
+
     this.resetAllFilters();
     this.generateURLParams();
     this.filterListReset.emit();
   }
 
-  resetCombobox(expression: Expression): void {
+  resetExpressionUI(type: string, expression: Expression): void {
     const { id } = expression;
-    expression.selectedFields = undefined;
-    const combobox = this.panelEl.querySelector(`[id='${id}']`) as HTMLCalciteComboboxElement;
-    if (combobox != null) {
-      for (let i = 0; i < combobox.children.length; i++) {
-        const comboboxItem = combobox.children[i] as HTMLCalciteComboboxItemElement;
-        comboboxItem.selected = false;
-      }
-    }
-  }
-
-  resetDatePicker(expression: Expression): void {
-    const { id } = expression;
-    expression.range = undefined;
-    const datePicker = this.panelEl.querySelector(`[id='${id}']`) as HTMLCalciteInputDatePickerElement;
-    resetDatePicker(datePicker);
-  }
-
-  resetNumberRange(expression: Expression): void {
-    expression.range = undefined;
-    const { id, max, min } = expression;
-    const slider = this.panelEl.querySelector(`[id='${id}']`) as HTMLCalciteSliderElement;
-    if (slider != null) {
-      slider.minValue = min as number;
-      slider.maxValue = max as number;
+    switch (type) {
+      case 'combobox':
+        expression.selectedFields = undefined;
+        const combobox = this.panelEl.querySelector(`[id='${id}']`) as HTMLCalciteComboboxElement;
+        if (combobox) {
+          Array.from(combobox.children).forEach(child => {
+            (child as HTMLCalciteComboboxItemElement).selected = false;
+          });
+        }
+        break;
+      case 'datePicker':
+        expression.range = undefined;
+        const datePicker = this.panelEl.querySelector(`[id='${id}']`) as HTMLCalciteInputDatePickerElement;
+        resetDatePicker(datePicker);
+        break;
+      case 'numberRange':
+        expression.range = undefined;
+        const slider = this.panelEl.querySelector(`[id='${id}']`) as HTMLCalciteSliderElement;
+        if (slider) {
+          slider.minValue = expression.min as number;
+          slider.maxValue = expression.max as number;
+        }
+        break;
     }
   }
 
@@ -518,38 +521,48 @@ export class InstantAppsFilterList {
   resetAllFilters(): void {
     const allLayersAndTables = this.view?.map?.allLayers?.concat(this.view?.map?.allTables);
     allLayersAndTables?.forEach(layer => {
-      if (supportedTypes.includes(layer.type)) {
-        const fl = layer as FilterLayer;
-        if (fl.type === 'point-cloud') {
-          fl.filters = this.initPointCloudFilters?.[fl.id];
-        } else if (fl.type === 'map-image') {
-          fl.allSublayers.forEach(sublayer => {
-            sublayer.definitionExpression = this.initMapImageExpressions?.[fl.id]?.[sublayer.id];
-          });
-        } else {
-          fl.definitionExpression = this.initDefExpressions?.[fl.id];
-        }
+      if (!supportedTypes.includes(layer.type)) return;
+
+      const fl = layer as FilterLayer;
+      if (fl.type === 'point-cloud') {
+        fl.filters = this.initPointCloudFilters?.[fl.id];
+      } else if (fl.type === 'map-image') {
+        fl.allSublayers.forEach(sublayer => {
+          sublayer.definitionExpression = this.initMapImageExpressions?.[fl.id]?.[sublayer.id];
+        });
+      } else {
+        fl.definitionExpression = this.initDefExpressions?.[fl.id];
       }
     });
   }
 
   async updateStringExpression(layerExpression: LayerExpression, expression: Expression): Promise<boolean> {
-    const { field, type } = expression;
     const layer = this.findFilterLayer(layerExpression);
-    expression.fields = await this.getFeatureAttributes(layer, field);
-    if (type === 'date') {
-      const layerField = layer.fields.find(({ name }) => name === field);
+
+    await this.getFeatureAttributes(layer, expression);
+
+    this.handleDateField(layer, expression);
+
+    if (expression?.selectedFields) {
+      expression.definitionExpression = this.createDefinitionExpression(expression);
+      return true;
+    }
+    return false;
+  }
+
+  handleDateField(layer: QueryableLayer, expression: Expression): void {
+    if (expression.type === 'date') {
+      const layerField = layer.fields.find(({ name }) => name === expression.field);
       if (layerField?.type === 'date-only') {
         expression.dateOnly = true;
       }
     }
-    if (expression?.selectedFields) {
-      const selectedFields = expression.selectedFields.map((field: string | number) => (typeof field === 'number' ? field : `'${handleSingleQuote(field)}'`));
-      expression.definitionExpression = `${field} IN (${selectedFields.join(',')})`;
+  }
 
-      return Promise.resolve(true);
-    }
-    return Promise.resolve(false);
+  createDefinitionExpression(expression: Expression): string {
+    if (!expression.selectedFields?.length) return '';
+    const selectedFields = expression.selectedFields.map((field: string | number) => (typeof field === 'number' ? field : `'${handleSingleQuote(field)}'`));
+    return `${expression.field} IN (${selectedFields.join(',')})`;
   }
 
   async updateNumberExpression(layerExpression: LayerExpression, expression: Expression): Promise<boolean> {
@@ -559,9 +572,7 @@ export class InstantAppsFilterList {
       if (field != null) {
         this.setExpressionFormat(layer as __esri.FeatureLayer, expression, field);
         if (expression?.numDisplayOption === 'drop-down' || expression?.displayOption === 'drop-down') {
-          const fields = (await this.getFeatureAttributes(layer, field)) as number[];
-          fields.sort((a, b) => a - b);
-          expression.fields = fields;
+          await this.getFeatureAttributes(layer, expression);
         } else {
           const graphic = await this.calculateMinMaxStatistics(layer, field);
           const attributes = graphic?.[0]?.attributes as { [key: string]: number };
@@ -611,23 +622,22 @@ export class InstantAppsFilterList {
   }
 
   updateCodedValueExpression(expression: Expression, layerField: __esri.Field | undefined): boolean {
-    const { field } = expression;
-    const fields: any[] = [];
-    expression.codedValues = {};
-    const domain = layerField?.domain as __esri.CodedValueDomain;
-    domain?.codedValues?.forEach(cv => {
-      const { code, name } = cv;
-      fields.push(code);
-      if (expression.codedValues != null) {
-        expression.codedValues[code] = name;
-      }
-    });
-    expression.fields = fields;
-    if (expression?.selectedFields) {
-      const selectedFields = expression.selectedFields.map((field: string | number) => (typeof field === 'number' ? field : `'${handleSingleQuote(field)}'`));
-      const definitionExpression = `${field} IN (${selectedFields.join(',')})`;
-      expression.definitionExpression = definitionExpression;
+    if (!layerField?.domain || layerField?.domain?.type !== 'coded-value') {
+      return false;
+    }
 
+    const domain = layerField.domain;
+    const codedValuesMap = domain.codedValues.reduce((acc, { code, name }) => {
+      acc[code] = name;
+      return acc;
+    }, {});
+
+    expression.codedValues = codedValuesMap;
+    expression.fields = Object.keys(codedValuesMap);
+
+    if (expression.selectedFields?.length) {
+      const selectedFieldsExpression = expression.selectedFields.map((field: string | number) => (typeof field === 'number' ? field : `'${handleSingleQuote(field)}'`)).join(',');
+      expression.definitionExpression = `${expression.field} IN (${selectedFieldsExpression})`;
       return true;
     }
 
@@ -635,91 +645,149 @@ export class InstantAppsFilterList {
   }
 
   updateRangeExpression(expression: Expression, layerField: __esri.Field | undefined): boolean {
-    const { field, range } = expression;
-    const domain = layerField?.domain as __esri.RangeDomain;
-    expression.min = domain?.minValue;
-    expression.max = domain?.maxValue;
-    if (range && Object.keys(range).length) {
-      const { min, max } = range;
-      const definitionExpression = `${field} BETWEEN ${min} AND ${max}`;
-      expression.definitionExpression = definitionExpression;
+    if (!layerField?.domain || layerField?.domain?.type !== 'range') {
+      return false;
+    }
 
+    const { field, range } = expression;
+    expression.min = layerField.domain.minValue;
+    expression.max = layerField.domain.maxValue;
+
+    if (range && Object.keys(range).length) {
+      expression.definitionExpression = `${field} BETWEEN ${range.min} AND ${range.max}`;
       return true;
     }
+
     return false;
   }
 
-  async getFeatureAttributes(layer: FilterQueryLayer, field: string | undefined): Promise<string[] | number[]> {
-    if (layer && supportedTypes.includes(layer.type)) {
-      const query = layer.createQuery();
-      if ((layer as any)?.capabilities?.query?.['supportsCacheHint']) {
-        query.cacheHint = true;
-      }
-      if (field) {
-        const initDefExpr = this.getInitDefExprFromLayer(layer);
-        query.where = initDefExpr || '1=1';
-        query.outFields = [field];
-        query.orderByFields = [`${field} ASC`];
-        query.returnDistinctValues = true;
-        query.returnGeometry = false;
-        query.maxRecordCountFactor = 5;
-        if (this.extentSelector && this.extentSelectorConfig) {
-          const geo = this.getExtent(this.extentSelector, this.extentSelectorConfig);
-          if (geo != null) query.geometry = geo;
-          query.spatialRelationship = 'intersects';
-        }
-
-        const features = (await this.queryForFeatures(layer, query, field)) as string[];
-
-        if (features?.length) {
-          return [...new Set(features)].sort();
-        }
-      }
+  async getFeatureAttributes(layer: QueryableLayer, expression: Expression): Promise<void> {
+    if (!this.isLayerSupported(layer)) {
+      expression.fields = [];
+      return;
     }
 
-    return [];
+    const queryLayer = await this.getQueryLayer(layer);
+    const { maxRecordCount, supportsMaxRecordCountFactor } = this.extractQueryCapabilities(queryLayer);
+    const featureCount = await queryLayer.queryFeatureCount();
+    const query = this.createQuery(queryLayer, expression);
+
+    await this.queryDistinctFeatures(queryLayer, query, expression);
+
+    if (this.shouldPaginate(maxRecordCount, featureCount, supportsMaxRecordCountFactor)) {
+      this.handlePagination(queryLayer, query, maxRecordCount, supportsMaxRecordCountFactor, featureCount, expression);
+    }
   }
 
-  async queryForFeatures(layer: FilterQueryLayer, query: __esri.Query, field: string): Promise<string[] | number[]> {
+  isLayerSupported(layer: QueryableLayer): boolean {
+    return layer && supportedTypes.includes(layer.type);
+  }
+
+  extractQueryCapabilities(queryLayer: any): { maxRecordCount: number; supportsMaxRecordCountFactor: boolean } {
+    return {
+      maxRecordCount: queryLayer.capabilities?.query?.['maxRecordCount'],
+      supportsMaxRecordCountFactor: queryLayer.capabilities?.query?.['supportsMaxRecordCountFactor'],
+    };
+  }
+
+  createQuery(queryLayer: any, expression: Expression): any {
+    const query = queryLayer.createQuery();
+    this.applyCacheHint(queryLayer, query);
+    const field = expression?.field;
+    if (field) {
+      const initDefExpr = this.getInitDefExprFromLayer(queryLayer);
+      query.where = initDefExpr || '1=1';
+      query.outFields = [field];
+      query.orderByFields = [`${field} ASC`];
+      query.returnDistinctValues = true;
+      query.returnGeometry = false;
+      query.maxRecordCountFactor = 5;
+      this.applyQueryGeometryFromExtentSelector(query);
+    }
+    return query;
+  }
+
+  async queryDistinctFeatures(queryLayer: any, query: any, expression: Expression): Promise<void> {
+    if (!query.outFields) return;
+
+    const features = (await this.queryForFeatures(queryLayer, query, query.outFields[0])) as string[];
+    if (features?.length) {
+      expression.fields = [...new Set(features)].sort();
+    }
+  }
+
+  getQueryCount(maxRecordCount: number, supportsMaxRecordCountFactor: boolean): number {
+    return supportsMaxRecordCountFactor ? maxRecordCount * 5 : maxRecordCount;
+  }
+
+  shouldPaginate(maxRecordCount: number, featureCount: number, supportsMaxRecordCountFactor: boolean): boolean {
+    const queryCount = this.getQueryCount(maxRecordCount, supportsMaxRecordCountFactor);
+    return maxRecordCount != null && featureCount > queryCount;
+  }
+
+  async handlePagination(
+    queryLayer: BaseQueryableLayer,
+    query: __esri.Query,
+    maxRecordCount: number,
+    supportsMaxRecordCountFactor: boolean,
+    featureCount: number,
+    expression: Expression,
+  ): Promise<void> {
+    const queryCount = this.getQueryCount(maxRecordCount, supportsMaxRecordCountFactor);
+    const promises: any[] = [];
+    for (let index = queryCount; index < featureCount; index += queryCount) {
+      const paginatedQuery = query.clone();
+      paginatedQuery.num = maxRecordCount;
+      paginatedQuery.start = index;
+
+      promises.push(this.queryForFeatures(queryLayer, paginatedQuery, query.outFields[0]));
+    }
+    Promise.all(promises).then(results => {
+      results.forEach((features: string[]) => {
+        if (features?.length && expression.fields) {
+          (expression.fields as string[]).push(...features);
+        }
+      });
+      expression.fields = [...new Set(expression.fields as string[])].sort();
+      this.filterLayerExpressions = [...this.filterLayerExpressions];
+    });
+  }
+
+  async queryForFeatures(layer: QueryableLayer, query: __esri.Query, field: string): Promise<string[] | number[]> {
     const results = await layer.queryFeatures(query);
     const features = results?.features.filter(feature => feature.attributes?.[field]);
     return features?.map(feature => feature.attributes?.[field]);
   }
 
-  async calculateMinMaxStatistics(layer: FilterQueryLayer, field: string | undefined): Promise<__esri.Graphic[]> {
-    if (layer && supportedTypes.includes(layer.type)) {
-      const query = layer.createQuery();
-      let initDefExpr = this.getInitDefExprFromLayer(layer);
-      query.where = initDefExpr || '1=1';
-      if ((layer as any)?.capabilities?.query?.supportsCacheHint) {
-        query.cacheHint = true;
-      }
-      if (field) {
-        const tmp = [
-          {
-            onStatisticField: field,
-            outStatisticFieldName: `max${field}`,
-            statisticType: 'max',
-          },
-          {
-            onStatisticField: field,
-            outStatisticFieldName: `min${field}`,
-            statisticType: 'min',
-          },
-        ];
-        query.outStatistics = tmp as any;
-        if (this.extentSelector && this.extentSelectorConfig) {
-          const geo = this.getExtent(this.extentSelector, this.extentSelectorConfig);
-          if (geo != null) {
-            query.geometry = geo;
-          }
-          query.spatialRelationship = 'intersects';
-        }
-        const results = await layer.queryFeatures(query);
-        return results?.features;
-      }
+  async calculateMinMaxStatistics(layer: QueryableLayer, field: string | undefined): Promise<__esri.Graphic[]> {
+    if (!layer || !supportedTypes.includes(layer.type) || !field) {
+      return [];
     }
-    return [];
+
+    const query = this.createStatisticsQuery(layer, field);
+    const results = await layer.queryFeatures(query);
+    return results?.features || [];
+  }
+
+  createStatisticsQuery(layer: QueryableLayer, field: string): __esri.Query {
+    const query = layer.createQuery();
+    query.where = this.getInitDefExprFromLayer(layer) || '1=1';
+    this.applyCacheHint(layer, query);
+    query.outStatistics = [
+      {
+        onStatisticField: field,
+        outStatisticFieldName: `max${field}`,
+        statisticType: 'max',
+      },
+      {
+        onStatisticField: field,
+        outStatisticFieldName: `min${field}`,
+        statisticType: 'min',
+      },
+    ] as __esri.StatisticDefinition[];
+    this.applyQueryGeometryFromExtentSelector(query);
+
+    return query;
   }
 
   getExtent(extentSelector: boolean, extentSelectorConfig: ExtentSelector): __esri.Geometry | undefined {
@@ -737,53 +805,75 @@ export class InstantAppsFilterList {
     return;
   }
 
-  setInitExpression(layerExpression: LayerExpression, expression: Expression): Promise<void> {
-    if (expression.field && expression.type) {
-      const filterLayer = this.findFilterLayer(layerExpression);
-      if (filterLayer == null) {
-        return Promise.resolve();
-      }
-      if (filterLayer.loadStatus === 'not-loaded' || filterLayer.loadStatus === 'failed') {
-        filterLayer.load();
-      }
-      return filterLayer.when(async () => {
-        const layerField = filterLayer.fields?.find(({ name }) => name === expression.field);
-        const domainType = layerField?.domain?.type;
-        expression.type = domainType === 'coded-value' || domainType === 'range' ? domainType : expression.type;
-        await this.updateExpression(layerExpression, expression, layerField);
-      });
-    } else {
-      this.updateExpression(layerExpression, expression, undefined);
-      return Promise.resolve();
+  async setInitExpression(layerExpression: LayerExpression, expression: Expression): Promise<void> {
+    if (!expression.field || !expression.type) {
+      await this.updateExpression(layerExpression, expression, undefined);
+      return;
     }
+
+    const filterLayer = this.findFilterLayer(layerExpression);
+    if (!filterLayer) {
+      return;
+    }
+
+    if (filterLayer.loadStatus === 'not-loaded' || filterLayer.loadStatus === 'failed') {
+      await filterLayer.load();
+    }
+
+    await filterLayer.when(async () => {
+      const layerField = filterLayer.fields?.find(({ name }) => name === expression.field);
+      const domainType = layerField?.domain?.type;
+      expression.type = domainType === 'coded-value' || domainType === 'range' ? domainType : expression.type;
+      await this.updateExpression(layerExpression, expression, layerField);
+    });
   }
 
   async updateExpression(layerExpression: LayerExpression, expression: Expression, layerField: __esri.Field | undefined): Promise<void> {
-    let update = false;
-    const { type } = expression;
-    if (type === 'string') {
-      update = await this.updateStringExpression(layerExpression, expression);
-    } else if (type === 'number') {
-      update = await this.updateNumberExpression(layerExpression, expression);
-    } else if (type === 'date') {
-      if (expression.displayOption === 'drop-down') {
-        update = await this.updateStringExpression(layerExpression, expression);
-      } else {
-        update = await this.updateDateExpression(layerExpression, expression);
-      }
-    } else if (type === 'coded-value') {
-      update = this.updateCodedValueExpression(expression, layerField);
-    } else if (type === 'range') {
-      if (expression.displayOption === 'drop-down') {
-        update = await this.updateStringExpression(layerExpression, expression);
-      } else {
-        update = this.updateRangeExpression(expression, layerField);
-      }
-    } else if (expression.active && (type === 'checkbox' || type == null)) {
-      update = true;
-    }
+    const update = await this.handleExpressionType(layerExpression, expression, layerField);
     if (update) {
       this.generateOutput(layerExpression);
+    }
+  }
+
+  async handleExpressionType(layerExpression: LayerExpression, expression: Expression, layerField: __esri.Field | undefined): Promise<boolean> {
+    switch (expression.type) {
+      case 'string':
+      case 'number':
+        return this.updateStringOrNumberExpression(layerExpression, expression);
+      case 'date':
+        return this.updateDateExpressionBasedOnDisplayOption(layerExpression, expression);
+      case 'coded-value':
+        return this.updateCodedValueExpression(expression, layerField);
+      case 'range':
+        return this.updateRangeExpressionBasedOnDisplayOption(layerExpression, expression, layerField);
+      case 'checkbox':
+      case null:
+        return expression.active ?? false;
+      default:
+        return false;
+    }
+  }
+
+  async updateStringOrNumberExpression(layerExpression: LayerExpression, expression: Expression): Promise<boolean> {
+    if (expression.type === 'string' || expression.type === 'number') {
+      return await this.updateStringExpression(layerExpression, expression);
+    }
+    return false;
+  }
+
+  async updateDateExpressionBasedOnDisplayOption(layerExpression: LayerExpression, expression: Expression): Promise<boolean> {
+    if (expression.displayOption === 'drop-down') {
+      return await this.updateStringExpression(layerExpression, expression);
+    } else {
+      return await this.updateDateExpression(layerExpression, expression);
+    }
+  }
+
+  async updateRangeExpressionBasedOnDisplayOption(layerExpression: LayerExpression, expression: Expression, layerField: __esri.Field | undefined): Promise<boolean> {
+    if (expression.displayOption === 'drop-down') {
+      return await this.updateStringExpression(layerExpression, expression);
+    } else {
+      return this.updateRangeExpression(expression, layerField);
     }
   }
 
@@ -817,67 +907,80 @@ export class InstantAppsFilterList {
     const combobox = event.target as HTMLCalciteComboboxElement;
     const items = combobox.selectedItems as HTMLCalciteComboboxItemElement[];
     const { field, type } = expression;
-    if (items && items.length) {
+
+    expression.selectedFields = items.map(({ value }) => value);
+
+    if (items.length) {
       const values = items.map(({ value }) => (typeof value === 'number' ? value : `'${handleSingleQuote(value)}'`));
-      if (type === 'date') {
-        expression.selectedFields = items.map(({ value }) => value);
-        expression.definitionExpression = values.map(value => this.buildDateExpression(value, field!)).join(' OR ');
-      } else {
-        expression.selectedFields = items.map(({ value }) => value);
-        const definitionExpression = `${field} IN (${values.join(',')})`;
-        expression.definitionExpression = definitionExpression;
-      }
+      expression.definitionExpression = type === 'date' ? values.map(value => this.buildDateExpression(value, field!)).join(' OR ') : `${field} IN (${values.join(',')})`;
       expression.active = true;
     } else {
       expression.definitionExpression = undefined;
       expression.active = false;
     }
+
     this.generateOutput(layerExpression);
   }
 
   handleDatePickerRangeChange(expression: Expression, layerExpression: LayerExpression, event: CalciteInputDatePickerCustomEvent<Event>): void {
     const datePicker = event.target;
     const [startDate, endDate] = datePicker.valueAsDate as Date[];
-    const start = startDate != null ? convertToDate(Math.floor(startDate.getTime()), true) : undefined;
-    const end = endDate != null ? convertToDate(Math.floor(endDate.getTime()), true) : undefined;
-    if (start != null || end != null) {
-      const chevron = end && start == null ? '<' : end == null && start ? '>' : null;
-      if (chevron) {
-        expression.definitionExpression = `${expression.field} ${chevron} '${start ?? end}'`;
-      } else {
-        expression.definitionExpression = `${expression.field} BETWEEN '${start}' AND '${end}'`;
-      }
+    const start = startDate ? convertToDate(Math.floor(startDate.getTime()), true) : undefined;
+    const end = endDate ? convertToDate(Math.floor(endDate.getTime()), true) : undefined;
+
+    if (start || end) {
+      expression.definitionExpression = this.constructDefinitionExpression(expression.field as string, start, end);
       expression.range = { min: start, max: end };
       expression.active = true;
-
       this.generateOutput(layerExpression);
     }
   }
 
+  constructDefinitionExpression(field: string, start?: string, end?: string): string {
+    if (!start) return `${field} < '${end}'`;
+    if (!end) return `${field} > '${start}'`;
+    return `${field} BETWEEN '${start}' AND '${end}'`;
+  }
+
   handleURLParams(): void {
-    if ('URLSearchParams' in window) {
-      const params = new URLSearchParams(document.location.search);
-      const filters = params.get('filter')?.split(';');
-      let filterCount = 0;
-      filters?.forEach(filter => {
-        const tmpFilter = JSON.parse(filter) as FilterParam;
-        this.filterLayerExpressions?.forEach(layerExpression => {
-          if (tmpFilter?.layerId === layerExpression.id) {
-            layerExpression.expressions?.forEach(expression => {
-              if (expression.id?.toString() === tmpFilter?.expressionId?.toString()) {
-                expression.active = true;
-                filterCount++;
-                if (tmpFilter.type === 'range') {
-                  expression.range = tmpFilter.range;
-                } else if (tmpFilter.type === 'select') {
-                  expression.selectedFields = tmpFilter.selectedFields;
-                }
-              }
-            });
-          }
-        });
+    if (!('URLSearchParams' in window)) return;
+
+    const params = new URLSearchParams(document.location.search);
+    const filterParamString = params.get('filter');
+    if (!filterParamString) {
+      this.filterCount = 0;
+      return;
+    }
+
+    const filters = filterParamString.split(';').map(filter => JSON.parse(filter) as FilterParam);
+    this.filterCount = this.applyFilters(filters);
+  }
+
+  applyFilters(filters: FilterParam[]): number {
+    let filterCount = 0;
+
+    filters.forEach(filter => {
+      const layerExpression = this.filterLayerExpressions?.find(le => le.id === filter.layerId);
+      if (!layerExpression) return;
+
+      layerExpression.expressions?.forEach(expression => {
+        if (expression.id?.toString() === filter.expressionId?.toString()) {
+          this.activateExpression(expression, filter);
+          filterCount++;
+        }
       });
-      this.filterCount = filterCount;
+    });
+
+    return filterCount;
+  }
+
+  activateExpression(expression: Expression, filter: FilterParam): void {
+    expression.active = true;
+
+    if (filter.type === 'range') {
+      expression.range = filter.range;
+    } else if (filter.type === 'select') {
+      expression.selectedFields = filter.selectedFields;
     }
   }
 
@@ -907,37 +1010,26 @@ export class InstantAppsFilterList {
 
   autoUpdateURLCheck(params: URLSearchParams): void {
     if (this.autoUpdateUrl) {
-      if (params.toString()) {
-        window.history.replaceState({}, '', `${window.location.pathname}?${params} `);
-      } else {
-        window.history.replaceState({}, '', window.location.pathname);
-      }
+      const url = params.toString() ? `${window.location.pathname}?${params}`.trim() : window.location.pathname;
+      window.history.replaceState({}, '', url);
     }
   }
 
   generateURLParams(): void {
-    if ('URLSearchParams' in window) {
-      const params = new URLSearchParams(window.location.search);
-      const expressions: string[] = [];
-      let filterCount = 0;
-      this.filterLayerExpressions?.forEach(layerExpr => {
-        layerExpr?.expressions?.forEach(expression => {
-          if (expression.active) {
-            filterCount++;
-            const paramExpression = this.createURLParamExpression(layerExpr, expression);
-            expressions.push(JSON.stringify(paramExpression));
-          }
-        });
-      });
-      this.filterCount = filterCount;
-      if (expressions.length > 0) {
-        params.set('filter', expressions.join(';'));
-      } else {
-        params.delete('filter');
-      }
-      this.autoUpdateURLCheck(params);
-      this.urlParams = params;
-    }
+    if (!('URLSearchParams' in window)) return;
+
+    const params = new URLSearchParams(window.location.search);
+    const expressions =
+      this.filterLayerExpressions?.flatMap(
+        layerExpr => layerExpr?.expressions?.filter(expression => expression.active).map(expression => JSON.stringify(this.createURLParamExpression(layerExpr, expression))) || [],
+      ) || [];
+
+    this.filterCount = expressions.length;
+
+    expressions.length > 0 ? params.set('filter', expressions.join(';')) : params.delete('filter');
+
+    this.autoUpdateURLCheck(params);
+    this.urlParams = params;
   }
 
   updateFilter(layerExpression: LayerExpression, defExpressions: string[], filters: PointCloudFilters): void {
@@ -957,7 +1049,7 @@ export class InstantAppsFilterList {
     }
   }
 
-  updateFilterLayerDefExpression(layer: FilterQueryLayer, defExpressions: string[], layerExpression: LayerExpression): void {
+  updateFilterLayerDefExpression(layer: QueryableLayer, defExpressions: string[], layerExpression: LayerExpression): void {
     const { operator } = layerExpression;
     let initDefExpressions = this.getInitDefExprFromLayer(layer);
     const combinedExpressions =
@@ -986,24 +1078,22 @@ export class InstantAppsFilterList {
     this.initDefExpressions = {};
     this.initPointCloudFilters = {};
     this.initMapImageExpressions = {};
-    const layersAndTables = map.allLayers.concat(map.allTables);
-    for (let i = 0; i < layersAndTables.length; i++) {
-      const layer = layersAndTables.getItemAt(i);
-      if (supportedTypes.includes(layer.type)) {
-        const fl = layer as FilterLayer;
-        if (fl.type === 'point-cloud') {
-          this.initPointCloudFilters[fl.id] = fl.filters;
-        } else if (fl.type === 'map-image') {
-          this.initMapImageExpressions[fl.id] = {};
-          fl.allSublayers.forEach(sublayer => {
-            this.initMapImageExpressions[fl.id][sublayer.id] = sublayer.definitionExpression;
-          });
-        } else {
-          this.initDefExpressions[fl.id] = fl.definitionExpression;
-        }
-      }
-    }
 
+    map.allLayers.concat(map.allTables).forEach(layer => {
+      if (!supportedTypes.includes(layer.type)) return;
+
+      const fl = layer as FilterLayer;
+      if (fl.type === 'point-cloud') {
+        this.initPointCloudFilters[fl.id] = fl.filters;
+      } else if (fl.type === 'map-image') {
+        this.initMapImageExpressions[fl.id] = fl.allSublayers.reduce((acc, sublayer) => {
+          acc[sublayer.id] = sublayer.definitionExpression;
+          return acc;
+        }, {});
+      } else {
+        this.initDefExpressions[fl.id] = fl.definitionExpression;
+      }
+    });
     this.initExpressions();
     this.handleURLParams();
   }
@@ -1011,89 +1101,49 @@ export class InstantAppsFilterList {
   async handleZoomTo(layerExpression: LayerExpression): Promise<void> {
     const zoomId = layerExpression?.sublayerId ? `#zoom-to-${layerExpression.id}-${layerExpression.sublayerId}` : `#zoom-to-${layerExpression.id}`;
     const zoomToBtn = this.panelEl.querySelector(zoomId) as HTMLCalciteButtonElement;
-    if (zoomToBtn != null) {
-      zoomToBtn.loading = true;
-      zoomToBtn.disabled = true;
-    }
-    this.zoomToGraphics = [];
-    let loadingTime = 0;
-    let startGoTo = false;
-    const zoomToInterval = setInterval(() => {
-      if (loadingTime >= 1000 && startGoTo) {
-        this.view.goTo(this.zoomToGraphics);
-        if (zoomToBtn != null) {
-          zoomToBtn.loading = false;
-          zoomToBtn.disabled = false;
-        }
-        clearInterval(zoomToInterval);
+
+    const toggleZoomButtonState = (isLoading: boolean, isDisabled: boolean) => {
+      if (zoomToBtn) {
+        zoomToBtn.loading = isLoading;
+        zoomToBtn.disabled = isDisabled;
       }
-      loadingTime += 500;
-    }, 500);
-    await this.getZoomToGraphics(layerExpression);
-    startGoTo = true;
+    };
+
+    toggleZoomButtonState(true, true);
+
+    await this.getZoomToExtent(layerExpression);
+    const goToOptions = this.zoomToExtent.type === 'point' && this.zoomToExtent.count === 1 ? { target: this.zoomToExtent.extent, zoom: 10 } : this.zoomToExtent.extent;
+
+    await this.view.goTo(goToOptions);
+
+    toggleZoomButtonState(false, false);
   }
 
-  async getZoomToGraphics(layerExpression: LayerExpression): Promise<void> {
-    const lv = this.view.allLayerViews.find(({ layer }) => layer.id === layerExpression.id) as FilterQueryLayerView;
-    const layer = lv.layer as FilterLayer;
-    const queryLayer = layer.type === 'map-image' ? layer.findSublayerById(layerExpression.sublayerId) : layer;
-    if (queryLayer.type !== 'point-cloud' && supportedTypes.includes(queryLayer?.type)) {
+  async getZoomToExtent(layerExpression: LayerExpression): Promise<void> {
+    const layerView = this.view.allLayerViews.find(({ layer }) => layer.id === layerExpression.id) as QueryableLayerView;
+    const baseLayer = layerView.layer as FilterLayer;
+    const layer = baseLayer.type === 'map-image' ? baseLayer.findSublayerById(layerExpression.sublayerId) : baseLayer;
+
+    if (layer.type !== 'point-cloud' && supportedTypes.includes(layer?.type)) {
+      const queryLayer = await this.getQueryLayer(layer);
       const query = queryLayer.createQuery();
-      if ((layer as any)?.capabilities?.query?.['supportsCacheHint']) {
-        query.cacheHint = true;
-      }
       query.where = queryLayer.definitionExpression ?? '1=1';
-      query.returnGeometry = true;
-      query.returnDistinctValues = true;
-      query.maxRecordCountFactor = 5;
-      query.returnExceededLimitFeatures = true;
-      query.outFields = [];
-      if (this.extentSelector && this.extentSelectorConfig) {
-        const geo = this.getExtent(this.extentSelector, this.extentSelectorConfig);
-        if (geo != null) query.geometry = geo;
-        query.spatialRelationship = 'intersects';
-      }
-      const filter = lv?.featureEffect?.filter != null ? lv.featureEffect.filter : lv.filter;
-      if (filter != null) {
-        if (filter.objectIds != null) {
-          query.objectIds = filter.objectIds;
-        }
-        if (filter.distance != null) {
-          query.distance = filter.distance;
-        }
-        if (filter.geometry != null) {
-          query.geometry = filter.geometry;
-        }
-        if (filter.distance != null) {
-          query.distance = filter.distance;
-        }
-        if (filter.spatialRelationship != null) {
-          query.spatialRelationship = filter.spatialRelationship as __esri.Query['spatialRelationship'];
-        }
-        if (filter.units != null) {
-          query.units = filter.units;
-        }
-        if (filter.where != null) {
-          query.where = filter.where;
-        }
-        if (filter.timeExtent != null) {
-          query.timeExtent = filter.timeExtent;
-        }
-      }
-      try {
-        const results = await queryLayer.queryFeatures(query);
-        this.zoomToGraphics.push(...results.features);
-      } catch (error) {
-        if (error?.message?.toLowerCase().includes('distinct')) {
-          try {
-            query.returnDistinctValues = false;
-            const results = await queryLayer.queryFeatures(query);
-            this.zoomToGraphics.push(...results.features);
-          } catch {}
-        }
-      }
+      const results = await queryLayer.queryExtent(query);
+      this.zoomToExtent = { ...results, type: queryLayer.geometryType };
     }
-    return Promise.resolve();
+  }
+
+  applyFilterToQuery(query: __esri.Query, layerExpression: LayerExpression): void {
+    const layerView = this.view.allLayerViews.find(({ layer }) => layer.id === layerExpression.id) as QueryableLayerView;
+    const filter = layerView?.featureEffect?.filter ?? layerView.filter;
+
+    if (filter) {
+      ['objectIds', 'distance', 'geometry', 'spatialRelationship', 'units', 'where', 'timeExtent'].forEach(prop => {
+        if (filter[prop] != null) {
+          query[prop] = filter[prop];
+        }
+      });
+    }
   }
 
   generateOutput(layerExpression: LayerExpression): void {
@@ -1124,46 +1174,34 @@ export class InstantAppsFilterList {
   // e.g. when using Math.round() with a min of 1.058 with only 2 decimal places would be 1.06 so the slider wouldn't contain the min. Math.floor() ensures it does.
   // Inverse of this reasoning for roundMaxNumberUp().
 
-  roundMinNumberDown(num: number, decimalPlaces: number): number | undefined {
-    if (num == null) return;
-    if (!('' + num).includes('e')) {
-      return +(Math.floor((num + 'e+' + decimalPlaces) as unknown as number) + 'e-' + decimalPlaces);
+  scientificRounding(num: number, decimalPlaces: number, operation: 'floor' | 'ceil' | 'round'): number | undefined {
+    if (num == null) return undefined;
+    let result: number;
+
+    if (!String(num).includes('e')) {
+      result = Math[operation](num * Math.pow(10, decimalPlaces)) / Math.pow(10, decimalPlaces);
     } else {
-      var arr = ('' + num).split('e');
-      var sig = '';
-      if (+arr[1] + decimalPlaces > 0) {
-        sig = '+';
-      }
-      return +(Math.floor((+arr[0] + 'e' + sig + (+arr[1] + decimalPlaces)) as unknown as number) + 'e-' + decimalPlaces);
+      const [base, exponent] = String(num)
+        .split('e')
+        .map(item => Number(item));
+      const adjustedExponent = exponent + decimalPlaces;
+      const adjustedNumber = Math[operation](+`${base}e${adjustedExponent}`);
+      result = adjustedNumber * Math.pow(10, -decimalPlaces);
     }
+
+    return +result.toFixed(decimalPlaces);
+  }
+
+  roundMinNumberDown(num: number, decimalPlaces: number): number | undefined {
+    return this.scientificRounding(num, decimalPlaces, 'floor');
   }
 
   roundMaxNumberUp(num: number, decimalPlaces: number): number | undefined {
-    if (num == null) return;
-    if (!('' + num).includes('e')) {
-      return +(Math.ceil((num + 'e+' + decimalPlaces) as unknown as number) + 'e-' + decimalPlaces);
-    } else {
-      var arr = ('' + num).split('e');
-      var sig = '';
-      if (+arr[1] + decimalPlaces > 0) {
-        sig = '+';
-      }
-      return +(Math.ceil((+arr[0] + 'e' + sig + (+arr[1] + decimalPlaces)) as unknown as number) + 'e-' + decimalPlaces);
-    }
+    return this.scientificRounding(num, decimalPlaces, 'ceil');
   }
 
-  roundNumber(num: number, decimalPlaces: number): number | undefined {
-    if (num == null) return;
-    if (!('' + num).includes('e')) {
-      return +(Math.round((num + 'e+' + decimalPlaces) as unknown as number) + 'e-' + decimalPlaces);
-    } else {
-      var arr = ('' + num).split('e');
-      var sig = '';
-      if (+arr[1] + decimalPlaces > 0) {
-        sig = '+';
-      }
-      return +(Math.round((+arr[0] + 'e' + sig + (+arr[1] + decimalPlaces)) as unknown as number) + 'e-' + decimalPlaces);
-    }
+  roundNumber(num: number, decimalPlaces: number): number {
+    return this.scientificRounding(num, decimalPlaces, 'round') ?? num;
   }
 
   setExpressionFormat(layer: __esri.FeatureLayer, expression: Expression, field: string): void {
@@ -1181,32 +1219,38 @@ export class InstantAppsFilterList {
     return layerExpression?.sublayerId != null ? this.initMapImageExpressions?.[layerExpression.id]?.[layerExpression.sublayerId] : this.initDefExpressions?.[layerExpression.id];
   }
 
-  findFilterLayer(layerExpression: LayerExpression): FilterQueryLayer {
+  findFilterLayer(layerExpression: LayerExpression): QueryableLayer {
     const allLayersAndTables = this.view.map.allLayers.concat(this.view.map.allTables);
     const layer = allLayersAndTables.find(({ id }) => id === layerExpression.id) as FilterLayer;
     if (layer.type === 'map-image') {
       return layer?.findSublayerById(layerExpression.sublayerId);
     } else {
-      return layer as FilterQueryLayer;
+      return layer as QueryableLayer;
     }
   }
 
   createLabel(expression: Expression, value: string | number): string | number {
-    let label = value;
     if (expression.type === 'coded-value') {
-      label = expression.codedValues?.[value] as string;
-    } else if (expression.type === 'number' && typeof value === 'number' && expression.format != null) {
-      if (expression.format.places != null) {
-        label = this.roundNumber(value, expression.format.places) as number;
-      }
-      if (expression.format.digitSeparator) {
-        label = this.numberWithCommas(label as number);
-      }
-    } else if (expression.type === 'date' && !expression.dateOnly) {
-      const format = expression.dateOnly ? this.intl.convertDateFormatToIntlOptions('short-date-long-time') : undefined;
-      label = this.intl.formatDate(value as number, format);
+      return expression.codedValues?.[value] as string;
     }
-    return label;
+
+    if (expression.type === 'number' && typeof value === 'number') {
+      let formattedValue = value;
+      if (expression.format?.places != null) {
+        formattedValue = this.roundNumber(value, expression.format.places);
+      }
+      if (expression.format?.digitSeparator) {
+        return this.numberWithCommas(formattedValue);
+      }
+      return formattedValue;
+    }
+
+    if (expression.type === 'date' && !expression.dateOnly) {
+      const format = this.intl.convertDateFormatToIntlOptions('short-date-long-time');
+      return this.intl.formatDate(value as number, format);
+    }
+
+    return value;
   }
 
   buildDateExpression(date: string | number | undefined, field: string): string | undefined {
@@ -1223,5 +1267,24 @@ export class InstantAppsFilterList {
     }
 
     return;
+  }
+
+  async getQueryLayer(layer: QueryableLayer): Promise<BaseQueryableLayer> {
+    return layer.type === 'sublayer' ? await layer.createFeatureLayer() : layer;
+  }
+
+  applyCacheHint(queryLayer: QueryableLayer, query: __esri.Query) {
+    if ((queryLayer as any)?.capabilities?.query?.supportsCacheHint) {
+      query.cacheHint = true;
+    }
+  }
+
+  applyQueryGeometryFromExtentSelector(query: __esri.Query): void {
+    if (!this.extentSelector || !this.extentSelectorConfig) return;
+
+    const geometry = this.getExtent(this.extentSelector, this.extentSelectorConfig);
+    if (!geometry) return;
+    query.geometry = geometry;
+    query.spatialRelationship = 'intersects';
   }
 }
