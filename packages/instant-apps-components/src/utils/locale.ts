@@ -2,6 +2,9 @@
 import { loadModules } from '../utils/loadModules';
 import { languageMap } from './languageUtil';
 
+const TEST_ENV_ORIGIN = 'localhost:5173';
+const IS_TEST_ENV = new URL(window.location.href).origin.includes(TEST_ENV_ORIGIN);
+
 export function getComponentClosestLanguage(): string | undefined {
   // language set by the calling application or browser. defaults to english.
   const lang = (document.documentElement.lang || navigator?.language || 'en').toLowerCase() as string;
@@ -42,7 +45,7 @@ async function fetchLocaleStringsForComponent<T extends StringBundle = StringBun
   }
 
   try {
-    return await fetchJson(primaryURL);
+    return await fetchJson(IS_TEST_ENV ? fallbackURL : primaryURL);
   } catch (primaryError) {
     console.error(`Primary fetch error: ${primaryError}`); // Log primary fetch error with more context
     try {
