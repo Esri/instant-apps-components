@@ -30,19 +30,30 @@ test('test if create option map works in inline', async () => {
   
     //const inline = document.getElementById('create-inline');
 
-    document.body.appendChild(create)
 
     create.portal = portal;
-
     create.content = webscene;
 
-    console.log(document.documentElement);
-    await new Promise(resolve => requestIdleCallback(resolve));
-    
-    const listOptions  = document.getElementById('create-inline')?.shadowRoot?.querySelectorAll(".instant-apps-create__option");
-    expect(listOptions?.length).toBe(5);
-    //expect(listOptions?.length).toBe(5)
+    document.body.appendChild(create);
 
+    await new Promise(resolve => requestIdleCallback(resolve));
+    await new Promise((resolve) => setTimeout(resolve, 5000));
+
+    const shadowRoot = document.getElementById('create-inline')?.shadowRoot;
     
+    const listOptions  = shadowRoot?.querySelectorAll(".instant-apps-create__option");
+
+    expect(listOptions?.length).toBe(5);
+
+    const hrefs = listOptions && Array.from(listOptions).map((option: HTMLAnchorElement) => option.href);
+    const validSubstrings = ["instantgallery", "mapviewer", "stories", "template", "dashboards"];
+
+    const testValidity = (testString: string, substrings: string[]) => 
+        substrings.some(substring => testString.includes(substring));
+    const hrefsAreValid = hrefs?.every(href => testValidity(href, validSubstrings));
+
+    expect(hrefsAreValid).toBe(true);
+
+
 
 });
