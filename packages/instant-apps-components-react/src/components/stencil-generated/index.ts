@@ -38,3 +38,4 @@ export const InstantAppsScoreboard = /*@__PURE__*/createReactComponent<JSX.Insta
 export const InstantAppsSignIn = /*@__PURE__*/createReactComponent<JSX.InstantAppsSignIn, HTMLInstantAppsSignInElement>('instant-apps-sign-in');
 export const InstantAppsSocialShare = /*@__PURE__*/createReactComponent<JSX.InstantAppsSocialShare, HTMLInstantAppsSocialShareElement>('instant-apps-social-share');
 export const InstantAppsSplash = /*@__PURE__*/createReactComponent<JSX.InstantAppsSplash, HTMLInstantAppsSplashElement>('instant-apps-splash');
+export const InstantAppsTimeSlider = /*@__PURE__*/createReactComponent<JSX.InstantAppsTimeSlider, HTMLInstantAppsTimeSliderElement>('instant-apps-time-slider');
