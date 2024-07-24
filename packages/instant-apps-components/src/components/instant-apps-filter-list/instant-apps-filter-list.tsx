@@ -668,7 +668,7 @@ export class InstantAppsFilterList {
     }
 
     const queryLayer = await this.getQueryLayer(layer);
-    const { maxRecordCount, supportsMaxRecordCountFactor } = this.extractQueryCapabilities(queryLayer);
+    const { maxRecordCount, supportsMaxRecordCountFactor } = this.extractQueryCapabilities(layer);
     const featureCount = await queryLayer.queryFeatureCount();
     const query = this.createQuery(queryLayer, expression);
 
@@ -685,8 +685,8 @@ export class InstantAppsFilterList {
 
   extractQueryCapabilities(queryLayer: any): { maxRecordCount: number; supportsMaxRecordCountFactor: boolean } {
     return {
-      maxRecordCount: queryLayer.capabilities?.query?.['maxRecordCount'],
-      supportsMaxRecordCountFactor: queryLayer.capabilities?.query?.['supportsMaxRecordCountFactor'],
+      maxRecordCount: queryLayer.capabilities?.query?.maxRecordCount ?? queryLayer.sourceJSON?.maxRecordCount,
+      supportsMaxRecordCountFactor: queryLayer.capabilities?.query?.supportsMaxRecordCountFactor,
     };
   }
 
