@@ -22,7 +22,7 @@
   "scripts": {
     "build": "stencil build --docs",
     "start": "stencil build --dev --watch --serve",
-    "test": "vitest watch",
+    "test": "vitest --run",
     "generate": "stencil generate",
     "storybook": "start-storybook -p 6007 --quiet -s ./www",
     "predeploy": "npm run build-storybook",
@@ -44,7 +44,6 @@
     "templates-common-library": "0.0.497-esm"
   },
   "devDependencies": {
-    "@arcgis/core": "^4.30.8",
     "@babel/core": "7.16.5",
     "@stencil/sass": "^3.0.7",
     "@storybook/addon-a11y": "^6.4.9",
