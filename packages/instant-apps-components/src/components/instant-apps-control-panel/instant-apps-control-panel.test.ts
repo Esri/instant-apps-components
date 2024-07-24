@@ -1,24 +1,52 @@
-import { test } from 'vitest';
+import { test, expect  } from 'vitest';
 
 import '../../../dist/components/instant-apps-header.js';
+import '../../../dist/components/instant-apps-social-share.js';
+import Home from "@arcgis/core/widgets/Home.js"
+import view from "@arcgis/core/views/View.js"
+import MapView from "@arcgis/core/views/MapView.js";
+import Zoom from "@arcgis/core/widgets/Zoom.js";
+import WebMap from "@arcgis/core/WebMap.js";
+import Legend from "@arcgis/core/widgets/Legend.js";
 
-// const control_panel = document.createElement('instant-apps-control-panel');
 
-test('test if all widgets exist', async () => {
-  // let {entries} = control_panel.components;
-  // for (let i = 0; i < entries.length; i ++){
-  //     entries[i]
-  // }
-  // for (let i = 0 ; i < control_panel.components.length; i++){
-  //     expect(control_panel.components[i].content).toBe(control_panel.components[i]);
-  // }
-  // control_panel.components.slice(-2);
-  // control_panel.componentWillUpdate();
-  // expect(control_panel.components.length).toBe(3);
-  // const arr = control_panel.querySelectorAll('.esri-expand .esri-widget')
-  // expect(arr).toBe(null);
-  // const esri_home = control_panel.querySelectorAll('.esri-home .esri-widget')
-  // expect(esri_home ? true : false).toBe(true);
-  // const esri_zoom = control_panel.querySelectorAll('.esri-zoom .esri-widget')
-  // expect(esri_zoom ? true : false).toBe(true);
+const control_panel = document.createElement('instant-apps-control-panel');
+
+
+test('test if all widgets exist in the control panel', async () => {
+  const map = new WebMap({
+    portalItem: {
+      id: '8891ee1d2e0e428bb96c58b8ecf8c408',
+    },
+  });
+
+  const view = new MapView({
+    container: 'viewDiv',
+    map,
+    ui: {
+      components: [],
+    },
+  });
+  const home = new Home({ view });
+  const zoom = new Zoom({ view });
+  const socialShare = document.createElement('instant-apps-social-share');
+  socialShare.classList.add('calcite-mode-light');
+  socialShare.mode = 'inline';
+  const legend = new Legend({
+    view,
+  });
+  const all_components = [
+    {
+      content: home,
+    },
+    {
+      content: zoom,
+    },
+    { content: legend, isExpand: true, expandTooltip: 'Open legend', collapseTooltip: 'Close legend' },
+    { content: socialShare, isExpand: true, expandIcon: 'share', expandTooltip: 'Open social share', collapseTooltip: 'Close social share' },
+  ];
+    control_panel.components = all_components;
+    expect(control_panel.components).toBe(all_components);
+
+
 });
