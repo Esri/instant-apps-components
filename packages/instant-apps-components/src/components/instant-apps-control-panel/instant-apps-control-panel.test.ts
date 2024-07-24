@@ -3,7 +3,7 @@ import { test, expect  } from 'vitest';
 import '../../../dist/components/instant-apps-header.js';
 import '../../../dist/components/instant-apps-social-share.js';
 import Home from "@arcgis/core/widgets/Home.js"
-import view from "@arcgis/core/views/View.js"
+// import view from "@arcgis/core/views/View.js"
 import MapView from "@arcgis/core/views/MapView.js";
 import Zoom from "@arcgis/core/widgets/Zoom.js";
 import WebMap from "@arcgis/core/WebMap.js";
