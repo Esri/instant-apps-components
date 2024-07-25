@@ -22,8 +22,7 @@
   "scripts": {
     "build": "stencil build --docs",
     "start": "stencil build --dev --watch --serve",
-    "test": "stencil test --spec --e2e",
-    "test.watch": "stencil test --spec --e2e --watchAll",
+    "test": "vitest watch",
     "generate": "stencil generate",
     "predeploy": "npm run build-storybook",
     "storybook": "storybook dev -p 6006",
@@ -44,6 +43,7 @@
     "templates-common-library": "0.0.497-esm"
   },
   "devDependencies": {
+    "@arcgis/core": "^4.30.9",
     "@babel/core": "7.16.5",
     "@stencil/sass": "^3.0.7",
     "@storybook/addon-essentials": "^7.6.15",
@@ -58,8 +58,6 @@
     "babel-loader": "^8.2.3",
     "cpy-cli": "^4.1.0",
     "gh-pages": "^4.0.0",
-    "jest": "^26.6.3",
-    "jest-cli": "^26.6.3",
     "lit-html": "^2.0.2",
     "puppeteer": "^22.0.0",
     "react": "^18.3.1",
