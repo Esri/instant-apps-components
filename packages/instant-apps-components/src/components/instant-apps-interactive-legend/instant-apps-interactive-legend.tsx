@@ -2,7 +2,7 @@ import { Component, h, Element, Prop, State, Watch, forceUpdate } from '@stencil
 
 import { loadModules } from '../../utils/loadModules';
 
-import { FilterMode } from './instant-apps-interactive-legend-classic/interfaces/interfaces';
+import { FilterMode } from '../../interfaces/interfaces';
 
 import { getMessages } from '../../utils/locale';
 import { getTheme } from './support/helpers';

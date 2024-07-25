@@ -1,5 +1,6 @@
 import { loadModules } from '../../../utils/loadModules';
-import { IInteractiveLegendData, ICategories, IIntLegendLayerData, ICategory, FilterMode } from '../instant-apps-interactive-legend-classic/interfaces/interfaces';
+import { IInteractiveLegendData, ICategories, IIntLegendLayerData, ICategory } from '../instant-apps-interactive-legend-classic/interfaces/interfaces';
+import { FilterMode } from '../../../interfaces/interfaces';
 import { getMergedEffect } from './effects';
 import { interactiveLegendState, store } from '../support/store';
 
