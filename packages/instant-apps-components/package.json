@@ -22,8 +22,7 @@
   "scripts": {
     "build": "stencil build --docs",
     "start": "stencil build --dev --watch --serve",
-    "test": "stencil test --spec --e2e",
-    "test.watch": "stencil test --spec --e2e --watchAll",
+    "test": "vitest watch",
     "generate": "stencil generate",
     "storybook": "start-storybook -p 6007 --quiet -s ./www",
     "predeploy": "npm run build-storybook",
@@ -45,6 +44,7 @@
     "templates-common-library": "0.0.497-esm"
   },
   "devDependencies": {
+    "@arcgis/core": "^4.30.9",
     "@babel/core": "7.16.5",
     "@stencil/sass": "^3.0.7",
     "@storybook/addon-a11y": "^6.4.9",
@@ -55,20 +55,22 @@
     "@storybook/addon-knobs": "^6.4.0",
     "@storybook/addon-links": "^6.4.9",
     "@storybook/web-components": "^7.6.15",
-    "@types/jest": "^26.0.24",
     "@types/sortablejs": "^1.10.7",
+    "@vitest/browser": "^2.0.4",
     "@whitespace/storybook-addon-html": "^5.0.0",
     "babel-loader": "^8.2.3",
     "cpy-cli": "^4.1.0",
     "gh-pages": "^4.0.0",
-    "jest": "^26.6.3",
-    "jest-cli": "^26.6.3",
     "lit-html": "^2.0.2",
-    "puppeteer": "^22.0.0",
     "rollup-plugin-node-polyfills": "^0.2.1",
     "sortablejs": "^1.14.0",
     "storybook-addon-themes": "^6.1.0",
     "storybook-color-picker": "^2.2.1",
-    "storybook-rtl-addon": "^0.3.3"
+    "storybook-rtl-addon": "^0.3.3",
+    "unplugin-stencil": "^0.1.1",
+    "vite": "^5.3.5",
+    "vite-tsconfig-paths": "^4.3.2",
+    "vitest": "^2.0.4",
+    "webdriverio": "^8.39.1"
   }
 }
