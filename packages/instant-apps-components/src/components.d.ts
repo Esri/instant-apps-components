@@ -352,6 +352,7 @@ export namespace Components {
           * Url to link out to from title text
          */
         "titleTextLink": string;
+        "toggleInfo": () => Promise<void>;
     }
     interface InstantAppsInteractiveLegend {
         /**
