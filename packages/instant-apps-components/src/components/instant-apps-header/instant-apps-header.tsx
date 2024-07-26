@@ -257,9 +257,10 @@ export class InstantAppsHeader {
   }
 
   @Method()
-  toggleInfo(): void {
+  toggleInfo(): Promise<void> {
     this.infoIsOpen = !this.infoIsOpen;
     this.infoIsOpenChanged.emit(this.infoIsOpen);
+    return Promise.resolve();
   }
 
   mqlCallback(): (event: MediaQueryListEvent) => void {
