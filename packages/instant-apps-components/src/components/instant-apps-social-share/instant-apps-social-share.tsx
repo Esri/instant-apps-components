@@ -544,7 +544,6 @@ export class InstantAppsSocialShare {
 
   renderXIcon() {
     const isCalciteModeDark = !!this.el.closest(CALCITE_MODE_DARK);
-    console.log(isCalciteModeDark);
     return (
       <svg class={isCalciteModeDark ? CSS.xLogo.dark : CSS.xLogo.light} viewBox="0 0 1200 1227" fill="none" xmlns="http://www.w3.org/2000/svg">
         <rect height="400" style={{ fill: 'none' }} width="400" x="56" y="56" />
