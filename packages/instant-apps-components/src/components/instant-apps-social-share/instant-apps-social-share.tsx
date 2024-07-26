@@ -358,8 +358,10 @@ export class InstantAppsSocialShare {
 
     const layoutClass = this.shareIconsLayout === 'vertical' ? ` ${CSS.layout.vertical}` : ` ${CSS.layout.horizontal}`;
 
+    const mode = ` calcite-mode-${!!this.el.closest(CALCITE_MODE_DARK) ? 'dark' : 'light'}`;
+
     const dialogContent = (
-      <div ref={el => (this.dialogContentRef = el)} class={`${CSS.dialog}${layoutClass}`}>
+      <div ref={el => (this.dialogContentRef = el)} class={`${CSS.dialog}${layoutClass}${mode}`}>
         {content}
       </div>
     );
