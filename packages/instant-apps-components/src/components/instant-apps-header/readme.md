@@ -48,6 +48,19 @@ The header component includes custom CSS properties to adjust the style of the h
 | `infoIsOpenChanged` | Fires when the info button is clicked. | `CustomEvent<boolean>` |
 
 
+## Methods
+
+### `toggleInfo() => Promise<void>`
+
+
+
+#### Returns
+
+Type: `Promise<void>`
+
+
+
+
 ## Slots
 
 | Slot            | Description                                                                                        |

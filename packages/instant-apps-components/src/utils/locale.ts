@@ -2,10 +2,12 @@
 import { loadModules } from '../utils/loadModules';
 import { languageMap } from './languageUtil';
 
-export function getComponentClosestLanguage(element: HTMLElement): string | undefined {
-  const closestElement = (element.closest('[lang]') as HTMLElement) ?? element.shadowRoot?.ownerDocument?.documentElement;
+const TEST_ENV_ORIGIN = 'localhost:5173';
+const IS_TEST_ENV = new URL(window.location.href).origin.includes(TEST_ENV_ORIGIN);
+
+export function getComponentClosestLanguage(): string | undefined {
   // language set by the calling application or browser. defaults to english.
-  const lang = (closestElement?.lang || navigator?.language || 'en').toLowerCase() as string;
+  const lang = (document.documentElement.lang || navigator?.language || 'en').toLowerCase() as string;
   if (languageMap.has(lang)) {
     return languageMap.get(lang);
   } else {
@@ -24,20 +26,35 @@ interface StringBundle {
   [key: string]: StringValue;
 }
 
-function fetchLocaleStringsForComponent<T extends StringBundle = StringBundle>(componentName: string, locale: string): Promise<T> {
-  return new Promise((resolve, reject): void => {
-    const t9nDir = './assets/t9n';
-    const fileName = `resources_${locale}.json`;
-    const localeFilePath = `${t9nDir}/${componentName}/${fileName}`;
-    const { href } = new URL(localeFilePath, window.location.href);
-    fetch(href).then(
-      result => {
-        if (result.ok) resolve(result.json());
-        else reject();
-      },
-      () => reject(),
-    );
-  });
+async function fetchLocaleStringsForComponent<T extends StringBundle = StringBundle>(componentName: string, locale: string): Promise<T> {
+  const localePath = `assets/t9n/${componentName}/resources_${locale}.json`;
+  const primaryURL = new URL(`./${localePath}`, window.location.href).href;
+  const fallbackURL = `${getFallbackUrl()}/dist/${localePath}`;
+
+  async function fetchJson(url: string): Promise<T> {
+    const response = await fetch(url);
+    if (!response.ok) throw new Error(`Fetch failed with status ${response.status}: ${response.statusText}`);
+    const contentType = response.headers.get('content-type');
+    if (!contentType || !contentType.includes('application/json')) {
+      // Attempt to read response as text for debugging purposes
+      const responseBody = await response.text();
+      console.error(`Expected JSON, but received (${contentType}): ${responseBody}`);
+      throw new Error('Fetched content is not JSON');
+    }
+    return await response.json();
+  }
+
+  try {
+    return await fetchJson(IS_TEST_ENV ? fallbackURL : primaryURL);
+  } catch (primaryError) {
+    console.error(`Primary fetch error: ${primaryError}`); // Log primary fetch error with more context
+    try {
+      return await fetchJson(fallbackURL);
+    } catch (fallbackError) {
+      console.error(`Fallback fetch error: ${fallbackError}`); // Log fallback fetch error with more context
+      throw new Error('Both primary and fallback fetches failed');
+    }
+  }
 }
 
 export function getDefaultLanguage(intl: __esri.intl, portal: __esri.Portal): string {
@@ -54,7 +71,7 @@ export function getDefaultLanguage(intl: __esri.intl, portal: __esri.Portal): st
 
 export async function getLocaleComponentStrings<T extends StringBundle = StringBundle>(element: HTMLElement, locale?: string): Promise<[T, string]> {
   const componentName = element.tagName.toLowerCase();
-  const componentLanguage = locale ?? (getComponentClosestLanguage(element) as string);
+  const componentLanguage = locale ?? (getComponentClosestLanguage() as string);
   let strings: T;
   try {
     strings = await fetchLocaleStringsForComponent(componentName, componentLanguage);
@@ -66,10 +83,16 @@ export async function getLocaleComponentStrings<T extends StringBundle = StringB
 }
 
 export async function getMessages(component: any, messageOverrides?: unknown) {
-  const messages = await getLocaleComponentStrings(component.el);
-  updateMessages(component, messages, messageOverrides);
-  const [intl] = await loadModules(['esri/intl']);
-  (intl as __esri.intl).onLocaleChange(handleOnLocaleChange(component, messageOverrides));
+  try {
+    const messages = await getLocaleComponentStrings(component.el);
+    updateMessages(component, messages, messageOverrides);
+  } catch {
+  } finally {
+    try {
+      const [intl] = await loadModules(['esri/intl']);
+      (intl as __esri.intl).onLocaleChange(handleOnLocaleChange(component, messageOverrides));
+    } catch {}
+  }
 }
 
 function updateMessages(component, messages: unknown[], messageOverrides: unknown) {
@@ -87,4 +110,8 @@ function handleOnLocaleChange(component, messageOverrides: unknown) {
     const messages = await getLocaleComponentStrings(component.el, locale);
     updateMessages(component, messages, messageOverrides);
   };
+}
+
+export function getFallbackUrl() {
+  return new URL(window.location.href).origin;
 }
