@@ -1,10 +1,11 @@
-import { Component, Host, Prop, State, h } from '@stencil/core';
+import { Component, Element, Host, Prop, State, h } from '@stencil/core';
 import { ITimeInfoItem } from './interfaces';
 import { FilterMode } from '../../interfaces/interfaces';
 
 import TimeFilter_t9n from "../../assets/t9n/instant-apps-time-filter/resources.json";
 import { getMessages } from '../../utils/locale';
 import { loadModules } from '../../utils/loadModules';
+import { HostElement } from '@stencil/core/internal';
 
 @Component({
   tag: 'instant-apps-time-filter',
@@ -14,9 +15,13 @@ import { loadModules } from '../../utils/loadModules';
 export class InstantAppsTimeFilter {
   reactiveUtils: __esri.reactiveUtils;
   handles: __esri.Handles;
-
   messages: typeof TimeFilter_t9n;
+
+
   timeSlider: __esri.TimeSlider;
+
+  @Element()
+  el: HostElement;
 
   @Prop()
   filterMode: FilterMode;
