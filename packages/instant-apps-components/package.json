@@ -55,6 +55,7 @@
     "@storybook/test": "^7.6.15",
     "@types/jest": "^26.0.24",
     "@types/sortablejs": "^1.10.7",
+    "@vitest/browser": "^2.0.4",
     "babel-loader": "^8.2.3",
     "cpy-cli": "^4.1.0",
     "gh-pages": "^4.0.0",
