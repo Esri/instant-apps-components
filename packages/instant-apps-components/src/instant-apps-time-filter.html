@@ -1,33 +1,74 @@
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <meta charset="utf-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=5.0" />
-        <title>ArcGIS Instant Apps Components</title>
-    
-        <link rel="stylesheet" href="https://js.arcgis.com/4.30/esri/themes/light/main.css" />
-        <script src="https://js.arcgis.com/4.30/"></script>
-        <script type="module" src="https://js.arcgis.com/calcite-components/2.8.5/calcite.esm.js"></script>
-        <link rel="stylesheet" type="text/css" href="https://js.arcgis.com/calcite-components/2.8.5/calcite.css" />
-        <script type="module" src="/build/instant-apps-components.esm.js"></script>
-        <script nomodule src="/build/instant-apps-components.js"></script>
-    
-        <style>
-          html,
-          body,
-          #viewDiv {
-            width: 100%;
-            height: 100%;
-            margin: 0;
-            padding: 0;
-          }
-    
-          calcite-panel {
-            padding: 10px;
-          }
-        </style>
-      </head>
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=5.0" />
+  <title>ArcGIS Instant Apps Components</title>
+
+  <link rel="stylesheet" href="https://js.arcgis.com/4.30/esri/themes/light/main.css" />
+  <script src="https://js.arcgis.com/4.30/"></script>
+  <script type="module" src="https://js.arcgis.com/calcite-components/2.8.5/calcite.esm.js"></script>
+  <link rel="stylesheet" type="text/css" href="https://js.arcgis.com/calcite-components/2.8.5/calcite.css" />
+  <script type="module" src="/build/instant-apps-components.esm.js"></script>
+  <script nomodule src="/build/instant-apps-components.js"></script>
+
+  <style>
+    html,
+    body,
+    #viewDiv {
+      width: 100%;
+      height: 100%;
+      margin: 0;
+      padding: 0;
+    }
+
+    calcite-panel {
+      padding: 10px;
+    }
+  </style>
+</head>
+
 <body>
-<instant-apps-time-filter></instant-apps-time-filter>  
+  <div id="viewDiv"></div>
+  <script>
+    require(['esri/WebMap', 'esri/views/MapView', 'esri/config', 'esri/widgets/Expand'], (WebMap, MapView, esriConfig, Expand) => {
+      esriConfig.portalUrl = 'https://holistic.mapsdevext.arcgis.com';
+
+      const MAP_ID = '5b2d08964e5848128e0fef31854fc13d';
+      const map = new WebMap({ portalItem: { id: MAP_ID } });
+      const view = new MapView({ container: "viewDiv", map });
+
+      const data = [
+        {
+          id: "1786615cac0-layer-6",
+          increments: "days",
+          min: "2024-04-05T01:34:49.000Z",
+          max: "2024-07-02T20:26:33.000Z",
+          rangeStart: "2024-04-05",
+          rangeEnd: "2024-07-15"
+        }
+      ];
+
+      const timeFilter = document.createElement("instant-apps-time-filter");
+      const content = document.createElement("div");
+      content.appendChild(timeFilter);
+      timeFilter.view = view;
+      timeFilter.timeInfoConfigItems = data;
+
+      const timeFilterExpand = new Expand({
+        content,
+        view,
+        expanded: true,
+        expandIcon: "clock"
+      });
+
+
+      view.ui.add(timeFilterExpand, "top-right");
+    });
+
+
+  </script>
 </body>
+
 </html>

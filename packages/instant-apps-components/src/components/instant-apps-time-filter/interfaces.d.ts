@@ -1,4 +1,4 @@
-type ITimeItemUnit = "milliseconds"
+export type ITimeItemUnit = "milliseconds"
     | "seconds"
     | "minutes"
     | "hours"
@@ -15,4 +15,13 @@ export interface ITimeInfoItem {
     rangeStart: Date;
     rangeEnd: Date;
     timeExtent: __esri.TimeExtent;
+}
+
+export interface ITimeInfoConfigItem {
+    id: string;
+    increments: string;
+    max: string;
+    min: string;
+    rangeEnd: Date;
+    rangeStart: Date;
 }

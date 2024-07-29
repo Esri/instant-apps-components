@@ -11,8 +11,6 @@ describe("Time filter", async () => {
     const timeFilter = document.createElement("instant-apps-time-filter");
     document.body.appendChild(timeFilter);
 
-
-
     await new Promise(resolve => requestIdleCallback(resolve));
 
     test("renders successfully", async () => {

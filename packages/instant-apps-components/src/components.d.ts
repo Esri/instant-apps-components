@@ -13,7 +13,7 @@ import { AppSettings, LocaleItem, LocaleSettingData } from "./components/instant
 import { InstantAppsPopovers } from "./components/instant-apps-popovers/instant-apps-popovers";
 import { LogicalPlacement } from "@esri/calcite-components/dist/types/utils/floating-ui";
 import { ScoreboardItem, ScoreboardMode, ScoreboardPosition } from "./components/instant-apps-scoreboard/types/interfaces";
-import { ITimeInfoItem } from "./components/instant-apps-time-filter/interfaces";
+import { ITimeInfoConfigItem } from "./components/instant-apps-time-filter/interfaces";
 export { EditorConfig } from "@ckeditor/ckeditor5-core/src/editor/editorconfig";
 export { ActiveTool, ControlPanelComponent, CreateOption, ExportOutput, ExportView, ExtentSelector, FilterMode, IMeasureConfiguration, InstantAppsPopoverMessageOverrides, IPortal, LayerExpression, PopoverPlacement } from "./interfaces/interfaces";
 export { PredefinedOptions } from "./components/instant-apps-create/instant-apps-create";
@@ -22,7 +22,7 @@ export { AppSettings, LocaleItem, LocaleSettingData } from "./components/instant
 export { InstantAppsPopovers } from "./components/instant-apps-popovers/instant-apps-popovers";
 export { LogicalPlacement } from "@esri/calcite-components/dist/types/utils/floating-ui";
 export { ScoreboardItem, ScoreboardMode, ScoreboardPosition } from "./components/instant-apps-scoreboard/types/interfaces";
-export { ITimeInfoItem } from "./components/instant-apps-time-filter/interfaces";
+export { ITimeInfoConfigItem } from "./components/instant-apps-time-filter/interfaces";
 export namespace Components {
     interface InstantAppsCkeditorWrapper {
         "config": EditorConfig;
@@ -882,7 +882,7 @@ export namespace Components {
     }
     interface InstantAppsTimeFilter {
         "filterMode": FilterMode;
-        "timeInfoItems": ITimeInfoItem[];
+        "timeInfoConfigItems": ITimeInfoConfigItem[];
         "view": __esri.MapView | __esri.SceneView;
     }
 }
@@ -2261,7 +2261,7 @@ declare namespace LocalJSX {
     }
     interface InstantAppsTimeFilter {
         "filterMode"?: FilterMode;
-        "timeInfoItems"?: ITimeInfoItem[];
+        "timeInfoConfigItems"?: ITimeInfoConfigItem[];
         "view"?: __esri.MapView | __esri.SceneView;
     }
     interface IntrinsicElements {
