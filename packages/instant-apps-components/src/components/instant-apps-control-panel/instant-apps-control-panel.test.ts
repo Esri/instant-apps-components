@@ -1,18 +1,12 @@
-import { test, expect  } from 'vitest';
-
+import { test, expect } from 'vitest';
 import '../../../dist/components/instant-apps-header.js';
 import '../../../dist/components/instant-apps-social-share.js';
-import Home from "@arcgis/core/widgets/Home.js"
-// import view from "@arcgis/core/views/View.js"
-import MapView from "@arcgis/core/views/MapView.js";
-import Zoom from "@arcgis/core/widgets/Zoom.js";
-import WebMap from "@arcgis/core/WebMap.js";
-import Legend from "@arcgis/core/widgets/Legend.js";
-
-
-const control_panel = document.createElement('instant-apps-control-panel');
-
-
+import Home from '@arcgis/core/widgets/Home.js';
+import MapView from '@arcgis/core/views/MapView.js';
+import Zoom from '@arcgis/core/widgets/Zoom.js';
+import WebMap from '@arcgis/core/WebMap.js';
+import Legend from '@arcgis/core/widgets/Legend.js';
+const controlPanel = document.createElement('instant-apps-control-panel');
 test('test if all widgets exist in the control panel', async () => {
   const map = new WebMap({
     portalItem: {
@@ -45,8 +39,6 @@ test('test if all widgets exist in the control panel', async () => {
     { content: legend, isExpand: true, expandTooltip: 'Open legend', collapseTooltip: 'Close legend' },
     { content: socialShare, isExpand: true, expandIcon: 'share', expandTooltip: 'Open social share', collapseTooltip: 'Close social share' },
   ];
-    control_panel.components = all_components;
-    expect(control_panel.components).toBe(all_components);
-
-
+  controlPanel.components = all_components;
+  expect(controlPanel.components).toBe(all_components);
 });
