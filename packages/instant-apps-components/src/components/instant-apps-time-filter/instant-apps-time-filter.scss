@@ -1,4 +1,8 @@
 .instant-apps-time-filter {
   display: block;
   padding: 10px;
+
+  &__layer-title {
+    font-weight: 550;
+  }
 }

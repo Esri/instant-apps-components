@@ -7,11 +7,11 @@
 
 ## Properties
 
-| Property        | Attribute | Description | Type                   | Default     |
-| --------------- | --------- | ----------- | ---------------------- | ----------- |
-| `filterMode`    | --        |             | `FilterMode`           | `undefined` |
-| `timeInfoItems` | --        |             | `ITimeInfoItem[]`      | `[]`        |
-| `view`          | --        |             | `MapView \| SceneView` | `undefined` |
+| Property              | Attribute | Description | Type                    | Default     |
+| --------------------- | --------- | ----------- | ----------------------- | ----------- |
+| `filterMode`          | --        |             | `FilterMode`            | `undefined` |
+| `timeInfoConfigItems` | --        |             | `ITimeInfoConfigItem[]` | `[]`        |
+| `view`                | --        |             | `MapView \| SceneView`  | `undefined` |
 
 
 ----------------------------------------------
