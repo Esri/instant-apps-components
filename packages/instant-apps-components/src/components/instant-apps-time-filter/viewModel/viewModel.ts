@@ -34,6 +34,10 @@ class InstantAppsTimeFilterViewModel {
     return Promise.resolve();
   }
 
+  cleanupTimeSlider(timeSliderRef: HTMLDivElement) {
+    if (timeSliderRef) timeSliderRef.innerHTML = '';
+  }
+
   updateTimeSliderExtent(): void {
     if (!state.timeSlider || !state.timeInfoItems || state.timeInfoItems.length === 0) return;
     state.timeSlider.fullTimeExtent = state.timeInfoItems[0].timeExtent;
@@ -67,11 +71,9 @@ class InstantAppsTimeFilterViewModel {
     };
   }
 
-  // TODO: Write unit tests for methods below
-  generateDateValues(timestamp: Date): DateValue | null {
-    if (!timestamp) return null;
-    const { getUTCMonth, getUTCDate, getUTCFullYear } = new Date(timestamp);
-    return { month: getUTCMonth(), day: getUTCDate(), year: getUTCFullYear() };
+  generateDateValues(timestamp: string): DateValue {
+    const dateObj = new Date(timestamp);
+    return { month: dateObj.getUTCMonth(), day: dateObj.getUTCDate(), year: dateObj.getUTCFullYear() };
   }
 }
 

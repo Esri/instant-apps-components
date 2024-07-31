@@ -41,11 +41,7 @@ describe('Time filter', async () => {
     });
 
     test('has map view', () => {
-      const map = new WebMap({
-        portalItem: {
-          id: '5b2d08964e5848128e0fef31854fc13d',
-        },
-      });
+      const map = new WebMap();
       const view = new MapView({ map });
       timeFilter.view = view;
       expect(timeFilter.view).toBeTruthy();
@@ -56,9 +52,7 @@ describe('Time filter', async () => {
     });
 
     test('has scene view', () => {
-      const map = new WebScene({
-        portalItem: { id: '3fc4b300ab4b42ddaa2c26e9707dc12e' },
-      });
+      const map = new WebScene();
       const view = new SceneView({ map });
       timeFilter.view = view;
       expect(timeFilter.view).toBeTruthy();
@@ -119,5 +113,13 @@ describe('Time filter', async () => {
       expect(containsExpectedProps).toBe(true);
       expect(timeInfoItem.timeExtent.declaredClass).toBe('esri.TimeExtent');
     });
+  });
+
+  test('generateDateValues', () => {
+    const { month, day, year } = viewModel.generateDateValues('07-21-2024');
+
+    expect(month).toBe(6);
+    expect(day).toBe(21);
+    expect(year).toBe(2024);
   });
 });

@@ -31,7 +31,7 @@ export class InstantAppsTimeFilter {
   }
 
   reactiveUtils: __esri.reactiveUtils;
-  handles: __esri.Handles;
+  handles: __esri.Handles | null;
   messages: typeof TimeFilter_t9n;
 
   @State()
@@ -61,8 +61,17 @@ export class InstantAppsTimeFilter {
     } catch {}
   }
 
+  private async _initializeModules() {
+    try {
+      const [Handles, reactiveUtils] = await loadModules(['esri/core/Handles', 'esri/core/reactiveUtils']);
+      this.reactiveUtils = reactiveUtils;
+      this.handles = new Handles();
+    } catch {}
+  }
+
   async componentDidLoad() {
     try {
+      viewModel.cleanupTimeSlider(this.timeSliderRef);
       await viewModel.init(this.timeSliderRef);
     } catch {
     } finally {
@@ -70,10 +79,10 @@ export class InstantAppsTimeFilter {
     }
   }
 
-  private async _initializeModules() {
-    const [Handles, reactiveUtils] = await loadModules(['esri/core/Handles', 'esri/core/reactiveUtils']);
-    this.reactiveUtils = reactiveUtils;
-    this.handles = new Handles();
+  disconnectedcallback() {
+    this.handles?.removeAll();
+    this.handles = null;
+    state.timeSlider?.destroy();
   }
 
   render(): HostElement {
