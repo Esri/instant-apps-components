@@ -43,8 +43,7 @@ describe('Testing prop changes', () => {
     header.setAttribute('logo-scale', 's');
     document.body.appendChild(header);
     await new Promise(resolve => requestIdleCallback(resolve));
-    const elem = document.getElementById('instant-apps-header');
-    expect(elem?.getAttribute('logo-scale')).toBe('s');
+    expect(header.getAttribute('logo-scale')).toBe('s');
   });
 
   test('logo scale change to large should be reflected', async () => {
@@ -52,8 +51,7 @@ describe('Testing prop changes', () => {
     header.setAttribute('logo-scale', 'l');
     document.body.appendChild(header);
     await new Promise(resolve => requestIdleCallback(resolve));
-    const elem = document.getElementById('instant-apps-header');
-    expect(elem?.getAttribute('logo-scale')).toBe('l');
+    expect(header.getAttribute('logo-scale')).toBe('l');
   });
 
   test('change background color', async () => {
@@ -61,8 +59,7 @@ describe('Testing prop changes', () => {
     header.setAttribute('background-color', newColor);
     document.body.appendChild(header);
     await new Promise(resolve => requestIdleCallback(resolve));
-    const elem = document.getElementById('instant-apps-header');
-    expect(elem?.getAttribute('background-color')).toBe(newColor);
+    expect(header.getAttribute('background-color')).toBe(newColor);
   });
 
   test('set title text link', async () => {

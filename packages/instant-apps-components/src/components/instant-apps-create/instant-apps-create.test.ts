@@ -10,12 +10,12 @@ const scene = new WebScene({
     id: '0614ea1f9dd043e9ba157b9c20d3c538', // ID of the WebScene on the on-premise portal
   },
 });
-describe('inline', async () => {
+describe('testing create component with CSS.inlineContainer as its class and as an inline component', async () => {
   const create = document.createElement('instant-apps-create');
   create.mode = 'inline';
   create.setAttribute('show-scale-bar', 'true');
   create.setAttribute('id', 'create-inline');
-  test('test if create option map works in inline', async () => {
+  test('test if create option map works in inline and if all create options are present and there are not duplicates', async () => {
     create.portal = scene.portalItem.portal;
     create.content = scene;
 
@@ -23,9 +23,8 @@ describe('inline', async () => {
 
     await new Promise(resolve => requestIdleCallback(resolve));
     await new Promise(resolve => setTimeout(resolve, 5000));
-
-    const shadowRoot = document.getElementById('create-inline')?.shadowRoot;
-
+    const shadowRoot = create.shadowRoot;
+    
     const listOptions = shadowRoot?.querySelectorAll('.instant-apps-create__option');
 
     expect(listOptions?.length).toBe(5);
@@ -47,13 +46,13 @@ describe('inline', async () => {
   });
 });
 
-describe('popover', async () => {
+describe('testing create component with CSS.popoverContainer as its class and as an popover component', async () => {
   const create = document.createElement('instant-apps-create');
   create.mode = 'popover';
   create.setAttribute('show-scale-bar', 'true');
   create.setAttribute('id', 'create-popover');
 
-  test('test if create option map works in popover', async () => {
+  test('test if create option map works in popover and if all create options are present and there are not duplicates', async () => {
     create.portal = scene.portalItem.portal;
     create.content = scene;
 
@@ -61,9 +60,8 @@ describe('popover', async () => {
 
     await new Promise(resolve => requestIdleCallback(resolve));
     await new Promise(resolve => setTimeout(resolve, 5000));
-
-    const shadowRoot = document.getElementById('create-popover')?.shadowRoot;
-
+    const shadowRoot = create.shadowRoot;
+    
     const listOptions = shadowRoot?.querySelectorAll('.instant-apps-create__option');
 
     expect(listOptions?.length).toBe(5);

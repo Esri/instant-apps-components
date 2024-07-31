@@ -1,4 +1,4 @@
-import { test, expect } from 'vitest';
+import { test, expect, describe } from 'vitest';
 import '../../../dist/components/instant-apps-header.js';
 import '../../../dist/components/instant-apps-social-share.js';
 import Home from '@arcgis/core/widgets/Home.js';
