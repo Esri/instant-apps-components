@@ -113,13 +113,13 @@ describe('Time filter', async () => {
       expect(containsExpectedProps).toBe(true);
       expect(timeInfoItem.timeExtent.declaredClass).toBe('esri.TimeExtent');
     });
-  });
 
-  test('generateDateValues', () => {
-    const { month, day, year } = viewModel.generateDateValues('07-21-2024');
+    test('generateDateValues', () => {
+      const { month, day, year } = viewModel.generateDateValues('07-21-2024');
 
-    expect(month).toBe(6);
-    expect(day).toBe(21);
-    expect(year).toBe(2024);
+      expect(month).toBe(6);
+      expect(day).toBe(21);
+      expect(year).toBe(2024);
+    });
   });
 });
