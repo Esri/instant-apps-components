@@ -710,9 +710,14 @@ export class InstantAppsFilterList {
   async queryDistinctFeatures(queryLayer: any, query: any, expression: Expression): Promise<void> {
     if (!query.outFields) return;
 
-    const features = (await this.queryForFeatures(queryLayer, query, query.outFields[0])) as string[];
+    const features = (await this.queryForFeatures(queryLayer, query, query.outFields[0])) as any[];
     if (features?.length) {
-      expression.fields = [...new Set(features)].sort();
+      expression.fields = [...new Set(features)];
+      if (expression.type === 'string') {
+        expression.fields = expression.fields.sort();
+      } else if (expression.type === 'number') {
+        expression.fields = expression.fields.sort((a, b) => a - b);
+      }
     }
   }
 
@@ -838,8 +843,9 @@ export class InstantAppsFilterList {
   async handleExpressionType(layerExpression: LayerExpression, expression: Expression, layerField: __esri.Field | undefined): Promise<boolean> {
     switch (expression.type) {
       case 'string':
+        return await this.updateStringExpression(layerExpression, expression);
       case 'number':
-        return this.updateStringOrNumberExpression(layerExpression, expression);
+        return await this.updateNumberExpression(layerExpression, expression);
       case 'date':
         return this.updateDateExpressionBasedOnDisplayOption(layerExpression, expression);
       case 'coded-value':
@@ -852,13 +858,6 @@ export class InstantAppsFilterList {
       default:
         return false;
     }
-  }
-
-  async updateStringOrNumberExpression(layerExpression: LayerExpression, expression: Expression): Promise<boolean> {
-    if (expression.type === 'string' || expression.type === 'number') {
-      return await this.updateStringExpression(layerExpression, expression);
-    }
-    return false;
   }
 
   async updateDateExpressionBasedOnDisplayOption(layerExpression: LayerExpression, expression: Expression): Promise<boolean> {
