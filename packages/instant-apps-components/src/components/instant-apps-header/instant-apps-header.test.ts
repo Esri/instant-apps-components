@@ -4,7 +4,7 @@ const header = document.createElement('instant-apps-header');
 header.setAttribute('id', 'instant-apps-header');
 header.setAttribute('background-color', '#151515');
 
-describe ("Testing prop changes", () => {
+describe('Testing prop changes', () => {
   test('should render component with custom title text', async () => {
     const customTitle = 'Instant Apps Header';
     header.titleText = customTitle;
@@ -36,7 +36,7 @@ describe ("Testing prop changes", () => {
     expect(infoElement).toBeTruthy();
     const infosTitle = infoElement?.getAttribute('title');
     expect(infosTitle).toBe(header.infoTitleText);
-  })
+  });
 
   test('logo scale change should be reflected', async () => {
     header.logoScale = 's';
@@ -72,4 +72,4 @@ describe ("Testing prop changes", () => {
     await new Promise(resolve => requestIdleCallback(resolve));
     expect(header.titleTextLink).toBe(newLink);
   });
-})
+});
