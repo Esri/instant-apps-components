@@ -6,6 +6,9 @@ import WebMap from '@arcgis/core/WebMap';
 import WebScene from '@arcgis/core/WebScene';
 import MapView from '@arcgis/core/views/MapView';
 import SceneView from '@arcgis/core/views/SceneView';
+import esriConfig from '@arcgis/core/config';
+
+esriConfig.portalUrl = 'https://holistic.mapsdevext.arcgis.com';
 
 describe('Time filter', async () => {
   const timeFilter = document.createElement('instant-apps-time-filter');
@@ -24,7 +27,11 @@ describe('Time filter', async () => {
   });
 
   test('has map view', () => {
-    const map = new WebMap();
+    const map = new WebMap({
+      portalItem: {
+        id: '5b2d08964e5848128e0fef31854fc13d',
+      },
+    });
     const view = new MapView({ map });
     timeFilter.view = view;
     expect(timeFilter.view).toBeTruthy();
@@ -35,7 +42,9 @@ describe('Time filter', async () => {
   });
 
   test('has scene view', () => {
-    const map = new WebScene();
+    const map = new WebScene({
+      portalItem: { id: '3fc4b300ab4b42ddaa2c26e9707dc12e' },
+    });
     const view = new SceneView({ map });
     timeFilter.view = view;
     expect(timeFilter.view).toBeTruthy();

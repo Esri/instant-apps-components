@@ -8,6 +8,7 @@ const { state, onChange } = createStore<State>({
   timeSlider: null,
   timeInfoItems: [],
   selectedTimeInfoItem: null,
+  loading: true,
 });
 
 export { state, onChange };

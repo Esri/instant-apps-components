@@ -25,6 +25,7 @@ export interface State {
   view: __esri.MapView | __esri.SceneView | null;
   filterMode: FilterMode | null;
   timeSlider: __esri.TimeSlider | null;
+  loading: boolean;
 }
 
 export interface DateValue {

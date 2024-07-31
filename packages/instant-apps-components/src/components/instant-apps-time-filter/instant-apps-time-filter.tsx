@@ -1,5 +1,5 @@
-import { Component, Element, Prop, h } from '@stencil/core';
-import { Host, HostElement, Watch } from '@stencil/core/internal';
+import { Component, Element, Prop, h, Fragment } from '@stencil/core';
+import { FunctionalComponent, Host, HostElement, State, Watch } from '@stencil/core/internal';
 
 import { state } from './support/store';
 import { viewModel } from './support/viewModel';
@@ -15,6 +15,8 @@ import { ITimeInfoConfigItem } from './interfaces';
 const CSS = {
   base: 'instant-apps-time-filter',
   layerTitle: 'instant-apps-time-filter__layer-title',
+  loadingContainer: 'instant-apps-time-filter__loading-container',
+  background: 'instant-apps-time-filter__background',
 };
 
 @Component({
@@ -31,6 +33,8 @@ export class InstantAppsTimeFilter {
   reactiveUtils: __esri.reactiveUtils;
   handles: __esri.Handles;
   messages: typeof TimeFilter_t9n;
+
+  @State()
   timeSliderRef: HTMLDivElement;
 
   @Element()
@@ -51,12 +55,19 @@ export class InstantAppsTimeFilter {
   }
 
   async componentWillLoad() {
-    await getMessages(this);
-    this._initializeModules();
+    try {
+      await getMessages(this);
+      this._initializeModules();
+    } catch {}
   }
 
   async componentDidLoad() {
-    viewModel.init(this.timeSliderRef);
+    try {
+      await viewModel.init(this.timeSliderRef);
+    } catch {
+    } finally {
+      state.loading = false;
+    }
   }
 
   private async _initializeModules() {
@@ -65,46 +76,75 @@ export class InstantAppsTimeFilter {
     this.handles = new Handles();
   }
 
-  render() {
+  render(): HostElement {
+    return <Host>{this._renderBase()}</Host>;
+  }
+
+  private _renderBase(): HTMLDivElement {
     return (
-      <Host>
-        <div class={CSS.base}>
-          {this._renderTopEl()}
-          <div ref={(ref: HTMLDivElement) => (this.timeSliderRef = ref)} />
-        </div>
-      </Host>
+      <div class="instant-apps-time-filter">
+        {this._renderLoader()}
+        {this._renderMain()}
+      </div>
     );
   }
 
-  private _renderTopEl() {
+  private _renderMain(): FunctionalComponent {
+    return (
+      <Fragment>
+        {this._renderTopEl()}
+        <div ref={(ref: HTMLDivElement) => (this.timeSliderRef = ref)} />
+      </Fragment>
+    );
+  }
+
+  private _renderLoader(): FunctionalComponent | null {
+    return (
+      state.loading && (
+        <Fragment>
+          <div class={CSS.background}></div>
+          <div class={CSS.loadingContainer}>
+            <calcite-loader scale="m" label={this.messages?.loading} text={this.messages?.loading} />
+          </div>
+        </Fragment>
+      )
+    );
+  }
+
+  private _renderTopEl(): HTMLCalciteDropdownElement | HTMLSpanElement {
     const moreThanOneTimeLayer = this.timeInfoConfigItems.length > 1;
-    return moreThanOneTimeLayer ? this._renderSelectControl() : this._renderLayerTitle();
+    return moreThanOneTimeLayer ? this._renderDropdown() : this._renderLayerTitle();
   }
 
-  private _renderSelectControl() {
-    const label = this.messages?.label;
-    return (
-      <calcite-label>
-        {label}
-        {this._renderSelect()}
-      </calcite-label>
-    );
-  }
-
-  private _renderSelect() {
-    return <calcite-select label={this.messages?.label}>{this._renderOptions()}</calcite-select>;
-  }
-
-  private _renderOptions() {
-    return state.timeInfoItems?.map(({ layerView }) => this._renderOption(layerView));
-  }
-
-  private _renderOption(layerView: __esri.LayerView) {
-    return <calcite-option label={layerView.layer.title} />;
-  }
-
-  private _renderLayerTitle() {
+  private _renderLayerTitle(): HTMLSpanElement {
     const title = state.selectedTimeInfoItem?.layerView?.layer?.title;
     return <span class={CSS.layerTitle}>{title}</span>;
+  }
+
+  private _renderDropdown(): HTMLCalciteDropdownElement {
+    return (
+      state.selectedTimeInfoItem && (
+        <calcite-dropdown>
+          {this._renderDropdownButton()}
+          {this._renderDropdownItems()}
+        </calcite-dropdown>
+      )
+    );
+  }
+
+  private _renderDropdownButton(): HTMLCalciteButtonElement {
+    return (
+      <calcite-button slot="trigger" appearance="transparent" iconEnd="chevron-down" width="full" alignment="space-between">
+        {state.selectedTimeInfoItem?.layerView?.layer?.title}
+      </calcite-button>
+    );
+  }
+
+  private _renderDropdownItems(): HTMLCalciteDropdownItemElement[] {
+    return state.timeInfoItems.map(({ layerView }) => this._renderDropdownItem(layerView.layer.title));
+  }
+
+  private _renderDropdownItem(title: string) {
+    return <calcite-dropdown-item>{title}</calcite-dropdown-item>;
   }
 }

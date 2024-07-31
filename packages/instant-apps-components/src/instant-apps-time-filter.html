@@ -25,48 +25,140 @@
       calcite-panel {
         padding: 10px;
       }
+
+      .switcher {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+      .switcher span {
+        margin: 5px;
+      }
     </style>
   </head>
 
   <body>
-    <div id="viewDiv"></div>
+    <calcite-shell>
+      <instant-apps-header
+        id="instant-apps-header"
+        slot="header"
+        title-text="Instant Apps: Time Filter"
+        text-color="#151515"
+        background-color="#fff"
+        logo-image="https://www.esri.com/content/dam/esrisites/en-us/common/icons/product-logos/arcgis-instant-apps-64.svg"
+        logo-image-alt-text="ArcGIS Instant Apps logo"
+        logo-link="https://www.esri.com/en-us/arcgis/products/arcgis-instant-apps/overview"
+        slot="header"
+      >
+        <div class="switcher" slot="actions-end">
+          <span>2D</span>
+          <calcite-switch id="switcher" checked></calcite-switch>
+          <span>3D</span>
+        </div>
+      </instant-apps-header>
+      <div id="viewDiv"></div>
+    </calcite-shell>
+
     <script>
-      require(['esri/WebMap', 'esri/views/MapView', 'esri/config', 'esri/widgets/Expand', 'esri/widgets/Legend'], (WebMap, MapView, esriConfig, Expand, Legend) => {
+      require(['esri/WebMap', 'esri/views/MapView', 'esri/WebScene', 'esri/views/SceneView', 'esri/config', 'esri/widgets/Expand', 'esri/widgets/Legend'], (
+        WebMap,
+        MapView,
+        WebScene,
+        SceneView,
+        esriConfig,
+        Expand,
+        Legend,
+      ) => {
         esriConfig.portalUrl = 'https://holistic.mapsdevext.arcgis.com';
 
-        const MAP_ID = '5b2d08964e5848128e0fef31854fc13d';
-        const map = new WebMap({ portalItem: { id: MAP_ID } });
-        const view = new MapView({ container: 'viewDiv', map });
+        let view;
+        let timeFilter;
 
-        const data = [
-          {
-            id: '1786615cac0-layer-6',
-            increments: 'days',
-            min: '2024-04-05T01:34:49.000Z',
-            max: '2024-07-02T20:26:33.000Z',
-            rangeStart: '2024-04-05',
-            rangeEnd: '2024-07-15',
-          },
-        ];
+        function setMapView() {
+          if (timeFilter) {
+            timeFilter.remove();
+          }
+          if (view) {
+            view.destroy();
+          }
 
-        const legend = new Legend({ view });
-        const legendExpand = new Expand({ content: legend, expanded: true });
-        view.ui.add(legendExpand, 'bottom-left');
+          const MAP_ID = '5b2d08964e5848128e0fef31854fc13d';
+          const map = new WebMap({ portalItem: { id: MAP_ID } });
+          view = new MapView({ container: 'viewDiv', map });
 
-        const timeFilter = document.createElement('instant-apps-time-filter');
-        const content = document.createElement('div');
-        content.appendChild(timeFilter);
-        timeFilter.view = view;
-        timeFilter.timeInfoConfigItems = data;
+          const data = [
+            {
+              id: '1786615cac0-layer-6',
+              increments: 'weeks',
+              min: '2024-04-05T01:34:49.000Z',
+              max: '2024-07-02T20:26:33.000Z',
+              rangeStart: '2024-04-05',
+              rangeEnd: '2024-07-15',
+            },
+          ];
 
-        const timeFilterExpand = new Expand({
-          content,
-          view,
-          expanded: true,
-          expandIcon: 'clock',
+          timeFilter = document.createElement('instant-apps-time-filter');
+          const content = document.createElement('div');
+          content.appendChild(timeFilter);
+          timeFilter.view = view;
+          timeFilter.timeInfoConfigItems = data;
+
+          const timeFilterExpand = new Expand({
+            content,
+            view,
+            expanded: true,
+            expandIcon: 'clock',
+          });
+
+          view.ui.add(timeFilterExpand, 'bottom-left');
+        }
+
+        function setSceneView() {
+          if (view) {
+            view.destroy();
+          }
+
+          const MAP_ID = 'daab29aca87e4eb3bdafd11ebf6167ec';
+          const map = new WebScene({ portalItem: { id: MAP_ID } });
+          view = new SceneView({ container: 'viewDiv', map });
+
+          const data = [
+            {
+              id: '3fc4b300ab4b42ddaa2c26e9707dc12e',
+              increments: 'weeks',
+              min: '2024-04-05T01:34:49.000Z',
+              max: '2024-07-02T20:26:33.000Z',
+              rangeStart: '2024-04-05',
+              rangeEnd: '2024-07-15',
+            },
+          ];
+
+          timeFilter = document.createElement('instant-apps-time-filter');
+          const content = document.createElement('div');
+          content.appendChild(timeFilter);
+          timeFilter.view = view;
+          timeFilter.timeInfoConfigItems = data;
+
+          const timeFilterExpand = new Expand({
+            content,
+            view,
+            expanded: true,
+            expandIcon: 'clock',
+          });
+
+          view.ui.add(timeFilterExpand, 'bottom-left');
+        }
+
+        const switcher = document.getElementById('switcher');
+        switcher.addEventListener('calciteSwitchChange', e => {
+          if (e.target.checked) {
+            setSceneView();
+          } else {
+            setMapView();
+          }
         });
 
-        view.ui.add(timeFilterExpand, 'top-right');
+        setSceneView();
       });
     </script>
   </body>

@@ -1,21 +1,51 @@
 import { state } from './store';
-import { DateValue, ITimeInfoConfigItem, ITimeInfoItem, ITimeItemUnit } from '../interfaces';
 import { loadModules } from '../../../utils/loadModules';
+
+import { DateValue, ITimeInfoConfigItem, ITimeInfoItem, ITimeItemUnit } from '../interfaces';
 
 class InstantAppsTimeFilterViewModel {
   async init(timeSliderRef: HTMLDivElement) {
     await state?.view?.when();
-    const timeLayerViews = await this.getTimeLayerViews();
-    state.timeInfoItems = viewModel.generateTimeInfoItems(timeLayerViews as __esri.LayerView[]);
-    this.initTimeSlider(timeSliderRef);
+    if (state.view) {
+      const timeLayerViews = await this.getTimeLayerViews(state.view, state.timeInfoConfigItems);
+      state.timeInfoItems = this.generateTimeInfoItems(timeLayerViews as __esri.LayerView[]);
+    }
+
+    await this.initTimeSlider(timeSliderRef);
+    return Promise.resolve();
   }
 
-  async getTimeLayerViews(): Promise<__esri.LayerView[] | undefined> {
-    const { view } = state;
+  async initTimeSlider(timeSliderRef: HTMLDivElement): Promise<void> {
+    const initialTimeInfoItem = state?.timeInfoItems?.[0];
+    if (initialTimeInfoItem) {
+      state.selectedTimeInfoItem = initialTimeInfoItem;
+      const [{ timeExtent, rangeStart, rangeEnd }] = state.timeInfoItems;
+      const [TimeSlider] = await loadModules(['esri/widgets/TimeSlider']);
+      state.timeSlider = new TimeSlider({
+        view: state.view,
+        container: timeSliderRef,
+        fullTimeExtent: timeExtent,
+        start: rangeStart,
+        end: rangeEnd,
+        mode: 'time-window',
+        loop: true,
+      });
+    }
+    return Promise.resolve();
+  }
+
+  updateTimeSliderExtent(): void {
+    if (!state.timeSlider || !state.timeInfoItems || state.timeInfoItems.length === 0) return;
+    state.timeSlider.fullTimeExtent = state.timeInfoItems[0].timeExtent;
+  }
+
+  // TODO: Write unit tests for methods below
+  async getTimeLayerViews(view: __esri.MapView | __esri.SceneView, timeInfoConfigItems: ITimeInfoConfigItem[]): Promise<__esri.LayerView[] | undefined> {
     if (!view) return;
     const { allLayers } = view.map;
     const getTimeLayer = (timeInfoLayerId: string) => allLayers.find(({ id }) => timeInfoLayerId === id);
-    const timeLayers = state.timeInfoConfigItems.map(({ id }) => getTimeLayer(id));
+
+    const timeLayers = timeInfoConfigItems.map(({ id }) => getTimeLayer(id));
     const timeLVPromises = timeLayers.map(layer => view.whenLayerView(layer));
     return await Promise.all(timeLVPromises);
   }
@@ -38,27 +68,6 @@ class InstantAppsTimeFilterViewModel {
       rangeEnd: new Date(rangeEnd),
       timeExtent: (layerView.layer as __esri.FeatureLayer).timeInfo.fullTimeExtent,
     };
-  }
-
-  async initTimeSlider(timeSliderRef: HTMLDivElement): Promise<void> {
-    const initialTimeInfoItem = state?.timeInfoItems?.[0];
-    if (initialTimeInfoItem) {
-      state.selectedTimeInfoItem = initialTimeInfoItem;
-      const [{ timeExtent, rangeStart, rangeEnd }] = state.timeInfoItems;
-      const [TimeSlider] = await loadModules(['esri/widgets/TimeSlider']);
-      state.timeSlider = new TimeSlider({
-        view: state.view,
-        container: timeSliderRef,
-        fullTimeExtent: timeExtent,
-        start: rangeStart,
-        end: rangeEnd,
-      });
-    }
-  }
-
-  updateTimeSliderExtent(): void {
-    if (!state.timeSlider || !state.timeInfoItems || state.timeInfoItems.length === 0) return;
-    state.timeSlider.fullTimeExtent = state.timeInfoItems[0].timeExtent;
   }
 
   generateDateValues(timestamp: Date): DateValue | null {
