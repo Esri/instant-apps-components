@@ -1,17 +1,17 @@
 import { expect, test, describe } from 'vitest';
 
-import '../../../dist/components/instant-apps-time-filter.js';
+import '../../../../dist/components/instant-apps-time-filter.js';
 
 import WebMap from '@arcgis/core/WebMap';
 import WebScene from '@arcgis/core/WebScene';
 import MapView from '@arcgis/core/views/MapView';
 import SceneView from '@arcgis/core/views/SceneView';
 import esriConfig from '@arcgis/core/config';
-import EArcGISOrgs from '../../testUtils/orgEnums.js';
+import EArcGISOrgs from '../../../testUtils/orgEnums.js';
 
 esriConfig.portalUrl = EArcGISOrgs.Holistic;
 
-import { viewModel } from '../instant-apps-time-filter/support/viewModel';
+import { viewModel } from '../viewModel/viewModel.js';
 
 const timeConfigItems = [
   {

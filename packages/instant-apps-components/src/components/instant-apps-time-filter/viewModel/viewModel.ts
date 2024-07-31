@@ -1,7 +1,7 @@
-import { state } from './store';
+import { state } from './model';
 import { loadModules } from '../../../utils/loadModules';
 
-import { DateValue, ITimeInfoConfigItem, ITimeInfoItem, ITimeItemUnit } from '../interfaces';
+import { DateValue, ITimeInfoConfigItem, ITimeInfoItem, ITimeItemUnit } from '../interfaces/interfaces';
 
 class InstantAppsTimeFilterViewModel {
   async init(timeSliderRef: HTMLDivElement) {
@@ -39,7 +39,6 @@ class InstantAppsTimeFilterViewModel {
     state.timeSlider.fullTimeExtent = state.timeInfoItems[0].timeExtent;
   }
 
-  // TODO: Write unit tests for methods below
   async getTimeLayerViews(view: __esri.MapView | __esri.SceneView, timeInfoConfigItems: ITimeInfoConfigItem[]): Promise<__esri.LayerView[] | undefined> {
     if (!view) return;
     const { allLayers } = view.map;
@@ -68,6 +67,7 @@ class InstantAppsTimeFilterViewModel {
     };
   }
 
+  // TODO: Write unit tests for methods below
   generateDateValues(timestamp: Date): DateValue | null {
     if (!timestamp) return null;
     const { getUTCMonth, getUTCDate, getUTCFullYear } = new Date(timestamp);
