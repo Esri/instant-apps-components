@@ -8,7 +8,7 @@ class InstantAppsTimeFilterViewModel {
     await state?.view?.when();
     if (state.view) {
       const timeLayerViews = await this.getTimeLayerViews(state.view, state.timeInfoConfigItems);
-      state.timeInfoItems = this.generateTimeInfoItems(timeLayerViews as __esri.LayerView[]);
+      state.timeInfoItems = this.generateTimeInfoItems(timeLayerViews as __esri.LayerView[], state.timeInfoConfigItems);
     }
 
     await this.initTimeSlider(timeSliderRef);
@@ -50,14 +50,12 @@ class InstantAppsTimeFilterViewModel {
     return await Promise.all(timeLVPromises);
   }
 
-  generateTimeInfoItems(timeLayerViews: __esri.LayerView[]): ITimeInfoItem[] {
-    const { timeInfoConfigItems } = state;
-    return timeInfoConfigItems
-      ? timeInfoConfigItems.map(timeConfigItem => {
-          const lv = timeLayerViews.find(({ layer }) => layer.id === timeConfigItem.id) as __esri.LayerView;
-          return this.generateTimeInfoItem(lv, timeConfigItem);
-        })
-      : [];
+  generateTimeInfoItems(timeLayerViews: __esri.LayerView[], timeConfigItems: ITimeInfoConfigItem[]): ITimeInfoItem[] {
+    const items = [...timeConfigItems];
+    return items.map(timeConfigItem => {
+      const lv = timeLayerViews.find(({ layer }) => layer.id === timeConfigItem.id) as __esri.LayerView;
+      return this.generateTimeInfoItem(lv, timeConfigItem);
+    });
   }
 
   generateTimeInfoItem(layerView: __esri.LayerView, { increments, rangeStart, rangeEnd }: ITimeInfoConfigItem): ITimeInfoItem {

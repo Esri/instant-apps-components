@@ -1,4 +1,4 @@
-import stencil from 'unplugin-stencil/vite'
+import stencil from 'unplugin-stencil/vite';
 import { defineConfig } from 'vitest/config';
 
 export default defineConfig({
@@ -10,5 +10,5 @@ export default defineConfig({
       name: 'chrome',
     },
   },
-  plugins: [stencil()]
+  plugins: [stencil()],
 });
