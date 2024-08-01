@@ -19,17 +19,19 @@ jobs:
         uses: actions/setup-node@v2
         with:
           node-version: ${{ matrix.node-version }}
+      - name: Enable Corepack
+        run: corepack enable
       - name: Cache node modules
         uses: actions/cache@v2
         with:
           path: |
             packages/instant-apps-components/node_modules
             packages/instant-apps-components/.cache
-          key: ${{ runner.os }}-node-${{ matrix.node-version }}-${{ hashFiles('**/package-lock.json') }}
+          key: ${{ runner.os }}-node-${{ matrix.node-version }}-${{ hashFiles('**/yarn.lock') }}
           restore-keys: |
             ${{ runner.os }}-node-${{ matrix.node-version }}-
             ${{ runner.os }}-node-
-      - run: npm install
+      - run: npm ci
         working-directory: packages/instant-apps-components
       - run: npx playwright install
         working-directory: packages/instant-apps-components
