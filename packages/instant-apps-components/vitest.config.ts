@@ -9,10 +9,10 @@ export default defineConfig({
     browser: {
       enabled: true,
       provider: 'playwright',
-      headless: isCI ? true : false,
+      headless: isCI,
       name: 'chromium',
     },
-    dangerouslyIgnoreUnhandledErrors: true,
+    dangerouslyIgnoreUnhandledErrors: isCI,
   },
   plugins: [stencil()],
 });
