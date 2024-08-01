@@ -60,6 +60,7 @@
     "babel-loader": "^8.2.3",
     "cpy-cli": "^4.1.0",
     "gh-pages": "^4.0.0",
+    "jsdom": "^24.1.1",
     "lit-html": "^2.0.2",
     "puppeteer": "^22.0.0",
     "react": "^18.3.1",
