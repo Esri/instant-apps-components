@@ -24,6 +24,8 @@ jobs:
           node-version: ${{ matrix.node-version }}
       - name: Install Yarn
         run: npm install -g yarn
+      - name: Enable Corepack
+        run: corepack enable
       - name: Cache node modules
         uses: actions/cache@v2
         with:
