@@ -119,7 +119,7 @@ describe('Time filter', async () => {
 
       expect(month).toBe(6);
       expect(day).toBe(21);
-      expect(year).toBe(2023);
+      expect(year).toBe(2024);
     });
   });
 });
