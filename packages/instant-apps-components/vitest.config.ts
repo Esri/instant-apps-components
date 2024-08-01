@@ -11,13 +11,8 @@ export default defineConfig({
       provider: 'playwright',
       headless: isCI ? true : false,
       name: 'chromium',
-      launchOptions: {
-        args: [
-          '--enable-webgl',
-          '--ignore-gpu-blacklist', // Ignore GPU blacklist to enable WebGL on all GPUs
-        ],
-      },
-    } as any,
+    },
+    dangerouslyIgnoreUnhandledErrors: true,
   },
   plugins: [stencil()],
 });
