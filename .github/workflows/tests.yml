@@ -22,25 +22,21 @@ jobs:
         uses: actions/setup-node@v2
         with:
           node-version: ${{ matrix.node-version }}
-      - name: Install Yarn
-        run: npm install -g yarn
-      - name: Enable Corepack
-        run: corepack enable
       - name: Cache node modules
         uses: actions/cache@v2
         with:
           path: |
             packages/instant-apps-components/node_modules
             packages/instant-apps-components/.cache
-          key: ${{ runner.os }}-node-${{ matrix.node-version }}-${{ hashFiles('**/yarn.lock') }}
+          key: ${{ runner.os }}-node-${{ matrix.node-version }}-${{ hashFiles('**/package-lock.json') }}
           restore-keys: |
             ${{ runner.os }}-node-${{ matrix.node-version }}-
             ${{ runner.os }}-node-
-      - run: yarn install
+      - run: npm install
         working-directory: packages/instant-apps-components
       - run: npx playwright install
         working-directory: packages/instant-apps-components
-      - run: yarn build
+      - run: npm run build
         working-directory: packages/instant-apps-components
-      - run: yarn test
+      - run: npm test
         working-directory: packages/instant-apps-components
