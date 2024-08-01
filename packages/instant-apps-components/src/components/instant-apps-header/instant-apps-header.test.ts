@@ -1,11 +1,10 @@
 import { expect, test, describe } from 'vitest';
 import '../../../dist/components/instant-apps-header.js';
-const header = document.createElement('instant-apps-header');
-header.setAttribute('id', 'instant-apps-header');
-header.setAttribute('background-color', '#151515');
 
-describe('Testing prop changes', () => {
-  test('should render component with custom title text', async () => {
+describe('prop changes', () => {
+  const header = document.createElement('instant-apps-header');
+  header.setAttribute('background-color', '#151515');
+  test('custom title text', async () => {
     const customTitle = 'Instant Apps Header';
     header.titleText = customTitle;
     document.body.appendChild(header);
@@ -14,8 +13,7 @@ describe('Testing prop changes', () => {
     expect(header.titleText).toBe(customTitle);
   });
 
-  test('test info button visibility', async () => {
-    header.infoButton = true;
+  test('info button visibility', async () => {
     header.setAttribute('info-button', 'true');
     header.infoTitleText = 'info test';
     document.body.appendChild(header);
@@ -25,20 +23,19 @@ describe('Testing prop changes', () => {
     expect(header.infoIsOpen).toBe(true);
   });
 
-  test('test info button toggle', async () => {
+  test('info button toggle', async () => {
     header.toggleInfo();
     expect(header.infoIsOpen).toBe(false);
   });
 
-  test('test info text title prop', async () => {
+  test('info text title prop', async () => {
     const infoElement = header.shadowRoot?.getElementById('infoButton');
-    expect(infoElement ? true : false).toBe(true);
     expect(infoElement).toBeTruthy();
     const infosTitle = infoElement?.getAttribute('title');
     expect(infosTitle).toBe(header.infoTitleText);
   });
 
-  test('logo scale change should be reflected', async () => {
+  test('logo scale', async () => {
     header.logoScale = 's';
     header.setAttribute('logo-scale', 's');
     document.body.appendChild(header);
@@ -46,7 +43,7 @@ describe('Testing prop changes', () => {
     expect(header.getAttribute('logo-scale')).toBe('s');
   });
 
-  test('logo scale change to large should be reflected', async () => {
+  test('logo scale', async () => {
     header.logoScale = 'l';
     header.setAttribute('logo-scale', 'l');
     document.body.appendChild(header);

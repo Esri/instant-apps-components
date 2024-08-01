@@ -7,21 +7,22 @@ import Zoom from '@arcgis/core/widgets/Zoom.js';
 import WebMap from '@arcgis/core/WebMap.js';
 import Legend from '@arcgis/core/widgets/Legend.js';
 const controlPanel = document.createElement('instant-apps-control-panel');
-describe ("Testing props", () => {
-  test('test if all widgets exist in the control panel', async () => {
-    const map = new WebMap({
-      portalItem: {
-        id: '8891ee1d2e0e428bb96c58b8ecf8c408',
-      },
-    });
+const map = new WebMap({
+  portalItem: {
+    id: '8891ee1d2e0e428bb96c58b8ecf8c408',
+  },
+});
 
-    const view = new MapView({
-      container: 'viewDiv',
-      map,
-      ui: {
-        components: [],
-      },
-    });
+const view = new MapView({
+  container: 'viewDiv',
+  map,
+  ui: {
+    components: [],
+  },
+});
+describe ("Control panel", () => {
+  test('if widgets exist', async () => {
+    
     const home = new Home({ view });
     const zoom = new Zoom({ view });
     const socialShare = document.createElement('instant-apps-social-share');
