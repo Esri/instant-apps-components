@@ -1,6 +1,5 @@
 import stencil from 'unplugin-stencil/vite';
 import { defineConfig } from 'vitest/config';
-import { devices } from '@playwright/test';
 
 const isCI = process.env.CI === 'true';
 
