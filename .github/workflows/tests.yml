@@ -34,7 +34,7 @@ jobs:
             ${{ runner.os }}-node-
 
       - name: Install dependencies
-        run: npm ci --verbose
+        run: npm ci
         working-directory: packages/instant-apps-components
 
       - name: Install Playwright
