@@ -5,12 +5,11 @@ import { state } from './viewModel/model';
 import { viewModel } from './viewModel/viewModel';
 
 import { getMessages } from '../../utils/locale';
-import { loadModules } from '../../utils/loadModules';
 
 import TimeFilter_t9n from '../../assets/t9n/instant-apps-time-filter/resources.json';
 
 import { FilterMode } from '../../interfaces/interfaces';
-import { ITimeInfoConfigItem } from './interfaces/interfaces';
+import { ITimeInfoConfigItem, ITimeInfoItem } from './interfaces/interfaces';
 
 const CSS = {
   base: 'instant-apps-time-filter',
@@ -30,8 +29,6 @@ export class InstantAppsTimeFilter {
     state.timeInfoConfigItems = this.timeInfoConfigItems;
   }
 
-  reactiveUtils: __esri.reactiveUtils;
-  handles: __esri.Handles | null;
   messages: typeof TimeFilter_t9n;
 
   @State()
@@ -57,21 +54,11 @@ export class InstantAppsTimeFilter {
   async componentWillLoad() {
     try {
       await getMessages(this);
-      this._initializeModules();
-    } catch {}
-  }
-
-  private async _initializeModules() {
-    try {
-      const [Handles, reactiveUtils] = await loadModules(['esri/core/Handles', 'esri/core/reactiveUtils']);
-      this.reactiveUtils = reactiveUtils;
-      this.handles = new Handles();
     } catch {}
   }
 
   async componentDidLoad() {
     try {
-      viewModel.cleanupTimeSlider(this.timeSliderRef);
       await viewModel.init(this.timeSliderRef);
     } catch {
     } finally {
@@ -80,9 +67,7 @@ export class InstantAppsTimeFilter {
   }
 
   disconnectedcallback() {
-    this.handles?.removeAll();
-    this.handles = null;
-    state.timeSlider?.destroy();
+    viewModel.destroy();
   }
 
   render(): HostElement {
@@ -91,7 +76,7 @@ export class InstantAppsTimeFilter {
 
   private _renderBase(): HTMLDivElement {
     return (
-      <div class="instant-apps-time-filter">
+      <div class={CSS.base}>
         {this._renderLoader()}
         {this._renderMain()}
       </div>
@@ -144,16 +129,16 @@ export class InstantAppsTimeFilter {
   private _renderDropdownButton(): HTMLCalciteButtonElement {
     return (
       <calcite-button slot="trigger" appearance="transparent" iconEnd="chevron-down" width="full" alignment="space-between">
-        {state.selectedTimeInfoItem?.layerView?.layer?.title}
+        {viewModel.getLabel(state.selectedTimeInfoItem as ITimeInfoItem)}
       </calcite-button>
     );
   }
 
   private _renderDropdownItems(): HTMLCalciteDropdownItemElement[] {
-    return state.timeInfoItems.map(({ layerView }) => this._renderDropdownItem(layerView.layer.title));
+    return state.timeInfoItems.map(timeInfoItem => this._renderDropdownItem(timeInfoItem));
   }
 
-  private _renderDropdownItem(title: string) {
-    return <calcite-dropdown-item>{title}</calcite-dropdown-item>;
+  private _renderDropdownItem(timeInfoItem: ITimeInfoItem) {
+    return <calcite-dropdown-item>{viewModel.getLabel(timeInfoItem)}</calcite-dropdown-item>;
   }
 }

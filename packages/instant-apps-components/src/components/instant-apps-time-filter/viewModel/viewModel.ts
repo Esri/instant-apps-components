@@ -4,7 +4,23 @@ import { loadModules } from '../../../utils/loadModules';
 import { DateValue, ITimeInfoConfigItem, ITimeInfoItem, ITimeItemUnit } from '../interfaces/interfaces';
 
 class InstantAppsTimeFilterViewModel {
+  constructor() {
+    this._initializeModules();
+  }
+
+  reactiveUtils: __esri.reactiveUtils;
+  handles: __esri.Handles | null;
+
+  private async _initializeModules() {
+    try {
+      const [Handles, reactiveUtils] = await loadModules(['esri/core/Handles', 'esri/core/reactiveUtils']);
+      this.reactiveUtils = reactiveUtils;
+      this.handles = new Handles();
+    } catch {}
+  }
+
   async init(timeSliderRef: HTMLDivElement) {
+    viewModel.cleanupTimeSlider(timeSliderRef);
     await state?.view?.when();
     if (state.view) {
       const timeLayerViews = await this.getTimeLayerViews(state.view, state.timeInfoConfigItems);
@@ -13,6 +29,12 @@ class InstantAppsTimeFilterViewModel {
 
     await this.initTimeSlider(timeSliderRef);
     return Promise.resolve();
+  }
+
+  destroy() {
+    this.handles?.removeAll();
+    this.handles = null;
+    state.timeSlider?.destroy();
   }
 
   async initTimeSlider(timeSliderRef: HTMLDivElement): Promise<void> {
@@ -74,6 +96,10 @@ class InstantAppsTimeFilterViewModel {
   generateDateValues(timestamp: string): DateValue {
     const dateObj = new Date(timestamp);
     return { month: dateObj.getUTCMonth(), day: dateObj.getUTCDate(), year: dateObj.getUTCFullYear() };
+  }
+
+  getLabel(timeInfoItem: ITimeInfoItem): string {
+    return timeInfoItem?.layerView?.layer?.title || '';
   }
 }
 
