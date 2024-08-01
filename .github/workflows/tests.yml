@@ -26,5 +26,7 @@ jobs:
         working-directory: packages/instant-apps-components
       - run: npx playwright install
         working-directory: packages/instant-apps-components
+      - run: npm run build
+        working-directory: packages/instant-apps-components
       - run: npm test
         working-directory: packages/instant-apps-components
