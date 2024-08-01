@@ -1,9 +1,6 @@
-name: Run Tests
-
-on:
-  pull_request:
-    branches:
-      - master
+pull_request:
+  branches:
+    - master
 
 jobs:
   build:
@@ -19,8 +16,6 @@ jobs:
         uses: actions/setup-node@v2
         with:
           node-version: ${{ matrix.node-version }}
-      - name: Enable Corepack
-        run: corepack enable
       - name: Cache node modules
         uses: actions/cache@v2
         with:
@@ -31,7 +26,7 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-node-${{ matrix.node-version }}-
             ${{ runner.os }}-node-
-      - run: npm ci
+      - run: npm ci --verbose
         working-directory: packages/instant-apps-components
       - run: npx playwright install
         working-directory: packages/instant-apps-components
