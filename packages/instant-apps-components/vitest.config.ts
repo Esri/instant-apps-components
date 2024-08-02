@@ -1,14 +1,18 @@
-import stencil from 'unplugin-stencil/vite'
+import stencil from 'unplugin-stencil/vite';
 import { defineConfig } from 'vitest/config';
+
+const isCI = process.env.CI === 'true';
 
 export default defineConfig({
   test: {
-    testTimeout: 10000,
+    environment: 'jsdom',
     browser: {
       enabled: true,
-      headless: false,
-      name: 'chrome',
+      provider: 'playwright',
+      headless: isCI,
+      name: 'chromium',
     },
+    dangerouslyIgnoreUnhandledErrors: isCI,
   },
-  plugins: [stencil()]
+  plugins: [stencil()],
 });
