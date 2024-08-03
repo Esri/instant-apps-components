@@ -5,7 +5,8 @@ export interface ITimeInfoItem {
   unit: ITimeItemUnit;
   rangeStart: Date;
   rangeEnd: Date;
-  timeExtent: __esri.TimeExtent;
+  timeExtent: __esri.TimeExtent | null;
+  previousTimeExtent: __esri.TimeExtent | null;
 }
 
 export interface ITimeInfoConfigItem {
@@ -24,7 +25,7 @@ export interface State {
   selectedTimeInfoItem: ITimeInfoItem | null;
   view: __esri.MapView | __esri.SceneView | null;
   filterMode: FilterMode | null;
-  timeSlider: __esri.TimeSlider | null;
+  timeSlider: __esri.widgetsTimeSlider | null;
   loading: boolean;
 }
 

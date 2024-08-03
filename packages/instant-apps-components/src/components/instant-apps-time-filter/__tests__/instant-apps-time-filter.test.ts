@@ -1,4 +1,4 @@
-import { expect, test, describe } from 'vitest';
+import { expect, test, describe, afterAll } from 'vitest';
 
 import '../../../../dist/components/instant-apps-time-filter.js';
 
@@ -12,17 +12,9 @@ import EArcGISOrgs from '../../../testUtils/orgEnums.js';
 esriConfig.portalUrl = EArcGISOrgs.Holistic;
 
 import { viewModel } from '../viewModel/viewModel.js';
-
-const timeConfigItems = [
-  {
-    id: '1786615cac0-layer-6',
-    increments: 'weeks',
-    min: '2024-04-05T01:34:49.000Z',
-    max: '2024-07-02T20:26:33.000Z',
-    rangeStart: new Date('2024-04-05'),
-    rangeEnd: new Date('2024-07-15'),
-  },
-];
+import testData from './testData.js';
+import { createMapAndViews } from '../../../testUtils/createView.js';
+import { ITimeInfoConfigItem } from '../interfaces/interfaces.js';
 
 describe('Time filter', async () => {
   describe('General', async () => {
@@ -68,50 +60,77 @@ describe('Time filter', async () => {
     jsapiStyles.href = 'https://js.arcgis.com/4.30/esri/themes/light/main.css';
     document.head.appendChild(jsapiStyles);
 
-    const container = document.createElement('div');
-    container.style.width = '500px';
-    container.style.height = '500px';
+    describe('Map with a single time-aware layer', async () => {
+      const data = testData.webmaps[0];
 
-    const id = '5b2d08964e5848128e0fef31854fc13d';
-    const mapConfig = { portalItem: { id } };
-    const map = new WebMap(mapConfig);
-    const view = new MapView({ map, container });
+      const view = await createMapAndViews(data.id);
 
-    document.body.appendChild(view.container);
+      test('getTimeLayerViews: 0', async () => {
+        const layerViews = await viewModel.getTimeLayerViews(view, []);
+        expect(layerViews?.length).toBe(0);
+      });
 
-    await map.loadAll();
-    await view.when();
+      let layerViews: __esri.LayerView[];
 
-    test('getTimeLayerViews: 0', async () => {
-      const layerViews = await viewModel.getTimeLayerViews(view, []);
-      expect(layerViews?.length).toBe(0);
+      test('getTimeLayerViews: 1', async () => {
+        layerViews = (await viewModel.getTimeLayerViews(view, data.config as ITimeInfoConfigItem[])) as __esri.LayerView[];
+        expect(layerViews?.length).toBe(1);
+      });
+
+      test('generateTimeInfoItems: 1', async () => {
+        const timeInfoItems = viewModel.generateTimeInfoItems(layerViews, data.config as ITimeInfoConfigItem[]);
+        expect(timeInfoItems.length).toBe(1);
+      });
+
+      test('generateTimeInfoItems: 1', async () => {
+        const timeInfoItems = viewModel.generateTimeInfoItems(layerViews, data.config as ITimeInfoConfigItem[]);
+        expect(timeInfoItems.length).toBe(1);
+      });
+
+      test('generateTimeInfoItem: Thorough check of key/value pairs', async () => {
+        const layerView = layerViews[0];
+        const timeConfigItem = data?.config?.[0] as ITimeInfoConfigItem;
+        const timeInfoItem = viewModel.generateTimeInfoItem(layerView, timeConfigItem);
+        expect(timeInfoItem.layerView.declaredClass).toBe('esri.views.2d.layers.FeatureLayerView2D');
+        expect(timeInfoItem.unit).not.toBe('days');
+        expect(timeInfoItem.unit).toBe('weeks');
+        expect(timeInfoItem.rangeEnd).not.toBeInstanceOf(Array);
+        expect(timeInfoItem.rangeStart).toBeInstanceOf(Date);
+        const props = ['layerView', 'unit', 'rangeStart', 'rangeEnd', 'timeExtent'];
+        const containsExpectedProps = props.every(prop => timeInfoItem.hasOwnProperty(prop));
+        expect(containsExpectedProps).toBe(true);
+        expect(timeInfoItem?.timeExtent?.declaredClass).toBe('esri.TimeExtent');
+      });
+
+      afterAll(() => {
+        view.destroy();
+      });
     });
 
-    let layerViews: __esri.LayerView[];
+    describe('Map with multiple time-aware layers', async () => {
+      const data = testData.webmaps[1];
+      const view = await createMapAndViews(data.id);
 
-    test('getTimeLayerViews: 1', async () => {
-      layerViews = (await viewModel.getTimeLayerViews(view, timeConfigItems)) as __esri.LayerView[];
-      expect(layerViews?.length).toBe(1);
-    });
+      test('getTimeLayerViews: 0', async () => {
+        const layerViews = await viewModel.getTimeLayerViews(view, []);
+        expect(layerViews?.length).toBe(0);
+      });
 
-    test('generateTimeInfoItems: 1', async () => {
-      const timeInfoItems = viewModel.generateTimeInfoItems(layerViews, timeConfigItems);
-      expect(timeInfoItems.length).toBe(1);
-    });
+      let layerViews: __esri.LayerView[];
 
-    test('generateTimeInfoItem: Thorough check of key/value pairs', async () => {
-      const layerView = layerViews[0];
-      const timeConfigItem = timeConfigItems[0];
-      const timeInfoItem = viewModel.generateTimeInfoItem(layerView, timeConfigItem);
-      expect(timeInfoItem.layerView.declaredClass).toBe('esri.views.2d.layers.FeatureLayerView2D');
-      expect(timeInfoItem.unit).not.toBe('days');
-      expect(timeInfoItem.unit).toBe('weeks');
-      expect(timeInfoItem.rangeEnd).not.toBeInstanceOf(Array);
-      expect(timeInfoItem.rangeStart).toBeInstanceOf(Date);
-      const props = ['layerView', 'unit', 'rangeStart', 'rangeEnd', 'timeExtent'];
-      const containsExpectedProps = props.every(prop => timeInfoItem.hasOwnProperty(prop));
-      expect(containsExpectedProps).toBe(true);
-      expect(timeInfoItem.timeExtent.declaredClass).toBe('esri.TimeExtent');
+      test('getTimeLayerViews: 2', async () => {
+        layerViews = (await viewModel.getTimeLayerViews(view, data.config)) as __esri.LayerView[];
+        expect(layerViews?.length).toBe(2);
+      });
+
+      test('generateTimeInfoItems: 2', async () => {
+        const timeInfoItems = viewModel.generateTimeInfoItems(layerViews, data.config);
+        expect(timeInfoItems.length).toBe(2);
+      });
+
+      afterAll(() => {
+        view.destroy();
+      });
     });
 
     test('generateDateValues', () => {

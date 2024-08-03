@@ -51,7 +51,7 @@
       >
         <div class="switcher" slot="actions-end">
           <span>2D</span>
-          <calcite-switch id="switcher" checked></calcite-switch>
+          <calcite-switch id="switcher"></calcite-switch>
           <span>3D</span>
         </div>
       </instant-apps-header>
@@ -81,18 +81,26 @@
             view.destroy();
           }
 
-          const MAP_ID = '5b2d08964e5848128e0fef31854fc13d';
+          const MAP_ID = '3188c27cb24340b9a9c1d35c94cfbf68';
           const map = new WebMap({ portalItem: { id: MAP_ID } });
           view = new MapView({ container: 'viewDiv', map });
 
           const data = [
+            // {
+            //   id: '1910f491661-layer-2',
+            //   increments: 'weeks',
+            //   min: '2019-05-06T21:19:00.000Z',
+            //   max: '2019-08-05T21:19:00.000Z',
+            //   rangeStart: new Date('2019-05-24'),
+            //   rangeEnd: new Date('2019-08-05T21:19:00.000Z'),
+            // },
             {
-              id: '1786615cac0-layer-6',
-              increments: 'weeks',
-              min: '2024-04-05T01:34:49.000Z',
-              max: '2024-07-02T20:26:33.000Z',
-              rangeStart: '2024-04-05',
-              rangeEnd: '2024-07-15',
+              id: '1910f491fa6-layer-3',
+              increments: 'days',
+              min: '2019-05-06T21:19:35.000Z',
+              max: '2019-07-30T12:25:33.000Z',
+              rangeStart: new Date('2019-05-23T21:19:35.000Z'),
+              rangeEnd: new Date('2019-05-31T12:25:33.000Z'),
             },
           ];
 
@@ -125,10 +133,10 @@
             {
               id: '3fc4b300ab4b42ddaa2c26e9707dc12e',
               increments: 'weeks',
-              min: '2024-04-05T01:34:49.000Z',
-              max: '2024-07-02T20:26:33.000Z',
-              rangeStart: '2024-04-05',
-              rangeEnd: '2024-07-15',
+              min: '2024-04-05T01:34:49.000Z', // not used
+              max: '2024-07-02T20:26:33.000Z', // not used
+              rangeStart: '2019-05-10',
+              rangeEnd: '2019-05-15',
             },
           ];
 
@@ -157,7 +165,7 @@
           }
         });
 
-        setSceneView();
+        setMapView();
       });
     </script>
   </body>

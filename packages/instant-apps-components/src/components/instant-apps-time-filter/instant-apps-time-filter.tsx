@@ -1,5 +1,5 @@
 import { Component, Element, Prop, h, Fragment } from '@stencil/core';
-import { FunctionalComponent, Host, HostElement, State, Watch } from '@stencil/core/internal';
+import { FunctionalComponent, Host, HostElement, State } from '@stencil/core/internal';
 
 import { state } from './viewModel/model';
 import { viewModel } from './viewModel/viewModel';
@@ -16,6 +16,7 @@ const CSS = {
   layerTitle: 'instant-apps-time-filter__layer-title',
   loadingContainer: 'instant-apps-time-filter__loading-container',
   background: 'instant-apps-time-filter__background',
+  threeD: ' instant-apps-time-filter--3d',
 };
 
 @Component({
@@ -46,10 +47,11 @@ export class InstantAppsTimeFilter {
   @Prop()
   view: __esri.MapView | __esri.SceneView;
 
-  @Watch('timeInfoItems')
-  timeInfoItemsChanged() {
-    viewModel.updateTimeSliderExtent();
-  }
+  // TODO: Handle live updates
+  // @Watch('timeInfoItems')
+  // timeInfoItemsChanged() {
+  //   viewModel.updateTimeSliderExtent();
+  // }
 
   async componentWillLoad() {
     try {
@@ -76,7 +78,7 @@ export class InstantAppsTimeFilter {
 
   private _renderBase(): HTMLDivElement {
     return (
-      <div class={CSS.base}>
+      <div class={`${CSS.base}${this.view.type !== '2d' ? CSS.threeD : ''}`}>
         {this._renderLoader()}
         {this._renderMain()}
       </div>
@@ -86,7 +88,7 @@ export class InstantAppsTimeFilter {
   private _renderMain(): FunctionalComponent {
     return (
       <Fragment>
-        {this._renderTopEl()}
+        {this.view.type === '2d' && this._renderTopEl()}
         <div ref={(ref: HTMLDivElement) => (this.timeSliderRef = ref)} />
       </Fragment>
     );
@@ -139,6 +141,13 @@ export class InstantAppsTimeFilter {
   }
 
   private _renderDropdownItem(timeInfoItem: ITimeInfoItem) {
-    return <calcite-dropdown-item>{viewModel.getLabel(timeInfoItem)}</calcite-dropdown-item>;
+    const selectedInfoItemId = state.selectedTimeInfoItem?.layerView?.layer?.id;
+    const timeInfoItemId = timeInfoItem?.layerView?.layer?.id;
+    const selected = selectedInfoItemId === timeInfoItemId;
+    return (
+      <calcite-dropdown-item onCalciteDropdownItemSelect={() => viewModel.updateSelectedTimeInfoItem(timeInfoItem)} selected={selected}>
+        {viewModel.getLabel(timeInfoItem)}
+      </calcite-dropdown-item>
+    );
   }
 }
