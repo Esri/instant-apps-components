@@ -20,9 +20,8 @@ const view = new MapView({
     components: [],
   },
 });
-describe ("Control panel", () => {
+describe('Control panel', () => {
   test('if widgets exist', async () => {
-    
     const home = new Home({ view });
     const zoom = new Zoom({ view });
     const socialShare = document.createElement('instant-apps-social-share');
