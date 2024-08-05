@@ -1,15 +1,15 @@
 import { Component, Element, Prop, h, Fragment } from '@stencil/core';
 import { FunctionalComponent, Host, HostElement, State, Watch } from '@stencil/core/internal';
 
-import { state } from './viewModel/model';
-import { viewModel } from './viewModel/viewModel';
+import { state } from './TimeFilter/model';
+import { viewModel } from './TimeFilter/viewModel';
 
 import { getMessages } from '../../utils/locale';
 
 import TimeFilter_t9n from '../../assets/t9n/instant-apps-time-filter/resources.json';
 
 import { FilterMode } from '../../interfaces/interfaces';
-import { ITimeInfoConfigItem, ITimeInfoItem } from './interfaces/interfaces';
+import { ITimeInfoConfigItem, ITimeInfoItem } from './TimeFilter/interfaces/interfaces';
 
 const CSS = {
   base: 'instant-apps-time-filter',

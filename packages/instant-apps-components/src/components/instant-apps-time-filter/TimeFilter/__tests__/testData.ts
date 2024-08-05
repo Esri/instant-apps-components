@@ -1,4 +1,4 @@
-import EArcGISOrgs from '../../../testUtils/orgEnums';
+import EArcGISOrgs from '../../../../testUtils/orgEnums.js';
 
 export default {
   webmaps: [

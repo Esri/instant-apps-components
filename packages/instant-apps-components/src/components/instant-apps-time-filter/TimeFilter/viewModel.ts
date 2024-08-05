@@ -1,7 +1,7 @@
 import { state } from './model';
 import { loadModules } from '../../../utils/loadModules';
 
-import { DateValue, ITimeInfoConfigItem, ITimeInfoItem, ITimeItemUnit } from '../interfaces/interfaces';
+import { DateValue, ITimeInfoConfigItem, ITimeInfoItem, ITimeItemUnit } from './interfaces/interfaces';
 import { getMergedEffect } from 'templates-common-library/functionality/effects';
 
 const TIME_SLIDER_HANDLE_KEY = 'time-slider-watch';

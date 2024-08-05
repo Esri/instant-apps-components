@@ -1,5 +1,5 @@
 import { createStore } from '@stencil/store';
-import { State } from '../interfaces/interfaces';
+import { State } from './interfaces/interfaces';
 
 const { state, onChange } = createStore<State>({
   timeInfoConfigItems: [],
