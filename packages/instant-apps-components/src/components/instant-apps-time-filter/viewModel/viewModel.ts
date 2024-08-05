@@ -113,12 +113,6 @@ class InstantAppsTimeFilterViewModel {
     if (timeSliderRef) timeSliderRef.innerHTML = '';
   }
 
-  // TODO: Handle live updates
-  // updateTimeSliderExtent(): void {
-  //   if (!state.timeSlider || !state.timeInfoItems || state.timeInfoItems.length === 0) return;
-  //   state.timeSlider.fullTimeExtent = state.timeInfoItems[0].timeExtent as __esri.TimeExtent;
-  // }
-
   async getTimeLayerViews(view: __esri.MapView | __esri.SceneView, timeInfoConfigItems: ITimeInfoConfigItem[]): Promise<__esri.LayerView[] | undefined> {
     if (!view) return;
     const { allLayers } = view.map;
