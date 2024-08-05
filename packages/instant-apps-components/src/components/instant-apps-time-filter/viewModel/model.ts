@@ -3,7 +3,7 @@ import { State } from '../interfaces/interfaces';
 
 const { state, onChange } = createStore<State>({
   timeInfoConfigItems: [],
-  filterMode: null,
+  filterMode: { type: 'filter' },
   view: null,
   timeSlider: null,
   timeInfoItems: [],

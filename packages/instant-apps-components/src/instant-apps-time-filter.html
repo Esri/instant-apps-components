@@ -105,10 +105,19 @@
           ];
 
           timeFilter = document.createElement('instant-apps-time-filter');
+
+          timeFilter.view = view;
+          timeFilter.filterMode = {
+            type: 'effect',
+            effect: {
+              includedEffect: '',
+              excludedEffect: 'blur(3px) opacity(50%)',
+            },
+          };
+          timeFilter.timeInfoConfigItems = data;
+
           const content = document.createElement('div');
           content.appendChild(timeFilter);
-          timeFilter.view = view;
-          timeFilter.timeInfoConfigItems = data;
 
           const timeFilterExpand = new Expand({
             content,

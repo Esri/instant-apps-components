@@ -1,3 +1,5 @@
+import { FilterMode } from '../../../components';
+
 export type ITimeItemUnit = 'milliseconds' | 'seconds' | 'minutes' | 'hours' | 'days' | 'weeks' | 'months' | 'years' | 'decades' | 'centuries';
 
 export interface ITimeInfoItem {

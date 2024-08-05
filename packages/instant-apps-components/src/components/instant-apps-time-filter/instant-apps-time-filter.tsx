@@ -28,6 +28,7 @@ export class InstantAppsTimeFilter {
   constructor() {
     state.view = this.view;
     state.timeInfoConfigItems = this.timeInfoConfigItems;
+    if (this.filterMode) state.filterMode = this.filterMode;
   }
 
   messages: typeof TimeFilter_t9n;
