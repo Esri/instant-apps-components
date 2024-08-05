@@ -85,15 +85,7 @@
           const map = new WebMap({ portalItem: { id: MAP_ID } });
           view = new MapView({ container: 'viewDiv', map });
 
-          const data = [
-            // {
-            //   id: '1910f491661-layer-2',
-            //   increments: 'weeks',
-            //   min: '2019-05-06T21:19:00.000Z',
-            //   max: '2019-08-05T21:19:00.000Z',
-            //   rangeStart: new Date('2019-05-24'),
-            //   rangeEnd: new Date('2019-08-05T21:19:00.000Z'),
-            // },
+          let data = [
             {
               id: '1910f491fa6-layer-3',
               increments: 'days',
@@ -101,6 +93,14 @@
               max: '2019-07-30T12:25:33.000Z',
               rangeStart: new Date('2019-05-23T21:19:35.000Z'),
               rangeEnd: new Date('2019-05-31T12:25:33.000Z'),
+            },
+            {
+              id: '1910f491661-layer-2',
+              increments: 'weeks',
+              min: '2016-12-31',
+              max: '2017-12-30',
+              rangeStart: new Date('2017-01-31'),
+              rangeEnd: new Date('2017-02-15'),
             },
           ];
 

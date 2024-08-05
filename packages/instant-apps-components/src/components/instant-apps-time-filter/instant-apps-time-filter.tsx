@@ -1,5 +1,5 @@
 import { Component, Element, Prop, h, Fragment } from '@stencil/core';
-import { FunctionalComponent, Host, HostElement, State } from '@stencil/core/internal';
+import { FunctionalComponent, Host, HostElement, State, Watch } from '@stencil/core/internal';
 
 import { state } from './viewModel/model';
 import { viewModel } from './viewModel/viewModel';
@@ -47,11 +47,11 @@ export class InstantAppsTimeFilter {
   @Prop()
   view: __esri.MapView | __esri.SceneView;
 
-  // TODO: Handle live updates
-  // @Watch('timeInfoItems')
-  // timeInfoItemsChanged() {
-  //   viewModel.updateTimeSliderExtent();
-  // }
+  @Watch('timeInfoConfigItems')
+  async timeInfoItemsChanged() {
+    state.timeInfoConfigItems = this.timeInfoConfigItems;
+    await viewModel.init(this.timeSliderRef);
+  }
 
   async componentWillLoad() {
     try {
