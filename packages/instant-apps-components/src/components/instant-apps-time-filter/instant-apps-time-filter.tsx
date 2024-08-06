@@ -1,8 +1,8 @@
 import { Component, Element, Prop, h, Fragment } from '@stencil/core';
 import { FunctionalComponent, Host, HostElement, State, Watch } from '@stencil/core/internal';
 
-import { state } from './TimeFilter/model';
-import { viewModel } from './TimeFilter/viewModel';
+import { state } from './TimeFilter/TimeFilterModel';
+import { viewModel } from './TimeFilter/TimeFilterViewModel';
 
 import { getMessages } from '../../utils/locale';
 

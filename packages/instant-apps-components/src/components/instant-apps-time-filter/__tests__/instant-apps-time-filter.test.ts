@@ -1,20 +1,20 @@
 import { expect, test, describe, afterAll } from 'vitest';
 
-import '../../../../../dist/components/instant-apps-time-filter.js';
+import '../../../../dist/components/instant-apps-time-filter.js';
 
 import WebMap from '@arcgis/core/WebMap';
 import WebScene from '@arcgis/core/WebScene';
 import MapView from '@arcgis/core/views/MapView';
 import SceneView from '@arcgis/core/views/SceneView';
 import esriConfig from '@arcgis/core/config';
-import EArcGISOrgs from '../../../../testUtils/orgEnums.js';
+import EArcGISOrgs from '../../../testUtils/orgEnums.js';
 
 esriConfig.portalUrl = EArcGISOrgs.Holistic;
 
-import { viewModel } from '../viewModel.js';
-import testData from './testData.js';
-import { createMapAndViews } from '../../../../testUtils/createView.js';
-import { ITimeInfoConfigItem } from '../interfaces/interfaces.js';
+import { viewModel } from '../TimeFilter/TimeFilterViewModel.js';
+import testData from './testData';
+import { createMapAndViews } from '../../../testUtils/createView.js';
+import { ITimeInfoConfigItem } from '../TimeFilter/interfaces/interfaces.js';
 
 describe('Time filter', async () => {
   describe('General', async () => {

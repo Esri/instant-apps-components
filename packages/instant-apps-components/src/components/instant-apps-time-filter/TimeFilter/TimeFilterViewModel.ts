@@ -1,4 +1,4 @@
-import { state } from './model';
+import { state } from './TimeFilterModel';
 import { loadModules } from '../../../utils/loadModules';
 
 import { DateValue, ITimeInfoConfigItem, ITimeInfoItem, ITimeItemUnit } from './interfaces/interfaces';
