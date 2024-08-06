@@ -16,7 +16,6 @@ export default defineConfig({
       }
     },
     dangerouslyIgnoreUnhandledErrors: isCI,
-    
   },
   plugins: [stencil()],
 });
