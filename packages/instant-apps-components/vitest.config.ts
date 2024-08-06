@@ -11,8 +11,12 @@ export default defineConfig({
       provider: 'playwright',
       headless: isCI,
       name: 'chromium',
+      api: {
+        port: 4444
+      }
     },
     dangerouslyIgnoreUnhandledErrors: isCI,
+    
   },
   plugins: [stencil()],
 });
