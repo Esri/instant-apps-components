@@ -132,13 +132,5 @@ describe('Time filter', async () => {
         view.destroy();
       });
     });
-
-    test('generateDateValues', () => {
-      const { month, day, year } = viewModel.generateDateValues('07-21-2024');
-
-      expect(month).toBe(6);
-      expect(day).toBe(21);
-      expect(year).toBe(2024);
-    });
   });
 });

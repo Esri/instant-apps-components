@@ -31,12 +31,6 @@ export interface State {
   loading: boolean;
 }
 
-export interface DateValue {
-  month: number;
-  day: number;
-  year: number;
-}
-
 interface TimeExtent {
   startTime: Date;
   endTime: Date;
