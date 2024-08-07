@@ -5,6 +5,15 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## v1.0.0-beta.240
+
+### instant-apps-time-filter
+
+- Filter time aware data in both web maps and web scenes.
+- Web maps filter time data on a per layer basis, while web scenes filter all available time data.
+- Client-side filtering in both 2D/3D
+- Feature effects support in 2D
+
 ## v1.0.0-beta.239
 
 ### instant-apps-filter-list
