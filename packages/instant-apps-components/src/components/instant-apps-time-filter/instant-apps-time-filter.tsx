@@ -49,7 +49,7 @@ export class InstantAppsTimeFilter {
   view: __esri.MapView | __esri.SceneView;
 
   @Watch('timeInfoConfigItems')
-  async timeInfoItemsChanged() {
+  async updateTimeInfoConfigItems() {
     state.timeInfoConfigItems = this.timeInfoConfigItems;
     await viewModel.init(this.timeSliderRef);
   }

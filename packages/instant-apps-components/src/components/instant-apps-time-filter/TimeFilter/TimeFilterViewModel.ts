@@ -1,7 +1,7 @@
 import { state } from './TimeFilterModel';
 import { loadModules } from '../../../utils/loadModules';
 
-import { DateValue, ITimeInfoConfigItem, ITimeInfoItem, ITimeItemUnit } from './interfaces/interfaces';
+import { DateValue, IFeatureEffect, IFeatureFilter, ITimeExtent, ITimeInfoConfigItem, ITimeInfoItem, ITimeInterval, ITimeItemUnit, ITimeSlider } from './interfaces/interfaces';
 import { getMergedEffect } from 'templates-common-library/functionality/effects';
 
 const TIME_SLIDER_HANDLE_KEY = 'time-slider-watch';
@@ -13,11 +13,11 @@ class InstantAppsTimeFilterViewModel {
 
   reactiveUtils: __esri.reactiveUtils;
   handles: __esri.Handles | null;
-  TimeExtent;
-  TimeInterval;
-  FeatureFilter;
-  FeatureEffect;
-  TimeSlider;
+  TimeExtent: ITimeExtent;
+  TimeInterval: ITimeInterval;
+  FeatureFilter: IFeatureFilter;
+  FeatureEffect: IFeatureEffect;
+  TimeSlider: ITimeSlider;
 
   private async _initializeModules() {
     try {
@@ -63,7 +63,8 @@ class InstantAppsTimeFilterViewModel {
     if (initialTimeInfoItem) {
       state.selectedTimeInfoItem = initialTimeInfoItem;
       const config = this.getTimeSliderConfig(timeSliderRef);
-      state.timeSlider = new this.TimeSlider(config);
+      const { TimeSlider } = this;
+      state.timeSlider = new TimeSlider(config);
       if (state.view?.type === '2d') this._handle2DView();
     }
     return Promise.resolve();
@@ -71,27 +72,24 @@ class InstantAppsTimeFilterViewModel {
 
   private getTimeSliderConfig(timeSliderRef: HTMLDivElement) {
     const [{ timeExtent, rangeStart, rangeEnd, unit }] = state.timeInfoItems;
+    const { TimeExtent, TimeInterval } = this;
     let config = {
       container: timeSliderRef,
-      fullTimeExtent: timeExtent,
-      timeExtent: new this.TimeExtent({
+      fullTimeExtent: timeExtent as ITimeExtent,
+      timeExtent: new TimeExtent({
         start: rangeStart,
         end: rangeEnd,
       }),
       mode: 'time-window',
       loop: true,
       stops: {
-        interval: new this.TimeInterval({
+        interval: new TimeInterval({
           unit,
           value: 1,
         }),
       },
-    };
-
-    if (state.view?.type === '3d') {
-      config['view'] = state.view?.type === '3d' ? state.view : null;
-    }
-
+    } as __esri.widgetsTimeSliderProperties;
+    if (state.view?.type === '3d') config['view'] = state.view;
     return config;
   }
 
@@ -116,12 +114,13 @@ class InstantAppsTimeFilterViewModel {
   private _applyFeatureEffect(timeExtent: __esri.TimeExtent) {
     const selectedLayerView = state.selectedTimeInfoItem?.layerView as __esri.FeatureLayerView;
     let filter = selectedLayerView?.filter || selectedLayerView?.featureEffect?.filter;
-    if (!filter) filter = new this.FeatureFilter({ timeExtent });
+    const { FeatureFilter, FeatureEffect } = this;
+    if (!filter) filter = new FeatureFilter({ timeExtent });
     if (!selectedLayerView.featureEffect) {
       const includedEffect = getMergedEffect(state.filterMode?.effect?.includedEffect as string, selectedLayerView, 'includedEffect');
       const excludedEffect = getMergedEffect(state.filterMode?.effect?.excludedEffect as string, selectedLayerView, 'excludedEffect');
 
-      selectedLayerView.featureEffect = new this.FeatureEffect({
+      selectedLayerView.featureEffect = new FeatureEffect({
         filter,
         includedEffect,
         excludedEffect,
@@ -135,7 +134,8 @@ class InstantAppsTimeFilterViewModel {
   private _applyFeatureFilter(timeExtent: __esri.TimeExtent) {
     const selectedLayerView = state.selectedTimeInfoItem?.layerView as __esri.FeatureLayerView;
     let filter = selectedLayerView?.filter || selectedLayerView?.featureEffect?.filter;
-    if (!filter) selectedLayerView.filter = new this.FeatureFilter({ timeExtent });
+    const { FeatureFilter } = this;
+    if (!filter) selectedLayerView.filter = new FeatureFilter({ timeExtent });
     selectedLayerView.filter.timeExtent = timeExtent;
   }
 
