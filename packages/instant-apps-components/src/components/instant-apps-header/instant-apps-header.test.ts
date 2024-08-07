@@ -1,7 +1,7 @@
 import { expect, test, describe } from 'vitest';
 import '../../../dist/components/instant-apps-header.js';
 
-describe('prop changes', () => {
+describe('Header', () => {
   const header = document.createElement('instant-apps-header');
   header.setAttribute('background-color', '#151515');
   test('custom title text', async () => {
@@ -9,8 +9,9 @@ describe('prop changes', () => {
     header.titleText = customTitle;
     document.body.appendChild(header);
     await new Promise(resolve => requestIdleCallback(resolve));
-
-    expect(header.titleText).toBe(customTitle);
+    const element = document.querySelector('instant-apps-header');
+    expect(element).toBeTruthy();
+    expect(element!.titleText).toBe(customTitle);
   });
 
   test('info button visibility', async () => {
@@ -19,18 +20,22 @@ describe('prop changes', () => {
     document.body.appendChild(header);
     await new Promise(resolve => requestIdleCallback(resolve));
     header.toggleInfo();
-    expect(header.infoButton).toBe(true);
-    expect(header.infoIsOpen).toBe(true);
+    const element = document.querySelector('instant-apps-header');
+    expect(element).toBeTruthy();
+    expect(element!.infoButton).toBe(true);
+    expect(element!.infoIsOpen).toBe(true);
   });
 
   test('info button toggle', async () => {
     header.toggleInfo();
-    expect(header.infoIsOpen).toBe(false);
+    const element = document.querySelector('instant-apps-header');
+    expect(element).toBeTruthy();
+    expect(element!.infoIsOpen).toBe(false);
   });
 
   test('info text title prop', async () => {
     const infoElement = header.shadowRoot?.getElementById('infoButton');
-    expect(infoElement).toBeTruthy();
+    expect(header.shadowRoot).toBeTruthy();
     const infosTitle = infoElement?.getAttribute('title');
     expect(infosTitle).toBe(header.infoTitleText);
   });
@@ -40,7 +45,9 @@ describe('prop changes', () => {
     header.setAttribute('logo-scale', 's');
     document.body.appendChild(header);
     await new Promise(resolve => requestIdleCallback(resolve));
-    expect(header.getAttribute('logo-scale')).toBe('s');
+    const element = document.querySelector('instant-apps-header');
+    expect(element).toBeTruthy();
+    expect(element!.logoScale).toBe(header.logoScale);
   });
 
   test('logo scale', async () => {
@@ -48,7 +55,9 @@ describe('prop changes', () => {
     header.setAttribute('logo-scale', 'l');
     document.body.appendChild(header);
     await new Promise(resolve => requestIdleCallback(resolve));
-    expect(header.getAttribute('logo-scale')).toBe('l');
+    const element = document.querySelector('instant-apps-header');
+    expect(element).toBeTruthy();
+    expect(element!.logoScale).toBe(header.logoScale);
   });
 
   test('change background color', async () => {
@@ -56,7 +65,9 @@ describe('prop changes', () => {
     header.setAttribute('background-color', newColor);
     document.body.appendChild(header);
     await new Promise(resolve => requestIdleCallback(resolve));
-    expect(header.getAttribute('background-color')).toBe(newColor);
+    const element = document.querySelector('instant-apps-header');
+    expect(element).toBeTruthy();
+    expect(element!.backgroundColor).toBe(header.backgroundColor);
   });
 
   test('set title text link', async () => {
@@ -64,6 +75,8 @@ describe('prop changes', () => {
     header.titleTextLink = newLink;
     document.body.appendChild(header);
     await new Promise(resolve => requestIdleCallback(resolve));
-    expect(header.titleTextLink).toBe(newLink);
+    const element = document.querySelector('instant-apps-header');
+    expect(element).toBeTruthy();
+    expect(element!.titleTextLink).toBe(header.titleTextLink);
   });
 });

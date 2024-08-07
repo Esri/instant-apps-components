@@ -11,7 +11,7 @@ const scene = new WebScene({
   },
 });
 
-const testCreateoptions = async (create) => {
+const testCreateoptions = async create => {
   create.portal = scene.portalItem.portal;
   create.content = scene;
 
@@ -39,22 +39,21 @@ const testCreateoptions = async (create) => {
   const hrefsAreValid = hrefs?.every(href => testValidity(href, validSubstrings));
 
   expect(hrefsAreValid).toBe(true);
-}
-describe('testing create component with CSS.inlineContainer as its class and as an inline component', async () => {
-  const create = document.createElement('instant-apps-create');
-  create.mode = 'inline';
-  create.setAttribute('show-scale-bar', 'true');
+};
+describe('create Inline', async () => {
   test('create options', async () => {
+    const create = document.createElement('instant-apps-create');
+    create.mode = 'inline';
+    create.setAttribute('show-scale-bar', 'true');
     testCreateoptions(create);
   });
 });
 
-describe('create options', async () => {
-  const create = document.createElement('instant-apps-create');
-  create.mode = 'popover';
-  create.setAttribute('show-scale-bar', 'true');
+describe('create Popover', async () => {
   test('create options', async () => {
+    const create = document.createElement('instant-apps-create');
+    create.mode = 'popover';
+    create.setAttribute('show-scale-bar', 'true');
     testCreateoptions(create);
   });
 });
-

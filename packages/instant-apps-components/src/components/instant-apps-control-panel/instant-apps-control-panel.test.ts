@@ -42,5 +42,16 @@ describe('Control panel', () => {
     ];
     controlPanel.components = allComponents;
     expect(controlPanel.components).toBe(allComponents);
+    expect(controlPanel.components[0]).toHaveProperty('content', allComponents[0]['content']);
+    expect(controlPanel.components[1]).toHaveProperty('content', allComponents[1]['content']);
+    expect(controlPanel.components[2]).toHaveProperty('content', allComponents[2]['content']);
+    expect(controlPanel.components[2]).toHaveProperty('isExpand', allComponents[2]['isExpand']);
+    expect(controlPanel.components[2]).toHaveProperty('expandTooltip', allComponents[2]['expandTooltip']);
+    expect(controlPanel.components[2]).toHaveProperty('collapseTooltip', allComponents[2]['collapseTooltip']);
+    expect(controlPanel.components[3]).toHaveProperty('content', allComponents[3]['content']);
+    expect(controlPanel.components[3]).toHaveProperty('isExpand', allComponents[3]['isExpand']);
+    expect(controlPanel.components[3]).toHaveProperty('expandIcon', allComponents[3]['expandIcon']);
+    expect(controlPanel.components[3]).toHaveProperty('expandTooltip', allComponents[3]['expandTooltip']);
+    expect(controlPanel.components[3]).toHaveProperty('collapseTooltip', allComponents[3]['collapseTooltip']);
   });
 });
