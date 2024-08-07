@@ -2,7 +2,7 @@
 import { loadModules } from '../utils/loadModules';
 import { languageMap } from './languageUtil';
 
-const TEST_ENV_ORIGIN = 'localhost:5173';
+const TEST_ENV_ORIGIN = 'localhost:4444';
 const IS_TEST_ENV = new URL(window.location.href).origin.includes(TEST_ENV_ORIGIN);
 
 export function getComponentClosestLanguage(): string | undefined {
