@@ -54,6 +54,11 @@ export class InstantAppsTimeFilter {
     await viewModel.init(this.timeSliderRef);
   }
 
+  @Watch('filterMode')
+  async updateFilterMode() {
+    state.filterMode = this.filterMode;
+  }
+
   async componentWillLoad() {
     try {
       await getMessages(this);

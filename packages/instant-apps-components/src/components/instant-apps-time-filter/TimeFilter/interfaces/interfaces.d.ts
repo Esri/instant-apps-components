@@ -1,4 +1,4 @@
-import { FilterMode } from '../../../components';
+import { FilterMode } from '../../../../interfaces/interfaces';
 
 export type ITimeItemUnit = 'milliseconds' | 'seconds' | 'minutes' | 'hours' | 'days' | 'weeks' | 'months' | 'years' | 'decades' | 'centuries';
 

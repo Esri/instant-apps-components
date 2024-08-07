@@ -55,6 +55,21 @@
           <span>3D</span>
         </div>
       </instant-apps-header>
+      <calcite-shell-panel slot="panel-start">
+        <calcite-panel>
+          <calcite-label layout="inline">
+            Use preset layer effects
+            <calcite-switch id="filterMode" />
+          </calcite-label>
+          <calcite-label>
+            Layer effects
+            <calcite-select id="layerEffects">
+              <calcite-option value="bloom">Bloom</calcite-option>
+              <calcite-option value="strong-drop-shadow">Strong drop shadow</calcite-option>
+            </calcite-select>
+          </calcite-label>
+        </calcite-panel>
+      </calcite-shell-panel>
       <div id="viewDiv"></div>
     </calcite-shell>
 
@@ -72,6 +87,22 @@
 
         let view;
         let timeFilter;
+        const dropShadow = {
+          includedEffect: 'drop-shadow(4px, 4px, 4px, #000000)',
+          excludedEffect: '',
+        };
+        const bloom = {
+          includedEffect: 'bloom(1.3, 0.75px, 0.3)',
+          excludedEffect: 'grayscale(100%) opacity(65%)',
+        };
+
+        let currentEffect = {
+          type: 'effect',
+          effect: bloom,
+        };
+        let filterMode = {
+          type: 'filter',
+        };
 
         function setMapView() {
           if (timeFilter) {
@@ -107,14 +138,8 @@
           timeFilter = document.createElement('instant-apps-time-filter');
 
           timeFilter.view = view;
-          timeFilter.filterMode = {
-            type: 'effect',
-            effect: {
-              includedEffect: '',
-              excludedEffect: 'blur(3px) opacity(50%)',
-            },
-          };
           timeFilter.timeInfoConfigItems = data;
+          timeFilter.filterMode = filterMode;
 
           const content = document.createElement('div');
           content.appendChild(timeFilter);
@@ -175,6 +200,36 @@
         });
 
         setMapView();
+
+        const filterModeSwitch = document.getElementById('filterMode');
+        filterModeSwitch.addEventListener('calciteSwitchChange', e => {
+          const value = e.target.checked;
+          if (!value) {
+            timeFilter.filterMode = {
+              type: 'filter',
+            };
+          } else {
+            timeFilter.filterMode = currentEffect;
+          }
+        });
+
+        const layerEffectsDropdown = document.getElementById('layerEffects');
+        layerEffectsDropdown.addEventListener('calciteSelectChange', e => {
+          const value = e.target.value;
+          let effect;
+          if (value === 'bloom') {
+            effect = bloom;
+          } else if (value === 'strong-drop-shadow') {
+            effect = dropShadow;
+          }
+          if (timeFilter.filterMode.type === 'effect') {
+            currentEffect = {
+              type: 'effect',
+              effect,
+            };
+            timeFilter.filterMode = currentEffect;
+          }
+        });
       });
     </script>
   </body>
