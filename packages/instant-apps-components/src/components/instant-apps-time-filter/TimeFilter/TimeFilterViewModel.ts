@@ -192,22 +192,36 @@ class InstantAppsTimeFilterViewModel {
     if (!state.timeSlider) return;
     if (state.selectedTimeInfoItem) state.selectedTimeInfoItem.previousTimeExtent = state.timeSlider.timeExtent;
     state.selectedTimeInfoItem = timeInfoItem;
-    const { TimeExtent, TimeInterval } = this;
+    this.reconfigureTimeSlider(timeInfoItem);
+    this.applyTimeExtent(timeInfoItem.layerView as __esri.FeatureLayerView, state.timeSlider.timeExtent);
+    this.setupTimeExtentWatcher();
+  }
+
+  reconfigureTimeSlider(timeInfoItem: ITimeInfoItem) {
+    if (!state.timeSlider) return;
+    state.timeSlider.fullTimeExtent = timeInfoItem.timeExtent as __esri.TimeExtent;
+    state.timeSlider.timeExtent = this.getTimeExtent(timeInfoItem);
+    state.timeSlider.stops = { interval: this.getTimeInterval(timeInfoItem) };
+  }
+
+  getTimeExtent({ rangeStart, rangeEnd, previousTimeExtent }: ITimeInfoItem) {
+    const { TimeExtent } = this;
+    return (
+      previousTimeExtent ??
+      new TimeExtent({
+        start: rangeStart,
+        end: rangeEnd,
+      })
+    );
+  }
+
+  getTimeInterval(timeInfoItem: ITimeInfoItem) {
+    const { TimeInterval } = this;
     const unit = timeInfoItem.unit ?? (timeInfoItem.layerView?.layer as __esri.FeatureLayer)?.timeInfo?.interval?.unit;
-    const interval = new TimeInterval({
+    return new TimeInterval({
       unit: unit,
       value: 1,
     });
-    state.timeSlider.fullTimeExtent = timeInfoItem.timeExtent as __esri.TimeExtent;
-    state.timeSlider.timeExtent =
-      timeInfoItem.previousTimeExtent ??
-      new TimeExtent({
-        start: timeInfoItem.rangeStart,
-        end: timeInfoItem.rangeEnd,
-      });
-    state.timeSlider.stops = { interval };
-    this.applyTimeExtent(timeInfoItem.layerView as __esri.FeatureLayerView, state.timeSlider.timeExtent);
-    this.setupTimeExtentWatcher();
   }
 
   getLabel(timeInfoItem: ITimeInfoItem): string {
