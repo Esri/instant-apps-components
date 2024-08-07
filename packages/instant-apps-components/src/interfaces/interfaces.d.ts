@@ -286,3 +286,11 @@ export interface CreateOption {
   subtitle?: string;
   href?: string;
 }
+
+export interface FilterMode {
+  type: 'filter' | 'effect';
+  effect?: {
+    includedEffect: string;
+    excludedEffect: string;
+  };
+}

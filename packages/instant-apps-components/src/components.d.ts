@@ -6,23 +6,23 @@
  */
 import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
 import { EditorConfig } from "@ckeditor/ckeditor5-core/src/editor/editorconfig";
-import { ActiveTool, ControlPanelComponent, CreateOption, ExportOutput, ExportView, ExtentSelector, IMeasureConfiguration, InstantAppsPopoverMessageOverrides, IPortal, LayerExpression, PopoverPlacement } from "./interfaces/interfaces";
+import { ActiveTool, ControlPanelComponent, CreateOption, ExportOutput, ExportView, ExtentSelector, FilterMode, IMeasureConfiguration, InstantAppsPopoverMessageOverrides, IPortal, LayerExpression, PopoverPlacement } from "./interfaces/interfaces";
 import { PredefinedOptions } from "./components/instant-apps-create/instant-apps-create";
-import { FilterMode } from "./components/instant-apps-interactive-legend/instant-apps-interactive-legend-classic/interfaces/interfaces";
 import { AlignmentPositions } from "./components/instant-apps-landing-page/support/enum";
 import { AppSettings, LocaleItem, LocaleSettingData } from "./components/instant-apps-language-translator/support/interfaces";
 import { InstantAppsPopovers } from "./components/instant-apps-popovers/instant-apps-popovers";
 import { LogicalPlacement } from "@esri/calcite-components/dist/types/utils/floating-ui";
 import { ScoreboardItem, ScoreboardMode, ScoreboardPosition } from "./components/instant-apps-scoreboard/types/interfaces";
+import { ITimeInfoConfigItem } from "./components/instant-apps-time-filter/TimeFilter/interfaces/interfaces";
 export { EditorConfig } from "@ckeditor/ckeditor5-core/src/editor/editorconfig";
-export { ActiveTool, ControlPanelComponent, CreateOption, ExportOutput, ExportView, ExtentSelector, IMeasureConfiguration, InstantAppsPopoverMessageOverrides, IPortal, LayerExpression, PopoverPlacement } from "./interfaces/interfaces";
+export { ActiveTool, ControlPanelComponent, CreateOption, ExportOutput, ExportView, ExtentSelector, FilterMode, IMeasureConfiguration, InstantAppsPopoverMessageOverrides, IPortal, LayerExpression, PopoverPlacement } from "./interfaces/interfaces";
 export { PredefinedOptions } from "./components/instant-apps-create/instant-apps-create";
-export { FilterMode } from "./components/instant-apps-interactive-legend/instant-apps-interactive-legend-classic/interfaces/interfaces";
 export { AlignmentPositions } from "./components/instant-apps-landing-page/support/enum";
 export { AppSettings, LocaleItem, LocaleSettingData } from "./components/instant-apps-language-translator/support/interfaces";
 export { InstantAppsPopovers } from "./components/instant-apps-popovers/instant-apps-popovers";
 export { LogicalPlacement } from "@esri/calcite-components/dist/types/utils/floating-ui";
 export { ScoreboardItem, ScoreboardMode, ScoreboardPosition } from "./components/instant-apps-scoreboard/types/interfaces";
+export { ITimeInfoConfigItem } from "./components/instant-apps-time-filter/TimeFilter/interfaces/interfaces";
 export namespace Components {
     interface InstantAppsCkeditorWrapper {
         "config": EditorConfig;
@@ -880,6 +880,11 @@ export namespace Components {
          */
         "titleText": string;
     }
+    interface InstantAppsTimeFilter {
+        "filterMode": FilterMode;
+        "timeInfoConfigItems": ITimeInfoConfigItem[];
+        "view": __esri.MapView | __esri.SceneView;
+    }
 }
 export interface InstantAppsCkeditorWrapperCustomEvent<T> extends CustomEvent<T> {
     detail: T;
@@ -1317,6 +1322,12 @@ declare global {
         prototype: HTMLInstantAppsSplashElement;
         new (): HTMLInstantAppsSplashElement;
     };
+    interface HTMLInstantAppsTimeFilterElement extends Components.InstantAppsTimeFilter, HTMLStencilElement {
+    }
+    var HTMLInstantAppsTimeFilterElement: {
+        prototype: HTMLInstantAppsTimeFilterElement;
+        new (): HTMLInstantAppsTimeFilterElement;
+    };
     interface HTMLElementTagNameMap {
         "instant-apps-ckeditor-wrapper": HTMLInstantAppsCkeditorWrapperElement;
         "instant-apps-control-panel": HTMLInstantAppsControlPanelElement;
@@ -1349,6 +1360,7 @@ declare global {
         "instant-apps-sign-in": HTMLInstantAppsSignInElement;
         "instant-apps-social-share": HTMLInstantAppsSocialShareElement;
         "instant-apps-splash": HTMLInstantAppsSplashElement;
+        "instant-apps-time-filter": HTMLInstantAppsTimeFilterElement;
     }
 }
 declare namespace LocalJSX {
@@ -2247,6 +2259,11 @@ declare namespace LocalJSX {
          */
         "titleText"?: string;
     }
+    interface InstantAppsTimeFilter {
+        "filterMode"?: FilterMode;
+        "timeInfoConfigItems"?: ITimeInfoConfigItem[];
+        "view"?: __esri.MapView | __esri.SceneView;
+    }
     interface IntrinsicElements {
         "instant-apps-ckeditor-wrapper": InstantAppsCkeditorWrapper;
         "instant-apps-control-panel": InstantAppsControlPanel;
@@ -2279,6 +2296,7 @@ declare namespace LocalJSX {
         "instant-apps-sign-in": InstantAppsSignIn;
         "instant-apps-social-share": InstantAppsSocialShare;
         "instant-apps-splash": InstantAppsSplash;
+        "instant-apps-time-filter": InstantAppsTimeFilter;
     }
 }
 export { LocalJSX as JSX };
@@ -2316,6 +2334,7 @@ declare module "@stencil/core" {
             "instant-apps-sign-in": LocalJSX.InstantAppsSignIn & JSXBase.HTMLAttributes<HTMLInstantAppsSignInElement>;
             "instant-apps-social-share": LocalJSX.InstantAppsSocialShare & JSXBase.HTMLAttributes<HTMLInstantAppsSocialShareElement>;
             "instant-apps-splash": LocalJSX.InstantAppsSplash & JSXBase.HTMLAttributes<HTMLInstantAppsSplashElement>;
+            "instant-apps-time-filter": LocalJSX.InstantAppsTimeFilter & JSXBase.HTMLAttributes<HTMLInstantAppsTimeFilterElement>;
         }
     }
 }

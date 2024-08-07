@@ -29,7 +29,8 @@ import {
 
 import { loadModules } from '../../../utils/loadModules';
 
-import { FilterMode, IIntLegendLayerData } from './interfaces/interfaces';
+import {  IIntLegendLayerData } from './interfaces/interfaces';
+import { FilterMode } from '../../../interfaces/interfaces';
 import {
   ColorRampElement,
   ColorRampStop,

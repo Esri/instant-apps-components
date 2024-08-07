@@ -1,0 +1,236 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=5.0" />
+    <title>ArcGIS Instant Apps Components</title>
+
+    <link rel="stylesheet" href="https://js.arcgis.com/4.30/esri/themes/light/main.css" />
+    <script src="https://js.arcgis.com/4.30/"></script>
+    <script type="module" src="https://js.arcgis.com/calcite-components/2.8.5/calcite.esm.js"></script>
+    <link rel="stylesheet" type="text/css" href="https://js.arcgis.com/calcite-components/2.8.5/calcite.css" />
+    <script type="module" src="/build/instant-apps-components.esm.js"></script>
+    <script nomodule src="/build/instant-apps-components.js"></script>
+
+    <style>
+      html,
+      body,
+      #viewDiv {
+        width: 100%;
+        height: 100%;
+        margin: 0;
+        padding: 0;
+      }
+
+      calcite-panel {
+        padding: 10px;
+      }
+
+      .switcher {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+      .switcher span {
+        margin: 5px;
+      }
+    </style>
+  </head>
+
+  <body>
+    <calcite-shell>
+      <instant-apps-header
+        id="instant-apps-header"
+        slot="header"
+        title-text="Instant Apps: Time Filter"
+        text-color="#151515"
+        background-color="#fff"
+        logo-image="https://www.esri.com/content/dam/esrisites/en-us/common/icons/product-logos/arcgis-instant-apps-64.svg"
+        logo-image-alt-text="ArcGIS Instant Apps logo"
+        logo-link="https://www.esri.com/en-us/arcgis/products/arcgis-instant-apps/overview"
+      >
+        <div class="switcher" slot="actions-end">
+          <span>2D</span>
+          <calcite-switch id="switcher"></calcite-switch>
+          <span>3D</span>
+        </div>
+      </instant-apps-header>
+      <calcite-shell-panel slot="panel-start">
+        <calcite-panel>
+          <calcite-label layout="inline">
+            Use preset layer effects
+            <calcite-switch id="filterMode" />
+          </calcite-label>
+          <calcite-label>
+            Layer effects
+            <calcite-select id="layerEffects">
+              <calcite-option value="bloom">Bloom</calcite-option>
+              <calcite-option value="strong-drop-shadow">Strong drop shadow</calcite-option>
+            </calcite-select>
+          </calcite-label>
+        </calcite-panel>
+      </calcite-shell-panel>
+      <div id="viewDiv"></div>
+    </calcite-shell>
+
+    <script>
+      require(['esri/WebMap', 'esri/views/MapView', 'esri/WebScene', 'esri/views/SceneView', 'esri/config', 'esri/widgets/Expand', 'esri/widgets/Legend'], (
+        WebMap,
+        MapView,
+        WebScene,
+        SceneView,
+        esriConfig,
+        Expand,
+        Legend,
+      ) => {
+        esriConfig.portalUrl = 'https://holistic.mapsdevext.arcgis.com';
+
+        let view;
+        let timeFilter;
+        const dropShadow = {
+          includedEffect: 'drop-shadow(4px, 4px, 4px, #000000)',
+          excludedEffect: '',
+        };
+        const bloom = {
+          includedEffect: 'bloom(1.3, 0.75px, 0.3)',
+          excludedEffect: 'grayscale(100%) opacity(65%)',
+        };
+
+        let currentEffect = {
+          type: 'effect',
+          effect: bloom,
+        };
+        let filterMode = {
+          type: 'filter',
+        };
+
+        function setMapView() {
+          if (timeFilter) {
+            timeFilter.remove();
+          }
+          if (view) {
+            view.destroy();
+          }
+
+          const MAP_ID = '3188c27cb24340b9a9c1d35c94cfbf68';
+          const map = new WebMap({ portalItem: { id: MAP_ID } });
+          view = new MapView({ container: 'viewDiv', map });
+
+          let data = [
+            {
+              id: '1910f491fa6-layer-3',
+              increments: 'days',
+              min: '2019-05-06T21:19:35.000Z',
+              max: '2019-07-30T12:25:33.000Z',
+              rangeStart: new Date('2019-05-23T21:19:35.000Z'),
+              rangeEnd: new Date('2019-05-31T12:25:33.000Z'),
+            },
+            {
+              id: '1910f491661-layer-2',
+              increments: 'weeks',
+              min: '2016-12-31',
+              max: '2017-12-30',
+              rangeStart: new Date('2017-01-31'),
+              rangeEnd: new Date('2017-02-15'),
+            },
+          ];
+
+          timeFilter = document.createElement('instant-apps-time-filter');
+
+          timeFilter.view = view;
+          timeFilter.timeInfoConfigItems = data;
+          timeFilter.filterMode = filterMode;
+
+          const content = document.createElement('div');
+          content.appendChild(timeFilter);
+
+          const timeFilterExpand = new Expand({
+            content,
+            view,
+            expanded: true,
+            expandIcon: 'clock',
+          });
+
+          view.ui.add(timeFilterExpand, 'bottom-left');
+        }
+
+        function setSceneView() {
+          if (view) {
+            view.destroy();
+          }
+
+          const MAP_ID = 'daab29aca87e4eb3bdafd11ebf6167ec';
+          const map = new WebScene({ portalItem: { id: MAP_ID } });
+          view = new SceneView({ container: 'viewDiv', map });
+
+          const data = [
+            {
+              id: '3fc4b300ab4b42ddaa2c26e9707dc12e',
+              increments: 'weeks',
+              min: '2024-04-05T01:34:49.000Z', // not used
+              max: '2024-07-02T20:26:33.000Z', // not used
+              rangeStart: '2019-05-10',
+              rangeEnd: '2019-05-15',
+            },
+          ];
+
+          timeFilter = document.createElement('instant-apps-time-filter');
+          const content = document.createElement('div');
+          content.appendChild(timeFilter);
+          timeFilter.view = view;
+          timeFilter.timeInfoConfigItems = data;
+
+          const timeFilterExpand = new Expand({
+            content,
+            view,
+            expanded: true,
+            expandIcon: 'clock',
+          });
+
+          view.ui.add(timeFilterExpand, 'bottom-left');
+        }
+
+        const switcher = document.getElementById('switcher');
+        switcher.addEventListener('calciteSwitchChange', e => {
+          if (e.target.checked) {
+            setSceneView();
+          } else {
+            setMapView();
+          }
+        });
+
+        setMapView();
+
+        const filterModeSwitch = document.getElementById('filterMode');
+        filterModeSwitch.addEventListener('calciteSwitchChange', e => {
+          const value = e.target.checked;
+          if (!value) {
+            timeFilter.filterMode = {
+              type: 'filter',
+            };
+          } else {
+            timeFilter.filterMode = currentEffect;
+          }
+        });
+
+        const layerEffectsDropdown = document.getElementById('layerEffects');
+        layerEffectsDropdown.addEventListener('calciteSelectChange', e => {
+          const value = e.target.value;
+          let effect;
+          if (value === 'bloom') {
+            effect = bloom;
+          } else if (value === 'strong-drop-shadow') {
+            effect = dropShadow;
+          }
+          if (timeFilter.filterMode.type === 'effect') {
+            currentEffect = {
+              type: 'effect',
+              effect,
+            };
+            timeFilter.filterMode = currentEffect;
+          }
+        });
+      });
+    </script>
+  </body>
+</html>

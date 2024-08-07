@@ -1,7 +1,7 @@
 {
   "homepage": "https://esri.github.io/instant-apps-components",
   "name": "@esri/instant-apps-components",
-  "version": "1.0.0-beta.239",
+  "version": "1.0.0-beta.240",
   "description": "Reusable ArcGIS Instant Apps web components.",
   "main": "dist/index.cjs.js",
   "module": "dist/index.js",
@@ -62,6 +62,7 @@
     "gh-pages": "^4.0.0",
     "jsdom": "^24.1.1",
     "lit-html": "^2.0.2",
+    "prettier": "^3.3.3",
     "puppeteer": "^22.0.0",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",

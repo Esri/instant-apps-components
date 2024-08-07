@@ -1,11 +1,3 @@
-export interface FilterMode {
-  type: 'filter' | 'effect';
-  effect?: {
-    includedEffect: string;
-    excludedEffect: string;
-  };
-}
-
 export interface ICategory {
   count: number | null;
   selected: boolean;
