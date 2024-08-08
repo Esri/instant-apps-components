@@ -178,7 +178,7 @@ export async function handleFilter(data: IIntLegendLayerData, info: any, infoInd
   generateQueryExpressions(data, info, infoIndex, parentLegendElementInfo);
   const sep = queryExpressions.every(expression => expression && expression.includes('<>')) ? ' AND ' : ' OR ';
   const where = queryExpressions.join(sep);
-  const timeExtent = fLayerView?.filter?.timeExtent ?? null;
+  const timeExtent = fLayerView?.filter?.timeExtent ?? fLayerView?.featureEffect?.filter?.timeExtent ?? null;
 
   const { type } = filterMode;
 
