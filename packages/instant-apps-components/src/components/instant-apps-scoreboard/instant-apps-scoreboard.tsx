@@ -526,6 +526,8 @@ export class InstantAppsScoreboard {
       const geometry = this.geometry ? this.geometry : this.view.extent;
       query.outStatistics = outStatistics;
       query.geometry = geometry as __esri.Extent;
+      const timeExtent = layerView?.filter?.timeExtent ?? (layerView as __esri.FeatureLayerView)?.featureEffect?.filter?.timeExtent ?? null;
+      if (timeExtent) query.timeExtent = timeExtent;
       return query;
     };
 
