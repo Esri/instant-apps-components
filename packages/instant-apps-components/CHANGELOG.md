@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## v1.0.0-beta.243
 
+### instant-apps-scoreboard
+
+- fix: check if timeExtent exists for scoreboard stats query
+
 ### instant-apps-interactive-legend
 
 - fix: check LayerView.featureEffects if timeExtent exists
