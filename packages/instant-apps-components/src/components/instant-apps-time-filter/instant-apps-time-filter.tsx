@@ -25,12 +25,6 @@ const CSS = {
   shadow: false,
 })
 export class InstantAppsTimeFilter {
-  constructor() {
-    state.view = this.view;
-    state.timeInfoConfigItems = this.timeInfoConfigItems;
-    if (this.filterMode) state.filterMode = this.filterMode;
-  }
-
   messages: typeof TimeFilter_t9n;
 
   @State()
@@ -61,6 +55,9 @@ export class InstantAppsTimeFilter {
 
   async componentWillLoad() {
     try {
+      state.view = this.view;
+      state.timeInfoConfigItems = this.timeInfoConfigItems;
+      if (this.filterMode) state.filterMode = this.filterMode;
       await getMessages(this);
     } catch {}
   }
