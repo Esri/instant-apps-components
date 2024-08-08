@@ -41,13 +41,16 @@ describe('Control panel', () => {
       { content: socialShare, isExpand: true, expandIcon: 'share', expandTooltip: 'Open social share', collapseTooltip: 'Close social share' },
     ];
     controlPanel.components = allComponents;
-    expect(controlPanel.components).toBe(allComponents);
+    document.body.appendChild(controlPanel);
+    await new Promise(resolve => requestIdleCallback(resolve));
+    const elem = document.querySelector('instant-apps-control-panel')!;
+    expect(elem.components).toBe(allComponents);
 
     for (let i = 0; i < allComponents.length; i++) {
       let entry = allComponents[i];
       Object.keys(entry).forEach(key => {
         const value = entry[key];
-        expect(controlPanel.components[i]).toHaveProperty(key, value);
+        expect(elem.components[i]).toHaveProperty(key, value);
       });
     }
   });
