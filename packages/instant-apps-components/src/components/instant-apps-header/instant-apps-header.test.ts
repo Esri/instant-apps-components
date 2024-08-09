@@ -4,14 +4,16 @@ import '../../../dist/components/instant-apps-header.js';
 describe('Header', () => {
   const header = document.createElement('instant-apps-header');
   header.setAttribute('background-color', '#151515');
-  test('custom title text', async () => {
-    const customTitle = 'Instant Apps Header';
-    header.titleText = customTitle;
-    document.body.appendChild(header);
-    await new Promise(resolve => requestIdleCallback(resolve));
-    const element = document.querySelector('instant-apps-header');
-    expect(element).toBeTruthy();
-    expect(element!.titleText).toBe(customTitle);
+  describe('titleText prop', async () => {
+    test('custom title text', async () => {
+      const customTitle = 'Instant Apps Header';
+      header.titleText = customTitle;
+      document.body.appendChild(header);
+      await new Promise(resolve => requestIdleCallback(resolve));
+      const element = document.querySelector('instant-apps-header');
+      expect(element).toBeTruthy();
+      expect(element!.titleText).toBe(customTitle);
+    });
   });
 
   test('info button visibility', async () => {
