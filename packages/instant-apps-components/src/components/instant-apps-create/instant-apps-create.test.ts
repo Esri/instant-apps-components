@@ -27,7 +27,7 @@ const testCreateOptions = test.extend<{
     await new Promise(resolve => requestIdleCallback(resolve));
     await new Promise(resolve => setTimeout(resolve, 5000));
     await use(shadowRoot);
-  }
+  },
 });
 
 const execOptionsTest = async (create, shadow) => {
@@ -78,7 +78,7 @@ describe('create', async () => {
       const inlineElem = await waitForElement('div.instant-apps-create__inline-container', shadow!);
       expect(inlineElem).toBeTruthy();
     });
-    testCreateOptions('create options', async ({create,shadow}) => {
+    testCreateOptions('create options', async ({ create, shadow }) => {
       await execOptionsTest(create, shadow);
     });
   });
@@ -92,7 +92,7 @@ describe('create', async () => {
       const calcitePopover = await waitForElement('calcite-popover', shadow!);
       expect(calcitePopover).toBeTruthy();
     });
-    testCreateOptions('create options', async ({create,shadow}) => {
+    testCreateOptions('create options', async ({ create, shadow }) => {
       await execOptionsTest(create, shadow);
     });
   });
