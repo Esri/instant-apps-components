@@ -5,7 +5,8 @@ describe('Header', () => {
   const header = document.createElement('instant-apps-header');
   header.setAttribute('background-color', '#151515');
   header.setAttribute('logo-image', "https://www.esri.com/content/dam/esrisites/en-us/common/icons/product-logos/arcgis-instant-apps-64.svg");
-  header.setAttribute('logo-link', "https://www.esri.com/en-us/arcgis/products/arcgis-instant-apps/overview"); 
+  header.setAttribute('logo-link', "https://www.esri.com/en-us/arcgis/products/arcgis-instant-apps/overview");
+  header.titleTextLink = 'https://doc.arcgis.com/en/instant-apps/gallery/'; 
   let shadow;
   let element;
   beforeEach(async () => {
@@ -59,9 +60,26 @@ describe('Header', () => {
       
     })
   });
-//test logoimage on header then on img 
-//test logolink on header then on a parent of img
-
+  describe('logoimage prop', async () => {
+    test("logoImage on header", async () => {
+      expect(element?.getAttribute("logo-image")).toBe(header.logoImage);
+      
+    })
+    test("logoImage on img tag", async () => {
+      const imgTag = shadow?.querySelector("img");
+      expect(imgTag?.getAttribute("src")).toBe(header.logoImage);
+    })
+  });
+  describe('logoLink prop', async () => {
+    test("logoLink on header", async () => {
+      expect(element?.getAttribute("logo-link")).toBe(header.logoLink);
+      
+    })
+    test("logoLink on a tag", async () => {
+      const aTag = shadow?.querySelector(`a[href='${header.logoLink}']`);
+      expect(aTag).toBeTruthy();
+    })
+  });
   describe("logo scale prop", async () => {
     test('logo scale', async () => {
       header.logoScale = 's';
@@ -87,7 +105,6 @@ describe('Header', () => {
       await new Promise(resolve => requestIdleCallback(resolve));
       expect(shadow).toBeTruthy();
       const logoElem = shadow.querySelector("img");
-      console.log("logo elem ---> ", logoElem);
       expect(logoElem).toBeTruthy();
       expect(logoElem?.classList.contains(`instant-apps-header__logo-scale--${header.logoScale}`)).toBe(true);
     })
@@ -101,13 +118,12 @@ describe('Header', () => {
     expect(element).toBeTruthy();
     expect(element!.backgroundColor).toBe(header.backgroundColor);
   });
-
-  test('set title text link', async () => {
-    const newLink = 'https://doc.arcgis.com/en/instant-apps/gallery/';
-    header.titleTextLink = newLink;
-    document.body.appendChild(header);
-    await new Promise(resolve => requestIdleCallback(resolve));
-    expect(element).toBeTruthy();
-    expect(element!.titleTextLink).toBe(header.titleTextLink);
+  describe("titleTextLink prop", async () => {
+    test('set title text link', async () => {
+      
+      expect(element).toBeTruthy();
+      const titleElem = shadow.querySelector(`a[href='${header.titleTextLink}']`);
+      expect(titleElem).toBeTruthy();
+    });
   });
 });
