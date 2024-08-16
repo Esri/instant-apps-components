@@ -9,15 +9,17 @@ const componentConfig = {
   iconImageScale: 's',
   iconImage: 'https://www.esri.com/content/dam/esrisites/en-us/arcgis/products/arcgis-instant-apps/assets/instant-apps-banner-fg.png',
 };
+const {enableSignIn, titleText, subtitleText, descriptionText, entryButtonText,iconImageScale ,iconImage } = componentConfig;
+
 
 describe('Landing Page', async () => {
   const landingPage = document.createElement('instant-apps-landing-page');
-  landingPage.setAttribute('title-text', componentConfig.titleText);
-  landingPage.setAttribute('subtitle-text', componentConfig.subtitleText);
-  landingPage.setAttribute('description-text', componentConfig.descriptionText);
-  landingPage.setAttribute('entry-button-text', componentConfig.entryButtonText);
-  landingPage.setAttribute('icon-image-scale', componentConfig.iconImageScale);
-  landingPage.setAttribute('icon-image', componentConfig.iconImage);
+  landingPage.setAttribute('title-text', titleText);
+  landingPage.setAttribute('subtitle-text', subtitleText);
+  landingPage.setAttribute('description-text', descriptionText);
+  landingPage.setAttribute('entry-button-text',entryButtonText);
+  landingPage.setAttribute('icon-image-scale', iconImageScale);
+  landingPage.setAttribute('icon-image', iconImage);
   document.body.appendChild(landingPage);
   await new Promise(resolve => requestIdleCallback(resolve));
   test('customization', async () => {
@@ -74,7 +76,7 @@ describe('Landing Page', async () => {
     expect(element?.enableSignIn).toBe(undefined);
   });
   test('initialized enableSignIn prop', async () => {
-    landingPage.setAttribute('enable-sign-in', componentConfig.enableSignIn);
+    landingPage.setAttribute('enable-sign-in', enableSignIn);
     const element = document.querySelector('instant-apps-landing-page');
     expect(element).toBeTruthy();
     expect(element?.enableSignIn).toBe(true);
