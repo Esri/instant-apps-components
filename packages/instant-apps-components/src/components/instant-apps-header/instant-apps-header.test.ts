@@ -12,8 +12,8 @@ describe('Header', () => {
   beforeEach(async () => {
     document.body.append(header);
     await new Promise(resolve => requestIdleCallback(resolve));
-    shadow = await waitForShadowRoot(document.querySelector('instant-apps-header')!);
     element = document.querySelector('instant-apps-header');
+    shadow = await waitForShadowRoot(element!);
   });
   describe('titleText prop', async () => {
     test('custom title text', async () => {

@@ -1,7 +1,10 @@
 import { expect, test, describe, beforeEach } from 'vitest';
+import {  waitForShadowRoot } from '../../utils/testUtils.js';
 import '../../../dist/components/instant-apps-social-share.js';
+import SocialShare_T9n from '../../assets/t9n/instant-apps-social-share/resources.json';
+
 describe('social share', async () => {
-    let element;
+
     const shareParams =  {
       center: true,
       level: true,
@@ -10,30 +13,86 @@ describe('social share', async () => {
       hiddenLayers: true,
     };
     const {center, level, viewpoint, selectedFeature, hiddenLayers} = shareParams; 
-  beforeEach(async () => {
-    
-    element = document.querySelector('instant-apps-social-share');
-  })
+  
+  type cases  = [string, () => HTMLInstantAppsSocialShareElement]
+  type allTests = cases[]
+  const testCases : allTests = 
+   [['inline',   function createInline() {
+    let ss = document.createElement('instant-apps-social-share');
+    ss.setAttribute('mode', 'inline');
+    return ss;
+  }],['popover',   function createPopover() {
+    let ss = document.createElement('instant-apps-social-share');
+    return ss;
+  }]
 
-  test.each([
-    ['inline', () => {
-      let ss = document.createElement('instant-apps-social-share');
-      ss.setAttribute('mode', 'inline');
-      return ss;
-    }],
-    ['popover', () => {
-      return document.createElement('instant-apps-social-share');
-    }]
-  ])(`%s`, (elem, getElem) => {
-    
+   ]
+  
+  testCases.forEach(  (arr) => {
+    let element;
+    let shadow;
+    const [elem, getElem] = arr;
+    const socialShare = getElem();
+
+
+
     describe (`${elem}`, async () => {
-      const socialShare = getElem();
-      document.body.appendChild(socialShare);
-      new Promise(resolve => requestIdleCallback(resolve));
 
+      beforeEach(async () => {
+        document.body.append(socialShare);
+        await new Promise(resolve => requestIdleCallback(resolve));
+        element = document.querySelector('instant-apps-social-share');
+        shadow = await waitForShadowRoot(element);
+      })
       test('default', () => {
-        expect(element).toBeTruthy();
-        expect(element?.mode).toBe(`${elem}`);
+          expect(element).toBeTruthy();
+          expect(element?.mode).toBe(`${elem}`);
+      });
+      describe.skipIf (elem !== 'popover')("popover render" ,async () => {
+        console.log(elem)
+        test('check renderButton', async () => {
+          
+          const button = shadow.querySelector("button[id='shareButton']");
+          expect(button).toBeTruthy();
+        })
+        test('check popover', async () => {
+        
+          const popover = shadow.querySelector("calcite-popover[referenceElement='shareButton']");
+          expect(popover.referenceElement).toBe("shareButton")
+        })
+        
+      });
+      describe.skipIf(elem !== 'inline')("inline render", () => {
+        console.log("2 "+elem)
+        test('check popover', async () => {
+          const popovers = shadow.querySelectorAll("calcite-popover");
+          expect(popovers.length).toBe(2);
+          let [copyToClipboard, copyEmbedToClipboard] = ["copyToClipboard", "copyEmbedToClipboard"]
+          popovers.forEach(elem => {
+            let ref : string = elem.getAttribute("referenceElement");
+            if (ref === copyToClipboard && copyToClipboard){
+              copyToClipboard = "";
+            }else if (ref === copyEmbedToClipboard && copyEmbedToClipboard){
+              copyEmbedToClipboard = "";
+            }else {
+              expect(true).toBe(false);
+            }
+          })
+         
+        })
+        test('check renderEmbedSuccess', async () => {
+          const popover = shadow.querySelectorAll("span");
+          console.log("mesg---> ", popover)
+          let found = false;
+          popover.forEach(element => {
+            if (element.innerHTML === SocialShare_T9n.success.embed ){
+              found = true;
+              return;
+            }
+          });
+          expect(found).toBe(true);
+        })
+            
       });
 
       test('current URL window', () => {
@@ -151,7 +210,7 @@ describe('social share', async () => {
         expect(element?.defaultUrlParams).toHaveProperty('selectedFeature', selectedFeature);
         expect(element?.defaultUrlParams).toHaveProperty('hiddenLayers', hiddenLayers);
       });
-      if (elem === 'popover'){
+      describe.skipIf(elem !== 'popover')("CSS popover", async () => {
         test('popoverPositioning', () => {
           expect(element).toBeTruthy();
           expect(element?.popoverPositioning).toBe('absolute');
@@ -168,7 +227,7 @@ describe('social share', async () => {
           expect(element?.removePopoverOffset).toBe(true);
           socialShare.remove();
         });
-      }
+      });
     });
   });
 });
