@@ -52,6 +52,16 @@ describe('social share', async () => {
         expect(element).toBeTruthy();
         expect(element.getAttribute('mode')).toBe(`${elem}`);
       });
+      test('embed prop', async() => {
+        expect(element).toBeTruthy();
+        expect(element?.embed).toBe(false);
+        socialShare.embed = true;
+        document.body.append(socialShare);
+        await new Promise(resolve => requestIdleCallback(resolve));
+
+        expect(element?.embed).toBe(true);
+        expect(element.inlineCopyEmbedOpened).toBe(false);
+      });
       describe.runIf(!isInline)('popover render', async () => {
         test('check renderButton', async () => {
           const button = shadow.querySelector("calcite-button[id='shareButton']");
@@ -61,7 +71,39 @@ describe('social share', async () => {
           const popover = shadow.querySelector(`calcite-popover[label='${SocialShare_T9n.share.label}']`);
           expect(popover).toBeTruthy();
         });
-      });
+        test('shareButtonColor', async () => {
+          expect(element).toBeTruthy();
+          expect(element?.shareButtonColor).toBe('neutral');
+          socialShare.shareButtonColor = 'inverse';
+          document.body.append(socialShare);
+          await new Promise(resolve => requestIdleCallback(resolve));
+          expect(element?.shareButtonColor).toBe('inverse');
+          const kind = shadow.querySelector("calcite-button[id='shareButton']").getAttribute("kind");
+          expect(kind).toBe(socialShare.shareButtonColor);
+        });
+
+        test('shareButtonType', async () => {
+          expect(element).toBeTruthy();
+          expect(element?.shareButtonType).toBe('button');
+          const button = shadow.querySelector("calcite-button[id='shareButton']");
+          expect(button).toBeTruthy();
+
+          socialShare.shareButtonType = 'action';
+          document.body.append(socialShare);
+          await new Promise(resolve => requestIdleCallback(resolve));
+          const action = shadow.querySelector("calcite-action[id='shareButton']");
+          expect(action).toBeTruthy();          
+          expect(element?.shareButtonType).toBe('action');
+        });
+
+        test('shareButtonScale', () => {
+          expect(element).toBeTruthy();
+          expect(element?.shareButtonScale).toBe(undefined);
+          //should be defaulted to whatever scale is in the render logic
+          socialShare.shareButtonScale = 's';
+          expect(element?.shareButtonScale).toBe('s');
+        });
+        });
       describe.runIf(isInline)('inline render', () => {
         test('check popover', async () => {
           const popovers = shadow.querySelectorAll('calcite-popover');
@@ -89,6 +131,27 @@ describe('social share', async () => {
           });
           expect(found).toBe(true);
         });
+        test('iframeInnerText', async () => {
+          expect(element).toBeTruthy();
+          expect(element?.iframeInnerText).toBe('');
+
+          socialShare.iframeInnerText = 'This is the test for ifrmae inner text !@';
+          document.body.append(socialShare);
+          await new Promise(resolve => requestIdleCallback(resolve));
+          
+          expect(element?.iframeInnerText).toBe('This is the test for ifrmae inner text !@');
+          const iframe = document.body.querySelector("iframe")!;
+          expect(iframe).toBeTruthy();
+          const iframeText = iframe.innerHTML;
+          expect(iframeText).toBe(socialShare.iframeInnerText);
+        });
+        test('displayTipText', () => {
+          expect(element).toBeTruthy();
+          expect(element?.displayTipText).toBe(true);
+          const renderTip = shadow.querySelector("calcite-icon[icon='lightbulb']");
+          expect(renderTip).toBeTruthy()
+        });
+      
       });
 
       test('current URL window', () => {
@@ -107,41 +170,6 @@ describe('social share', async () => {
         socialShare.shareText = 'This is the test shareText !';
         expect(element?.shareText).toBe('This is the test shareText !');
       });
-      test('embed prop', () => {
-        expect(element).toBeTruthy();
-        expect(element?.embed).toBe(false);
-        socialShare.embed = true;
-        expect(element?.embed).toBe(true);
-      });
-      test('shareButtonColor', () => {
-        expect(element).toBeTruthy();
-        expect(element?.shareButtonColor).toBe('neutral');
-        socialShare.shareButtonColor = 'inverse';
-        expect(element?.shareButtonColor).toBe('inverse');
-      });
-
-      test('shareButtonType', () => {
-        expect(element).toBeTruthy();
-        expect(element?.shareButtonType).toBe('button');
-        socialShare.shareButtonType = 'action';
-        expect(element?.shareButtonType).toBe('action');
-      });
-
-      test('shareButtonScale', () => {
-        expect(element).toBeTruthy();
-        expect(element?.shareButtonScale).toBe(undefined);
-        //should be defaulted to whatever scale is in the render logic
-        socialShare.shareButtonScale = 's';
-        expect(element?.shareButtonScale).toBe('s');
-      });
-
-      test('iframeInnerText', () => {
-        expect(element).toBeTruthy();
-        expect(element?.iframeInnerText).toBe('');
-
-        socialShare.iframeInnerText = 'This is the test for ifrmae inner text !@';
-        expect(element?.iframeInnerText).toBe('This is the test for ifrmae inner text !@');
-      });
 
       test('popoverButtonIconScale', () => {
         expect(element).toBeTruthy();
@@ -150,13 +178,7 @@ describe('social share', async () => {
         socialShare.popoverButtonIconScale = 's';
         expect(element?.popoverButtonIconScale).toBe('s');
       });
-      test('displayTipText', () => {
-        expect(element).toBeTruthy();
-        expect(element?.displayTipText).toBe(true);
 
-        socialShare.displayTipText = false;
-        expect(element?.displayTipText).toBe(false);
-      });
       test('shortenShareUrl', () => {
         expect(element).toBeTruthy();
         expect(element?.shortenShareUrl).toBe(true);
