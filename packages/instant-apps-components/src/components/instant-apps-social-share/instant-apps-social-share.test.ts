@@ -16,16 +16,17 @@ describe('social share', async () => {
   
   type cases  = [string, () => HTMLInstantAppsSocialShareElement]
   type allTests = cases[]
+
   const testCases : allTests = 
-   [['inline',   function createInline() {
+   [['popover',   function createPopover() {
+    let ss = document.createElement('instant-apps-social-share');
+    return ss;
+  }],
+  ['inline',   function createInline() {
     let ss = document.createElement('instant-apps-social-share');
     ss.setAttribute('mode', 'inline');
     return ss;
-  }],['popover',   function createPopover() {
-    let ss = document.createElement('instant-apps-social-share');
-    return ss;
   }]
-
    ]
   
   testCases.forEach(  (arr) => {
@@ -34,11 +35,13 @@ describe('social share', async () => {
     const [elem, getElem] = arr;
     const socialShare = getElem();
 
-
-
+    const isInline = elem === 'inline'
     describe (`${elem}`, async () => {
 
       beforeEach(async () => {
+        if (element){
+          element.remove();
+        }
         document.body.append(socialShare);
         await new Promise(resolve => requestIdleCallback(resolve));
         element = document.querySelector('instant-apps-social-share');
@@ -46,24 +49,22 @@ describe('social share', async () => {
       })
       test('default', () => {
           expect(element).toBeTruthy();
-          expect(element?.mode).toBe(`${elem}`);
+          expect(element.getAttribute('mode')).toBe(`${elem}`);
       });
-      describe.skipIf (elem !== 'popover')("popover render" ,async () => {
-        console.log(elem)
+      describe.runIf (!isInline)("popover render" ,async () => {
         test('check renderButton', async () => {
           
-          const button = shadow.querySelector("button[id='shareButton']");
+          const button = shadow.querySelector("calcite-button[id='shareButton']");
           expect(button).toBeTruthy();
         })
         test('check popover', async () => {
         
-          const popover = shadow.querySelector("calcite-popover[referenceElement='shareButton']");
-          expect(popover.referenceElement).toBe("shareButton")
+          const popover = shadow.querySelector(`calcite-popover[label='${SocialShare_T9n.share.label}']`);
+          expect(popover).toBeTruthy();
         })
         
       });
-      describe.skipIf(elem !== 'inline')("inline render", () => {
-        console.log("2 "+elem)
+      describe.runIf(isInline)("inline render", () => {
         test('check popover', async () => {
           const popovers = shadow.querySelectorAll("calcite-popover");
           expect(popovers.length).toBe(2);
@@ -82,7 +83,6 @@ describe('social share', async () => {
         })
         test('check renderEmbedSuccess', async () => {
           const popover = shadow.querySelectorAll("span");
-          console.log("mesg---> ", popover)
           let found = false;
           popover.forEach(element => {
             if (element.innerHTML === SocialShare_T9n.success.embed ){
@@ -210,7 +210,7 @@ describe('social share', async () => {
         expect(element?.defaultUrlParams).toHaveProperty('selectedFeature', selectedFeature);
         expect(element?.defaultUrlParams).toHaveProperty('hiddenLayers', hiddenLayers);
       });
-      describe.skipIf(elem !== 'popover')("CSS popover", async () => {
+      describe.skipIf(isInline)("CSS popover", async () => {
         test('popoverPositioning', () => {
           expect(element).toBeTruthy();
           expect(element?.popoverPositioning).toBe('absolute');
