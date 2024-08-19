@@ -62,7 +62,6 @@ describe('Landing Page', async () => {
     landingPage.setAttribute('icon-image', iconImage);
     let element;
     let shadow;
-    let signInComp;
 
    describe('customization', async () => {
     beforeEach( async () =>{
@@ -74,9 +73,7 @@ describe('Landing Page', async () => {
 
       element = document.querySelector('instant-apps-landing-page');
       shadow = await waitForShadowRoot(element);
-      if (elem){
-        signInComp = shadow.querySelector('instant-apps-sign-in');
-      } 
+
     })
       describe.runIf(elem) ("sign in enabled", async () => {
         test("renderLandingPageSignIn", () => {
