@@ -99,8 +99,6 @@ describe('Landing Page', async () => {
         await new Promise(resolve => requestIdleCallback(resolve));
         const closed = !landingPage.open ? (landingPage.disableTransition ? ` ${CSS.closedNoTransition}` : ` ${CSS.closed}`) : '';
         const divs = Array.from(shadow.querySelectorAll('div[class]'));
-        //<div style={style} class={`${CSS.BASE}${alignmentClass}${closed}${removeTransition}`}>
-        console.log("closed : ", closed)
         expect(divs.some((div : HTMLElement) => div.className.includes(closed))).toBe(true);
         
     
