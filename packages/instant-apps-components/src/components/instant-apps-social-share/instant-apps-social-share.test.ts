@@ -39,9 +39,7 @@ describe('social share', async () => {
     describe (`${elem}`, async () => {
 
       beforeEach(async () => {
-        if (element){
-          element.remove();
-        }
+       
         document.body.append(socialShare);
         await new Promise(resolve => requestIdleCallback(resolve));
         element = document.querySelector('instant-apps-social-share');
