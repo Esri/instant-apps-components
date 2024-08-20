@@ -52,7 +52,7 @@ describe('social share', async () => {
         expect(element).toBeTruthy();
         expect(element.getAttribute('mode')).toBe(`${elem}`);
       });
-      test('embed prop', async() => {
+      test('embed prop', async () => {
         expect(element).toBeTruthy();
         expect(element?.embed).toBe(false);
         socialShare.embed = true;
@@ -78,7 +78,7 @@ describe('social share', async () => {
           document.body.append(socialShare);
           await new Promise(resolve => requestIdleCallback(resolve));
           expect(element?.shareButtonColor).toBe('inverse');
-          const kind = shadow.querySelector("calcite-button[id='shareButton']").getAttribute("kind");
+          const kind = shadow.querySelector("calcite-button[id='shareButton']").getAttribute('kind');
           expect(kind).toBe(socialShare.shareButtonColor);
         });
 
@@ -92,7 +92,7 @@ describe('social share', async () => {
           document.body.append(socialShare);
           await new Promise(resolve => requestIdleCallback(resolve));
           const action = shadow.querySelector("calcite-action[id='shareButton']");
-          expect(action).toBeTruthy();          
+          expect(action).toBeTruthy();
           expect(element?.shareButtonType).toBe('action');
         });
 
@@ -103,7 +103,7 @@ describe('social share', async () => {
           socialShare.shareButtonScale = 's';
           expect(element?.shareButtonScale).toBe('s');
         });
-        });
+      });
       describe.runIf(isInline)('inline render', () => {
         test('check popover', async () => {
           const popovers = shadow.querySelectorAll('calcite-popover');
@@ -136,26 +136,25 @@ describe('social share', async () => {
           expect(element?.iframeInnerText).toBe('');
 
           socialShare.iframeInnerText = 'This is the test for ifrmae inner text !@';
-          socialShare.setAttribute('embed','true');
+          socialShare.setAttribute('embed', 'true');
           document.body.append(socialShare);
           await new Promise(resolve => requestIdleCallback(resolve));
-          expect(element.mode).toBe("inline");
+          expect(element.mode).toBe('inline');
           expect(element?.iframeInnerText).toBe('This is the test for ifrmae inner text !@');
-          const iframe = shadow.querySelector("textarea")!;
+          const iframe = shadow.querySelector('textarea')!;
           expect(iframe).toBeTruthy();
           const iframeText = iframe.value;
-          const regex = /<iframe src="http:\/\/localhost:4444\/__vitest_test__\/__test__\/.* width="400" height="600" frameborder="0" style="border:0" allowfullscreen>This is the test for ifrmae inner text !@<\/iframe>/gm;
+          const regex =
+            /<iframe src="http:\/\/localhost:4444\/__vitest_test__\/__test__\/.* width="400" height="600" frameborder="0" style="border:0" allowfullscreen>This is the test for ifrmae inner text !@<\/iframe>/gm;
           const found = iframeText.match(regex);
-          console.log("innerText1: ",typeof iframeText);
           expect(found).toBeTruthy();
         });
         test('displayTipText', () => {
           expect(element).toBeTruthy();
           expect(element?.displayTipText).toBe(true);
           const renderTip = shadow.querySelector("calcite-icon[icon='lightbulb']");
-          expect(renderTip).toBeTruthy()
+          expect(renderTip).toBeTruthy();
         });
-      
       });
 
       test('current URL window', () => {
