@@ -136,14 +136,18 @@ describe('social share', async () => {
           expect(element?.iframeInnerText).toBe('');
 
           socialShare.iframeInnerText = 'This is the test for ifrmae inner text !@';
+          socialShare.setAttribute('embed','true');
           document.body.append(socialShare);
           await new Promise(resolve => requestIdleCallback(resolve));
-          
+          expect(element.mode).toBe("inline");
           expect(element?.iframeInnerText).toBe('This is the test for ifrmae inner text !@');
-          const iframe = document.body.querySelector("iframe")!;
+          const iframe = shadow.querySelector("textarea")!;
           expect(iframe).toBeTruthy();
-          const iframeText = iframe.innerHTML;
-          expect(iframeText).toBe(socialShare.iframeInnerText);
+          const iframeText = iframe.value;
+          const regex = /<iframe src="http:\/\/localhost:4444\/__vitest_test__\/__test__\/.* width="400" height="600" frameborder="0" style="border:0" allowfullscreen>This is the test for ifrmae inner text !@<\/iframe>/gm;
+          const found = iframeText.match(regex);
+          console.log("innerText1: ",typeof iframeText);
+          expect(found).toBeTruthy();
         });
         test('displayTipText', () => {
           expect(element).toBeTruthy();
