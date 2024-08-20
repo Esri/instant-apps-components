@@ -99,7 +99,6 @@ describe('social share', async () => {
         test('shareButtonScale', () => {
           expect(element).toBeTruthy();
           expect(element?.shareButtonScale).toBe(undefined);
-          //should be defaulted to whatever scale is in the render logic
           socialShare.shareButtonScale = 's';
           expect(element?.shareButtonScale).toBe('s');
         });
