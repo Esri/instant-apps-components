@@ -46,7 +46,6 @@ describe('Header', () => {
     });
     test('info button toggle', async () => {
       expect(element).toBeTruthy();
-      console.log('info open -> ', element?.getAttribute('info-is-open'));
       expect(element?.getAttribute('info-is-open')).toBe('');
       header.toggleInfo();
       expect(element!.infoIsOpen).toBe(false);
