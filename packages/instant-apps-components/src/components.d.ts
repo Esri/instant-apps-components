@@ -881,8 +881,10 @@ export namespace Components {
         "titleText": string;
     }
     interface InstantAppsTimeFilter {
+        "autoPlay": boolean;
         "filterMode": FilterMode;
         "timeInfoConfigItems": ITimeInfoConfigItem[];
+        "timeSliderConfig": __esri.widgetsTimeSliderProperties;
         "view": __esri.MapView | __esri.SceneView;
     }
 }
@@ -2260,8 +2262,10 @@ declare namespace LocalJSX {
         "titleText"?: string;
     }
     interface InstantAppsTimeFilter {
+        "autoPlay"?: boolean;
         "filterMode"?: FilterMode;
         "timeInfoConfigItems"?: ITimeInfoConfigItem[];
+        "timeSliderConfig"?: __esri.widgetsTimeSliderProperties;
         "view"?: __esri.MapView | __esri.SceneView;
     }
     interface IntrinsicElements {

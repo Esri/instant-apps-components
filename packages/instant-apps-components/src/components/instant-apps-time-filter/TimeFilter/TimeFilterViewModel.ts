@@ -26,8 +26,8 @@ class InstantAppsTimeFilterViewModel {
         'esri/core/Handles',
         'esri/core/reactiveUtils',
         'esri/widgets/TimeSlider',
-        'esri/TimeExtent',
-        'esri/TimeInterval',
+        'esri/time/TimeExtent',
+        'esri/time/TimeInterval',
         'esri/layers/support/FeatureFilter',
         'esri/layers/support/FeatureEffect',
       ]);
@@ -99,6 +99,7 @@ class InstantAppsTimeFilterViewModel {
     state.selectedTimeInfoItem = initialTimeInfoItem;
     const config = this.getTimeSliderConfig(timeSliderRef);
     state.timeSlider = new TimeSlider(config);
+    if (state.autoPlay) state.timeSlider.play();
     if (state.view?.type === '2d') this.initialize2DView();
   }
 
@@ -130,6 +131,7 @@ class InstantAppsTimeFilterViewModel {
         }),
       },
       view: state.view?.type === '3d' ? state.view : null,
+      ...state.timeSliderConfig,
     } as __esri.widgetsTimeSliderProperties;
   }
 
