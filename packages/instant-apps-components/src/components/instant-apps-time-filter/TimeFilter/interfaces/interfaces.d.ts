@@ -29,6 +29,8 @@ export interface State {
   filterMode: FilterMode | null;
   timeSlider: __esri.widgetsTimeSlider | null;
   loading: boolean;
+  timeSliderConfig: __esri.widgetsTimeSlider | {};
+  autoPlay: boolean;
 }
 
 interface TimeExtent {
