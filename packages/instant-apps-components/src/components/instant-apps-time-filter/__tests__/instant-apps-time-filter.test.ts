@@ -1,4 +1,4 @@
-import { describe, expect, test, afterAll } from 'vitest';
+import { expect, test, describe, afterAll } from 'vitest';
 
 import '../../../../dist/components/instant-apps-time-filter.js';
 
