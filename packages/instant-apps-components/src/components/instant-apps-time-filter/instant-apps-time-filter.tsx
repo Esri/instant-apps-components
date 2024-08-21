@@ -68,14 +68,20 @@ export class InstantAppsTimeFilter {
   @Watch('autoPlay')
   async updateAutoPlay() {
     state.autoPlay = this.autoPlay;
-    await viewModel.init(this.timeSliderRef);
+    if (state.timeSlider) {
+      if (state.autoPlay) {
+        state.timeSlider.play();
+      } else {
+        state.timeSlider.stop();
+      }
+    }
   }
 
   async componentWillLoad() {
     try {
       state.view = this.view;
       state.timeInfoConfigItems = this.timeInfoConfigItems;
-      state.autoPlay = this.autoPlay;
+      state.autoPlay = !!this.autoPlay;
       if (this.timeSliderConfig) state.timeSliderConfig = this.timeSliderConfig;
       if (this.filterMode) state.filterMode = this.filterMode;
       await getMessages(this);

@@ -43,6 +43,7 @@ class InstantAppsTimeFilterViewModel {
 
   async init(timeSliderRef: HTMLDivElement) {
     if (timeSliderRef) timeSliderRef.innerHTML = '';
+    if (state?.timeSlider?.viewModel?.state === 'playing') state.timeSlider.stop();
     const { view, timeInfoConfigItems } = state;
     if (!view) return;
     try {
@@ -115,7 +116,7 @@ class InstantAppsTimeFilterViewModel {
   getTimeSliderConfig(timeSliderRef: HTMLDivElement) {
     const [{ timeExtent, rangeStart, rangeEnd, unit }] = state.timeInfoItems;
     const { TimeExtent, TimeInterval } = this;
-    return {
+    const config = {
       container: timeSliderRef,
       fullTimeExtent: timeExtent as ITimeExtent,
       timeExtent: new TimeExtent({
@@ -123,7 +124,6 @@ class InstantAppsTimeFilterViewModel {
         end: rangeEnd,
       }),
       mode: 'time-window',
-      loop: true,
       stops: {
         interval: new TimeInterval({
           unit,
@@ -133,6 +133,7 @@ class InstantAppsTimeFilterViewModel {
       view: state.view?.type === '3d' ? state.view : null,
       ...state.timeSliderConfig,
     } as __esri.widgetsTimeSliderProperties;
+    return config;
   }
 
   initialize2DView() {
