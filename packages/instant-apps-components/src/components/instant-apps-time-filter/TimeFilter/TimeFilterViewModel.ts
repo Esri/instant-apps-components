@@ -26,8 +26,8 @@ class InstantAppsTimeFilterViewModel {
         'esri/core/Handles',
         'esri/core/reactiveUtils',
         'esri/widgets/TimeSlider',
-        'esri/TimeExtent',
-        'esri/TimeInterval',
+        'esri/time/TimeExtent',
+        'esri/time/TimeInterval',
         'esri/layers/support/FeatureFilter',
         'esri/layers/support/FeatureEffect',
       ]);
@@ -43,6 +43,7 @@ class InstantAppsTimeFilterViewModel {
 
   async init(timeSliderRef: HTMLDivElement) {
     if (timeSliderRef) timeSliderRef.innerHTML = '';
+    if (state?.timeSlider?.viewModel?.state === 'playing') state.timeSlider.stop();
     const { view, timeInfoConfigItems } = state;
     if (!view) return;
     try {
@@ -99,6 +100,7 @@ class InstantAppsTimeFilterViewModel {
     state.selectedTimeInfoItem = initialTimeInfoItem;
     const config = this.getTimeSliderConfig(timeSliderRef);
     state.timeSlider = new TimeSlider(config);
+    if (state.autoPlay) state.timeSlider.play();
     if (state.view?.type === '2d') this.initialize2DView();
   }
 
@@ -114,7 +116,7 @@ class InstantAppsTimeFilterViewModel {
   getTimeSliderConfig(timeSliderRef: HTMLDivElement) {
     const [{ timeExtent, rangeStart, rangeEnd, unit }] = state.timeInfoItems;
     const { TimeExtent, TimeInterval } = this;
-    return {
+    const config = {
       container: timeSliderRef,
       fullTimeExtent: timeExtent as ITimeExtent,
       timeExtent: new TimeExtent({
@@ -122,7 +124,6 @@ class InstantAppsTimeFilterViewModel {
         end: rangeEnd,
       }),
       mode: 'time-window',
-      loop: true,
       stops: {
         interval: new TimeInterval({
           unit,
@@ -130,7 +131,9 @@ class InstantAppsTimeFilterViewModel {
         }),
       },
       view: state.view?.type === '3d' ? state.view : null,
+      ...state.timeSliderConfig,
     } as __esri.widgetsTimeSliderProperties;
+    return config;
   }
 
   initialize2DView() {

@@ -1,4 +1,4 @@
-import { Component, Element, Prop, h, Fragment } from '@stencil/core';
+import { Component, Element, Prop, h } from '@stencil/core';
 import { FunctionalComponent, Host, HostElement, State, Watch } from '@stencil/core/internal';
 
 import { state } from './TimeFilter/TimeFilterModel';
@@ -42,6 +42,12 @@ export class InstantAppsTimeFilter {
   @Prop()
   view: __esri.MapView | __esri.SceneView;
 
+  @Prop()
+  timeSliderConfig: __esri.widgetsTimeSliderProperties;
+
+  @Prop()
+  autoPlay: boolean = false;
+
   @Watch('timeInfoConfigItems')
   async updateTimeInfoConfigItems() {
     state.timeInfoConfigItems = this.timeInfoConfigItems;
@@ -53,10 +59,30 @@ export class InstantAppsTimeFilter {
     state.filterMode = this.filterMode;
   }
 
+  @Watch('timeSliderConfig')
+  async updateTimeSliderConfig() {
+    state.timeSliderConfig = this.timeSliderConfig;
+    await viewModel.init(this.timeSliderRef);
+  }
+
+  @Watch('autoPlay')
+  async updateAutoPlay() {
+    state.autoPlay = this.autoPlay;
+    if (state.timeSlider) {
+      if (state.autoPlay) {
+        state.timeSlider.play();
+      } else {
+        state.timeSlider.stop();
+      }
+    }
+  }
+
   async componentWillLoad() {
     try {
       state.view = this.view;
       state.timeInfoConfigItems = this.timeInfoConfigItems;
+      state.autoPlay = !!this.autoPlay;
+      if (this.timeSliderConfig) state.timeSliderConfig = this.timeSliderConfig;
       if (this.filterMode) state.filterMode = this.filterMode;
       await getMessages(this);
     } catch {}
@@ -83,29 +109,21 @@ export class InstantAppsTimeFilter {
     return (
       <div class={`${CSS.base}${this.view.type !== '2d' ? CSS.threeD : ''}`}>
         {this._renderLoader()}
-        {this._renderMain()}
-      </div>
-    );
-  }
-
-  private _renderMain(): FunctionalComponent {
-    return (
-      <Fragment>
         {this.view.type === '2d' && this._renderTopEl()}
-        <div ref={(ref: HTMLDivElement) => (this.timeSliderRef = ref)} />
-      </Fragment>
+        <div key="time-slider" ref={(ref: HTMLDivElement) => (this.timeSliderRef = ref)} />
+      </div>
     );
   }
 
   private _renderLoader(): FunctionalComponent | null {
     return (
       state.loading && (
-        <Fragment>
+        <div>
           <div class={CSS.background}></div>
           <div class={CSS.loadingContainer}>
             <calcite-loader scale="m" label={this.messages?.loading} text={this.messages?.loading} />
           </div>
-        </Fragment>
+        </div>
       )
     );
   }
