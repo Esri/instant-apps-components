@@ -1,5 +1,5 @@
 import { CalciteCheckboxCustomEvent, CalciteInputDatePickerCustomEvent } from '@esri/calcite-components';
-import { Component, Element, Event, EventEmitter, Host, Prop, State, VNode, Watch, h } from '@stencil/core';
+import { Component, Element, Event, EventEmitter, Host, Method, Prop, State, VNode, Watch, h } from '@stencil/core';
 
 import FilterList_T9n from '../../assets/t9n/instant-apps-filter-list/resources.json';
 
@@ -7,6 +7,7 @@ import {
   BaseQueryableLayer,
   Expression,
   ExtentSelector,
+  FilterInitState,
   FilterLayer,
   FilterParam,
   GenericObject,
@@ -114,6 +115,11 @@ export class InstantAppsFilterList {
    */
   @Prop() zoomBtn?: boolean = true;
 
+  /**
+   * When false filters will not be reset when the component is disconnected from the DOM
+   */
+  @Prop() resetFiltersOnDisconnect: boolean = true;
+
   @State() loading: boolean;
   @State() filterLayerExpressions: LayerExpression[];
   @State() messages: typeof FilterList_T9n;
@@ -146,6 +152,41 @@ export class InstantAppsFilterList {
       this.handleLayerExpressionsUpdate();
       this.hasLayerExpression = true;
     }
+  }
+
+  @Method()
+  getFilterInitState(): Promise<FilterInitState> {
+    return Promise.resolve({
+      initDefExpressions: this.initDefExpressions,
+      initMapImageExpressions: this.initMapImageExpressions,
+      initPointCloudFilters: this.initPointCloudFilters
+    });
+  }
+
+  @Method()
+  forceReset(): Promise<void> {
+    this.filterLayerExpressions = JSON.parse(JSON.stringify(this.layerExpressions));
+    this.resetAllFilters();
+    this.generateURLParams();
+    this.filterListReset.emit();
+    return Promise.resolve();
+  }
+
+  @Method()
+  restoreFilters(
+    filterParamString: string,
+    filterInitState: any
+  ): Promise<void> {
+    this.filterLayerExpressions = JSON.parse(JSON.stringify(this.layerExpressions));
+    this.initDefExpressions = filterInitState.initDefExpressions;
+    this.initMapImageExpressions = filterInitState.initMapImageExpressions;
+    this.initPointCloudFilters = filterInitState.initPointCloudFilters;
+
+    const filters = filterParamString?.split(';').map(filter => JSON.parse(filter) as FilterParam);
+    if (filters) {
+      this.filterCount = this.applyFilters(filters);
+    }
+    return this.initExpressions();
   }
 
   geometryJsonUtils: typeof __esri.JSONSupport;
@@ -183,8 +224,10 @@ export class InstantAppsFilterList {
   }
 
   disconnectedCallback(): void {
-    this.filterLayerExpressions = JSON.parse(JSON.stringify(this.layerExpressions));
-    this.resetAllFilters();
+    if (this.resetFiltersOnDisconnect) {
+      this.filterLayerExpressions = JSON.parse(JSON.stringify(this.layerExpressions));
+      this.resetAllFilters();
+    }
   }
 
   async initializeModules(): Promise<void> {

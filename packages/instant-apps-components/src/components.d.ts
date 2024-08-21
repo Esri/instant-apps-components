@@ -6,7 +6,7 @@
  */
 import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
 import { EditorConfig } from "@ckeditor/ckeditor5-core/src/editor/editorconfig";
-import { ActiveTool, ControlPanelComponent, CreateOption, ExportOutput, ExportView, ExtentSelector, FilterMode, IMeasureConfiguration, InstantAppsPopoverMessageOverrides, IPortal, LayerExpression, PopoverPlacement } from "./interfaces/interfaces";
+import { ActiveTool, ControlPanelComponent, CreateOption, ExportOutput, ExportView, ExtentSelector, FilterInitState, FilterMode, FilterParam, IMeasureConfiguration, InstantAppsPopoverMessageOverrides, IPortal, LayerExpression, PopoverPlacement } from "./interfaces/interfaces";
 import { PredefinedOptions } from "./components/instant-apps-create/instant-apps-create";
 import { AlignmentPositions } from "./components/instant-apps-landing-page/support/enum";
 import { AppSettings, LocaleItem, LocaleSettingData } from "./components/instant-apps-language-translator/support/interfaces";
@@ -15,7 +15,7 @@ import { LogicalPlacement } from "@esri/calcite-components/dist/types/utils/floa
 import { ScoreboardItem, ScoreboardMode, ScoreboardPosition } from "./components/instant-apps-scoreboard/types/interfaces";
 import { ITimeInfoConfigItem } from "./components/instant-apps-time-filter/TimeFilter/interfaces/interfaces";
 export { EditorConfig } from "@ckeditor/ckeditor5-core/src/editor/editorconfig";
-export { ActiveTool, ControlPanelComponent, CreateOption, ExportOutput, ExportView, ExtentSelector, FilterMode, IMeasureConfiguration, InstantAppsPopoverMessageOverrides, IPortal, LayerExpression, PopoverPlacement } from "./interfaces/interfaces";
+export { ActiveTool, ControlPanelComponent, CreateOption, ExportOutput, ExportView, ExtentSelector, FilterInitState, FilterMode, FilterParam, IMeasureConfiguration, InstantAppsPopoverMessageOverrides, IPortal, LayerExpression, PopoverPlacement } from "./interfaces/interfaces";
 export { PredefinedOptions } from "./components/instant-apps-create/instant-apps-create";
 export { AlignmentPositions } from "./components/instant-apps-landing-page/support/enum";
 export { AppSettings, LocaleItem, LocaleSettingData } from "./components/instant-apps-language-translator/support/interfaces";
@@ -266,6 +266,8 @@ export namespace Components {
           * Number of active filters
          */
         "filterCount"?: number;
+        "forceReset": () => Promise<void>;
+        "getFilterInitState": () => Promise<FilterInitState>;
         /**
           * Use this to create filters that update a layer's definitionExpression.
          */
@@ -274,6 +276,11 @@ export namespace Components {
           * When `true`, the layer filter block is expanded.
          */
         "openFilters"?: boolean;
+        /**
+          * When false filters will not be reset when the component is disconnected from the DOM
+         */
+        "resetFiltersOnDisconnect": boolean;
+        "restoreFilters": (filterParamString: string, filterInitState: any) => Promise<void>;
         /**
           * URL params set by using filters.
          */
@@ -1632,6 +1639,10 @@ declare namespace LocalJSX {
           * When `true`, the layer filter block is expanded.
          */
         "openFilters"?: boolean;
+        /**
+          * When false filters will not be reset when the component is disconnected from the DOM
+         */
+        "resetFiltersOnDisconnect"?: boolean;
         /**
           * URL params set by using filters.
          */
