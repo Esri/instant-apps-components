@@ -63,7 +63,6 @@ describe('create', async () => {
   let shadow;
   beforeEach(async () => {
     create = document.createElement('instant-apps-create');
-    create.setAttribute('show-scale-bar', 'true');
     shadow = await waitForShadowRoot(create);
   });
   describe('create Inline', async () => {

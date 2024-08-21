@@ -13,32 +13,30 @@ describe('social share', async () => {
   };
   const { center, level, viewpoint, selectedFeature, hiddenLayers } = shareParams;
 
-  type cases = [string, () => HTMLInstantAppsSocialShareElement];
+  type cases = [string, HTMLInstantAppsSocialShareElement];
   type allTests = cases[];
-
+  function createSocialShare(isInline : boolean) {
+        let socialShareElement = document.createElement('instant-apps-social-share');
+        if (isInline) socialShareElement.setAttribute('mode', 'inline');
+        return socialShareElement;
+ 
+  }
   const testCases: allTests = [
     [
       'popover',
-      function createPopover() {
-        let ss = document.createElement('instant-apps-social-share');
-        return ss;
-      },
+    createSocialShare(false)
     ],
     [
       'inline',
-      function createInline() {
-        let ss = document.createElement('instant-apps-social-share');
-        ss.setAttribute('mode', 'inline');
-        return ss;
-      },
+      createSocialShare(true)
     ],
   ];
 
   testCases.forEach(arr => {
     let element;
     let shadow;
-    const [elem, getElem] = arr;
-    const socialShare = getElem();
+    const [elem, socialShare] = arr;
+
 
     const isInline = elem === 'inline';
     describe(`${elem}`, async () => {
@@ -64,7 +62,7 @@ describe('social share', async () => {
       });
       describe.runIf(!isInline)('popover render', async () => {
         test('check renderButton', async () => {
-          const button = shadow.querySelector("calcite-button[id='shareButton']");
+          const button = shadow.getElementById("shareButton");
           expect(button).toBeTruthy();
         });
         test('check popover', async () => {
@@ -78,20 +76,20 @@ describe('social share', async () => {
           document.body.append(socialShare);
           await new Promise(resolve => requestIdleCallback(resolve));
           expect(element?.shareButtonColor).toBe('inverse');
-          const kind = shadow.querySelector("calcite-button[id='shareButton']").getAttribute('kind');
+          const kind = shadow.getElementById("shareButton").getAttribute('kind');
           expect(kind).toBe(socialShare.shareButtonColor);
         });
 
         test('shareButtonType', async () => {
           expect(element).toBeTruthy();
           expect(element?.shareButtonType).toBe('button');
-          const button = shadow.querySelector("calcite-button[id='shareButton']");
+          const button = shadow.getElementById("shareButton");
           expect(button).toBeTruthy();
 
           socialShare.shareButtonType = 'action';
           document.body.append(socialShare);
           await new Promise(resolve => requestIdleCallback(resolve));
-          const action = shadow.querySelector("calcite-action[id='shareButton']");
+          const action = shadow.getElementById("shareButton");
           expect(action).toBeTruthy();
           expect(element?.shareButtonType).toBe('action');
         });

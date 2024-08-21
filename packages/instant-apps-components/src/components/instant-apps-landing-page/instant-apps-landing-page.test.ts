@@ -33,32 +33,29 @@ const CSS = {
     l: ' instant-apps-landing-page__icon-image-scale--l',
   },
 };
-
+function createLandingPage(hasSignIn : boolean) {
+    let landingPageElement = document.createElement('instant-apps-landing-page');
+    if (hasSignIn) landingPageElement.enableSignIn = enableSignIn
+    return landingPageElement;
+      
+}
 describe('Landing Page', async () => {
-  type cases = [boolean, () => HTMLInstantAppsLandingPageElement];
+  type cases = [boolean, HTMLInstantAppsLandingPageElement];
   type allTests = cases[];
 
   const testCases: allTests = [
     [
       false,
-      function createNoSignIn() {
-        let ss = document.createElement('instant-apps-landing-page');
-        return ss;
-      },
+     createLandingPage(false) 
     ],
     [
       true,
-      function createSignIn() {
-        let ss = document.createElement('instant-apps-landing-page');
-        ss.enableSignIn = enableSignIn;
-        return ss;
-      },
+      createLandingPage(true)
     ],
   ];
 
   testCases.forEach(async arr => {
-    const [elem, getElem] = arr;
-    const landingPage = getElem();
+    const [elem, landingPage] = arr;
     landingPage.setAttribute('title-text', titleText);
     landingPage.setAttribute('subtitle-text', subtitleText);
     landingPage.setAttribute('description-text', descriptionText);
