@@ -9,7 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### instant-apps-control-panel
 
-- feat: add ability to expand components uses expand widget
+- feat: add ability to expand components that uses the expand widget
 
 ## v1.0.0-beta.246
 
