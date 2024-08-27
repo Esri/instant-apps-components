@@ -24,6 +24,9 @@ interface ControlPanelComponent {
     content: any;
     isExpand?: boolean;
     expandIcon?: string;
+    expandTooltip?: string;
+    collapseTooltip?: string;
+    expanded?: boolean;
 }
 ```
 

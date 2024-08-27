@@ -89,7 +89,7 @@ export class InstantAppsControlPanel {
   private _getExpand(component: ControlPanelComponent): __esri.Expand {
     const { view } = this;
     const { content } = component;
-    const expanded = false;
+    const expanded = component?.expanded ?? false;
     return new this.Expand({ content, view, expanded, mode: MODE, group: GROUP });
   }
 
