@@ -12,6 +12,7 @@ import LanguageTranslator_t9n from '../../assets/t9n/instant-apps-language-trans
 import { loadModules } from '../../utils/loadModules';
 import { getComponentClosestLanguage } from '../../utils/locale';
 import { getPortalItemResource, fetchResourceData } from '../../utils/languageSwitcher';
+import { LANGUAGE_DATA } from 'templates-common-library/structuralFunctionality/language-switcher/support/constants';
 
 const BASE = 'instant-apps-language-translator';
 
@@ -324,13 +325,13 @@ export class InstantAppsLanguageTranslator {
     const uiData = store.get('uiData');
     const locales = uiData?.get('locales') as LocaleItem[];
     const localeFlags = getLocales(locales);
+    const partialSupportLocales = Object.keys(LANGUAGE_DATA.partial);
     return localeFlags?.map(locale => {
-      const { messages } = this;
-      const translatedLanguageNames = messages?.translatedLanguageNames;
-      const enLanguageNames = messages?.languages;
-      const translatedLanguageName = translatedLanguageNames?.[locale];
-      const enLanguageName = enLanguageNames?.[locale];
-      const text = `${translatedLanguageName} - ${enLanguageName}`;
+      const isPartial = partialSupportLocales.indexOf(locale) !== -1;
+      const type = isPartial ? 'partial' : 'full';
+      const data = LANGUAGE_DATA[type];
+      const { language, translated } = data[locale];
+      const text = `${language} - ${translated}`;
       return (
         <calcite-option key={`translated-lang-option-${locale}`} value={locale}>
           {text}
