@@ -28,10 +28,6 @@ interface StringBundle {
 }
 
 async function fetchLocaleStringsForComponent<T extends StringBundle = StringBundle>(componentName: string, locale: string): Promise<T> {
-  const localePath = `../assets/t9n/${componentName}/resources_${locale}.json`;
-  const primaryURL = getAssetPath(localePath);
-  const fallbackURL = `${getFallbackUrl()}/dist/${localePath}`;
-
   async function fetchJson(url: string): Promise<T> {
     const response = await fetch(url);
     if (!response.ok) throw new Error(`Fetch failed with status ${response.status}: ${response.statusText}`);
@@ -45,8 +41,10 @@ async function fetchLocaleStringsForComponent<T extends StringBundle = StringBun
     return await response.json();
   }
 
+  const localePath = `assets/t9n/${componentName}/resources_${locale}.json`;
+  const fallbackURL = `${getFallbackUrl()}/dist/${localePath}`;
   try {
-    return await fetchJson(IS_TEST_ENV ? fallbackURL : primaryURL);
+    return await fetchJson(IS_TEST_ENV ? fallbackURL : getAssetPath(`../${localePath}`));
   } catch (primaryError) {
     console.error(`Primary fetch error: ${primaryError}`); // Log primary fetch error with more context
     try {
