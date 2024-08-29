@@ -17,8 +17,6 @@ const CSS = {
   entryButton: 'instant-apps-landing-page__entry-button',
   contentContainer: 'instant-apps-landing-page__content-container',
   buttonContainer: 'instant-apps-landing-page__button-container',
-  signIn: 'instant-apps-landing-page__sign-in',
-  signInOverlay: 'instant-apps-landing-page__sign-in--overlay',
   iconImageScale: {
     s: ' instant-apps-landing-page__icon-image-scale--s',
     m: ' instant-apps-landing-page__icon-image-scale--m',
@@ -170,7 +168,7 @@ export class InstantAppsLandingPage {
   }
 
   render() {
-    const content = this.enableSignIn ? this.renderLandingPageSignIn() : this.renderLandingPageContent();
+    const content = this.renderLandingPageContent();
     return <Host>{content}</Host>;
   }
 
@@ -187,33 +185,34 @@ export class InstantAppsLandingPage {
           {this.renderSubtitleText()}
           {this.renderDescriptionText()}
         </div>
-        <div class={CSS.buttonContainer}>
-          {this.renderEntryButton()}
-          <slot name="secondary-action"></slot>
-        </div>
+        {this.renderEntryButtonContainer()}
+      </div>
+    );
+  }
+
+  renderEntryButtonContainer() {
+    return this.enableSignIn ? (
+      this.renderLandingPageSignIn()
+    ) : (
+      <div class={CSS.buttonContainer}>
+        {this.renderEntryButton()}
+        <slot name="secondary-action"></slot>
       </div>
     );
   }
 
   renderLandingPageSignIn() {
-    const closed = !this.open ? (this.disableTransition ? ` ${CSS.closedNoTransition}` : ` ${CSS.closed}`) : '';
-    const style = this.getContentStyle();
-    const signInClass = this.backgroundImageSrc ? `${CSS.signIn} ${CSS.signInOverlay}` : CSS.signIn;
     return (
-      <div style={style} class={`${CSS.BASE}${closed} ${CSS.removePadding}`}>
-        <div class={signInClass}>
-          <instant-apps-sign-in
-            type="landingPage"
-            landingPage={true}
-            portal={this.portal}
-            oauthappid={this.oauthappid}
-            titleText={this.titleText}
-            subtitleText={this.subtitleText}
-            descriptionText={this.descriptionText}
-            closeLandingPage={this.closeLandingPage.bind(this)}
-          ></instant-apps-sign-in>
-        </div>
-      </div>
+      <instant-apps-sign-in
+        type="landingPage"
+        landingPage={true}
+        portal={this.portal}
+        oauthappid={this.oauthappid}
+        titleText={this.titleText}
+        subtitleText={this.subtitleText}
+        descriptionText={this.descriptionText}
+        closeLandingPage={this.closeLandingPage.bind(this)}
+      ></instant-apps-sign-in>
     );
   }
 
