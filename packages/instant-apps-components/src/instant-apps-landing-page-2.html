@@ -30,10 +30,17 @@
         overflow: hidden;
       }
 
-      instant-apps-landing-page {
+      instant-apps-landing-page,
+      instant-apps-sign-in {
         --instant-apps-landing-page-background-color: #559e10;
         --instant-apps-landing-page-entry-button-color: #559e10;
         --instant-apps-landing-page-entry-button-margin: 0 10px 0 0;
+      }
+
+      instant-apps-sign-in {
+        --calcite-color-brand: #fff;
+        --calcite-color-brand-hover: #fff;
+        --calcite-color-brand-press: #fff;
       }
 
       #secondary {
@@ -72,6 +79,7 @@
         info-is-open="true"
       >
         <instant-apps-social-share slot="actions-end" share-button-color="inverse" popover-button-icon-scale="s"></instant-apps-social-share>
+        <instant-apps-sign-in id="instant-apps-sign-in" slot="actions-end"></instant-apps-sign-in>
       </instant-apps-header>
       <calcite-shell-panel slot="panel-start">
         <calcite-action-bar slot="action-bar">
@@ -109,6 +117,9 @@
         view.when(() => {
           landingPage.portal = view.map.portalItem.portal;
           landingPage.oauthappid = 'wfblKnj2mvxLOiCx';
+          const signIn = document.getElementById('instant-apps-sign-in');
+          signIn.portal = view.map.portalItem.portal;
+          signIn.oauthappid = 'wfblKnj2mvxLOiCx';
         });
       });
     </script>
