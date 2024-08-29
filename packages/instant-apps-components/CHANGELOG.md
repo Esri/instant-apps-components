@@ -11,6 +11,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - revert: Update locale util to use `getAssetPath`
 
+### instant-apps-sign-in
+
+### instant-apps-landing-page
+
+- Update landing page's sign in UI
+- Update sign in/out logic
+
 ## v1.0.0-beta.249
 
 ### General
