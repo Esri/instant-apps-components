@@ -6,5 +6,3 @@
  *   See use restrictions at http://www.esri.com/legal/pdfs/mla_e204_e300/english
  */
 export { Components, JSX } from './components';
-
-export { setAssetPath } from '@stencil/core';

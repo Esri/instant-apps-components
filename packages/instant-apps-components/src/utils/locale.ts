@@ -1,5 +1,4 @@
 // https://medium.com/stencil-tricks/implementing-internationalisation-i18n-with-stencil-5e6559554117
-import { getAssetPath } from '@stencil/core';
 import { loadModules } from '../utils/loadModules';
 import { languageMap } from './languageUtil';
 
@@ -28,6 +27,10 @@ interface StringBundle {
 }
 
 async function fetchLocaleStringsForComponent<T extends StringBundle = StringBundle>(componentName: string, locale: string): Promise<T> {
+  const localePath = `assets/t9n/${componentName}/resources_${locale}.json`;
+  const primaryURL = new URL(`./${localePath}`, window.location.href).href;
+  const fallbackURL = `${getFallbackUrl()}/dist/${localePath}`;
+
   async function fetchJson(url: string): Promise<T> {
     const response = await fetch(url);
     if (!response.ok) throw new Error(`Fetch failed with status ${response.status}: ${response.statusText}`);
@@ -41,10 +44,8 @@ async function fetchLocaleStringsForComponent<T extends StringBundle = StringBun
     return await response.json();
   }
 
-  const localePath = `assets/t9n/${componentName}/resources_${locale}.json`;
-  const fallbackURL = `${getFallbackUrl()}/dist/${localePath}`;
   try {
-    return await fetchJson(IS_TEST_ENV ? fallbackURL : getAssetPath(`../${localePath}`));
+    return await fetchJson(IS_TEST_ENV ? fallbackURL : primaryURL);
   } catch (primaryError) {
     console.error(`Primary fetch error: ${primaryError}`); // Log primary fetch error with more context
     try {
