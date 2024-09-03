@@ -148,7 +148,7 @@ export class InstantAppsFilterList {
   @Watch('layerExpressions')
   watchLayerExpressions() {
     if (!this.hasLayerExpression) {
-      this.filterLayerExpressions = JSON.parse(JSON.stringify(this.layerExpressions));
+      this.filterLayerExpressions = structuredClone(this.layerExpressions);
       this.handleLayerExpressionsUpdate();
       this.hasLayerExpression = true;
     }
@@ -159,13 +159,13 @@ export class InstantAppsFilterList {
     return Promise.resolve({
       initDefExpressions: this.initDefExpressions,
       initMapImageExpressions: this.initMapImageExpressions,
-      initPointCloudFilters: this.initPointCloudFilters
+      initPointCloudFilters: this.initPointCloudFilters,
     });
   }
 
   @Method()
   forceReset(): Promise<void> {
-    this.filterLayerExpressions = JSON.parse(JSON.stringify(this.layerExpressions));
+    this.filterLayerExpressions = structuredClone(this.layerExpressions);
     this.resetAllFilters();
     this.generateURLParams();
     this.filterListReset.emit();
@@ -173,11 +173,8 @@ export class InstantAppsFilterList {
   }
 
   @Method()
-  restoreFilters(
-    filterParamString: string,
-    filterInitState: any
-  ): Promise<void> {
-    this.filterLayerExpressions = JSON.parse(JSON.stringify(this.layerExpressions));
+  restoreFilters(filterParamString: string, filterInitState: any): Promise<void> {
+    this.filterLayerExpressions = structuredClone(this.layerExpressions);
     this.initDefExpressions = filterInitState.initDefExpressions;
     this.initMapImageExpressions = filterInitState.initMapImageExpressions;
     this.initPointCloudFilters = filterInitState.initPointCloudFilters;
@@ -201,7 +198,7 @@ export class InstantAppsFilterList {
     await this.initializeModules();
     getMessages(this);
     this.hasLayerExpression = this.layerExpressions != null;
-    this.filterLayerExpressions = this.layerExpressions != null ? JSON.parse(JSON.stringify(this.layerExpressions)) : undefined;
+    this.filterLayerExpressions = this.layerExpressions != null ? structuredClone(this.layerExpressions) : [];
     this.disabled = this.filterLayerExpressions?.length ? undefined : true;
     this.reactiveUtils.whenOnce(() => this.view).then(() => this.handleLayerExpressionsUpdate());
   }
@@ -213,7 +210,7 @@ export class InstantAppsFilterList {
       if (this.hasLayerExpression) {
         this.resetAllFilters();
       }
-      this.filterLayerExpressions = JSON.parse(JSON.stringify(this.layerExpressions));
+      this.filterLayerExpressions = structuredClone(this.layerExpressions);
       this.handleLayerExpressionsUpdate();
       this.hasLayerExpression = true;
     }
@@ -225,7 +222,7 @@ export class InstantAppsFilterList {
 
   disconnectedCallback(): void {
     if (this.resetFiltersOnDisconnect) {
-      this.filterLayerExpressions = JSON.parse(JSON.stringify(this.layerExpressions));
+      this.filterLayerExpressions = structuredClone(this.layerExpressions);
       this.resetAllFilters();
     }
   }
@@ -1098,8 +1095,8 @@ export class InstantAppsFilterList {
       defExpressions?.length > 0 && initDefExpressions != null
         ? `(${defExpressions.join(operator)}) AND (${initDefExpressions})`
         : defExpressions.length > 0
-        ? defExpressions.join(operator)
-        : initDefExpressions;
+          ? defExpressions.join(operator)
+          : initDefExpressions;
     layer.definitionExpression = combinedExpressions;
   }
 
