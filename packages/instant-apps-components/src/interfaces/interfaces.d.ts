@@ -279,6 +279,7 @@ export interface ControlPanelComponent {
   expandIcon?: string;
   expandTooltip?: string;
   collapseTooltip?: string;
+  expanded?: boolean;
 }
 
 export interface IPortal extends __esri.Portal {

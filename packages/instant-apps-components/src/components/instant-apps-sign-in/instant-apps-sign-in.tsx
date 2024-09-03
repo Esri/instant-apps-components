@@ -7,9 +7,9 @@ import { getMessages } from '../../utils/locale';
 
 const CSS = {
   base: 'instant-apps-sign-in__container',
-  landing: 'instant-apps-sign-in__landing-page',
-  landingBtn: 'instant-apps-sign-in__landing-page-btns',
   SignInBtn: 'instant-apps-sign-in__sign-in-btn',
+  buttonContainer: 'instant-apps-sign-in__entry-button-container',
+  entryButton: 'instant-apps-sign-in__entry-button',
 };
 
 @Component({
@@ -151,16 +151,13 @@ export class InstantAppsSignIn {
 
   renderLandingPageSignIn() {
     return (
-      <div class={CSS.landing}>
-        <h1>{this.titleText}</h1>
-        <h2>{this.subtitleText}</h2>
-        <p>{this.descriptionText}</p>
-        <div class={CSS.landingBtn}>
-          <calcite-button onClick={this.landingPageSignIn.bind(this)}>{this.messages?.signIn}</calcite-button>
-          <calcite-button onClick={this.guestOnClick.bind(this)} appearance="outline">
-            {this.messages?.continueAsGuest}
-          </calcite-button>
-        </div>
+      <div class={CSS.buttonContainer}>
+        <calcite-button class={CSS.entryButton} scale="l" appearance="outline-fill" width="half" onClick={this.landingPageSignIn.bind(this)}>
+          {this.messages?.signIn}
+        </calcite-button>
+        <calcite-button class={CSS.entryButton} scale="l" appearance="outline-fill" width="half" onClick={this.guestOnClick.bind(this)}>
+          {this.messages?.continueAsGuest}
+        </calcite-button>
       </div>
     );
   }
@@ -179,73 +176,53 @@ export class InstantAppsSignIn {
     this.idManager.registerOAuthInfos([this.info]);
     this.isSignedIn = await this.checkSignInStatus();
     this.ready = true;
-    this.watchCredential();
-    reactiveUtils
-      .whenOnce(() => this.portal.user)
-      .then(() => {
-        this.user = this.portal.user;
-        this.ready = true;
-      });
+    await reactiveUtils.whenOnce(() => this.portal.user);
+    this.user = this.portal.user;
+    this.ready = true;
   }
 
-  signIn() {
-    if (this.landingPage) {
-      this.setSignInLocalStorage();
-    }
-    this.idManager
-      .getCredential(this.info.portalUrl + '/sharing', {
-        oAuthPopupConfirmation: false,
-      })
-      .then(async () => {
-        await this.checkSignInStatus();
-      });
+  async signIn() {
+    this.setSignInLocalStorage();
+    await this.idManager.getCredential(`${this.info.portalUrl}/sharing`, {
+      oAuthPopupConfirmation: false,
+    });
+    await this.checkSignInStatus();
   }
 
   signOut() {
+    this.portal.credential?.destroy();
     this.idManager.destroyCredentials();
     this.portal.authMode = 'anonymous';
-    localStorage.removeItem('_AGO_SESSION_');
-    this.isSignedIn = false;
     this.portal.credential = null;
+    const rdUrl = window.location.href;
+    this.setSignInLocalStorage();
+    window.location.href = `${this.portal.restUrl}/oauth2/signout?client_id=${this.oauthappid}&redirect_uri=${rdUrl}`;
   }
 
-  landingPageSignIn() {
-    if (!this.isSignedIn) {
-      this.setSignInLocalStorage();
-      this.signIn();
-    } else if (this.closeLandingPage != null) {
-      this.closeLandingPage();
-    }
-  }
-
-  guestOnClick() {
-    this.signOut();
+  async landingPageSignIn() {
+    await this.signIn();
     if (this.closeLandingPage != null) {
       this.closeLandingPage();
     }
   }
 
-  checkSignInStatus(): Promise<boolean> {
-    return new Promise<boolean>(resolve => {
-      this.idManager
-        .checkSignInStatus(this.info.portalUrl + '/sharing')
-        .then(async credential => {
-          this.portal.credential = credential;
-          resolve(true);
-        })
-        .catch(() => {
-          this.portal.credential = null;
-          resolve(false);
-        });
-    });
+  guestOnClick() {
+    if (this.isSignedIn) {
+      this.signOut();
+    } else if (this.closeLandingPage != null) {
+      this.closeLandingPage();
+    }
   }
 
-  watchCredential() {
-    this.portal.addHandles(
-      this.portal.watch('credential', credential => {
-        this.isSignedIn = credential != null;
-      }),
-    );
+  async checkSignInStatus(): Promise<boolean> {
+    try {
+      const credential = await this.idManager.checkSignInStatus(`${this.info.portalUrl}/sharing`);
+      this.portal.credential = credential;
+      return true;
+    } catch {
+      this.portal.credential = null;
+      return false;
+    }
   }
 
   setSignInLocalStorage() {

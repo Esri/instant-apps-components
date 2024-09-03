@@ -6,6 +6,7 @@ import { Element } from '@stencil/core';
 import { loadModules } from '../../utils/loadModules';
 import { getDefaultLanguage } from '../../utils/locale';
 import { getPortalItemResource, fetchResourceData } from '../../utils/languageSwitcher';
+import { LANGUAGE_DATA } from 'templates-common-library/structuralFunctionality/language-switcher/support/constants';
 
 @Component({
   tag: 'instant-apps-language-switcher',
@@ -156,7 +157,14 @@ export class InstantAppsLanguageSwitcher {
 
   renderTrigger(): HTMLCalciteActionElement {
     return (
-      <calcite-button ref={node => (this.trigger = node as HTMLCalciteButtonElement)} slot="trigger" icon-start={this.icon} icon-end="chevron-down" width="full" appearance="outline">
+      <calcite-button
+        ref={node => (this.trigger = node as HTMLCalciteButtonElement)}
+        slot="trigger"
+        icon-start={this.icon}
+        icon-end="chevron-down"
+        width="full"
+        appearance="outline"
+      >
         {this.getSelectedLanguageText(this.selectedLanguage as string)}
       </calcite-button>
     );
@@ -171,11 +179,7 @@ export class InstantAppsLanguageSwitcher {
     const selected = translatedLanguage === this.selectedLanguage;
 
     return (
-      <calcite-dropdown-item
-        key={translatedLanguage}
-        selected={selected}
-        onCalciteDropdownItemSelect={this.calciteDropdownItemSelectCallback(translatedLanguage)}
-      >
+      <calcite-dropdown-item key={translatedLanguage} selected={selected} onCalciteDropdownItemSelect={this.calciteDropdownItemSelectCallback(translatedLanguage)}>
         {text}
       </calcite-dropdown-item>
     );
@@ -237,12 +241,12 @@ export class InstantAppsLanguageSwitcher {
   }
 
   getSelectedLanguageText(translatedLanguage: any): string {
-    const { messages } = this;
-    const translatedLanguageNames = messages?.translatedLanguageNames;
-    const enLanguageNames = messages?.languages;
-    const translatedLanguageName = translatedLanguageNames?.[translatedLanguage];
-    const enLanguageName = enLanguageNames?.[translatedLanguage];
-    return `${translatedLanguageName} - ${enLanguageName}`;
+    const partialSupportLocales = Object.keys(LANGUAGE_DATA.partial);
+    const isPartial = partialSupportLocales.indexOf(translatedLanguage) !== -1;
+    const type = isPartial ? 'partial' : 'full';
+    const data = LANGUAGE_DATA[type];
+    const { language, translated } = data[translatedLanguage];
+    return `${language} - ${translated}`;
   }
 
   /**

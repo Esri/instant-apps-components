@@ -12,6 +12,11 @@
       height: 100%;
     }
 
+    calcite-navigation-user {
+      --calcite-color-foreground-2: rgba(0, 0, 0, 0.04);
+      --calcite-color-foreground-3: rgba(0, 0, 0, 0.04);
+    }
+
     .instant-apps-sign-in__sign-in-btn {
       margin: 10px;
     }
@@ -37,8 +42,11 @@
       -moz-appearance: none;
       -webkit-appearance: none;
       text-decoration-line: none;
-      transition: color var(--calcite-animation-timing) ease-in-out, background-color var(--calcite-animation-timing) ease-in-out,
-        box-shadow var(--calcite-animation-timing) ease-in-out, outline-color var(--calcite-internal-animation-timing-fast) ease-in-out;
+      transition:
+        color var(--calcite-animation-timing) ease-in-out,
+        background-color var(--calcite-animation-timing) ease-in-out,
+        box-shadow var(--calcite-animation-timing) ease-in-out,
+        outline-color var(--calcite-internal-animation-timing-fast) ease-in-out;
       border: none;
       border-radius: 50%;
       background: #000;
@@ -77,31 +85,23 @@
     }
   }
 
-  .instant-apps-sign-in__landing-page-btns {
-    display: flex;
-    justify-content: space-between;
-    margin-top: 40px;
+  .instant-apps-sign-in__entry-button {
+    --calcite-color-brand: var(--instant-apps-landing-page-entry-button-color);
+    --calcite-color-brand-hover: var(--instant-apps-landing-page-entry-button-color);
+    --calcite-color-brand-press: var(--instant-apps-landing-page-entry-button-color);
+  }
+
+  @media screen and (max-width: 767px) {
+    flex-direction: column;
+    align-items: center;
 
     calcite-button {
-      width: calc(50% - 5px);
-      --calcite-color-brand: var(--instant-apps-landing-page-entry-button-color);
-      --calcite-color-brand-hover: var(--instant-apps-landing-page-entry-button-color);
-      --calcite-color-brand-press: var(--instant-apps-landing-page-entry-button-color);
-    }
-
-    calcite-button:hover {
-      filter: contrast(0.8);
-    }
-
-    @media screen and (max-width: 767px) {
-      flex-direction: column;
       width: 100%;
-      align-items: center;
-      height: 76px;
+    }
 
-      calcite-button {
-        width: 100%;
-      }
+    .instant-apps-sign-in__entry-button-container {
+      display: flex;
+      flex-direction: column;
     }
   }
 }

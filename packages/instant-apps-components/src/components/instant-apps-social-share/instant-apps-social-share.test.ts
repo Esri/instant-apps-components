@@ -1,319 +1,251 @@
-import { expect, test, describe } from 'vitest';
-
+import { expect, test, describe, beforeEach } from 'vitest';
+import { waitForShadowRoot } from '../../utils/testUtils.js';
 import '../../../dist/components/instant-apps-social-share.js';
+import SocialShare_T9n from '../../assets/t9n/instant-apps-social-share/resources.json';
 
-describe('popover', () => {
-  const socialShare = document.createElement('instant-apps-social-share');
+describe('social share', async () => {
+  const shareParams = {
+    center: true,
+    level: true,
+    viewpoint: true,
+    selectedFeature: false,
+    hiddenLayers: true,
+  };
+  const { center, level, viewpoint, selectedFeature, hiddenLayers } = shareParams;
 
-  document.body.appendChild(socialShare);
-  new Promise(resolve => requestIdleCallback(resolve));
+  type cases = [string, HTMLInstantAppsSocialShareElement];
+  type allTests = cases[];
+  function createSocialShare(isInline : boolean) {
+        let socialShareElement = document.createElement('instant-apps-social-share');
+        if (isInline) socialShareElement.setAttribute('mode', 'inline');
+        return socialShareElement;
+ 
+  }
+  const testCases: allTests = [
+    [
+      'popover',
+    createSocialShare(false)
+    ],
+    [
+      'inline',
+      createSocialShare(true)
+    ],
+  ];
 
-  test('popover default', () => {
-    const element = document.querySelector('instant-apps-social-share');
-    expect(element).toBeTruthy();
-    expect(element?.mode).toBe('popover');
-  });
+  testCases.forEach(arr => {
+    let element;
+    let shadow;
+    const [elem, socialShare] = arr;
 
-  test('current URL window', () => {
-    const element = document.querySelector('instant-apps-social-share');
-    expect(element).toBeTruthy();
-    expect(element?.shareUrl).toBe(window.location.href);
-  });
 
-  test('autoUpdateShareUrl', () => {
-    const element = document.querySelector('instant-apps-social-share');
-    expect(element).toBeTruthy();
-    expect(element?.autoUpdateShareUrl).toBe(true);
-  });
+    const isInline = elem === 'inline';
+    describe(`${elem}`, async () => {
+      beforeEach(async () => {
+        document.body.append(socialShare);
+        await new Promise(resolve => requestIdleCallback(resolve));
+        element = document.querySelector('instant-apps-social-share');
+        shadow = await waitForShadowRoot(element);
+      });
+      test('default', () => {
+        expect(element).toBeTruthy();
+        expect(element.getAttribute('mode')).toBe(`${elem}`);
+      });
+      test('embed prop', async () => {
+        expect(element).toBeTruthy();
+        expect(element?.embed).toBe(false);
+        socialShare.embed = true;
+        document.body.append(socialShare);
+        await new Promise(resolve => requestIdleCallback(resolve));
 
-  test('shareText', () => {
-    const element = document.querySelector('instant-apps-social-share');
-    expect(element).toBeTruthy();
-    expect(element?.shareText).toBe('');
-    socialShare.shareText = 'This is the test shareText !';
-    expect(element?.shareText).toBe('This is the test shareText !');
-  });
-  test('embed prop', () => {
-    const element = document.querySelector('instant-apps-social-share');
-    expect(element).toBeTruthy();
-    expect(element?.embed).toBe(false);
-    socialShare.embed = true;
-    expect(element?.embed).toBe(true);
-  });
-  test('shareButtonColor', () => {
-    const element = document.querySelector('instant-apps-social-share');
-    expect(element).toBeTruthy();
-    expect(element?.shareButtonColor).toBe('neutral');
-    socialShare.shareButtonColor = 'inverse';
-    expect(element?.shareButtonColor).toBe('inverse');
-  });
+        expect(element?.embed).toBe(true);
+        expect(element.inlineCopyEmbedOpened).toBe(false);
+      });
+      describe.runIf(!isInline)('popover render', async () => {
+        test('check renderButton', async () => {
+          const button = shadow.getElementById("shareButton");
+          expect(button).toBeTruthy();
+        });
+        test('check popover', async () => {
+          const popover = shadow.querySelector(`calcite-popover[label='${SocialShare_T9n.share.label}']`);
+          expect(popover).toBeTruthy();
+        });
+        test('shareButtonColor', async () => {
+          expect(element).toBeTruthy();
+          expect(element?.shareButtonColor).toBe('neutral');
+          socialShare.shareButtonColor = 'inverse';
+          document.body.append(socialShare);
+          await new Promise(resolve => requestIdleCallback(resolve));
+          expect(element?.shareButtonColor).toBe('inverse');
+          const kind = shadow.getElementById("shareButton").getAttribute('kind');
+          expect(kind).toBe(socialShare.shareButtonColor);
+        });
 
-  test('shareButtonType', () => {
-    const element = document.querySelector('instant-apps-social-share');
-    expect(element).toBeTruthy();
-    expect(element?.shareButtonType).toBe('button');
-    socialShare.shareButtonType = 'action';
-    expect(element?.shareButtonType).toBe('action');
-  });
+        test('shareButtonType', async () => {
+          expect(element).toBeTruthy();
+          expect(element?.shareButtonType).toBe('button');
+          const button = shadow.getElementById("shareButton");
+          expect(button).toBeTruthy();
 
-  test('shareButtonScale', () => {
-    const element = document.querySelector('instant-apps-social-share');
-    expect(element).toBeTruthy();
-    expect(element?.shareButtonScale).toBe(undefined);
-    //should be defaulted to whatever scale is in the render logic
-    socialShare.shareButtonScale = 's';
-    expect(element?.shareButtonScale).toBe('s');
-  });
+          socialShare.shareButtonType = 'action';
+          document.body.append(socialShare);
+          await new Promise(resolve => requestIdleCallback(resolve));
+          const action = shadow.getElementById("shareButton");
+          expect(action).toBeTruthy();
+          expect(element?.shareButtonType).toBe('action');
+        });
 
-  test('iframeInnerText', () => {
-    const element = document.querySelector('instant-apps-social-share');
-    expect(element).toBeTruthy();
-    expect(element?.iframeInnerText).toBe('');
+        test('shareButtonScale', () => {
+          expect(element).toBeTruthy();
+          expect(element?.shareButtonScale).toBe(undefined);
+          socialShare.shareButtonScale = 's';
+          expect(element?.shareButtonScale).toBe('s');
+        });
+      });
+      describe.runIf(isInline)('inline render', () => {
+        test('check popover', async () => {
+          const popovers = shadow.querySelectorAll('calcite-popover');
+          expect(popovers.length).toBe(2);
+          let [copyToClipboard, copyEmbedToClipboard] = ['copyToClipboard', 'copyEmbedToClipboard'];
+          popovers.forEach(elem => {
+            let ref: string = elem.getAttribute('referenceElement');
+            if (ref === copyToClipboard && copyToClipboard) {
+              copyToClipboard = '';
+            } else if (ref === copyEmbedToClipboard && copyEmbedToClipboard) {
+              copyEmbedToClipboard = '';
+            } else {
+              expect(true).toBe(false);
+            }
+          });
+        });
+        test('check renderEmbedSuccess', async () => {
+          const popover = shadow.querySelectorAll('span');
+          let found = false;
+          popover.forEach(element => {
+            if (element.innerHTML === SocialShare_T9n.success.embed) {
+              found = true;
+              return;
+            }
+          });
+          expect(found).toBe(true);
+        });
+        test('iframeInnerText', async () => {
+          expect(element).toBeTruthy();
+          expect(element?.iframeInnerText).toBe('');
 
-    socialShare.iframeInnerText = 'This is the test for ifrmae inner text !@';
-    expect(element?.iframeInnerText).toBe('This is the test for ifrmae inner text !@');
-  });
+          socialShare.iframeInnerText = 'This is the test for ifrmae inner text !@';
+          socialShare.setAttribute('embed', 'true');
+          document.body.append(socialShare);
+          await new Promise(resolve => requestIdleCallback(resolve));
+          expect(element.mode).toBe('inline');
+          expect(element?.iframeInnerText).toBe('This is the test for ifrmae inner text !@');
+          const iframe = shadow.querySelector('textarea')!;
+          expect(iframe).toBeTruthy();
+          const iframeText = iframe.value;
+          const regex =
+            /<iframe src="http:\/\/localhost:4444\/__vitest_test__\/__test__\/.* width="400" height="600" frameborder="0" style="border:0" allowfullscreen>This is the test for ifrmae inner text !@<\/iframe>/gm;
+          const found = iframeText.match(regex);
+          expect(found).toBeTruthy();
+        });
+        test('displayTipText', () => {
+          expect(element).toBeTruthy();
+          expect(element?.displayTipText).toBe(true);
+          const renderTip = shadow.querySelector("calcite-icon[icon='lightbulb']");
+          expect(renderTip).toBeTruthy();
+        });
+      });
 
-  test('popoverButtonIconScale', () => {
-    const element = document.querySelector('instant-apps-social-share');
-    expect(element).toBeTruthy();
-    expect(element?.popoverButtonIconScale).toBe('m');
+      test('current URL window', () => {
+        expect(element).toBeTruthy();
+        expect(element?.shareUrl).toBe(window.location.href);
+      });
 
-    socialShare.popoverButtonIconScale = 's';
-    expect(element?.popoverButtonIconScale).toBe('s');
-  });
-  test('displayTipText', () => {
-    const element = document.querySelector('instant-apps-social-share');
-    expect(element).toBeTruthy();
-    expect(element?.displayTipText).toBe(true);
+      test('autoUpdateShareUrl', () => {
+        expect(element).toBeTruthy();
+        expect(element?.autoUpdateShareUrl).toBe(true);
+      });
 
-    socialShare.displayTipText = false;
-    expect(element?.displayTipText).toBe(false);
-  });
-  test('shortenShareUrl', () => {
-    const element = document.querySelector('instant-apps-social-share');
-    expect(element).toBeTruthy();
-    expect(element?.shortenShareUrl).toBe(true);
+      test('shareText', () => {
+        expect(element).toBeTruthy();
+        expect(element?.shareText).toBe('');
+        socialShare.shareText = 'This is the test shareText !';
+        expect(element?.shareText).toBe('This is the test shareText !');
+      });
 
-    socialShare.shortenShareUrl = false;
-    expect(element?.shortenShareUrl).toBe(false);
-  });
-  test('socialMedia', () => {
-    const element = document.querySelector('instant-apps-social-share');
-    expect(element).toBeTruthy();
-    expect(element?.socialMedia).toBe(true);
+      test('popoverButtonIconScale', () => {
+        expect(element).toBeTruthy();
+        expect(element?.popoverButtonIconScale).toBe('m');
 
-    socialShare.socialMedia = false;
-    expect(element?.socialMedia).toBe(false);
-  });
-  test('shareIconsLayout', () => {
-    const element = document.querySelector('instant-apps-social-share');
-    expect(element).toBeTruthy();
-    expect(element?.shareIconsLayout).toBe('vertical');
+        socialShare.popoverButtonIconScale = 's';
+        expect(element?.popoverButtonIconScale).toBe('s');
+      });
 
-    socialShare.shareIconsLayout = 'horizontal';
-    expect(element?.shareIconsLayout).toBe('horizontal');
-  });
-  test('scale', () => {
-    const element = document.querySelector('instant-apps-social-share');
-    expect(element).toBeTruthy();
-    expect(element?.scale).toBe('m');
+      test('shortenShareUrl', () => {
+        expect(element).toBeTruthy();
+        expect(element?.shortenShareUrl).toBe(true);
 
-    socialShare.scale = 'l';
-    expect(element?.scale).toBe('l');
-  });
-  test('successMessage', () => {
-    const element = document.querySelector('instant-apps-social-share');
-    expect(element).toBeTruthy();
-    expect(element?.successMessage).toBe('');
+        socialShare.shortenShareUrl = false;
+        expect(element?.shortenShareUrl).toBe(false);
+      });
+      test('socialMedia', () => {
+        expect(element).toBeTruthy();
+        expect(element?.socialMedia).toBe(true);
 
-    socialShare.successMessage = 'Your awsome map has been copied to clipboard';
-    expect(element?.successMessage).toBe('Your awsome map has been copied to clipboard');
-  });
+        socialShare.socialMedia = false;
+        expect(element?.socialMedia).toBe(false);
+      });
+      test('shareIconsLayout', () => {
+        expect(element).toBeTruthy();
+        expect(element?.shareIconsLayout).toBe('vertical');
 
-  test('defaultUrlParams', () => {
-    const element = document.querySelector('instant-apps-social-share');
-    expect(element).toBeTruthy();
-    expect(element?.defaultUrlParams).toBe(null);
-    const shareParams = {
-      center: true,
-      level: true,
-      viewpoint: true,
-      selectedFeature: false,
-      hiddenLayers: true,
-    };
+        socialShare.shareIconsLayout = 'horizontal';
+        expect(element?.shareIconsLayout).toBe('horizontal');
+      });
+      test('scale', () => {
+        expect(element).toBeTruthy();
+        expect(element?.scale).toBe('m');
 
-    socialShare.defaultUrlParams = shareParams;
+        socialShare.scale = 'l';
+        expect(element?.scale).toBe('l');
+      });
+      test('successMessage', () => {
+        expect(element).toBeTruthy();
+        expect(element?.successMessage).toBe('');
 
-    expect(socialShare.defaultUrlParams).toBe(shareParams);
+        socialShare.successMessage = 'Your awsome map has been copied to clipboard';
+        expect(element?.successMessage).toBe('Your awsome map has been copied to clipboard');
+      });
 
-    expect(element?.defaultUrlParams).toHaveProperty('center', shareParams['center']);
-    expect(element?.defaultUrlParams).toHaveProperty('level', shareParams['level']);
-    expect(element?.defaultUrlParams).toHaveProperty('viewpoint', shareParams['viewpoint']);
-    expect(element?.defaultUrlParams).toHaveProperty('selectedFeature', shareParams['selectedFeature']);
-    expect(element?.defaultUrlParams).toHaveProperty('hiddenLayers', shareParams['hiddenLayers']);
-  });
+      test('defaultUrlParams', () => {
+        expect(element).toBeTruthy();
+        expect(element?.defaultUrlParams).toBe(null);
+        socialShare.defaultUrlParams = shareParams;
 
-  test('popoverPositioning', () => {
-    const element = document.querySelector('instant-apps-social-share');
-    expect(element).toBeTruthy();
-    expect(element?.popoverPositioning).toBe('absolute');
+        expect(socialShare.defaultUrlParams).toBe(shareParams);
 
-    socialShare.popoverPositioning = 'fixed';
-    expect(element?.popoverPositioning).toBe('fixed');
-  });
+        expect(element?.defaultUrlParams).toHaveProperty('center', center);
+        expect(element?.defaultUrlParams).toHaveProperty('level', level);
+        expect(element?.defaultUrlParams).toHaveProperty('viewpoint', viewpoint);
+        expect(element?.defaultUrlParams).toHaveProperty('selectedFeature', selectedFeature);
+        expect(element?.defaultUrlParams).toHaveProperty('hiddenLayers', hiddenLayers);
+      });
+      describe.skipIf(isInline)('CSS popover', async () => {
+        test('popoverPositioning', () => {
+          expect(element).toBeTruthy();
+          expect(element?.popoverPositioning).toBe('absolute');
 
-  test('removePopoverOffset', () => {
-    const element = document.querySelector('instant-apps-social-share');
-    expect(element).toBeTruthy();
-    expect(element?.removePopoverOffset).toBe(false);
+          socialShare.popoverPositioning = 'fixed';
+          expect(element?.popoverPositioning).toBe('fixed');
+        });
 
-    socialShare.removePopoverOffset = true;
-    expect(element?.removePopoverOffset).toBe(true);
-    socialShare.remove();
-  });
-});
+        test('removePopoverOffset', () => {
+          expect(element).toBeTruthy();
+          expect(element?.removePopoverOffset).toBe(false);
 
-describe('inline', () => {
-  const socialShare = document.createElement('instant-apps-social-share');
-  socialShare.setAttribute('mode', 'inline');
-  document.body.appendChild(socialShare);
-  new Promise(resolve => requestIdleCallback(resolve));
-
-  test('defaulting to popover', () => {
-    const element = document.querySelector('instant-apps-social-share');
-    expect(element).toBeTruthy();
-    expect(element?.mode).toBe('inline');
-  });
-
-  test('URL window', () => {
-    const element = document.querySelector('instant-apps-social-share');
-    expect(element).toBeTruthy();
-    expect(element?.shareUrl).toBe(window.location.href);
-  });
-  //autoUpdateShareUrl
-  test('autoUpdateShareUrl defualt', () => {
-    const element = document.querySelector('instant-apps-social-share');
-    expect(element).toBeTruthy();
-    expect(element?.autoUpdateShareUrl).toBe(true);
-  });
-  //shareText
-  test(' shareText', () => {
-    const element = document.querySelector('instant-apps-social-share');
-    expect(element).toBeTruthy();
-    expect(element?.shareText).toBe('');
-    socialShare.shareText = 'This is the test shareText !';
-    expect(element?.shareText).toBe('This is the test shareText !');
-  });
-  test('embed prop', () => {
-    const element = document.querySelector('instant-apps-social-share');
-    expect(element).toBeTruthy();
-    expect(element?.embed).toBe(false);
-    socialShare.embed = true;
-    expect(element?.embed).toBe(true);
-  });
-  test('shareButtonColor', () => {
-    const element = document.querySelector('instant-apps-social-share');
-    expect(element).toBeTruthy();
-    expect(element?.shareButtonColor).toBe('neutral');
-    socialShare.shareButtonColor = 'inverse';
-    expect(element?.shareButtonColor).toBe('inverse');
-  });
-
-  test('shareButtonType', () => {
-    const element = document.querySelector('instant-apps-social-share');
-    expect(element).toBeTruthy();
-    expect(element?.shareButtonType).toBe('button');
-    socialShare.shareButtonType = 'action';
-    expect(element?.shareButtonType).toBe('action');
-  });
-
-  test('shareButtonType', () => {
-    const element = document.querySelector('instant-apps-social-share');
-    expect(element).toBeTruthy();
-    expect(element?.shareButtonScale).toBe(undefined);
-    //should be defaulted to whatever scale is in the render logic
-    socialShare.shareButtonScale = 's';
-    expect(element?.shareButtonScale).toBe('s');
-  });
-
-  test('shareButtonType', () => {
-    const element = document.querySelector('instant-apps-social-share');
-    expect(element).toBeTruthy();
-    expect(element?.iframeInnerText).toBe('');
-
-    socialShare.iframeInnerText = 'This is the test for ifrmae inner text !@';
-    expect(element?.iframeInnerText).toBe('This is the test for ifrmae inner text !@');
-  });
-
-  test('displayTipText', () => {
-    const element = document.querySelector('instant-apps-social-share');
-    expect(element).toBeTruthy();
-    expect(element?.displayTipText).toBe(true);
-
-    socialShare.displayTipText = false;
-    expect(element?.displayTipText).toBe(false);
-  });
-  test('shortenShareUrl', () => {
-    const element = document.querySelector('instant-apps-social-share');
-    expect(element).toBeTruthy();
-    expect(element?.shortenShareUrl).toBe(true);
-
-    socialShare.shortenShareUrl = false;
-    expect(element?.shortenShareUrl).toBe(false);
-  });
-  test('socialMedia', () => {
-    const element = document.querySelector('instant-apps-social-share');
-    expect(element).toBeTruthy();
-    expect(element?.socialMedia).toBe(true);
-
-    socialShare.socialMedia = false;
-    expect(element?.socialMedia).toBe(false);
-  });
-  test('shareIconsLayout', () => {
-    const element = document.querySelector('instant-apps-social-share');
-    expect(element).toBeTruthy();
-    expect(element?.shareIconsLayout).toBe('vertical');
-
-    socialShare.shareIconsLayout = 'horizontal';
-    expect(element?.shareIconsLayout).toBe('horizontal');
-  });
-  test('scale', () => {
-    const element = document.querySelector('instant-apps-social-share');
-    expect(element).toBeTruthy();
-    expect(element?.scale).toBe('m');
-
-    socialShare.scale = 'l';
-    expect(element?.scale).toBe('l');
-  });
-  test('successMessage', () => {
-    const element = document.querySelector('instant-apps-social-share');
-    expect(element).toBeTruthy();
-    expect(element?.successMessage).toBe('');
-
-    socialShare.successMessage = 'Your awsome map has been copied to clipboard';
-    expect(element?.successMessage).toBe('Your awsome map has been copied to clipboard');
-  });
-
-  test('defaultUrlParams', () => {
-    const element = document.querySelector('instant-apps-social-share');
-    expect(element).toBeTruthy();
-    expect(element?.defaultUrlParams).toBe(null);
-    const shareParams = {
-      center: true,
-      level: true,
-      viewpoint: true,
-      selectedFeature: false,
-      hiddenLayers: true,
-    };
-    socialShare.defaultUrlParams = shareParams;
-
-    expect(element?.defaultUrlParams).toBe(shareParams);
-
-    expect(element?.defaultUrlParams).toHaveProperty('center', shareParams['center']);
-    expect(element?.defaultUrlParams).toHaveProperty('level', shareParams['level']);
-    expect(element?.defaultUrlParams).toHaveProperty('viewpoint', shareParams['viewpoint']);
-    expect(element?.defaultUrlParams).toHaveProperty('selectedFeature', shareParams['selectedFeature']);
-    expect(element?.defaultUrlParams).toHaveProperty('hiddenLayers', shareParams['hiddenLayers']);
+          socialShare.removePopoverOffset = true;
+          expect(element?.removePopoverOffset).toBe(true);
+          socialShare.remove();
+        });
+      });
+    });
   });
 });
