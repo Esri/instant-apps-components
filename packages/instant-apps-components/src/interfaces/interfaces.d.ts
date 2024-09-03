@@ -191,6 +191,12 @@ export interface FilterParam {
   range?: { min: string | number | undefined; max: string | number | undefined };
 }
 
+export interface FilterInitState {
+  initDefExpressions: GenericStringObject;
+  initMapImageExpressions: { [key: string]: GenericStringObject };
+  initPointCloudFilters: { [key: string]: PointCloudFilters };
+}
+
 export interface ExtentSelector {
   constraints: __esri.MapViewConstraints;
   mapRotation: number;
