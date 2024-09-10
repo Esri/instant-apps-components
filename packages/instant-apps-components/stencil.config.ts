@@ -18,7 +18,7 @@ export const config: Config = {
     { type: 'dist-custom-elements', customElementsExportBehavior: 'auto-define-custom-elements' },
     {
       type: 'www',
-      copy: [{ src: '**/*.html' }, { ...t9nAssetsObj, dest: 'assets/t9n' }],
+      copy: [{ src: '**/*.html' }, { ...t9nAssetsObj, dest: 'assets/t9n' }, { src: 'assets', dest: 'build/assets' }],
       serviceWorker: null, // disable service workers
     },
     reactOutputTarget({
