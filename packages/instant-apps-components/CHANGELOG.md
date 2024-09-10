@@ -5,6 +5,18 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## v1.0.0-beta.253
+
+### General
+
+- Update locale util to use `getAssetPath`
+
+## v1.0.0-beta.252
+
+### instant-apps-language-translator-item
+
+- fix: change fieldName to uid for textEditor onChange
+
 ## v1.0.0-beta.251
 
 ### instant-apps-filter-list
