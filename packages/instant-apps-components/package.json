@@ -40,10 +40,10 @@
     "arcgis-js-api": "^4.29.0-next.20240118",
     "esri-loader": "^3.7.0",
     "maquette": "^3.5.3",
-    "templates-common-library": "0.0.536-esm"
+    "templates-common-library": "0.0.548-esm"
   },
   "devDependencies": {
-    "@arcgis/core": "^4.30.9",
+    "@arcgis/core": ">=4.31.0-next.20240624 <4.32",
     "@babel/core": "7.16.5",
     "@playwright/test": "^1.45.3",
     "@stencil/sass": "^3.0.7",

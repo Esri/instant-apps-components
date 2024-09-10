@@ -101,5 +101,8 @@
   "packageManager": "npm@8.19.4",
   "volta": {
     "node": "16.20.0"
+  },
+  "dependencies": {
+    "vitest": "^2.0.5"
   }
 }
