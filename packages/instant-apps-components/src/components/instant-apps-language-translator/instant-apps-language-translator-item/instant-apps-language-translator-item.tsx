@@ -445,9 +445,11 @@ export class InstantAppsLanguageTranslatorItem {
     store.set('saving', true);
     try {
       const value = e.detail;
+      const node = e.target as HTMLInstantAppsCkeditorWrapperElement;
+      const uid = node.id;
       const uiDataItem = this.getUIDataItem() as LocaleSettingItem;
       uiDataItem.userLocaleData.value = value;
-      await this.userLocaleInputOnChangeCallback(this.fieldName, value);
+      await this.userLocaleInputOnChangeCallback(uid, value);
       store.set('saving', false);
     } catch {
       store.set('saving', false);
