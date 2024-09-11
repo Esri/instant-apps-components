@@ -78,7 +78,7 @@ class InstantAppsTimeFilterViewModel {
     });
   }
 
-  generateTimeInfoItem(layerView: __esri.LayerView, { increments, rangeStart, rangeEnd }: ITimeInfoConfigItem): ITimeInfoItem {
+  generateTimeInfoItem(layerView: __esri.LayerView, { increments, rangeStart, rangeEnd, timeIntervalValue }: ITimeInfoConfigItem): ITimeInfoItem {
     const layer = layerView?.layer as __esri.FeatureLayer;
     const layerFTE = layer?.timeInfo?.fullTimeExtent;
 
@@ -86,6 +86,7 @@ class InstantAppsTimeFilterViewModel {
     return {
       layerView: layerView,
       unit: increments as ITimeItemUnit,
+      timeIntervalValue: timeIntervalValue ?? 1,
       rangeStart: new Date(rangeStart),
       rangeEnd: new Date(rangeEnd),
       timeExtent,
@@ -114,7 +115,7 @@ class InstantAppsTimeFilterViewModel {
   }
 
   getTimeSliderConfig(timeSliderRef: HTMLDivElement) {
-    const [{ timeExtent, rangeStart, rangeEnd, unit }] = state.timeInfoItems;
+    const [{ timeExtent, rangeStart, rangeEnd, unit, timeIntervalValue }] = state.timeInfoItems;
     const { TimeExtent, TimeInterval } = this;
     const config = {
       container: timeSliderRef,
@@ -127,7 +128,7 @@ class InstantAppsTimeFilterViewModel {
       stops: {
         interval: new TimeInterval({
           unit,
-          value: 1,
+          value: timeIntervalValue,
         }),
       },
       view: state.view?.type === '3d' ? state.view : null,

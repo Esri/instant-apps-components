@@ -9,6 +9,7 @@ export interface ITimeInfoItem {
   rangeEnd: Date;
   timeExtent: __esri.TimeExtent | null;
   previousTimeExtent: __esri.TimeExtent | null;
+  timeIntervalValue: number;
 }
 
 export interface ITimeInfoConfigItem {
@@ -16,9 +17,9 @@ export interface ITimeInfoConfigItem {
   increments: string;
   max: string;
   min: string;
-
   rangeEnd: Date;
   rangeStart: Date;
+  timeIntervalValue?: number;
 }
 
 export interface State {
