@@ -1,0 +1,75 @@
+<!-- /*
+*   Copyright (c) 2024 Esri
+*   All rights reserved under the copyright laws of the United States and applicable international laws, treaties, and conventions.
+*   This material is licensed for use under the Esri Master License Agreement (MLA), and is bound by the terms of that agreement.
+*   You may redistribute and use this code without modification, provided you adhere to the terms of the MLA and include this copyright notice.
+*   See use restrictions at http://www.esri.com/legal/pdfs/mla_e204_e300/english
+*/ -->
+
+<!DOCTYPE html>
+<html dir="ltr" lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=5.0" />
+    <title>ArcGIS Instant Apps Components</title>
+
+    <link rel="stylesheet" href="https://js.arcgis.com/4.30/esri/themes/light/main.css" />
+    <script src="https://js.arcgis.com/4.30/"></script>
+    <script type="module" src="https://js.arcgis.com/calcite-components/2.12.2/calcite.esm.js"></script>
+    <link rel="stylesheet" type="text/css" href="https://js.arcgis.com/calcite-components/2.12.2/calcite.css" />
+    <script type="module" src="/build/instant-apps-components.esm.js"></script>
+    <script nomodule src="/build/instant-apps-components.js"></script>
+
+    <style>
+      html,
+      body,
+      #viewDiv {
+        box-sizing: border-box;
+        width: 100%;
+        height: 100%;
+        margin: 0;
+        padding: 0;
+      }
+    </style>
+  </head>
+
+  <body>
+    <calcite-shell class="calcite-mode-light">
+      <div id="viewDiv"></div>
+    </calcite-shell>
+
+    <script>
+      require(['esri/WebMap', 'esri/widgets/Expand', 'esri/views/MapView', 'esri/config'], (WebMap, Expand, MapView, esriConfig) => {
+        esriConfig.portalUrl = 'https://nw-brews.mapsdevext.arcgis.com';
+
+        const map = new WebMap({
+          portalItem: {
+            id: '8891ee1d2e0e428bb96c58b8ecf8c408',
+          },
+        });
+
+        const view = new MapView({
+          map,
+          container: 'viewDiv'
+        });
+
+        // Create the App Guide
+        const appGuide = document.createElement('instant-apps-app-guide');
+        // appGuide.classList.add('calcite-mode-dark');
+
+        // Create the App Guide Expander
+        const appGuideExpand = new Expand({
+          view,
+          group: 'top-right',
+          mode: 'floating',
+          expandIcon: 'lightbulb',
+          expanded: true,
+          content: appGuide
+        });
+
+        // Add the App Guide to the view
+        view.ui.add(appGuideExpand, 'top-right');
+      });
+    </script>
+  </body>
+</html>
