@@ -78,6 +78,12 @@ export class InstantAppsSignIn {
   @Prop()
   closeLandingPage: Function;
 
+  /**
+   * Add items to the sign in dropdown.
+   */
+  @Prop()
+  signInDropdownItems: { label: string; onClick: Function }[];
+
   @State()
   ready = false;
 
@@ -133,6 +139,7 @@ export class InstantAppsSignIn {
           </button>
         )}
         <calcite-dropdown-group selection-mode="none">
+          {this.signInDropdownItems?.map(item => <calcite-dropdown-item onClick={item.onClick}>{item.label}</calcite-dropdown-item>)}
           <calcite-dropdown-item onClick={this.signOut.bind(this)}>{this.messages?.signOut}</calcite-dropdown-item>
         </calcite-dropdown-group>
       </calcite-dropdown>
