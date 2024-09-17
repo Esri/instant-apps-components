@@ -12,6 +12,10 @@ const CSS = {
   entryButton: 'instant-apps-sign-in__entry-button',
 };
 
+/**
+ * @slot sign-in-dropdown-top - A slot for adding an element to the top of the sign in dropdown.
+ */
+
 @Component({
   tag: 'instant-apps-sign-in',
   styleUrl: 'instant-apps-sign-in.scss',
@@ -138,6 +142,7 @@ export class InstantAppsSignIn {
             <calcite-avatar thumbnail={this.user?.thumbnailUrl} full-name={this.user?.fullName} username={this.user?.username}></calcite-avatar>
           </button>
         )}
+        <slot name="sign-in-dropdown-top"></slot>
         <calcite-dropdown-group selection-mode="none">
           {this.signInDropdownItems?.map(item => <calcite-dropdown-item onClick={item.onClick}>{item.label}</calcite-dropdown-item>)}
           <calcite-dropdown-item onClick={this.signOut.bind(this)}>{this.messages?.signOut}</calcite-dropdown-item>
