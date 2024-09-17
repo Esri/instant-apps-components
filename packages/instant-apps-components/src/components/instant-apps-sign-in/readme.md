@@ -21,6 +21,13 @@
 | `type`                    | `type`             | Pick the look of the sign in/out component. `navigation` will put sign out in calcite-navigation-user. `avatar` will put sign out in calcite-avatar. `landingPage` is used for instant-apps-landing-page. | `"avatar" \| "landingPage" \| "navigation"` | `'navigation'` |
 
 
+## Slots
+
+| Slot                     | Description                                                      |
+| ------------------------ | ---------------------------------------------------------------- |
+| `"sign-in-dropdown-top"` | A slot for adding an element to the top of the sign in dropdown. |
+
+
 ## Dependencies
 
 ### Used by
