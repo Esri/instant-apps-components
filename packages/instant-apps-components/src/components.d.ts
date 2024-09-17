@@ -24,6 +24,8 @@ export { LogicalPlacement } from "@esri/calcite-components/dist/types/utils/floa
 export { ScoreboardItem, ScoreboardMode, ScoreboardPosition } from "./components/instant-apps-scoreboard/types/interfaces";
 export { ITimeInfoConfigItem } from "./components/instant-apps-time-filter/TimeFilter/interfaces/interfaces";
 export namespace Components {
+    interface InstantAppsAppGuide {
+    }
     interface InstantAppsCkeditorWrapper {
         "config": EditorConfig;
         /**
@@ -960,6 +962,12 @@ export interface InstantAppsSplashCustomEvent<T> extends CustomEvent<T> {
     target: HTMLInstantAppsSplashElement;
 }
 declare global {
+    interface HTMLInstantAppsAppGuideElement extends Components.InstantAppsAppGuide, HTMLStencilElement {
+    }
+    var HTMLInstantAppsAppGuideElement: {
+        prototype: HTMLInstantAppsAppGuideElement;
+        new (): HTMLInstantAppsAppGuideElement;
+    };
     interface HTMLInstantAppsCkeditorWrapperElementEventMap {
         "isFocused": { fieldName: string; isFocused: boolean };
         "dataChanged": string;
@@ -1338,6 +1346,7 @@ declare global {
         new (): HTMLInstantAppsTimeFilterElement;
     };
     interface HTMLElementTagNameMap {
+        "instant-apps-app-guide": HTMLInstantAppsAppGuideElement;
         "instant-apps-ckeditor-wrapper": HTMLInstantAppsCkeditorWrapperElement;
         "instant-apps-control-panel": HTMLInstantAppsControlPanelElement;
         "instant-apps-create": HTMLInstantAppsCreateElement;
@@ -1373,6 +1382,8 @@ declare global {
     }
 }
 declare namespace LocalJSX {
+    interface InstantAppsAppGuide {
+    }
     interface InstantAppsCkeditorWrapper {
         "config"?: EditorConfig;
         /**
@@ -2280,6 +2291,7 @@ declare namespace LocalJSX {
         "view"?: __esri.MapView | __esri.SceneView;
     }
     interface IntrinsicElements {
+        "instant-apps-app-guide": InstantAppsAppGuide;
         "instant-apps-ckeditor-wrapper": InstantAppsCkeditorWrapper;
         "instant-apps-control-panel": InstantAppsControlPanel;
         "instant-apps-create": InstantAppsCreate;
@@ -2318,6 +2330,7 @@ export { LocalJSX as JSX };
 declare module "@stencil/core" {
     export namespace JSX {
         interface IntrinsicElements {
+            "instant-apps-app-guide": LocalJSX.InstantAppsAppGuide & JSXBase.HTMLAttributes<HTMLInstantAppsAppGuideElement>;
             "instant-apps-ckeditor-wrapper": LocalJSX.InstantAppsCkeditorWrapper & JSXBase.HTMLAttributes<HTMLInstantAppsCkeditorWrapperElement>;
             "instant-apps-control-panel": LocalJSX.InstantAppsControlPanel & JSXBase.HTMLAttributes<HTMLInstantAppsControlPanelElement>;
             "instant-apps-create": LocalJSX.InstantAppsCreate & JSXBase.HTMLAttributes<HTMLInstantAppsCreateElement>;
