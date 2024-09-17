@@ -749,6 +749,10 @@ export namespace Components {
          */
         "portal": IPortal;
         /**
+          * Add items to the sign in dropdown.
+         */
+        "signInDropdownItems": { label: string; onClick: Function }[];
+        /**
           * Landing page subtitle text.
          */
         "subtitleText": string;
@@ -2129,6 +2133,10 @@ declare namespace LocalJSX {
           * The apps Portal, used to setup sign in capabilities.
          */
         "portal": IPortal;
+        /**
+          * Add items to the sign in dropdown.
+         */
+        "signInDropdownItems"?: { label: string; onClick: Function }[];
         /**
           * Landing page subtitle text.
          */
