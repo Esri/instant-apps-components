@@ -21,7 +21,7 @@
     "dist/"
   ],
   "devDependencies": {
-    "@esri/calcite-components": "2.11.1",
+    "@esri/calcite-components": "2.12.1",
     "arcgis-js-api": "^4.29.0-next.20240118",
     "@types/node": "~15.12.1",
     "@types/react": "^16.7.6",
