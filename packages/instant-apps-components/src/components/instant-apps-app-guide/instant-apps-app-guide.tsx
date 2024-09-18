@@ -56,22 +56,4 @@ export class InstantAppsAppGuide {
       </Host>
     )
   }
-
-  connectedCallback() { }
-
-  disconnectedCallback() { }
-
-  comopnentWillLoad() { }
-
-  componentDidLoad() { }
-
-  componentWillRender() { }
-
-  componentDidRender() { }
-
-  componentShouldUpdate() { }
-
-  componentWillUpdate() { }
-
-  componentDidUpdate() { }
 }

@@ -1,11 +1,14 @@
 :host {
-  width: 300px;
-  height: 400px;
+  --instant-apps-app-guide-width: 300px;
+  --instant-apps-app-guide-height: 400px;
+
+  width: var(--instant-apps-app-guide-width);
+  height: var(--instant-apps-app-guide-height);
   display: block;
 
   calcite-panel {
-    max-width: 300px;
-    max-height: 400px;
+    max-width: var(--instant-apps-app-guide-width);
+    max-height: var(--instant-apps-app-guide-height);
     display: flex;
   }
 
@@ -28,6 +31,7 @@
   }
 
   calcite-carousel-item div {
+    padding-block-start: 0.5rem;
     padding-inline: 0.5rem;
     flex-shrink: 1;
     flex-grow: 0;
