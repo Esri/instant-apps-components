@@ -212,8 +212,7 @@ export function handlePredominanceExpression(elementInfo: any, featureLayerView:
       if (elementInfo.value === field) {
         return;
       }
-      const sqlQuery = `(${elementInfo.value} > ${field} OR (${field} IS NULL AND ${elementInfo.value} <> 0 AND ${elementInfo.value} IS NOT NULL))`;
-
+      const sqlQuery = `(${elementInfo.value} > ${field} OR (${field} IS NULL AND ${elementInfo.value} IS NOT NULL AND (${elementInfo.value} > 0 AND ${elementInfo.value} < 0)))`;
       expressionArr.push(sqlQuery);
     });
     return expressionArr.join(' AND ');
