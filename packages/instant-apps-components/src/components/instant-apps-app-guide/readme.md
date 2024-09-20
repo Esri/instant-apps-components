@@ -5,6 +5,14 @@
 <!-- Auto Generated Below -->
 
 
+## Properties
+
+| Property     | Attribute     | Description | Type             | Default     |
+| ------------ | ------------- | ----------- | ---------------- | ----------- |
+| `data`       | --            |             | `AppGuidePage[]` | `undefined` |
+| `withHeader` | `with-header` |             | `boolean`        | `undefined` |
+
+
 ----------------------------------------------
 
 ## License
