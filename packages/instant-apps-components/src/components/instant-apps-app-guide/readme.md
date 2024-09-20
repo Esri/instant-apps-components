@@ -7,10 +7,10 @@
 
 ## Properties
 
-| Property     | Attribute     | Description | Type             | Default     |
-| ------------ | ------------- | ----------- | ---------------- | ----------- |
-| `data`       | --            |             | `AppGuidePage[]` | `undefined` |
-| `withHeader` | `with-header` |             | `boolean`        | `undefined` |
+| Property | Attribute | Description | Type             | Default     |
+| -------- | --------- | ----------- | ---------------- | ----------- |
+| `data`   | --        |             | `AppGuidePage[]` | `undefined` |
+| `header` | `header`  |             | `boolean`        | `undefined` |
 
 
 ----------------------------------------------

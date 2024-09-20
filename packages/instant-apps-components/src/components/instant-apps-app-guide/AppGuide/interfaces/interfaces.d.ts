@@ -1,7 +1,7 @@
 export interface AppGuidePage {
   title: string;
   content: string[];
-  renderContentAs: AppGuideRenderType;
+  type: AppGuideRenderType;
 }
 
 export type AppGuideRenderType = 'paragraphs' | 'list';

@@ -4,6 +4,7 @@ import AppGuideViewModel from './AppGuide/AppGuideViewModel';
 import { AppGuidePage, AppGuideRenderType } from './AppGuide/interfaces/interfaces';
 import AppGuide_T9n from '../../assets/t9n/instant-apps-app-guide/resources.json';
 import { getMessages } from '../../utils/locale';
+import { ArrowType } from '@esri/calcite-components';
 
 @Component({
   tag: 'instant-apps-app-guide',
@@ -15,7 +16,7 @@ export class InstantAppsAppGuide {
   el: HTMLInstantAppsAppGuideElement;
 
   @Prop()
-  withHeader: boolean;
+  header: boolean;
 
   @Prop()
   data: AppGuidePage[];
@@ -45,7 +46,7 @@ export class InstantAppsAppGuide {
     )
   }
 
-  private _getArrowType() {
+  private _getArrowType(): ArrowType {
     return this.viewModel.pages.length > 2 ? 'inline' : 'none';
   }
 
@@ -54,36 +55,36 @@ export class InstantAppsAppGuide {
   }
 
   private _renderAppGuideHeader() {
-    return !!this.withHeader && this.messages?.headerText ?
+    return !!this.header && this.messages?.headerText ?
       (<span slot="header-content">{this.messages?.headerText} <calcite-icon icon="lightbulb" scale="s"></calcite-icon></span>) :
       null;
   }
 
   private _renderAppGuidePages(pages: AppGuidePage[]) {
     return pages.map(pageData => {
-      const { title, content, renderContentAs } = pageData;
+      const { title, content, type } = pageData;
       return (
         <calcite-carousel-item>
           <div>
-            <b class="content-heading">{title}</b>
-            { this._renderContentItems(content, renderContentAs) }
+            <span class="content-heading">{title}</span>
+            { this._renderContentItems(content, type) }
           </div>
         </calcite-carousel-item>
       );
     });
   }
 
-  private _renderContentItems(content: string[], renderAs: AppGuideRenderType) {
-    switch(renderAs) {
+  private _renderContentItems(content: string[], type: AppGuideRenderType) {
+    switch(type) {
       case 'list':
         return (
           <ol>
-            {content.map(contentItem => (<li>{contentItem}</li>))}
+            {content.map((contentItem, index) => (<li key={`content-list-item-${index}`}>{contentItem}</li>))}
           </ol>
         );
       case 'paragraphs':
       default:
-        return content.map(contentItem => (<p>{contentItem}</p>));
+        return content.map((contentItem, index) => (<p key={`content-paragraph-${index}`}>{contentItem}</p>));
     }
   }
 }

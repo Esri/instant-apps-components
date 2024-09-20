@@ -59,7 +59,7 @@
         with higher quality data sources returning extents closer to the feature obtained from the search.`,
         'Search widget results are typically sorted according to their relevance to the search and their relative importance.'
       ],
-      renderContentAs: 'paragraphs'
+      type: 'paragraphs'
     };
 
     const compassTool = {
@@ -71,7 +71,7 @@
         reference is Web Mercator or WGS84, the icon will be a compass needle. For all other spatial references, 
         the icon will be an arrow.`
       ],
-      renderContentAs: 'paragraphs'
+      type: 'paragraphs'
     };
 
     // Create the app guide component and add it to the page with the content
@@ -79,7 +79,7 @@
     const appGuide = document.createElement("instant-apps-app-guide");
 
     appGuide.data = [compassTool, searchTool];
-    appGuide.withHeader = true;
+    appGuide.header = true;
     appGuidePlacement.appendChild(appGuide);
   </script>
 </body>

@@ -28,7 +28,7 @@ export { ITimeInfoConfigItem } from "./components/instant-apps-time-filter/TimeF
 export namespace Components {
     interface InstantAppsAppGuide {
         "data": AppGuidePage[];
-        "withHeader": boolean;
+        "header": boolean;
     }
     interface InstantAppsCkeditorWrapper {
         "config": EditorConfig;
@@ -1388,7 +1388,7 @@ declare global {
 declare namespace LocalJSX {
     interface InstantAppsAppGuide {
         "data"?: AppGuidePage[];
-        "withHeader"?: boolean;
+        "header"?: boolean;
     }
     interface InstantAppsCkeditorWrapper {
         "config"?: EditorConfig;
