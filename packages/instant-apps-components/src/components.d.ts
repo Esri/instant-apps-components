@@ -5,6 +5,7 @@
  * It contains typing information for all components that exist in this project.
  */
 import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
+import { AppGuidePage } from "./components/instant-apps-app-guide/AppGuide/interfaces/interfaces";
 import { EditorConfig } from "@ckeditor/ckeditor5-core/src/editor/editorconfig";
 import { ActiveTool, ControlPanelComponent, CreateOption, ExportOutput, ExportView, ExtentSelector, FilterInitState, FilterMode, FilterParam, IMeasureConfiguration, InstantAppsPopoverMessageOverrides, IPortal, LayerExpression, PopoverPlacement } from "./interfaces/interfaces";
 import { PredefinedOptions } from "./components/instant-apps-create/instant-apps-create";
@@ -14,6 +15,7 @@ import { InstantAppsPopovers } from "./components/instant-apps-popovers/instant-
 import { LogicalPlacement } from "@esri/calcite-components/dist/types/utils/floating-ui";
 import { ScoreboardItem, ScoreboardMode, ScoreboardPosition } from "./components/instant-apps-scoreboard/types/interfaces";
 import { ITimeInfoConfigItem } from "./components/instant-apps-time-filter/TimeFilter/interfaces/interfaces";
+export { AppGuidePage } from "./components/instant-apps-app-guide/AppGuide/interfaces/interfaces";
 export { EditorConfig } from "@ckeditor/ckeditor5-core/src/editor/editorconfig";
 export { ActiveTool, ControlPanelComponent, CreateOption, ExportOutput, ExportView, ExtentSelector, FilterInitState, FilterMode, FilterParam, IMeasureConfiguration, InstantAppsPopoverMessageOverrides, IPortal, LayerExpression, PopoverPlacement } from "./interfaces/interfaces";
 export { PredefinedOptions } from "./components/instant-apps-create/instant-apps-create";
@@ -25,6 +27,8 @@ export { ScoreboardItem, ScoreboardMode, ScoreboardPosition } from "./components
 export { ITimeInfoConfigItem } from "./components/instant-apps-time-filter/TimeFilter/interfaces/interfaces";
 export namespace Components {
     interface InstantAppsAppGuide {
+        "data": AppGuidePage[];
+        "header": boolean;
     }
     interface InstantAppsCkeditorWrapper {
         "config": EditorConfig;
@@ -1383,6 +1387,8 @@ declare global {
 }
 declare namespace LocalJSX {
     interface InstantAppsAppGuide {
+        "data"?: AppGuidePage[];
+        "header"?: boolean;
     }
     interface InstantAppsCkeditorWrapper {
         "config"?: EditorConfig;

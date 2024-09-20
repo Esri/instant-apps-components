@@ -1,3 +1,53 @@
 :host {
+  --instant-apps-app-guide-width: 300px;
+  --instant-apps-app-guide-height: 400px;
+
+  width: var(--instant-apps-app-guide-width);
+  height: var(--instant-apps-app-guide-height);
   display: block;
+
+  calcite-panel {
+    max-width: var(--instant-apps-app-guide-width);
+    max-height: var(--instant-apps-app-guide-height);
+    display: flex;
+  }
+
+  calcite-carousel {
+    flex: 1;
+    overflow: scroll;
+    height: fit-content;
+    background-color: var(--calcite-color-foreground-1);
+  }
+
+  [slot='header-content'] {
+    display: flex;
+    gap: 8px;
+  }
+
+  .content-heading {
+    font-weight: 800;
+  }
+
+  calcite-carousel-item {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+  }
+
+  calcite-carousel-item div {
+    padding-block-start: 0.5rem;
+    padding-inline: 0.5rem;
+    flex-shrink: 1;
+    flex-grow: 0;
+  }
+
+  calcite-button {
+    position: absolute;
+    bottom: 5em;
+    left: 0;
+  }
+
+  calcite-icon {
+    --calcite-ui-icon-color: var(--calcite-color-brand);
+  }
 }
