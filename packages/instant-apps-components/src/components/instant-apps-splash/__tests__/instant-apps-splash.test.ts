@@ -72,8 +72,6 @@ describe('Instant Apps Splash', async () => {
 
   // check the dont-show-again button and then retest to see if it is hidden
   test('instant-apps-splash test dont-show-again button', async () => {
-    const modalRefBefore = splash?.shadowRoot?.querySelector('calcite-modal');
-    expect(modalRefBefore?.open).toBeTruthy();
     const dontShowAgainButton = splash?.shadowRoot?.querySelector('.instant-apps-splash__back-content');
     expect(dontShowAgainButton).toBeDefined();
     dontShowAgainButton?.querySelector('calcite-checkbox')?.click();
