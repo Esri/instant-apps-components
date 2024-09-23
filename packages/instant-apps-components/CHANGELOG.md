@@ -5,6 +5,30 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## v1.0.0-beta.259
+
+### instant-apps-interactive-legend
+
+- fix: predominance expression where clause
+
+## v1.0.0-beta.258
+
+### General
+
+- chore: upgrade calcite components to 2.12.1
+
+## v1.0.0-beta.257
+
+### instant-apps-sign-in
+
+- feat: add slot for adding an element to the top of the sign in dropdown.
+
+## v1.0.0-beta.256
+
+### instant-apps-sign-in
+
+- feat: `signInDropdownItems` to add ability to add other dropdown items
+
 ## v1.0.0-beta.255
 
 ### instant-apps-time-filter

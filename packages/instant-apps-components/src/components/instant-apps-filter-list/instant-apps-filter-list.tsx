@@ -116,6 +116,11 @@ export class InstantAppsFilterList {
   @Prop() zoomBtn?: boolean = true;
 
   /**
+   * Display reset button.
+   */
+  @Prop() resetBtn?: boolean = true;
+
+  /**
    * When false filters will not be reset when the component is disconnected from the DOM
    */
   @Prop() resetFiltersOnDisconnect: boolean = true;
@@ -237,7 +242,7 @@ export class InstantAppsFilterList {
 
   render(): VNode {
     const filterConfig = this.loading ? this.renderLoading() : this.initFilterConfig();
-    const footer = this.closeBtn ? this.renderFullFooter() : this.renderFooter();
+    const footer = this.renderFooter(this.closeBtn, this.resetBtn);
     return (
       <Host>
         <calcite-panel class={this.baseClass} ref={el => (this.panelEl = el as HTMLCalcitePanelElement)}>
@@ -409,26 +414,27 @@ export class InstantAppsFilterList {
     ) : null;
   }
 
-  renderFooter(): VNode {
-    return (
-      <div class={CSS.footer} slot="footer">
-        <calcite-button appearance="outline" width="full" disabled={this.disabled} onClick={this.handleResetFilter.bind(this)}>
-          {this.messages?.resetFilter}
-        </calcite-button>
-      </div>
-    );
-  }
-
-  renderFullFooter(): VNode {
+  renderFooter(
+    closeBtn: boolean | undefined,
+    resetBtn: boolean | undefined
+  ): VNode {
     const closeText = this.closeBtnText != null ? this.closeBtnText : this.messages?.close;
     return (
       <div class={CSS.footer} slot="footer">
-        <calcite-button appearance="outline" width="half" disabled={this.disabled} onClick={this.handleResetFilter.bind(this)}>
-          {this.messages?.resetFilter}
-        </calcite-button>
-        <calcite-button appearance="solid" width="half" kind="brand" onClick={this.closeBtnOnClick?.bind(this)}>
-          {closeText}
-        </calcite-button>
+        {
+          resetBtn ? (
+            <calcite-button appearance="outline" width="half" disabled={this.disabled} onClick={this.handleResetFilter.bind(this)}>
+              {this.messages?.resetFilter}
+            </calcite-button>
+          ) : undefined
+        }
+        {
+          closeBtn ? (
+            <calcite-button appearance="solid" width="half" kind="brand" onClick={this.closeBtnOnClick?.bind(this)}>
+              {closeText}
+            </calcite-button>
+          ) : undefined
+        }
       </div>
     );
   }

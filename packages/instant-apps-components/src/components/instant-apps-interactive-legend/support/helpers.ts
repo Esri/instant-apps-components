@@ -212,8 +212,7 @@ export function handlePredominanceExpression(elementInfo: any, featureLayerView:
       if (elementInfo.value === field) {
         return;
       }
-      const sqlQuery = `(${elementInfo.value} > ${field} OR (${field} IS NULL AND ${elementInfo.value} <> 0 AND ${elementInfo.value} IS NOT NULL))`;
-
+      const sqlQuery = `(${elementInfo.value} > ${field} OR (${field} IS NULL AND ${elementInfo.value} IS NOT NULL AND (${elementInfo.value} > 0 OR ${elementInfo.value} < 0)))`;
       expressionArr.push(sqlQuery);
     });
     return expressionArr.join(' AND ');
@@ -408,8 +407,8 @@ function generateQueryExpression(info: any, field: string, infoIndex: number, le
             const expression = singleQuote
               ? `${field} <> '${singleQuote}'`
               : isNaN(value) || (typeof value === 'string' && !value.trim())
-              ? `${field} <> '${value}'`
-              : `${field} <> ${value} AND ${field} <> '${value}'`;
+                ? `${field} <> '${value}'`
+                : `${field} <> ${value} AND ${field} <> '${value}'`;
             expressionList.push(expression);
           }
         });
@@ -428,17 +427,17 @@ function generateQueryExpression(info: any, field: string, infoIndex: number, le
             ? `(${field}/${normalizationField}) >= ${value[0]} AND (${field}/${normalizationField}) <= ${info.value[1]}`
             : `(${field}/${normalizationField}) > ${value[0]} AND (${field}/${normalizationField}) <= ${info.value[1]}`
           : isLastElement || (lastElementAndNoValue && secondToLastElement)
-          ? `${field} >= ${value[0]} AND ${field} <= ${value[1]}`
-          : `${field} > ${value[0]} AND ${field} <= ${value[1]}`
+            ? `${field} >= ${value[0]} AND ${field} <= ${value[1]}`
+            : `${field} > ${value[0]} AND ${field} <= ${value[1]}`
         : legendElementInfos?.length === 1 && field
-        ? isNaN(value) || !value.trim().length
-          ? `${field} <> '${value}'`
-          : `${field} <> ${value} OR ${field} <> '${value}'`
-        : singleQuote
-        ? `${field} = '${singleQuote}'`
-        : isNaN(value) || !value.trim().length
-        ? `${field} = '${value}'`
-        : `${field} = ${value} OR ${field} = '${value}'`;
+          ? isNaN(value) || !value.trim().length
+            ? `${field} <> '${value}'`
+            : `${field} <> ${value} OR ${field} <> '${value}'`
+          : singleQuote
+            ? `${field} = '${singleQuote}'`
+            : isNaN(value) || !value.trim().length
+              ? `${field} = '${value}'`
+              : `${field} = ${value} OR ${field} = '${value}'`;
 
       return expression;
     }
@@ -663,8 +662,8 @@ export async function getInfoCount(
   const where = checkPredominance(fLayerView)
     ? handlePredominanceExpression(info, fLayerView)
     : info.type
-    ? generateQueryExpression(nestedUniqueSymbolInfo, field, nestedUniqueSymbolInfoIndex as number, info, info.infos as any)
-    : generateQueryExpression(info, field, infoIndex, legendElement, legendElement.infos as any);
+      ? generateQueryExpression(nestedUniqueSymbolInfo, field, nestedUniqueSymbolInfoIndex as number, info, info.infos as any)
+      : generateQueryExpression(info, field, infoIndex, legendElement, legendElement.infos as any);
 
   if (query && where) {
     query.where = where === '1=0' ? '1=1' : where;

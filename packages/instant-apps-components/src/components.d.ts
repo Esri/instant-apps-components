@@ -283,6 +283,10 @@ export namespace Components {
          */
         "openFilters"?: boolean;
         /**
+          * Display reset button.
+         */
+        "resetBtn"?: boolean;
+        /**
           * When false filters will not be reset when the component is disconnected from the DOM
          */
         "resetFiltersOnDisconnect": boolean;
@@ -754,6 +758,10 @@ export namespace Components {
           * The apps Portal, used to setup sign in capabilities.
          */
         "portal": IPortal;
+        /**
+          * Add items to the sign in dropdown.
+         */
+        "signInDropdownItems": { label: string; onClick: Function }[];
         /**
           * Landing page subtitle text.
          */
@@ -1659,6 +1667,10 @@ declare namespace LocalJSX {
          */
         "openFilters"?: boolean;
         /**
+          * Display reset button.
+         */
+        "resetBtn"?: boolean;
+        /**
           * When false filters will not be reset when the component is disconnected from the DOM
          */
         "resetFiltersOnDisconnect"?: boolean;
@@ -2146,6 +2158,10 @@ declare namespace LocalJSX {
           * The apps Portal, used to setup sign in capabilities.
          */
         "portal": IPortal;
+        /**
+          * Add items to the sign in dropdown.
+         */
+        "signInDropdownItems"?: { label: string; onClick: Function }[];
         /**
           * Landing page subtitle text.
          */
