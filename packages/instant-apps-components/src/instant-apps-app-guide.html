@@ -74,11 +74,22 @@
       type: 'paragraphs'
     };
 
+    const tryItOut = {
+      title: 'Try it out',
+      content: [
+        'To try out the Search widget, type an address or place name from your home state in the search box and press Enter.',
+        'Use the Zoom In (+) button to zoom in enough to see streets and buildings on the map.',
+        'Use the Zoom Out (-) button to zoom out to see more of the map.',
+        'Click the Home button to return to the default map extent.'
+      ],
+      type: 'list'
+    };
+
     // Create the app guide component and add it to the page with the content
     const appGuidePlacement = document.querySelector("arcgis-placement.app-guide");
     const appGuide = document.createElement("instant-apps-app-guide");
 
-    appGuide.data = [compassTool, searchTool];
+    appGuide.data = [compassTool, searchTool, tryItOut];
     appGuide.header = true;
     appGuidePlacement.appendChild(appGuide);
   </script>

@@ -6,6 +6,11 @@ import AppGuide_T9n from '../../assets/t9n/instant-apps-app-guide/resources.json
 import { getMessages } from '../../utils/locale';
 import { ArrowType } from '@esri/calcite-components';
 
+const CSS = {
+  contentList: 'esri-content-list',
+  contentListItem: 'esri-content-list--item',
+}
+
 @Component({
   tag: 'instant-apps-app-guide',
   styleUrl: 'instant-apps-app-guide.scss',
@@ -78,8 +83,8 @@ export class InstantAppsAppGuide {
     switch(type) {
       case 'list':
         return (
-          <ol>
-            {content.map((contentItem, index) => (<li key={`content-list-item-${index}`}>{contentItem}</li>))}
+          <ol class={CSS.contentList}>
+            {content.map((contentItem, index) => (<li key={`content-list-item-${index}`} class={CSS.contentListItem}>{contentItem}</li>))}
           </ol>
         );
       case 'paragraphs':

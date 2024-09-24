@@ -1,6 +1,7 @@
 :host {
   --instant-apps-app-guide-width: 300px;
   --instant-apps-app-guide-height: 400px;
+  --instant-apps-app-guide-list-item-bubble-size: 22px;
 
   width: var(--instant-apps-app-guide-width);
   height: var(--instant-apps-app-guide-height);
@@ -21,7 +22,7 @@
 
   [slot='header-content'] {
     display: flex;
-    gap: 8px;
+    gap: var(--calcite-spacing-sm);
   }
 
   .content-heading {
@@ -41,13 +42,42 @@
     flex-grow: 0;
   }
 
-  calcite-button {
-    position: absolute;
-    bottom: 5em;
-    left: 0;
-  }
-
   calcite-icon {
     --calcite-ui-icon-color: var(--calcite-color-brand);
+  }
+
+  .esri-content-list {
+    counter-reset: item-counter;
+    margin-inline: 0;
+    padding-inline-start: var(--calcite-spacing-xxxl);
+    padding-inline-end: var(--calcite-spacing-lg);
+    position: relative;
+
+    .esri-content-list--item {
+      counter-increment: item-counter;
+      margin-block-start: var(--calcite-spacing-lg);
+      display: flex;
+      align-items: flex-start;
+
+      &::before {
+        content: counter(item-counter);
+        background: var(--calcite-color-text-2);
+        color: var(--calcite-color-text-inverse);
+        height: var(--instant-apps-app-guide-list-item-bubble-size);
+        width: var(--instant-apps-app-guide-list-item-bubble-size);
+        left: 0;
+        border-radius: var(--calcite-corner-radius-pill);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: var(--calcite-font-size-sm);
+        padding-top: var(--calcite-spacing-base);
+        position: absolute;
+      }
+    
+      &::marker {
+        color: var(--calcite-color-transparent);
+      }
+    }
   }
 }
