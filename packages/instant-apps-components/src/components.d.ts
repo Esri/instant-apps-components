@@ -277,6 +277,10 @@ export namespace Components {
          */
         "openFilters"?: boolean;
         /**
+          * Display reset button.
+         */
+        "resetBtn"?: boolean;
+        /**
           * When false filters will not be reset when the component is disconnected from the DOM
          */
         "resetFiltersOnDisconnect": boolean;
@@ -1645,6 +1649,10 @@ declare namespace LocalJSX {
           * When `true`, the layer filter block is expanded.
          */
         "openFilters"?: boolean;
+        /**
+          * Display reset button.
+         */
+        "resetBtn"?: boolean;
         /**
           * When false filters will not be reset when the component is disconnected from the DOM
          */
