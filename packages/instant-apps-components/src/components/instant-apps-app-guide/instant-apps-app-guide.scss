@@ -26,7 +26,10 @@
   }
 
   .content-heading {
-    font-weight: 800;
+    font-weight: var(--calcite-font-weight-bold);
+    display: flex;
+    gap: var(--calcite-spacing-sm);
+    line-height: var(--calcite-font-line-height-fixed-lg);
   }
 
   calcite-carousel-item {

@@ -71,7 +71,7 @@ export class InstantAppsAppGuide {
       return (
         <calcite-carousel-item>
           <div>
-            <span class="content-heading">{title}</span>
+            <span class="content-heading">{!this.header ? (<calcite-icon icon="lightbulb" scale="s"></calcite-icon>) : null}{title}</span>
             { this._renderContentItems(content, type) }
           </div>
         </calcite-carousel-item>
