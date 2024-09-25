@@ -4,7 +4,7 @@ import { LocaleSettingItem, LocaleUIData } from './interfaces';
 interface LanguageTranslatorState {
   uiData: LocaleUIData | null;
   currentLanguage: string | null;
-  lastSave: string | null;
+  lastSave: number | null;
   saving: boolean;
   currentLocaleSettingItem: LocaleSettingItem | null;
   portalItemResource: __esri.PortalItemResource | null;

@@ -85,6 +85,16 @@
         margin-left: 30px;
       }
     }
+
+    &__primary-content {
+      display: flex;
+      align-items: center;
+      .instant-apps-language-translator__close-button,
+      .instant-apps-language-translator__saving-indicator,
+      .instant-apps-language-translator__last-auto-save {
+        margin-right: 20px;
+      }
+    }
   }
 }
 
@@ -101,4 +111,19 @@
 .ck.ck-editor__editable_inline > :first-child,
 .ck.ck-editor__editable_inline > :last-child {
   --ck-spacing-large: 0.5rem !important;
+}
+
+html[dir='rtl'] {
+  :host {
+    .instant-apps-language-translator {
+      &__primary-content {
+        .instant-apps-language-translator__close-button,
+        .instant-apps-language-translator__saving-indicator,
+        .instant-apps-language-translator__last-auto-save {
+          margin-right: unset;
+          margin-left: 20px;
+        }
+      }
+    }
+  }
 }
