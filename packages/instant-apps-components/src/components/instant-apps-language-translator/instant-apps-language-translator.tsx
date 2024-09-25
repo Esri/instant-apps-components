@@ -1,7 +1,7 @@
 import { Component, Host, Prop, h, Event } from '@stencil/core';
 import { Element, EventEmitter, HostElement, Watch, State, Listen, Fragment, Method } from '@stencil/core/internal';
 
-import { generateUIData, getLocales, getMessages, getUIDataKeys, initExternalCKEditorStyles } from './support/utils';
+import { generateUIData, getLocales, getMessages, getUIDataKeys, initExternalCKEditorStyles, updateLastSave } from './support/utils';
 
 import { languageTranslatorState, store } from './support/store';
 
@@ -29,6 +29,8 @@ const CSS = {
   userLangText: `${BASE}__user-lang-text`,
   lastItem: `${BASE}--last-item`,
   writingIcon: `${BASE}__writing-icon`,
+  primaryContent: `${BASE}__primary-content`,
+  lastAutoSave: `${BASE}__last-auto-save`,
 };
 
 /**
@@ -174,6 +176,7 @@ export class InstantAppsLanguageTranslator {
       const portalItemResource = (await getPortalItemResource(this.portalItem)) as __esri.PortalItemResource;
       store.set('portalItemResource', portalItemResource as __esri.PortalItemResource);
       const t9nData = await fetchResourceData(this.request, portalItemResource);
+      store.set('lastSave', t9nData.lastSave);
       store.set('portalItemResourceT9n', t9nData ?? {});
     } catch {}
   }
@@ -192,7 +195,7 @@ export class InstantAppsLanguageTranslator {
       <calcite-modal open={this.open} scale="l" fullscreen={true} onCalciteModalClose={this.close.bind(this)}>
         {this.renderHeader()}
         {this.renderContent()}
-        {this.renderPrimaryButton()}
+        {this.renderPrimaryContent()}
       </calcite-modal>
     );
   }
@@ -206,11 +209,9 @@ export class InstantAppsLanguageTranslator {
   }
 
   renderHeader(): HTMLElement {
-    const saving = store.get('saving');
     return (
       <header class={CSS.header} slot="header">
         {this.renderHeaderText()}
-        {saving ? this.renderSavingIndicator() : null}
       </header>
     );
   }
@@ -228,11 +229,10 @@ export class InstantAppsLanguageTranslator {
   }
 
   renderSavingIndicator(): HTMLDivElement {
-    const saving = store.get('saving');
     const t9n = this.messages?.saving;
     return (
       <div class={CSS.savingIndicator}>
-        {saving ? <calcite-loader label={t9n} inline={true} /> : null}
+        <calcite-loader label={t9n} inline={true} />
         <span>{t9n}</span>
       </div>
     );
@@ -371,17 +371,36 @@ export class InstantAppsLanguageTranslator {
         fieldName={key}
         translatedLanguageLabels={translatedLanguageLabels}
         setting={setting}
-        userLocaleInputOnChangeCallback={this.userLocaleInputOnChangeCallback}
-        translatedLocaleInputOnChangeCallback={this.translatedLocaleInputOnChangeCallback}
+        userLocaleInputOnChangeCallback={async (fieldName: string, value: string) => {
+          try {
+            await this.userLocaleInputOnChangeCallback(fieldName, value);
+            const resource = store.get('portalItemResource') as __esri.PortalItemResource;
+            updateLastSave(resource);
+          } catch {}
+        }}
+        translatedLocaleInputOnChangeCallback={async (fieldName: string, value: string, locale: string, resource: __esri.PortalItemResource) => {
+          try {
+            await this.translatedLocaleInputOnChangeCallback(fieldName, value, locale, resource);
+            updateLastSave(resource);
+          } catch {}
+        }}
       />
     );
   }
 
-  renderPrimaryButton(): HTMLCalciteButtonElement {
+  renderPrimaryContent(): HTMLDivElement {
     return (
-      <calcite-button onClick={() => (this.open = false)} slot="primary" class={CSS.closeButton}>
-        {this.messages?.close}
-      </calcite-button>
+      <div class={CSS.primaryContent} slot="primary">
+        {store.get('saving') ? this.renderSavingIndicator() : null}
+        {store.get('lastSave') ? (
+          <span key="last-save" class={CSS.lastAutoSave}>
+            {this.messages?.lastAutoSave} {this.intl.formatDate(store.get('lastSave') as number)}
+          </span>
+        ) : null}
+        <calcite-button onClick={() => (this.open = false)} class={CSS.closeButton}>
+          {this.messages?.close}
+        </calcite-button>
+      </div>
     );
   }
 
@@ -451,7 +470,9 @@ export class InstantAppsLanguageTranslator {
     store.set('saving', true);
     try {
       const resource = await this.getPortalItemResource();
-      const dataStr = JSON.stringify(data);
+      const lastSave = Date.now();
+      store.set('lastSave', lastSave);
+      const dataStr = JSON.stringify({ ...data, lastSave });
       const blobParts = [dataStr];
       const options = { type: 'application/json' };
       const blob = new Blob(blobParts, options);

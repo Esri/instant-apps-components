@@ -9,7 +9,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### instant-apps-language-translator
 
-fix: nested ckeditor text area styles
+- fix: nested ckeditor text area styles
+- feat: implement last auto save date
 
 ## v1.0.0-beta.259
 
