@@ -5,6 +5,7 @@
   "goToSetting": "Go to setting",
   "header": "Translation",
   "headerTip": "All text that you enter in the app configuration appears below with the option to add translated text for the selected languages. When a text box is empty for any selected language, the app will show the default language until you provide the translated text. Find text using the search, which includes the default and translated text areas.",
+  "lastAutoSave": "Last autosave:",
   "languages": {
     "ar": "Arabic",
     "bg": "Bulgarian",
