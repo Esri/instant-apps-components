@@ -2,6 +2,7 @@ import LanguageTranslator_t9n from '../../../assets/t9n/instant-apps-language-tr
 import { getLocaleComponentStrings } from '../../../utils/locale';
 import { ECalciteMode } from './enum';
 import { LocaleItem, LocaleUIData } from './interfaces';
+import { CKEditorStyles } from './resources';
 import { languageTranslatorState, store } from './store';
 
 export function generateUIData(appSettings, locales: LocaleItem[]): LocaleUIData | void {
@@ -86,4 +87,9 @@ export function getLocales(localeItems: LocaleItem[]) {
 
 export function isCalciteModeDark(): boolean {
   return document.body.classList.contains(ECalciteMode.Dark);
+}
+export function initExternalCKEditorStyles() {
+  const style = document.createElement('style');
+  style.innerHTML = CKEditorStyles;
+  document.head.appendChild(style);
 }

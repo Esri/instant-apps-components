@@ -1,7 +1,7 @@
 import { Component, Host, Prop, h, Event } from '@stencil/core';
 import { Element, EventEmitter, HostElement, Watch, State, Listen, Fragment, Method } from '@stencil/core/internal';
 
-import { generateUIData, getLocales, getMessages, getUIDataKeys } from './support/utils';
+import { generateUIData, getLocales, getMessages, getUIDataKeys, initExternalCKEditorStyles } from './support/utils';
 
 import { languageTranslatorState, store } from './support/store';
 
@@ -118,6 +118,10 @@ export class InstantAppsLanguageTranslator {
    */
   @Event()
   translatorDataUpdated: EventEmitter<string>;
+
+  componentWillLoad() {
+    initExternalCKEditorStyles();
+  }
 
   async componentDidLoad() {
     this.initialize();
