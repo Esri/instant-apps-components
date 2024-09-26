@@ -1,5 +1,5 @@
 import { Component, Host, h, Prop, State } from '@stencil/core';
-import { Element, HostElement } from '@stencil/core/internal';
+import { Element, HostElement, Watch } from '@stencil/core/internal';
 import AppGuideViewModel from './AppGuide/AppGuideViewModel';
 import { AppGuidePage, AppGuideRenderType } from './AppGuide/interfaces/interfaces';
 import AppGuide_T9n from '../../assets/t9n/instant-apps-app-guide/resources.json';
@@ -26,16 +26,30 @@ export class InstantAppsAppGuide {
   @Prop()
   data: AppGuidePage[];
 
-  @State() messages: typeof AppGuide_T9n;
-
-  viewModel: AppGuideViewModel = new AppGuideViewModel();
-
-  componentWillRender() {
-    this._initialize();
+  @Watch('data')
+  watchPropHandler(newValue: AppGuidePage[]) {
+    this.viewModel.pages = newValue;
+    this.el.dispatchEvent(new CustomEvent('calciteCarouselChange'));
   }
 
-  componentDidRender() {
+  @State() messages: typeof AppGuide_T9n;
+  @State() headerTitle: string;
+
+  private viewModel: AppGuideViewModel = new AppGuideViewModel();
+  private carouselRef: HTMLCalciteCarouselElement;
+
+  connectedCallback() {
+    this.viewModel.pages = this?.data || [];
+    this.headerTitle = this?.data[0]?.title;
+  }
+
+  componentDidLoad() {
     getMessages(this);
+
+    // Listen for the calciteCarouselChange event to update the header title to match the selected page
+    this.el.addEventListener('calciteCarouselChange', (_event: CustomEvent) => {
+      this._updateHeaderTitle();
+    });
   }
 
   render(): HostElement {
@@ -43,35 +57,41 @@ export class InstantAppsAppGuide {
       <Host>
         <calcite-panel scale="s">
           { this._renderAppGuideHeader() }
-          <calcite-carousel arrow-type={this._getArrowType()}>
-            {this._renderAppGuidePages(this.viewModel.pages)}
+          <calcite-carousel ref={ el => this.carouselRef = el } arrow-type={this._getArrowType()}>
+            { this._renderAppGuidePages(this.viewModel.pages) }
           </calcite-carousel>
         </calcite-panel>
       </Host>
     )
   }
 
+  private _updateHeaderTitle() {
+    const nodeArray = Array.from(this.carouselRef.childNodes);
+    const selectedNodeIndex = nodeArray.indexOf(this.carouselRef.selectedItem);
+
+    // DOM nodes get updated after the viewModel is updated, so the selectedNodeIndex
+    // may be out of bounds of the pages collection in the viewModel when pages are removed.
+    // When this happens, we default to the title of the first page.
+    const targetIndex = this.viewModel.pages[selectedNodeIndex] ? selectedNodeIndex : 0;
+    this.headerTitle = this?.viewModel?.pages[targetIndex]?.title;
+  }
+
   private _getArrowType(): ArrowType {
     return this.viewModel.pages.length > 2 ? 'inline' : 'none';
   }
 
-  private _initialize() {
-    this.viewModel.pages = this?.data || [];
-  }
-
   private _renderAppGuideHeader() {
     return !!this.header && this.messages?.headerText ?
-      (<span slot="header-content">{this.messages?.headerText} <calcite-icon icon="lightbulb" scale="s"></calcite-icon></span>) :
+      (<span slot="header-content">{this.headerTitle} <calcite-icon icon="lightbulb" scale="s"></calcite-icon></span>) :
       null;
   }
 
   private _renderAppGuidePages(pages: AppGuidePage[]) {
-    return pages.map(pageData => {
-      const { title, content, type } = pageData;
+    return pages.map((pageData, index) => {
+      const { content, type } = pageData;
       return (
-        <calcite-carousel-item>
+        <calcite-carousel-item key={`page_${index}`}>
           <div>
-            <span class="content-heading">{!this.header ? (<calcite-icon icon="lightbulb" scale="s"></calcite-icon>) : null}{title}</span>
             { this._renderContentItems(content, type) }
           </div>
         </calcite-carousel-item>

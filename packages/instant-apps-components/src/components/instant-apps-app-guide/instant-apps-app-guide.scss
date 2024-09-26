@@ -23,6 +23,7 @@
   [slot='header-content'] {
     display: flex;
     gap: var(--calcite-spacing-sm);
+    padding-inline-start: 0.25rem;
   }
 
   .content-heading {
@@ -64,7 +65,7 @@
 
       &::before {
         content: counter(item-counter);
-        background: var(--calcite-color-text-2);
+        background-color: var(--calcite-color-text-2);
         color: var(--calcite-color-text-inverse);
         line-height: var(--calcite-font-line-height-fixed-xl);
         width: var(--instant-apps-app-guide-list-item-bubble-size);
