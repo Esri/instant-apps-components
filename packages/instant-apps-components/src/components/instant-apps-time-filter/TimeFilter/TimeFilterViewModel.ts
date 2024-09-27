@@ -48,12 +48,18 @@ class InstantAppsTimeFilterViewModel {
     if (!view) return;
     try {
       await view.when();
-      const timeLayerViews = await this.getTimeLayerViews(view, timeInfoConfigItems);
-      state.timeInfoItems = this.generateTimeInfoItems(timeLayerViews as __esri.LayerView[], timeInfoConfigItems);
-      this.initTimeSlider(timeSliderRef);
-      this.setupFilterModeWatcher();
+      if (timeInfoConfigItems.length === 1 && timeInfoConfigItems[0]?.type === 'map') {
+        this.initTimeSlider(timeSliderRef, timeInfoConfigItems[0]);
+      } else {
+        const timeLayerViews = await this.getTimeLayerViews(view, timeInfoConfigItems);
+        state.timeInfoItems = this.generateTimeInfoItems(timeLayerViews as __esri.LayerView[], timeInfoConfigItems);
+        this.initTimeSlider(timeSliderRef);
+      }
       return Promise.resolve();
-    } catch {}
+    } catch {
+    } finally {
+      this.setupFilterModeWatcher();
+    }
   }
 
   destroy() {
@@ -65,7 +71,7 @@ class InstantAppsTimeFilterViewModel {
   async getTimeLayerViews(view: __esri.MapView | __esri.SceneView, timeInfoConfigItems: ITimeInfoConfigItem[]): Promise<__esri.LayerView[] | undefined> {
     const { allLayers } = view.map;
     const getTimeLayer = (timeInfoLayerId: string) => allLayers.find(({ id }) => timeInfoLayerId === id);
-    const timeLayers = timeInfoConfigItems.map(({ id }) => getTimeLayer(id));
+    const timeLayers = timeInfoConfigItems.map(({ id }) => getTimeLayer(id as string));
     const timeLVPromises = timeLayers.map(layer => view.whenLayerView(layer));
     return await Promise.all(timeLVPromises);
   }
@@ -94,14 +100,25 @@ class InstantAppsTimeFilterViewModel {
     };
   }
 
-  initTimeSlider(timeSliderRef: HTMLDivElement): void {
-    const initialTimeInfoItem = state?.timeInfoItems?.[0];
-    if (!initialTimeInfoItem) return;
+  initTimeSlider(timeSliderRef: HTMLDivElement, defaultItem?: ITimeInfoConfigItem): void {
     const { TimeSlider } = this;
-    state.selectedTimeInfoItem = initialTimeInfoItem;
-    const config = this.getTimeSliderConfig(timeSliderRef);
-    state.timeSlider = new TimeSlider(config);
-    if (state.autoPlay) state.timeSlider.play();
+
+    const initializeSlider = config => {
+      state.timeSlider = new TimeSlider(config);
+      if (state.autoPlay) state.timeSlider.play();
+    };
+
+    if (defaultItem) {
+      const config = this.getTimeSliderConfig(timeSliderRef, defaultItem);
+      initializeSlider(config);
+    } else {
+      const initialTimeInfoItem = state?.timeInfoItems?.[0];
+      if (!initialTimeInfoItem) return;
+      state.selectedTimeInfoItem = initialTimeInfoItem;
+      const config = this.getTimeSliderConfig(timeSliderRef);
+      initializeSlider(config);
+    }
+
     if (state.view?.type === '2d') this.initialize2DView();
   }
 
@@ -114,27 +131,48 @@ class InstantAppsTimeFilterViewModel {
     );
   }
 
-  getTimeSliderConfig(timeSliderRef: HTMLDivElement) {
-    const [{ timeExtent, rangeStart, rangeEnd, unit, timeIntervalValue }] = state.timeInfoItems;
+  getTimeSliderConfig(timeSliderRef: HTMLDivElement, defaultItem?: ITimeInfoConfigItem) {
     const { TimeExtent, TimeInterval } = this;
-    const config = {
+    const baseConfig = {
       container: timeSliderRef,
-      fullTimeExtent: timeExtent as ITimeExtent,
-      timeExtent: new TimeExtent({
-        start: rangeStart,
-        end: rangeEnd,
-      }),
       mode: 'time-window',
-      stops: {
-        interval: new TimeInterval({
-          unit,
-          value: timeIntervalValue,
-        }),
-      },
       view: state.view?.type === '3d' ? state.view : null,
       ...state.timeSliderConfig,
     } as __esri.widgetsTimeSliderProperties;
-    return config;
+
+    if (defaultItem) {
+      const timeSlider = (state.view?.map as __esri.WebMap | __esri.WebScene)?.widgets?.timeSlider;
+      return {
+        ...baseConfig,
+        fullTimeExtent: timeSlider?.fullTimeExtent,
+        timeExtent: timeSlider?.currentTimeExtent,
+        stops:
+          timeSlider?.stopInterval?.unit && timeSlider?.stopInterval?.value
+            ? {
+                interval: new TimeInterval({
+                  unit: timeSlider?.stopInterval?.unit,
+                  value: timeSlider?.stopInterval?.value,
+                }),
+              }
+            : null,
+      };
+    } else {
+      const [{ timeExtent, rangeStart, rangeEnd, unit, timeIntervalValue }] = state.timeInfoItems;
+      return {
+        ...baseConfig,
+        fullTimeExtent: timeExtent as ITimeExtent,
+        timeExtent: new TimeExtent({
+          start: rangeStart,
+          end: rangeEnd,
+        }),
+        stops: {
+          interval: new TimeInterval({
+            unit,
+            value: timeIntervalValue,
+          }),
+        },
+      };
+    }
   }
 
   initialize2DView() {
