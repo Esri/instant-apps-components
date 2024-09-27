@@ -7,9 +7,18 @@ import { getMessages } from '../../utils/locale';
 import { ArrowType } from '@esri/calcite-components';
 
 const CSS = {
-  contentList: 'esri-content-list',
-  contentListItem: 'esri-content-list--item',
+  contentList: 'instant-apps-app-guide__content-list',
+  contentListItem: 'instant-apps-app-guide__content-list--item',
 }
+
+/**
+ * The `instant-apps-app-guide` is a component containing a page(s) that describes features of a tool or Instant App.
+ *
+ * Data for the pages is passed as an array of `AppGuidePage` objects that each have the following properties:
+ * - `title`: The title of the page; this will be displayed in the header if the `header` prop is set to true or the `header` attribute is present
+ * - `content`: An array of strings that represent the content items on the page
+ * - `type`: How the content items should be rendered. The default is 'paragraphs', but 'list' is also available for rendering as a numbered list.
+ */
 
 @Component({
   tag: 'instant-apps-app-guide',
@@ -20,36 +29,37 @@ export class InstantAppsAppGuide {
   @Element()
   el: HTMLInstantAppsAppGuideElement;
 
+  /**
+   * Show a header with the title of the current page
+   */
   @Prop()
   header: boolean;
 
+  /**
+   * A collection of AppGuidePage objects that represent the content of the component
+   */
   @Prop()
   data: AppGuidePage[];
 
   @Watch('data')
   watchPropHandler(newValue: AppGuidePage[]) {
     this.viewModel.pages = newValue;
-    this.el.dispatchEvent(new CustomEvent('calciteCarouselChange'));
+    this._updateHeaderText();
   }
 
   @State() messages: typeof AppGuide_T9n;
-  @State() headerTitle: string;
+  @State() headerText: string;
 
   private viewModel: AppGuideViewModel = new AppGuideViewModel();
   private carouselRef: HTMLCalciteCarouselElement;
 
   connectedCallback() {
     this.viewModel.pages = this?.data || [];
-    this.headerTitle = this?.data[0]?.title;
+    this.headerText = this?.data[0]?.title;
   }
 
   componentDidLoad() {
     getMessages(this);
-
-    // Listen for the calciteCarouselChange event to update the header title to match the selected page
-    this.el.addEventListener('calciteCarouselChange', (_event: CustomEvent) => {
-      this._updateHeaderTitle();
-    });
   }
 
   render(): HostElement {
@@ -57,7 +67,10 @@ export class InstantAppsAppGuide {
       <Host>
         <calcite-panel scale="s">
           { this._renderAppGuideHeader() }
-          <calcite-carousel ref={ el => this.carouselRef = el } arrow-type={this._getArrowType()}>
+          <calcite-carousel
+            onCalciteCarouselChange={() => this._updateHeaderText()}
+            ref={ el => this.carouselRef = el }
+            arrow-type={this._getArrowType()}>
             { this._renderAppGuidePages(this.viewModel.pages) }
           </calcite-carousel>
         </calcite-panel>
@@ -65,15 +78,16 @@ export class InstantAppsAppGuide {
     )
   }
 
-  private _updateHeaderTitle() {
+  private _updateHeaderText() {
     const nodeArray = Array.from(this.carouselRef.childNodes);
     const selectedNodeIndex = nodeArray.indexOf(this.carouselRef.selectedItem);
 
     // DOM nodes get updated after the viewModel is updated, so the selectedNodeIndex
     // may be out of bounds of the pages collection in the viewModel when pages are removed.
     // When this happens, we default to the title of the first page.
-    const targetIndex = this.viewModel.pages[selectedNodeIndex] ? selectedNodeIndex : 0;
-    this.headerTitle = this?.viewModel?.pages[targetIndex]?.title;
+    const pages = this.viewModel?.pages;
+    const selectedPage = pages?.[selectedNodeIndex] ?? pages[0];
+    this.headerText = selectedPage?.title;
   }
 
   private _getArrowType(): ArrowType {
@@ -82,7 +96,7 @@ export class InstantAppsAppGuide {
 
   private _renderAppGuideHeader() {
     return !!this.header && this.messages?.headerText ?
-      (<span slot="header-content">{this.headerTitle} <calcite-icon icon="lightbulb" scale="s"></calcite-icon></span>) :
+      (<span slot="header-content">{this.headerText} <calcite-icon icon="lightbulb" scale="s"></calcite-icon></span>) :
       null;
   }
 

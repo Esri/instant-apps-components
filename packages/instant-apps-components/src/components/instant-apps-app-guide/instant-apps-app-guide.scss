@@ -50,14 +50,14 @@
     --calcite-ui-icon-color: var(--calcite-color-brand);
   }
 
-  .esri-content-list {
-    counter-reset: item-counter;
+  .instant-apps-app-guide__content-list {
+    counter-set: item-counter;
     margin-inline: 0;
     padding-inline-start: var(--calcite-spacing-xxxl);
     padding-inline-end: var(--calcite-spacing-lg);
     position: relative;
 
-    .esri-content-list--item {
+    .instant-apps-app-guide__content-list--item {
       counter-increment: item-counter;
       margin-block-start: var(--calcite-spacing-lg);
       display: flex;

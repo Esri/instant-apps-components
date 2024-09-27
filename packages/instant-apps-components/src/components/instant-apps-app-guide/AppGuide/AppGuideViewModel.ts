@@ -2,7 +2,6 @@ import { AppGuidePage } from "./interfaces/interfaces";
 
 class AppGuideViewModel {
   pages: AppGuidePage[];
-  headerTitle: string;
   
   constructor() {
     this.pages = [];

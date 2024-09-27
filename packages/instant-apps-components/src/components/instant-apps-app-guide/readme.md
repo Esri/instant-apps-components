@@ -5,12 +5,21 @@
 <!-- Auto Generated Below -->
 
 
+## Overview
+
+The `instant-apps-app-guide` is a component containing a page(s) that describes features of a tool or Instant App.
+
+Data for the pages is passed as an array of `AppGuidePage` objects that each have the following properties:
+- `title`: The title of the page; this will be displayed in the header if the `header` prop is set to true or the `header` attribute is present
+- `content`: An array of strings that represent the content items on the page
+- `type`: How the content items should be rendered. The default is 'paragraphs', but 'list' is also available for rendering as a numbered list.
+
 ## Properties
 
-| Property | Attribute | Description | Type             | Default     |
-| -------- | --------- | ----------- | ---------------- | ----------- |
-| `data`   | --        |             | `AppGuidePage[]` | `undefined` |
-| `header` | `header`  |             | `boolean`        | `undefined` |
+| Property | Attribute | Description                                                                      | Type             | Default     |
+| -------- | --------- | -------------------------------------------------------------------------------- | ---------------- | ----------- |
+| `data`   | --        | A collection of AppGuidePage objects that represent the content of the component | `AppGuidePage[]` | `undefined` |
+| `header` | `header`  | Show a header with the title of the current page                                 | `boolean`        | `undefined` |
 
 
 ----------------------------------------------
