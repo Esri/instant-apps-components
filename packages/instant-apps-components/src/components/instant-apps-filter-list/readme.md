@@ -121,6 +121,7 @@ const layerExpressions = [
 | `filterCount`                | `filter-count`                 | Number of active filters                                                             | `number \| undefined`                | `0`          |
 | `layerExpressions`           | --                             | Use this to create filters that update a layer's definitionExpression.               | `LayerExpression[]`                  | `undefined`  |
 | `openFilters`                | `open-filters`                 | When `true`, the layer filter block is expanded.                                     | `boolean \| undefined`               | `false`      |
+| `resetBtn`                   | `reset-btn`                    | Display reset button.                                                                | `boolean \| undefined`               | `true`       |
 | `resetFiltersOnDisconnect`   | `reset-filters-on-disconnect`  | When false filters will not be reset when the component is disconnected from the DOM | `boolean`                            | `true`       |
 | `urlParams`                  | --                             | URL params set by using filters.                                                     | `URLSearchParams \| undefined`       | `undefined`  |
 | `view`                       | --                             | A reference to the MapView or SceneView.                                             | `MapView \| SceneView`               | `undefined`  |

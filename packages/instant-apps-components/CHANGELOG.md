@@ -5,6 +5,19 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## v1.0.0-beta.262
+
+### instant-apps-interactive-legend
+
+- fix: re-set handlers when node is reattached to dom
+
+## v1.0.0-beta.261
+
+### instant-apps-language-translator
+
+- fix: nested ckeditor text area styles
+- feat: implement last auto save date
+
 ## v1.0.0-beta.259
 
 ### instant-apps-interactive-legend
