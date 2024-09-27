@@ -29,7 +29,7 @@ import {
 
 import { loadModules } from '../../../utils/loadModules';
 
-import {  IIntLegendLayerData } from './interfaces/interfaces';
+import { IIntLegendLayerData } from './interfaces/interfaces';
 import { FilterMode } from '../../../interfaces/interfaces';
 import {
   ColorRampElement,
@@ -146,6 +146,12 @@ export class InstantAppsInteractiveLegendClassic {
   @State()
   intLegendId: string;
 
+  async connectedCallback() {
+    if (this.handles) return;
+    const [Handles] = await loadModules(['esri/core/Handles']);
+    this.handles = new Handles();
+  }
+
   async componentWillLoad() {
     const observer = new MutationObserver(() => {
       forceUpdate(this.el);
@@ -153,10 +159,9 @@ export class InstantAppsInteractiveLegendClassic {
     observer.observe(this.el, {
       attributes: true,
     });
-    const [intl, reactiveUtils, Handles] = await loadModules(['esri/intl', 'esri/core/reactiveUtils', 'esri/core/Handles']);
+    const [intl, reactiveUtils] = await loadModules(['esri/intl', 'esri/core/reactiveUtils']);
 
     this.reactiveUtils = reactiveUtils;
-    this.handles = new Handles();
     this.intl = intl;
   }
 
@@ -650,7 +655,7 @@ export class InstantAppsInteractiveLegendClassic {
         {this.featureCount ? (
           <instant-apps-interactive-legend-count
             class={getTheme(this.el)}
-            categoryId={parentLegendElementInfoData ? legendElement.title : elementInfo.label ?? layer?.id}
+            categoryId={parentLegendElementInfoData ? legendElement.title : (elementInfo.label ?? layer?.id)}
             activeLayerInfo={activeLayerInfo}
             legendvm={this.legendvm}
             messages={this.messages}
@@ -723,14 +728,14 @@ export class InstantAppsInteractiveLegendClassic {
       bundleKey = titleInfo.ratioPercentTotal
         ? 'showRatioPercentTotal'
         : titleInfo.ratioPercent
-        ? 'showRatioPercent'
-        : titleInfo.ratio
-        ? 'showRatio'
-        : titleInfo.normField
-        ? 'showNormField'
-        : titleInfo.field
-        ? 'showField'
-        : null;
+          ? 'showRatioPercent'
+          : titleInfo.ratio
+            ? 'showRatio'
+            : titleInfo.normField
+              ? 'showNormField'
+              : titleInfo.field
+                ? 'showField'
+                : null;
     } else if (this.isRendererTitle(titleInfo, isRamp)) {
       bundleKey = titleInfo.normField ? 'showNormField' : titleInfo.normByPct ? 'showNormPct' : titleInfo.field ? 'showField' : null;
     }
