@@ -26,8 +26,21 @@ export { LogicalPlacement } from "@esri/calcite-components/dist/types/utils/floa
 export { ScoreboardItem, ScoreboardMode, ScoreboardPosition } from "./components/instant-apps-scoreboard/types/interfaces";
 export { ITimeInfoConfigItem } from "./components/instant-apps-time-filter/TimeFilter/interfaces/interfaces";
 export namespace Components {
+    /**
+     * The `instant-apps-app-guide` is a component containing a page(s) that describes features of a tool or Instant App.
+     * Data for the pages is passed as an array of `AppGuidePage` objects that each have the following properties:
+     * - `title`: The title of the page; this will be displayed in the header if the `header` prop is set to true or the `header` attribute is present
+     * - `content`: An array of strings that represent the content items on the page
+     * - `type`: How the content items should be rendered. The default is 'paragraphs', but 'list' is also available for rendering as a numbered list.
+     */
     interface InstantAppsAppGuide {
+        /**
+          * A collection of AppGuidePage objects that represent the content of the component
+         */
         "data": AppGuidePage[];
+        /**
+          * Show a header with the title of the current page
+         */
         "header": boolean;
     }
     interface InstantAppsCkeditorWrapper {
@@ -974,6 +987,13 @@ export interface InstantAppsSplashCustomEvent<T> extends CustomEvent<T> {
     target: HTMLInstantAppsSplashElement;
 }
 declare global {
+    /**
+     * The `instant-apps-app-guide` is a component containing a page(s) that describes features of a tool or Instant App.
+     * Data for the pages is passed as an array of `AppGuidePage` objects that each have the following properties:
+     * - `title`: The title of the page; this will be displayed in the header if the `header` prop is set to true or the `header` attribute is present
+     * - `content`: An array of strings that represent the content items on the page
+     * - `type`: How the content items should be rendered. The default is 'paragraphs', but 'list' is also available for rendering as a numbered list.
+     */
     interface HTMLInstantAppsAppGuideElement extends Components.InstantAppsAppGuide, HTMLStencilElement {
     }
     var HTMLInstantAppsAppGuideElement: {
@@ -1394,8 +1414,21 @@ declare global {
     }
 }
 declare namespace LocalJSX {
+    /**
+     * The `instant-apps-app-guide` is a component containing a page(s) that describes features of a tool or Instant App.
+     * Data for the pages is passed as an array of `AppGuidePage` objects that each have the following properties:
+     * - `title`: The title of the page; this will be displayed in the header if the `header` prop is set to true or the `header` attribute is present
+     * - `content`: An array of strings that represent the content items on the page
+     * - `type`: How the content items should be rendered. The default is 'paragraphs', but 'list' is also available for rendering as a numbered list.
+     */
     interface InstantAppsAppGuide {
+        /**
+          * A collection of AppGuidePage objects that represent the content of the component
+         */
         "data"?: AppGuidePage[];
+        /**
+          * Show a header with the title of the current page
+         */
         "header"?: boolean;
     }
     interface InstantAppsCkeditorWrapper {
@@ -2352,6 +2385,13 @@ export { LocalJSX as JSX };
 declare module "@stencil/core" {
     export namespace JSX {
         interface IntrinsicElements {
+            /**
+             * The `instant-apps-app-guide` is a component containing a page(s) that describes features of a tool or Instant App.
+             * Data for the pages is passed as an array of `AppGuidePage` objects that each have the following properties:
+             * - `title`: The title of the page; this will be displayed in the header if the `header` prop is set to true or the `header` attribute is present
+             * - `content`: An array of strings that represent the content items on the page
+             * - `type`: How the content items should be rendered. The default is 'paragraphs', but 'list' is also available for rendering as a numbered list.
+             */
             "instant-apps-app-guide": LocalJSX.InstantAppsAppGuide & JSXBase.HTMLAttributes<HTMLInstantAppsAppGuideElement>;
             "instant-apps-ckeditor-wrapper": LocalJSX.InstantAppsCkeditorWrapper & JSXBase.HTMLAttributes<HTMLInstantAppsCkeditorWrapperElement>;
             "instant-apps-control-panel": LocalJSX.InstantAppsControlPanel & JSXBase.HTMLAttributes<HTMLInstantAppsControlPanelElement>;
