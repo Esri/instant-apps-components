@@ -1,0 +1,86 @@
+:host {
+  --instant-apps-app-guide-width: 300px;
+  --instant-apps-app-guide-height: 400px;
+  --instant-apps-app-guide-list-item-bubble-size: 22px;
+
+  width: var(--instant-apps-app-guide-width);
+  height: var(--instant-apps-app-guide-height);
+  display: block;
+
+  calcite-panel {
+    max-width: var(--instant-apps-app-guide-width);
+    max-height: var(--instant-apps-app-guide-height);
+    display: flex;
+  }
+
+  calcite-carousel {
+    flex: 1;
+    overflow: scroll;
+    height: fit-content;
+    background-color: var(--calcite-color-foreground-1);
+  }
+
+  [slot='header-content'] {
+    display: flex;
+    gap: var(--calcite-spacing-sm);
+    padding-inline-start: 0.25rem;
+  }
+
+  .content-heading {
+    font-weight: var(--calcite-font-weight-bold);
+    display: flex;
+    gap: var(--calcite-spacing-sm);
+    line-height: var(--calcite-font-line-height-fixed-lg);
+  }
+
+  calcite-carousel-item {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .instant-apps-app-guide__content-wrapper {
+    padding-block-start: 0.5rem;
+    padding-inline: 0.5rem;
+    flex-shrink: 1;
+    flex-grow: 0;
+  }
+
+  calcite-icon {
+    --calcite-ui-icon-color: var(--calcite-color-brand);
+  }
+
+  .instant-apps-app-guide__content-list {
+    counter-set: item-counter;
+    margin-inline: 0;
+    padding-inline-start: var(--calcite-spacing-xxxl);
+    padding-inline-end: var(--calcite-spacing-lg);
+    position: relative;
+
+    .instant-apps-app-guide__content-list--item {
+      counter-increment: item-counter;
+      margin-block-start: var(--calcite-spacing-lg);
+      display: flex;
+      align-items: flex-start;
+
+      &::before {
+        content: counter(item-counter);
+        background-color: var(--calcite-color-text-2);
+        color: var(--calcite-color-text-inverse);
+        line-height: var(--calcite-font-line-height-fixed-xl);
+        width: var(--instant-apps-app-guide-list-item-bubble-size);
+        left: 0;
+        border-radius: var(--calcite-corner-radius-pill);
+        display: flex;
+        justify-content: center;
+        font-size: var(--calcite-font-size-sm);
+        position: absolute;
+        max-height: var(--instant-apps-app-guide-list-item-bubble-size);
+      }
+    
+      &::marker {
+        color: var(--calcite-color-transparent);
+      }
+    }
+  }
+}

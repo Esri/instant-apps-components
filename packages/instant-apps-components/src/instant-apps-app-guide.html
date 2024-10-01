@@ -1,0 +1,98 @@
+<!-- /*
+*   Copyright (c) 2024 Esri
+*   All rights reserved under the copyright laws of the United States and applicable international laws, treaties, and conventions.
+*   This material is licensed for use under the Esri Master License Agreement (MLA), and is bound by the terms of that agreement.
+*   You may redistribute and use this code without modification, provided you adhere to the terms of the MLA and include this copyright notice.
+*   See use restrictions at http://www.esri.com/legal/pdfs/mla_e204_e300/english
+*/ -->
+
+<!DOCTYPE html>
+<html dir="ltr" lang="en">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=5.0" />
+  <title>ArcGIS Instant Apps Components</title>
+  <link rel="stylesheet" href="https://js.arcgis.com/4.30/esri/themes/light/main.css" />
+  <script type="module" src="https://js.arcgis.com/calcite-components/2.12.2/calcite.esm.js"></script>
+  <link rel="stylesheet" type="text/css" href="https://js.arcgis.com/calcite-components/2.12.2/calcite.css" />
+  <script src="https://js.arcgis.com/4.30/"></script>
+  <script type="module" src="https://js.arcgis.com/map-components/4.30/arcgis-map-components.esm.js"></script>
+  <script type="module" src="/build/instant-apps-components.esm.js"></script>
+  <script nomodule src="/build/instant-apps-components.js"></script>
+
+  <style>
+    html,
+    body {
+      box-sizing: border-box;
+      width: 100%;
+      height: 100%;
+      margin: 0;
+      padding: 0;
+    }
+  </style>
+</head>
+
+<body>
+  <arcgis-map item-id="45b3b2fb35e94ab09381d0caa0da5946">
+    <arcgis-expand position="top-right" expanded expand-icon="lightbulb">
+      <arcgis-placement class="app-guide"></arcgis-placement>
+    </arcgis-expand>
+    <arcgis-search position="top-right" />
+    <arcgis-compass position="top-right" />
+    <arcgis-zoom position="top-left" />
+    <arcgis-home position="top-left"></arcgis-home>
+  </arcgis-map>
+  <script>
+    async function load() {
+      const esriConfig = await $arcgis.import("esri/config");
+      esriConfig.portalUrl = "https://www.arcgis.com";
+    }
+    load();
+
+    // Define some page content to display in the guide
+    const searchTool = {
+      title: 'The Search widget',
+      content: [
+        'The Search widget provides a way to perform search operations on locator service(s), map/feature service feature layer(s), and more.',
+        `The Search widget sets the view on the Search result. The level of detail (LOD) at the center of the view depends on the data source, 
+        with higher quality data sources returning extents closer to the feature obtained from the search.`,
+        'Search widget results are typically sorted according to their relevance to the search and their relative importance.'
+      ],
+      type: 'paragraphs'
+    };
+
+    const compassTool = {
+      title: 'The Compass widget',
+      content: [
+        'The Compass widget indicates where north is in relation to the current view rotation or camera heading.',
+        'Clicking the Compass widget rotates the view to face north (heading = 0).',
+        `The icon for the Compass widget is determined based upon the view's spatial reference. If the spatial 
+        reference is Web Mercator or WGS84, the icon will be a compass needle. For all other spatial references, 
+        the icon will be an arrow.`
+      ],
+      type: 'paragraphs'
+    };
+
+    const tryItOut = {
+      title: 'Try it out',
+      content: [
+        'To try out the Search widget, type an address or place name from your home state in the search box and press Enter.',
+        'Use the Zoom In (+) button to zoom in enough to see streets and buildings on the map.',
+        'Use the Zoom Out (-) button to zoom out to see more of the map.',
+        'Click the Home button to return to the default map extent.'
+      ],
+      type: 'list'
+    };
+
+    // Create the app guide component and add it to the page with the content
+    const appGuidePlacement = document.querySelector("arcgis-placement.app-guide");
+    const appGuide = document.createElement("instant-apps-app-guide");
+
+    appGuide.data = [compassTool, searchTool, tryItOut];
+    appGuide.header = true;
+    appGuidePlacement.appendChild(appGuide);
+  </script>
+</body>
+
+</html>
