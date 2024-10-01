@@ -5,6 +5,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## v1.0.0-beta.266
+
+### instant-apps-app-guide
+
+- refactor: improved error handling; setting the header to be displayed by default
+
 ## v1.0.0-beta.265
 
 ### instant-apps-app-guide
