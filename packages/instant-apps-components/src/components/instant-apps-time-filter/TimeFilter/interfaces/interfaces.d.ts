@@ -13,7 +13,8 @@ export interface ITimeInfoItem {
 }
 
 export interface ITimeInfoConfigItem {
-  id: string;
+  type?: string;
+  id?: string;
   increments: string;
   max: string;
   min: string;
