@@ -5,6 +5,7 @@
  * It contains typing information for all components that exist in this project.
  */
 import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
+import { AppGuidePage } from "./components/instant-apps-app-guide/AppGuide/interfaces/interfaces";
 import { EditorConfig } from "@ckeditor/ckeditor5-core/src/editor/editorconfig";
 import { ActiveTool, ControlPanelComponent, CreateOption, ExportOutput, ExportView, ExtentSelector, FilterInitState, FilterMode, FilterParam, IMeasureConfiguration, InstantAppsPopoverMessageOverrides, IPortal, LayerExpression, PopoverPlacement } from "./interfaces/interfaces";
 import { PredefinedOptions } from "./components/instant-apps-create/instant-apps-create";
@@ -14,6 +15,7 @@ import { InstantAppsPopovers } from "./components/instant-apps-popovers/instant-
 import { LogicalPlacement } from "@esri/calcite-components/dist/types/utils/floating-ui";
 import { ScoreboardItem, ScoreboardMode, ScoreboardPosition } from "./components/instant-apps-scoreboard/types/interfaces";
 import { ITimeInfoConfigItem } from "./components/instant-apps-time-filter/TimeFilter/interfaces/interfaces";
+export { AppGuidePage } from "./components/instant-apps-app-guide/AppGuide/interfaces/interfaces";
 export { EditorConfig } from "@ckeditor/ckeditor5-core/src/editor/editorconfig";
 export { ActiveTool, ControlPanelComponent, CreateOption, ExportOutput, ExportView, ExtentSelector, FilterInitState, FilterMode, FilterParam, IMeasureConfiguration, InstantAppsPopoverMessageOverrides, IPortal, LayerExpression, PopoverPlacement } from "./interfaces/interfaces";
 export { PredefinedOptions } from "./components/instant-apps-create/instant-apps-create";
@@ -24,6 +26,23 @@ export { LogicalPlacement } from "@esri/calcite-components/dist/types/utils/floa
 export { ScoreboardItem, ScoreboardMode, ScoreboardPosition } from "./components/instant-apps-scoreboard/types/interfaces";
 export { ITimeInfoConfigItem } from "./components/instant-apps-time-filter/TimeFilter/interfaces/interfaces";
 export namespace Components {
+    /**
+     * The `instant-apps-app-guide` is a component containing a page(s) that describes features of a tool or Instant App.
+     * Data for the pages is passed as an array of `AppGuidePage` objects that each have the following properties:
+     * - `title`: The title of the page; this will be displayed in the header if the `header` prop is set to true or the `header` attribute is present
+     * - `content`: An array of strings that represent the content items on the page
+     * - `type`: How the content items should be rendered. The default is 'paragraphs', but 'list' is also available for rendering as a numbered list.
+     */
+    interface InstantAppsAppGuide {
+        /**
+          * A collection of AppGuidePage objects that represent the content of the component
+         */
+        "data": AppGuidePage[];
+        /**
+          * Show a header with the title of the current page
+         */
+        "header": boolean;
+    }
     interface InstantAppsCkeditorWrapper {
         "config": EditorConfig;
         /**
@@ -968,6 +987,19 @@ export interface InstantAppsSplashCustomEvent<T> extends CustomEvent<T> {
     target: HTMLInstantAppsSplashElement;
 }
 declare global {
+    /**
+     * The `instant-apps-app-guide` is a component containing a page(s) that describes features of a tool or Instant App.
+     * Data for the pages is passed as an array of `AppGuidePage` objects that each have the following properties:
+     * - `title`: The title of the page; this will be displayed in the header if the `header` prop is set to true or the `header` attribute is present
+     * - `content`: An array of strings that represent the content items on the page
+     * - `type`: How the content items should be rendered. The default is 'paragraphs', but 'list' is also available for rendering as a numbered list.
+     */
+    interface HTMLInstantAppsAppGuideElement extends Components.InstantAppsAppGuide, HTMLStencilElement {
+    }
+    var HTMLInstantAppsAppGuideElement: {
+        prototype: HTMLInstantAppsAppGuideElement;
+        new (): HTMLInstantAppsAppGuideElement;
+    };
     interface HTMLInstantAppsCkeditorWrapperElementEventMap {
         "isFocused": { fieldName: string; isFocused: boolean };
         "dataChanged": string;
@@ -1346,6 +1378,7 @@ declare global {
         new (): HTMLInstantAppsTimeFilterElement;
     };
     interface HTMLElementTagNameMap {
+        "instant-apps-app-guide": HTMLInstantAppsAppGuideElement;
         "instant-apps-ckeditor-wrapper": HTMLInstantAppsCkeditorWrapperElement;
         "instant-apps-control-panel": HTMLInstantAppsControlPanelElement;
         "instant-apps-create": HTMLInstantAppsCreateElement;
@@ -1381,6 +1414,23 @@ declare global {
     }
 }
 declare namespace LocalJSX {
+    /**
+     * The `instant-apps-app-guide` is a component containing a page(s) that describes features of a tool or Instant App.
+     * Data for the pages is passed as an array of `AppGuidePage` objects that each have the following properties:
+     * - `title`: The title of the page; this will be displayed in the header if the `header` prop is set to true or the `header` attribute is present
+     * - `content`: An array of strings that represent the content items on the page
+     * - `type`: How the content items should be rendered. The default is 'paragraphs', but 'list' is also available for rendering as a numbered list.
+     */
+    interface InstantAppsAppGuide {
+        /**
+          * A collection of AppGuidePage objects that represent the content of the component
+         */
+        "data"?: AppGuidePage[];
+        /**
+          * Show a header with the title of the current page
+         */
+        "header"?: boolean;
+    }
     interface InstantAppsCkeditorWrapper {
         "config"?: EditorConfig;
         /**
@@ -2296,6 +2346,7 @@ declare namespace LocalJSX {
         "view"?: __esri.MapView | __esri.SceneView;
     }
     interface IntrinsicElements {
+        "instant-apps-app-guide": InstantAppsAppGuide;
         "instant-apps-ckeditor-wrapper": InstantAppsCkeditorWrapper;
         "instant-apps-control-panel": InstantAppsControlPanel;
         "instant-apps-create": InstantAppsCreate;
@@ -2334,6 +2385,14 @@ export { LocalJSX as JSX };
 declare module "@stencil/core" {
     export namespace JSX {
         interface IntrinsicElements {
+            /**
+             * The `instant-apps-app-guide` is a component containing a page(s) that describes features of a tool or Instant App.
+             * Data for the pages is passed as an array of `AppGuidePage` objects that each have the following properties:
+             * - `title`: The title of the page; this will be displayed in the header if the `header` prop is set to true or the `header` attribute is present
+             * - `content`: An array of strings that represent the content items on the page
+             * - `type`: How the content items should be rendered. The default is 'paragraphs', but 'list' is also available for rendering as a numbered list.
+             */
+            "instant-apps-app-guide": LocalJSX.InstantAppsAppGuide & JSXBase.HTMLAttributes<HTMLInstantAppsAppGuideElement>;
             "instant-apps-ckeditor-wrapper": LocalJSX.InstantAppsCkeditorWrapper & JSXBase.HTMLAttributes<HTMLInstantAppsCkeditorWrapperElement>;
             "instant-apps-control-panel": LocalJSX.InstantAppsControlPanel & JSXBase.HTMLAttributes<HTMLInstantAppsControlPanelElement>;
             "instant-apps-create": LocalJSX.InstantAppsCreate & JSXBase.HTMLAttributes<HTMLInstantAppsCreateElement>;
