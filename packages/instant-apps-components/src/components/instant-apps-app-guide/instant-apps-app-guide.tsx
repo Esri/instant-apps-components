@@ -9,6 +9,7 @@ import { ArrowType } from '@esri/calcite-components';
 const CSS = {
   contentList: 'instant-apps-app-guide__content-list',
   contentListItem: 'instant-apps-app-guide__content-list--item',
+  contentWrapper: 'instant-apps-app-guide__content-wrapper'
 }
 
 /**
@@ -43,18 +44,18 @@ export class InstantAppsAppGuide {
 
   @Watch('data')
   watchPropHandler(newValue: AppGuidePage[]) {
-    this.viewModel.pages = newValue;
+    this._viewModel.pages = newValue;
     this._updateHeaderText();
   }
 
   @State() messages: typeof AppGuide_T9n;
   @State() headerText: string;
 
-  private viewModel: AppGuideViewModel = new AppGuideViewModel();
-  private carouselRef: HTMLCalciteCarouselElement;
+  private _viewModel: AppGuideViewModel = new AppGuideViewModel();
+  private _carouselRef: HTMLCalciteCarouselElement;
 
   connectedCallback() {
-    this.viewModel.pages = this?.data || [];
+    this._viewModel.pages = this?.data || [];
     this.headerText = this?.data[0]?.title;
   }
 
@@ -69,9 +70,9 @@ export class InstantAppsAppGuide {
           { this._renderAppGuideHeader() }
           <calcite-carousel
             onCalciteCarouselChange={() => this._updateHeaderText()}
-            ref={ el => this.carouselRef = el }
+            ref={ el => this._carouselRef = el }
             arrow-type={this._getArrowType()}>
-            { this._renderAppGuidePages(this.viewModel.pages) }
+            { this._renderAppGuidePages(this._viewModel.pages) }
           </calcite-carousel>
         </calcite-panel>
       </Host>
@@ -79,19 +80,19 @@ export class InstantAppsAppGuide {
   }
 
   private _updateHeaderText() {
-    const nodeArray = Array.from(this.carouselRef.childNodes);
-    const selectedNodeIndex = nodeArray.indexOf(this.carouselRef.selectedItem);
+    const nodeArray = Array.from(this._carouselRef.childNodes);
+    const selectedNodeIndex = nodeArray.indexOf(this._carouselRef.selectedItem);
 
     // DOM nodes get updated after the viewModel is updated, so the selectedNodeIndex
     // may be out of bounds of the pages collection in the viewModel when pages are removed.
     // When this happens, we default to the title of the first page.
-    const pages = this.viewModel?.pages;
+    const pages = this._viewModel?.pages;
     const selectedPage = pages?.[selectedNodeIndex] ?? pages[0];
     this.headerText = selectedPage?.title;
   }
 
   private _getArrowType(): ArrowType {
-    return this.viewModel.pages.length > 2 ? 'inline' : 'none';
+    return this._viewModel.pages.length > 2 ? 'inline' : 'none';
   }
 
   private _renderAppGuideHeader() {
@@ -105,7 +106,7 @@ export class InstantAppsAppGuide {
       const { content, type } = pageData;
       return (
         <calcite-carousel-item key={`page_${index}`}>
-          <div>
+          <div class={CSS.contentWrapper}>
             { this._renderContentItems(content, type) }
           </div>
         </calcite-carousel-item>
