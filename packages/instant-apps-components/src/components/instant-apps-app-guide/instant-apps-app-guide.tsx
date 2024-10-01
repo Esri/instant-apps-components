@@ -34,7 +34,7 @@ export class InstantAppsAppGuide {
    * Show a header with the title of the current page
    */
   @Prop()
-  header: boolean;
+  header: boolean = true;
 
   /**
    * A collection of AppGuidePage objects that represent the content of the component
@@ -56,7 +56,7 @@ export class InstantAppsAppGuide {
 
   connectedCallback() {
     this._viewModel.pages = this?.data || [];
-    this.headerText = this?.data[0]?.title;
+    this.headerText = this?.data?.[0]?.title ?? this?.messages?.headerText;
   }
 
   componentDidLoad() {
@@ -88,7 +88,7 @@ export class InstantAppsAppGuide {
     // When this happens, we default to the title of the first page.
     const pages = this._viewModel?.pages;
     const selectedPage = pages?.[selectedNodeIndex] ?? pages[0];
-    this.headerText = selectedPage?.title;
+    this.headerText = selectedPage?.title || this?.messages?.headerText;
   }
 
   private _getArrowType(): ArrowType {
