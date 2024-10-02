@@ -57,6 +57,14 @@ describe('Instant Apps App Guide', async () => {
       expect(headerSpan?.textContent?.trim()).toBe('Test Title');
     });
 
+    test('instant-apps-app-guide has fallback header text', async () => {
+      const { shadowRoot: shadowRoot2 } = await _createAppGuideComponent([testPages.emptyTitle]);
+      console.log(shadowRoot2?.innerHTML);
+      const headerSpan = shadowRoot2?.querySelector('[slot="header-content"]');
+      expect(headerSpan).toBeDefined();
+      expect(headerSpan?.textContent?.trim()).toBe('Tips');
+    });
+
     test('instant-apps-app-guide has header with lightbulb icon', () => {
       const headerIcon = shadowRoot?.querySelector('calcite-icon');
       expect(headerIcon).toBeDefined();
@@ -72,6 +80,35 @@ describe('Instant Apps App Guide', async () => {
       const headerSpan = shadowRoot?.querySelector('[slot="header-content"]');
       expect(headerSpan).toBeNull();
       expect(appGuide.header).toBeFalsy();
+    });
+  });
+
+  describe('component with two pages', async () => {
+    const { shadowRoot } = await _createAppGuideComponent([testPages.singleParagraph, testPages.paragraphs]);
+
+    test('instant-apps-app-guide has 2 pages', () => {
+      const pages = shadowRoot?.querySelectorAll('calcite-carousel-item');
+      expect(pages).toHaveLength(2);
+    });
+
+    test('instant-apps-app-guide has arrow type "none"', () => {
+      const arrowType = shadowRoot?.querySelector('calcite-carousel')?.getAttribute('arrow-type');
+      expect(arrowType).toBe('none');
+    });
+  });
+
+  describe('component with three or more pages', async () => {
+    const pages = [testPages.singleParagraph, testPages.paragraphs, testPages.list];
+    const { shadowRoot } = await _createAppGuideComponent(pages);
+
+    test(`instant-apps-app-guide has ${pages.length} pages`, () => {
+      const pages = shadowRoot?.querySelectorAll('calcite-carousel-item');
+      expect(pages).toHaveLength(pages?.length as number);
+    });
+
+    test('instant-apps-app-guide has arrow type "inline"', () => {
+      const arrowType = shadowRoot?.querySelector('calcite-carousel')?.getAttribute('arrow-type');
+      expect(arrowType).toBe('inline');
     });
   });
 });
