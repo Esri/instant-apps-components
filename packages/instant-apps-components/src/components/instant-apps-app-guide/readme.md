@@ -19,7 +19,7 @@ Data for the pages is passed as an array of `AppGuidePage` objects that each hav
 | Property | Attribute | Description                                                                      | Type             | Default     |
 | -------- | --------- | -------------------------------------------------------------------------------- | ---------------- | ----------- |
 | `data`   | --        | A collection of AppGuidePage objects that represent the content of the component | `AppGuidePage[]` | `undefined` |
-| `header` | `header`  | Show a header with the title of the current page                                 | `boolean`        | `undefined` |
+| `header` | `header`  | Show a header with the title of the current page                                 | `boolean`        | `true`      |
 
 
 ----------------------------------------------
