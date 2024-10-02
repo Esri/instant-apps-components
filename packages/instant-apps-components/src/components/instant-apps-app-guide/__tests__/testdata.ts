@@ -7,13 +7,13 @@ const singleParagraph:AppGuidePage = {
 };
 
 const list:AppGuidePage = {
-  title: 'Test Title',
+  title: 'Test Title 3',
   content: ['Test Content 1', 'Test Content 2', 'Test Content 3'],
   type: 'list'
 };
 
 const paragraphs:AppGuidePage = {
-  title: 'Test Title',
+  title: 'Test Title 2',
   content: ['Test Content 1', 'Test Content 2'],
   type: 'paragraphs'
 };

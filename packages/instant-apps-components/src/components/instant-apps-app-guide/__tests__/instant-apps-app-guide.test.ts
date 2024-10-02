@@ -98,7 +98,7 @@ describe('Instant Apps App Guide', async () => {
 
   describe('component with three or more pages', async () => {
     const pages = [testPages.singleParagraph, testPages.paragraphs, testPages.list];
-    const { shadowRoot } = await _createAppGuideComponent(pages);
+    const { appGuide, shadowRoot } = await _createAppGuideComponent(pages);
 
     test(`instant-apps-app-guide has ${pages.length} pages`, () => {
       const pages = shadowRoot?.querySelectorAll('calcite-carousel-item');
@@ -108,6 +108,16 @@ describe('Instant Apps App Guide', async () => {
     test('instant-apps-app-guide has arrow type "inline"', () => {
       const arrowType = shadowRoot?.querySelector('calcite-carousel')?.getAttribute('arrow-type');
       expect(arrowType).toBe('inline');
+    });
+
+    test('instant-apps-app-guide header text updates with data changes', async () => {
+      // Data changes trigger _updateHeaderText() and so does the onCalciteCarouselChange
+      // event handler; we'll use this as a proxy for paging through the carousel
+      // since can't actually do that from the Shadow DOM
+      appGuide.data = appGuide.data.slice(1);
+      await new Promise(resolve => requestIdleCallback(resolve));
+      const headerSpan = shadowRoot?.querySelector('[slot="header-content"]');
+      expect(headerSpan?.textContent?.trim()).toBe('Test Title 2');
     });
   });
 });
