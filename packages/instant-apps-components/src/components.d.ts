@@ -587,6 +587,10 @@ export namespace Components {
          */
         "refresh": () => Promise<void>;
         /**
+          * The currently selected language.
+         */
+        "selectedLanguage": string | null;
+        /**
           * Reference to map view to switch web maps if present in locales.
          */
         "view"?: __esri.MapView | __esri.SceneView;
@@ -2009,6 +2013,10 @@ declare namespace LocalJSX {
           * Instant App portal item - used to fetch it's associated portal item resource. The portal item resource will contain the user defined translated strings.
          */
         "portalItem": __esri.PortalItem;
+        /**
+          * The currently selected language.
+         */
+        "selectedLanguage"?: string | null;
         /**
           * Reference to map view to switch web maps if present in locales.
          */
