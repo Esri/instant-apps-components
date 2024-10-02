@@ -18,4 +18,10 @@ const paragraphs:AppGuidePage = {
   type: 'paragraphs'
 };
 
-export default { singleParagraph, list, paragraphs };
+const emptyTitle:AppGuidePage = {
+  title: '',
+  content: ['Generic Tip 1', 'Generic Tip 2'],
+  type: 'paragraphs'
+};
+
+export default { singleParagraph, list, paragraphs, emptyTitle };

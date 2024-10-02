@@ -5,9 +5,10 @@ import '../../../../dist/components/instant-apps-app-guide.js';
 import { AppGuidePage } from '../AppGuide/interfaces/interfaces.js';
 import testPages from './testdata';
 
-const _createAppGuideComponent = async (data:AppGuidePage[], hasHeader: boolean = false ) => {
+const _createAppGuideComponent = async (data:AppGuidePage[], header?: boolean ) => {
   const appGuide = document.createElement('instant-apps-app-guide');
-  if (hasHeader) appGuide.setAttribute('header', '');
+
+  appGuide.header = header ?? true;
   appGuide.data = data;
   document.body.appendChild(appGuide);
 
@@ -19,6 +20,7 @@ const _createAppGuideComponent = async (data:AppGuidePage[], hasHeader: boolean 
 
 describe('Instant Apps App Guide', async () => {
   describe('default component', async () => {
+
     const { appGuide, shadowRoot } = await _createAppGuideComponent([testPages.singleParagraph]);
 
     test('instant-apps-app-guide is defined', () => {
@@ -39,8 +41,8 @@ describe('Instant Apps App Guide', async () => {
       ]);
     });
 
-    test('instant-apps-app-guide has no header attribute', () => {
-      expect(appGuide.hasAttribute('header')).toBeFalsy();
+    test('instant-apps-app-guide header property has been set', () => {
+      expect(appGuide.header).toBeTruthy();
     });
 
     test('instant-apps-app-guide has paragraph content', () => {
@@ -48,21 +50,28 @@ describe('Instant Apps App Guide', async () => {
       expect(content).toBeDefined();
       expect(content?.textContent).toBe('Test Content');
     });
-  }); 
 
-  describe('component with header', async () => {
-    const useHeader = true;
-    const { appGuide, shadowRoot } = await _createAppGuideComponent([testPages.singleParagraph], useHeader);
-
-    test('instant-apps-app-guide has header attribute', () => {
-      expect(appGuide.hasAttribute('header')).toBeTruthy();
-      expect(appGuide.header).toBeTruthy();
-    });
-
-    test('instant-apps-app-guide has header text', () => {
+    test('instant-apps-app-guide has header with text', () => {
       const headerSpan = shadowRoot?.querySelector('[slot="header-content"]');
       expect(headerSpan).toBeDefined();
       expect(headerSpan?.textContent?.trim()).toBe('Test Title');
+    });
+
+    test('instant-apps-app-guide has header with lightbulb icon', () => {
+      const headerIcon = shadowRoot?.querySelector('calcite-icon');
+      expect(headerIcon).toBeDefined();
+      expect(headerIcon?.getAttribute('icon')).toBe('lightbulb');
+    });
+  }); 
+
+  describe('component with no header', async () => {
+    const header = false;
+    const { appGuide, shadowRoot } = await _createAppGuideComponent([testPages.singleParagraph], header);
+
+    test('instant-apps-app-guide has no header', () => {
+      const headerSpan = shadowRoot?.querySelector('[slot="header-content"]');
+      expect(headerSpan).toBeNull();
+      expect(appGuide.header).toBeFalsy();
     });
   });
 });
