@@ -96,8 +96,12 @@ export class InstantAppsAppGuide {
   }
 
   private _renderAppGuideHeader() {
-    return !!this.header && this.messages?.headerText ?
-      (<span slot="header-content">{this.headerText} <calcite-icon icon="lightbulb" scale="s"></calcite-icon></span>) :
+    const { messages, header, headerText } = this;
+    const displayHeader = !!header && messages?.headerText;
+    const _headerText = headerText || messages?.headerText;
+
+    return displayHeader ?
+      (<span slot="header-content">{_headerText} <calcite-icon icon="lightbulb" scale="s"></calcite-icon></span>) :
       null;
   }
 

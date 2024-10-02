@@ -58,9 +58,8 @@ describe('Instant Apps App Guide', async () => {
     });
 
     test('instant-apps-app-guide has fallback header text', async () => {
-      const { shadowRoot: shadowRoot2 } = await _createAppGuideComponent([testPages.emptyTitle]);
-      console.log(shadowRoot2?.innerHTML);
-      const headerSpan = shadowRoot2?.querySelector('[slot="header-content"]');
+      const { shadowRoot: _shadowRoot } = await _createAppGuideComponent([testPages.emptyTitle]);
+      const headerSpan = _shadowRoot?.querySelector('[slot="header-content"]');
       expect(headerSpan).toBeDefined();
       expect(headerSpan?.textContent?.trim()).toBe('Tips');
     });
@@ -76,7 +75,7 @@ describe('Instant Apps App Guide', async () => {
     const header = false;
     const { appGuide, shadowRoot } = await _createAppGuideComponent([testPages.singleParagraph], header);
 
-    test('instant-apps-app-guide has no header', () => {
+    test('instant-apps-app-guide has no header span', () => {
       const headerSpan = shadowRoot?.querySelector('[slot="header-content"]');
       expect(headerSpan).toBeNull();
       expect(appGuide.header).toBeFalsy();
