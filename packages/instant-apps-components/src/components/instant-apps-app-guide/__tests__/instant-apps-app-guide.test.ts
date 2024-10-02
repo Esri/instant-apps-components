@@ -46,6 +46,9 @@ describe('Instant Apps App Guide', async () => {
     });
 
     test('instant-apps-app-guide has paragraph content', () => {
+      const wrapper = shadowRoot?.querySelector('.instant-apps-app-guide__content-wrapper');
+      expect(wrapper).toBeDefined();
+
       const content = shadowRoot?.querySelector('p');
       expect(content).toBeDefined();
       expect(content?.textContent).toBe('Test Content');
@@ -118,6 +121,16 @@ describe('Instant Apps App Guide', async () => {
       await new Promise(resolve => requestIdleCallback(resolve));
       const headerSpan = shadowRoot?.querySelector('[slot="header-content"]');
       expect(headerSpan?.textContent?.trim()).toBe('Test Title 2');
+    });
+  });
+
+  describe('component with list content', async () => {
+    const { shadowRoot } = await _createAppGuideComponent([testPages.list]);
+
+    test('instant-apps-app-guide has list content', () => {
+      const list = shadowRoot?.querySelector('.instant-apps-app-guide__content-list');
+      expect(list).toBeDefined();
+      expect(list?.querySelectorAll('.instant-apps-app-guide__content-list--item')).toHaveLength(3);
     });
   });
 });
