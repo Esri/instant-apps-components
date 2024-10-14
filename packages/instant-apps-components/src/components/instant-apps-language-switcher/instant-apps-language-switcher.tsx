@@ -60,6 +60,12 @@ export class InstantAppsLanguageSwitcher {
   @Prop()
   selectedLanguage: string | null = null;
 
+  /**
+    Determines the type of positioning to use for the overlaid content. Using "absolute" will work for most cases. The component will be positioned inside of overflowing parent containers and will affect the container's layout. "fixed" should be used to escape an overflowing parent container, or when the reference element's position CSS property is "fixed".
+   */
+  @Prop()
+  calciteDropdownOverlayPositioning: 'absolute' | 'fixed' = 'absolute';
+
   @State()
   messages: typeof LanguageTranslator_t9n;
 
@@ -136,6 +142,7 @@ export class InstantAppsLanguageSwitcher {
       <calcite-dropdown
         onCalciteDropdownBeforeOpen={() => (this.trigger.iconEnd = 'chevron-up')}
         onCalciteDropdownBeforeClose={() => (this.trigger.iconEnd = 'chevron-down')}
+        overlay-positioning={this.calciteDropdownOverlayPositioning}
         width-scale="m"
       >
         {trigger}

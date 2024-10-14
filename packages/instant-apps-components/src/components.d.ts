@@ -567,6 +567,10 @@ export namespace Components {
     }
     interface InstantAppsLanguageSwitcher {
         /**
+          * Determines the type of positioning to use for the overlaid content. Using "absolute" will work for most cases. The component will be positioned inside of overflowing parent containers and will affect the container's layout. "fixed" should be used to escape an overflowing parent container, or when the reference element's position CSS property is "fixed".
+         */
+        "calciteDropdownOverlayPositioning": 'absolute' | 'fixed';
+        /**
           * Defines the default language of the language switcher dropdown. Set internally if not defined.
          */
         "defaultLocale"?: string;
@@ -1992,6 +1996,10 @@ declare namespace LocalJSX {
         "titleText": string;
     }
     interface InstantAppsLanguageSwitcher {
+        /**
+          * Determines the type of positioning to use for the overlaid content. Using "absolute" will work for most cases. The component will be positioned inside of overflowing parent containers and will affect the container's layout. "fixed" should be used to escape an overflowing parent container, or when the reference element's position CSS property is "fixed".
+         */
+        "calciteDropdownOverlayPositioning"?: 'absolute' | 'fixed';
         /**
           * Defines the default language of the language switcher dropdown. Set internally if not defined.
          */
