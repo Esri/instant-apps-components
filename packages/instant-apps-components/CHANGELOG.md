@@ -5,6 +5,15 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## v1.0.0-beta.272
+
+### instant-apps-sign-in
+
+- add `showIndicator` prop to show blue indicator on users avatar
+- update CSS and width props of sign in buttons
+- use Promise to pause render until check is over in landing page
+- fix: only run check with whenOnce if user is signed in
+
 ## v1.0.0-beta.271
 
 ### instant-apps-interactive-legend

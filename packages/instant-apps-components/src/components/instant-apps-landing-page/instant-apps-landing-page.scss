@@ -233,6 +233,12 @@
   instant-apps-sign-in {
     width: 50%;
   }
+
+  @media screen and (max-width: 500px) {
+    instant-apps-sign-in {
+      width: 100%;
+    }
+  }
 }
 
 @media only screen and (max-width: 768px) {
@@ -273,6 +279,10 @@
           margin-right: unset;
           margin-bottom: 10px;
         }
+      }
+
+      instant-apps-sign-in {
+        margin-bottom: auto;
       }
     }
   }

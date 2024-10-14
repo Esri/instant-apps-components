@@ -776,6 +776,10 @@ export namespace Components {
          */
         "portal": IPortal;
         /**
+          * Show blue dot indicator on user avatar.
+         */
+        "showIndicator": boolean;
+        /**
           * Add items to the sign in dropdown.
          */
         "signInDropdownItems": { label: string; onClick: Function }[];
@@ -2199,6 +2203,10 @@ declare namespace LocalJSX {
           * The apps Portal, used to setup sign in capabilities.
          */
         "portal": IPortal;
+        /**
+          * Show blue dot indicator on user avatar.
+         */
+        "showIndicator"?: boolean;
         /**
           * Add items to the sign in dropdown.
          */

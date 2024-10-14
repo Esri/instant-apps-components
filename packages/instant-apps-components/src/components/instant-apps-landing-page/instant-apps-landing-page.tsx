@@ -154,17 +154,8 @@ export class InstantAppsLandingPage {
     }
   }
 
-  componentWillLoad() {
-    if (this.enableSignIn) {
-      const signInTime = localStorage.getItem('signing-in') ? new Date(Number(localStorage.getItem('signing-in'))) : null;
-      if (signInTime != null) {
-        const minuteLimit = 2;
-        if ((Date.now() - signInTime.getTime()) / (60 * 1000) < minuteLimit) {
-          this.open = false;
-        }
-        localStorage.removeItem('signing-in');
-      }
-    }
+  async componentWillRender() {
+    await this.checkEnableSignIn();
   }
 
   render() {
@@ -265,5 +256,21 @@ export class InstantAppsLandingPage {
           backgroundPosition: 'center',
         }
       : { fontFamily };
+  }
+
+  checkEnableSignIn(): Promise<void> {
+    return new Promise(resolve => {
+      if (this.enableSignIn) {
+        const signInTime = localStorage.getItem('signing-in') ? Number(localStorage.getItem('signing-in')) : null;
+        if (signInTime != null) {
+          const minuteLimit = 2;
+          if ((Date.now() - signInTime) / (60 * 1000) < minuteLimit) {
+            this.open = false;
+          }
+          localStorage.removeItem('signing-in');
+        }
+      }
+      resolve();
+    });
   }
 }

@@ -15,6 +15,7 @@
 | `oauthappid` _(required)_ | `oauthappid`       | The registered application id, used to setup sign in capabilities.                                                                                                                                        | `string`                                    | `undefined`    |
 | `openInPopup`             | `open-in-popup`    | Set to true to show the OAuth sign-in page in a popup window.                                                                                                                                             | `boolean`                                   | `undefined`    |
 | `portal` _(required)_     | --                 | The apps Portal, used to setup sign in capabilities.                                                                                                                                                      | `IPortal`                                   | `undefined`    |
+| `showIndicator`           | `show-indicator`   | Show blue dot indicator on user avatar.                                                                                                                                                                   | `boolean`                                   | `true`         |
 | `signInDropdownItems`     | --                 | Add items to the sign in dropdown.                                                                                                                                                                        | `{ label: string; onClick: Function; }[]`   | `undefined`    |
 | `subtitleText`            | `subtitle-text`    | Landing page subtitle text.                                                                                                                                                                               | `string`                                    | `undefined`    |
 | `titleText`               | `title-text`       | Landing page title text.                                                                                                                                                                                  | `string`                                    | `undefined`    |
@@ -26,6 +27,13 @@
 | Slot                     | Description                                                      |
 | ------------------------ | ---------------------------------------------------------------- |
 | `"sign-in-dropdown-top"` | A slot for adding an element to the top of the sign in dropdown. |
+
+
+## CSS Custom Properties
+
+| Name                                     | Description                                                     |
+| ---------------------------------------- | --------------------------------------------------------------- |
+| `--instant-apps-sign-in-indicator-color` | Color of the indicator that shows in a signed in user's avatar. |
 
 
 ## Dependencies

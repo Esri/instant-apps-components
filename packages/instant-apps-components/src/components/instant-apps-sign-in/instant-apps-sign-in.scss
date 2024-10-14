@@ -1,4 +1,9 @@
 :host {
+  /**
+  * @prop --instant-apps-sign-in-indicator-color: Color of the indicator that shows in a signed in user's avatar.
+  */
+  --instant-apps-sign-in-indicator-color: #007ac2;
+
   display: block;
   box-shadow: none !important;
 
@@ -15,6 +20,19 @@
     calcite-navigation-user {
       --calcite-color-foreground-2: rgba(0, 0, 0, 0.04);
       --calcite-color-foreground-3: rgba(0, 0, 0, 0.04);
+    }
+
+    .instant-apps-sign-in__indicator::after {
+      content: '';
+      position: absolute;
+      block-size: 0.5rem;
+      inline-size: 0.5rem;
+      border-radius: 9999px;
+      inset-block-end: -0.275rem;
+      inset-inline-end: -0.275rem;
+      background-color: var(--instant-apps-sign-in-indicator-color);
+      bottom: calc(50% - 15px);
+      right: calc(50% - 15px);
     }
 
     .instant-apps-sign-in__sign-in-btn {
@@ -85,10 +103,16 @@
     }
   }
 
+  .instant-apps-sign-in__entry-button-container {
+    display: flex;
+    justify-content: center;
+  }
+
   .instant-apps-sign-in__entry-button {
     --calcite-color-brand: var(--instant-apps-landing-page-entry-button-color);
     --calcite-color-brand-hover: var(--instant-apps-landing-page-entry-button-color);
     --calcite-color-brand-press: var(--instant-apps-landing-page-entry-button-color);
+    min-width: 165px;
   }
 
   @media screen and (max-width: 767px) {

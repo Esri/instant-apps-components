@@ -10,6 +10,7 @@ const CSS = {
   SignInBtn: 'instant-apps-sign-in__sign-in-btn',
   buttonContainer: 'instant-apps-sign-in__entry-button-container',
   entryButton: 'instant-apps-sign-in__entry-button',
+  indicator: 'instant-apps-sign-in__indicator',
 };
 
 /**
@@ -79,6 +80,12 @@ export class InstantAppsSignIn {
   @Prop()
   descriptionText: string;
 
+  /**
+   * Show blue dot indicator on user avatar.
+   */
+  @Prop()
+  showIndicator = true;
+
   @Prop()
   closeLandingPage: Function;
 
@@ -127,19 +134,23 @@ export class InstantAppsSignIn {
 
   renderSignInDropdown() {
     const dropdownScale = this.type === 'navigation' ? 'm' : 's';
+    const avatarClass = this.showIndicator ? CSS.indicator : '';
     return (
       <calcite-dropdown placement="bottom-end" scale={dropdownScale}>
         {this.type === 'navigation' ? (
           <calcite-navigation-user
+            class={avatarClass}
             slot="trigger"
             thumbnail={this.user?.thumbnailUrl}
             full-name={this.user?.fullName}
             username={this.user?.username}
+            user-id={(this.user as any)?.id ?? this.user?.sourceJSON?.id}
             textDisabled
           ></calcite-navigation-user>
         ) : (
           <button slot="trigger">
             <calcite-avatar
+              class={avatarClass}
               thumbnail={this.user?.thumbnailUrl}
               full-name={this.user?.fullName}
               username={this.user?.username}
@@ -169,10 +180,10 @@ export class InstantAppsSignIn {
   renderLandingPageSignIn() {
     return (
       <div class={CSS.buttonContainer}>
-        <calcite-button class={CSS.entryButton} scale="l" appearance="outline-fill" width="half" onClick={this.landingPageSignIn.bind(this)}>
+        <calcite-button class={CSS.entryButton} scale="l" appearance="outline-fill" onClick={this.landingPageSignIn.bind(this)}>
           {this.messages?.signIn}
         </calcite-button>
-        <calcite-button class={CSS.entryButton} scale="l" appearance="outline-fill" width="half" onClick={this.guestOnClick.bind(this)}>
+        <calcite-button class={CSS.entryButton} scale="l" appearance="outline-fill" onClick={this.guestOnClick.bind(this)}>
           {this.messages?.continueAsGuest}
         </calcite-button>
       </div>
@@ -182,7 +193,6 @@ export class InstantAppsSignIn {
   async initSignIn(): Promise<void> {
     if (this.portal == null || this.oauthappid == null) return;
     const [OAuthInfo, esriId, reactiveUtils] = await loadModules(['esri/identity/OAuthInfo', 'esri/identity/IdentityManager', 'esri/core/reactiveUtils']);
-
     this.idManager = esriId;
     this.info = new OAuthInfo({
       appId: this.oauthappid,
@@ -193,9 +203,10 @@ export class InstantAppsSignIn {
     this.idManager.registerOAuthInfos([this.info]);
     this.isSignedIn = await this.checkSignInStatus();
     this.ready = true;
-    await reactiveUtils.whenOnce(() => this.portal.user);
-    this.user = this.portal.user;
-    this.ready = true;
+    if (this.isSignedIn) {
+      await reactiveUtils.whenOnce(() => this.portal.user);
+      this.user = this.portal.user;
+    }
   }
 
   async signIn() {
