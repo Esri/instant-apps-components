@@ -24,13 +24,7 @@
     display: flex;
     gap: var(--calcite-spacing-sm);
     padding-inline-start: 0.25rem;
-  }
-
-  .content-heading {
     font-weight: var(--calcite-font-weight-bold);
-    display: flex;
-    gap: var(--calcite-spacing-sm);
-    line-height: var(--calcite-font-line-height-fixed-lg);
   }
 
   calcite-carousel-item {

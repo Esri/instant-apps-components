@@ -54,11 +54,14 @@ export class InstantAppsLanguageSwitcher {
   @Prop()
   defaultLocale?: string;
 
-  @State()
-  messages: typeof LanguageTranslator_t9n;
+  /**
+    The currently selected language.
+   */
+  @Prop()
+  selectedLanguage: string | null = null;
 
   @State()
-  selectedLanguage: string | null = null;
+  messages: typeof LanguageTranslator_t9n;
 
   @State()
   t9nData: any = null;

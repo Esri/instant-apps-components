@@ -558,6 +558,7 @@ export class InstantAppsExport {
         this.legend = new Legend({
           container: legendCont,
           view,
+          respectLayerDefinitionExpression: true,
           style: {
             type: 'card',
             layout: 'side-by-side',

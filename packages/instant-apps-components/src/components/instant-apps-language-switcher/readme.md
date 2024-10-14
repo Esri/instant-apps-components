@@ -55,13 +55,14 @@ document.addEventListener("selectedLanguageUpdated", (e: CustomEvent) => {
 
 ## Properties
 
-| Property                  | Attribute        | Description                                                                                                                                              | Type                                                  | Default      |
-| ------------------------- | ---------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------- | ------------ |
-| `defaultLocale`           | `default-locale` | Defines the default language of the language switcher dropdown. Set internally if not defined.                                                           | `string \| undefined`                                 | `undefined`  |
-| `icon`                    | `icon`           | Icon to display.                                                                                                                                         | `string`                                              | `'language'` |
-| `locales`                 | --               | Data used to populate language switcher dropdown.                                                                                                        | `{ locale: string; webmap?: string \| undefined; }[]` | `[]`         |
-| `portalItem` _(required)_ | --               | Instant App portal item - used to fetch it's associated portal item resource. The portal item resource will contain the user defined translated strings. | `PortalItem`                                          | `undefined`  |
-| `view`                    | --               | Reference to map view to switch web maps if present in locales.                                                                                          | `MapView \| SceneView \| undefined`                   | `undefined`  |
+| Property                  | Attribute           | Description                                                                                                                                              | Type                                                  | Default      |
+| ------------------------- | ------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------- | ------------ |
+| `defaultLocale`           | `default-locale`    | Defines the default language of the language switcher dropdown. Set internally if not defined.                                                           | `string \| undefined`                                 | `undefined`  |
+| `icon`                    | `icon`              | Icon to display.                                                                                                                                         | `string`                                              | `'language'` |
+| `locales`                 | --                  | Data used to populate language switcher dropdown.                                                                                                        | `{ locale: string; webmap?: string \| undefined; }[]` | `[]`         |
+| `portalItem` _(required)_ | --                  | Instant App portal item - used to fetch it's associated portal item resource. The portal item resource will contain the user defined translated strings. | `PortalItem`                                          | `undefined`  |
+| `selectedLanguage`        | `selected-language` | The currently selected language.                                                                                                                         | `null \| string`                                      | `null`       |
+| `view`                    | --                  | Reference to map view to switch web maps if present in locales.                                                                                          | `MapView \| SceneView \| undefined`                   | `undefined`  |
 
 
 ## Events

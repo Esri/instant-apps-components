@@ -139,7 +139,12 @@ export class InstantAppsSignIn {
           ></calcite-navigation-user>
         ) : (
           <button slot="trigger">
-            <calcite-avatar thumbnail={this.user?.thumbnailUrl} full-name={this.user?.fullName} username={this.user?.username}></calcite-avatar>
+            <calcite-avatar
+              thumbnail={this.user?.thumbnailUrl}
+              full-name={this.user?.fullName}
+              username={this.user?.username}
+              user-id={(this.user as any)?.id ?? this.user?.sourceJSON?.id}
+            ></calcite-avatar>
           </button>
         )}
         <slot name="sign-in-dropdown-top"></slot>

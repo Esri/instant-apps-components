@@ -80,15 +80,16 @@ export class InstantAppsAppGuide {
   }
 
   private _updateHeaderText() {
-    const nodeArray = Array.from(this._carouselRef.childNodes);
-    const selectedNodeIndex = nodeArray.indexOf(this._carouselRef.selectedItem);
+    const { _viewModel, _carouselRef, messages } = this;
+    const nodeArray = Array.from(_carouselRef.childNodes);
+    const selectedNodeIndex = nodeArray.indexOf(_carouselRef.selectedItem);
 
     // DOM nodes get updated after the viewModel is updated, so the selectedNodeIndex
     // may be out of bounds of the pages collection in the viewModel when pages are removed.
     // When this happens, we default to the title of the first page.
-    const pages = this._viewModel?.pages;
+    const pages = _viewModel?.pages;
     const selectedPage = pages?.[selectedNodeIndex] ?? pages[0];
-    this.headerText = selectedPage?.title || this?.messages?.headerText;
+    this.headerText = selectedPage?.title || messages?.headerText;
   }
 
   private _getArrowType(): ArrowType {
@@ -96,8 +97,12 @@ export class InstantAppsAppGuide {
   }
 
   private _renderAppGuideHeader() {
-    return !!this.header && this.messages?.headerText ?
-      (<span slot="header-content">{this.headerText} <calcite-icon icon="lightbulb" scale="s"></calcite-icon></span>) :
+    const { messages, header, headerText } = this;
+    const displayHeader = !!header && messages?.headerText;
+    const _headerText = headerText || messages?.headerText;
+
+    return displayHeader ?
+      (<span slot="header-content">{_headerText} <calcite-icon icon="lightbulb" scale="s"></calcite-icon></span>) :
       null;
   }
 
