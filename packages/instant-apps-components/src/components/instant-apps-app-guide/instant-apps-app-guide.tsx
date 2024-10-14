@@ -42,21 +42,27 @@ export class InstantAppsAppGuide {
   @Prop()
   data: AppGuidePage[];
 
-  @Watch('data')
-  watchPropHandler(newValue: AppGuidePage[]) {
-    this._viewModel.pages = newValue;
-    this._updateHeaderText();
-  }
-
   @State() messages: typeof AppGuide_T9n;
   @State() headerText: string;
 
+  @Watch('data')
+  watchPropHandler(newValue: AppGuidePage[]) {
+    this._setContent(newValue);
+  }
+
+  @Watch('headerText')
+  watchStateHandler(newValue: string) {
+    this._viewModel.headerText = newValue;
+  }
+
+  /**
+   * Private Variables
+   */
   private _viewModel: AppGuideViewModel = new AppGuideViewModel();
   private _carouselRef: HTMLCalciteCarouselElement;
 
-  connectedCallback() {
-    this._viewModel.pages = this?.data || [];
-    this.headerText = this?.data?.[0]?.title ?? this?.messages?.headerText;
+  componentWillLoad() {
+    this._setContent(this?.data);
   }
 
   componentDidLoad() {
@@ -64,22 +70,29 @@ export class InstantAppsAppGuide {
   }
 
   render(): HostElement {
+    const pages = this._renderAppGuidePages(this._viewModel.pages);
+    const header = this._renderAppGuideHeader();
     return (
       <Host>
         <calcite-panel scale="s">
-          { this._renderAppGuideHeader() }
+          { header }
           <calcite-carousel
             onCalciteCarouselChange={() => this._updateHeaderText()}
             ref={ el => this._carouselRef = el }
             arrow-type={this._getArrowType()}>
-            { this._renderAppGuidePages(this._viewModel.pages) }
+            { pages }
           </calcite-carousel>
         </calcite-panel>
       </Host>
     )
   }
 
-  private _updateHeaderText() {
+  private _setContent(content: AppGuidePage[]) : void {
+    this._viewModel.setPages(content);
+    this.headerText = this._viewModel.headerText;
+  }
+
+  private _updateHeaderText() : void {
     const { _viewModel, _carouselRef, messages } = this;
     const nodeArray = Array.from(_carouselRef.childNodes);
     const selectedNodeIndex = nodeArray.indexOf(_carouselRef.selectedItem);
@@ -92,11 +105,11 @@ export class InstantAppsAppGuide {
     this.headerText = selectedPage?.title || messages?.headerText;
   }
 
-  private _getArrowType(): ArrowType {
+  private _getArrowType() : ArrowType {
     return this._viewModel.pages.length > 2 ? 'inline' : 'none';
   }
 
-  private _renderAppGuideHeader() {
+  private _renderAppGuideHeader() : HTMLElement | null {
     const { messages, header, headerText } = this;
     const displayHeader = !!header && messages?.headerText;
     const _headerText = headerText || messages?.headerText;
@@ -106,7 +119,7 @@ export class InstantAppsAppGuide {
       null;
   }
 
-  private _renderAppGuidePages(pages: AppGuidePage[]) {
+  private _renderAppGuidePages(pages: AppGuidePage[]) : HTMLCalciteCarouselItemElement[] {
     return pages.map((pageData, index) => {
       const { content, type } = pageData;
       return (
@@ -119,7 +132,7 @@ export class InstantAppsAppGuide {
     });
   }
 
-  private _renderContentItems(content: string[], type: AppGuideRenderType) {
+  private _renderContentItems(content: string[], type: AppGuideRenderType) : HTMLOListElement | HTMLParagraphElement[] {
     switch(type) {
       case 'list':
         return (
