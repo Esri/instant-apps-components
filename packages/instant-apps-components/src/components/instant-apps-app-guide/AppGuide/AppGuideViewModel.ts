@@ -1,18 +1,20 @@
 import { AppGuidePage } from "./interfaces/interfaces";
 
 class AppGuideViewModel {
-  pages: AppGuidePage[];
+  pages: AppGuidePage[] = [];
+  headerText: string = '';
   
   constructor() {
     this.pages = [];
   }
 
-  addPage(page: AppGuidePage) : void {
-    this.pages = [...this.pages, page];
+  setPages(pages: AppGuidePage[]) : void {
+    this.pages = pages;
+    this.setDefaultHeaderText();
   }
 
-  removePage(page: AppGuidePage) : void {
-    this.pages = this.pages.filter(p => p !== page);
+  setDefaultHeaderText() : void {
+    this.headerText = !!this.pages.length ? this.pages[0].title : '';
   }
 }
 
