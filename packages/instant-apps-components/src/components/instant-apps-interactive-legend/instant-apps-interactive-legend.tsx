@@ -106,7 +106,7 @@ export class InstantAppsInteractiveLegend {
       const { on } = this.reactiveUtils;
 
       const [LegendViewModel] = await loadModules(['esri/widgets/Legend/LegendViewModel']);
-      const legendVM = new LegendViewModel({ view: this.view });
+      const legendVM = new LegendViewModel({ view: this.view, respectLayerDefinitionExpression: true });
       this.legendvm = legendVM;
 
       this.handles.add([
