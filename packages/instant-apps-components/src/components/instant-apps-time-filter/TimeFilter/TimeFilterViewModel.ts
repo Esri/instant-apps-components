@@ -142,20 +142,21 @@ class InstantAppsTimeFilterViewModel {
 
     if (defaultItem) {
       const timeSlider = (state.view?.map as __esri.WebMap | __esri.WebScene)?.widgets?.timeSlider;
-      return {
+      const config = {
         ...baseConfig,
         fullTimeExtent: timeSlider?.fullTimeExtent,
         timeExtent: timeSlider?.currentTimeExtent,
-        stops:
-          timeSlider?.stopInterval?.unit && timeSlider?.stopInterval?.value
-            ? {
-                interval: new TimeInterval({
-                  unit: timeSlider?.stopInterval?.unit,
-                  value: timeSlider?.stopInterval?.value,
-                }),
-              }
-            : null,
       };
+      if (timeSlider?.stopInterval?.unit && timeSlider?.stopInterval?.value) {
+        config.stops = {
+          interval: new TimeInterval({
+            unit: timeSlider?.stopInterval?.unit,
+            value: timeSlider?.stopInterval?.value,
+          }),
+        };
+      }
+
+      return config;
     } else {
       const [{ timeExtent, rangeStart, rangeEnd, unit, timeIntervalValue }] = state.timeInfoItems;
       return {
