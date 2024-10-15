@@ -130,20 +130,19 @@ export class InstantAppsInteractiveLegendLegendElementCaption {
   renderCompactButtonUI() {
     const { data } = interactiveLegendState;
     const { id } = this.layer || {};
-    const { showAll: showAllLabel, zoomTo: zoomToLabel } = this.messages || {};
     const displayShowAll = data?.[id]?.categories?.size > 1;
     const zoomToCompact = 'zoomToCompact';
 
     const zoomTo = this.zoomTo && [
       <calcite-action id={zoomToCompact} class={CSS.zoomTo} onClick={this.handleZoomTo()} icon={Icons.ZoomTo} appearance="transparent" scale="m" compact={true} />,
-      <calcite-tooltip reference-element={zoomToCompact} placement="top" label={zoomToLabel}>
-        {zoomToLabel}
+      <calcite-tooltip reference-element={zoomToCompact} placement="top" label={this.messages?.zoomTo}>
+        {this.messages?.zoomTo}
       </calcite-tooltip>,
     ];
 
     const showAll = displayShowAll && (
       <button onClick={this.handleShowAll()} class={CSS.showAll}>
-        {showAllLabel}
+        {this.messages?.showAll}
       </button>
     );
 
@@ -153,22 +152,29 @@ export class InstantAppsInteractiveLegendLegendElementCaption {
   renderButtonUI() {
     const { data } = interactiveLegendState;
     const { id } = this.layer || {};
-    const { showAll: showAllLabel, zoomTo: zoomToLabel } = this.messages || {};
     const displayShowAll = data?.[id]?.categories?.size > 1;
     const showAllId = 'showAll';
     const zoomToId = 'zoomTo';
 
     const showAll = displayShowAll && [
-      <calcite-button key="show-all-button" id={showAllId} label={showAllLabel} onClick={this.handleShowAll()} iconStart={Icons.ShowAll} appearance="outline" round={true} />,
-      <calcite-tooltip referenceElement={showAllId} placement="top" label={showAllLabel}>
-        {showAllLabel}
+      <calcite-button
+        key="show-all-button"
+        id={showAllId}
+        label={this.messages?.showAll}
+        onClick={this.handleShowAll()}
+        iconStart={Icons.ShowAll}
+        appearance="outline"
+        round={true}
+      />,
+      <calcite-tooltip referenceElement={showAllId} placement="top" label={this.messages?.showAll}>
+        {this.messages?.showAll}
       </calcite-tooltip>,
     ];
 
     const zoomTo = this.zoomTo && [
-      <calcite-button key="zoom-to-button" id={zoomToId} label={zoomToLabel} onClick={this.handleZoomTo()} iconStart={Icons.ZoomTo} appearance="outline" round={true} />,
-      <calcite-tooltip reference-element={zoomToId} placement="top" label={zoomToLabel}>
-        {zoomToLabel}
+      <calcite-button key="zoom-to-button" id={zoomToId} label={this.messages?.zoomTo} onClick={this.handleZoomTo()} iconStart={Icons.ZoomTo} appearance="outline" round={true} />,
+      <calcite-tooltip reference-element={zoomToId} placement="top" label={this.messages?.zoomTo}>
+        {this.messages?.zoomTo}
       </calcite-tooltip>,
     ];
 
