@@ -1,7 +1,7 @@
 :host {
   display: block;
   --instant-apps-interactive-legend-heading-font-size: 1rem;
-  --instant-apps-interactive-legend-heading-font-weight: normal;
+  --instant-apps-interactive-legend-heading-font-weight: 500;
   --instant-apps-interactive-legend-secondary-color: var(--calcite-color-text-1);
   --instant-apps-interactive-legend-ui-padding: 15px 10px;
 
@@ -16,7 +16,7 @@
 
   .esri-widget__heading {
     display: inline-block;
-    font-size: var(--instant-apps-interactive-legend-heading-font-size);
+    font-size: var(--calcite-font-size-1);
   }
 
   .esri-widget__heading {

@@ -31,6 +31,7 @@ This component is only compatible with [ArcGIS Online feature layers](https://do
 
 | Property       | Attribute       | Description                                                                                             | Type         | Default                     |
 | -------------- | --------------- | ------------------------------------------------------------------------------------------------------- | ------------ | --------------------------- |
+| `compact`      | `compact`       |                                                                                                         | `boolean`    | `false`                     |
 | `featureCount` | `feature-count` | Display the individual counts for categories and total counts for layers in the legend                  | `boolean`    | `false`                     |
 | `filterMode`   | --              | Use effects to differentiate between features that are included and excluded from legend filter results | `FilterMode` | `{     type: 'filter',   }` |
 | `view`         | --              | Reference to Map View                                                                                   | `MapView`    | `undefined`                 |

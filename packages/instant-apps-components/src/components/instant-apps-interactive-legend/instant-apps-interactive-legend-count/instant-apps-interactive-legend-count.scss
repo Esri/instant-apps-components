@@ -3,6 +3,11 @@
   align-items: center;
 }
 
+.instant-apps-interactive-legend__total-feature-count {
+  font-weight: var(--calcite-font-weight-medium);
+  font-size: var(--calcite-font-size-0);
+}
+
 .instant-apps-interactive-legend__info-count-text {
   font-size: var(--instant-apps-interactive-legend-info-font-size);
   color: var(--instant-apps-interactive-legend-secondary-color);

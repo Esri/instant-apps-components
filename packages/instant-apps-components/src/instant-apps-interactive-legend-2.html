@@ -78,6 +78,8 @@
         view.ui.add(legend, 'top-left');
 
         const intLegend = document.createElement('instant-apps-interactive-legend');
+        intLegend.compact = true;
+        intLegend.zoomTo = true;
         intLegend.featureCount = true;
         intLegend.view = view;
 
