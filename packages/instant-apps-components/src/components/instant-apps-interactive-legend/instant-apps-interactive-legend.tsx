@@ -6,6 +6,7 @@ import { FilterMode } from '../../interfaces/interfaces';
 
 import { getMessages } from '../../utils/locale';
 import { getTheme } from './support/helpers';
+import { store } from './support/store';
 
 const CSS = {
   esri: {
@@ -55,7 +56,9 @@ export class InstantAppsInteractiveLegend {
   /**
    * Display the individual counts for categories and total counts for layers in the legend
    */
-  @Prop()
+  @Prop({
+    mutable: true,
+  })
   featureCount: boolean = false;
 
   /**
@@ -66,10 +69,17 @@ export class InstantAppsInteractiveLegend {
     type: 'filter',
   };
 
+  /**
+   * The legend elements are reduced to one line and feature count is not available.
+   */
+  @Prop()
+  compact = false;
+
   @State()
   messages;
 
   async componentWillLoad() {
+    this.compactHandler();
     const observer = new MutationObserver(() => {
       forceUpdate(this.el);
     });
@@ -119,6 +129,11 @@ export class InstantAppsInteractiveLegend {
     } catch (err) {
       console.error('Failed at "init": ', err);
     }
+  }
+
+  @Watch('compact')
+  compactHandler() {
+    store.set('compact', this.compact);
   }
 
   render() {

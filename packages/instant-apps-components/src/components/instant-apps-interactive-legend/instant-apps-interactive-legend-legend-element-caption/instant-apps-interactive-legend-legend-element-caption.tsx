@@ -16,6 +16,9 @@ const CSS = {
   layerCaptionBtnContainer: 'instant-apps-interactive-legend__layer-caption-btn-container',
   layerCaptionBtnContainerNoText: 'instant-apps-interactive-legend__layer-caption-btn-container--no-text',
   layerCaptionText: 'instant-apps-interactive-legend__legend-layer-caption-text',
+  compact: 'instant-apps-interactive-legend__layer-caption--compact',
+  showAll: 'instant-apps-interactive-legend__show-all-btn',
+  zoomTo: 'instant-apps-interactive-legend__zoom-to-btn',
 };
 
 @Component({
@@ -82,8 +85,10 @@ export class InstantAppsInteractiveLegendLegendElementCaption {
 
     const { expanded } = this;
 
+    const compact = store.get('compact') ? ` ${CSS.compact}` : '';
+
     return isNestedUniqueSymbols && !this.titleText ? null : (
-      <div class={CSS.layerCaption}>
+      <div class={`${CSS.layerCaption}${compact}`}>
         <calcite-action
           onClick={this.toggleExpanded()}
           icon={expanded === false ? 'chevron-up' : 'chevron-down'}
@@ -93,7 +98,11 @@ export class InstantAppsInteractiveLegendLegendElementCaption {
           scale="s"
         ></calcite-action>
         {this.isInteractive || isRelationship ? this.renderLegendElementCaptionControls() : null}
-        {this.titleText ? <span class={CSS.layerCaptionText} title={this.titleText}>{this.titleText}</span> : null}
+        {this.titleText ? (
+          <span class={CSS.layerCaptionText} title={this.titleText}>
+            {this.titleText}
+          </span>
+        ) : null}
       </div>
     );
   }
@@ -101,47 +110,56 @@ export class InstantAppsInteractiveLegendLegendElementCaption {
   renderLegendElementCaptionControls() {
     const noText = !this.titleText ? ` ${CSS.layerCaptionBtnContainerNoText}` : '';
 
-    const showAllButton =
-      interactiveLegendState.data?.[this.layer?.id]?.categories?.size > 1 ? (
-        <calcite-button
-          key="show-all-button"
-          id="showAll"
-          onClick={this.handleShowAll()}
-          icon-start="list-check-all"
-          appearance="outline"
-          round={true}
-          label={this.messages?.showAll}
-        />
-      ) : null;
-
-    const zoomToButton = (
-      <calcite-button
-        key="zoom-to-button"
-        id="zoomTo"
-        onClick={this.handleZoomTo()}
-        icon-start="magnifying-glass-plus"
-        appearance="outline"
-        round={true}
-        label={this.messages?.zoomTo}
-      />
-    );
-
     return (
       <div key="layer-caption-btn-container" class={`${CSS.layerCaptionBtnContainer}${noText}`}>
-        {showAllButton}
-        <calcite-tooltip reference-element="showAll" placement="top" label={this.messages?.showAll}>
-          {this.messages?.showAll}
-        </calcite-tooltip>
-        {this.zoomTo
-          ? [
-              zoomToButton,
-              <calcite-tooltip reference-element="zoomTo" placement="top" label={this.messages?.zoomTo}>
-                {this.messages?.zoomTo}
-              </calcite-tooltip>,
-            ]
-          : null}
+        {this.renderShowAllZoomToButtons()}
       </div>
     );
+  }
+
+  renderShowAllZoomToButtons() {
+    return store.get('compact')
+      ? [
+          this.zoomTo ? <calcite-action class={CSS.zoomTo} onClick={this.handleZoomTo()} icon="magnifying-glass-plus" appearance="transparent" scale="m" compact={true} /> : null,
+          interactiveLegendState.data?.[this.layer?.id]?.categories?.size > 1 ? (
+            <button onClick={this.handleShowAll()} class={CSS.showAll}>
+              {this.messages?.showAll}
+            </button>
+          ) : null,
+        ]
+      : [
+          interactiveLegendState.data?.[this.layer?.id]?.categories?.size > 1 ? (
+            <calcite-button
+              key="show-all-button"
+              id="showAll"
+              onClick={this.handleShowAll()}
+              icon-start="list-check-all"
+              appearance="outline"
+              round={true}
+              label={this.messages?.showAll}
+            />
+          ) : null,
+          <calcite-tooltip reference-element="showAll" placement="top" label={this.messages?.showAll}>
+            {this.messages?.showAll}
+          </calcite-tooltip>,
+
+          this.zoomTo
+            ? [
+                <calcite-button
+                  key="zoom-to-button"
+                  id="zoomTo"
+                  onClick={this.handleZoomTo()}
+                  icon-start="magnifying-glass-plus"
+                  appearance="outline"
+                  round={true}
+                  label={this.messages?.zoomTo}
+                />,
+                <calcite-tooltip reference-element="zoomTo" placement="top" label={this.messages?.zoomTo}>
+                  {this.messages?.zoomTo}
+                </calcite-tooltip>,
+              ]
+            : null,
+        ];
   }
 
   toggleExpanded(): () => void {

@@ -1,3 +1,5 @@
+$compactLegendUIPadding: 10px 5px;
+
 :host {
   display: block;
 
@@ -107,6 +109,10 @@
 
   .instant-apps-interactive-legend__layer-row--interactive {
     position: relative;
+  }
+
+  .instant-apps-interactive-legend-element-info__compact {
+    --instant-apps-interactive-legend-ui-padding: #{$compactLegendUIPadding};
   }
 
   .instant-apps-interactive-legend-element-info--selected {

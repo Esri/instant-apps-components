@@ -41,6 +41,10 @@
       <calcite-shell-panel slot="panel-start">
         <calcite-panel>
           <calcite-label layout="inline">
+            Compact
+            <calcite-switch id="compact" />
+          </calcite-label>
+          <calcite-label layout="inline">
             Use preset layer effects
             <calcite-switch id="filterMode" />
           </calcite-label>
@@ -58,10 +62,10 @@
     <div id="viewDiv"></div>
     <script>
       require(['esri/WebMap', 'esri/widgets/Expand', 'esri/views/MapView', 'esri/core/reactiveUtils', 'esri/config'], (WebMap, Expand, MapView, reactiveUtils, esriConfig) => {
-        esriConfig.portalUrl = 'https://nw-brews.mapsdevext.arcgis.com';
+        esriConfig.portalUrl = 'https://webapps.maps.arcgis.com';
         const map = new WebMap({
           portalItem: {
-            id: '3e43d1f8ae4841ffaea9a4163ed9c629',
+            id: '881f72ef29384b89a25a61d5803becd1',
           },
         });
 
@@ -73,6 +77,7 @@
         const legend = document.createElement('instant-apps-interactive-legend');
         legend.classList.add('calcite-mode-light');
         legend.featureCount = true;
+
         legend.zoomTo = true;
         legend.view = view;
         view.ui.add(legend, 'top-right');
@@ -95,6 +100,12 @@
               effect,
             };
           }
+        });
+
+        const compactSwitch = document.getElementById('compact');
+        compactSwitch.addEventListener('calciteSwitchChange', e => {
+          const value = e.target.checked;
+          legend.compact = value;
         });
 
         const layerEffectsDropdown = document.getElementById('layerEffects');
