@@ -11,6 +11,12 @@ import {
   zoomTo,
 } from '../support/helpers';
 import { interactiveLegendState, store } from '../support/store';
+
+enum Icons {
+  ZoomTo = 'magnifying-glass-plus',
+  ShowAll = 'list-check-all',
+}
+
 const CSS = {
   layerCaption: 'esri-legend__layer-caption',
   layerCaptionBtnContainer: 'instant-apps-interactive-legend__layer-caption-btn-container',
@@ -118,48 +124,55 @@ export class InstantAppsInteractiveLegendLegendElementCaption {
   }
 
   renderShowAllZoomToButtons() {
-    return store.get('compact')
-      ? [
-          this.zoomTo ? <calcite-action class={CSS.zoomTo} onClick={this.handleZoomTo()} icon="magnifying-glass-plus" appearance="transparent" scale="m" compact={true} /> : null,
-          interactiveLegendState.data?.[this.layer?.id]?.categories?.size > 1 ? (
-            <button onClick={this.handleShowAll()} class={CSS.showAll}>
-              {this.messages?.showAll}
-            </button>
-          ) : null,
-        ]
-      : [
-          interactiveLegendState.data?.[this.layer?.id]?.categories?.size > 1 ? (
-            <calcite-button
-              key="show-all-button"
-              id="showAll"
-              onClick={this.handleShowAll()}
-              icon-start="list-check-all"
-              appearance="outline"
-              round={true}
-              label={this.messages?.showAll}
-            />
-          ) : null,
-          <calcite-tooltip reference-element="showAll" placement="top" label={this.messages?.showAll}>
-            {this.messages?.showAll}
-          </calcite-tooltip>,
+    return store.get('compact') ? this.renderCompactButtonUI() : this.renderButtonUI();
+  }
 
-          this.zoomTo
-            ? [
-                <calcite-button
-                  key="zoom-to-button"
-                  id="zoomTo"
-                  onClick={this.handleZoomTo()}
-                  icon-start="magnifying-glass-plus"
-                  appearance="outline"
-                  round={true}
-                  label={this.messages?.zoomTo}
-                />,
-                <calcite-tooltip reference-element="zoomTo" placement="top" label={this.messages?.zoomTo}>
-                  {this.messages?.zoomTo}
-                </calcite-tooltip>,
-              ]
-            : null,
-        ];
+  renderCompactButtonUI() {
+    const { data } = interactiveLegendState;
+    const { id } = this.layer || {};
+    const { showAll: showAllLabel, zoomTo: zoomToLabel } = this.messages || {};
+    const displayShowAll = data?.[id]?.categories?.size > 1;
+    const zoomToCompact = 'zoomToCompact';
+
+    const zoomTo = this.zoomTo && [
+      <calcite-action id={zoomToCompact} class={CSS.zoomTo} onClick={this.handleZoomTo()} icon={Icons.ZoomTo} appearance="transparent" scale="m" compact={true} />,
+      <calcite-tooltip reference-element={zoomToCompact} placement="top" label={zoomToLabel}>
+        {zoomToLabel}
+      </calcite-tooltip>,
+    ];
+
+    const showAll = displayShowAll && (
+      <button onClick={this.handleShowAll()} class={CSS.showAll}>
+        {showAllLabel}
+      </button>
+    );
+
+    return [zoomTo, showAll];
+  }
+
+  renderButtonUI() {
+    const { data } = interactiveLegendState;
+    const { id } = this.layer || {};
+    const { showAll: showAllLabel, zoomTo: zoomToLabel } = this.messages || {};
+    const displayShowAll = data?.[id]?.categories?.size > 1;
+    const showAllId = 'showAll';
+    const zoomToId = 'zoomTo';
+
+    const showAll = displayShowAll && [
+      <calcite-button key="show-all-button" id={showAllId} label={showAllLabel} onClick={this.handleShowAll()} iconStart={Icons.ShowAll} appearance="outline" round={true} />,
+      <calcite-tooltip referenceElement={showAllId} placement="top" label={showAllLabel}>
+        {showAllLabel}
+      </calcite-tooltip>,
+    ];
+
+    const zoomTo = this.zoomTo && [
+      <calcite-button key="zoom-to-button" id={zoomToId} label={zoomToLabel} onClick={this.handleZoomTo()} iconStart={Icons.ZoomTo} appearance="outline" round={true} />,
+      <calcite-tooltip reference-element={zoomToId} placement="top" label={zoomToLabel}>
+        {zoomToLabel}
+      </calcite-tooltip>,
+    ];
+
+    return [showAll, zoomTo];
   }
 
   toggleExpanded(): () => void {

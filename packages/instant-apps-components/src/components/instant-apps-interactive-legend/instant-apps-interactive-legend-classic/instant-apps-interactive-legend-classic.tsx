@@ -669,7 +669,7 @@ export class InstantAppsInteractiveLegendClassic {
         ) : null}
       </button>
     ) : (
-      <div class={CSS.layerRow}>
+      <div class={`${CSS.layerRow}${compact}`}>
         <div class={`${CSS.symbolContainer}${imageryLayerInfoStretched}${sizeRamp}`}>{content}</div>
         <div class={`${CSS.layerInfo}${imageryLayerInfoStretched}`}>{this.getTitle(this.messages, elementInfo.label, false) || ''}</div>
       </div>
