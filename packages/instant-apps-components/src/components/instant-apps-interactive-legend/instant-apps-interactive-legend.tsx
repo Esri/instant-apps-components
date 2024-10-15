@@ -69,9 +69,6 @@ export class InstantAppsInteractiveLegend {
     type: 'filter',
   };
 
-  /**
-   * The legend elements are reduced to one line and feature count is not available.
-   */
   @Prop()
   compact = false;
 

@@ -385,9 +385,6 @@ export namespace Components {
         "toggleInfo": () => Promise<void>;
     }
     interface InstantAppsInteractiveLegend {
-        /**
-          * The legend elements are reduced to one line and feature count is not available.
-         */
         "compact": boolean;
         /**
           * Display the individual counts for categories and total counts for layers in the legend
@@ -1807,9 +1804,6 @@ declare namespace LocalJSX {
         "titleTextLink"?: string;
     }
     interface InstantAppsInteractiveLegend {
-        /**
-          * The legend elements are reduced to one line and feature count is not available.
-         */
         "compact"?: boolean;
         /**
           * Display the individual counts for categories and total counts for layers in the legend
