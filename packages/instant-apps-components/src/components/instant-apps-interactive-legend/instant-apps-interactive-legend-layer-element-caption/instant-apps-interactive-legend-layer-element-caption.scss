@@ -1,3 +1,5 @@
+$compactHeaderFontSize: 0.9rem;
+
 :host {
   display: block;
   --instant-apps-interactive-legend-heading-font-size: 1rem;
@@ -5,21 +7,17 @@
   --instant-apps-interactive-legend-secondary-color: var(--calcite-color-text-1);
   --instant-apps-interactive-legend-ui-padding: 15px 10px;
 
+  .instant-apps-interactive-legend__header--compact {
+    .esri-widget__heading {
+      font-size: $compactHeaderFontSize;
+    }
+  }
+
   .esri-widget__heading {
     overflow: hidden;
-  }
-
-  .esri-widget__heading {
     margin: 0;
-    overflow-x: hidden;
-  }
-
-  .esri-widget__heading {
     display: inline-block;
     font-size: var(--calcite-font-size-1);
-  }
-
-  .esri-widget__heading {
     font-weight: var(--instant-apps-interactive-legend-heading-font-weight);
   }
 
