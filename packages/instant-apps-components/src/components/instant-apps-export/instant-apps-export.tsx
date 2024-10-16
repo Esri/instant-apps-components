@@ -72,6 +72,11 @@ export class InstantAppsExport {
   @Prop({ mutable: true }) headerTitle?: string = '';
 
   /**
+   * Image URL for logo in export's header.
+   */
+  @Prop({ mutable: true }) logoImage?: string = '';
+
+  /**
    * When `true`, `extraContent` HTML element is included in the PDF.
    */
   @Prop({ mutable: true }) includeExtraContent?: boolean = true;
@@ -334,7 +339,9 @@ export class InstantAppsExport {
     return (
       <div class={CSS.print.viewContainer} ref={(el: HTMLDivElement) => (this.viewContainerEl = el)}>
         <div class={CSS.print.viewWrapper} ref={(el: HTMLDivElement) => (this.viewWrapperEl = el)}>
-          {this.headerTitle ? <instant-apps-header titleText={this.headerTitle} backgroundColor="#fff" textColor="#323232"></instant-apps-header> : null}
+          {this.headerTitle ? (
+            <instant-apps-header logoImage={this.logoImage} logoScale="s" titleText={this.headerTitle} backgroundColor="#fff" textColor="#323232"></instant-apps-header>
+          ) : null}
           <img class={CSS.print.view} ref={(el: HTMLImageElement) => (this.viewEl = el)}></img>
           <div class={CSS.print.scaleBarContainer} ref={(el: HTMLDivElement) => (this.scaleBarContainerEl = el)}></div>
         </div>
