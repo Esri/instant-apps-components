@@ -16,6 +16,7 @@ import {
 const CSS = {
   countText: ' instant-apps-interactive-legend__info-count-text',
   countTextSelected: ' instant-apps-interactive-legend__info-count-text--selected',
+  totalFeatureCount: 'instant-apps-interactive-legend__total-feature-count',
 };
 
 @Component({
@@ -68,7 +69,7 @@ export class InstantAppsInteractiveLegendCount {
     return (
       <div key="int-legend-count">
         {this.showTotal ? (
-          <span>
+          <span class={CSS.totalFeatureCount}>
             {this.messages?.totalFeatureCount}: {this.getTotalFeatureCount()}
           </span>
         ) : (

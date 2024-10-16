@@ -1,3 +1,4 @@
+$compactLegendUIPadding: 5px;
 :host {
   display: block;
 
@@ -22,6 +23,30 @@
     font-size: var(--instant-apps-interactive-legend-field-name-font-size);
     background-color: var(--instant-apps-interactive-legend-secondary-background-color);
     color: var(--instant-apps-interactive-legend-secondary-color);
+  }
+
+  .instant-apps-interactive-legend__layer-caption--compact {
+    --instant-apps-interactive-legend-ui-padding: #{$compactLegendUIPadding};
+    .instant-apps-interactive-legend__layer-caption-btn-container {
+      display: flex;
+      justify-content: flex-end;
+      width: 100%;
+
+      .instant-apps-interactive-legend__show-all-btn {
+        border: none;
+        background-color: transparent;
+        cursor: pointer;
+        color: var(--calcite-ui-brand);
+        font-weight: var(--calcite-font-weight-medium);
+        font-size: var(--calcite-font-size--0);
+        padding-inline-start: 20px;
+      }
+    }
+
+    .instant-apps-interactive-legend__zoom-to-btn {
+      --calcite-icon-color: var(--calcite-ui-brand);
+      --calcite-color-transparent-hover: transparent;
+    }
   }
 
   .instant-apps-interactive-legend__legend-layer-caption-text {
