@@ -1,11 +1,13 @@
 import { Component, h, Prop, Element, Event, EventEmitter } from '@stencil/core';
 import { getTheme, validateInteractivity } from '../support/helpers';
+import { store } from '../support/store';
 
 const CSS = {
   label: 'esri-legend__service-label',
   header: 'esri-widget__heading',
   interacitveLegendHeader: 'instant-apps-interactive-legend__header',
   headerActionContainer: 'instant-apps-interactive-legend__header-action-container',
+  compact: 'instant-apps-interactive-legend__header--compact',
 };
 
 @Component({
@@ -54,8 +56,10 @@ export class InstantAppsInteractiveLegendLayerElementCaption {
 
     const isChild = this.isChild ? ' instant-apps-interactive-legend__heading-text--group-item' : '';
 
+    const compact = store.get('compact') ? ` ${CSS.compact}` : '';
+
     return (
-      <header class={`${CSS.interacitveLegendHeader} ${getTheme(this.el)}`}>
+      <header class={`${CSS.interacitveLegendHeader} ${getTheme(this.el)}${compact}`}>
         <calcite-action
           onClick={this.toggleExpanded()}
           icon={expanded ? 'chevron-down' : 'chevron-up'}
