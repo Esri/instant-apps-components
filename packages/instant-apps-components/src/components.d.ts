@@ -114,6 +114,10 @@ export namespace Components {
          */
         "includeExtraContent"?: boolean;
         /**
+          * When `true`, user has ability to select the file format to be PDF or an image.
+         */
+        "includeFileFormat"?: boolean;
+        /**
           * When `true`, legend is included in the export.
          */
         "includeLegend"?: boolean;
@@ -1520,6 +1524,10 @@ declare namespace LocalJSX {
           * When `true`, `extraContent` HTML element is included in the PDF.
          */
         "includeExtraContent"?: boolean;
+        /**
+          * When `true`, user has ability to select the file format to be PDF or an image.
+         */
+        "includeFileFormat"?: boolean;
         /**
           * When `true`, legend is included in the export.
          */
