@@ -111,10 +111,6 @@ $compactLegendUIPadding: 10px 5px;
     position: relative;
   }
 
-  .instant-apps-interactive-legend-element-info__compact {
-    --instant-apps-interactive-legend-ui-padding: #{$compactLegendUIPadding};
-  }
-
   .instant-apps-interactive-legend-element-info--selected {
     background-color: var(--instant-apps-interactive-legend-info-item-background--selected);
   }
@@ -131,6 +127,23 @@ $compactLegendUIPadding: 10px 5px;
 
   .hide {
     display: none;
+  }
+}
+
+.instant-apps-interactive-legend__compact {
+  .esri-legend__layer-row {
+    --instant-apps-interactive-legend-ui-padding: #{$compactLegendUIPadding};
+
+    .esri-legend__layer-cell--info {
+      display: -webkit-box;
+      -webkit-box-orient: vertical;
+      -webkit-line-clamp: 2;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      line-clamp: 2;
+      line-height: 1.3125rem;
+      max-height: 2.625rem;
+    }
   }
 }
 

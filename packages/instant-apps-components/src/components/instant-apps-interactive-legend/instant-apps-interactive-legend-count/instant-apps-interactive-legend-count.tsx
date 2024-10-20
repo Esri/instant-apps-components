@@ -1,7 +1,7 @@
 import { Component, Element, forceUpdate, h, Prop } from '@stencil/core';
 import { ICategory } from '../instant-apps-interactive-legend-classic/interfaces/interfaces';
 import { loadModules } from '../../../utils/loadModules';
-import { interactiveLegendState } from '../support/store';
+import { interactiveLegendState, store } from '../support/store';
 import {
   calculateTotalCount,
   calculateTotalFeatureCountForNestedSymbols,
@@ -17,6 +17,7 @@ const CSS = {
   countText: ' instant-apps-interactive-legend__info-count-text',
   countTextSelected: ' instant-apps-interactive-legend__info-count-text--selected',
   totalFeatureCount: 'instant-apps-interactive-legend__total-feature-count',
+  compact: 'instant-apps-interactive-legend-count--compact',
 };
 
 @Component({
@@ -66,8 +67,9 @@ export class InstantAppsInteractiveLegendCount {
   }
 
   render() {
+    const compact = store.get('compact') ? CSS.compact : '';
     return (
-      <div key="int-legend-count">
+      <div key="int-legend-count" class={compact}>
         {this.showTotal ? (
           <span class={CSS.totalFeatureCount}>
             {this.messages?.totalFeatureCount}: {this.getTotalFeatureCount()}

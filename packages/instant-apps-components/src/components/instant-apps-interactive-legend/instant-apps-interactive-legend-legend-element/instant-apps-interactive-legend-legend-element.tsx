@@ -1,5 +1,5 @@
 import { Component, Listen, Prop, State, h } from '@stencil/core';
-import { checkNestedUniqueSymbolLegendElement, checkPredominance } from '../support/helpers';
+import { checkNestedUniqueSymbolLegendElement } from '../support/helpers';
 import { store } from '../support/store';
 
 const CSS = {
@@ -77,11 +77,6 @@ export class InstantAppsInteractiveLegendLegendElement {
       expanded = expandState;
     }
 
-    const isSymbolTable = this.legendElement?.type === 'symbol-table';
-    const isPredominance = isSymbolTable && checkPredominance(this.activeLayerInfo?.layerView as __esri.FeatureLayerView);
-    const isRelationship = isSymbolTable && this.activeLayerInfo?.legendElements?.[1]?.type === 'relationship-ramp';
-
-    const titleText = store.get('compact') && (isPredominance || isRelationship) ? '' : (this.titleText as string);
     return (
       <div class={`${tableClass}${tableClasses}${nonInteractiveClass}${nestedUniqueSymbolClass}`}>
         <div
@@ -93,7 +88,7 @@ export class InstantAppsInteractiveLegendLegendElement {
             legendvm={this.legendvm}
             activeLayerInfo={this.activeLayerInfo}
             layer={this.activeLayerInfo.layer as __esri.FeatureLayer}
-            titleText={titleText}
+            titleText={this.titleText as string}
             legendElement={this.legendElement}
             legendElementIndex={this.legendElementIndex}
             zoomTo={this.zoomTo}

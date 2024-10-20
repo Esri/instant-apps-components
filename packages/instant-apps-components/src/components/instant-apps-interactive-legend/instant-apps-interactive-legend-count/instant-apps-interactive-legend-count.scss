@@ -1,3 +1,5 @@
+$compactTotalFeatureCountFontSize: 0.75rem;
+
 :host {
   display: flex;
   align-items: center;
@@ -15,6 +17,12 @@
 
 .calcite-mode-dark.instant-apps-interactive-legend__info-count-text.instant-apps-interactive-legend__info-count-text--selected {
   color: var(--calcite-color-text-inverse);
+}
+
+.instant-apps-interactive-legend-count--compact {
+  .instant-apps-interactive-legend__total-feature-count {
+    font-size: $compactTotalFeatureCountFontSize;
+  }
 }
 
 html[dir='rtl'] {

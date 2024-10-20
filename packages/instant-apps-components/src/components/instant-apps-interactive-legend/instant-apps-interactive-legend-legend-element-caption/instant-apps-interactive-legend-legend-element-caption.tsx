@@ -86,15 +86,25 @@ export class InstantAppsInteractiveLegendLegendElementCaption {
 
   render() {
     const isNestedUniqueSymbols = checkNestedUniqueSymbolLegendElement(this.activeLayerInfo);
-
     const isRelationship = checkRelationshipRamp(this.activeLayerInfo);
-
     const { expanded } = this;
+    const compact = store.get('compact');
+    const compactClass = compact ? ` ${CSS.compact}` : '';
 
-    const compact = store.get('compact') ? ` ${CSS.compact}` : '';
+    if (isNestedUniqueSymbols && !this.titleText) {
+      return null;
+    }
 
-    return isNestedUniqueSymbols && !this.titleText ? null : (
-      <div class={`${CSS.layerCaption}${compact}`}>
+    const titleTextElement = this.titleText && (
+      <span class={CSS.layerCaptionText} title={this.titleText}>
+        {this.titleText}
+      </span>
+    );
+
+    const controlsElement = (this.isInteractive || isRelationship) && this.renderLegendElementCaptionControls();
+
+    return (
+      <div class={`${CSS.layerCaption}${compactClass}`}>
         <calcite-action
           onClick={this.toggleExpanded()}
           icon={expanded === false ? 'chevron-up' : 'chevron-down'}
@@ -103,12 +113,7 @@ export class InstantAppsInteractiveLegendLegendElementCaption {
           label={expanded === false ? this.messages?.expand : this.messages?.collapse}
           scale="s"
         ></calcite-action>
-        {this.isInteractive || isRelationship ? this.renderLegendElementCaptionControls() : null}
-        {this.titleText ? (
-          <span class={CSS.layerCaptionText} title={this.titleText}>
-            {this.titleText}
-          </span>
-        ) : null}
+        {compact ? [titleTextElement, controlsElement] : [controlsElement, titleTextElement]}
       </div>
     );
   }
@@ -134,7 +139,7 @@ export class InstantAppsInteractiveLegendLegendElementCaption {
     const zoomToCompact = 'zoomToCompact';
 
     const zoomTo = this.zoomTo && [
-      <calcite-action id={zoomToCompact} class={CSS.zoomTo} onClick={this.handleZoomTo()} icon={Icons.ZoomTo} appearance="transparent" scale="m" compact={true} />,
+      <calcite-action id={zoomToCompact} class={CSS.zoomTo} onClick={this.handleZoomTo()} icon={Icons.ZoomTo} appearance="transparent" scale="s" compact={true} />,
       <calcite-tooltip reference-element={zoomToCompact} placement="top" label={this.messages?.zoomTo}>
         {this.messages?.zoomTo}
       </calcite-tooltip>,

@@ -1,4 +1,5 @@
 $compactLegendUIPadding: 5px;
+$compactSubheadingFontSize: 0.75rem;
 :host {
   display: block;
 
@@ -38,7 +39,7 @@ $compactLegendUIPadding: 5px;
         cursor: pointer;
         color: var(--calcite-ui-brand);
         font-weight: var(--calcite-font-weight-medium);
-        font-size: var(--calcite-font-size--0);
+        font-size: $compactSubheadingFontSize;
         padding-inline-start: 20px;
       }
     }
@@ -46,6 +47,15 @@ $compactLegendUIPadding: 5px;
     .instant-apps-interactive-legend__zoom-to-btn {
       --calcite-icon-color: var(--calcite-ui-brand);
       --calcite-color-transparent-hover: transparent;
+    }
+
+    .instant-apps-interactive-legend__legend-layer-caption-text {
+      display: inline-block;
+      font-size: $compactSubheadingFontSize;
+      white-space: nowrap;
+      width: 100%;
+      overflow: hidden;
+      text-overflow: ellipsis;
     }
   }
 

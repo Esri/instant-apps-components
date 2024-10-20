@@ -85,7 +85,7 @@ const CSS = {
   layerCaptionBtnContainer: 'instant-apps-interactive-legend__layer-caption-btn-container',
   interactiveLayerRow: 'instant-apps-interactive-legend__layer-row--interactive',
   infoSelected: 'instant-apps-interactive-legend-element-info--selected',
-  compact: 'instant-apps-interactive-legend-element-info__compact',
+  compact: 'instant-apps-interactive-legend__compact',
 };
 
 const GRADIENT_WIDTH = 24;
@@ -223,10 +223,11 @@ export class InstantAppsInteractiveLegendClassic {
 
   render() {
     const filteredLayers = this.renderFilteredLayers();
+    const compact = store.get('compact') ? ` ${CSS.compact}` : '';
     return this.isLoading ? (
       <calcite-loader key="interactive-legend-loader" scale="m" label={this.messages?.loading} text={this.messages?.loading}></calcite-loader>
     ) : (
-      <div key="interactive-legend-classic-container" class={getTheme(this.el)}>
+      <div key="interactive-legend-classic-container" class={`${getTheme(this.el)}${compact}`}>
         {filteredLayers?.length > 0 ? filteredLayers : <div class={CSS.message}>{this.messages?.noLegend}</div>}
       </div>
     );
@@ -645,17 +646,19 @@ export class InstantAppsInteractiveLegendClassic {
 
     const interactive = parentLegendElementInfoData && !elementInfo?.value ? false : isInteractive;
 
-    const compact = store.get('compact') ? ` ${CSS.compact}` : '';
+    const isCompact = store.get('compact');
+    const layerRowLabel = this.getTitle(this.messages, elementInfo.label, false) || '';
 
     return interactive ? (
       // Regular LegendElementInfo
       <button
         onClick={this.applyFilter(elementInfo, layer, infoIndex, parentLegendElementInfo)}
-        class={`${CSS.layerRow} ${CSS.interactiveLayerRow}${selected ? ` ${CSS.infoSelected}` : ''}${compact}`}
+        class={`${CSS.layerRow} ${CSS.interactiveLayerRow}${selected ? ` ${CSS.infoSelected}` : ''}`}
+        title={isCompact ? `${layerRowLabel}` : undefined}
       >
         <div class={`${CSS.symbolContainer}${imageryLayerInfoStretched}${sizeRamp}`}>{content}</div>
         <div class={`${CSS.layerInfo}${imageryLayerInfoStretched}`}>{this.getTitle(this.messages, elementInfo.label, false) || ''}</div>
-        {this.featureCount && !store.get('compact') ? (
+        {this.featureCount && !isCompact ? (
           <instant-apps-interactive-legend-count
             class={getTheme(this.el)}
             categoryId={parentLegendElementInfoData ? legendElement.title : (elementInfo.label ?? layer?.id)}
@@ -669,9 +672,9 @@ export class InstantAppsInteractiveLegendClassic {
         ) : null}
       </button>
     ) : (
-      <div class={`${CSS.layerRow}${compact}`}>
+      <div class={CSS.layerRow}>
         <div class={`${CSS.symbolContainer}${imageryLayerInfoStretched}${sizeRamp}`}>{content}</div>
-        <div class={`${CSS.layerInfo}${imageryLayerInfoStretched}`}>{this.getTitle(this.messages, elementInfo.label, false) || ''}</div>
+        <div class={`${CSS.layerInfo}${imageryLayerInfoStretched}`}>{layerRowLabel}</div>
       </div>
     );
   }
