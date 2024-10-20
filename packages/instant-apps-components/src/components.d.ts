@@ -12,6 +12,7 @@ import { PredefinedOptions } from "./components/instant-apps-create/instant-apps
 import { AlignmentPositions } from "./components/instant-apps-landing-page/support/enum";
 import { AppSettings, LocaleItem, LocaleSettingData } from "./components/instant-apps-language-translator/support/interfaces";
 import { InstantAppsPopovers } from "./components/instant-apps-popovers/instant-apps-popovers";
+import { LogicalPlacement } from "@esri/calcite-components/dist/types/utils/floating-ui";
 import { ScoreboardItem, ScoreboardMode, ScoreboardPosition } from "./components/instant-apps-scoreboard/types/interfaces";
 import { ITimeInfoConfigItem } from "./components/instant-apps-time-filter/TimeFilter/interfaces/interfaces";
 export { AppGuidePage } from "./components/instant-apps-app-guide/AppGuide/interfaces/interfaces";
@@ -21,6 +22,7 @@ export { PredefinedOptions } from "./components/instant-apps-create/instant-apps
 export { AlignmentPositions } from "./components/instant-apps-landing-page/support/enum";
 export { AppSettings, LocaleItem, LocaleSettingData } from "./components/instant-apps-language-translator/support/interfaces";
 export { InstantAppsPopovers } from "./components/instant-apps-popovers/instant-apps-popovers";
+export { LogicalPlacement } from "@esri/calcite-components/dist/types/utils/floating-ui";
 export { ScoreboardItem, ScoreboardMode, ScoreboardPosition } from "./components/instant-apps-scoreboard/types/interfaces";
 export { ITimeInfoConfigItem } from "./components/instant-apps-time-filter/TimeFilter/interfaces/interfaces";
 export namespace Components {
@@ -111,6 +113,10 @@ export namespace Components {
           * When `true`, `extraContent` HTML element is included in the PDF.
          */
         "includeExtraContent"?: boolean;
+        /**
+          * When `true`, user has ability to select the file format to be PDF or an image.
+         */
+        "includeFileFormat"?: boolean;
         /**
           * When `true`, legend is included in the export.
          */
@@ -1518,6 +1524,10 @@ declare namespace LocalJSX {
           * When `true`, `extraContent` HTML element is included in the PDF.
          */
         "includeExtraContent"?: boolean;
+        /**
+          * When `true`, user has ability to select the file format to be PDF or an image.
+         */
+        "includeFileFormat"?: boolean;
         /**
           * When `true`, legend is included in the export.
          */
