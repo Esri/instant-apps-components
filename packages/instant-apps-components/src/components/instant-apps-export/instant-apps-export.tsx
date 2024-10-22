@@ -997,9 +997,6 @@ export class InstantAppsExport {
       this.includeMap = true;
       if (!this.showExtraContentInImg) {
         this.pdfIncludeExtraContent = this.includeExtraContent;
-        this.pdfIncludeExtraContent = this.includeExtraContent;
-        this.includeMap = true;
-        this.pdfIncludeExtraContent = this.includeExtraContent;
         this.includeMap = true;
         this.includeExtraContent = false;
       }
