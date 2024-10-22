@@ -19,7 +19,7 @@ const CSS = {
   print: {
     pdfBase: 'instant-apps-export-print instant-apps-export-print__pdf',
     imgBase: 'instant-apps-export-print instant-apps-export-print__img',
-    imgPopup: 'instant-apps-export-print__img--popup',
+    imgExtraContent: 'instant-apps-export-print__img--extra-content',
     contentContainer: 'instant-apps-export-print__content-container',
     extraContainer: 'instant-apps-export-print__extra-container',
     legendContainer: 'instant-apps-export-print__legend-container',
@@ -84,6 +84,11 @@ export class InstantAppsExport {
    * When `true`, `extraContent` HTML element is included in the PDF.
    */
   @Prop({ mutable: true }) includeExtraContent?: boolean = true;
+
+  /**
+   * When `true` and `selectedFileType` if JPG or PNG, `extraContent` HTML element is shown to the right of the map.
+   */
+  @Prop() showExtraContentInImg?: boolean = false;
 
   /**
    * When `true`, legend is included in the export.
@@ -278,10 +283,11 @@ export class InstantAppsExport {
 
   renderPanel(): VNode {
     const headerTitle = this.showHeaderTitle ? this.renderTitle() : null;
-    const includeExtraContent = this.extraContent != null ? this.renderSwitch('includeExtraContent', this.extraContentLabel, this.selectedFileType !== 'PDF') : null;
+    const includeExtraContent =
+      this.extraContent != null ? this.renderSwitch('includeExtraContent', this.extraContentLabel, this.selectedFileType !== 'PDF' && !this.showExtraContentInImg) : null;
     const includeMap = this.showIncludeMap ? this.renderSwitch('includeMap', undefined, this.selectedFileType !== 'PDF') : null;
     const options = this.includeMap ? this.renderMapOptions() : null;
-    const fileType = this.renderSelectFileType();
+    const fileType = this.includeFileFormat ? this.renderSelectFileType() : null;
     const print = this.selectedFileType === 'PDF' ? this.renderPrint() : this.renderImg();
     const panelClass = this.mode === 'inline' ? CSS.inlineContainer : CSS.popoverContainer;
     return (
@@ -407,13 +413,18 @@ export class InstantAppsExport {
   renderImg(): VNode {
     const printMap = this.includeMap ? this.renderPrintMap() : null;
     const legend = this.includeMap && this.showIncludeLegend ? this.renderLegend() : null;
-    const popup = this.includeMap && this.showIncludePopup ? this.renderPopup() : null;
+    let content: VNode | undefined;
+    if (this.includeMap && this.showIncludePopup) {
+      content = this.renderPopup();
+    } else if (this.showExtraContentInImg && this.extraContent != null && this.includeExtraContent) {
+      content = this.renderExtraContent();
+    }
     return (
       <div ref={(el: HTMLDivElement) => (this.printContainerEl = el)}>
         <div class={CSS.print.imgBase} ref={(el: HTMLDivElement) => (this.printEl = el)}>
           {printMap}
           {legend}
-          {popup}
+          {content}
         </div>
       </div>
     );
@@ -470,6 +481,7 @@ export class InstantAppsExport {
     downloadLink.href = this.dataUrl;
     downloadLink.download = this.headerTitle ?? document.title;
     downloadLink.click();
+    this.dataUrl = null;
     this.exportIsLoading = false;
     this.removeScreenshotElements();
     this.resetPrintContent();
@@ -516,19 +528,23 @@ export class InstantAppsExport {
     const extraContainerEl = this.printEl.querySelector('#export-content') as HTMLDivElement;
     if (extraContainerEl != null) {
       extraContainerEl.innerHTML = '';
-      if (this.extraContent != null && this.includeExtraContent) {
+      const hasExtraContent = this.extraContent != null && this.includeExtraContent;
+      const imgAndFeatureVisible = this.selectedFileType !== 'PDF' && this.showExtraContentInImg && hasExtraContent;
+      this.printEl.classList.toggle(CSS.print.imgExtraContent, imgAndFeatureVisible);
+      if (hasExtraContent) {
         extraContainerEl.style.display = 'block';
-        extraContainerEl.append(this.extraContent.cloneNode(true));
+        extraContainerEl.append(this.extraContent!.cloneNode(true));
       } else {
         extraContainerEl.style.display = 'none';
       }
+    } else if (this.showExtraContentInImg && this.selectedFileType !== 'PDF' && !this.includeExtraContent) {
+      this.printEl.classList.toggle(CSS.print.imgExtraContent, false);
     }
   }
 
   resetPrintContent(): void {
     if (this.view != null) {
       this.screenshot = null;
-      this.dataUrl = null;
       this.printContainerEl?.prepend(this.printEl);
       this.printStyleEl?.remove();
       this.tmpPopupTitleEl?.remove();
@@ -545,7 +561,7 @@ export class InstantAppsExport {
     this.popupContainerEl.style.display = this.includePopup && this.view.popup.visible ? 'block' : 'none';
     this.checkPopupOpen();
     const popupVisible = this.includePopup && (this.view.popup.visible || this.popupHiddenByMapArea) && this.view.popup.selectedFeature != null;
-    this.printEl.classList.toggle(CSS.print.imgPopup, this.selectedFileType !== 'PDF' && popupVisible);
+    this.printEl.classList.toggle(CSS.print.imgExtraContent, this.selectedFileType !== 'PDF' && popupVisible);
     if (popupVisible) {
       const heading = document.createElement(`h${this.view.popup.headingLevel ?? 2}`);
       heading.innerHTML = this.view.popup.title ?? '';
@@ -609,6 +625,7 @@ export class InstantAppsExport {
   }
 
   handleGetImage(dataUrl: string): void {
+    this.resetPrintContent();
     this.dataUrl = dataUrl;
     this.setMapAreaOnClick(false);
     this.showPreview(dataUrl);
@@ -841,7 +858,8 @@ export class InstantAppsExport {
     if (handlePopup) {
       if (this.view.popup.visible) {
         this.popupHiddenByMapArea = true;
-        this.view.popup.visible = false;
+        const popupContainer = this.view.popup.container as HTMLElement;
+        popupContainer.style.display = 'none';
       }
     }
     this.exportIsLoading = true;
@@ -959,7 +977,8 @@ export class InstantAppsExport {
 
   resetPopupVisibility() {
     if (this.view && this.settingMapArea && this.popupHiddenByMapArea) {
-      this.view.popup.visible = true;
+      const popupContainer = this.view.popup.container as HTMLElement;
+      popupContainer.style.display = '';
     }
     this.settingMapArea = false;
     this.popupHiddenByMapArea = false;
@@ -970,12 +989,20 @@ export class InstantAppsExport {
     this.selectedFileType = node.value as 'PDF' | 'JPG' | 'PNG';
     if (this.selectedFileType === 'PDF') {
       this.includeMap = this.pdfIncludeMap;
-      this.includeExtraContent = this.pdfIncludeExtraContent;
+      if (!this.showExtraContentInImg) {
+        this.includeExtraContent = this.pdfIncludeExtraContent;
+      }
     } else {
       this.pdfIncludeMap = this.includeMap;
-      this.pdfIncludeExtraContent = this.includeExtraContent;
       this.includeMap = true;
-      this.includeExtraContent = false;
+      if (!this.showExtraContentInImg) {
+        this.pdfIncludeExtraContent = this.includeExtraContent;
+        this.pdfIncludeExtraContent = this.includeExtraContent;
+        this.includeMap = true;
+        this.pdfIncludeExtraContent = this.includeExtraContent;
+        this.includeMap = true;
+        this.includeExtraContent = false;
+      }
     }
   }
 }
