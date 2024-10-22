@@ -90,6 +90,10 @@ export const printStyling = `
     grid-row: 1 / span 2;
     grid-column: 2;
   }
+  
+  .instant-apps-export-print__extra-container .esri-feature.esri-widget .esri-widget__heading.esri-feature__title {
+    display: block;
+  }
 
   .instant-apps-export-print__popup-container {
     height: min-content;
@@ -148,7 +152,7 @@ export const printStyling = `
   }
 
   .instant-apps-export-print .esri-widget__heading {
-    margin: 2pt 7pt;
+    margin: 4pt 7pt;
     padding: 0;
     color: #323232;
   }
