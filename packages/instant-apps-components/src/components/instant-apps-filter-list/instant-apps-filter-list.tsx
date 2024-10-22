@@ -412,27 +412,20 @@ export class InstantAppsFilterList {
     ) : null;
   }
 
-  renderFooter(
-    closeBtn: boolean | undefined,
-    resetBtn: boolean | undefined
-  ): VNode {
+  renderFooter(closeBtn: boolean | undefined, resetBtn: boolean | undefined): VNode {
     const closeText = this.closeBtnText != null ? this.closeBtnText : this.messages?.close;
     return (
       <div class={CSS.footer} slot="footer">
-        {
-          resetBtn ? (
-            <calcite-button appearance="outline" width="half" disabled={this.disabled} onClick={this.handleResetFilter.bind(this)}>
-              {this.messages?.resetFilter}
-            </calcite-button>
-          ) : undefined
-        }
-        {
-          closeBtn ? (
-            <calcite-button appearance="solid" width="half" kind="brand" onClick={this.closeBtnOnClick?.bind(this)}>
-              {closeText}
-            </calcite-button>
-          ) : undefined
-        }
+        {resetBtn ? (
+          <calcite-button appearance="outline" width="half" disabled={this.disabled} onClick={this.handleResetFilter.bind(this)}>
+            {this.messages?.resetFilter}
+          </calcite-button>
+        ) : undefined}
+        {closeBtn ? (
+          <calcite-button appearance="solid" width="half" kind="brand" onClick={this.closeBtnOnClick?.bind(this)}>
+            {closeText}
+          </calcite-button>
+        ) : undefined}
       </div>
     );
   }
@@ -474,13 +467,12 @@ export class InstantAppsFilterList {
   async initExpressions(): Promise<void> {
     this.loading = true;
     if (this.filterLayerExpressions == null) return;
-    const tmpLE = await this.processExpressions();
+    await this.processExpressions();
     this.loading = false;
-    this.filterLayerExpressions = [...tmpLE];
   }
 
-  async processExpressions(): Promise<LayerExpression[]> {
-    if (!this.filterLayerExpressions) return [];
+  async processExpressions(): Promise<void> {
+    if (!this.filterLayerExpressions) return;
 
     for (const layerExpression of this.filterLayerExpressions) {
       for (const expression of layerExpression.expressions || []) {
@@ -488,8 +480,6 @@ export class InstantAppsFilterList {
         await this.setInitExpression(layerExpression, expression);
       }
     }
-
-    return this.filterLayerExpressions;
   }
 
   handleResetFilter(): void {
@@ -798,7 +788,7 @@ export class InstantAppsFilterList {
         }
       });
       expression.fields = [...new Set(expression.fields as string[])].sort();
-      this.filterLayerExpressions = [...this.filterLayerExpressions];
+      this.filterLayerExpressions = structuredClone(this.filterLayerExpressions);
     });
   }
 
@@ -1137,8 +1127,8 @@ export class InstantAppsFilterList {
         this.initDefExpressions[fl.id] = fl.definitionExpression;
       }
     });
-    this.initExpressions();
     this.handleURLParams();
+    this.initExpressions();
   }
 
   async handleZoomTo(layerExpression: LayerExpression): Promise<void> {
