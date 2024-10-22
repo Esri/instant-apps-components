@@ -166,6 +166,10 @@ export namespace Components {
          */
         "scale"?: 's' | 'm' | 'l';
         /**
+          * When `true` and `selectedFileType` if JPG or PNG, `extraContent` HTML element is shown to the right of the map.
+         */
+        "showExtraContentInImg"?: boolean;
+        /**
           * Show header title input in export tool.
          */
         "showHeaderTitle"?: boolean;
@@ -1580,6 +1584,10 @@ declare namespace LocalJSX {
           * Adjusts the scale of the action button.
          */
         "scale"?: 's' | 'm' | 'l';
+        /**
+          * When `true` and `selectedFileType` if JPG or PNG, `extraContent` HTML element is shown to the right of the map.
+         */
+        "showExtraContentInImg"?: boolean;
         /**
           * Show header title input in export tool.
          */

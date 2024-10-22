@@ -41,7 +41,7 @@ export const printStyling = `
     width: auto;
   }
 
-  .instant-apps-export-print__img--popup {
+  .instant-apps-export-print__img--extra-content {
     grid-template-columns: 2fr minmax(0, 325px);
   }
 
@@ -86,6 +86,11 @@ export const printStyling = `
     object-fit: contain;
   }
 
+  .instant-apps-export-print__extra-container {
+    grid-row: 1 / span 2;
+    grid-column: 2;
+  }
+
   .instant-apps-export-print__popup-container {
     height: min-content;
     max-width: 325px;
@@ -96,9 +101,12 @@ export const printStyling = `
   }
 
   .instant-apps-export-print__pdf .instant-apps-export-print__popup-container {
+    border: 1pt solid #323232;
+  }
+
+  .instant-apps-export-print__img .instant-apps-export-print__popup-container {
     grid-row: 1 / span 2;
     grid-column: 2;
-    border: 1pt solid #323232;
   }
 
   .instant-apps-export-print__popup-title {
@@ -135,7 +143,7 @@ export const printStyling = `
     color: #323232;
   }
 
-  .instant-apps-export-print__popup-content * {
+  .instant-apps-export-print__popup-content *, .instant-apps-export-print__img .esri-feature.esri-widget * {
     color: #323232;
   }
 
