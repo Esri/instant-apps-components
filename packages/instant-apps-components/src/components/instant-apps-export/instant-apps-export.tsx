@@ -1,6 +1,8 @@
 import { CalciteCheckboxCustomEvent, CalciteInputCustomEvent } from '@esri/calcite-components';
 import { Component, Element, Event, EventEmitter, Host, Prop, State, VNode, Watch, h } from '@stencil/core';
 
+import { toJpeg, toPng } from 'html-to-image';
+
 import Export_T9n from '../../assets/t9n/instant-apps-export/resources.json';
 import { ExportOutput, PopoverPlacement } from '../../interfaces/interfaces';
 import { loadModules } from '../../utils/loadModules';
@@ -15,7 +17,9 @@ const CSS = {
   popoverContainer: 'instant-apps-export__popover-container',
   hidden: 'instant-apps-export__visually-hidden',
   print: {
-    base: 'instant-apps-export-print',
+    pdfBase: 'instant-apps-export-print instant-apps-export-print__pdf',
+    imgBase: 'instant-apps-export-print instant-apps-export-print__img',
+    imgExtraContent: 'instant-apps-export-print__img--extra-content',
     contentContainer: 'instant-apps-export-print__content-container',
     extraContainer: 'instant-apps-export-print__extra-container',
     legendContainer: 'instant-apps-export-print__legend-container',
@@ -82,6 +86,11 @@ export class InstantAppsExport {
   @Prop({ mutable: true }) includeExtraContent?: boolean = true;
 
   /**
+   * When `true` and `selectedFileType` if JPG or PNG, `extraContent` HTML element is shown to the right of the map.
+   */
+  @Prop() showExtraContentInImg?: boolean = false;
+
+  /**
    * When `true`, legend is included in the export.
    */
   @Prop({ mutable: true }) includeLegend?: boolean = true;
@@ -95,6 +104,11 @@ export class InstantAppsExport {
    * When `true`, popup is included in the export.
    */
   @Prop({ mutable: true }) includePopup?: boolean = false;
+
+  /**
+   * When `true`, user has ability to select the file format to be PDF or an image.
+   */
+  @Prop({ mutable: true }) includeFileFormat?: boolean = true;
 
   /**
    * Renders tool as a popover with a trigger button, or inline to place in a custom container.
@@ -159,6 +173,7 @@ export class InstantAppsExport {
   @State() baseClass = CSS.baseLight;
   @State() exportIsLoading: boolean | undefined = undefined;
   @State() messages: typeof Export_T9n;
+  @State() selectedFileType: 'PDF' | 'JPG' | 'PNG' = 'PDF';
 
   /**
    * Emits when the instant-apps-export's output prop is updated after the "Export" button is clicked.
@@ -189,19 +204,26 @@ export class InstantAppsExport {
   popupContainerEl: HTMLDivElement;
   popupContentEl: HTMLDivElement;
   popupTitleEl: HTMLDivElement;
+  tmpPopupTitleEl: HTMLDivElement;
   printContainerEl: HTMLDivElement;
   printEl: HTMLDivElement;
   printStyleEl: HTMLStyleElement | undefined;
   reactiveUtils: __esri.reactiveUtils;
   scaleBarContainerEl: HTMLDivElement | null;
+  dataUrl: string | null;
   screenshot: __esri.Screenshot | null;
   screenshotPreview: HTMLDivElement;
   screenshotImgContainer: HTMLDivElement;
   screenshotImg: HTMLImageElement;
   screenshotStyle: HTMLStyleElement;
+  settingMapArea: boolean;
+  popupHiddenByMapArea: boolean;
   viewWrapperEl: HTMLDivElement;
   viewContainerEl: HTMLDivElement;
   viewEl: HTMLImageElement;
+  fileTypes = ['PDF', 'JPG', 'PNG'];
+  pdfIncludeMap?: boolean;
+  pdfIncludeExtraContent?: boolean;
 
   async componentWillLoad(): Promise<void> {
     this.baseClass = getMode(this.el) === 'dark' ? CSS.baseDark : CSS.baseLight;
@@ -261,10 +283,12 @@ export class InstantAppsExport {
 
   renderPanel(): VNode {
     const headerTitle = this.showHeaderTitle ? this.renderTitle() : null;
-    const includeExtraContent = this.extraContent != null ? this.renderSwitch('includeExtraContent', this.extraContentLabel) : null;
-    const includeMap = this.showIncludeMap ? this.renderSwitch('includeMap') : null;
+    const includeExtraContent =
+      this.extraContent != null ? this.renderSwitch('includeExtraContent', this.extraContentLabel, this.selectedFileType !== 'PDF' && !this.showExtraContentInImg) : null;
+    const includeMap = this.showIncludeMap ? this.renderSwitch('includeMap', undefined, this.selectedFileType !== 'PDF') : null;
     const options = this.includeMap ? this.renderMapOptions() : null;
-    const print = this.renderPrint();
+    const fileType = this.includeFileFormat ? this.renderSelectFileType() : null;
+    const print = this.selectedFileType === 'PDF' ? this.renderPrint() : this.renderImg();
     const panelClass = this.mode === 'inline' ? CSS.inlineContainer : CSS.popoverContainer;
     return (
       <div class={panelClass}>
@@ -272,13 +296,14 @@ export class InstantAppsExport {
         {includeExtraContent}
         {includeMap}
         {options}
+        {fileType}
         {this.includeMap ? (
-          <calcite-button appearance="transparent" width="full" onClick={this.setMapAreaOnClick.bind(this)} disabled={this.exportIsLoading}>
+          <calcite-button appearance="transparent" width="full" onClick={this.setMapAreaOnClick.bind(this, true)} disabled={this.exportIsLoading}>
             {this.messages?.setMapArea}
           </calcite-button>
         ) : null}
         <calcite-button width="full" onClick={this.exportOnClick.bind(this)} disabled={this.exportIsLoading}>
-          {this.messages?.export}
+          {this.selectedFileType === 'PDF' ? this.messages?.export : this.messages?.preview}
         </calcite-button>
         {print}
       </div>
@@ -294,13 +319,28 @@ export class InstantAppsExport {
     );
   }
 
-  renderSwitch(value: string, label?: string): VNode {
+  renderSwitch(value: string, label?: string, disabled?: boolean): VNode {
     const checked = this[value];
     const title = label != null ? label : this.messages?.[value];
     return (
       <calcite-label layout="inline-space-between">
         {title}
-        <calcite-switch checked={checked} value={value} onCalciteSwitchChange={this.optionOnChange.bind(this)}></calcite-switch>
+        <calcite-switch checked={checked} value={value} onCalciteSwitchChange={this.optionOnChange.bind(this)} disabled={disabled}></calcite-switch>
+      </calcite-label>
+    );
+  }
+
+  renderSelectFileType(): VNode {
+    return (
+      <calcite-label>
+        {this.messages?.fileType}
+        <calcite-select onCalciteSelectChange={this.handleSelectFileType.bind(this)}>
+          {this.fileTypes.map(fileType => (
+            <calcite-option value={fileType} selected={fileType === this.selectedFileType}>
+              {fileType}
+            </calcite-option>
+          ))}
+        </calcite-select>
       </calcite-label>
     );
   }
@@ -323,7 +363,7 @@ export class InstantAppsExport {
     const popup = this.includeMap && this.showIncludePopup ? this.renderPopup() : null;
     return (
       <div ref={(el: HTMLDivElement) => (this.printContainerEl = el)}>
-        <div class={CSS.print.base} ref={(el: HTMLDivElement) => (this.printEl = el)}>
+        <div class={CSS.print.pdfBase} ref={(el: HTMLDivElement) => (this.printEl = el)}>
           {printMap}
           {legend}
           <div class={CSS.print.contentContainer}>
@@ -370,6 +410,26 @@ export class InstantAppsExport {
     return <div class={CSS.print.extraContainer} id="export-content" ref={(el: HTMLDivElement) => (this.extraContainerEl = el)}></div>;
   }
 
+  renderImg(): VNode {
+    const printMap = this.includeMap ? this.renderPrintMap() : null;
+    const legend = this.includeMap && this.showIncludeLegend ? this.renderLegend() : null;
+    let content: VNode | undefined;
+    if (this.includeMap && this.showIncludePopup) {
+      content = this.renderPopup();
+    } else if (this.showExtraContentInImg && this.extraContent != null && this.includeExtraContent) {
+      content = this.renderExtraContent();
+    }
+    return (
+      <div ref={(el: HTMLDivElement) => (this.printContainerEl = el)}>
+        <div class={CSS.print.imgBase} ref={(el: HTMLDivElement) => (this.printEl = el)}>
+          {printMap}
+          {legend}
+          {content}
+        </div>
+      </div>
+    );
+  }
+
   optionOnChange(e: CalciteCheckboxCustomEvent<Event>): void {
     const { checked, value } = e.target;
     this[value] = checked;
@@ -393,6 +453,40 @@ export class InstantAppsExport {
     }
   }
 
+  async exportPreviewOnClick(): Promise<void> {
+    if (this.selectedFileType === 'PDF') {
+      await this.exportPDF();
+    } else {
+      this.exportImg();
+    }
+  }
+
+  async exportPDF(): Promise<void> {
+    this.removeScreenshotElements();
+    await this.beforeExport();
+    if (this.viewWrapperEl != null && !this.viewWrapperEl.contains(this.compassContainerEl)) {
+      this.viewWrapperEl.append(this.compassContainerEl);
+    }
+    this.handleViewExportOnClick();
+    if (this.popoverEl != null) {
+      this.popoverEl.open = false;
+    }
+  }
+
+  exportImg(): void {
+    this.resetPopupVisibility();
+    if (this.dataUrl == null) return;
+    const downloadLink = document.createElement('a');
+    downloadLink.id = 'download-link';
+    downloadLink.href = this.dataUrl;
+    downloadLink.download = this.headerTitle ?? document.title;
+    downloadLink.click();
+    this.dataUrl = null;
+    this.exportIsLoading = false;
+    this.removeScreenshotElements();
+    this.resetPrintContent();
+  }
+
   async handleViewExportOnClick(): Promise<void> {
     if (this.view != null) {
       this.addPrintStyling();
@@ -400,7 +494,6 @@ export class InstantAppsExport {
       this.handleExtraContent();
       if (this.includeMap) {
         this.updateScaleBar();
-        this.updatePopupToPrint();
         this.viewScreenshot();
         this.handleImgLoaded();
       } else {
@@ -424,7 +517,9 @@ export class InstantAppsExport {
   handleImgLoaded(): void {
     this.exportIsLoading = true;
     setTimeout(() => {
-      this.exportIsLoading = undefined;
+      if (this.selectedFileType === 'PDF') {
+        this.exportIsLoading = false;
+      }
       this.setupViewPrintElements();
     }, 1500);
   }
@@ -433,12 +528,17 @@ export class InstantAppsExport {
     const extraContainerEl = this.printEl.querySelector('#export-content') as HTMLDivElement;
     if (extraContainerEl != null) {
       extraContainerEl.innerHTML = '';
-      if (this.extraContent != null && this.includeExtraContent) {
+      const hasExtraContent = this.extraContent != null && this.includeExtraContent;
+      const imgAndFeatureVisible = this.selectedFileType !== 'PDF' && this.showExtraContentInImg && hasExtraContent;
+      this.printEl.classList.toggle(CSS.print.imgExtraContent, imgAndFeatureVisible);
+      if (hasExtraContent) {
         extraContainerEl.style.display = 'block';
-        extraContainerEl.append(this.extraContent.cloneNode(true));
+        extraContainerEl.append(this.extraContent!.cloneNode(true));
       } else {
         extraContainerEl.style.display = 'none';
       }
+    } else if (this.showExtraContentInImg && this.selectedFileType !== 'PDF' && !this.includeExtraContent) {
+      this.printEl.classList.toggle(CSS.print.imgExtraContent, false);
     }
   }
 
@@ -447,6 +547,7 @@ export class InstantAppsExport {
       this.screenshot = null;
       this.printContainerEl?.prepend(this.printEl);
       this.printStyleEl?.remove();
+      this.tmpPopupTitleEl?.remove();
       this.printStyleEl = undefined;
       const extraContainerEl = this.printEl.querySelector('#export-content') as HTMLDivElement;
       if (extraContainerEl) {
@@ -456,20 +557,24 @@ export class InstantAppsExport {
   }
 
   async updatePopupToPrint(): Promise<void> {
-    if (this.view != null) {
-      if (this.popupContainerEl != null) {
-        this.popupContainerEl.style.display = this.includePopup && this.view.popup.visible ? 'block' : 'none';
-        this.checkPopupOpen();
-      }
-      if (this.view.popup.visible && this.view.popup.selectedFeature != null) {
-        const heading = document.createElement(`h${this.view.popup.headingLevel ?? 2}`);
-        heading.innerHTML = this.view.popup.title ?? '';
-        heading.className = 'esri-widget__heading esri-popup__header-title';
-        if (this.popupTitleEl != null) {
-          this.popupTitleEl.style.display = this.view.popup.title ? 'block' : 'none';
-          this.popupTitleEl.innerHTML = '';
-          this.popupTitleEl.prepend(heading);
-        }
+    if (this.view == null || this.popupContainerEl == null) return;
+    this.popupContainerEl.style.display = this.includePopup && this.view.popup.visible ? 'block' : 'none';
+    this.checkPopupOpen();
+    const popupVisible = this.includePopup && (this.view.popup.visible || this.popupHiddenByMapArea) && this.view.popup.selectedFeature != null;
+    this.printEl.classList.toggle(CSS.print.imgExtraContent, this.selectedFileType !== 'PDF' && popupVisible);
+    if (popupVisible) {
+      const heading = document.createElement(`h${this.view.popup.headingLevel ?? 2}`);
+      heading.innerHTML = this.view.popup.title ?? '';
+      heading.className = 'esri-widget__heading esri-popup__header-title';
+      if (this.popupTitleEl == null) {
+        this.tmpPopupTitleEl = document.createElement('div');
+        this.tmpPopupTitleEl.prepend(heading);
+        this.tmpPopupTitleEl.style.display = this.view.popup.title ? 'block' : 'none';
+        this.popupContainerEl.prepend(this.tmpPopupTitleEl);
+      } else {
+        this.popupTitleEl.style.display = this.view.popup.title ? 'block' : 'none';
+        this.popupTitleEl.innerHTML = '';
+        this.popupTitleEl.prepend(heading);
       }
     }
   }
@@ -494,16 +599,38 @@ export class InstantAppsExport {
   setupViewPrintElements(): void {
     if (this.view != null) {
       this.handleLegendSetup();
-      const title = document.title;
-      if (this.showHeaderTitle && this.headerTitle) {
-        document.title = this.headerTitle;
+      if (this.selectedFileType === 'PDF') {
+        const title = document.title;
+        if (this.showHeaderTitle && this.headerTitle) {
+          document.title = this.headerTitle;
+        }
+        window.print();
+        document.title = title;
+        setTimeout(() => {
+          this.resetPrintContent();
+        }, 1000);
+      } else {
+        this.convertToImage();
       }
-      window.print();
-      document.title = title;
-      setTimeout(() => {
-        this.resetPrintContent();
-      }, 1000);
     }
+  }
+
+  convertToImage(): void {
+    const options = { backgroundColor: '#FFF', skipFonts: true };
+    if (this.selectedFileType === 'JPG') {
+      toJpeg(this.printEl, options).then(this.handleGetImage.bind(this));
+    } else {
+      toPng(this.printEl, options).then(this.handleGetImage.bind(this));
+    }
+  }
+
+  handleGetImage(dataUrl: string): void {
+    this.resetPrintContent();
+    this.dataUrl = dataUrl;
+    this.setMapAreaOnClick(false);
+    this.showPreview(dataUrl);
+    this.view?.container.classList.remove('screenshot-cursor');
+    this.setMaskPosition(null);
   }
 
   handleLegendSetup(): void {
@@ -517,6 +644,7 @@ export class InstantAppsExport {
     if (this.includeMap) {
       this.handleLegendCreation();
       this.handleCompassCreation();
+      this.updatePopupToPrint();
     }
   }
 
@@ -531,6 +659,7 @@ export class InstantAppsExport {
             this.reactiveUtils.watch(
               () => this.view?.popup?.visible,
               (visible: boolean) => {
+                if (this.settingMapArea) return;
                 this.includePopup = visible;
               },
             ),
@@ -633,7 +762,9 @@ export class InstantAppsExport {
   }
 
   setMaxRowHeightOnViewContainer(): void {
-    this.printEl.style.gridTemplateRows = 'minmax(auto, 70%)';
+    if (this.selectedFileType === 'PDF') {
+      this.printEl.style.gridTemplateRows = 'minmax(auto, 70%)';
+    }
     this.viewEl.style.height = '100%';
     this.viewEl.style.width = '';
     this.viewWrapperEl.style.height = '100%';
@@ -688,10 +819,10 @@ export class InstantAppsExport {
       const screenshotBtnContainer = document.createElement('div');
       const exportBtn = document.createElement('calcite-button');
       const returnBtn = document.createElement('calcite-button');
-      exportBtn.innerHTML = this.messages?.export;
+      exportBtn.innerHTML = this.selectedFileType === 'PDF' ? this.messages?.export : this.messages?.downloadImage;
       returnBtn.innerHTML = this.messages?.returnToMap;
       returnBtn.appearance = 'outline-fill';
-      exportBtn.onclick = this.exportOnClick.bind(this);
+      exportBtn.onclick = this.exportPreviewOnClick.bind(this);
       returnBtn.onclick = this.screenshotReturn.bind(this);
       screenshotBtnContainer.append(returnBtn, exportBtn);
       this.screenshotImgContainer.append(this.screenshotImg, screenshotBtnContainer);
@@ -718,10 +849,19 @@ export class InstantAppsExport {
     this.removeScreenshotElements();
     this.exportIsLoading = false;
     this.screenshot = null;
+    this.resetPopupVisibility();
   }
 
-  setMapAreaOnClick(): void {
+  setMapAreaOnClick(handlePopup: boolean): void {
     if (this.view == null) return;
+    this.settingMapArea = true;
+    if (handlePopup) {
+      if (this.view.popup.visible) {
+        this.popupHiddenByMapArea = true;
+        const popupContainer = this.view.popup.container as HTMLElement;
+        popupContainer.style.display = 'none';
+      }
+    }
     this.exportIsLoading = true;
     this.createMaskDiv();
     this.createScreenshot();
@@ -767,9 +907,20 @@ export class InstantAppsExport {
       }
       this.view.takeScreenshot({ area: this.area, width: width * 2, height: height * 2, format: 'jpg' }).then(screenshot => {
         this.screenshot = screenshot;
-        this.showPreview();
         this.view?.container.classList.remove('screenshot-cursor');
         this.setMaskPosition(null);
+        if (this.selectedFileType === 'PDF') {
+          this.showPreview(screenshot?.dataUrl);
+          this.resetPopupVisibility();
+        } else {
+          if (this.viewWrapperEl != null && !this.viewWrapperEl.contains(this.compassContainerEl)) {
+            this.viewWrapperEl.append(this.compassContainerEl);
+          }
+          this.handleViewExportOnClick();
+          if (this.popoverEl != null) {
+            this.popoverEl.open = false;
+          }
+        }
       });
     }
   }
@@ -790,10 +941,11 @@ export class InstantAppsExport {
     return value < from ? from : value > to ? to : value;
   }
 
-  showPreview() {
+  showPreview(dataUrl: string) {
+    if (!dataUrl) return;
     this.screenshotPreview.classList.remove('hide');
-    if (this.screenshotImg != null && this.screenshot != null) {
-      this.screenshotImg.src = this.screenshot.dataUrl;
+    if (this.screenshotImg != null) {
+      this.screenshotImg.src = dataUrl;
     }
   }
 
@@ -818,7 +970,36 @@ export class InstantAppsExport {
   }
 
   removeScreenshotElements(): void {
+    this.view?.removeHandles(dragHandlerName);
     this.screenshotPreview?.remove();
     this.screenshotStyle?.remove();
+  }
+
+  resetPopupVisibility() {
+    if (this.view && this.settingMapArea && this.popupHiddenByMapArea) {
+      const popupContainer = this.view.popup.container as HTMLElement;
+      popupContainer.style.display = '';
+    }
+    this.settingMapArea = false;
+    this.popupHiddenByMapArea = false;
+  }
+
+  handleSelectFileType(e: CustomEvent): void {
+    const node = e.target as HTMLCalciteSelectElement;
+    this.selectedFileType = node.value as 'PDF' | 'JPG' | 'PNG';
+    if (this.selectedFileType === 'PDF') {
+      this.includeMap = this.pdfIncludeMap;
+      if (!this.showExtraContentInImg) {
+        this.includeExtraContent = this.pdfIncludeExtraContent;
+      }
+    } else {
+      this.pdfIncludeMap = this.includeMap;
+      this.includeMap = true;
+      if (!this.showExtraContentInImg) {
+        this.pdfIncludeExtraContent = this.includeExtraContent;
+        this.includeMap = true;
+        this.includeExtraContent = false;
+      }
+    }
   }
 }

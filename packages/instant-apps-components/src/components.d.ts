@@ -114,6 +114,10 @@ export namespace Components {
          */
         "includeExtraContent"?: boolean;
         /**
+          * When `true`, user has ability to select the file format to be PDF or an image.
+         */
+        "includeFileFormat"?: boolean;
+        /**
           * When `true`, legend is included in the export.
          */
         "includeLegend"?: boolean;
@@ -161,6 +165,10 @@ export namespace Components {
           * Adjusts the scale of the action button.
          */
         "scale"?: 's' | 'm' | 'l';
+        /**
+          * When `true` and `selectedFileType` if JPG or PNG, `extraContent` HTML element is shown to the right of the map.
+         */
+        "showExtraContentInImg"?: boolean;
         /**
           * Show header title input in export tool.
          */
@@ -1521,6 +1529,10 @@ declare namespace LocalJSX {
          */
         "includeExtraContent"?: boolean;
         /**
+          * When `true`, user has ability to select the file format to be PDF or an image.
+         */
+        "includeFileFormat"?: boolean;
+        /**
           * When `true`, legend is included in the export.
          */
         "includeLegend"?: boolean;
@@ -1572,6 +1584,10 @@ declare namespace LocalJSX {
           * Adjusts the scale of the action button.
          */
         "scale"?: 's' | 'm' | 'l';
+        /**
+          * When `true` and `selectedFileType` if JPG or PNG, `extraContent` HTML element is shown to the right of the map.
+         */
+        "showExtraContentInImg"?: boolean;
         /**
           * Show header title input in export tool.
          */

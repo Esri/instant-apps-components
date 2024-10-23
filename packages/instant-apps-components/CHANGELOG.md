@@ -5,6 +5,31 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## v1.0.0-beta.282
+
+### instant-apps-export
+
+- fix: make sure feature widget header isn't hidden
+
+## v1.0.0-beta.281
+
+### instant-apps-filter-list
+
+- fix: URL params and dropdown
+
+## v1.0.0-beta.280
+
+### instant-apps-export
+
+- feat: add `showExtraContentInImg`
+- fix: keep feature highlighted when
+
+## v1.0.0-beta.279
+
+### instant-apps-export
+
+- add support for JPG and PNG file types
+
 ## v1.0.0-beta.278
 
 ### instant-apps-interactive-legend
