@@ -130,7 +130,6 @@ export class InstantAppsFilterList {
   @State() messages: typeof FilterList_T9n;
   @State() baseClass = baseClassLight;
   @State() disabled: boolean | undefined = true;
-  @State() hasLayerExpression: boolean = false;
   @State() initDefExpressions: GenericStringObject;
   @State() initMapImageExpressions: { [key: string]: GenericStringObject };
   @State() initPointCloudFilters: { [key: string]: PointCloudFilters };
@@ -152,11 +151,9 @@ export class InstantAppsFilterList {
 
   @Watch('layerExpressions')
   watchLayerExpressions() {
-    if (!this.hasLayerExpression) {
-      this.filterLayerExpressions = structuredClone(this.layerExpressions);
-      this.handleLayerExpressionsUpdate();
-      this.hasLayerExpression = true;
-    }
+    this.resetAllFilters();
+    this.filterLayerExpressions = structuredClone(this.layerExpressions);
+    this.handleLayerExpressionsUpdate();
   }
 
   @Method()
@@ -193,30 +190,27 @@ export class InstantAppsFilterList {
   intl: __esri.intl;
   locale: string;
   panelEl: HTMLCalcitePanelElement;
-  reactiveUtils: __esri.reactiveUtils;
   zoomToExtent: { type: string; count: number; extent: __esri.Extent };
+  isLayerExpUpdated = false;
+
+  connectedCallback() {
+    if (this.layerExpressions == null && this.view == null) return;
+    this.isLayerExpUpdated = true;
+    this.filterLayerExpressions = structuredClone(this.layerExpressions);
+    this.disabled = this.filterLayerExpressions?.length ? undefined : true;
+    this.handleLayerExpressionsUpdate();
+  }
 
   async componentWillLoad(): Promise<void> {
     this.baseClass = getMode(this.el) === 'dark' ? baseClassDark : baseClassLight;
     await this.initializeModules();
     getMessages(this);
-    this.hasLayerExpression = this.layerExpressions != null;
+    if (this.isLayerExpUpdated) return;
+    this.isLayerExpUpdated = true;
     this.filterLayerExpressions = this.layerExpressions != null ? structuredClone(this.layerExpressions) : [];
     this.disabled = this.filterLayerExpressions?.length ? undefined : true;
-    this.reactiveUtils.whenOnce(() => this.view).then(() => this.handleLayerExpressionsUpdate());
-  }
-
-  componentShouldUpdate(newValue: unknown, _oldValue: unknown, name: string) {
-    if (name === 'view' && newValue != null) {
-      this.handleWhenView();
-    } else if (name === 'layerExpressions') {
-      if (this.hasLayerExpression) {
-        this.resetAllFilters();
-      }
-      this.filterLayerExpressions = structuredClone(this.layerExpressions);
-      this.handleLayerExpressionsUpdate();
-      this.hasLayerExpression = true;
-    }
+    if (this.view == null) return;
+    this.handleLayerExpressionsUpdate();
   }
 
   componentWillRender(): void {
@@ -225,22 +219,22 @@ export class InstantAppsFilterList {
 
   disconnectedCallback(): void {
     if (this.resetFiltersOnDisconnect) {
+      this.isLayerExpUpdated = false;
       this.filterLayerExpressions = structuredClone(this.layerExpressions);
       this.resetAllFilters();
     }
   }
 
   async initializeModules(): Promise<void> {
-    const [intl, geometryJsonUtils, reactiveUtils] = await loadModules(['esri/intl', 'esri/geometry/support/jsonUtils', 'esri/core/reactiveUtils']);
+    const [intl, geometryJsonUtils] = await loadModules(['esri/intl', 'esri/geometry/support/jsonUtils']);
     this.geometryJsonUtils = geometryJsonUtils;
-    this.reactiveUtils = reactiveUtils;
     this.locale = intl.getLocale();
     this.intl = intl;
   }
 
   render(): VNode {
     const filterConfig = this.loading ? this.renderLoading() : this.initFilterConfig();
-    const footer = this.renderFooter(this.closeBtn, this.resetBtn);
+    const footer = this.renderFooter();
     return (
       <Host>
         <calcite-panel class={this.baseClass} ref={el => (this.panelEl = el as HTMLCalcitePanelElement)}>
@@ -412,17 +406,18 @@ export class InstantAppsFilterList {
     ) : null;
   }
 
-  renderFooter(closeBtn: boolean | undefined, resetBtn: boolean | undefined): VNode {
+  renderFooter(): VNode {
     const closeText = this.closeBtnText != null ? this.closeBtnText : this.messages?.close;
+    const btnWidth = this.closeBtn && this.resetBtn ? 'half' : 'full';
     return (
       <div class={CSS.footer} slot="footer">
-        {resetBtn ? (
-          <calcite-button appearance="outline" width="half" disabled={this.disabled} onClick={this.handleResetFilter.bind(this)}>
+        {this.resetBtn ? (
+          <calcite-button appearance="outline" width={btnWidth} disabled={this.disabled} onClick={this.handleResetFilter.bind(this)}>
             {this.messages?.resetFilter}
           </calcite-button>
         ) : undefined}
-        {closeBtn ? (
-          <calcite-button appearance="solid" width="half" kind="brand" onClick={this.closeBtnOnClick?.bind(this)}>
+        {this.closeBtn ? (
+          <calcite-button appearance="solid" width={btnWidth} kind="brand" onClick={this.closeBtnOnClick?.bind(this)}>
             {closeText}
           </calcite-button>
         ) : undefined}
@@ -466,7 +461,7 @@ export class InstantAppsFilterList {
 
   async initExpressions(): Promise<void> {
     this.loading = true;
-    if (this.filterLayerExpressions == null) return;
+    if (this.filterLayerExpressions == null || this.view == null) return;
     await this.processExpressions();
     this.loading = false;
   }
@@ -553,6 +548,7 @@ export class InstantAppsFilterList {
   }
 
   resetAllFilters(): void {
+    if (this.initDefExpressions == null) return;
     const allLayersAndTables = this.view?.map?.allLayers?.concat(this.view?.map?.allTables);
     allLayersAndTables?.forEach(layer => {
       if (!supportedTypes.includes(layer.type)) return;
@@ -655,10 +651,13 @@ export class InstantAppsFilterList {
     return false;
   }
 
-  updateCodedValueExpression(expression: Expression, layerField: __esri.Field | undefined): boolean {
+  async updateCodedValueExpression(layerExpression: LayerExpression, expression: Expression, layerField: __esri.Field | undefined): Promise<boolean> {
     if (!layerField?.domain || layerField?.domain?.type !== 'coded-value') {
       return false;
     }
+
+    const layer = this.findFilterLayer(layerExpression);
+    await this.getFeatureAttributes(layer, expression);
 
     const domain = layerField.domain;
     const codedValuesMap = domain.codedValues.reduce((acc, { code, name }) => {
@@ -667,7 +666,6 @@ export class InstantAppsFilterList {
     }, {});
 
     expression.codedValues = codedValuesMap;
-    expression.fields = Object.keys(codedValuesMap);
 
     if (expression.selectedFields?.length) {
       const selectedFieldsExpression = expression.selectedFields.map((field: string | number) => (typeof field === 'number' ? field : `'${handleSingleQuote(field)}'`)).join(',');
@@ -731,6 +729,7 @@ export class InstantAppsFilterList {
     if (field) {
       const initDefExpr = this.getInitDefExprFromLayer(queryLayer);
       query.where = initDefExpr || '1=1';
+
       query.outFields = [field];
       query.orderByFields = [`${field} ASC`];
       query.returnDistinctValues = true;
@@ -748,7 +747,7 @@ export class InstantAppsFilterList {
     if (features?.length) {
       expression.fields = [...new Set(features)];
       if (expression.type === 'string') {
-        expression.fields = expression.fields.sort();
+        expression.fields = expression.fields.sort((a, b) => a.localeCompare(b));
       } else if (expression.type === 'number') {
         expression.fields = expression.fields.sort((a, b) => a - b);
       }
@@ -787,8 +786,13 @@ export class InstantAppsFilterList {
           (expression.fields as string[]).push(...features);
         }
       });
-      expression.fields = [...new Set(expression.fields as string[])].sort();
-      this.filterLayerExpressions = structuredClone(this.filterLayerExpressions);
+      if (expression.type === 'string') {
+        expression.fields = [...new Set(expression.fields as string[])].sort((a, b) => a.localeCompare(b));
+      } else if (expression.type === 'number') {
+        expression.fields = [...new Set(expression.fields as number[])].sort((a, b) => a - b);
+      } else {
+        expression.fields = [...new Set(expression.fields as string[])].sort();
+      }
     });
   }
 
@@ -881,11 +885,11 @@ export class InstantAppsFilterList {
       case 'number':
         return await this.updateNumberExpression(layerExpression, expression);
       case 'date':
-        return this.updateDateExpressionBasedOnDisplayOption(layerExpression, expression);
+        return await this.updateDateExpressionBasedOnDisplayOption(layerExpression, expression);
       case 'coded-value':
-        return this.updateCodedValueExpression(expression, layerField);
+        return await this.updateCodedValueExpression(layerExpression, expression, layerField);
       case 'range':
-        return this.updateRangeExpressionBasedOnDisplayOption(layerExpression, expression, layerField);
+        return await this.updateRangeExpressionBasedOnDisplayOption(layerExpression, expression, layerField);
       case 'checkbox':
       case null:
         return expression.active ?? false;
@@ -1106,27 +1110,7 @@ export class InstantAppsFilterList {
   }
 
   async handleLayerExpressionsUpdate(): Promise<void> {
-    if (this.view == null) return;
-    const map = this.view.map as __esri.WebMap | __esri.WebScene;
-    this.initDefExpressions = {};
-    this.initPointCloudFilters = {};
-    this.initMapImageExpressions = {};
-
-    map.allLayers.concat(map.allTables).forEach(layer => {
-      if (!supportedTypes.includes(layer.type)) return;
-
-      const fl = layer as FilterLayer;
-      if (fl.type === 'point-cloud') {
-        (this.initPointCloudFilters as any)[fl.id] = fl.filters;
-      } else if (fl.type === 'map-image') {
-        this.initMapImageExpressions[fl.id] = fl.allSublayers.reduce((acc, sublayer) => {
-          acc[sublayer.id] = sublayer.definitionExpression;
-          return acc;
-        }, {});
-      } else {
-        this.initDefExpressions[fl.id] = fl.definitionExpression;
-      }
-    });
+    this.updateInitExpressions();
     this.handleURLParams();
     this.initExpressions();
   }
@@ -1319,5 +1303,29 @@ export class InstantAppsFilterList {
     if (!geometry) return;
     query.geometry = geometry;
     query.spatialRelationship = 'intersects';
+  }
+
+  updateInitExpressions(): void {
+    if (this.view == null) return;
+    const map = this.view.map as __esri.WebMap | __esri.WebScene;
+    this.initDefExpressions = {};
+    this.initPointCloudFilters = {};
+    this.initMapImageExpressions = {};
+
+    map.allLayers.concat(map.allTables).forEach(layer => {
+      if (!supportedTypes.includes(layer.type)) return;
+
+      const fl = layer as FilterLayer;
+      if (fl.type === 'point-cloud') {
+        (this.initPointCloudFilters as any)[fl.id] = fl.filters;
+      } else if (fl.type === 'map-image') {
+        this.initMapImageExpressions[fl.id] = fl.allSublayers.reduce((acc, sublayer) => {
+          acc[sublayer.id] = sublayer.definitionExpression;
+          return acc;
+        }, {});
+      } else {
+        this.initDefExpressions[fl.id] = fl.definitionExpression;
+      }
+    });
   }
 }

@@ -5,6 +5,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## v1.0.0-beta.284
+
+### instant-apps-filter-list
+
+- fix: update how filter list handles lifecycle methods. Add check for footer buttons, change width to full when only one is visible.
+
 ## v1.0.0-beta.283
 
 ### instant-apps-landing-page
