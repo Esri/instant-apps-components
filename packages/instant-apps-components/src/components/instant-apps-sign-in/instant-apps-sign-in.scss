@@ -119,7 +119,8 @@
       border: 1px solid #fff;
     }
 
-    &[appearance='solid']:hover {
+    &[appearance='solid']:hover,
+    &[appearance='solid']:focus {
       filter: brightness(0.9);
     }
   }
