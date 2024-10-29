@@ -114,6 +114,15 @@
     --calcite-color-brand-hover: var(--instant-apps-landing-page-entry-button-color);
     --calcite-color-brand-press: var(--instant-apps-landing-page-entry-button-color);
     min-width: 165px;
+
+    &[appearance='solid'] {
+      border: 1px solid #fff;
+    }
+
+    &[appearance='solid']:hover,
+    &[appearance='solid']:focus {
+      filter: brightness(0.9);
+    }
   }
 
   @media screen and (max-width: 767px) {

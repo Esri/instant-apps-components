@@ -180,7 +180,7 @@ export class InstantAppsSignIn {
   renderLandingPageSignIn() {
     return (
       <div class={CSS.buttonContainer}>
-        <calcite-button class={CSS.entryButton} scale="l" appearance="outline-fill" onClick={this.landingPageSignIn.bind(this)}>
+        <calcite-button class={CSS.entryButton} scale="l" onClick={this.landingPageSignIn.bind(this)}>
           {this.messages?.signIn}
         </calcite-button>
         <calcite-button class={CSS.entryButton} scale="l" appearance="outline-fill" onClick={this.guestOnClick.bind(this)}>
