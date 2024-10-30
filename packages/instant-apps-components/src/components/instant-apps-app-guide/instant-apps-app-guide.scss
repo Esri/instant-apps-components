@@ -15,9 +15,9 @@
 
   calcite-carousel {
     flex: 1;
-    overflow: scroll;
     height: fit-content;
     background-color: var(--calcite-color-foreground-1);
+    overflow: auto;
   }
 
   [slot='header-content'] {
