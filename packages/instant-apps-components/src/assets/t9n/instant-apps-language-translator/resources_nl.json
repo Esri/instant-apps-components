@@ -5,6 +5,7 @@
   "goToSetting": "Ga naar instelling",
   "header": "Vertaling",
   "headerTip": "Alle tekst die u in de app-configuratie invoert, wordt hieronder weergegeven met de optie vertaalde tekst toe te voegen voor de geselecteerde talen. Indien een tekstvak leeg is voor een geselecteerde taal, geeft de app de standaardtaal weer tot u de vertaalde tekst invult. Zoek tekst met de zoekopdracht, waarin de standaard- en vertaalde tekstgebieden zijn opgenomen.",
+  "lastAutoSave": "Laatst automatisch opgeslagen:",
   "languages": {
     "ar": "Arabisch",
     "bg": "Bulgaars",

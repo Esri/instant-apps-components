@@ -5,6 +5,7 @@
   "goToSetting": "Ayarlara git",
   "header": "Çeviri",
   "headerTip": "Uygulama yapılandırmasına girdiğiniz tüm metinler, seçilen diller için çevrilmiş metin ekleme seçeneğiyle birlikte aşağıda görünür. Seçilen dil metin kutusu boş olduğunda, siz çevrilmiş metni sağlayana kadar uygulamada varsayılan dil gösterilir. Varsayılan ve çevrilmiş metin alanlarını içeren aramayı kullanarak metin bulun.",
+  "lastAutoSave": "Son otomatik kayıt:",
   "languages": {
     "ar": "Arapça",
     "bg": "Bulgarca",

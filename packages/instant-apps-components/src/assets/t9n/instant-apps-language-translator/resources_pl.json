@@ -5,6 +5,7 @@
   "goToSetting": "Przejdź do ustawienia",
   "header": "Translacja",
   "headerTip": "Cały tekst, który wpiszesz w konfiguracji aplikacji, pojawi się poniżej z opcją dodania przetłumaczonego tekstu dla wybranych języków. Gdy pole tekstowe dla dowolnego z wybranych języków jest puste, aplikacja wyświetla język domyślny, dopóki nie dodasz przetłumaczonego tekstu. Znajdź tekst za pomocą funkcji wyszukiwania, która przeszukuje obszary tekstu domyślnego i przetłumaczonego.",
+  "lastAutoSave": "Ostatni zapis automatyczny:",
   "languages": {
     "ar": "Arabski",
     "bg": "Bułgarski",
