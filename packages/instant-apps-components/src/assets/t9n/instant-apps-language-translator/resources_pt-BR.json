@@ -5,6 +5,7 @@
   "goToSetting": "Ir para configuração",
   "header": "Tradução",
   "headerTip": "Todo o texto inserido na configuração do aplicativo aparece abaixo com a opção de adicionar texto traduzido para os idiomas selecionados. Quando uma caixa de texto estiver vazia para qualquer idioma selecionado, o aplicativo mostrará o idioma padrão até que você forneça o texto traduzido. Encontre texto usando a pesquisa, que inclui as áreas de texto padrão e traduzidas.",
+  "lastAutoSave": "Última gravação automática:",
   "languages": {
     "ar": "Árabe",
     "bg": "Búlgaro",

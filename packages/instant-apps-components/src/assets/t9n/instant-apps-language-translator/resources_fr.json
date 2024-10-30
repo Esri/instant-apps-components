@@ -5,6 +5,7 @@
   "goToSetting": "Accéder aux paramètres",
   "header": "Traduction",
   "headerTip": "Tout le texte que vous saisissez pendant la configuration de l’application apparaît ci-dessous avec la possibilité d’ajouter sa version traduite dans les langues sélectionnées. Lorsqu’une zone de texte est vide pour l’une des langues sélectionnées, l’application affiche le texte dans la langue par défaut jusqu’à ce que vous ajoutiez la version traduite. Le texte peut faire l’objet d’une recherche qui porte à la fois sur les zones de texte traduites et sur les zones dans la langue par défaut.",
+  "lastAutoSave": "Dernier enregistrement automatique :",
   "languages": {
     "ar": "Arabe",
     "bg": "Bulgare",

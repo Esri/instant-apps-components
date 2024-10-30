@@ -5,6 +5,7 @@
   "goToSetting": "Eiti į nustatymus",
   "header": "Vertimas",
   "headerTip": "Visas tekstas, kurį įvedėte į programos konfigūraciją, rodomas toliau su galimybe pridėti išverstą tekstą pasirinktomis kalbomis. Jei pasirinktos kalbos teksto laukelis liks tuščias, programa rodys numatytąją kalbą, kol pateiksite išverstą tekstą. Raskite tekstą naudodami paiešką, kuri apima numatytojo ir išversto teksto sritis.",
+  "lastAutoSave": "Paskutinį kartą automatiškai įrašyta:",
   "languages": {
     "ar": "Arabų",
     "bg": "Bulgarų",

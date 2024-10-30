@@ -5,6 +5,7 @@
   "goToSetting": "Đi đến cài đặt",
   "header": "Biên dịch",
   "headerTip": "Tất cả văn bản bạn nhập vào cấu hình ứng dụng sẽ xuất hiện bên dưới với tùy chọn thêm văn bản đã dịch cho các ngôn ngữ đã chọn. Khi hộp văn bản trống đối với bất kỳ ngôn ngữ đã chọn nào, ứng dụng sẽ hiển thị ngôn ngữ mặc định cho đến khi bạn cung cấp văn bản đã dịch. Tìm văn bản bằng chức năng tìm kiếm, bao gồm các vùng văn bản mặc định và đã dịch.",
+  "lastAutoSave": "Lần lưu tự động cuối cùng:",
   "languages": {
     "ar": "Tiếng Ả Rập",
     "bg": "Tiếng Bulgari",

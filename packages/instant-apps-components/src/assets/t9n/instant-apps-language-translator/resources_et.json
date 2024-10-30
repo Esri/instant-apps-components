@@ -5,6 +5,7 @@
   "goToSetting": "Ava seaded",
   "header": "Tõlge",
   "headerTip": "Kogu rakenduse konfiguratsiooni sisestatav tekst kuvatakse allpool koos võimalusega lisada valitud keelte jaoks tõlgitud tekst. Kui tekstiväli on mõne valitud keele puhul tühi, kuvab rakendus vaikekeele, kuni lisate tõlgitud teksti. Otsige teksti otsingu abil, mis hõlmab vaike- ja tõlgitud tekstialasid.",
+  "lastAutoSave": "Viimane automaatsalvestus:",
   "languages": {
     "ar": "araabia",
     "bg": "bulgaaria",

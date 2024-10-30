@@ -5,6 +5,7 @@
   "goToSetting": "Pojdi v nastavitve",
   "header": "Prevod",
   "headerTip": "Vso besedilo, ki ga vnesete v konfiguracijo aplikacije, se prikaže spodaj z možnostjo dodajanja prevedenega besedila za izbrane jezike. Ko je polje z besedilom prazno za kateri koli izbrani jezik, bo aplikacija prikazala privzeti jezik, dokler ne zagotovite prevedenega besedila. Poiščite besedilo z iskanjem, ki vključuje privzeto in prevedeno območje besedila.",
+  "lastAutoSave": "Zadnje samodejno shranjevanje:",
   "languages": {
     "ar": "Arabščina",
     "bg": "Bolgarščina",
