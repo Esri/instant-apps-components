@@ -131,11 +131,6 @@
           container: 'viewDiv',
         });
 
-        // Add error handling for MapView initialization
-        view.when().catch(error => {
-          console.error('Error initializing MapView:', error);
-        });
-
         const scoreboard = document.createElement('instant-apps-scoreboard');
         scoreboard.position = 'left';
         scoreboard.mode = 'pinned';
