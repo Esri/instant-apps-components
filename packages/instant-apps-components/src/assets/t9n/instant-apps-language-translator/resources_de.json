@@ -5,6 +5,7 @@
   "goToSetting": "Zur Einstellung wechseln",
   "header": "Übersetzung",
   "headerTip": "Der gesamte Text, den Sie in die App-Konfiguration eingeben, wird unten zusammen mit der Option zum Hinzufügen von übersetztem Text für die ausgewählten Sprachen angezeigt. Wenn ein Textfeld für eine ausgewählte Sprache leer ist, zeigt die App die Standardsprache an, bis Sie den übersetzten Text bereitstellen. Suchen Sie mit der Suche nach Text, einschließlich der standardmäßigen und übersetzten Textbereiche.",
+  "lastAutoSave": "Letzte automatische Speicherung:",
   "languages": {
     "ar": "Arabisch",
     "bg": "Bulgarisch",

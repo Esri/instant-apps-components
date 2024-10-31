@@ -5,6 +5,7 @@
   "goToSetting": "Přejít na nastavení",
   "header": "Překlad",
   "headerTip": "Veškerý text zadaný v konfiguraci aplikace se zobrazí níže s možností přidat jeho překlad ve vybraných jazycích. Pokud je textové pole pro vybraný jazyk prázdné, aplikace text zobrazí ve výchozím jazyce, dokud nezadáte jeho překlad. Najděte text pomocí vyhledávání, které zahrnuje výchozí a přeložené oblasti textu.",
+  "lastAutoSave": "Poslední automatické uložení:",
   "languages": {
     "ar": "arabština",
     "bg": "bulharština",

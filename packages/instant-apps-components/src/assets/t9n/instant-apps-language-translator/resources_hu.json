@@ -5,6 +5,7 @@
   "goToSetting": "Ugrás a beállításokhoz",
   "header": "Fordítás",
   "headerTip": "Az alkalmazás konfigurációjában megadott összes szöveg alul jelenik meg a kiválasztott nyelvekre lefordított szöveg hozzáadásának lehetőségével. Ha egy szövegdoboz üres valamelyik kiválasztott nyelv esetében, akkor az alkalmazás az alapértelmezett nyelvet mutatja, amíg meg nem adja a lefordított szöveget. Szöveg keresése a keresés segítségével, amely magában foglalja az alapértelmezett és a lefordított szövegterületeket.",
+  "lastAutoSave": "Utolsó automatikus mentés:",
   "languages": {
     "ar": "arab",
     "bg": "bolgár",

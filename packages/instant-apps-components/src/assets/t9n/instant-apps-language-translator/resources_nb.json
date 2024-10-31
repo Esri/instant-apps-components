@@ -5,6 +5,7 @@
   "goToSetting": "Gå til innstilling",
   "header": "Oversettelse",
   "headerTip": "All tekst du skriver inn i appens konfigurasjon, vises nedenfor med mulig for å legge til oversatt tekst for de valgte språkene. Når en tekstboks er tom for et valgt språk, viser appen standardspråket før du oppgir den oversatte teksten. Finn tekst med søkefunksjonen, som omfatter standardteksten og de oversatte tekstområdene.",
+  "lastAutoSave": "Siste automatiske lagring",
   "languages": {
     "ar": "Arabisk",
     "bg": "Bulgarsk",

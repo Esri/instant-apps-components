@@ -5,6 +5,7 @@
   "goToSetting": "Accesare setare",
   "header": "Traducere",
   "headerTip": "Tot textul pe care îl introduceți în configurația aplicației apare mai jos cu o opțiune de a adăuga textul tradus pentru limbile selectate. Când o casetă de text este goală pentru orice limbă selectată, aplicația va afișa limba implicită până când furnizați textul tradus. Găsiți text folosind căutarea, care include zonele de text implicite și traduse.",
+  "lastAutoSave": "Ultima salvare automată:",
   "languages": {
     "ar": "Arabă",
     "bg": "Bulgară",

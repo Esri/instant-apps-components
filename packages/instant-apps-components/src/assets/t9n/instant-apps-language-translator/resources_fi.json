@@ -5,6 +5,7 @@
   "goToSetting": "Siirry asetuksiin",
   "header": "Siirto",
   "headerTip": "Kaikki sovellusmäärityksissä lisättävä teksti näkyy alapuolella, ja käännetty teksti voidaan lisätä kaikille valituille kielille. Kun minkä tahansa valitun kielen tekstiruutu on tyhjä, sovellus näyttää oletuskielen, kunnes annat käännetyn tekstin. Voit etsiä tekstiä käyttämällä hakutoimintoa, joka sisältää oletustekstin ja käännetyn tekstin alueet.",
+  "lastAutoSave": "Viimeisin automaattinen tallennus:",
   "languages": {
     "ar": "arabia",
     "bg": "bulgaria",

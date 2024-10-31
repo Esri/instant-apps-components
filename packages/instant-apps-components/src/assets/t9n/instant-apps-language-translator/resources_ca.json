@@ -5,6 +5,7 @@
   "goToSetting": "Vés a la configuració",
   "header": "Traducció",
   "headerTip": "Tot el text que introduïu a la configuració de l'aplicació apareixerà tot seguit amb l'opció d'afegir text traduït per a les llengües seleccionades. Si hi ha un quadre de text buit per a qualsevol de les llengües seleccionades, l'aplicació mostrarà la llengua per defecte fins que no proporcioneu el text traduït. Per trobar el text, feu servir la funció de cerca, que inclou les àrees de text per defecte i les traduïdes.",
+  "lastAutoSave": "Darrera desada automàtica:",
   "languages": {
     "ar": "Àrab",
     "bg": "Búlgar",

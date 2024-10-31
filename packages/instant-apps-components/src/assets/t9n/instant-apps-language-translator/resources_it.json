@@ -5,6 +5,7 @@
   "goToSetting": "Vai all'impostazione",
   "header": "Traduzione",
   "headerTip": "Se inserisci testo nell'app, viene visualizzata la configurazione seguente con l'opzione di aggiungere testo tradotto per le lingue selezionate. Quando una casella di testo è vuota per una lingua selezionata, l'app mostra la lingua predefinita finché non viene fornito il testo tradotto. Trova il testo utilizzando la ricerca, che include le aree di testo predefinito e tradotto.",
+  "lastAutoSave": "Ultimo salvataggio automatico:",
   "languages": {
     "ar": "Arabo",
     "bg": "Bulgaro",

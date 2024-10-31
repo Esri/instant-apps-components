@@ -5,6 +5,7 @@
   "goToSetting": "Idi na postavke",
   "header": "Prijevod",
   "headerTip": "Sav tekst koji unesete u konfiguraciju aplikacije pojavljuje se ispod s opcijom dodavanja prevedenog teksta za odabrane jezike. Kada je tekstni okvir prazan za bilo koji odabrani jezik, aplikacija će prikazivati zadani jezik dok ne unesete prevedeni tekst. Pronađite tekst pomoću pretraživanja koje uključuje zadana i prevedena područja teksta.",
+  "lastAutoSave": "Zadnje automatsko spremanje:",
   "languages": {
     "ar": "Arapski",
     "bg": "Bugarski",

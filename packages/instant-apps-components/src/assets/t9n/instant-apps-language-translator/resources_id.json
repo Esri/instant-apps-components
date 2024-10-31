@@ -5,6 +5,7 @@
   "goToSetting": "Buka pengaturan",
   "header": "Terjemahan",
   "headerTip": "Semua teks yang dimasukkan ke dalam konfigurasi aplikasi muncul di bawah dengan opsi menambahkan teks terjemahan untuk bahasa yang dipilih. Ketika kolom tulisan untuk semua bahasa yang dipilih, aplikasi akan menampilkan bahasa default hingga Anda memberikan teks yang diterjemahkan. Temukan teks dengan fitur pencarian, yang mencakup area teks default dan terjemahan.",
+  "lastAutoSave": "Simpan otomatis terakhir:",
   "languages": {
     "ar": "Bahasa Arab",
     "bg": "Bahasa Bulgaria",
