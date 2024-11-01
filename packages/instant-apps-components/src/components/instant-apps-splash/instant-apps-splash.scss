@@ -1,4 +1,9 @@
+/*
+* @prop --instant-apps-splash-content-max-height: Set the max height of the content area .
+*/
+
 :host {
+  --instant-apps-splash-content-max-height: 100%;
   display: block;
 
   .image.image_resized {
@@ -14,5 +19,9 @@
     calcite-label {
       --calcite-label-margin-bottom: 0;
     }
+  }
+
+  .instant-apps-splash__content {
+    max-height: var(--instant-apps-splash-content-max-height);
   }
 }

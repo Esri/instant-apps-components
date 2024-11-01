@@ -7,6 +7,7 @@ import Splash_T9n from '../../assets/t9n/instant-apps-splash/resources.json';
 
 const CSS = {
   back: 'instant-apps-splash__back-content',
+  content: 'instant-apps-splash__content',
 };
 
 @Component({
@@ -137,7 +138,7 @@ export class InstantAppsSplash {
   renderContent(): HTMLElement {
     const { content } = this;
     return (
-      <div slot="content" innerHTML={content}>
+      <div slot="content" class={CSS.content} innerHTML={content}>
         <slot name="custom-action"></slot>
       </div>
     );
