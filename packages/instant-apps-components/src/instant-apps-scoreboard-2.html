@@ -8,178 +8,180 @@
 
 <!doctype html>
 <html dir="ltr" lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=5.0" />
-    <title>Instant Apps Components: Scoreboard</title>
 
-    <link rel="stylesheet" href="https://jsdev.arcgis.com/4.31/esri/themes/light/main.css" />
-    <script src="https://jsdev.arcgis.com/4.31/"></script>
-    <script type="module" src="https://js.arcgis.com/calcite-components/2.13.0/calcite.esm.js"></script>
-    <link rel="stylesheet" type="text/css" href="https://js.arcgis.com/calcite-components/2.13.0/calcite.css" />
-    <script type="module" src="/build/instant-apps-components.esm.js"></script>
-    <script nomodule src="/build/instant-apps-components.js"></script>
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=5.0" />
+  <title>Instant Apps Components: Scoreboard</title>
 
-    <style>
-      html,
-      body {
-        box-sizing: border-box;
-        width: 100%;
-        height: 100%;
-        margin: 0;
-        padding: 0;
-      }
+  <link rel="stylesheet" href="https://jsdev.arcgis.com/4.31/esri/themes/light/main.css" />
+  <script src="https://jsdev.arcgis.com/4.31/"></script>
+  <script type="module" src="https://js.arcgis.com/calcite-components/2.13.0/calcite.esm.js"></script>
+  <link rel="stylesheet" type="text/css" href="https://js.arcgis.com/calcite-components/2.13.0/calcite.css" />
+  <script type="module" src="/build/instant-apps-components.esm.js"></script>
+  <script nomodule src="/build/instant-apps-components.js"></script>
 
-      body {
-        display: flex;
-        flex-direction: column;
-      }
+  <style>
+    html,
+    body {
+      box-sizing: border-box;
+      width: 100%;
+      margin: 0;
+      padding: 0;
 
-      #appContainer {
-        display: flex;
-        width: 100%;
-        flex-grow: 1;
-      }
+    }
 
-      #viewDiv,
-      #scoreboardContainer {
-        width: 50%;
-      }
+    body {
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
 
-      #scoreboardContainer {
-        display: flex;
-      }
+    #scoreboardContainer {
+      flex: 0 0 100px;
+    }
 
-      #scoreboardContainer div {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        width: 100%;
-      }
-    </style>
-  </head>
+    #appContainer {
+      display: flex;
+      width: 100vw;
+      height: 100vh;
 
-  <body>
-    <instant-apps-header
-      id="instant-apps-header"
-      slot="header"
-      title-text="Instant Apps: Scoreboard"
-      text-color="#fff"
-      background-color="#151515"
-      logo-image="https://www.esri.com/content/dam/esrisites/en-us/common/icons/product-logos/arcgis-instant-apps-64.svg"
-      logo-image-alt-text="ArcGIS Instant Apps logo"
-      logo-link="https://www.esri.com/en-us/arcgis/products/arcgis-instant-apps/overview"
-      info-button="true"
-      info-title-text="Open information"
-      info-is-open="true"
-    >
-      <instant-apps-social-share slot="actions-end" share-button-color="neutral" popover-button-icon-scale="s"></instant-apps-social-share>
-    </instant-apps-header>
-    <div id="appContainer">
-      <div id="scoreboardContainer">
-        <div>Content</div>
-      </div>
-      <div id="viewDiv"></div>
+    }
+
+    #viewDiv {
+      width: 100%;
+      height: 100vh;
+    }
+  </style>
+</head>
+
+<body>
+
+  <div id="appContainer">
+    <div id="scoreboardContainer">
+
+
     </div>
+    <div id="viewDiv"></div>
+  </div>
 
-    <script>
-      require(['esri/WebMap', 'esri/views/MapView', 'esri/core/reactiveUtils', 'esri/config', 'esri/core/Collection', 'esri/widgets/Sketch', 'esri/layers/GraphicsLayer'], (
-        WebMap,
-        MapView,
-        reactiveUtils,
-        esriConfig,
-        Collection,
-        Sketch,
-        GraphicsLayer,
-      ) => {
-        // // Init dummy data
-        let items = [
-          {
-            layer: {
-              id: 'PowerPlants_WorldResourcesInstitute_5563',
-              url: 'https://services1.arcgis.com/4yjifSiIG17X0gW4/arcgis/rest/services/PowerPlants_WorldResourcesInstitute/FeatureServer',
-            },
-            field: 'capacity_mw',
-            label: 'Capacity (MW)',
-            operation: 'avg',
-            visible: true,
+  <script>
+    require(['esri/WebMap', 'esri/views/MapView', 'esri/core/reactiveUtils', 'esri/config', 'esri/core/Collection', 'esri/widgets/Sketch', 'esri/layers/GraphicsLayer'], (
+      WebMap,
+      MapView,
+      reactiveUtils,
+      esriConfig,
+      Collection,
+      Sketch,
+      GraphicsLayer,
+    ) => {
+      // // Init dummy data
+      let items = [
+        {
+          layer: {
+            id: "School_Districts_Final_shapefile_2369",
+            url: null
           },
-          {
-            layer: {
-              id: 'PowerPlants_WorldResourcesInstitute_5563',
-              url: 'https://services1.arcgis.com/4yjifSiIG17X0gW4/arcgis/rest/services/PowerPlants_WorldResourcesInstitute/FeatureServer',
-            },
-            field: 'year_of_capacity_data',
-            label: 'Year of Capacity Data avg',
-            operation: 'avg',
-            visible: true,
+          field: "OBJECTID",
+          label: "Count",
+          operation: "count",
+          visible: true,
+          _uid: "1c68470d9e9"
+        },
+        {
+          layer: {
+            id: "School_Districts_Final_shapefile_2369",
+            url: null
           },
-        ];
+          field: "AWATER",
+          label: "sum",
+          operation: "sum",
+          visible: true,
+          _uid: "c68470d9e9d"
+        }
+      ];
 
-        esriConfig.portalUrl = 'https://holistic.mapsdevext.arcgis.com';
-        const gLayer = new GraphicsLayer();
+      esriConfig.portalUrl = 'https://www.arcgis.com';
+      const gLayer = new GraphicsLayer();
 
-        const map = new WebMap({
-          portalItem: {
-            id: '7e252d7ebdc448378e7d1c3ff15c5703',
-          },
-          layers: [gLayer],
-        });
-
-        const view = new MapView({
-          map: map,
-          container: 'viewDiv',
-        });
-
-        const scoreboard = document.createElement('instant-apps-scoreboard');
-        scoreboard.position = 'left';
-        scoreboard.mode = 'pinned';
-        scoreboard.autoDockEnabled = false;
-        scoreboard.view = view;
-        scoreboard.items = items;
-
-        const container = document.getElementById('scoreboardContainer');
-        container.prepend(scoreboard);
-
-        const sketch = new Sketch({
-          view,
-          layer: gLayer,
-          creationMode: 'update',
-
-          visibleElements: {
-            createTools: {
-              point: false,
-              circle: false,
-              polyline: false,
-            },
-            selectionTools: {
-              'lasso-selection': false,
-            },
-            undoRedoMenu: false,
-            settingsMenu: false,
-          },
-        });
-        view.ui.add(sketch, 'top-right');
-
-        sketch.on('create', e => {
-          if (e.state === 'complete') {
-            scoreboard.geometry = e.graphic.geometry;
-          }
-        });
-
-        sketch.on('update', e => {
-          const eInfoType = e.toolEventInfo?.type;
-          const types = ['move-stop', 'scale-stop', 'rotate-stop'];
-          const complete = types.indexOf(eInfoType) > -1;
-          if (complete) {
-            scoreboard.geometry = e.graphics[0].geometry;
-          }
-        });
-
-        sketch.on('delete', e => {
-          scoreboard.geometry = null;
-        });
+      const map = new WebMap({
+        portalItem: {
+          id: '73f22d3ec77a4562a263933ae15f1d52',
+        },
+        layers: [gLayer],
       });
-    </script>
-  </body>
+
+      const view = new MapView({
+        map: map,
+        container: 'viewDiv',
+      });
+
+      const scoreboard = document.createElement('instant-apps-scoreboard');
+      scoreboard.position = 'left';
+      scoreboard.mode = 'pinned';
+      scoreboard.autoDockEnabled = false;
+      scoreboard.view = view;
+      scoreboard.items = items;
+
+      const container = document.getElementById('scoreboardContainer');
+      container.prepend(scoreboard);
+
+      const sketch = new Sketch({
+        view,
+        layer: gLayer,
+        creationMode: 'update',
+
+        visibleElements: {
+          createTools: {
+            point: false,
+            circle: false,
+            polyline: false,
+          },
+          selectionTools: {
+            'lasso-selection': false,
+          },
+          undoRedoMenu: false,
+          settingsMenu: false,
+        },
+      });
+      view.ui.add(sketch, 'top-right');
+
+      sketch.on('create', e => {
+        if (e.state === 'complete') {
+          scoreboard.geometry = e.graphic.geometry;
+        }
+      });
+
+      sketch.on('update', e => {
+        const eInfoType = e.toolEventInfo?.type;
+        const types = ['move-stop', 'scale-stop', 'rotate-stop'];
+        const complete = types.indexOf(eInfoType) > -1;
+        if (complete) {
+          scoreboard.geometry = e.graphics[0].geometry;
+        }
+      });
+
+      sketch.on('delete', e => {
+        scoreboard.geometry = null;
+      });
+
+
+      view.on("click", (e) => {
+
+        view.hitTest(e.screenPoint).then((response) => {
+
+          const graphicHits = response.results?.filter((hitResult) => hitResult.type === "graphic");
+
+          if (graphicHits?.length > 0) {
+            console.log("Set Search Geometry")
+            scoreboard.geometry = graphicHits[0].graphic.geometry;
+          }
+
+
+        })
+      })
+    });
+  </script>
+</body>
+
 </html>
