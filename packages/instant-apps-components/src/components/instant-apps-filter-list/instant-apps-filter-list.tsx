@@ -892,6 +892,7 @@ export class InstantAppsFilterList {
         return await this.updateRangeExpressionBasedOnDisplayOption(layerExpression, expression, layerField);
       case 'checkbox':
       case null:
+      case undefined:
         return expression.active ?? false;
       default:
         return false;
