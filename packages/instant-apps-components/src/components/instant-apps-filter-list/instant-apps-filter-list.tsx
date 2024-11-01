@@ -167,7 +167,6 @@ export class InstantAppsFilterList {
 
   @Method()
   forceReset(): Promise<void> {
-    this.filterLayerExpressions = structuredClone(this.layerExpressions);
     this.handleResetFilter();
     return this.initExpressions();
   }
