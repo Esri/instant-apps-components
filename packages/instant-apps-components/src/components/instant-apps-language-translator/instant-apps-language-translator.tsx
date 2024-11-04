@@ -175,7 +175,7 @@ export class InstantAppsLanguageTranslator {
     try {
       const portalItemResource = (await getPortalItemResource(this.portalItem)) as __esri.PortalItemResource;
       store.set('portalItemResource', portalItemResource as __esri.PortalItemResource);
-      const t9nData = await fetchResourceData(this.request, portalItemResource);
+      const t9nData = await fetchResourceData(portalItemResource);
       store.set('lastSave', t9nData.lastSave);
       store.set('portalItemResourceT9n', t9nData ?? {});
     } catch {}

@@ -1,14 +1,8 @@
 import { loadModules } from '../utils/loadModules';
 
-export async function fetchResourceData(request, resource: __esri.PortalItemResource): Promise<any> {
+export async function fetchResourceData(resource: __esri.PortalItemResource): Promise<any> {
   try {
-    const token = resource?.portalItem?.portal?.['credential']?.['token'];
-    const reqConfig: __esri.RequestOptions = { responseType: 'json' };
-    if (token) reqConfig.query = { token };
-    var cacheBuster = 'cacheBuster=' + Date.now();
-    const url = `${resource.url}?${cacheBuster}`;
-    const reqRes = await request(url, reqConfig);
-    const t9nData = reqRes.data;
+    const t9nData = await resource.fetch('json', { cacheBust: true });
     return Promise.resolve(t9nData);
   } catch (err) {
     console.error('Unable to get resource t9n data.');

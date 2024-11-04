@@ -90,7 +90,7 @@ export class InstantAppsLanguageSwitcher {
     this.messages = await getMessages(document.createElement('instant-apps-language-translator'));
     try {
       this.portalItemResource = (await getPortalItemResource(this.portalItem)) as __esri.PortalItemResource;
-      const t9nData = await fetchResourceData(request, this.portalItemResource);
+      const t9nData = await fetchResourceData(this.portalItemResource);
       this.t9nData = t9nData ?? {};
     } catch (err) {
       this.t9nData = {};
@@ -266,7 +266,7 @@ export class InstantAppsLanguageSwitcher {
   async refresh(): Promise<void> {
     try {
       const resource = (await getPortalItemResource(this.portalItem)) as __esri.PortalItemResource;
-      const t9nData = await fetchResourceData(this.request, resource);
+      const t9nData = await fetchResourceData(resource);
       this.t9nData = t9nData;
       const refreshedData = { locale: this.selectedLanguage as string, data: t9nData[this.selectedLanguage as string] };
       this.selectedLanguageUpdated.emit(refreshedData);
