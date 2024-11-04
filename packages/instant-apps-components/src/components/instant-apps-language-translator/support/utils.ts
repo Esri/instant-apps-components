@@ -95,7 +95,7 @@ export function initExternalCKEditorStyles() {
 }
 
 export async function updateLastSave(resource: __esri.PortalItemResource): Promise<void> {
-  const data = await resource.fetch();
+  const data = store.get('portalItemResourceT9n');
   const lastSave = Date.now();
   store.set('lastSave', lastSave);
   const dataStr = JSON.stringify({ ...data, lastSave });

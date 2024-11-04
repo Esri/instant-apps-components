@@ -99,7 +99,7 @@ describe('Time filter', async () => {
         const props = ['layerView', 'unit', 'rangeStart', 'rangeEnd', 'timeExtent'];
         const containsExpectedProps = props.every(prop => timeInfoItem.hasOwnProperty(prop));
         expect(containsExpectedProps).toBe(true);
-        expect(timeInfoItem?.timeExtent?.declaredClass).toBe('esri.TimeExtent');
+        expect(timeInfoItem?.timeExtent?.declaredClass).toBe('esri.time.TimeExtent');
       });
 
       afterAll(() => {
