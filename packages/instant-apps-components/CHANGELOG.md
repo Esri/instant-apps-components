@@ -5,6 +5,20 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## v1.0.0-beta.290
+
+### instant-apps-language-translator
+
+- fix(Language Translator): Prevent stale data from being re-written to portal item resource
+
+### instant-apps-splash
+
+## v1.0.0-beta.289
+
+### instant-apps-splash
+
+- feat: Add CSS variable (`--instant-apps-splash-content-max-height`) for max-height of content area
+
 ## v1.0.0-beta.288
 
 ### instant-apps-filter-list
