@@ -129,10 +129,11 @@ export class InstantAppsFilterList {
   @State() filterLayerExpressions: LayerExpression[];
   @State() messages: typeof FilterList_T9n;
   @State() baseClass = baseClassLight;
-  @State() disabled: boolean | undefined = true;
   @State() initDefExpressions: GenericStringObject;
   @State() initMapImageExpressions: { [key: string]: GenericStringObject };
   @State() initPointCloudFilters: { [key: string]: PointCloudFilters };
+
+  resetBtnEl: HTMLCalciteButtonElement;
 
   /**
    * Emits when the reset button is pushed.
@@ -196,7 +197,6 @@ export class InstantAppsFilterList {
     if (this.layerExpressions == null && this.view == null) return;
     this.isLayerExpUpdated = true;
     this.filterLayerExpressions = structuredClone(this.layerExpressions);
-    this.disabled = this.filterLayerExpressions?.length ? undefined : true;
     this.handleLayerExpressionsUpdate();
   }
 
@@ -207,13 +207,14 @@ export class InstantAppsFilterList {
     if (this.isLayerExpUpdated) return;
     this.isLayerExpUpdated = true;
     this.filterLayerExpressions = this.layerExpressions != null ? structuredClone(this.layerExpressions) : [];
-    this.disabled = this.filterLayerExpressions?.length ? undefined : true;
     if (this.view == null) return;
     this.handleLayerExpressionsUpdate();
   }
 
-  componentWillRender(): void {
-    this.disabled = this.filterLayerExpressions?.length > 0 ? undefined : true;
+  componentDidRender(): void {
+    if (this.resetBtnEl != null) {
+      this.resetBtnEl.disabled = this.filterLayerExpressions?.length > 0 ? false : true;
+    }
   }
 
   disconnectedCallback(): void {
@@ -411,7 +412,7 @@ export class InstantAppsFilterList {
     return (
       <div class={CSS.footer} slot="footer">
         {this.resetBtn ? (
-          <calcite-button appearance="outline" width={btnWidth} disabled={this.disabled} onClick={this.handleResetFilter.bind(this)}>
+          <calcite-button appearance="outline" width={btnWidth} ref={(el: HTMLCalciteButtonElement) => (this.resetBtnEl = el)} onClick={this.handleResetFilter.bind(this)}>
             {this.messages?.resetFilter}
           </calcite-button>
         ) : undefined}
@@ -460,7 +461,10 @@ export class InstantAppsFilterList {
 
   async initExpressions(): Promise<void> {
     this.loading = true;
-    if (this.filterLayerExpressions == null || this.view == null) return;
+    if (this.filterLayerExpressions == null || this.view == null) {
+      this.loading = false;
+      return;
+    }
     await this.processExpressions();
     this.loading = false;
   }
@@ -470,7 +474,6 @@ export class InstantAppsFilterList {
 
     for (const layerExpression of this.filterLayerExpressions) {
       for (const expression of layerExpression.expressions || []) {
-        expression.active = expression.active ?? expression.definitionExpression != null;
         await this.setInitExpression(layerExpression, expression);
       }
     }
