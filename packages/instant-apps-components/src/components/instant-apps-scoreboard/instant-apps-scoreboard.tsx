@@ -108,6 +108,12 @@ export class InstantAppsScoreboard {
   })
   geometry: __esri.Geometry | null = null;
 
+  @Prop()
+  debug: boolean = false;
+
+  @Prop()
+  queryType: 'layerView' | 'layer' = 'layerView';
+
   // Internal state
   @State() state: ScoreboardState = Scoreboard.Loading;
 
@@ -206,6 +212,11 @@ export class InstantAppsScoreboard {
     this.scoreboardItemsUpdatedHandler();
 
     this.initStationaryWatcher();
+  }
+
+  @Watch('geometry')
+  protected logGeometry() {
+    if (this.debug) console.log(this.geometry);
   }
 
   // Lifecycle methods
@@ -521,13 +532,21 @@ export class InstantAppsScoreboard {
     };
 
     const getStatDefinitionQuery = (layerView: __esri.FeatureLayerView | __esri.SceneLayerView, statDefinition: __esri.StatisticDefinition) => {
-      const query = layerView.createQuery();
+      const query = layerView.layer.createQuery();
       const outStatistics = [statDefinition];
       const geometry = this.geometry ? this.geometry : this.view.extent;
       query.outStatistics = outStatistics;
       query.geometry = geometry as __esri.Extent;
       const timeExtent = layerView?.filter?.timeExtent ?? (layerView as __esri.FeatureLayerView)?.featureEffect?.filter?.timeExtent ?? null;
       if (timeExtent) query.timeExtent = timeExtent;
+
+      if (this.debug) {
+        console.log('Geometry: ', this.geometry);
+        console.log('View extent: ', this.view.extent);
+
+        console.log('Statistic definition query: ', query);
+        console.log('Query geometry declared class: ', query.geometry?.declaredClass);
+      }
       return query;
     };
 
@@ -540,7 +559,7 @@ export class InstantAppsScoreboard {
 
         const query = getStatDefinitionQuery(layerView, statDefinition);
 
-        const queryFeaturesRes = layerView.queryFeatures(query);
+        const queryFeaturesRes = this.queryType === 'layerView' ? layerView.queryFeatures(query) : layerView.layer.queryFeatures(query);
         queryFeaturePromises.push(queryFeaturesRes);
       };
     };
@@ -584,7 +603,9 @@ export class InstantAppsScoreboard {
     const isNotInteractingWatcher = () => {
       return this.reactiveUtils?.when(
         () => !this.view?.interacting,
-        () => this.calculateScoreboardItemValues(),
+        () => {
+          if (this.queryType === 'layerView') this.calculateScoreboardItemValues();
+        },
         whenOnceConfig,
       );
     };
@@ -605,7 +626,9 @@ export class InstantAppsScoreboard {
       () => {
         this.reactiveUtils.when(
           () => !this.view?.updating,
-          () => this.calculateScoreboardItemValues(),
+          () => {
+            if (this.queryType === 'layerView') this.calculateScoreboardItemValues();
+          },
           { once: true, initial: true },
         );
       },
