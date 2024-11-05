@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## v1.0.0-beta.292
 
+### instant-apps-filter-list
+
+- update `forceReset()`
+
 ### instant-apps-interactive-legend
 
 - fix: update relationship legend drawing style setup to take CIMSolidFill colors into account

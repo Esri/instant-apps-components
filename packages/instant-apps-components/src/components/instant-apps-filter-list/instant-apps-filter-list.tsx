@@ -168,8 +168,8 @@ export class InstantAppsFilterList {
 
   @Method()
   forceReset(): Promise<void> {
-    this.handleResetFilter();
-    return this.initExpressions();
+    this.resetExpressions();
+    return Promise.resolve();
   }
 
   @Method()
@@ -480,6 +480,13 @@ export class InstantAppsFilterList {
   }
 
   handleResetFilter(): void {
+    this.resetExpressions();
+    this.resetAllFilters();
+    this.generateURLParams();
+    this.filterListReset.emit();
+  }
+
+  resetExpressions(): void {
     this.filterLayerExpressions?.forEach(layerExpression => {
       layerExpression.expressions?.forEach(expression => {
         const { type, numDisplayOption, displayOption } = expression;
@@ -507,10 +514,6 @@ export class InstantAppsFilterList {
         expression.active = false;
       });
     });
-
-    this.resetAllFilters();
-    this.generateURLParams();
-    this.filterListReset.emit();
   }
 
   resetExpressionUI(type: string, expression: Expression): void {
