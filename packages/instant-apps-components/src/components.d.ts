@@ -298,6 +298,7 @@ export namespace Components {
          */
         "filterCount"?: number;
         "forceReset": () => Promise<void>;
+        "getCurrentLayerExpressions": () => Promise<LayerExpression[]>;
         "getFilterInitState": () => Promise<FilterInitState>;
         /**
           * Use this to create filters that update a layer's definitionExpression.
