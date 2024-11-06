@@ -148,6 +148,16 @@ Type: `Promise<void>`
 
 
 
+### `getCurrentLayerExpressions() => Promise<LayerExpression[]>`
+
+
+
+#### Returns
+
+Type: `Promise<LayerExpression[]>`
+
+
+
 ### `getFilterInitState() => Promise<FilterInitState>`
 
 

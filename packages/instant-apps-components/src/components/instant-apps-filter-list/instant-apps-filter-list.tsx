@@ -186,6 +186,12 @@ export class InstantAppsFilterList {
     return this.initExpressions();
   }
 
+  @Method()
+  getCurrentLayerExpressions(): Promise<LayerExpression[]> {
+    const currentLayerExpressions = structuredClone(this.filterLayerExpressions);
+    return Promise.resolve(currentLayerExpressions);
+  }
+
   geometryJsonUtils: typeof __esri.JSONSupport;
   intl: __esri.intl;
   locale: string;
