@@ -7,7 +7,7 @@
 import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
 import { AppGuidePage } from "./components/instant-apps-app-guide/AppGuide/interfaces/interfaces";
 import { EditorConfig } from "@ckeditor/ckeditor5-core/src/editor/editorconfig";
-import { ActiveTool, ControlPanelComponent, CreateOption, ExportOutput, ExportView, ExtentSelector, FilterInitState, FilterMode, FilterParam, IMeasureConfiguration, InstantAppsPopoverMessageOverrides, IPortal, LayerExpression, PopoverPlacement } from "./interfaces/interfaces";
+import { ActiveTool, ControlPanelComponent, CreateOption, ExportOutput, ExportView, ExtentSelector, FilterInitState, FilterMode, IMeasureConfiguration, InstantAppsPopoverMessageOverrides, IPortal, LayerExpression, PopoverPlacement } from "./interfaces/interfaces";
 import { PredefinedOptions } from "./components/instant-apps-create/instant-apps-create";
 import { AlignmentPositions } from "./components/instant-apps-landing-page/support/enum";
 import { AppSettings, LocaleItem, LocaleSettingData } from "./components/instant-apps-language-translator/support/interfaces";
@@ -17,7 +17,7 @@ import { ScoreboardItem, ScoreboardMode, ScoreboardPosition } from "./components
 import { ITimeInfoConfigItem } from "./components/instant-apps-time-filter/TimeFilter/interfaces/interfaces";
 export { AppGuidePage } from "./components/instant-apps-app-guide/AppGuide/interfaces/interfaces";
 export { EditorConfig } from "@ckeditor/ckeditor5-core/src/editor/editorconfig";
-export { ActiveTool, ControlPanelComponent, CreateOption, ExportOutput, ExportView, ExtentSelector, FilterInitState, FilterMode, FilterParam, IMeasureConfiguration, InstantAppsPopoverMessageOverrides, IPortal, LayerExpression, PopoverPlacement } from "./interfaces/interfaces";
+export { ActiveTool, ControlPanelComponent, CreateOption, ExportOutput, ExportView, ExtentSelector, FilterInitState, FilterMode, IMeasureConfiguration, InstantAppsPopoverMessageOverrides, IPortal, LayerExpression, PopoverPlacement } from "./interfaces/interfaces";
 export { PredefinedOptions } from "./components/instant-apps-create/instant-apps-create";
 export { AlignmentPositions } from "./components/instant-apps-landing-page/support/enum";
 export { AppSettings, LocaleItem, LocaleSettingData } from "./components/instant-apps-language-translator/support/interfaces";
@@ -316,7 +316,7 @@ export namespace Components {
           * When false filters will not be reset when the component is disconnected from the DOM
          */
         "resetFiltersOnDisconnect": boolean;
-        "restoreFilters": (filterParamString: string, filterInitState: any) => Promise<void>;
+        "updateInitDefExpressions": (filterInitState: any) => Promise<void>;
         /**
           * URL params set by using filters.
          */
