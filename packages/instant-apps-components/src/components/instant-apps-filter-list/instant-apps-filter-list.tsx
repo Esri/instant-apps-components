@@ -173,17 +173,11 @@ export class InstantAppsFilterList {
   }
 
   @Method()
-  restoreFilters(filterParamString: string, filterInitState: any): Promise<void> {
-    this.filterLayerExpressions = structuredClone(this.layerExpressions);
+  updateInitDefExpressions(filterInitState: any): Promise<void> {
     this.initDefExpressions = filterInitState.initDefExpressions;
     this.initMapImageExpressions = filterInitState.initMapImageExpressions;
     this.initPointCloudFilters = filterInitState.initPointCloudFilters;
-
-    const filters = filterParamString?.split(';').map(filter => JSON.parse(filter) as FilterParam);
-    if (filters) {
-      this.filterCount = this.applyFilters(filters);
-    }
-    return this.initExpressions();
+    return Promise.resolve();
   }
 
   @Method()
