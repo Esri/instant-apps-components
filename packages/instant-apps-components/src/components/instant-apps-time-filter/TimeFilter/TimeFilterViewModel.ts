@@ -195,7 +195,7 @@ class InstantAppsTimeFilterViewModel {
   applyFeatureEffect(layerView: __esri.FeatureLayerView, timeExtent: __esri.TimeExtent, filterMode?: FilterMode) {
     if (!layerView) return;
     if (layerView.filter) layerView.set('filter', null);
-    if (!layerView.featureEffect || filterMode) {
+    if (!layerView?.featureEffect || !layerView?.featureEffect?.filter || filterMode) {
       this.handleUpdatedFeatureEffect(layerView as __esri.FeatureLayerView, timeExtent as ITimeExtent);
       return;
     }
