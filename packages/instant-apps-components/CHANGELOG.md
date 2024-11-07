@@ -5,6 +5,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## v1.0.0-beta.296
+
+### instant-apps-export
+
+- fix: add try catch for converting print to image. `logoImage` might cause CORS issues so remove image in catch and then retry.
+
 ## v1.0.0-beta.295
 
 ### instant-apps-time-filter

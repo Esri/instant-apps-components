@@ -615,17 +615,27 @@ export class InstantAppsExport {
     }
   }
 
-  convertToImage(): void {
+  async convertToImage(): Promise<void> {
     const options = { backgroundColor: '#FFF', skipFonts: true };
-    if (this.selectedFileType === 'JPG') {
-      toJpeg(this.printEl, options).then(this.handleGetImage.bind(this));
-    } else {
-      toPng(this.printEl, options).then(this.handleGetImage.bind(this));
+    let data = '';
+    try {
+      if (this.selectedFileType === 'JPG') {
+        data = await toJpeg(this.printEl, options);
+      } else {
+        data = await toPng(this.printEl, options as any);
+      }
+    } catch {
+      this.logoImage = undefined;
+      await new Promise(resolve => setTimeout(resolve, 500));
+      data = await toJpeg(this.printEl, options);
+    } finally {
+      this.handleGetImage(data);
     }
   }
 
   handleGetImage(dataUrl: string): void {
     this.resetPrintContent();
+    if (!dataUrl) return;
     this.dataUrl = dataUrl;
     this.setMapAreaOnClick(false);
     this.showPreview(dataUrl);
