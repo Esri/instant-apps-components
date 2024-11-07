@@ -115,11 +115,28 @@ export class InstantAppsInteractiveLegendRelationship {
     cellGroup.map((cell: HTMLElement, cellIndex) => {
       const uvInfos = ((this.activeLayerInfo?.layer as __esri.FeatureLayer)?.renderer as __esri.UniqueValueRenderer).uniqueValueInfos;
       if (uvInfos[cellIndex]) {
-        const color = uvInfos[cellIndex].symbol.color;
+        const CIMSymbolColor_Index = uvInfos?.[cellIndex]?.symbol?.['data']?.symbol?.symbolLayers?.[1].color;
+        const colorFromUVInfo_Index = uvInfos?.[cellIndex]?.symbol?.color;
+
         uvInfos.forEach((uvInfo, index) => {
-          const itemColor = uvInfo.symbol.color;
-          const match = color.r === itemColor.r && color.g === itemColor.g && color.b === itemColor.b && color.a === itemColor.a;
-          if (match) this.setCellAttributes(cell, index);
+          const colorFromUVInfo = uvInfo?.symbol?.color;
+          const CIMSymbolColor = uvInfo?.symbol?.['data']?.symbol?.symbolLayers?.[1].color;
+
+          let match = false;
+
+          if (CIMSymbolColor) {
+            match = CIMSymbolColor.every((value: number, i: number) => value === CIMSymbolColor_Index[i]);
+          } else {
+            match =
+              colorFromUVInfo.r === colorFromUVInfo_Index.r &&
+              colorFromUVInfo.g === colorFromUVInfo_Index.g &&
+              colorFromUVInfo.b === colorFromUVInfo_Index.b &&
+              colorFromUVInfo.a === colorFromUVInfo_Index.a;
+          }
+
+          if (match) {
+            this.setCellAttributes(cell, index);
+          }
         });
         cell.classList.add('esri-interactive-legend__svg-rect-element');
       }

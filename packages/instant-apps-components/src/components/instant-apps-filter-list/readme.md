@@ -148,6 +148,16 @@ Type: `Promise<void>`
 
 
 
+### `getCurrentLayerExpressions() => Promise<LayerExpression[]>`
+
+
+
+#### Returns
+
+Type: `Promise<LayerExpression[]>`
+
+
+
 ### `getFilterInitState() => Promise<FilterInitState>`
 
 
@@ -158,16 +168,15 @@ Type: `Promise<FilterInitState>`
 
 
 
-### `restoreFilters(filterParamString: string, filterInitState: any) => Promise<void>`
+### `updateInitDefExpressions(filterInitState: any) => Promise<void>`
 
 
 
 #### Parameters
 
-| Name                | Type     | Description |
-| ------------------- | -------- | ----------- |
-| `filterParamString` | `string` |             |
-| `filterInitState`   | `any`    |             |
+| Name              | Type  | Description |
+| ----------------- | ----- | ----------- |
+| `filterInitState` | `any` |             |
 
 #### Returns
 

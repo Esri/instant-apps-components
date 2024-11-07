@@ -168,22 +168,22 @@ export class InstantAppsFilterList {
 
   @Method()
   forceReset(): Promise<void> {
-    this.handleResetFilter();
-    return this.initExpressions();
+    this.resetExpressions();
+    return Promise.resolve();
   }
 
   @Method()
-  restoreFilters(filterParamString: string, filterInitState: any): Promise<void> {
-    this.filterLayerExpressions = structuredClone(this.layerExpressions);
+  updateInitDefExpressions(filterInitState: any): Promise<void> {
     this.initDefExpressions = filterInitState.initDefExpressions;
     this.initMapImageExpressions = filterInitState.initMapImageExpressions;
     this.initPointCloudFilters = filterInitState.initPointCloudFilters;
+    return Promise.resolve();
+  }
 
-    const filters = filterParamString?.split(';').map(filter => JSON.parse(filter) as FilterParam);
-    if (filters) {
-      this.filterCount = this.applyFilters(filters);
-    }
-    return this.initExpressions();
+  @Method()
+  getCurrentLayerExpressions(): Promise<LayerExpression[]> {
+    const currentLayerExpressions = structuredClone(this.filterLayerExpressions);
+    return Promise.resolve(currentLayerExpressions);
   }
 
   geometryJsonUtils: typeof __esri.JSONSupport;
@@ -480,6 +480,13 @@ export class InstantAppsFilterList {
   }
 
   handleResetFilter(): void {
+    this.resetExpressions();
+    this.resetAllFilters();
+    this.generateURLParams();
+    this.filterListReset.emit();
+  }
+
+  resetExpressions(): void {
     this.filterLayerExpressions?.forEach(layerExpression => {
       layerExpression.expressions?.forEach(expression => {
         const { type, numDisplayOption, displayOption } = expression;
@@ -507,10 +514,6 @@ export class InstantAppsFilterList {
         expression.active = false;
       });
     });
-
-    this.resetAllFilters();
-    this.generateURLParams();
-    this.filterListReset.emit();
   }
 
   resetExpressionUI(type: string, expression: Expression): void {
