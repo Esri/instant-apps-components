@@ -767,6 +767,10 @@ export namespace Components {
          */
         "position": ScoreboardPosition;
         /**
+          * Determines whether to query against feature layer service or feature layer view. Default: 'layerView'
+         */
+        "queryType": 'layerView' | 'layer';
+        /**
           * MapView or SceneView to reference extent, viewpoint, and layers in map to perform calculations.
          */
         "view": __esri.MapView | __esri.SceneView;
@@ -2211,6 +2215,10 @@ declare namespace LocalJSX {
           * Position of scoreboard i.e. 'bottom', 'left', or 'right'.
          */
         "position"?: ScoreboardPosition;
+        /**
+          * Determines whether to query against feature layer service or feature layer view. Default: 'layerView'
+         */
+        "queryType"?: 'layerView' | 'layer';
         /**
           * MapView or SceneView to reference extent, viewpoint, and layers in map to perform calculations.
          */

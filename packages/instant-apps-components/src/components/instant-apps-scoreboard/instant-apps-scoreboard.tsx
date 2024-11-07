@@ -108,6 +108,12 @@ export class InstantAppsScoreboard {
   })
   geometry: __esri.Geometry | null = null;
 
+  /**
+   * Determines whether to query against feature layer service or feature layer view. Default: 'layerView'
+   */
+  @Prop()
+  queryType: 'layerView' | 'layer' = 'layerView';
+
   // Internal state
   @State() state: ScoreboardState = Scoreboard.Loading;
 
@@ -521,7 +527,7 @@ export class InstantAppsScoreboard {
     };
 
     const getStatDefinitionQuery = (layerView: __esri.FeatureLayerView | __esri.SceneLayerView, statDefinition: __esri.StatisticDefinition) => {
-      const query = layerView.createQuery();
+      const query = this.queryType === 'layer' ? layerView.layer.createQuery() : layerView.createQuery();
       const outStatistics = [statDefinition];
       const geometry = this.geometry ? this.geometry : this.view.extent;
       query.outStatistics = outStatistics;
@@ -540,7 +546,7 @@ export class InstantAppsScoreboard {
 
         const query = getStatDefinitionQuery(layerView, statDefinition);
 
-        const queryFeaturesRes = layerView.queryFeatures(query);
+        const queryFeaturesRes = this.queryType === 'layer' ? layerView.layer.queryFeatures(query) : layerView.queryFeatures(query);
         queryFeaturePromises.push(queryFeaturesRes);
       };
     };
@@ -584,7 +590,9 @@ export class InstantAppsScoreboard {
     const isNotInteractingWatcher = () => {
       return this.reactiveUtils?.when(
         () => !this.view?.interacting,
-        () => this.calculateScoreboardItemValues(),
+        () => {
+          if (this.queryType === 'layerView') this.calculateScoreboardItemValues();
+        },
         whenOnceConfig,
       );
     };
@@ -605,7 +613,9 @@ export class InstantAppsScoreboard {
       () => {
         this.reactiveUtils.when(
           () => !this.view?.updating,
-          () => this.calculateScoreboardItemValues(),
+          () => {
+            if (this.queryType === 'layerView') this.calculateScoreboardItemValues();
+          },
           { once: true, initial: true },
         );
       },
