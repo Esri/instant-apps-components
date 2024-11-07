@@ -108,9 +108,9 @@ export class InstantAppsScoreboard {
   })
   geometry: __esri.Geometry | null = null;
 
-  @Prop()
-  debug: boolean = false;
-
+  /**
+   * Determines whether to query against feature layer service or feature layer view. Default: 'layerView'
+   */
   @Prop()
   queryType: 'layerView' | 'layer' = 'layerView';
 
@@ -212,11 +212,6 @@ export class InstantAppsScoreboard {
     this.scoreboardItemsUpdatedHandler();
 
     this.initStationaryWatcher();
-  }
-
-  @Watch('geometry')
-  protected logGeometry() {
-    if (this.debug) console.log(this.geometry);
   }
 
   // Lifecycle methods
@@ -539,14 +534,6 @@ export class InstantAppsScoreboard {
       query.geometry = geometry as __esri.Extent;
       const timeExtent = layerView?.filter?.timeExtent ?? (layerView as __esri.FeatureLayerView)?.featureEffect?.filter?.timeExtent ?? null;
       if (timeExtent) query.timeExtent = timeExtent;
-
-      if (this.debug) {
-        console.log('Geometry: ', this.geometry);
-        console.log('View extent: ', this.view.extent);
-
-        console.log('Statistic definition query: ', query);
-        console.log('Query geometry declared class: ', query.geometry?.declaredClass);
-      }
       return query;
     };
 

@@ -745,7 +745,6 @@ export namespace Components {
           * Controls the behavior to auto dock the scoreboard to the bottom in smaller parent containers/mobile devices.
          */
         "autoDockEnabled": boolean;
-        "debug": boolean;
         /**
           * Optional geometry in which the statistics will be calculated. To re-calculate the scoreboard's statistics based on the current view extent, set this property to `null`.
          */
@@ -766,6 +765,9 @@ export namespace Components {
           * Position of scoreboard i.e. 'bottom', 'left', or 'right'.
          */
         "position": ScoreboardPosition;
+        /**
+          * Determines whether to query against feature layer service or feature layer view. Default: 'layerView'
+         */
         "queryType": 'layerView' | 'layer';
         /**
           * MapView or SceneView to reference extent, viewpoint, and layers in map to perform calculations.
@@ -2188,7 +2190,6 @@ declare namespace LocalJSX {
           * Controls the behavior to auto dock the scoreboard to the bottom in smaller parent containers/mobile devices.
          */
         "autoDockEnabled"?: boolean;
-        "debug"?: boolean;
         /**
           * Optional geometry in which the statistics will be calculated. To re-calculate the scoreboard's statistics based on the current view extent, set this property to `null`.
          */
@@ -2213,6 +2214,9 @@ declare namespace LocalJSX {
           * Position of scoreboard i.e. 'bottom', 'left', or 'right'.
          */
         "position"?: ScoreboardPosition;
+        /**
+          * Determines whether to query against feature layer service or feature layer view. Default: 'layerView'
+         */
         "queryType"?: 'layerView' | 'layer';
         /**
           * MapView or SceneView to reference extent, viewpoint, and layers in map to perform calculations.
