@@ -546,7 +546,7 @@ export class InstantAppsScoreboard {
 
         const query = getStatDefinitionQuery(layerView, statDefinition);
 
-        const queryFeaturesRes = this.queryType === 'layerView' ? layerView.queryFeatures(query) : layerView.layer.queryFeatures(query);
+        const queryFeaturesRes = this.queryType === 'layer' ? layerView.layer.queryFeatures(query) : layerView.queryFeatures(query);
         queryFeaturePromises.push(queryFeaturesRes);
       };
     };
