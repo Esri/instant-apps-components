@@ -527,7 +527,7 @@ export class InstantAppsScoreboard {
     };
 
     const getStatDefinitionQuery = (layerView: __esri.FeatureLayerView | __esri.SceneLayerView, statDefinition: __esri.StatisticDefinition) => {
-      const query = layerView.layer.createQuery();
+      const query = this.queryType === 'layer' ? layerView.layer.createQuery() : layerView.createQuery();
       const outStatistics = [statDefinition];
       const geometry = this.geometry ? this.geometry : this.view.extent;
       query.outStatistics = outStatistics;
