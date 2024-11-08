@@ -346,7 +346,7 @@ export class InstantAppsScoreboard {
     const isLoading = state === Scoreboard.Loading;
     const isCalculating = state === Scoreboard.Calculating;
     const isDisabled = state === Scoreboard.Disabled;
-    const progress = isLoading || isCalculating || this.view?.updating ? this.renderProgress() : null;
+    const progress = isLoading || isCalculating || (this.queryType === 'layerView' && this.view?.updating) ? this.renderProgress() : null;
     const positionClass = this.getPositionClass;
     const styleClass = this.getStyleClass;
     return <Host class={`${positionClass} ${styleClass}`}>{isDisabled ? null : [progress, this.items?.length > 0 ? this.renderBase() : null]}</Host>;
