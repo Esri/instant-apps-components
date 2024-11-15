@@ -188,6 +188,8 @@ export class InstantAppsFilterList {
 
   @Method()
   handleUpdatingT9nData(t9nLayerExpressions: LayerExpression[]): Promise<void> {
+    if (t9nLayerExpressions == null) return Promise.resolve();
+
     this.filterLayerExpressions?.forEach(layerExpression => {
       const t9nLayerExpression = t9nLayerExpressions?.find(t9nLayerExpression => t9nLayerExpression.id === layerExpression.id);
       if (t9nLayerExpression != null) {
