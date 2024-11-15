@@ -186,6 +186,26 @@ export class InstantAppsFilterList {
     return Promise.resolve(currentLayerExpressions);
   }
 
+  @Method()
+  handleUpdatingT9nData(t9nLayerExpressions: LayerExpression[]): Promise<void> {
+    if (t9nLayerExpressions == null) return Promise.resolve();
+
+    this.filterLayerExpressions?.forEach(layerExpression => {
+      const t9nLayerExpression = t9nLayerExpressions?.find(t9nLayerExpression => t9nLayerExpression.id === layerExpression.id);
+      if (t9nLayerExpression != null) {
+        layerExpression.title = t9nLayerExpression.title;
+        layerExpression.expressions?.forEach(expression => {
+          const t9nExpression = t9nLayerExpression.expressions?.find(t9nExpression => t9nExpression.id === expression.id);
+          if (t9nExpression != null) {
+            expression.name = t9nExpression.name;
+          }
+        });
+      }
+    });
+
+    return Promise.resolve();
+  }
+
   geometryJsonUtils: typeof __esri.JSONSupport;
   intl: __esri.intl;
   locale: string;
