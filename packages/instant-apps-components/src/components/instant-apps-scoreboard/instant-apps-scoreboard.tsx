@@ -25,6 +25,7 @@ import {
 // T9n
 import Scoreboard_t9n from '../../assets/t9n/instant-apps-scoreboard/resources.json';
 import { widthBreakpoints } from '../../utils/breakpoints';
+import { LANGUAGE_DATA } from 'templates-common-library/structuralFunctionality/language-switcher/support/constants';
 
 // Constants
 const BASE = 'instant-apps-scoreboard';
@@ -574,7 +575,7 @@ export class InstantAppsScoreboard {
         const value = getValue(stat);
         const numberFormatOptions = getNumberFormatOptions();
         const isNotNull = value !== null;
-        const formattedNumber = isNotNull ? this.intl.formatNumber(value, numberFormatOptions) : null;
+        const formattedNumber = LANGUAGE_DATA?.[document.documentElement.lang]?.full && isNotNull ? this.intl.formatNumber(value, numberFormatOptions) : null;
         const displayValue = isNotNull ? `${formattedNumber}` : '';
         items[statIndex].displayValue = displayValue;
         items[statIndex].value = value;
