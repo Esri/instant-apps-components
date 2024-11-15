@@ -300,6 +300,7 @@ export namespace Components {
         "forceReset": () => Promise<void>;
         "getCurrentLayerExpressions": () => Promise<LayerExpression[]>;
         "getFilterInitState": () => Promise<FilterInitState>;
+        "handleUpdatingT9nData": (t9nLayerExpressions: LayerExpression[]) => Promise<void>;
         /**
           * Use this to create filters that update a layer's definitionExpression.
          */

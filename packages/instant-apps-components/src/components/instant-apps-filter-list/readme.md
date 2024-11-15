@@ -168,6 +168,22 @@ Type: `Promise<FilterInitState>`
 
 
 
+### `handleUpdatingT9nData(t9nLayerExpressions: LayerExpression[]) => Promise<void>`
+
+
+
+#### Parameters
+
+| Name                  | Type                | Description |
+| --------------------- | ------------------- | ----------- |
+| `t9nLayerExpressions` | `LayerExpression[]` |             |
+
+#### Returns
+
+Type: `Promise<void>`
+
+
+
 ### `updateInitDefExpressions(filterInitState: any) => Promise<void>`
 
 
