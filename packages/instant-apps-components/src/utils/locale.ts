@@ -90,7 +90,7 @@ export async function getMessages(component: any, messageOverrides?: unknown) {
   } finally {
     try {
       const [intl] = await loadModules(['esri/intl']);
-      (intl as __esri.intl).onLocaleChange(handleOnLocaleChange(component, messageOverrides));
+      (intl as __esri.intl).onLocaleChange(handleOnLocaleChange(component, messageOverrides, intl));
     } catch {}
   }
 }
@@ -105,9 +105,10 @@ function updateMessages(component, messages: unknown[], messageOverrides: unknow
   }
 }
 
-function handleOnLocaleChange(component, messageOverrides: unknown) {
+function handleOnLocaleChange(component, messageOverrides: unknown, intl: __esri.intl) {
   return async (locale: string) => {
-    const messages = await getLocaleComponentStrings(component.el, locale);
+    const localeToUse = locale ? intl.normalizeMessageBundleLocale(locale) : 'en';
+    const messages = await getLocaleComponentStrings(component.el, localeToUse);
     updateMessages(component, messages, messageOverrides);
   };
 }

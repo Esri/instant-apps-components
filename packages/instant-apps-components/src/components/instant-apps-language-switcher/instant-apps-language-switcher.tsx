@@ -207,14 +207,9 @@ export class InstantAppsLanguageSwitcher {
 
       const params = new URLSearchParams(window.location.search);
 
-      const locale: string = this.intl.normalizeMessageBundleLocale(this.selectedLanguage);
+      const locale: string = this.selectedLanguage ? this.intl.normalizeMessageBundleLocale(this.selectedLanguage) : 'en';
       intl.setLocale(locale);
-
-      // Set url parameter 'locale' with value
-      const docElLang = this.intl.normalizeMessageBundleLocale(document.documentElement.lang);
-      if (docElLang !== this.selectedLanguage) {
-        params.set('locale', this.selectedLanguage);
-      }
+      params.set('locale', locale);
 
       if (this.view) {
         const [WebMap] = await loadModules(['esri/WebMap']);
@@ -237,7 +232,7 @@ export class InstantAppsLanguageSwitcher {
         }
       }
 
-      document.documentElement.setAttribute('lang', this.selectedLanguage);
+      document.documentElement.setAttribute('lang', locale);
       const prefersRTL = this.intl.prefersRTL();
       if (prefersRTL) {
         document.documentElement.setAttribute('dir', 'rtl');
