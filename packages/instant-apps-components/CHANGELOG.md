@@ -9,7 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### instant-apps-language-switcher
 
-- fix: Prevents locales like 'en-US' from being set but normalizing the message bundle locale.
+- fix: Prevents locales like 'en-US' from being set by normalizing the message bundle locale.
 
 ## v1.0.0-beta.300
 
