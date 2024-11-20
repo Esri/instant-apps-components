@@ -7,6 +7,7 @@ import { loadModules } from '../../utils/loadModules';
 import { getDefaultLanguage } from '../../utils/locale';
 import { getPortalItemResource, fetchResourceData } from '../../utils/languageSwitcher';
 import { LANGUAGE_DATA } from 'templates-common-library/structuralFunctionality/language-switcher/support/constants';
+import { calculateLocale } from 'templates-common-library/structuralFunctionality/locale';
 
 @Component({
   tag: 'instant-apps-language-switcher',
@@ -207,7 +208,7 @@ export class InstantAppsLanguageSwitcher {
 
       const params = new URLSearchParams(window.location.search);
 
-      const locale: string = this.selectedLanguage ? this.intl.normalizeMessageBundleLocale(this.selectedLanguage) : 'en';
+      const locale = calculateLocale(this.selectedLanguage);
       intl.setLocale(locale);
       params.set('locale', locale);
 
