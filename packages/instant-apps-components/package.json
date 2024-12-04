@@ -33,7 +33,7 @@
     "@arcgis/core": ">=4.32.0-next.20241010 <4.33",
     "@ckeditor/ckeditor5-build-classic": "^39.0.1",
     "@esri/arcgis-html-sanitizer": "^4.0.3",
-    "@esri/calcite-components": "3.0.0-next.45",
+    "@esri/calcite-components": "3.0.0-next.40",
     "@stencil/core": "4.17.1",
     "@stencil/react-output-target": "^0.5.3",
     "@stencil/store": "^2.0.8",
