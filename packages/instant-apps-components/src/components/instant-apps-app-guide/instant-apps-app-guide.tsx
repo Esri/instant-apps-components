@@ -123,9 +123,9 @@ export class InstantAppsAppGuide {
 
   private _renderAppGuidePages(pages: AppGuidePage[]) : HTMLCalciteCarouselItemElement[] {
     return pages.map((pageData, index) => {
-      const { content, type } = pageData;
+      const { content, type, title } = pageData;
       return (
-        <calcite-carousel-item label="App Guide Panel" key={`page_${index}`}>
+        <calcite-carousel-item label={title} key={`page_${index}`}>
           <div class={CSS.contentWrapper}>
             { this._renderContentItems(content, type) }
           </div>
