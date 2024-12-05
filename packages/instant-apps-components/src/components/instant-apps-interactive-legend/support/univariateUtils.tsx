@@ -2,8 +2,8 @@ import { pt2px } from './screenUtils';
 import type { Projector } from 'maquette';
 import { createProjector } from 'maquette';
 import { h } from '@stencil/core';
-import { loadModules } from '../../../utils/loadModules';
 import { ColorRampElement, SizeRampElement, UnivariateColorSizeRampElement } from '../../../interfaces/interfaces';
+import { importSymbolsSupportSymbolUtils } from '@arcgis/core-adapter';
 
 const projector: Projector = createProjector();
 const separatorWidth = 10;
@@ -105,13 +105,13 @@ export async function getUnivariateColorRampPreview(
   }
 
   const colors = colorRampElement.infos.map(stop => stop.color);
-  const [symbolUtils] = await loadModules(['esri/symbols/support/symbolUtils']);
+  const symbolUtils = await importSymbolsSupportSymbolUtils();
   const colorRampDiv = symbolUtils.renderColorRampPreviewHTML(
     options.type === 'full'
       ? colors
       : options.type === 'above'
-      ? colors.slice(0, 3) // First 3 colors
-      : colors.slice(2, 5), // Last 3 colors
+        ? colors.slice(0, 3) // First 3 colors
+        : colors.slice(2, 5), // Last 3 colors
     {
       width: options.width,
       height: options.height,

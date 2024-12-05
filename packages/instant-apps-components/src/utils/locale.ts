@@ -1,8 +1,8 @@
 // https://medium.com/stencil-tricks/implementing-internationalisation-i18n-with-stencil-5e6559554117
 import { getAssetPath } from '@stencil/core';
-import { loadModules } from '../utils/loadModules';
 import { languageMap } from './languageUtil';
 import { calculateLocale } from 'templates-common-library/structuralFunctionality/locale';
+import { importIntl } from '@arcgis/core-adapter';
 
 const TEST_ENV_ORIGIN = 'localhost:4444';
 const IS_TEST_ENV = new URL(window.location.href).origin.includes(TEST_ENV_ORIGIN);
@@ -91,7 +91,7 @@ export async function getMessages(component: any, messageOverrides?: unknown) {
   } catch {
   } finally {
     try {
-      const [intl] = await loadModules(['esri/intl']);
+      const intl = await importIntl();
       (intl as __esri.intl).onLocaleChange(handleOnLocaleChange(component, messageOverrides));
     } catch {}
   }

@@ -1,4 +1,4 @@
-import { loadModules } from '../utils/loadModules';
+import { importPortalPortalItemResource } from '@arcgis/core-adapter';
 
 export async function fetchResourceData(resource: __esri.PortalItemResource): Promise<any> {
   try {
@@ -11,7 +11,7 @@ export async function fetchResourceData(resource: __esri.PortalItemResource): Pr
 
 export async function getPortalItemResource(portalItem: __esri.PortalItem): Promise<__esri.PortalItemResource | null> {
   if (!portalItem) return null;
-  const [PortalItemResource] = await loadModules(['esri/portal/PortalItemResource']);
+  const PortalItemResource = await importPortalPortalItemResource();
   const existingResourcesRes = await portalItem.fetchResources({
     num: 100,
   });

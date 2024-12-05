@@ -30,15 +30,13 @@
   },
   "dependencies": {
     "@a11y/focus-trap": "^1.0.5",
-    "@arcgis/core": ">=4.32.0-next.20241010 <4.33",
+    "@arcgis/core-adapter": "^4.32.0-next.4",
     "@ckeditor/ckeditor5-build-classic": "^39.0.1",
     "@esri/arcgis-html-sanitizer": "^4.0.3",
     "@esri/calcite-components": "2.13.0",
     "@stencil/core": "4.17.1",
     "@stencil/react-output-target": "^0.5.3",
     "@stencil/store": "^2.0.8",
-    "arcgis-js-api": "^4.29.0-next.20240118",
-    "esri-loader": "^3.7.0",
     "html-to-image": "^1.11.11",
     "maquette": "^3.5.3",
     "templates-common-library": "0.0.590-esm"

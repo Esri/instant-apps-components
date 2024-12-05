@@ -1,8 +1,7 @@
 // @stencil/core
 import { Component, Host, h, Prop, State, Element, Watch, Event, EventEmitter } from '@stencil/core';
 
-// esri-loader
-import { loadModules } from '../../utils/loadModules';
+import { importCoreCollection, importCoreHandles, importCoreReactiveUtils, importIntl } from '@arcgis/core-adapter';
 
 // Utils
 import { getLocaleComponentStrings } from '../../utils/locale';
@@ -60,7 +59,7 @@ const CSS = {
 export class InstantAppsScoreboard {
   // Variables
   reactiveUtils: __esri.reactiveUtils;
-  Collection: typeof import('esri/core/Collection');
+  Collection: typeof __esri.Collection;
   handles: __esri.Handles | null;
   intl: __esri.intl;
 
@@ -295,7 +294,7 @@ export class InstantAppsScoreboard {
 
   protected async initModules(): Promise<void> {
     try {
-      const [Handles, reactiveUtils, Collection, intl] = await loadModules(['esri/core/Handles', 'esri/core/reactiveUtils', 'esri/core/Collection', 'esri/intl']);
+      const [Handles, reactiveUtils, Collection, intl] = await Promise.all([importCoreHandles(), importCoreReactiveUtils(), importCoreCollection(), importIntl()]);
 
       // Store modules for future use
       this.reactiveUtils = reactiveUtils;

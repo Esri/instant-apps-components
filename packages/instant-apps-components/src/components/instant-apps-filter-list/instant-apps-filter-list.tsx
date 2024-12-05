@@ -17,11 +17,11 @@ import {
   QueryableLayer,
   QueryableLayerView,
 } from '../../interfaces/interfaces';
-import { loadModules } from '../../utils/loadModules';
 import { getMessages } from '../../utils/locale';
 import { getMode } from '../../utils/mode';
 import { baseClassDark, baseClassLight, supportedTypes } from './resources';
 import { convertToDate, handleSingleQuote, resetDatePicker } from './utils';
+import { importGeometrySupportJsonUtils, importIntl } from '@arcgis/core-adapter';
 
 const CSS = {
   base: 'instant-apps-filter-list',
@@ -206,7 +206,7 @@ export class InstantAppsFilterList {
     return Promise.resolve();
   }
 
-  geometryJsonUtils: typeof __esri.JSONSupport;
+  geometryJsonUtils: __esri.jsonUtils;
   intl: __esri.intl;
   locale: string;
   panelEl: HTMLCalcitePanelElement;
@@ -246,7 +246,7 @@ export class InstantAppsFilterList {
   }
 
   async initializeModules(): Promise<void> {
-    const [intl, geometryJsonUtils] = await loadModules(['esri/intl', 'esri/geometry/support/jsonUtils']);
+    const [intl, geometryJsonUtils] = await Promise.all([importIntl(), importGeometrySupportJsonUtils()]);
     this.geometryJsonUtils = geometryJsonUtils;
     this.locale = intl.getLocale();
     this.intl = intl;

@@ -5,10 +5,10 @@ import { toJpeg, toPng } from 'html-to-image';
 
 import Export_T9n from '../../assets/t9n/instant-apps-export/resources.json';
 import { ExportOutput, PopoverPlacement } from '../../interfaces/interfaces';
-import { loadModules } from '../../utils/loadModules';
 import { getMessages } from '../../utils/locale';
 import { getMode } from '../../utils/mode';
 import { printStyling, screenshotStyling } from './resources';
+import { importCoreHandles, importCoreReactiveUtils, importWidgetsCompass, importWidgetsLegend } from '@arcgis/core-adapter';
 
 const CSS = {
   baseDark: 'instant-apps-export calcite-mode-dark',
@@ -237,7 +237,7 @@ export class InstantAppsExport {
   }
 
   async initializeModules() {
-    const [Handles, reactiveUtils] = await loadModules(['esri/core/Handles', 'esri/core/reactiveUtils']);
+    const [Handles, reactiveUtils] = await Promise.all([importCoreHandles(), importCoreReactiveUtils()]);
     this.handles = new Handles();
     this.reactiveUtils = reactiveUtils;
 
@@ -700,7 +700,7 @@ export class InstantAppsExport {
         this.legendContainerEl.innerHTML = '';
         const legendCont = document.createElement('div');
         this.legendContainerEl.append(legendCont);
-        const [Legend] = await loadModules(['esri/widgets/Legend']);
+        const Legend = await importWidgetsLegend();
         this.legend = new Legend({
           container: legendCont,
           view,
@@ -731,7 +731,7 @@ export class InstantAppsExport {
       this.compass = null;
       const container = document.createElement('div');
       this.compassContainerEl.append(container);
-      const [Compass] = await loadModules(['esri/widgets/Compass']);
+      const Compass = await importWidgetsCompass();
       this.compass = new Compass({ container, view });
     });
   }

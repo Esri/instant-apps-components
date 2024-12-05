@@ -1,6 +1,6 @@
 import { Component, Element, Host, Prop, h } from '@stencil/core';
 import { HostElement } from '@stencil/core/internal';
-import { loadModules } from '../../utils/loadModules';
+import { importWidgetsExpand } from '@arcgis/core-adapter';
 import { ControlPanelComponent } from '../../interfaces/interfaces';
 
 const MODE = 'floating';
@@ -33,7 +33,7 @@ export class InstantAppsControlPanel {
   view: __esri.MapView | __esri.SceneView;
 
   async componentWillLoad() {
-    const [Expand] = await loadModules(['esri/widgets/Expand']);
+    const Expand = await importWidgetsExpand();
     this.Expand = Expand;
     this._handleComponents();
   }

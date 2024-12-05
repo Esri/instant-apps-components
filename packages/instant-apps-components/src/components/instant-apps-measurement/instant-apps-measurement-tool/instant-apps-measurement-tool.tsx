@@ -17,7 +17,7 @@
 import { Component, Element, Host, h, Prop, VNode, Watch } from '@stencil/core';
 import { ActiveTool, IMeasureConfiguration } from '../../../interfaces/interfaces';
 
-import { loadModules } from '../../../utils/loadModules';
+import { importWidgetsMeasurement, importWidgetsCoordinateConversion, importWidgetsCoordinateConversionSupportConversion } from '@arcgis/core-adapter';
 
 const base = 'instant-apps-measurement-tool';
 const CSS = {
@@ -53,9 +53,9 @@ export class InstantAppsMeasurementTool {
   //
   //--------------------------------------------------------------------------
 
-  protected Measurement: typeof import('esri/widgets/Measurement');
-  protected CoordinateConversion: typeof import('esri/widgets/CoordinateConversion');
-  protected Conversion: typeof import('esri/widgets/CoordinateConversion/support/Conversion');
+  protected Measurement: typeof __esri.Measurement;
+  protected CoordinateConversion: typeof __esri.CoordinateConversion;
+  protected Conversion: typeof __esri.Conversion;
 
   /**
    * HTMLElement: The container div for the measurement widget
@@ -124,10 +124,10 @@ export class InstantAppsMeasurementTool {
    * @protected
    */
   protected async _initModules(): Promise<void> {
-    const [Measurement, CoordinateConversion, Conversion] = await loadModules([
-      'esri/widgets/Measurement',
-      'esri/widgets/CoordinateConversion',
-      'esri/widgets/CoordinateConversion/support/Conversion',
+    const [Measurement, CoordinateConversion, Conversion] = await Promise.all([
+      importWidgetsMeasurement(),
+      importWidgetsCoordinateConversion(),
+      importWidgetsCoordinateConversionSupportConversion(),
     ]);
     this.Measurement = Measurement;
     this.CoordinateConversion = CoordinateConversion;

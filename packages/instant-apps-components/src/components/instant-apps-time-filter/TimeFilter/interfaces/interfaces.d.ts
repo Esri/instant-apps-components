@@ -39,23 +39,3 @@ interface TimeExtent {
   startTime: Date;
   endTime: Date;
 }
-
-export interface ITimeExtent extends __esri.TimeExtent {
-  new (props: __esri.TimeExtentProperties): __esri.TimeExtent;
-}
-
-export interface ITimeInterval extends __esri.TimeInterval {
-  new (props: __esri.TimeIntervalProperties): __esri.TimeInterval;
-}
-
-export interface IFeatureFilter extends __esri.FeatureFilter {
-  new (props: __esri.FeatureFilterProperties): __esri.FeatureFilter;
-}
-
-export interface IFeatureEffect extends __esri.FeatureEffect {
-  new (props: __esri.FeatureEffectProperties): __esri.FeatureEffect;
-}
-
-export interface ITimeSlider extends __esri.widgetsTimeSlider {
-  new (props: __esri.widgetsTimeSliderProperties): __esri.widgetsTimeSlider;
-}

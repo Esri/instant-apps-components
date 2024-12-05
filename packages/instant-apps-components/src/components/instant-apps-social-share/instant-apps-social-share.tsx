@@ -8,12 +8,11 @@
 
 import { Component, Element, Host, Prop, State, h } from '@stencil/core';
 
-import { loadModules } from '../../utils/loadModules';
-
 import SocialShare_T9n from '../../assets/t9n/instant-apps-social-share/resources.json';
 
 import { LogicalPlacement } from '@esri/calcite-components/dist/types/utils/floating-ui';
 import { getMessages } from '../../utils/locale';
+import { importGeometryPoint, importGeometryProjection, importGeometrySpatialReference, importIntl, importRequest } from '@arcgis/core-adapter';
 // import { PopperPlacement } from '@esri/calcite-components/dist/types/utils/popper';
 
 type ShareItemOptions = 'link' | 'facebook' | 'x' | 'linkedIn';
@@ -717,7 +716,7 @@ export class InstantAppsSocialShare {
           url: encodeURI(urlToUse),
         };
         const data = type === 'x' ? { ...urlData, text: this.shareText } : urlData;
-        const [intl] = await loadModules(['esri/intl']);
+        const intl = await importIntl();
         const url = intl.substitute(SOCIAL_URL_TEMPLATES[type], data);
         if (this.mode === 'popover') {
           this.closePopover();
@@ -737,7 +736,7 @@ export class InstantAppsSocialShare {
   }
 
   async shortenUrl(url: string) {
-    const [esriRequest] = await loadModules(['esri/request']);
+    const esriRequest = await importRequest();
     const request = await esriRequest(SHORTEN_API, {
       query: {
         longUrl: url,
@@ -778,7 +777,7 @@ export class InstantAppsSocialShare {
     // Use x/y values and the spatial reference of the view to instantiate a geometry point
     const { x, y } = this.view.center;
     const { spatialReference } = this.view;
-    const [Point, SpatialReference] = await loadModules(['esri/geometry/Point', 'esri/geometry/SpatialReference']);
+    const [Point, SpatialReference] = await Promise.all([importGeometryPoint(), importGeometrySpatialReference()]);
     const updatedSpatialReference = new SpatialReference({ ...spatialReference.toJSON() });
     const centerPoint = new Point({
       x,
@@ -798,7 +797,7 @@ export class InstantAppsSocialShare {
     if (isWGS84 || isWebMercator) {
       return point;
     }
-    const [SpatialReference, projection] = await loadModules(['esri/geometry/SpatialReference', 'esri/geometry/projection']);
+    const [SpatialReference, projection] = await Promise.all([importGeometrySpatialReference(), importGeometryProjection()]);
     const outputSpatialReference = new SpatialReference({ wkid: 4326 });
     try {
       await projection.load();

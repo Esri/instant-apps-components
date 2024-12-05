@@ -3,11 +3,11 @@ import { Component, Event, EventEmitter, Method, Prop, State, h } from '@stencil
 import LanguageTranslator_t9n from '../../assets/t9n/instant-apps-language-translator/resources.json';
 import { getMessages } from '../instant-apps-language-translator/support/utils';
 import { Element } from '@stencil/core';
-import { loadModules } from '../../utils/loadModules';
 import { getDefaultLanguage } from '../../utils/locale';
 import { getPortalItemResource, fetchResourceData } from '../../utils/languageSwitcher';
 import { LANGUAGE_DATA } from 'templates-common-library/structuralFunctionality/language-switcher/support/constants';
 import { calculateLocale } from 'templates-common-library/structuralFunctionality/locale';
+import { importIntl, importRequest, importWebMap } from '@arcgis/core-adapter';
 
 @Component({
   tag: 'instant-apps-language-switcher',
@@ -18,7 +18,7 @@ export class InstantAppsLanguageSwitcher {
   portalItemResource: __esri.PortalItemResource;
   userLocale: string;
   intl: __esri.intl;
-  request: __esri.request;
+  request: typeof __esri.request;
   defaultWebMapId: string;
   trigger: HTMLCalciteButtonElement;
 
@@ -85,7 +85,7 @@ export class InstantAppsLanguageSwitcher {
   }>;
 
   async componentWillLoad() {
-    const [intl, WebMap, request] = await loadModules(['esri/intl', 'esri/WebMap', 'esri/request']);
+    const [intl, WebMap, request] = await Promise.all([importIntl(), importWebMap(), importRequest()]);
     this.intl = intl;
     this.request = request;
     this.messages = await getMessages(document.createElement('instant-apps-language-translator'));
@@ -213,7 +213,7 @@ export class InstantAppsLanguageSwitcher {
       params.set('locale', locale);
 
       if (this.view) {
-        const [WebMap] = await loadModules(['esri/WebMap']);
+        const WebMap = await importWebMap();
         const webmap = this.locales.filter(localeItem => localeItem.locale === selectedLanguage)?.[0]?.webmap;
         if (webmap) {
           this.view.map = new WebMap({
