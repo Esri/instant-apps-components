@@ -9,10 +9,10 @@ import { EIcons } from './support/enum';
 import { AppSettings, LocaleItem, LocaleSettingItem, LocaleUIData } from './support/interfaces';
 
 import LanguageTranslator_t9n from '../../assets/t9n/instant-apps-language-translator/resources.json';
-import { loadModules } from '../../utils/loadModules';
 import { getComponentClosestLanguage } from '../../utils/locale';
 import { getPortalItemResource, fetchResourceData } from '../../utils/languageSwitcher';
 import { LANGUAGE_DATA } from 'templates-common-library/structuralFunctionality/language-switcher/support/constants';
+import { importIntl, importRequest } from '@arcgis/core-adapter';
 
 const BASE = 'instant-apps-language-translator';
 
@@ -46,7 +46,7 @@ const CSS = {
 })
 export class InstantAppsLanguageTranslator {
   intl: __esri.intl;
-  request: __esri.request;
+  request: typeof __esri.request;
 
   @Element()
   el: HTMLInstantAppsLanguageTranslatorElement;
@@ -130,7 +130,7 @@ export class InstantAppsLanguageTranslator {
   }
 
   async initialize(): Promise<void> {
-    const [intl, request] = await loadModules(['esri/intl', 'esri/request']);
+    const [intl, request] = await Promise.all([importIntl(), importRequest()]);
     this.intl = intl;
     this.request = request;
     await this.initMessages();
@@ -458,8 +458,8 @@ export class InstantAppsLanguageTranslator {
    * Gets portal item resource containing the translation data.
    */
   @Method()
-  async getPortalItemResource() {
-    return store.get('portalItemResource') as __esri.PortalItemResource;
+  async getPortalItemResource(): Promise<__esri.PortalItemResource | null> {
+    return store.get('portalItemResource');
   }
 
   /**
@@ -470,6 +470,10 @@ export class InstantAppsLanguageTranslator {
     store.set('saving', true);
     try {
       const resource = await this.getPortalItemResource();
+      if (!resource) {
+        store.set('saving', false);
+        return;
+      }
       const lastSave = Date.now();
       store.set('lastSave', lastSave);
       const dataStr = JSON.stringify({ ...data, lastSave });

@@ -1,8 +1,8 @@
-import { loadModules } from '../../../utils/loadModules';
 import { IInteractiveLegendData, ICategories, IIntLegendLayerData, ICategory } from '../instant-apps-interactive-legend-classic/interfaces/interfaces';
 import { FilterMode } from '../../../interfaces/interfaces';
-import { getMergedEffect } from './effects';
 import { interactiveLegendState, store } from '../support/store';
+import { newLayersSupportFeatureEffect, newLayersSupportFeatureFilter } from '@arcgis/core-adapter';
+import { getMergedEffect } from 'templates-common-library/functionality/effects';
 
 // data handling
 function activeLayerInfoCallback(
@@ -173,7 +173,6 @@ export function getIntLegendLayerData(fLayer: __esri.FeatureLayer): IIntLegendLa
 
 // filtering
 export async function handleFilter(data: IIntLegendLayerData, info: any, infoIndex: number, filterMode: FilterMode, parentLegendElementInfo?: any): Promise<void> {
-  const [FeatureFilter, FeatureEffect] = await loadModules(['esri/layers/support/FeatureFilter', 'esri/layers/support/FeatureEffect']);
   const { queryExpressions, fLayerView } = data;
   generateQueryExpressions(data, info, infoIndex, parentLegendElementInfo);
   const sep = queryExpressions.every(expression => expression && expression.includes('<>')) ? ' AND ' : ' OR ';
@@ -183,18 +182,18 @@ export async function handleFilter(data: IIntLegendLayerData, info: any, infoInd
   const { type } = filterMode;
 
   if (type === 'filter') {
-    fLayerView.filter = new FeatureFilter({ where, timeExtent });
+    fLayerView.filter = await newLayersSupportFeatureFilter({ where, timeExtent });
   } else {
     if (filterMode.effect) {
       const { includedEffect, excludedEffect } = filterMode.effect;
       const mergedExcludedEffect = await getMergedEffect(excludedEffect, fLayerView, 'excludedEffect');
       const mergedIncludedEffect = await getMergedEffect(includedEffect, fLayerView, 'includedEffect');
 
-      fLayerView.featureEffect = new FeatureEffect({
-        filter: new FeatureFilter({ where, timeExtent }),
+      fLayerView.featureEffect = (await newLayersSupportFeatureEffect({
+        filter: await newLayersSupportFeatureFilter({ where, timeExtent }),
         includedEffect: mergedIncludedEffect,
         excludedEffect: mergedExcludedEffect,
-      }) as __esri.FeatureEffect;
+      })) as __esri.FeatureEffect;
     }
   }
   return Promise.resolve();
@@ -884,18 +883,17 @@ function updateExistingFilterToFeatureEffect(filterMode: FilterMode, view: __esr
     ?.filter((layerView: __esri.LayerView) => layerView?.layer?.type === 'feature')
     .forEach(async (fLayerView: __esri.FeatureLayerView) => {
       if (filterMode?.effect && fLayerView) {
-        const [FeatureEffect] = await loadModules(['esri/layers/support/FeatureEffect']);
         const { includedEffect, excludedEffect } = filterMode.effect;
         const mergedExcludedEffect = await getMergedEffect(excludedEffect, fLayerView as __esri.FeatureLayerView, 'excludedEffect');
         const mergedIncludedEffect = await getMergedEffect(includedEffect, fLayerView as __esri.FeatureLayerView, 'includedEffect');
 
         const existingFilter = getExistingFilter(fLayerView);
 
-        fLayerView.featureEffect = new FeatureEffect({
+        fLayerView.featureEffect = (await newLayersSupportFeatureEffect({
           filter: existingFilter,
           includedEffect: mergedIncludedEffect,
           excludedEffect: mergedExcludedEffect,
-        }) as __esri.FeatureEffect;
+        })) as __esri.FeatureEffect;
         fLayerView.set('filter', null);
       }
     });
@@ -911,7 +909,7 @@ function checkIfFieldExists(fLayer: __esri.FeatureLayer, field: string) {
   return field ? fieldNames && fieldNames.includes(field) : true;
 }
 
-export function getAllActiveLayerInfos(activeLayerInfos: __esri.Collection<__esri.ActiveLayerInfo>) {
+export function getAllActiveLayerInfos(activeLayerInfos: __esri.Collection<__esri.ActiveLayerInfo>): __esri.ActiveLayerInfo[] {
   const arr: __esri.ActiveLayerInfo[] = [];
   activeLayerInfos.forEach(acl => flattenActiveLayerInfos(acl, arr));
   return arr;

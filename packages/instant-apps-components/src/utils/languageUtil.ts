@@ -6,7 +6,7 @@
  *   See use restrictions at http://www.esri.com/legal/pdfs/mla_e204_e300/english
  */
 
-import { loadModules } from './loadModules';
+import { importIntl } from '@arcgis/core-adapter';
 import { APIVersion } from './types';
 
 export const languageMap = new Map<string, string>([
@@ -71,23 +71,22 @@ export async function formatNumber(
   number: number,
   options?: {
     api: APIVersion;
-    type: 'decimal' | 'percent';
+    style: 'decimal' | 'percent';
     places: number;
   },
 ): Promise<string> {
-  const { api = 4, type = 'decimal', places = 2 } = options || {};
+  const intl = await importIntl();
+  const { api = 4, style = 'decimal', places = 2 } = options || {};
   if (api === 4) {
-    const [intl] = await loadModules(['esri/intl']);
+    const intl = await importIntl();
     const numberFormatIntlOptions = intl.convertNumberFormatToIntlOptions({
       places,
-      type,
+      style,
       digitSeparator: true,
-    });
+    } as __esri.NumberFormat);
     return intl.formatNumber(number, numberFormatIntlOptions);
   }
-  const [dojoNumber] = await loadModules(['dojo/number']);
-  return dojoNumber.format(number, {
-    type,
-    places,
+  return intl.formatNumber(number, {
+    style,
   });
 }

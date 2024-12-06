@@ -2,8 +2,8 @@ import { Component, Element, Host, Prop, State, Watch, h } from '@stencil/core';
 
 import SignIn_T9n from '../../assets/t9n/instant-apps-sign-in/resources.json';
 import { IPortal } from '../../interfaces/interfaces';
-import { loadModules } from '../../utils/loadModules';
 import { getMessages } from '../../utils/locale';
+import { importCoreReactiveUtils, importIdentityIdentityManager, newIdentityOAuthInfo } from '@arcgis/core-adapter';
 
 const CSS = {
   base: 'instant-apps-sign-in__container',
@@ -192,9 +192,9 @@ export class InstantAppsSignIn {
 
   async initSignIn(): Promise<void> {
     if (this.portal == null || this.oauthappid == null) return;
-    const [OAuthInfo, esriId, reactiveUtils] = await loadModules(['esri/identity/OAuthInfo', 'esri/identity/IdentityManager', 'esri/core/reactiveUtils']);
+    const [esriId, reactiveUtils] = await Promise.all([importIdentityIdentityManager(), importCoreReactiveUtils()]);
     this.idManager = esriId;
-    this.info = new OAuthInfo({
+    this.info = await newIdentityOAuthInfo({
       appId: this.oauthappid,
       portalUrl: this.portal.url,
       flowType: 'authorization-code',

@@ -626,7 +626,7 @@ export namespace Components {
         /**
           * Gets portal item resource containing the translation data.
          */
-        "getPortalItemResource": () => Promise<__esri.PortalItemResource>;
+        "getPortalItemResource": () => Promise<__esri.PortalItemResource | null>;
         /**
           * Gets translation data for all languages and fields.
          */

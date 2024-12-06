@@ -1,6 +1,5 @@
 import { Component, Element, forceUpdate, h, Prop } from '@stencil/core';
 import { ICategory } from '../instant-apps-interactive-legend-classic/interfaces/interfaces';
-import { loadModules } from '../../../utils/loadModules';
 import { interactiveLegendState, store } from '../support/store';
 import {
   calculateTotalCount,
@@ -12,6 +11,7 @@ import {
   getNestedInfoData,
   getTheme,
 } from '../support/helpers';
+import { importIntl } from '@arcgis/core-adapter';
 
 const CSS = {
   countText: ' instant-apps-interactive-legend__info-count-text',
@@ -62,7 +62,7 @@ export class InstantAppsInteractiveLegendCount {
     observer.observe(this.el, {
       attributes: true,
     });
-    const [intl] = await loadModules(['esri/intl', 'esri/core/reactiveUtils', 'esri/core/Handles']);
+    const intl = await importIntl();
     this.intl = intl;
   }
 

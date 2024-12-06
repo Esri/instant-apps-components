@@ -1,8 +1,7 @@
 // @stencil/core
 import { Component, Host, h, Prop, State, Element, Watch, Event, EventEmitter } from '@stencil/core';
 
-// esri-loader
-import { loadModules } from '../../utils/loadModules';
+import { importCoreReactiveUtils, importIntl, newCoreCollection, newCoreHandles } from '@arcgis/core-adapter';
 
 // Utils
 import { getLocaleComponentStrings } from '../../utils/locale';
@@ -60,7 +59,7 @@ const CSS = {
 export class InstantAppsScoreboard {
   // Variables
   reactiveUtils: __esri.reactiveUtils;
-  Collection: typeof import('esri/core/Collection');
+  Collection: typeof __esri.Collection;
   handles: __esri.Handles | null;
   intl: __esri.intl;
 
@@ -181,7 +180,7 @@ export class InstantAppsScoreboard {
       const layerViewUpdatePromises: Promise<boolean>[] = [];
       layerViews.forEach(layerView => layerViewUpdatePromises.push(this.reactiveUtils?.whenOnce(() => !layerView.updating)));
       await Promise.all(layerViewUpdatePromises);
-      this.layerViews = new this.Collection([...layerViews]);
+      this.layerViews = await newCoreCollection([...layerViews]);
     }
   }
 
@@ -295,17 +294,16 @@ export class InstantAppsScoreboard {
 
   protected async initModules(): Promise<void> {
     try {
-      const [Handles, reactiveUtils, Collection, intl] = await loadModules(['esri/core/Handles', 'esri/core/reactiveUtils', 'esri/core/Collection', 'esri/intl']);
+      const [reactiveUtils, intl] = await Promise.all([importCoreReactiveUtils(), importIntl()]);
 
       // Store modules for future use
       this.reactiveUtils = reactiveUtils;
-      this.Collection = Collection;
       this.intl = intl;
 
       // Instantiate handles and collections
-      this.handles = new Handles();
-      this.layers = new Collection();
-      this.layerViews = new Collection();
+      this.handles = await newCoreHandles();
+      this.layers = await newCoreCollection([]);
+      this.layerViews = await newCoreCollection([]);
       return Promise.resolve();
     } catch (err) {
       console.error(err);

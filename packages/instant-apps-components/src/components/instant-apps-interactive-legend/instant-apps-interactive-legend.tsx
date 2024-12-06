@@ -1,12 +1,11 @@
 import { Component, h, Element, Prop, State, Watch, forceUpdate } from '@stencil/core';
 
-import { loadModules } from '../../utils/loadModules';
-
 import { FilterMode } from '../../interfaces/interfaces';
 
 import { getMessages } from '../../utils/locale';
 import { getTheme } from './support/helpers';
 import { store } from './support/store';
+import { importCoreReactiveUtils, newCoreHandles, newWidgetsLegend, newWidgetsLegendLegendViewModel, newWidgetsWidget } from '@arcgis/core-adapter';
 
 const CSS = {
   esri: {
@@ -91,15 +90,16 @@ export class InstantAppsInteractiveLegend {
   }
 
   async initializeModules() {
-    const [Handles, reactiveUtils, Widget, Legend] = await loadModules(['esri/core/Handles', 'esri/core/reactiveUtils', 'esri/widgets/Widget', 'esri/widgets/Legend']);
-    this.handles = new Handles();
+    const reactiveUtils = await importCoreReactiveUtils();
+
+    this.handles = await newCoreHandles();
     this.reactiveUtils = reactiveUtils;
-    this.widget = new Widget();
-    const legend = new Legend();
-    await reactiveUtils.whenOnce(() => legend?.messages);
+    this.widget = await newWidgetsWidget({});
+    const legend = await newWidgetsLegend({});
+    await reactiveUtils.whenOnce(() => legend?.['messages']);
     this.messages = {
       ...this.messages,
-      ...legend.messages,
+      ...legend['messages'],
     };
     return Promise.resolve();
   }
@@ -111,9 +111,7 @@ export class InstantAppsInteractiveLegend {
     if (!this.reactiveUtils || !this.view || !this.handles) return;
     try {
       const { on } = this.reactiveUtils;
-
-      const [LegendViewModel] = await loadModules(['esri/widgets/Legend/LegendViewModel']);
-      const legendVM = new LegendViewModel({ view: this.view, respectLayerDefinitionExpression: true });
+      const legendVM = await newWidgetsLegendLegendViewModel({ view: this.view, respectLayerDefinitionExpression: true } as any);
       this.legendvm = legendVM;
 
       this.handles.add([

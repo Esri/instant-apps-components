@@ -1,4 +1,4 @@
-import { loadModules } from '../utils/loadModules';
+import { newPortalPortalItemResource } from '@arcgis/core-adapter';
 
 export async function fetchResourceData(resource: __esri.PortalItemResource): Promise<any> {
   try {
@@ -11,12 +11,11 @@ export async function fetchResourceData(resource: __esri.PortalItemResource): Pr
 
 export async function getPortalItemResource(portalItem: __esri.PortalItem): Promise<__esri.PortalItemResource | null> {
   if (!portalItem) return null;
-  const [PortalItemResource] = await loadModules(['esri/portal/PortalItemResource']);
   const existingResourcesRes = await portalItem.fetchResources({
     num: 100,
   });
   const path = `t9n/${portalItem?.id}.json`;
-  const resource = new PortalItemResource({ path, portalItem });
+  const resource = await newPortalPortalItemResource({ path, portalItem });
   const existingResourceArr = existingResourcesRes.resources.filter(resourceItem => resourceItem.resource.path === path);
   if (existingResourceArr.length === 0) {
     const type = 'application/json';

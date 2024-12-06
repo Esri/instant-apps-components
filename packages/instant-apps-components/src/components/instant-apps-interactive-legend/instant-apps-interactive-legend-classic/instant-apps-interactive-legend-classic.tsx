@@ -27,8 +27,6 @@ import {
   getAllActiveLayerInfos,
 } from '../support/helpers';
 
-import { loadModules } from '../../../utils/loadModules';
-
 import { IIntLegendLayerData } from './interfaces/interfaces';
 import { FilterMode } from '../../../interfaces/interfaces';
 import {
@@ -43,6 +41,7 @@ import {
   StretchRampElement,
   UnivariateColorSizeRampElement,
 } from '../../../interfaces/interfaces';
+import { importCoreReactiveUtils, importIntl, newCoreHandles } from '@arcgis/core-adapter';
 
 const CSS = {
   // jsapi styles
@@ -149,8 +148,7 @@ export class InstantAppsInteractiveLegendClassic {
 
   async connectedCallback() {
     if (this.handles) return;
-    const [Handles] = await loadModules(['esri/core/Handles']);
-    this.handles = new Handles();
+    this.handles = await newCoreHandles();
   }
 
   async componentWillLoad() {
@@ -160,7 +158,8 @@ export class InstantAppsInteractiveLegendClassic {
     observer.observe(this.el, {
       attributes: true,
     });
-    const [intl, reactiveUtils] = await loadModules(['esri/intl', 'esri/core/reactiveUtils']);
+
+    const [intl, reactiveUtils] = await Promise.all([importIntl(), importCoreReactiveUtils()]);
 
     this.reactiveUtils = reactiveUtils;
     this.intl = intl;

@@ -7,7 +7,6 @@
  */
 
 import { Component, Host, State, Prop, Element, h } from '@stencil/core';
-import SceneView from 'esri/views/SceneView';
 import KeyboardShortcuts_T9n from '../../assets/t9n/instant-apps-keyboard-shortcuts/resources.json';
 
 import { getMessages } from '../../utils/locale';
@@ -105,7 +104,7 @@ export class InstantAppsKeyboardShortcuts {
   _getSceneViewCommands() {
     /* Arrow Keys(nudge), U and J are only 
      supported in global scenes*/
-    const isGlobal = (this?.view as SceneView)?.viewingMode === 'global' ? true : false;
+    const isGlobal = (this?.view as __esri.SceneView)?.viewingMode === 'global' ? true : false;
     const allMessages = this?.messages
       ? [
           {

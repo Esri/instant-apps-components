@@ -1,8 +1,8 @@
 import { Component, h, Prop, Listen } from '@stencil/core';
-import { loadModules } from '../../../utils/loadModules';
 import { FilterMode } from '../../../interfaces/interfaces';
-import { getMergedEffect } from '../support/effects';
 import { interactiveLegendState } from '../support/store';
+import {  importSymbolsSupportSymbolUtils, newLayersSupportFeatureEffect, newLayersSupportFeatureFilter } from '@arcgis/core-adapter';
+import { getMergedEffect } from 'templates-common-library/functionality/effects';
 
 const RELATIONSHIP_DIAMOND_SELECTOR = '.esri-relationship-ramp--diamond__middle-column--ramp svg g';
 
@@ -53,7 +53,7 @@ export class InstantAppsInteractiveLegendRelationship {
   }
 
   async componentWillLoad() {
-    const [symbolUtils] = await loadModules(['esri/symbols/support/symbolUtils']);
+    const symbolUtils = await importSymbolsSupportSymbolUtils();
     this.symbolUtils = symbolUtils;
   }
 
@@ -521,10 +521,9 @@ export class InstantAppsInteractiveLegendRelationship {
       const where = queryExpressions.join(' OR ');
       const timeExtent = fLayerView?.filter?.timeExtent ?? null;
 
-      const [FeatureFilter, FeatureEffect] = await loadModules(['esri/layers/support/FeatureFilter', 'esri/layers/support/FeatureEffect']);
 
       if (this.filterMode?.type === 'filter') {
-        fLayerView.filter = new FeatureFilter({
+        fLayerView.filter = await newLayersSupportFeatureFilter({
           where,
           timeExtent: fLayerView?.filter?.timeExtent ? fLayerView.filter.timeExtent : null,
         });
@@ -533,11 +532,11 @@ export class InstantAppsInteractiveLegendRelationship {
         const mergedExcludedEffect = await getMergedEffect(excludedEffect, fLayerView, 'excludedEffect');
         const mergedIncludedEffect = await getMergedEffect(includedEffect, fLayerView, 'includedEffect');
 
-        fLayerView.featureEffect = new FeatureEffect({
-          filter: new FeatureFilter({ where, timeExtent }),
+        fLayerView.featureEffect = (await newLayersSupportFeatureEffect({
+          filter: await newLayersSupportFeatureFilter({ where, timeExtent }),
           includedEffect: mergedIncludedEffect,
           excludedEffect: mergedExcludedEffect,
-        }) as __esri.FeatureEffect;
+        })) as __esri.FeatureEffect;
       }
     }
   }
