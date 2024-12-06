@@ -1,6 +1,6 @@
 import { Component, Element, Host, Prop, h } from '@stencil/core';
 import { HostElement } from '@stencil/core/internal';
-import { importWidgetsExpand } from '@arcgis/core-adapter';
+import { newWidgetsExpand } from '@arcgis/core-adapter';
 import { ControlPanelComponent } from '../../interfaces/interfaces';
 
 const MODE = 'floating';
@@ -33,8 +33,6 @@ export class InstantAppsControlPanel {
   view: __esri.MapView | __esri.SceneView;
 
   async componentWillLoad() {
-    const Expand = await importWidgetsExpand();
-    this.Expand = Expand;
     this._handleComponents();
   }
 
@@ -86,11 +84,11 @@ export class InstantAppsControlPanel {
     };
   }
 
-  private _getExpand(component: ControlPanelComponent): __esri.Expand {
+  private async _getExpand(component: ControlPanelComponent): Promise<__esri.Expand> {
     const { view } = this;
     const { content } = component;
     const expanded = component?.expanded ?? false;
-    return new this.Expand({ content, view, expanded, mode: MODE, group: GROUP });
+    return await newWidgetsExpand({ content, view, expanded, mode: MODE, group: GROUP });
   }
 
   private _getComponentsNode(): HTMLDivElement {

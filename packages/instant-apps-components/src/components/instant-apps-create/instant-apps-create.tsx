@@ -11,7 +11,7 @@ import { Component, Element, h, Host, Prop, State, VNode, Watch } from '@stencil
 // import Create_T9N from '../../assets/t9n/instant-apps-create/resources.json';
 import { CreateOption, PopoverPlacement } from '../../interfaces/interfaces';
 import { getMessages } from '../../utils/locale';
-import { importCoreHandles } from '@arcgis/core-adapter';
+import { newCoreHandles } from '@arcgis/core-adapter';
 import { getMode } from '../../utils/mode';
 
 // Images
@@ -116,8 +116,7 @@ export class InstantAppsCreate {
   }
 
   async initializeModules() {
-    const Handles = await importCoreHandles();
-    this.handles = new Handles();
+    this.handles = await newCoreHandles();
 
     return Promise.resolve();
   }

@@ -1,5 +1,4 @@
-import MapView from '@arcgis/core/views/MapView';
-import WebMap from '@arcgis/core/WebMap';
+import { newViewsMapView, newWebMap } from '@arcgis/core-adapter';
 
 export async function createMapAndViews(id: string): Promise<__esri.MapView | __esri.SceneView> {
   const container = document.createElement('div');
@@ -8,8 +7,8 @@ export async function createMapAndViews(id: string): Promise<__esri.MapView | __
   container.style.height = '500px';
 
   const mapConfig = { portalItem: { id } };
-  const map = new WebMap(mapConfig);
-  const view = new MapView({ map, container });
+  const map = await newWebMap(mapConfig);
+  const view = await newViewsMapView({ map, container });
 
   document.body.appendChild(view.container);
 

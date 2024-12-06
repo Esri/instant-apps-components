@@ -41,7 +41,7 @@ import {
   StretchRampElement,
   UnivariateColorSizeRampElement,
 } from '../../../interfaces/interfaces';
-import { importCoreHandles, importCoreReactiveUtils, importIntl } from '@arcgis/core-adapter';
+import { importCoreReactiveUtils, importIntl, newCoreHandles } from '@arcgis/core-adapter';
 
 const CSS = {
   // jsapi styles
@@ -148,9 +148,7 @@ export class InstantAppsInteractiveLegendClassic {
 
   async connectedCallback() {
     if (this.handles) return;
-    const Handles = await importCoreHandles();
-    debugger;
-    this.handles = new Handles();
+    this.handles = await newCoreHandles();
   }
 
   async componentWillLoad() {

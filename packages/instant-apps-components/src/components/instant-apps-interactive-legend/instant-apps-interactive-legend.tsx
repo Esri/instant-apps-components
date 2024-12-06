@@ -5,7 +5,7 @@ import { FilterMode } from '../../interfaces/interfaces';
 import { getMessages } from '../../utils/locale';
 import { getTheme } from './support/helpers';
 import { store } from './support/store';
-import { importCoreHandles, importCoreReactiveUtils, importWidgetsLegend, importWidgetsLegendLegendViewModel, importWidgetsWidget } from '@arcgis/core-adapter';
+import { importCoreReactiveUtils, newCoreHandles, newWidgetsLegend, newWidgetsLegendLegendViewModel, newWidgetsWidget } from '@arcgis/core-adapter';
 
 const CSS = {
   esri: {
@@ -90,12 +90,12 @@ export class InstantAppsInteractiveLegend {
   }
 
   async initializeModules() {
-    const [Handles, reactiveUtils, Widget, Legend] = await Promise.all([importCoreHandles(), importCoreReactiveUtils(), importWidgetsWidget(), importWidgetsLegend()]);
+    const reactiveUtils = await importCoreReactiveUtils();
 
-    this.handles = new Handles();
+    this.handles = await newCoreHandles();
     this.reactiveUtils = reactiveUtils;
-    this.widget = new Widget();
-    const legend = new Legend();
+    this.widget = await newWidgetsWidget({});
+    const legend = await newWidgetsLegend({});
     await reactiveUtils.whenOnce(() => legend?.['messages']);
     this.messages = {
       ...this.messages,
@@ -111,8 +111,7 @@ export class InstantAppsInteractiveLegend {
     if (!this.reactiveUtils || !this.view || !this.handles) return;
     try {
       const { on } = this.reactiveUtils;
-      const LegendViewModel = await importWidgetsLegendLegendViewModel();
-      const legendVM = new LegendViewModel({ view: this.view, respectLayerDefinitionExpression: true } as any);
+      const legendVM = await newWidgetsLegendLegendViewModel({ view: this.view, respectLayerDefinitionExpression: true } as any);
       this.legendvm = legendVM;
 
       this.handles.add([

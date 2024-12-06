@@ -1,7 +1,7 @@
 // @stencil/core
 import { Component, Host, h, Prop, State, Element, Watch, Event, EventEmitter } from '@stencil/core';
 
-import { importCoreCollection, importCoreHandles, importCoreReactiveUtils, importIntl } from '@arcgis/core-adapter';
+import { importCoreReactiveUtils, importIntl, newCoreCollection, newCoreHandles } from '@arcgis/core-adapter';
 
 // Utils
 import { getLocaleComponentStrings } from '../../utils/locale';
@@ -180,7 +180,7 @@ export class InstantAppsScoreboard {
       const layerViewUpdatePromises: Promise<boolean>[] = [];
       layerViews.forEach(layerView => layerViewUpdatePromises.push(this.reactiveUtils?.whenOnce(() => !layerView.updating)));
       await Promise.all(layerViewUpdatePromises);
-      this.layerViews = new this.Collection([...layerViews]);
+      this.layerViews = await newCoreCollection([...layerViews]);
     }
   }
 
@@ -294,17 +294,16 @@ export class InstantAppsScoreboard {
 
   protected async initModules(): Promise<void> {
     try {
-      const [Handles, reactiveUtils, Collection, intl] = await Promise.all([importCoreHandles(), importCoreReactiveUtils(), importCoreCollection(), importIntl()]);
+      const [reactiveUtils, intl] = await Promise.all([importCoreReactiveUtils(), importIntl()]);
 
       // Store modules for future use
       this.reactiveUtils = reactiveUtils;
-      this.Collection = Collection;
       this.intl = intl;
 
       // Instantiate handles and collections
-      this.handles = new Handles();
-      this.layers = new Collection();
-      this.layerViews = new Collection();
+      this.handles = await newCoreHandles();
+      this.layers = await newCoreCollection([]);
+      this.layerViews = await newCoreCollection([]);
       return Promise.resolve();
     } catch (err) {
       console.error(err);

@@ -4,13 +4,13 @@ import { ITimeInfoConfigItem, ITimeInfoItem, ITimeItemUnit } from './interfaces/
 import { getMergedEffect } from 'templates-common-library/functionality/effects';
 import { FilterMode } from '../../../components';
 import {
-  importCoreHandles,
   importCoreReactiveUtils,
-  importLayersSupportFeatureEffect,
-  importLayersSupportFeatureFilter,
-  importTimeTimeExtent,
-  importTimeTimeInterval,
-  importWidgetsTimeSlider,
+  newCoreHandles,
+  newLayersSupportFeatureEffect,
+  newLayersSupportFeatureFilter,
+  newTimeTimeExtent,
+  newTimeTimeInterval,
+  newWidgetsTimeSlider,
 } from '@arcgis/core-adapter';
 
 const TIME_SLIDER_HANDLE_KEY = 'time-slider-watch';
@@ -22,30 +22,13 @@ class InstantAppsTimeFilterViewModel {
 
   reactiveUtils: __esri.reactiveUtils;
   handles: __esri.Handles | null;
-  TimeExtent: typeof __esri.TimeExtent;
-  TimeInterval: typeof __esri.TimeInterval;
-  FeatureFilter: typeof __esri.FeatureFilter;
-  FeatureEffect: typeof __esri.FeatureEffect;
-  TimeSlider: typeof __esri.widgetsTimeSlider;
 
   async initializeModules() {
     try {
-      const [Handles, reactiveUtils, TimeSlider, TimeExtent, TimeInterval, FeatureFilter, FeatureEffect] = await Promise.all([
-        importCoreHandles(),
-        importCoreReactiveUtils(),
-        importWidgetsTimeSlider(),
-        importTimeTimeExtent(),
-        importTimeTimeInterval(),
-        importLayersSupportFeatureFilter(),
-        importLayersSupportFeatureEffect(),
-      ]);
+      const reactiveUtils = await importCoreReactiveUtils();
+
       this.reactiveUtils = reactiveUtils;
-      this.handles = new Handles();
-      this.TimeSlider = TimeSlider;
-      this.TimeExtent = TimeExtent;
-      this.TimeInterval = TimeInterval;
-      this.FeatureFilter = FeatureFilter;
-      this.FeatureEffect = FeatureEffect;
+      this.handles = await newCoreHandles();
     } catch {}
   }
 
@@ -109,10 +92,8 @@ class InstantAppsTimeFilterViewModel {
   }
 
   initTimeSlider(timeSliderRef: HTMLDivElement, defaultItem?: ITimeInfoConfigItem): void {
-    const { TimeSlider } = this;
-
-    const initializeSlider = config => {
-      state.timeSlider = new TimeSlider(config);
+    const initializeSlider = async config => {
+      state.timeSlider = await newWidgetsTimeSlider(config);
       if (state.autoPlay) state.timeSlider.play();
     };
 
@@ -139,8 +120,7 @@ class InstantAppsTimeFilterViewModel {
     );
   }
 
-  getTimeSliderConfig(timeSliderRef: HTMLDivElement, defaultItem?: ITimeInfoConfigItem): any {
-    const { TimeExtent, TimeInterval } = this;
+  async getTimeSliderConfig(timeSliderRef: HTMLDivElement, defaultItem?: ITimeInfoConfigItem): Promise<any> {
     const baseConfig = {
       container: timeSliderRef,
       mode: 'time-window',
@@ -157,7 +137,7 @@ class InstantAppsTimeFilterViewModel {
       };
       if (timeSlider?.stopInterval?.unit && timeSlider?.stopInterval?.value) {
         config.stops = {
-          interval: new TimeInterval({
+          interval: await newTimeTimeInterval({
             unit: timeSlider?.stopInterval?.unit,
             value: timeSlider?.stopInterval?.value,
           }),
@@ -170,12 +150,12 @@ class InstantAppsTimeFilterViewModel {
       return {
         ...baseConfig,
         fullTimeExtent: timeExtent as typeof __esri.TimeExtent | null,
-        timeExtent: new TimeExtent({
+        timeExtent: await newTimeTimeExtent({
           start: rangeStart,
           end: rangeEnd,
         }),
         stops: {
-          interval: new TimeInterval({
+          interval: await newTimeTimeInterval({
             unit,
             value: timeIntervalValue,
           }),
@@ -185,8 +165,8 @@ class InstantAppsTimeFilterViewModel {
   }
 
   initialize2DView() {
-    state.timeInfoItems.forEach(timeInfoItem =>
-      this.applyTimeExtent(timeInfoItem.layerView as __esri.FeatureLayerView, new this.TimeExtent({ start: timeInfoItem.rangeStart, end: timeInfoItem.rangeEnd })),
+    state.timeInfoItems.forEach(async timeInfoItem =>
+      this.applyTimeExtent(timeInfoItem.layerView as __esri.FeatureLayerView, await newTimeTimeExtent({ start: timeInfoItem.rangeStart, end: timeInfoItem.rangeEnd })),
     );
 
     this.setupTimeExtentWatcher();
@@ -210,20 +190,19 @@ class InstantAppsTimeFilterViewModel {
     layerView.featureEffect.filter.timeExtent = timeExtent;
   }
 
-  handleUpdatedFeatureEffect(fLayerView: __esri.FeatureLayerView, timeExtent: __esri.TimeExtent) {
-    const { FeatureEffect } = this;
-    fLayerView.featureEffect = new FeatureEffect({
+  async handleUpdatedFeatureEffect(fLayerView: __esri.FeatureLayerView, timeExtent: __esri.TimeExtent) {
+    fLayerView.featureEffect = await newLayersSupportFeatureEffect({
       filter: { timeExtent },
       includedEffect: getMergedEffect(state.filterMode?.effect?.includedEffect as string, fLayerView, 'includedEffect'),
       excludedEffect: getMergedEffect(state.filterMode?.effect?.excludedEffect as string, fLayerView, 'excludedEffect'),
     });
   }
 
-  applyFeatureFilter(layerView: __esri.FeatureLayerView, timeExtent: __esri.TimeExtent) {
+  async applyFeatureFilter(layerView: __esri.FeatureLayerView, timeExtent: __esri.TimeExtent) {
     if (layerView.featureEffect) layerView.set('featureEffect', null);
 
     if (!layerView.filter) {
-      layerView.filter = new this.FeatureFilter({ timeExtent: timeExtent as __esri.TimeExtent });
+      layerView.filter = await newLayersSupportFeatureFilter({ timeExtent: timeExtent as __esri.TimeExtent });
       return;
     }
     layerView.filter.timeExtent = timeExtent;
@@ -248,28 +227,26 @@ class InstantAppsTimeFilterViewModel {
     this.setupTimeExtentWatcher();
   }
 
-  reconfigureTimeSlider(timeInfoItem: ITimeInfoItem) {
+  async reconfigureTimeSlider(timeInfoItem: ITimeInfoItem) {
     if (!state.timeSlider) return;
     state.timeSlider.fullTimeExtent = timeInfoItem.timeExtent as __esri.TimeExtent;
-    state.timeSlider.timeExtent = this.getTimeExtent(timeInfoItem);
-    state.timeSlider.stops = { interval: this.getTimeInterval(timeInfoItem) };
+    state.timeSlider.timeExtent = await this.getTimeExtent(timeInfoItem);
+    state.timeSlider.stops = { interval: await this.getTimeInterval(timeInfoItem) };
   }
 
-  getTimeExtent({ rangeStart, rangeEnd, previousTimeExtent }: ITimeInfoItem): any {
-    const { TimeExtent } = this;
-    return (
+  async getTimeExtent({ rangeStart, rangeEnd, previousTimeExtent }: ITimeInfoItem): Promise<__esri.TimeExtent | __esri.TimeExtent> {
+    const timeExtent =
       previousTimeExtent ??
-      new TimeExtent({
+      (await newTimeTimeExtent({
         start: rangeStart,
         end: rangeEnd,
-      })
-    );
+      }));
+    return Promise.resolve(timeExtent);
   }
 
-  getTimeInterval(timeInfoItem: ITimeInfoItem): any {
-    const { TimeInterval } = this;
+  async getTimeInterval(timeInfoItem: ITimeInfoItem): Promise<__esri.TimeInterval> {
     const unit = timeInfoItem.unit ?? (timeInfoItem.layerView?.layer as __esri.FeatureLayer)?.timeInfo?.interval?.unit;
-    return new TimeInterval({
+    return await newTimeTimeInterval({
       unit: unit,
       value: 1,
     });
