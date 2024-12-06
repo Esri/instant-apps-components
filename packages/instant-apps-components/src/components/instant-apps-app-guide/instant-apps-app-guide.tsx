@@ -1,10 +1,9 @@
 import { Component, Host, h, Prop, State } from '@stencil/core';
 import { Element, HostElement, Watch } from '@stencil/core/internal';
 import AppGuideViewModel from './AppGuide/AppGuideViewModel';
-import { AppGuidePage, AppGuideRenderType } from './AppGuide/interfaces/interfaces';
+import { AppGuidePage, AppGuideRenderType, CalciteCarouselArrowType } from './AppGuide/interfaces/interfaces';
 import AppGuide_T9n from '../../assets/t9n/instant-apps-app-guide/resources.json';
 import { getMessages } from '../../utils/locale';
-import { ArrowType } from '@esri/calcite-components';
 
 const CSS = {
   contentList: 'instant-apps-app-guide__content-list',
@@ -59,7 +58,7 @@ export class InstantAppsAppGuide {
    * Private Variables
    */
   private _viewModel: AppGuideViewModel = new AppGuideViewModel();
-  private _carouselRef: HTMLCalciteCarouselElement;
+  private _carouselRef!: HTMLCalciteCarouselElement;
 
   componentWillLoad() {
     this._setContent(this?.data);
@@ -77,8 +76,9 @@ export class InstantAppsAppGuide {
         <calcite-panel scale="s">
           { header }
           <calcite-carousel
+            label="App Guide"
             onCalciteCarouselChange={() => this._updateHeaderText()}
-            ref={ el => this._carouselRef = el }
+            ref={ el => this._carouselRef = el! }
             arrow-type={this._getArrowType()}>
             { pages }
           </calcite-carousel>
@@ -94,6 +94,8 @@ export class InstantAppsAppGuide {
 
   private _updateHeaderText() : void {
     const { _viewModel, _carouselRef, messages } = this;
+    if (!(_viewModel && _carouselRef)) return;
+
     const nodeArray = Array.from(_carouselRef.childNodes);
     const selectedNodeIndex = nodeArray.indexOf(_carouselRef.selectedItem);
 
@@ -105,7 +107,7 @@ export class InstantAppsAppGuide {
     this.headerText = selectedPage?.title || messages?.headerText;
   }
 
-  private _getArrowType() : ArrowType {
+  private _getArrowType() : CalciteCarouselArrowType {
     return this._viewModel.pages.length > 2 ? 'inline' : 'none';
   }
 
@@ -121,9 +123,9 @@ export class InstantAppsAppGuide {
 
   private _renderAppGuidePages(pages: AppGuidePage[]) : HTMLCalciteCarouselItemElement[] {
     return pages.map((pageData, index) => {
-      const { content, type } = pageData;
+      const { content, type, title } = pageData;
       return (
-        <calcite-carousel-item key={`page_${index}`}>
+        <calcite-carousel-item label={title} key={`page_${index}`}>
           <div class={CSS.contentWrapper}>
             { this._renderContentItems(content, type) }
           </div>
