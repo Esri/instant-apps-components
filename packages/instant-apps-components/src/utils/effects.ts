@@ -1,4 +1,4 @@
-import { loadModules } from '../../../utils/loadModules';
+import { loadModules } from '../utils/loadModules';
 
 interface FeatureLayerFeatureEffect extends __esri.FeatureLayer {
   featureEffect: __esri.FeatureEffect;

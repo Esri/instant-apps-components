@@ -2,6 +2,7 @@ import { Config } from '@stencil/core';
 import { sass } from '@stencil/sass';
 import { reactOutputTarget } from '@stencil/react-output-target';
 import resolvePkg from 'resolve-pkg';
+import { makeArcgisExternal, makeCalciteExternal } from './src/utils/makeExternal';
 
 const t9nAssetsObj = {
   src: './assets/t9n',
@@ -25,7 +26,7 @@ export const config: Config = {
         { src: 'assets', dest: 'build/assets' },
         {
           src: resolvePkg('@esri/calcite-components/dist/calcite') ?? '',
-          dest: 'build/calcite-components',
+          dest: 'vendor/calcite-components',
         },
       ],
       serviceWorker: null, // disable service workers
@@ -54,4 +55,8 @@ email: contracts@esri.com
     },
   ],
   plugins: [sass()],
+  rollupPlugins: {
+    before: [makeArcgisExternal(), makeCalciteExternal()],
+    after: [],
+  },
 };

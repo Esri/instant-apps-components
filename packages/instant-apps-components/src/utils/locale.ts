@@ -2,7 +2,8 @@
 import { getAssetPath } from '@stencil/core';
 import { loadModules } from '../utils/loadModules';
 import { languageMap } from './languageUtil';
-import { calculateLocale } from 'templates-common-library/structuralFunctionality/locale';
+
+import { LANGUAGE_DATA } from './constants';
 
 const TEST_ENV_ORIGIN = 'localhost:4444';
 const IS_TEST_ENV = new URL(window.location.href).origin.includes(TEST_ENV_ORIGIN);
@@ -109,7 +110,7 @@ function updateMessages(component, messages: unknown[], messageOverrides: unknow
 
 function handleOnLocaleChange(component, messageOverrides: unknown) {
   return async (locale: string) => {
-    const localeToUse = calculateLocale(locale);
+    const localeToUse = await calculateLocale(locale);
     const messages = await getLocaleComponentStrings(component.el, localeToUse);
     updateMessages(component, messages, messageOverrides);
   };
@@ -117,4 +118,16 @@ function handleOnLocaleChange(component, messageOverrides: unknown) {
 
 export function getFallbackUrl() {
   return new URL(window.location.href).origin;
+}
+
+export async function calculateLocale(locale: string): Promise<string> {
+  if (!locale) return 'en';
+  const isPartial = !!LANGUAGE_DATA?.partial?.[locale];
+  if (isPartial) {
+    return locale;
+  } else {
+    const [intl] = await loadModules(['esri/intl']);
+    const normalizedLocale = intl.normalizeMessageBundleLocale(locale);
+    return normalizedLocale == null ? 'en' : normalizedLocale;
+  }
 }

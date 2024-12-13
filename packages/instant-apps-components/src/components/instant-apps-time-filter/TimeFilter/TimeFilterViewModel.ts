@@ -2,7 +2,7 @@ import { onChange, state } from './TimeFilterModel';
 import { loadModules } from '../../../utils/loadModules';
 
 import { IFeatureEffect, IFeatureFilter, ITimeExtent, ITimeInfoConfigItem, ITimeInfoItem, ITimeInterval, ITimeItemUnit, ITimeSlider } from './interfaces/interfaces';
-import { getMergedEffect } from 'templates-common-library/functionality/effects';
+import { getMergedEffect } from '../../../utils/effects';
 import { FilterMode } from '../../../components';
 
 const TIME_SLIDER_HANDLE_KEY = 'time-slider-watch';
@@ -202,12 +202,12 @@ class InstantAppsTimeFilterViewModel {
     layerView.featureEffect.filter.timeExtent = timeExtent;
   }
 
-  handleUpdatedFeatureEffect(fLayerView: __esri.FeatureLayerView, timeExtent: __esri.TimeExtent) {
+  async handleUpdatedFeatureEffect(fLayerView: __esri.FeatureLayerView, timeExtent: __esri.TimeExtent) {
     const { FeatureEffect } = this;
     fLayerView.featureEffect = new FeatureEffect({
       filter: { timeExtent },
-      includedEffect: getMergedEffect(state.filterMode?.effect?.includedEffect as string, fLayerView, 'includedEffect'),
-      excludedEffect: getMergedEffect(state.filterMode?.effect?.excludedEffect as string, fLayerView, 'excludedEffect'),
+      includedEffect: await getMergedEffect(state.filterMode?.effect?.includedEffect as string, fLayerView, 'includedEffect'),
+      excludedEffect: await getMergedEffect(state.filterMode?.effect?.excludedEffect as string, fLayerView, 'excludedEffect'),
     });
   }
 
