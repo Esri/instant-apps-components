@@ -1,6 +1,7 @@
 import { Config } from '@stencil/core';
 import { sass } from '@stencil/sass';
 import { reactOutputTarget } from '@stencil/react-output-target';
+import resolvePkg from 'resolve-pkg';
 
 const t9nAssetsObj = {
   src: './assets/t9n',
@@ -18,7 +19,15 @@ export const config: Config = {
     { type: 'dist-custom-elements', customElementsExportBehavior: 'auto-define-custom-elements' },
     {
       type: 'www',
-      copy: [{ src: '**/*.html' }, { ...t9nAssetsObj, dest: 'assets/t9n' }, { src: 'assets', dest: 'build/assets' }],
+      copy: [
+        { src: '**/*.html' },
+        { ...t9nAssetsObj, dest: 'assets/t9n' },
+        { src: 'assets', dest: 'build/assets' },
+        {
+          src: resolvePkg('@esri/calcite-components/dist/calcite') ?? '',
+          dest: 'build/calcite-components',
+        },
+      ],
       serviceWorker: null, // disable service workers
     },
     reactOutputTarget({

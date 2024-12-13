@@ -15,8 +15,8 @@
 
     <link rel="stylesheet" href="https://jsdev.arcgis.com/4.32/esri/themes/light/main.css" />
     <script src="https://jsdev.arcgis.com/4.32/"></script>
-    <script type="module" src="https://cdn.jsdelivr.net/npm/@esri/calcite-components@3.0.0-next.40/dist/calcite/calcite.esm.js"></script>
-    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/@esri/calcite-components@3.0.0-next.40/dist/calcite/calcite.css" />
+    <script type="module" src="build/calcite-components/calcite.esm.js"></script>
+    <link rel="stylesheet" type="text/css" href="build/calcite-components/calcite.css" />
     <script type="module" src="/build/instant-apps-components.esm.js"></script>
     <script nomodule src="/build/instant-apps-components.js"></script>
 
@@ -200,7 +200,7 @@
         </div>
         <calcite-button slot="primary" id="done">Done</calcite-button>
       </calcite-modal>
-      <calcite-modal id="create">
+      <!-- <calcite-modal id="create">
         <span slot="header">Create statistic</span>
         <div slot="content" id="createContent">
           <calcite-label>
@@ -225,7 +225,7 @@
         </div>
         <calcite-button id="cancelCreate" slot="secondary" appearance="outline">Cancel</calcite-button>
         <calcite-button id="confirmCreate" slot="primary">Create</calcite-button>
-      </calcite-modal>
+      </calcite-modal> -->
     </calcite-shell>
     <script>
       require(['esri/WebScene', 'esri/views/SceneView', 'esri/core/reactiveUtils', 'esri/config', 'esri/core/Collection'], (

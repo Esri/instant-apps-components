@@ -191,13 +191,14 @@ export class InstantAppsLanguageTranslator {
   }
 
   renderModal(): HTMLCalciteModalElement {
-    return (
-      <calcite-modal open={this.open} scale="l" fullscreen={true} onCalciteModalClose={this.close.bind(this)}>
-        {this.renderHeader()}
-        {this.renderContent()}
-        {this.renderPrimaryContent()}
-      </calcite-modal>
-    );
+    // return (
+    //   <calcite-modal open={this.open} scale="l" fullscreen={true} onCalciteModalClose={this.close.bind(this)}>
+    //     {this.renderHeader()}
+    //     {this.renderContent()}
+    //     {this.renderPrimaryContent()}
+    //   </calcite-modal>
+    // );
+    return <div></div>;
   }
 
   renderPopoverTip(): HTMLCalcitePopoverElement {

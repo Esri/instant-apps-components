@@ -30,10 +30,10 @@
   },
   "dependencies": {
     "@a11y/focus-trap": "^1.0.5",
-    "@arcgis/core": ">=4.32.0-next.20241010 <4.33",
+    "@arcgis/core": "4.32.0-next.20241213",
     "@ckeditor/ckeditor5-build-classic": "^39.0.1",
     "@esri/arcgis-html-sanitizer": "^4.0.3",
-    "@esri/calcite-components": "3.0.0-next.40",
+    "@esri/calcite-components": "3.0.0-next.62",
     "@stencil/core": "4.17.1",
     "@stencil/react-output-target": "^0.5.3",
     "@stencil/store": "^2.0.8",
@@ -41,11 +41,12 @@
     "esri-loader": "^3.7.0",
     "html-to-image": "^1.11.11",
     "maquette": "^3.5.3",
-    "templates-common-library": "0.0.590-esm"
+    "templates-common-library": "0.0.593-esm"
   },
   "devDependencies": {
     "@babel/core": "7.16.5",
     "@playwright/test": "^1.45.3",
+    "@rollup/plugin-commonjs": "^28.0.1",
     "@stencil/sass": "^3.0.7",
     "@storybook/addon-essentials": "^7.6.15",
     "@storybook/addon-interactions": "^7.6.15",
@@ -66,6 +67,7 @@
     "puppeteer": "^22.0.0",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
+    "resolve-pkg": "^2.0.0",
     "rollup-plugin-node-polyfills": "^0.2.1",
     "sortablejs": "^1.14.0",
     "storybook": "^7.6.15",

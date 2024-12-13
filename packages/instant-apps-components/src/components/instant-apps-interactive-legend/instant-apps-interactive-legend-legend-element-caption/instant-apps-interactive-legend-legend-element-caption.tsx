@@ -139,7 +139,7 @@ export class InstantAppsInteractiveLegendLegendElementCaption {
     const zoomToCompact = 'zoomToCompact';
 
     const zoomTo = this.zoomTo && [
-      <calcite-action id={zoomToCompact} class={CSS.zoomTo} onClick={this.handleZoomTo()} icon={Icons.ZoomTo} appearance="transparent" scale="s" compact={true} />,
+      <calcite-action id={zoomToCompact} class={CSS.zoomTo} onClick={this.handleZoomTo()} icon={Icons.ZoomTo} appearance="transparent" scale="s" text={this.messages?.zoomTo} />,
       <calcite-tooltip reference-element={zoomToCompact} placement="top" label={this.messages?.zoomTo}>
         {this.messages?.zoomTo}
       </calcite-tooltip>,

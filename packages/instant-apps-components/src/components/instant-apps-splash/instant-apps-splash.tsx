@@ -119,15 +119,16 @@ export class InstantAppsSplash {
   }
 
   render(): HTMLCalciteModalElement {
-    return (
-      <calcite-modal onCalciteModalClose={this.close.bind(this)} open={this.open} closeButtonDisabled={this.closeButtonDisabled} outsideCloseDisabled={this.outsideCloseDisabled}>
-        {this.renderHeader()}
-        {this.renderContent()}
-        {this.localStorageKey ? this.renderDontShowThisAgainCheckbox() : null}
-        {this.renderPrimaryButton()}
-        {this.secondaryButton ? this.renderSecondaryButton() : null}
-      </calcite-modal>
-    );
+    // return (
+    //   <calcite-modal onCalciteModalClose={this.close.bind(this)} open={this.open} closeButtonDisabled={this.closeButtonDisabled} outsideCloseDisabled={this.outsideCloseDisabled}>
+    //     {this.renderHeader()}
+    //     {this.renderContent()}
+    //     {this.localStorageKey ? this.renderDontShowThisAgainCheckbox() : null}
+    //     {this.renderPrimaryButton()}
+    //     {this.secondaryButton ? this.renderSecondaryButton() : null}
+    //   </calcite-modal>
+    // );
+    return <div></div>;
   }
 
   renderHeader(): HTMLElement {

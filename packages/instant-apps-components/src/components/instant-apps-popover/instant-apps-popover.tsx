@@ -12,8 +12,8 @@ import { InstantAppsPopovers } from '../instant-apps-popovers/instant-apps-popov
 import Popover_T9n from '../../assets/t9n/instant-apps-popover/resources.json';
 
 import { getMessages } from '../../utils/locale';
-import { LogicalPlacement } from '@esri/calcite-components/dist/types/utils/floating-ui';
 import { InstantAppsPopoverMessageOverrides } from '../../interfaces/interfaces';
+import { LogicalPlacement } from '@esri/calcite-components/dist/utils/floating-ui';
 
 const CSS = {
   content: 'instant-apps-popover__content',

@@ -12,6 +12,7 @@ import { PredefinedOptions } from "./components/instant-apps-create/instant-apps
 import { AlignmentPositions } from "./components/instant-apps-landing-page/support/enum";
 import { AppSettings, LocaleItem, LocaleSettingData } from "./components/instant-apps-language-translator/support/interfaces";
 import { InstantAppsPopovers } from "./components/instant-apps-popovers/instant-apps-popovers";
+import { LogicalPlacement } from "@esri/calcite-components/dist/utils/floating-ui";
 import { ScoreboardItem, ScoreboardMode, ScoreboardPosition } from "./components/instant-apps-scoreboard/types/interfaces";
 import { ITimeInfoConfigItem } from "./components/instant-apps-time-filter/TimeFilter/interfaces/interfaces";
 export { AppGuidePage } from "./components/instant-apps-app-guide/AppGuide/interfaces/interfaces";
@@ -21,6 +22,7 @@ export { PredefinedOptions } from "./components/instant-apps-create/instant-apps
 export { AlignmentPositions } from "./components/instant-apps-landing-page/support/enum";
 export { AppSettings, LocaleItem, LocaleSettingData } from "./components/instant-apps-language-translator/support/interfaces";
 export { InstantAppsPopovers } from "./components/instant-apps-popovers/instant-apps-popovers";
+export { LogicalPlacement } from "@esri/calcite-components/dist/utils/floating-ui";
 export { ScoreboardItem, ScoreboardMode, ScoreboardPosition } from "./components/instant-apps-scoreboard/types/interfaces";
 export { ITimeInfoConfigItem } from "./components/instant-apps-time-filter/TimeFilter/interfaces/interfaces";
 export namespace Components {
@@ -803,7 +805,7 @@ export namespace Components {
         /**
           * Add items to the sign in dropdown.
          */
-        "signInDropdownItems": { label: string; onClick: Function }[];
+        "signInDropdownItems": { label: string; onClick: (event: MouseEvent) => unknown }[];
         /**
           * Landing page subtitle text.
          */
@@ -2252,7 +2254,7 @@ declare namespace LocalJSX {
         /**
           * Add items to the sign in dropdown.
          */
-        "signInDropdownItems"?: { label: string; onClick: Function }[];
+        "signInDropdownItems"?: { label: string; onClick: (event: MouseEvent) => unknown }[];
         /**
           * Landing page subtitle text.
          */

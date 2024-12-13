@@ -334,7 +334,7 @@ export class InstantAppsExport {
     return (
       <calcite-label>
         {this.messages?.fileType}
-        <calcite-select onCalciteSelectChange={this.handleSelectFileType.bind(this)}>
+        <calcite-select label="" onCalciteSelectChange={this.handleSelectFileType.bind(this)}>
           {this.fileTypes.map(fileType => (
             <calcite-option value={fileType} selected={fileType === this.selectedFileType}>
               {fileType}
