@@ -162,7 +162,7 @@
             <div class="group">
               <div class="group-label">Attribute data</div>
               <div class="group-content">
-                <calcite-value-list id="attrData" drag-enabled="true"></calcite-value-list>
+                <calcite-list id="attrData" drag-enabled="true"></calcite-list>
                 <calcite-button id="add" icon-start="plus" appearance="outline-fill" width="full">Add statistic</calcite-button>
               </div>
             </div>
@@ -200,7 +200,7 @@
         </div>
         <calcite-button slot="primary" id="done">Done</calcite-button>
       </calcite-modal>
-      <!-- <calcite-modal id="create">
+      <calcite-modal id="create">
         <span slot="header">Create statistic</span>
         <div slot="content" id="createContent">
           <calcite-label>
@@ -225,7 +225,7 @@
         </div>
         <calcite-button id="cancelCreate" slot="secondary" appearance="outline">Cancel</calcite-button>
         <calcite-button id="confirmCreate" slot="primary">Create</calcite-button>
-      </calcite-modal> -->
+      </calcite-modal>
     </calcite-shell>
     <script>
       require(['esri/WebScene', 'esri/views/SceneView', 'esri/core/reactiveUtils', 'esri/config', 'esri/core/Collection'], (
@@ -515,7 +515,7 @@
             obj.label = labelInput.value;
             obj.operation = editOperationInput.value;
             const updatedData = dataCollection.toArray();
-            const valueListItem = document.getElementById(`${currentId}-value-list-item`);
+            const valueListItem = document.getElementById(`${currentId}-list`);
             valueListItem.label = labelInput.value;
             items = [...updatedData];
             scoreboard.items = items;
@@ -528,7 +528,7 @@
             const attrData = document.getElementById('attrData');
             attrData.innerHTML = '';
             items.forEach((item, index) => {
-              const valueListItem = document.createElement('calcite-value-list-item');
+              const valueListItem = document.createElement('calcite-list-item');
 
               const editAction = document.createElement('calcite-action');
 

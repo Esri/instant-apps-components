@@ -73,6 +73,7 @@ $compactSubheadingFontSize: 0.75rem;
   }
 
   .instant-apps-interactive-legend__layer-caption-btn-container {
+    display: flex;
     white-space: nowrap;
     calcite-button {
       margin: 2px;

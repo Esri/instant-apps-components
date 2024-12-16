@@ -36,7 +36,7 @@ export class InstantAppsSplash {
   /**
    * Content of splash screen.
    */
-  @Prop()
+  @Prop({ mutable: true })
   content: string = '';
 
   /**
@@ -118,30 +118,22 @@ export class InstantAppsSplash {
     getMessages(this);
   }
 
-  render(): HTMLCalciteModalElement {
-    // return (
-    //   <calcite-modal onCalciteModalClose={this.close.bind(this)} open={this.open} closeButtonDisabled={this.closeButtonDisabled} outsideCloseDisabled={this.outsideCloseDisabled}>
-    //     {this.renderHeader()}
-    //     {this.renderContent()}
-    //     {this.localStorageKey ? this.renderDontShowThisAgainCheckbox() : null}
-    //     {this.renderPrimaryButton()}
-    //     {this.secondaryButton ? this.renderSecondaryButton() : null}
-    //   </calcite-modal>
-    // );
-    return <div></div>;
-  }
-
-  renderHeader(): HTMLElement {
-    const { titleText } = this;
-    return <header slot="header">{titleText}</header>;
-  }
-
-  renderContent(): HTMLElement {
-    const { content } = this;
+  render(): HTMLCalciteDialogElement {
     return (
-      <div slot="content" class={CSS.content} innerHTML={content}>
+      <calcite-dialog
+        open={this.open}
+        modal={true}
+        heading={this.titleText}
+        onCalciteDialogClose={this.close.bind(this)}
+        closeDisabled={this.closeButtonDisabled}
+        outsideCloseDisabled={this.outsideCloseDisabled}
+      >
+        <div innerHTML={this.content} />
         <slot name="custom-action"></slot>
-      </div>
+        {this.localStorageKey ? this.renderDontShowThisAgainCheckbox() : null}
+        {this.secondaryButton ? this.renderSecondaryButton() : null}
+        {this.renderPrimaryButton()}
+      </calcite-dialog>
     );
   }
 
@@ -149,7 +141,7 @@ export class InstantAppsSplash {
     const { localStorageKey, messages } = this;
     const checked = getLocalStorageItem(localStorageKey) ? true : null;
     return (
-      <div class={CSS.back} slot="back">
+      <div class={CSS.back} slot="footer-start">
         <calcite-label layout="inline">
           <calcite-checkbox onCalciteCheckboxChange={this.handleDontShowThisAgain.bind(this)} checked={checked ?? undefined} />
           {messages?.dontShowThisAgain}
@@ -161,7 +153,7 @@ export class InstantAppsSplash {
   renderPrimaryButton(): HTMLElement {
     const { primaryButtonText } = this;
     return (
-      <calcite-button onClick={this.close.bind(this)} slot="primary">
+      <calcite-button onClick={this.close.bind(this)} slot="footer-end">
         {primaryButtonText ? primaryButtonText : 'Enter'}
       </calcite-button>
     );
@@ -169,7 +161,7 @@ export class InstantAppsSplash {
 
   renderSecondaryButton() {
     return (
-      <calcite-button onClick={this.secondaryButtonCallback?.bind(this)} slot="secondary" icon-start={this.secondaryButtonIcon} appearance="outline">
+      <calcite-button onClick={this.secondaryButtonCallback?.bind(this)} slot="footer-end" icon-start={this.secondaryButtonIcon} appearance="outline">
         {this.secondaryButtonText}
       </calcite-button>
     );
