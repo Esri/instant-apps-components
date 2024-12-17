@@ -636,7 +636,7 @@ export namespace Components {
          */
         "locales": LocaleItem[];
         /**
-          * Controls the open/close state of the modal.
+          * Controls the open/close state of the dialog.
          */
         "open": boolean;
         /**
@@ -2080,7 +2080,7 @@ declare namespace LocalJSX {
          */
         "onTranslatorDataUpdated"?: (event: InstantAppsLanguageTranslatorCustomEvent<string>) => void;
         /**
-          * Controls the open/close state of the modal.
+          * Controls the open/close state of the dialog.
          */
         "open"?: boolean;
         /**

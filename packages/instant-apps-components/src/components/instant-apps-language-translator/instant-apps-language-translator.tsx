@@ -70,7 +70,7 @@ export class InstantAppsLanguageTranslator {
   locales: LocaleItem[];
 
   /**
-   * Controls the open/close state of the modal.
+   * Controls the open/close state of the dialog.
    */
   @Prop({
     mutable: true,
@@ -184,21 +184,20 @@ export class InstantAppsLanguageTranslator {
   render(): HostElement {
     return (
       <Host>
-        {this.renderModal()}
+        {this.renderDialog()}
         {this.renderPopoverTip()}
       </Host>
     );
   }
 
-  renderModal(): HTMLCalciteModalElement {
-    // return (
-    //   <calcite-modal open={this.open} scale="l" fullscreen={true} onCalciteModalClose={this.close.bind(this)}>
-    //     {this.renderHeader()}
-    //     {this.renderContent()}
-    //     {this.renderPrimaryContent()}
-    //   </calcite-modal>
-    // );
-    return <div></div>;
+  renderDialog(): HTMLCalciteDialogElement {
+    return (
+      <calcite-dialog open={this.open} scale="l" placement="cover" onCalciteDialogClose={this.close.bind(this)}>
+        {this.renderHeader()}
+        {this.renderContent()}
+        {this.renderPrimaryContent()}
+      </calcite-dialog>
+    );
   }
 
   renderPopoverTip(): HTMLCalcitePopoverElement {
@@ -211,7 +210,7 @@ export class InstantAppsLanguageTranslator {
 
   renderHeader(): HTMLElement {
     return (
-      <header class={CSS.header} slot="header">
+      <header class={CSS.header} slot="header-content">
         {this.renderHeaderText()}
       </header>
     );
@@ -242,7 +241,7 @@ export class InstantAppsLanguageTranslator {
   renderContent(): HTMLDivElement {
     const localeItems = getLocales(this.locales);
     return (
-      <div slot="content">
+      <div>
         {this.renderTopBar()}
         {localeItems?.length > 0 ? this.renderUIData() : this.renderNotice()}
       </div>
@@ -391,7 +390,7 @@ export class InstantAppsLanguageTranslator {
 
   renderPrimaryContent(): HTMLDivElement {
     return (
-      <div class={CSS.primaryContent} slot="primary">
+      <div class={CSS.primaryContent} slot="footer-end">
         {store.get('saving') ? this.renderSavingIndicator() : null}
         {store.get('lastSave') ? (
           <span key="last-save" class={CSS.lastAutoSave}>
