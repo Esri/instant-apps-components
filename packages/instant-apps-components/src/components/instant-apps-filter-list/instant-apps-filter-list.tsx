@@ -346,7 +346,7 @@ export class InstantAppsFilterList {
     const selectedFields = expression?.selectedFields as unknown[];
     const selected = selectedFields?.includes(value) ?? false;
 
-    return <calcite-combobox-item key={`${label}-${index}`} value={value} textLabel={`${label}`} selected={selected}></calcite-combobox-item>;
+    return <calcite-combobox-item key={`${label}-${index}`} value={value} heading={`${label}`} selected={selected}></calcite-combobox-item>;
   }
 
   initFilterConfig(): VNode[] | undefined {
