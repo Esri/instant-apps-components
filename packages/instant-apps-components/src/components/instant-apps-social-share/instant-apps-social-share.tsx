@@ -12,7 +12,7 @@ import { loadModules } from '../../utils/loadModules';
 
 import SocialShare_T9n from '../../assets/t9n/instant-apps-social-share/resources.json';
 
-import { LogicalPlacement } from '@esri/calcite-components/dist/types/utils/floating-ui';
+import { LogicalPlacement } from '@esri/calcite-components/dist/utils/floating-ui';
 import { getMessages } from '../../utils/locale';
 // import { PopperPlacement } from '@esri/calcite-components/dist/types/utils/popper';
 

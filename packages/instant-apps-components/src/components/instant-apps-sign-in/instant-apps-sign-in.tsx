@@ -93,7 +93,7 @@ export class InstantAppsSignIn {
    * Add items to the sign in dropdown.
    */
   @Prop()
-  signInDropdownItems: { label: string; onClick: Function }[];
+  signInDropdownItems: { label: string; onClick: (event: MouseEvent) => unknown }[];
 
   @State()
   ready = false;

@@ -13,10 +13,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=5.0" />
     <title>Instant Apps Components: Scoreboard</title>
 
-    <link rel="stylesheet" href="https://js.arcgis.com/4.31/esri/themes/light/main.css" />
-    <script src="https://js.arcgis.com/4.31/"></script>
-    <script type="module" src="https://js.arcgis.com/calcite-components/2.13.0/calcite.esm.js"></script>
-    <link rel="stylesheet" type="text/css" href="https://js.arcgis.com/calcite-components/2.13.0/calcite.css" />
+    <link rel="stylesheet" href="https://jsdev.arcgis.com/4.32/esri/themes/light/main.css" />
+    <script src="https://jsdev.arcgis.com/4.32/"></script>
+    <script type="module" src="/vendor/calcite-components/calcite.esm.js"></script>
+    <link rel="stylesheet" type="text/css" href="/vendor/calcite-components/calcite.css" />
     <script type="module" src="/build/instant-apps-components.esm.js"></script>
     <script nomodule src="/build/instant-apps-components.js"></script>
 
@@ -162,7 +162,7 @@
             <div class="group">
               <div class="group-label">Attribute data</div>
               <div class="group-content">
-                <calcite-value-list id="attrData" drag-enabled="true"></calcite-value-list>
+                <calcite-list id="attrData" drag-enabled="true"></calcite-list>
                 <calcite-button id="add" icon-start="plus" appearance="outline-fill" width="full">Add statistic</calcite-button>
               </div>
             </div>
@@ -515,7 +515,7 @@
             obj.label = labelInput.value;
             obj.operation = editOperationInput.value;
             const updatedData = dataCollection.toArray();
-            const valueListItem = document.getElementById(`${currentId}-value-list-item`);
+            const valueListItem = document.getElementById(`${currentId}-list`);
             valueListItem.label = labelInput.value;
             items = [...updatedData];
             scoreboard.items = items;
@@ -528,7 +528,7 @@
             const attrData = document.getElementById('attrData');
             attrData.innerHTML = '';
             items.forEach((item, index) => {
-              const valueListItem = document.createElement('calcite-value-list-item');
+              const valueListItem = document.createElement('calcite-list-item');
 
               const editAction = document.createElement('calcite-action');
 

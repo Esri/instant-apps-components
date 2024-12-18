@@ -102,7 +102,7 @@ export class InstantAppsMeasurement {
           data-value="distance"
           onClick={this._handleToolClick.bind(this)}
         >
-          <calcite-tooltip close-on-click={true} placement="top" slot="tooltip">
+          <calcite-tooltip overlayPositioning="fixed" close-on-click={true} placement="top" slot="tooltip">
             {messages?.line}
           </calcite-tooltip>
         </calcite-action>
@@ -114,7 +114,7 @@ export class InstantAppsMeasurement {
           data-value="area"
           onClick={this._handleToolClick.bind(this)}
         >
-          <calcite-tooltip close-on-click={true} placement="top" slot="tooltip">
+          <calcite-tooltip overlayPositioning="fixed" close-on-click={true} placement="top" slot="tooltip">
             {messages?.area}
           </calcite-tooltip>
         </calcite-action>
@@ -126,13 +126,13 @@ export class InstantAppsMeasurement {
           data-value="point"
           onClick={this._handleToolClick.bind(this)}
         >
-          <calcite-tooltip close-on-click={true} placement="top" slot="tooltip">
+          <calcite-tooltip overlayPositioning="fixed" close-on-click={true} placement="top" slot="tooltip">
             {messages?.point}
           </calcite-tooltip>
         </calcite-action>
 
         <calcite-action text={messages?.clear} scale="m" icon="trash" data-value="clear" onClick={this._handleToolClick.bind(this)}>
-          <calcite-tooltip close-on-click={true} placement="top" slot="tooltip">
+          <calcite-tooltip overlayPositioning="fixed" close-on-click={true} placement="top" slot="tooltip">
             {messages?.clear}
           </calcite-tooltip>
         </calcite-action>

@@ -5,3 +5,5 @@ export interface AppGuidePage {
 }
 
 export type AppGuideRenderType = 'paragraphs' | 'list';
+
+export type CalciteCarouselArrowType = "inline" | "edge" | "none";

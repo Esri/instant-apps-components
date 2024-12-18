@@ -1,7 +1,7 @@
 import { Component, h, Prop, Listen } from '@stencil/core';
 import { loadModules } from '../../../utils/loadModules';
 import { FilterMode } from '../../../interfaces/interfaces';
-import { getMergedEffect } from '../support/effects';
+import { getMergedEffect } from '../../../utils/effects';
 import { interactiveLegendState } from '../support/store';
 
 const RELATIONSHIP_DIAMOND_SELECTOR = '.esri-relationship-ramp--diamond__middle-column--ramp svg g';
@@ -184,20 +184,20 @@ export class InstantAppsInteractiveLegendRelationship {
       return index === 0
         ? index + 8
         : index === 1
-        ? index + 6
-        : index === 2
-        ? index + 4
-        : index === 3
-        ? index + 2
-        : index === 5
-        ? index - 2
-        : index === 6
-        ? index - 4
-        : index === 7
-        ? index - 6
-        : index === 8
-        ? index - 8
-        : index;
+          ? index + 6
+          : index === 2
+            ? index + 4
+            : index === 3
+              ? index + 2
+              : index === 5
+                ? index - 2
+                : index === 6
+                  ? index - 4
+                  : index === 7
+                    ? index - 6
+                    : index === 8
+                      ? index - 8
+                      : index;
     } else if (focus === 'LL') {
       return index === 0 || index === 1 || index === 2 ? index + 6 : index === 6 || index === 7 || index === 8 ? index - 6 : index;
     }
@@ -209,56 +209,56 @@ export class InstantAppsInteractiveLegendRelationship {
       return index === 0 || index === 4 || index === 8 || index === 12
         ? index + 3
         : index === 1 || index === 5 || index === 9 || index === 13
-        ? index + 1
-        : index === 2 || index === 6 || index === 10 || index === 14
-        ? index - 1
-        : index === 3 || index === 7 || index === 11 || index === 15
-        ? index - 3
-        : null;
+          ? index + 1
+          : index === 2 || index === 6 || index === 10 || index === 14
+            ? index - 1
+            : index === 3 || index === 7 || index === 11 || index === 15
+              ? index - 3
+              : null;
     } else if (focus === 'LH') {
       return index === 0
         ? index + 15
         : index === 1
-        ? index + 13
-        : index === 2
-        ? index + 11
-        : index === 3
-        ? index + 9
-        : index === 4
-        ? index + 7
-        : index === 5
-        ? index + 5
-        : index === 6
-        ? index + 3
-        : index === 7
-        ? index + 1
-        : index === 8
-        ? index - 1
-        : index === 9
-        ? index - 3
-        : index === 10
-        ? index - 5
-        : index === 11
-        ? index - 7
-        : index === 12
-        ? index - 9
-        : index === 13
-        ? index - 11
-        : index === 14
-        ? index - 13
-        : index === 15
-        ? index - 15
-        : null;
+          ? index + 13
+          : index === 2
+            ? index + 11
+            : index === 3
+              ? index + 9
+              : index === 4
+                ? index + 7
+                : index === 5
+                  ? index + 5
+                  : index === 6
+                    ? index + 3
+                    : index === 7
+                      ? index + 1
+                      : index === 8
+                        ? index - 1
+                        : index === 9
+                          ? index - 3
+                          : index === 10
+                            ? index - 5
+                            : index === 11
+                              ? index - 7
+                              : index === 12
+                                ? index - 9
+                                : index === 13
+                                  ? index - 11
+                                  : index === 14
+                                    ? index - 13
+                                    : index === 15
+                                      ? index - 15
+                                      : null;
     } else if (focus === 'LL') {
       return index === 0 || index === 1 || index === 2 || index === 3
         ? index + 12
         : index === 4 || index === 5 || index === 6 || index === 7
-        ? index + 4
-        : index === 8 || index === 9 || index === 10 || index === 11
-        ? index - 4
-        : index === 12 || index === 13 || index === 14 || index === 15
-        ? index - 12
-        : null;
+          ? index + 4
+          : index === 8 || index === 9 || index === 10 || index === 11
+            ? index - 4
+            : index === 12 || index === 13 || index === 14 || index === 15
+              ? index - 12
+              : null;
     }
   }
 
@@ -281,12 +281,12 @@ export class InstantAppsInteractiveLegendRelationship {
     focus === 'HH' || focus === null
       ? this.relationshipFocusIsHighHigh(cellItems, numClasses)
       : focus === 'LL'
-      ? this.relationshipFocusIsLowLow(cellItems, numClasses)
-      : focus === 'LH'
-      ? this.relationshipFocusIsLowHigh(cellItems, numClasses)
-      : focus === 'HL'
-      ? this.relationshipFocusIsHighLow(cellItems, numClasses)
-      : null;
+        ? this.relationshipFocusIsLowLow(cellItems, numClasses)
+        : focus === 'LH'
+          ? this.relationshipFocusIsLowHigh(cellItems, numClasses)
+          : focus === 'HL'
+            ? this.relationshipFocusIsHighLow(cellItems, numClasses)
+            : null;
     this.cellNodeCounter = 0;
   }
 
@@ -411,70 +411,70 @@ export class InstantAppsInteractiveLegendRelationship {
     i === 0 && j === 0
       ? rawNode.setAttribute('data-cell-focus', 'LL')
       : i === 0 && j === 1
-      ? rawNode.setAttribute('data-cell-focus', 'LH')
-      : i === 1 && j === 0
-      ? rawNode.setAttribute('data-cell-focus', 'HL')
-      : i === 1 && j === 1
-      ? rawNode.setAttribute('data-cell-focus', 'HH')
-      : null;
+        ? rawNode.setAttribute('data-cell-focus', 'LH')
+        : i === 1 && j === 0
+          ? rawNode.setAttribute('data-cell-focus', 'HL')
+          : i === 1 && j === 1
+            ? rawNode.setAttribute('data-cell-focus', 'HH')
+            : null;
   }
 
   setDataCellFocusForThreeClasses(rawNode: HTMLElement, i: number, j: number): void {
     i === 0 && j === 0
       ? rawNode.setAttribute('data-cell-focus', 'LL')
       : i === 0 && j === 1
-      ? rawNode.setAttribute('data-cell-focus', 'LM')
-      : i === 0 && j === 2
-      ? rawNode.setAttribute('data-cell-focus', 'LH')
-      : i === 1 && j === 0
-      ? rawNode.setAttribute('data-cell-focus', 'ML')
-      : i === 1 && j === 1
-      ? rawNode.setAttribute('data-cell-focus', 'MM')
-      : i === 1 && j === 2
-      ? rawNode.setAttribute('data-cell-focus', 'MH')
-      : i === 2 && j === 0
-      ? rawNode.setAttribute('data-cell-focus', 'HL')
-      : i === 2 && j === 1
-      ? rawNode.setAttribute('data-cell-focus', 'HM')
-      : i === 2 && j === 2
-      ? rawNode.setAttribute('data-cell-focus', 'HH')
-      : null;
+        ? rawNode.setAttribute('data-cell-focus', 'LM')
+        : i === 0 && j === 2
+          ? rawNode.setAttribute('data-cell-focus', 'LH')
+          : i === 1 && j === 0
+            ? rawNode.setAttribute('data-cell-focus', 'ML')
+            : i === 1 && j === 1
+              ? rawNode.setAttribute('data-cell-focus', 'MM')
+              : i === 1 && j === 2
+                ? rawNode.setAttribute('data-cell-focus', 'MH')
+                : i === 2 && j === 0
+                  ? rawNode.setAttribute('data-cell-focus', 'HL')
+                  : i === 2 && j === 1
+                    ? rawNode.setAttribute('data-cell-focus', 'HM')
+                    : i === 2 && j === 2
+                      ? rawNode.setAttribute('data-cell-focus', 'HH')
+                      : null;
   }
 
   setDataCellFocusForFourClasses(rawNode: HTMLElement, i: number, j: number): void {
     i === 0 && j === 0
       ? rawNode.setAttribute('data-cell-focus', 'LL')
       : i === 0 && j === 1
-      ? rawNode.setAttribute('data-cell-focus', 'LM1')
-      : i === 0 && j === 2
-      ? rawNode.setAttribute('data-cell-focus', 'LM2')
-      : i === 0 && j === 3
-      ? rawNode.setAttribute('data-cell-focus', 'LH')
-      : i === 1 && j === 0
-      ? rawNode.setAttribute('data-cell-focus', 'M1L')
-      : i === 1 && j === 1
-      ? rawNode.setAttribute('data-cell-focus', 'M1M1')
-      : i === 1 && j === 2
-      ? rawNode.setAttribute('data-cell-focus', 'M1M2')
-      : i === 1 && j === 3
-      ? rawNode.setAttribute('data-cell-focus', 'M1H')
-      : i === 2 && j === 0
-      ? rawNode.setAttribute('data-cell-focus', 'M2L')
-      : i === 2 && j === 1
-      ? rawNode.setAttribute('data-cell-focus', 'M2M1')
-      : i === 2 && j === 2
-      ? rawNode.setAttribute('data-cell-focus', 'M2M2')
-      : i === 2 && j === 3
-      ? rawNode.setAttribute('data-cell-focus', 'M2H')
-      : i === 3 && j === 0
-      ? rawNode.setAttribute('data-cell-focus', 'HL')
-      : i === 3 && j === 1
-      ? rawNode.setAttribute('data-cell-focus', 'HM1')
-      : i === 3 && j === 2
-      ? rawNode.setAttribute('data-cell-focus', 'HM2')
-      : i === 3 && j === 3
-      ? rawNode.setAttribute('data-cell-focus', 'HH')
-      : null;
+        ? rawNode.setAttribute('data-cell-focus', 'LM1')
+        : i === 0 && j === 2
+          ? rawNode.setAttribute('data-cell-focus', 'LM2')
+          : i === 0 && j === 3
+            ? rawNode.setAttribute('data-cell-focus', 'LH')
+            : i === 1 && j === 0
+              ? rawNode.setAttribute('data-cell-focus', 'M1L')
+              : i === 1 && j === 1
+                ? rawNode.setAttribute('data-cell-focus', 'M1M1')
+                : i === 1 && j === 2
+                  ? rawNode.setAttribute('data-cell-focus', 'M1M2')
+                  : i === 1 && j === 3
+                    ? rawNode.setAttribute('data-cell-focus', 'M1H')
+                    : i === 2 && j === 0
+                      ? rawNode.setAttribute('data-cell-focus', 'M2L')
+                      : i === 2 && j === 1
+                        ? rawNode.setAttribute('data-cell-focus', 'M2M1')
+                        : i === 2 && j === 2
+                          ? rawNode.setAttribute('data-cell-focus', 'M2M2')
+                          : i === 2 && j === 3
+                            ? rawNode.setAttribute('data-cell-focus', 'M2H')
+                            : i === 3 && j === 0
+                              ? rawNode.setAttribute('data-cell-focus', 'HL')
+                              : i === 3 && j === 1
+                                ? rawNode.setAttribute('data-cell-focus', 'HM1')
+                                : i === 3 && j === 2
+                                  ? rawNode.setAttribute('data-cell-focus', 'HM2')
+                                  : i === 3 && j === 3
+                                    ? rawNode.setAttribute('data-cell-focus', 'HH')
+                                    : null;
   }
 
   applyEventHandlers(): void {
@@ -591,10 +591,10 @@ export class InstantAppsInteractiveLegendRelationship {
     return focus === 'LL'
       ? `${field1} >= ${data[i][j][0].minValue} AND ${field1} <= ${data[i][j][0].maxValue} AND ${field2} >= ${data[i][j][1].minValue} AND ${field2} <= ${data[i][j][1].maxValue}`
       : focus === 'LM' || focus === 'LM1' || focus === 'LM2' || focus === 'LH'
-      ? `${field1} >= ${data[i][j][0].minValue} AND ${field1} <= ${data[i][j][0].maxValue} AND ${field2} > ${data[i][j][1].minValue} AND ${field2} <= ${data[i][j][1].maxValue}`
-      : focus === 'ML' || focus === 'M1L' || focus === 'M2L' || focus === 'HL'
-      ? `${field1} > ${data[i][j][0].minValue} AND ${field1} <= ${data[i][j][0].maxValue} AND ${field2} >= ${data[i][j][1].minValue} AND ${field2} <= ${data[i][j][1].maxValue}`
-      : `${field1} > ${data[i][j][0].minValue} AND ${field1} <= ${data[i][j][0].maxValue} AND ${field2} > ${data[i][j][1].minValue} AND ${field2} <= ${data[i][j][1].maxValue}`;
+        ? `${field1} >= ${data[i][j][0].minValue} AND ${field1} <= ${data[i][j][0].maxValue} AND ${field2} > ${data[i][j][1].minValue} AND ${field2} <= ${data[i][j][1].maxValue}`
+        : focus === 'ML' || focus === 'M1L' || focus === 'M2L' || focus === 'HL'
+          ? `${field1} > ${data[i][j][0].minValue} AND ${field1} <= ${data[i][j][0].maxValue} AND ${field2} >= ${data[i][j][1].minValue} AND ${field2} <= ${data[i][j][1].maxValue}`
+          : `${field1} > ${data[i][j][0].minValue} AND ${field1} <= ${data[i][j][0].maxValue} AND ${field2} > ${data[i][j][1].minValue} AND ${field2} <= ${data[i][j][1].maxValue}`;
   }
 
   handleSelectedElement(cell: HTMLElement): void {
