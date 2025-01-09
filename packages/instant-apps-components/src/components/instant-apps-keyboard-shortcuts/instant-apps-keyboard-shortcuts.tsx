@@ -7,8 +7,7 @@
  */
 
 import { Component, Host, State, Prop, Element, h } from '@stencil/core';
-import SceneView from 'esri/views/SceneView';
-import KeyboardShortcuts_T9n from '../../assets/t9n/instant-apps-keyboard-shortcuts/resources.json';
+import type KeyboardShortcuts_T9n from '../../assets/t9n/instant-apps-keyboard-shortcuts/resources.json';
 
 import { getMessages } from '../../utils/locale';
 const CSS = {
@@ -21,14 +20,17 @@ const CSS = {
 })
 export class InstantAppsKeyboardShortcuts {
   // HOST ELEMENT
-  @Element() el: HTMLInstantAppsKeyboardShortcutsElement;
+  @Element()
+  el!: HTMLInstantAppsKeyboardShortcutsElement;
 
-  @State() messages: typeof KeyboardShortcuts_T9n;
+  @State()
+  messages!: typeof KeyboardShortcuts_T9n;
 
   /**
    * A reference to the MapView or SceneView
    */
-  @Prop() view: __esri.MapView | __esri.SceneView;
+  @Prop()
+  view!: __esri.MapView | __esri.SceneView;
 
   render() {
     const commands = this?.view?.type === '2d' || !this?.view ? this._getMapViewCommands() : this._getSceneViewCommands();
@@ -36,7 +38,7 @@ export class InstantAppsKeyboardShortcuts {
     const modifierKey = this._isMacLike() ? 'Option' : 'Alt';
     return (
       <Host>
-        <calcite-block open class={`${CSS.content}`} heading={this?.messages?.generalShortcuts?.label}>
+        <calcite-block open class={CSS.content} heading={this?.messages?.generalShortcuts?.label}>
           <table>
             {this.renderTableHeader()}
             <tr>
@@ -47,14 +49,12 @@ export class InstantAppsKeyboardShortcuts {
           <calcite-label>{this?.messages?.generalShortcuts?.title}</calcite-label>
           <table>
             {this.renderTableHeader()}
-            {commands.map(command => {
-              return (
-                <tr>
-                  <td>{command.alias}</td>
-                  <td>{command.title}</td>
-                </tr>
-              );
-            })}
+            {commands.map(command => (
+              <tr>
+                <td>{command.alias}</td>
+                <td>{command.title}</td>
+              </tr>
+            ))}
           </table>
         </calcite-block>
       </Host>
@@ -73,45 +73,55 @@ export class InstantAppsKeyboardShortcuts {
     ) : null;
   }
   _getMapViewCommands() {
-    return this?.messages
-      ? [
-          {
-            alias: this?.messages.mapShortcuts.arrowKeys,
-            title: this?.messages.mapShortcuts.nudge,
-          },
-          {
-            alias: 'N',
-            title: this?.messages.mapShortcuts.N,
-          },
-          {
-            alias: 'A',
-            title: this?.messages.mapShortcuts.A,
-          },
-          {
-            alias: 'D',
-            title: this?.messages.mapShortcuts.D,
-          },
-          {
-            alias: '+',
-            title: this?.messages.mapShortcuts.plus,
-          },
-          {
-            alias: '-',
-            title: this?.messages.mapShortcuts.minus,
-          },
-        ]
-      : [];
-  }
-  _getSceneViewCommands() {
-    /* Arrow Keys(nudge), U and J are only 
-     supported in global scenes*/
-    const isGlobal = (this?.view as SceneView)?.viewingMode === 'global' ? true : false;
+    const enableRotationCommands = this.view?.type === '2d' && this.view.constraints.rotationEnabled;
+
     const allMessages = this?.messages
       ? [
           {
             alias: this?.messages.mapShortcuts.arrowKeys,
             title: this?.messages.mapShortcuts.nudge,
-            show: isGlobal ? true : false,
+            show: true,
+          },
+          {
+            alias: 'N',
+            title: this?.messages.mapShortcuts.N,
+            show: enableRotationCommands,
+          },
+          {
+            alias: 'A',
+            title: this?.messages.mapShortcuts.A,
+            show: enableRotationCommands,
+          },
+          {
+            alias: 'D',
+            title: this?.messages.mapShortcuts.D,
+            show: enableRotationCommands,
+          },
+          {
+            alias: '+',
+            title: this?.messages.mapShortcuts.plus,
+            show: true,
+          },
+          {
+            alias: '-',
+            title: this?.messages.mapShortcuts.minus,
+            show: true,
+          },
+        ]
+      : [];
+    return this?.messages ? allMessages?.filter(m => m.show) : [];
+  }
+  _getSceneViewCommands() {
+    /* Arrow Keys(nudge), U and J are only 
+     supported in global scenes*/
+    const isGlobal = this.view?.type === '3d' && this.view.viewingMode === 'global';
+
+    const allMessages = this?.messages
+      ? [
+          {
+            alias: this?.messages.mapShortcuts.arrowKeys,
+            title: this?.messages.mapShortcuts.nudge,
+            show: !!isGlobal,
           },
           {
             alias: 'P',
@@ -146,25 +156,18 @@ export class InstantAppsKeyboardShortcuts {
           {
             alias: 'J',
             title: this?.messages.sceneShortcuts.globalCommands.J,
-            show: isGlobal ? true : false,
+            show: !!isGlobal,
           },
           {
             alias: 'U',
             title: this?.messages.sceneShortcuts.globalCommands.U,
-            show: isGlobal ? true : false,
+            show: !!isGlobal,
           },
         ]
       : [];
-    return this?.messages
-      ? allMessages?.filter(m => {
-          return m.show;
-        })
-      : [];
+    return this?.messages ? allMessages?.filter(m => m.show) : [];
   }
-  /* _parseMessageValues(data) {
-    return Object.keys(data).map(key => ({ alias: key, title: data[key] }));
-  }*/
   _isMacLike(): boolean {
-    return /(Mac)/i.test(navigator.platform);
+    return /(Mac)/iu.test(navigator.platform);
   }
 }
