@@ -1951,7 +1951,7 @@ declare namespace LocalJSX {
         /**
           * A reference to the MapView or SceneView
          */
-        "view"?: __esri.MapView | __esri.SceneView;
+        "view": __esri.MapView | __esri.SceneView;
     }
     interface InstantAppsLandingPage {
         /**
