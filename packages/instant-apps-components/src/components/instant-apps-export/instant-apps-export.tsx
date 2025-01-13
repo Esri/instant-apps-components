@@ -116,6 +116,11 @@ export class InstantAppsExport {
   @Prop({ reflect: true }) mode: 'popover' | 'inline' = 'popover';
 
   /**
+   * Determines the size of the export.
+   */
+  @Prop() pageSize?: 'portrait' | 'landscape' | 'A1' = 'portrait';
+
+  /**
    * Determines the type of positioning to use for the overlaid content. Using `"absolute"` will work for most cases. The component will be positioned inside of overflowing parent containers and will affect the container's layout. `"fixed"` value should be used to escape an overflowing parent container, or when the reference element's position CSS property is `"fixed"`.
    */
   @Prop() popoverPositioning?: 'absolute' | 'fixed' = 'absolute';
@@ -509,7 +514,12 @@ export class InstantAppsExport {
   addPrintStyling(): void {
     if (this.printStyleEl == null) {
       this.printStyleEl = document.createElement('style');
-      this.printStyleEl.innerHTML = printStyling;
+      if (this.pageSize !== 'portrait') {
+        const updatedPrintStyling = printStyling.replace(/size:\s*\w+;/, `size: ${this.pageSize};`);
+        this.printStyleEl.innerHTML = updatedPrintStyling;
+      } else {
+        this.printStyleEl.innerHTML = printStyling;
+      }
       document.body.prepend(this.printStyleEl);
     }
   }
@@ -774,6 +784,7 @@ export class InstantAppsExport {
   setMaxRowHeightOnViewContainer(): void {
     if (this.selectedFileType === 'PDF') {
       this.printEl.style.gridTemplateRows = 'minmax(auto, 70%)';
+      this.printEl.style.zIndex = this.getMaxZIndex().toString();
     }
     this.viewEl.style.height = '100%';
     this.viewEl.style.width = '';
@@ -783,6 +794,7 @@ export class InstantAppsExport {
 
   setMaxWidthOnViewContainer(): void {
     this.printEl.style.gridTemplateRows = '';
+    this.printEl.style.zIndex = this.getMaxZIndex().toString();
     this.viewEl.style.width = '100%';
     this.viewEl.style.height = '';
     this.viewWrapperEl.style.height = 'fit-content';
@@ -1011,5 +1023,17 @@ export class InstantAppsExport {
         this.includeExtraContent = false;
       }
     }
+  }
+
+  getMaxZIndex() {
+    let elements = document.getElementsByTagName("*");
+    let maxZIndex = 0;
+    for (let element of elements) {
+      let zIndex = window.getComputedStyle(element).zIndex;
+      if (!isNaN(parseInt(zIndex))) {
+        maxZIndex = Math.max(maxZIndex, parseInt(zIndex, 10));
+      }
+    }
+    return maxZIndex;
   }
 }
