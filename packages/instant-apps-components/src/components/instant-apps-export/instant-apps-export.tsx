@@ -36,6 +36,7 @@ const CSS = {
 };
 
 const dragHandlerName = 'instant-app-export-drag';
+type PrintSize = 'Letter' | 'Legal' | 'A1' | 'A3' | 'A4' | 'Tabloid';
 
 @Component({
   tag: 'instant-apps-export',
@@ -133,7 +134,7 @@ export class InstantAppsExport {
   /**
    * Determines the size of the export.
    */
-  @Prop() printSize?: 'Letter' | 'Legal' | 'A1' | 'A3' | 'A4' | 'Tabloid' = 'Letter';
+  @Prop() printSize?: PrintSize = 'Letter';
 
   /**
    * Adjusts the scale of the action button.
@@ -299,6 +300,7 @@ export class InstantAppsExport {
     const options = this.includeMap ? this.renderMapOptions() : null;
     const fileType = this.includeFileFormat ? this.renderSelectFileType() : null;
     const printOrientation = this.selectedFileType === 'PDF' ? this.renderSelectPrintOrientation() : null;
+    const printSize = this.selectedFileType === 'PDF' ? this.renderSelectPrintSize() : null;
     const print = this.selectedFileType === 'PDF' ? this.renderPrint() : this.renderImg();
     const panelClass = this.mode === 'inline' ? CSS.inlineContainer : CSS.popoverContainer;
     return (
@@ -309,6 +311,7 @@ export class InstantAppsExport {
         {options}
         {fileType}
         {printOrientation}
+        {printSize}
         {this.includeMap ? (
           <calcite-button appearance="transparent" width="full" onClick={this.setMapAreaOnClick.bind(this, true)} disabled={this.exportIsLoading}>
             {this.messages?.setMapArea}
@@ -368,6 +371,22 @@ export class InstantAppsExport {
           <calcite-option value={'Landscape'} selected={this.printOrientation === 'Landscape'}>
             {this.messages?.landscape}
           </calcite-option>
+        </calcite-select>
+      </calcite-label>
+    );
+  }
+
+  renderSelectPrintSize(): VNode {
+    const printSizes: PrintSize[] = ['Letter', 'Legal', 'A1', 'A3', 'A4', 'Tabloid'];
+    return (
+      <calcite-label>
+        {this.messages?.selectPrintSize}
+        <calcite-select label="" onCalciteSelectChange={this.handleSelectPrintSize.bind(this)}>
+          {printSizes.map((size) => (
+            <calcite-option value={size} selected={size === this.printSize}>
+              {this.messages?.printSize[size.toLowerCase()]}
+            </calcite-option>
+          ))}
         </calcite-select>
       </calcite-label>
     );
@@ -1051,6 +1070,11 @@ export class InstantAppsExport {
   handleSelectPrintOrientation(e: CustomEvent): void {
     const node = e.target as HTMLCalciteSelectElement;
     this.printOrientation = node.value as 'Portrait' | 'Landscape';
+  }
+
+  handleSelectPrintSize(e: CustomEvent): void {
+    const node = e.target as HTMLCalciteSelectElement;
+    this.printSize = node.value as PrintSize;
   }
 
   /*
