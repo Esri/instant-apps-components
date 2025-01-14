@@ -116,11 +116,6 @@ export class InstantAppsExport {
   @Prop({ reflect: true }) mode: 'popover' | 'inline' = 'popover';
 
   /**
-   * Determines the size of the export.
-   */
-  @Prop() pageSize?: 'portrait' | 'landscape' | 'A1' = 'portrait';
-
-  /**
    * Determines the type of positioning to use for the overlaid content. Using `"absolute"` will work for most cases. The component will be positioned inside of overflowing parent containers and will affect the container's layout. `"fixed"` value should be used to escape an overflowing parent container, or when the reference element's position CSS property is `"fixed"`.
    */
   @Prop() popoverPositioning?: 'absolute' | 'fixed' = 'absolute';
@@ -129,6 +124,16 @@ export class InstantAppsExport {
    * Determines where the component will be positioned relative to the `referenceElement`.
    */
   @Prop() popoverPlacement?: PopoverPlacement = 'auto';
+
+  /**
+   * Determines the print page orientation of the export.
+   */
+  @Prop() printOrientation?: 'Portrait' | 'Landscape' = 'Portrait';
+
+  /**
+   * Determines the size of the export.
+   */
+  @Prop() printSize?: 'Letter' | 'Legal' | 'A1' | 'A3' | 'A4' | 'Tabloid' = 'Letter';
 
   /**
    * Adjusts the scale of the action button.
@@ -293,6 +298,7 @@ export class InstantAppsExport {
     const includeMap = this.showIncludeMap ? this.renderSwitch('includeMap', undefined, this.selectedFileType !== 'PDF') : null;
     const options = this.includeMap ? this.renderMapOptions() : null;
     const fileType = this.includeFileFormat ? this.renderSelectFileType() : null;
+    const printOrientation = this.selectedFileType === 'PDF' ? this.renderSelectPrintOrientation() : null;
     const print = this.selectedFileType === 'PDF' ? this.renderPrint() : this.renderImg();
     const panelClass = this.mode === 'inline' ? CSS.inlineContainer : CSS.popoverContainer;
     return (
@@ -302,6 +308,7 @@ export class InstantAppsExport {
         {includeMap}
         {options}
         {fileType}
+        {printOrientation}
         {this.includeMap ? (
           <calcite-button appearance="transparent" width="full" onClick={this.setMapAreaOnClick.bind(this, true)} disabled={this.exportIsLoading}>
             {this.messages?.setMapArea}
@@ -345,6 +352,22 @@ export class InstantAppsExport {
               {fileType}
             </calcite-option>
           ))}
+        </calcite-select>
+      </calcite-label>
+    );
+  }
+
+  renderSelectPrintOrientation(): VNode {
+    return (
+      <calcite-label>
+        {this.messages?.selectPrintOrientation}
+        <calcite-select label="" onCalciteSelectChange={this.handleSelectPrintOrientation.bind(this)}>
+          <calcite-option value={'Portrait'} selected={this.printOrientation === 'Portrait'}>
+            {this.messages?.portrait}
+          </calcite-option>
+          <calcite-option value={'Landscape'} selected={this.printOrientation === 'Landscape'}>
+            {this.messages?.landscape}
+          </calcite-option>
         </calcite-select>
       </calcite-label>
     );
@@ -514,8 +537,8 @@ export class InstantAppsExport {
   addPrintStyling(): void {
     if (this.printStyleEl == null) {
       this.printStyleEl = document.createElement('style');
-      if (this.pageSize !== 'portrait') {
-        const updatedPrintStyling = printStyling.replace(/size:\s*\w+;/, `size: ${this.pageSize};`);
+      if (this.printOrientation !== 'Portrait' || this.printSize !== 'Letter') {
+        const updatedPrintStyling = printStyling.replace(/size:\s*\w+;/, `size: ${this.printSize} ${this.printOrientation};`);
         this.printStyleEl.innerHTML = updatedPrintStyling;
       } else {
         this.printStyleEl.innerHTML = printStyling;
@@ -784,7 +807,7 @@ export class InstantAppsExport {
   setMaxRowHeightOnViewContainer(): void {
     if (this.selectedFileType === 'PDF') {
       this.printEl.style.gridTemplateRows = 'minmax(auto, 70%)';
-      this.printEl.style.zIndex = this.getMaxZIndex().toString();
+      //this.printEl.style.zIndex = this.getMaxZIndex().toString();
     }
     this.viewEl.style.height = '100%';
     this.viewEl.style.width = '';
@@ -794,7 +817,7 @@ export class InstantAppsExport {
 
   setMaxWidthOnViewContainer(): void {
     this.printEl.style.gridTemplateRows = '';
-    this.printEl.style.zIndex = this.getMaxZIndex().toString();
+    //this.printEl.style.zIndex = this.getMaxZIndex().toString();
     this.viewEl.style.width = '100%';
     this.viewEl.style.height = '';
     this.viewWrapperEl.style.height = 'fit-content';
@@ -1025,6 +1048,12 @@ export class InstantAppsExport {
     }
   }
 
+  handleSelectPrintOrientation(e: CustomEvent): void {
+    const node = e.target as HTMLCalciteSelectElement;
+    this.printOrientation = node.value as 'Portrait' | 'Landscape';
+  }
+
+  /*
   getMaxZIndex() {
     let elements = document.getElementsByTagName("*");
     let maxZIndex = 0;
@@ -1036,4 +1065,5 @@ export class InstantAppsExport {
     }
     return maxZIndex;
   }
+    */
 }
