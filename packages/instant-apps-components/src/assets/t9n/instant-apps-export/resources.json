@@ -28,5 +28,17 @@
   "screenshotLayout": "Screenshot layout",
   "horizontal": "Horizontal",
   "preview": "Preview",
-  "vertical": "Vertical"
+  "vertical": "Vertical",
+  "selectPrintOrientation": "Select page orientation",
+  "selectPrintSize": "Select print size",
+  "portrait": "Portrait",
+  "landscape": "Landscape",
+  "printSize": {
+    "letter": "Letter",
+    "legal": "Legal",
+    "a1": "A1",
+    "a3": "A3",
+    "a4": "A4",
+    "tabloid": "Tabloid"
+  }
 }

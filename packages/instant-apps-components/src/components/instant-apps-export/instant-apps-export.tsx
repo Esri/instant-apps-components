@@ -826,7 +826,6 @@ export class InstantAppsExport {
   setMaxRowHeightOnViewContainer(): void {
     if (this.selectedFileType === 'PDF') {
       this.printEl.style.gridTemplateRows = 'minmax(auto, 70%)';
-      //this.printEl.style.zIndex = this.getMaxZIndex().toString();
     }
     this.viewEl.style.height = '100%';
     this.viewEl.style.width = '';
@@ -836,7 +835,6 @@ export class InstantAppsExport {
 
   setMaxWidthOnViewContainer(): void {
     this.printEl.style.gridTemplateRows = '';
-    //this.printEl.style.zIndex = this.getMaxZIndex().toString();
     this.viewEl.style.width = '100%';
     this.viewEl.style.height = '';
     this.viewWrapperEl.style.height = 'fit-content';
@@ -1077,17 +1075,4 @@ export class InstantAppsExport {
     this.printSize = node.value as PrintSize;
   }
 
-  /*
-  getMaxZIndex() {
-    let elements = document.getElementsByTagName("*");
-    let maxZIndex = 0;
-    for (let element of elements) {
-      let zIndex = window.getComputedStyle(element).zIndex;
-      if (!isNaN(parseInt(zIndex))) {
-        maxZIndex = Math.max(maxZIndex, parseInt(zIndex, 10));
-      }
-    }
-    return maxZIndex;
-  }
-    */
 }
