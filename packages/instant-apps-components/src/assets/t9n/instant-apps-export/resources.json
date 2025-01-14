@@ -39,6 +39,8 @@
     "a1": "A1",
     "a3": "A3",
     "a4": "A4",
-    "tabloid": "Tabloid"
+    "tabloid": "Tabloid",
+    "letteransia": "Letter ANSI A",
+    "tabloidansib": "Tabloid ANSI B"
   }
 }

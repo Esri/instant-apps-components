@@ -36,7 +36,7 @@ const CSS = {
 };
 
 const dragHandlerName = 'instant-app-export-drag';
-type PrintSize = 'Letter' | 'Legal' | 'A1' | 'A3' | 'A4' | 'Tabloid';
+type PrintSize = 'Letter' | 'Legal' | 'A1' | 'A3' | 'A4' | 'Tabloid' | 'Letter ANSI A' | 'Tabloid ANSI B';
 
 @Component({
   tag: 'instant-apps-export',
@@ -377,14 +377,14 @@ export class InstantAppsExport {
   }
 
   renderSelectPrintSize(): VNode {
-    const printSizes: PrintSize[] = ['Letter', 'Legal', 'A1', 'A3', 'A4', 'Tabloid'];
+    const printSizes: PrintSize[] = ['Letter', 'Legal', 'A1', 'A3', 'A4', 'Tabloid', 'Letter ANSI A', 'Tabloid ANSI B'];
     return (
       <calcite-label>
         {this.messages?.selectPrintSize}
         <calcite-select label="" onCalciteSelectChange={this.handleSelectPrintSize.bind(this)}>
           {printSizes.map((size) => (
             <calcite-option value={size} selected={size === this.printSize}>
-              {this.messages?.printSize[size.toLowerCase()]}
+              {this.messages?.printSize[size.replace(/\s/g, '').toLowerCase()]}
             </calcite-option>
           ))}
         </calcite-select>
