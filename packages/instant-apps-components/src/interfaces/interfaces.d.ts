@@ -198,7 +198,7 @@ export interface FilterInitState {
 }
 
 export interface ExtentSelector {
-  constraints: __esri.MapViewConstraints;
+  constraints: __esri.View2DConstraints;
   mapRotation: number;
 }
 
