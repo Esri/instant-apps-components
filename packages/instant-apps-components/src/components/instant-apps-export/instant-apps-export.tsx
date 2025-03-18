@@ -16,6 +16,7 @@ const CSS = {
   inlineContainer: 'instant-apps-export__inline-container',
   popoverContainer: 'instant-apps-export__popover-container',
   hidden: 'instant-apps-export__visually-hidden',
+  setMapArea: 'instant-apps-export__set-map-area',
   print: {
     pdfBase: 'instant-apps-export-print instant-apps-export-print__pdf',
     imgBase: 'instant-apps-export-print instant-apps-export-print__img',
@@ -227,6 +228,7 @@ export class InstantAppsExport {
 
   async componentWillLoad(): Promise<void> {
     this.baseClass = getMode(this.el) === 'dark' ? CSS.baseDark : CSS.baseLight;
+    this.pdfIncludeMap = this.includeMap;
     getMessages(this);
     await this.initializeModules();
   }
@@ -298,7 +300,7 @@ export class InstantAppsExport {
         {options}
         {fileType}
         {this.includeMap ? (
-          <calcite-button appearance="transparent" width="full" onClick={this.setMapAreaOnClick.bind(this, true)} disabled={this.exportIsLoading}>
+          <calcite-button class={CSS.setMapArea} appearance="transparent" width="full" onClick={this.setMapAreaOnClick.bind(this, true)} disabled={this.exportIsLoading}>
             {this.messages?.setMapArea}
           </calcite-button>
         ) : null}
@@ -479,7 +481,9 @@ export class InstantAppsExport {
     const downloadLink = document.createElement('a');
     downloadLink.id = 'download-link';
     downloadLink.href = this.dataUrl;
-    downloadLink.download = this.headerTitle ?? document.title;
+    const downloadTitle = this.headerTitle ?? document.title;
+    const fileType = this.selectedFileType?.toLowerCase() ?? 'jpg';
+    downloadLink.download = `${downloadTitle}.${fileType}`;
     downloadLink.click();
     this.dataUrl = null;
     this.exportIsLoading = false;
@@ -809,7 +813,7 @@ export class InstantAppsExport {
           const popCanvas = popContCanvas[key];
           if (popCanvas != null) {
             popCanvas.replaceWith(img);
-            if (document.querySelector("link[href*='esri/themes/dark/main.css']") && img.parentElement?.parentElement != null) {
+            if (getMode(this.el) === 'dark' && img.parentElement?.parentElement) {
               img.parentElement.style.background = '#242424';
               img.parentElement.parentElement.style.background = '#242424';
             }

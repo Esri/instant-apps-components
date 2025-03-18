@@ -23,6 +23,7 @@
   --instant-apps-export-background: var(--calcite-color-foreground-1);
   --instant-apps-export-text-color: var(--calcite-color-text-1);
   --instant-apps-export-popover-width: 250px;
+  --instant-apps-export-button-text-dark-hover-color: #fff;
 }
 
 .instant-apps-export {
@@ -86,11 +87,15 @@
   calcite-button:last-of-type {
     margin-top: 0.5rem;
   }
+}
 
-  .calcite-mode-dark calcite-switch {
-    --calcite-color-foreground-1: #2b2b2b;
-    --calcite-color-foreground-2: #202020;
-  }
+.calcite-mode-dark.instant-apps-export .instant-apps-export__set-map-area {
+  --calcite-color-brand-hover: #fff;
+}
+
+.calcite-mode-dark.instant-apps-export calcite-switch {
+  --calcite-color-foreground-1: #2b2b2b;
+  --calcite-color-foreground-2: #202020;
 }
 
 .instant-apps-export__compass-container.esri-widget {
