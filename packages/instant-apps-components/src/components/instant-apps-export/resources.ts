@@ -162,9 +162,19 @@ export const printStyling = `
   }
 
   .instant-apps-export-print .esri-legend--card__section {
-    padding: 4pt 0 4pt;
+    padding: 6pt;
     min-width: unset;
-    border-left: none;
+  }
+
+  .instant-apps-export-print .esri-legend--card__color-ramp-container > .esri-legend--card__ramp-label {
+    height: 25px;
+    line-height: 25px;
+  }
+
+  .instant-apps-export-print .esri-legend--card__color-ramp-container .esri-legend--card__interval-separators-container {
+    position: unset;
+    transform: unset;
+    text-align: center;
   }
 
   .instant-apps-export-print .esri-legend--card__section:first-child {
