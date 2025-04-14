@@ -1,7 +1,7 @@
 {
   "homepage": "https://esri.github.io/instant-apps-components",
   "name": "@esri/instant-apps-components",
-  "version": "1.0.0-beta.308",
+  "version": "1.0.0-beta.309",
   "description": "Reusable ArcGIS Instant Apps web components.",
   "main": "dist/index.cjs.js",
   "module": "dist/index.js",
@@ -41,7 +41,8 @@
     "esri-loader": "^3.7.0",
     "html-to-image": "^1.11.11",
     "maquette": "^3.5.3",
-    "templates-common-library": "0.0.593-esm"
+    "templates-common-library": "0.0.593-esm",
+    "vitest": "^3.1.1"
   },
   "devDependencies": {
     "@babel/core": "7.16.5",

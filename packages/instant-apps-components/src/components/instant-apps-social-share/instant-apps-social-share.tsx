@@ -14,9 +14,8 @@ import SocialShare_T9n from '../../assets/t9n/instant-apps-social-share/resource
 
 import { LogicalPlacement } from '@esri/calcite-components/dist/utils/floating-ui';
 import { getMessages } from '../../utils/locale';
-// import { PopperPlacement } from '@esri/calcite-components/dist/types/utils/popper';
 
-type ShareItemOptions = 'link' | 'facebook' | 'x' | 'linkedIn';
+type ShareItemOptions = 'link' | 'facebook' | 'x' | 'linkedIn' | 'native-share';
 
 const base = 'instant-apps-social-share';
 
@@ -235,6 +234,14 @@ export class InstantAppsSocialShare {
   })
   removePopoverOffset: boolean = false;
 
+  /**
+   * Use the native share API if available.
+   */
+  @Prop({
+    reflect: true,
+  })
+  useNativeShare: boolean = false;
+
   // INTERNAL STATE
   // T9N
   @State() messages: typeof SocialShare_T9n;
@@ -254,6 +261,7 @@ export class InstantAppsSocialShare {
     this.setupAutoCloseListeners();
     if (this.mode === 'popover') {
       if (this.opened) this.popoverRef.open = true;
+
       this.popoverRef.addEventListener('calcitePopoverOpen', () => {
         if (!this.shareListRef) return;
         const firstNode = this.shareListRef.children[0] as HTMLLIElement;
@@ -411,39 +419,43 @@ export class InstantAppsSocialShare {
   }
 
   renderButton() {
-    const scale = this.shareButtonScale != null ? this.shareButtonScale : this.scale;
+    const scale = this.shareButtonScale ?? this.scale;
+    const nativeShare = this.useNativeShare && this.isMobileDevice();
+
+    const commonProps = {
+      ...(nativeShare
+        ? {}
+        : {
+            ref: (el: HTMLCalciteButtonElement | HTMLCalciteActionElement) => {
+              this.popoverButtonRef = el;
+            },
+          }),
+      onClick: nativeShare
+        ? event => {
+            event.stopPropagation();
+            this.handleShareItem('native-share');
+          }
+        : this.togglePopover.bind(this),
+      id: 'shareButton',
+      class: CSS.popoverButton,
+      label: this.messages?.share?.label,
+      title: this.messages?.share?.label,
+      scale,
+    };
+
+    const icon = (
+      <div class={CSS.iconContainer}>
+        <calcite-icon icon="share" scale={this.popoverButtonIconScale} />
+      </div>
+    );
+
     return this.shareButtonType === 'button' ? (
-      <calcite-button
-        ref={el => (this.popoverButtonRef = el)}
-        onClick={this.togglePopover.bind(this)}
-        id="shareButton"
-        class={CSS.popoverButton}
-        kind={this.shareButtonColor}
-        appearance="transparent"
-        label={this.messages?.share?.label}
-        title={this.messages?.share?.label}
-        scale={scale}
-      >
-        <div class={CSS.iconContainer}>
-          <calcite-icon icon="share" scale={this.popoverButtonIconScale} />
-        </div>
+      <calcite-button {...commonProps} kind={this.shareButtonColor} appearance="transparent">
+        {icon}
       </calcite-button>
     ) : (
-      <calcite-action
-        ref={el => (this.popoverButtonRef = el)}
-        onClick={this.togglePopover.bind(this)}
-        id="shareButton"
-        class={CSS.popoverButton}
-        appearance="transparent"
-        label={this.messages?.share?.label}
-        title={this.messages?.share?.label}
-        scale={scale}
-        text=""
-        alignment="center"
-      >
-        <div class={CSS.iconContainer}>
-          <calcite-icon icon="share" scale={this.popoverButtonIconScale} />
-        </div>
+      <calcite-action {...commonProps} appearance="transparent" text="" alignment="center">
+        {icon}
       </calcite-action>
     );
   }
@@ -667,6 +679,7 @@ export class InstantAppsSocialShare {
 
   togglePopover(event: Event) {
     event.stopPropagation();
+
     this.opened = !this.opened;
     this.popoverRef.open = this.opened;
   }
@@ -732,6 +745,21 @@ export class InstantAppsSocialShare {
           window.open(encodeURI(url), '_blank');
         }
 
+        return;
+      case 'native-share':
+        if (navigator.canShare && navigator.canShare({ url: urlToUse })) {
+          navigator
+            .share({
+              title: this.messages?.share?.label || 'Share',
+              text: this.shareText,
+              url: encodeURI(urlToUse),
+            })
+            .catch(err => {
+              console.error('Error using native share:', err);
+            });
+        } else {
+          console.warn('Native share is not supported or the provided data is not shareable.');
+        }
         return;
     }
   }
@@ -887,5 +915,13 @@ export class InstantAppsSocialShare {
 
   roundValue(val: number, decimalPoints: number = 4): number {
     return parseFloat(val.toFixed(decimalPoints));
+  }
+
+  /**
+   * Utility function to detect if the user is on a mobile device.
+   * @returns {boolean} True if the device is mobile, otherwise false.
+   */
+  isMobileDevice(): boolean {
+    return /Mobi|Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
   }
 }
