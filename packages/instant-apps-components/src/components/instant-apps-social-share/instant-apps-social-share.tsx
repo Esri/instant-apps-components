@@ -423,11 +423,13 @@ export class InstantAppsSocialShare {
     const nativeShare = this.useNativeShare && this.isMobileDevice();
 
     const commonProps = {
-      ref: nativeShare
-        ? undefined
-        : (el: HTMLCalciteButtonElement | HTMLCalciteActionElement) => {
-            this.popoverButtonRef = el;
-          },
+      ...(nativeShare
+        ? {}
+        : {
+            ref: (el: HTMLCalciteButtonElement | HTMLCalciteActionElement) => {
+              this.popoverButtonRef = el;
+            },
+          }),
       onClick: nativeShare
         ? event => {
             event.stopPropagation();
