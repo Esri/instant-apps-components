@@ -895,6 +895,10 @@ export namespace Components {
          */
         "successMessage": string;
         /**
+          * Use the native share API if available.
+         */
+        "useNativeShare": boolean;
+        /**
           * MapView or SceneView to reference when URL parameter values are generated, i.e. center, level, viewpoint, etc.
          */
         "view": __esri.MapView | __esri.SceneView;
@@ -2343,6 +2347,10 @@ declare namespace LocalJSX {
           * Provides an alternate to the success.url message "App URL copied to clipboard."
          */
         "successMessage"?: string;
+        /**
+          * Use the native share API if available.
+         */
+        "useNativeShare"?: boolean;
         /**
           * MapView or SceneView to reference when URL parameter values are generated, i.e. center, level, viewpoint, etc.
          */
